@@ -1,15 +1,12 @@
 #[allow(unused_imports)]
-use uniffi_runtime_javascript::{self as js, uniffi as u, IntoJs, IntoRust};
+use uniffi_runtime_javascript::{self as js, IntoJs, IntoRust, uniffi as u};
 use wasm_bindgen::prelude::wasm_bindgen;
 extern "C" {
     fn uniffi_iota_sdk_ffi_fn_clone_address(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_address(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_address(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_address_framework(
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
@@ -77,10 +74,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_argument(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_argument(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_argument_new_gas(
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
@@ -750,10 +744,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_circomg1(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_circomg1(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(
         el_0: u::VoidPointer,
         el_1: u::VoidPointer,
@@ -778,10 +769,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_circomg2(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_circomg2(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(
         el_0_0: u::VoidPointer,
         el_0_1: u::VoidPointer,
@@ -833,9 +821,7 @@ extern "C" {
         epoch: u64,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(
-        ptr: u::VoidPointer,
-    ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(ptr: u::VoidPointer) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas(
         ptr: u::VoidPointer,
         object_ids: u::RustBuffer,
@@ -946,10 +932,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_coin(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_coin(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_coin_try_from_object(
         object: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -974,10 +957,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_command(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_command(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_command_new_make_move_vector(
         make_move_vector: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -1113,10 +1093,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_digest(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_digest(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(
         base58: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -1774,9 +1751,7 @@ extern "C" {
         ptr: u::VoidPointer,
         pagination_filter: u::RustBuffer,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
-        ptr: u::VoidPointer,
-    ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(ptr: u::VoidPointer) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
         ptr: u::VoidPointer,
         coin_type: u::RustBuffer,
@@ -1868,9 +1843,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(
         ptr: u::VoidPointer,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(
-        ptr: u::VoidPointer,
-    ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(ptr: u::VoidPointer) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
         ptr: u::VoidPointer,
         object_id: u::VoidPointer,
@@ -1958,9 +1931,7 @@ extern "C" {
         ptr: u::VoidPointer,
         query: u::RustBuffer,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
-        ptr: u::VoidPointer,
-    ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(ptr: u::VoidPointer) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
         ptr: u::VoidPointer,
         inspector: u::VoidPointer,
@@ -2039,10 +2010,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_identifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_identifier(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_identifier_new(
         identifier: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -2077,10 +2045,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_input(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_input(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned(
         object_ref: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -2117,10 +2082,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_intent(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_intent(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(
         bytes: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -2222,10 +2184,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_mergecoins(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_mergecoins(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_mergecoins_new(
         coin: u::VoidPointer,
         coins_to_merge: u::RustBuffer,
@@ -2257,10 +2216,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_movearg(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_movearg(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_movearg_address(
         address: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -2436,10 +2392,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_movecall(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_movecall(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_movecall_new(
         package: u::VoidPointer,
         module: u::VoidPointer,
@@ -3024,10 +2977,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_name(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_name(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_name_from_str(
         s: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -3133,10 +3083,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_object(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_object(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_object_new(
         data: u::VoidPointer,
         owner: u::VoidPointer,
@@ -3214,10 +3161,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_objectdata(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_objectdata(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(
         move_package: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -3264,10 +3208,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_objectid(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_objectid(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
@@ -3344,10 +3285,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_objecttype(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_objecttype(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
@@ -3393,10 +3331,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_owner(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_owner(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_owner_new_address(
         address: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -3799,10 +3734,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_publish(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_publish(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_publish_new(
         modules: u::RustBuffer,
         dependencies: u::RustBuffer,
@@ -4666,10 +4598,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_splitcoins(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_splitcoins(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_splitcoins_new(
         coin: u::VoidPointer,
         amounts: u::RustBuffer,
@@ -4701,10 +4630,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_structtag(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_structtag(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
         address: u::VoidPointer,
         module: u::VoidPointer,
@@ -5270,9 +5196,7 @@ extern "C" {
         status_: &mut u::RustCallStatus,
     );
     fn uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(
-        vtable: std::ptr::NonNull<
-            v_table_callback_interface_transaction_signer_fn::VTableRs,
-        >,
+        vtable: std::ptr::NonNull<v_table_callback_interface_transaction_signer_fn::VTableRs>,
     );
     fn uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
         ptr: u::VoidPointer,
@@ -5382,10 +5306,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_typetag(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_typetag(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
@@ -5512,10 +5433,7 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_upgrade(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
+    fn uniffi_iota_sdk_ffi_fn_free_upgrade(ptr: u::VoidPointer, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
         modules: u::RustBuffer,
         dependencies: u::RustBuffer,
@@ -7944,10 +7862,8 @@ extern "C" {
     );
     fn ffi_iota_sdk_ffi_rust_future_cancel_u8(handle: u64);
     fn ffi_iota_sdk_ffi_rust_future_free_u8(handle: u64);
-    fn ffi_iota_sdk_ffi_rust_future_complete_u8(
-        handle: u64,
-        status_: &mut u::RustCallStatus,
-    ) -> u8;
+    fn ffi_iota_sdk_ffi_rust_future_complete_u8(handle: u64, status_: &mut u::RustCallStatus)
+    -> u8;
     fn ffi_iota_sdk_ffi_rust_future_poll_i8(
         handle: u64,
         callback: rust_future_continuation_callback::FnSig,
@@ -7955,10 +7871,8 @@ extern "C" {
     );
     fn ffi_iota_sdk_ffi_rust_future_cancel_i8(handle: u64);
     fn ffi_iota_sdk_ffi_rust_future_free_i8(handle: u64);
-    fn ffi_iota_sdk_ffi_rust_future_complete_i8(
-        handle: u64,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
+    fn ffi_iota_sdk_ffi_rust_future_complete_i8(handle: u64, status_: &mut u::RustCallStatus)
+    -> i8;
     fn ffi_iota_sdk_ffi_rust_future_poll_u16(
         handle: u64,
         callback: rust_future_continuation_callback::FnSig,
@@ -8076,10 +7990,7 @@ extern "C" {
     );
     fn ffi_iota_sdk_ffi_rust_future_cancel_void(handle: u64);
     fn ffi_iota_sdk_ffi_rust_future_free_void(handle: u64);
-    fn ffi_iota_sdk_ffi_rust_future_complete_void(
-        handle: u64,
-        status_: &mut u::RustCallStatus,
-    );
+    fn ffi_iota_sdk_ffi_rust_future_complete_void(handle: u64, status_: &mut u::RustCallStatus);
     fn uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs() -> u16;
@@ -8578,7 +8489,8 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info() -> u16;
@@ -8625,12 +8537,15 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_coin_id() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() -> u16;
@@ -9058,13 +8973,16 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() -> u16;
@@ -9135,7 +9053,8 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_command_new_transfer_objects() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_command_new_upgrade() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() -> u16;
@@ -9156,19 +9075,27 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() -> u16;
@@ -9396,8 +9323,10 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1()
+    -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() -> u16;
@@ -9435,7 +9364,8 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
+    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() -> u16;
@@ -9455,10 +9385,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_address(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_address(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_address(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -9469,12 +9396,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_address(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_address(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_address(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -9482,9 +9404,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_address_framework(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_address_framework(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_address_framework(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9523,9 +9443,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_address_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_address_generate(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_address_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9534,9 +9452,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_address_std(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_address_std(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_address_std(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9545,9 +9461,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_address_system(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_address_system(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_address_system(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9556,9 +9470,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_address_zero(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_address_zero(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_address_zero(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9601,10 +9513,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_address_to_hex(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_address_to_hex(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_address_to_hex(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -9712,10 +9621,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_argument(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_argument(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_argument(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -9726,12 +9632,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_argument(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_argument(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_argument(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -9739,9 +9640,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_argument_new_gas(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_argument_new_gas(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_argument_new_gas(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -9752,10 +9651,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_argument_new_input(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_argument_new_input(
-            u16::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_argument_new_input(u16::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -9892,9 +9788,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -10056,9 +9951,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381publickey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_bls12381publickey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_bls12381publickey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -10190,9 +10084,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381signature_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_bls12381signature_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_bls12381signature_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -10637,10 +10530,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_changeepoch(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_changeepoch(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_changeepoch(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -10652,10 +10542,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_changeepoch(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_changeepoch(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_changeepoch(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -10864,10 +10751,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_changeepochv2(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_changeepochv2(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_changeepochv2(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -10879,10 +10763,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_changeepochv2(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_changeepochv2(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_changeepochv2(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -11108,10 +10989,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_changeepochv3(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_changeepochv3(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_changeepochv3(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -11123,10 +11001,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_changeepochv3(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_changeepochv3(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_changeepochv3(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -11369,10 +11244,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_changeepochv4(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_changeepochv4(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_changeepochv4(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -11384,10 +11256,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_changeepochv4(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_changeepochv4(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_changeepochv4(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -12098,10 +11967,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_circomg1(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_circomg1(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_circomg1(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12112,12 +11978,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_circomg1(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_circomg1(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_circomg1(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -12195,10 +12056,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_circomg2(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_circomg2(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_circomg2(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12209,12 +12067,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_circomg2(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_circomg2(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_circomg2(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -12326,10 +12179,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_ru
     skip_checks: js::Int8,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(
-            u::VoidPointer::into_rust(ptr),
-            i8::into_rust(skip_checks),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        i8::into_rust(skip_checks),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
@@ -12338,11 +12191,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execut
     wait_for: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(signer),
-            u::RustBuffer::into_rust(wait_for),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(signer),
+        u::RustBuffer::into_rust(wait_for),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
@@ -12352,12 +12205,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execut
     wait_for: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(signer),
-            u::VoidPointer::into_rust(sponsor_signer),
-            u::RustBuffer::into_rust(wait_for),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(signer),
+        u::VoidPointer::into_rust(sponsor_signer),
+        u::RustBuffer::into_rust(wait_for),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_expiration(
@@ -12380,9 +12233,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_expiration(
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(
-            u::VoidPointer::into_rust(ptr),
-        )
+    uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(u::VoidPointer::into_rust(ptr))
         .into_js()
 }
 #[wasm_bindgen]
@@ -12733,9 +12584,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_coin(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_coin(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_coin(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -12760,10 +12609,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_coin_balance(
 ) -> js::UInt64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_coin_balance(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_coin_balance(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12775,10 +12621,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_coin_coin_type(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_coin_coin_type(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_coin_coin_type(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12790,10 +12633,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_coin_id(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_coin_id(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_coin_id(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12820,10 +12660,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_command(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_command(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_command(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -12834,12 +12671,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_command(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_command(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_command(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -13319,10 +13151,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_digest(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_digest(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_digest(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -13333,12 +13162,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_digest(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_digest(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_digest(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -13376,9 +13200,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_digest_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_digest_generate(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_digest_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -13623,9 +13445,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -13905,10 +13726,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519publickey(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519publickey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_ed25519publickey(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -13947,9 +13765,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -14084,10 +13901,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519signature(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519signature(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_ed25519signature(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -14126,9 +13940,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519signature_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519signature_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519signature_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -14203,10 +14016,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -14218,10 +14028,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519verifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_ed25519verifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -14230,9 +14037,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -14897,9 +14702,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_p
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -14936,9 +14739,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_u
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -15122,10 +14923,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_faucetclient(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_faucetclient(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_faucetclient(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -15137,10 +14935,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_faucetclient(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_faucetclient(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_faucetclient(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -15164,9 +14959,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15175,9 +14969,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15186,9 +14979,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15198,10 +14990,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request(
     address: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_faucetclient_request(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
@@ -15209,10 +15001,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
     address: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
@@ -15221,11 +15013,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_f
     client: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::VoidPointer::into_rust(client),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::VoidPointer::into_rust(client),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(
@@ -15233,10 +15025,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(
     id: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(id),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(id),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_genesisobject(
@@ -15245,10 +15037,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_genesisobject(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_genesisobject(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_genesisobject(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -15260,10 +15049,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_genesisobject(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_genesisobject(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_genesisobject(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -15540,10 +15326,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_graphqlclient(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_graphqlclient(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_graphqlclient(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -15555,10 +15338,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_graphqlclient(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_graphqlclient(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_graphqlclient(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -15582,9 +15362,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15593,9 +15372,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15604,9 +15382,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15615,9 +15392,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_testnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_testnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_testnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -15628,11 +15404,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(epoch),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(epoch),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_balance(
@@ -15641,18 +15417,17 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_balance(
     coin_type: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_balance(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(coin_type),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(coin_type),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_chain_id(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_graphqlclient_chain_id(u::VoidPointer::into_rust(ptr))
-        .into_js()
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_chain_id(u::VoidPointer::into_rust(ptr)).into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(
@@ -15661,11 +15436,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(
     seq_num: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(digest),
-            u::RustBuffer::into_rust(seq_num),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(digest),
+        u::RustBuffer::into_rust(seq_num),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
@@ -15673,18 +15448,16 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
-            u::VoidPointer::into_rust(ptr),
-        )
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(u::VoidPointer::into_rust(ptr))
         .into_js()
 }
 #[wasm_bindgen]
@@ -15693,10 +15466,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
     coin_type: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(coin_type),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(coin_type),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
@@ -15706,12 +15479,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
     coin_type: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(owner),
-            u::RustBuffer::into_rust(pagination_filter),
-            u::RustBuffer::into_rust(coin_type),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(owner),
+        u::RustBuffer::into_rust(pagination_filter),
+        u::RustBuffer::into_rust(coin_type),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
@@ -15720,11 +15493,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
     skip_checks: js::Int8,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(tx),
-            i8::into_rust(skip_checks),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(tx),
+        i8::into_rust(skip_checks),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
@@ -15734,12 +15507,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
     skip_checks: js::Int8,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(tx_kind),
-            u::RustBuffer::into_rust(tx_meta),
-            i8::into_rust(skip_checks),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(tx_kind),
+        u::RustBuffer::into_rust(tx_meta),
+        i8::into_rust(skip_checks),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
@@ -15749,12 +15522,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
     name: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::VoidPointer::into_rust(type_tag),
-            u::RustBuffer::into_rust(name),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::VoidPointer::into_rust(type_tag),
+        u::RustBuffer::into_rust(name),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(
@@ -15763,11 +15536,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(
@@ -15777,12 +15550,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_fi
     name: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::VoidPointer::into_rust(type_tag),
-            u::RustBuffer::into_rust(name),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::VoidPointer::into_rust(type_tag),
+        u::RustBuffer::into_rust(name),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch(
@@ -15790,10 +15563,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch(
     epoch: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(epoch),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(epoch),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_checkpoints(
@@ -15801,10 +15574,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_check
     epoch: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_checkpoints(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(epoch),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(epoch),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blocks(
@@ -15812,10 +15585,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_trans
     epoch: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blocks(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(epoch),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(epoch),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
@@ -15824,11 +15597,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(filter),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(filter),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
@@ -15838,12 +15611,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
     wait_for: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(signatures),
-            u::VoidPointer::into_rust(tx),
-            u::RustBuffer::into_rust(wait_for),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(signatures),
+        u::VoidPointer::into_rust(tx),
+        u::RustBuffer::into_rust(wait_for),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
@@ -15852,11 +15625,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(owner),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(owner),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(
@@ -15865,11 +15638,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_defaul
     format: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(format),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(format),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(
@@ -15877,10 +15650,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup
     name: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(name),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(name),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(
@@ -15889,11 +15662,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_regist
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
@@ -15901,10 +15674,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
@@ -15912,27 +15685,25 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(
     ptr: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(
-            u::VoidPointer::into_rust(ptr),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(
-            u::VoidPointer::into_rust(ptr),
-        )
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(u::VoidPointer::into_rust(ptr))
         .into_js()
 }
 #[wasm_bindgen]
@@ -15942,11 +15713,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_conte
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(object_id),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(object_id),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
@@ -15955,11 +15726,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_conte
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(object_id),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(object_id),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
@@ -15969,12 +15740,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
     arguments: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(function_name),
-            u::RustBuffer::into_rust(type_arguments),
-            u::RustBuffer::into_rust(arguments),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(function_name),
+        u::RustBuffer::into_rust(type_arguments),
+        u::RustBuffer::into_rust(arguments),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
@@ -15984,12 +15755,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_js
     arguments: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(function_name),
-            u::RustBuffer::into_rust(type_arguments),
-            u::RustBuffer::into_rust(arguments),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(function_name),
+        u::RustBuffer::into_rust(type_arguments),
+        u::RustBuffer::into_rust(arguments),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
@@ -16000,13 +15771,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_f
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(package),
-            u::RustBuffer::into_rust(module),
-            u::RustBuffer::into_rust(function),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(package),
+        u::RustBuffer::into_rust(module),
+        u::RustBuffer::into_rust(function),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
@@ -16020,16 +15791,16 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_m
     pagination_filter_structs: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(package),
-            u::RustBuffer::into_rust(module),
-            u::RustBuffer::into_rust(version),
-            u::RustBuffer::into_rust(pagination_filter_enums),
-            u::RustBuffer::into_rust(pagination_filter_friends),
-            u::RustBuffer::into_rust(pagination_filter_functions),
-            u::RustBuffer::into_rust(pagination_filter_structs),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(package),
+        u::RustBuffer::into_rust(module),
+        u::RustBuffer::into_rust(version),
+        u::RustBuffer::into_rust(pagination_filter_enums),
+        u::RustBuffer::into_rust(pagination_filter_friends),
+        u::RustBuffer::into_rust(pagination_filter_functions),
+        u::RustBuffer::into_rust(pagination_filter_structs),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
@@ -16038,11 +15809,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(object_id),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(object_id),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(
@@ -16050,10 +15821,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(
     object_id: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(object_id),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(object_id),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
@@ -16062,11 +15833,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(filter),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(filter),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
@@ -16075,11 +15846,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_latest(
@@ -16087,10 +15858,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_latest(
     address: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_latest(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
@@ -16101,13 +15872,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(address),
-            u::RustBuffer::into_rust(after_version),
-            u::RustBuffer::into_rust(before_version),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(address),
+        u::RustBuffer::into_rust(after_version),
+        u::RustBuffer::into_rust(before_version),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
@@ -16117,12 +15888,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(after_checkpoint),
-            u::RustBuffer::into_rust(before_checkpoint),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(after_checkpoint),
+        u::RustBuffer::into_rust(before_checkpoint),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
@@ -16130,10 +15901,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
     version: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(version),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(version),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(
@@ -16141,10 +15912,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_pri
     epoch: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(epoch),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(epoch),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
@@ -16152,18 +15923,16 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
     query: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(query),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(query),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
-            u::VoidPointer::into_rust(ptr),
-        )
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(u::VoidPointer::into_rust(ptr))
         .into_js()
 }
 #[wasm_bindgen]
@@ -16172,10 +15941,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
     inspector: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(inspector),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(inspector),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(
@@ -16183,10 +15952,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(
     server: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(server),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(server),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_supply(
@@ -16194,19 +15963,19 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_supply(
     coin_type: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_supply(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(coin_type),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(coin_type),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks(
     ptr: js::VoidPointer,
 ) -> js::Handle {
-    uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks(
-            u::VoidPointer::into_rust(ptr),
-        )
-        .into_js()
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks(u::VoidPointer::into_rust(
+        ptr,
+    ))
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks_by_digest(
@@ -16214,10 +15983,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks_by_digest(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks_by_seq_num(
@@ -16225,10 +15994,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction
     seq_num: js::UInt64,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks_by_seq_num(
-            u::VoidPointer::into_rust(ptr),
-            u64::into_rust(seq_num),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u64::into_rust(seq_num),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction(
@@ -16236,10 +16005,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction(
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_data_effects(
@@ -16247,10 +16016,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_data_
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_data_effects(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effects(
@@ -16258,10 +16027,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effec
     digest: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effects(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
@@ -16270,11 +16039,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(filter),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(filter),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
@@ -16283,11 +16052,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(filter),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(filter),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
@@ -16296,11 +16065,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effe
     pagination_filter: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(filter),
-            u::RustBuffer::into_rust(pagination_filter),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::RustBuffer::into_rust(filter),
+        u::RustBuffer::into_rust(pagination_filter),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
@@ -16310,12 +16079,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
     timeout: js::ForeignBytes,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(digest),
-            u::RustBuffer::into_rust(wait_for),
-            u::RustBuffer::into_rust(timeout),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(digest),
+        u::RustBuffer::into_rust(wait_for),
+        u::RustBuffer::into_rust(timeout),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(
@@ -16350,11 +16119,9 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(
     vtable: v_table_callback_interface_graph_ql_request_inspector_fn::VTableJs,
 ) {
-    uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(
-        std::ptr::NonNull::<
-            v_table_callback_interface_graph_ql_request_inspector_fn::VTableRs,
-        >::into_rust(vtable),
-    );
+    uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(std::ptr::NonNull::<
+        v_table_callback_interface_graph_ql_request_inspector_fn::VTableRs,
+    >::into_rust(vtable));
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
@@ -16379,10 +16146,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_identifier(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_identifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_identifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16394,10 +16158,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_identifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_identifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_identifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -16517,10 +16278,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_input(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_input(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_input(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16531,9 +16289,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_input(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_input(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_input(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -16656,10 +16412,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_intent(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_intent(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_intent(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16670,12 +16423,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_intent(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_intent(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_intent(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -16762,9 +16510,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -16773,9 +16520,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -16786,10 +16532,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_intent_app_id(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_intent_app_id(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_intent_app_id(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16801,10 +16544,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_intent_scope(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_intent_scope(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_intent_scope(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16831,10 +16571,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_intent_version(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_intent_version(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_intent_version(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16910,10 +16647,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_makemovevector(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_makemovevector(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_makemovevector(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -16925,10 +16659,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_makemovevector(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_makemovevector(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_makemovevector(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -17035,10 +16766,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_mergecoins(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_mergecoins(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_mergecoins(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17050,10 +16778,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_mergecoins(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_mergecoins(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_mergecoins(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -17160,10 +16885,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_movearg(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_movearg(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_movearg(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17174,12 +16896,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_movearg(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_movearg(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_movearg(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -17249,10 +16966,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_bool(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_movearg_bool(
-            i8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_movearg_bool(i8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17414,10 +17128,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u16(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_movearg_u16(
-            u16::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_movearg_u16(u16::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17474,10 +17185,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u32(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_movearg_u32(
-            u32::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_movearg_u32(u32::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17504,10 +17212,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u64(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_movearg_u64(
-            u64::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_movearg_u64(u64::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17534,10 +17239,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(
-            u8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(u8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17670,10 +17372,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish
     client: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(client),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(client),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(
@@ -17811,10 +17513,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_movecall(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_movecall(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_movecall(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -17825,12 +17524,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_movecall(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_movecall(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_movecall(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -17987,10 +17681,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_movefunction(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_movefunction(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_movefunction(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18002,10 +17693,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_movefunction(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_movefunction(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_movefunction(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -18136,10 +17824,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_movepackage(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_movepackage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_movepackage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18151,10 +17836,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_movepackage(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_movepackage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_movepackage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -18188,10 +17870,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_movepackage_id(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_movepackage_id(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_movepackage_id(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18327,10 +18006,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_movepackagedata(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_movepackagedata(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_movepackagedata(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18342,10 +18018,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_movepackagedata(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_movepackagedata(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_movepackagedata(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -18493,10 +18166,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_moveviewarg(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_moveviewarg(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_moveviewarg(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18508,10 +18178,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_moveviewarg(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_moveviewarg(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_moveviewarg(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -18537,10 +18204,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(
-            i8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(i8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18565,9 +18229,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -18653,10 +18315,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(
-            u16::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(u16::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18668,10 +18327,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(
-            u32::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(u32::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18683,10 +18339,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(
-            u64::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(u64::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -18698,10 +18351,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(
-            u8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(u8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -19182,10 +18832,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigmember(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_multisigmember(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_multisigmember(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -19197,10 +18844,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_multisigmember(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_multisigmember(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_multisigmember(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -19853,10 +19497,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_multisigverifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_multisigverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_multisigverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -19865,9 +19506,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -19954,9 +19593,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_name(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_name(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_name(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -19998,10 +19635,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_name_is_sln(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_name_is_sln(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_name_is_sln(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20045,10 +19679,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_name_labels(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_name_labels(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_name_labels(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20075,10 +19706,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_name_parent(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_name_parent(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_name_parent(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20184,10 +19812,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_nameregistration(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_nameregistration(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_nameregistration(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -20328,10 +19953,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_object(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_object(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_object(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20342,12 +19964,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_object(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_object(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_object(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -20438,10 +20055,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_object_data(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_object_data(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_object_data(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20453,10 +20067,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_object_digest(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_object_digest(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_object_digest(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20513,10 +20124,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_object_owner(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_object_owner(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_object_owner(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20558,10 +20166,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_object_version(
 ) -> js::UInt64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_object_version(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_object_version(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20622,10 +20227,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_objectdata(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_objectdata(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_objectdata(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20637,10 +20239,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_objectdata(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_objectdata(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_objectdata(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -20805,10 +20404,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_objectid(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_objectid(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_objectid(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -20819,12 +20415,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_objectid(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_objectid(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_objectid(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -20832,9 +20423,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -20890,9 +20479,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_objectid_system(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_objectid_system(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -20901,9 +20488,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -21091,10 +20676,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_objecttype(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_objecttype(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_objecttype(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -21106,10 +20688,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_objecttype(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_objecttype(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_objecttype(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -21118,9 +20697,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -21270,10 +20848,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_owner(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_owner(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_owner(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -21284,9 +20859,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_owner(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_owner(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_owner(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -21309,9 +20882,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -21337,10 +20908,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
-            u64::into_rust(version),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(u64::into_rust(version), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -21581,10 +21149,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ptbargument(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_ptbargument(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_ptbargument(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -21596,10 +21161,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ptbargument(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ptbargument(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_ptbargument(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -21685,10 +21247,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(
-            i8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(i8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -21773,9 +21332,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -21996,10 +21553,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(
-            u16::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(u16::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22056,10 +21610,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(
-            u32::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(u32::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22086,10 +21637,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(
-            u64::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(u64::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22116,10 +21664,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(
-            u8::into_rust(value),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(u8::into_rust(value), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22314,10 +21859,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_passkeypublickey(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_passkeypublickey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_passkeypublickey(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -22422,10 +21964,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22437,10 +21976,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_passkeyverifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_passkeyverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_passkeyverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -22449,9 +21985,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -22495,10 +22029,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_personalmessage(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_personalmessage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_personalmessage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22510,10 +22041,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_personalmessage(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_personalmessage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_personalmessage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -22758,10 +22286,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_publish(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_publish(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_publish(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -22772,12 +22297,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_publish(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_publish(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_publish(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -22993,9 +22513,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -23317,9 +22836,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -23496,9 +23014,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -23600,9 +23117,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -23996,9 +23512,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -24320,9 +23835,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -24499,9 +24013,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -24603,9 +24116,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -24889,10 +24401,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simplekeypair(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simplekeypair(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_simplekeypair(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -24904,10 +24413,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simplekeypair(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simplekeypair(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_simplekeypair(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -25211,10 +24717,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simplesignature(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simplesignature(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_simplesignature(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -25226,10 +24729,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simplesignature(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simplesignature(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_simplesignature(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -25610,10 +25110,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simpleverifier(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simpleverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_simpleverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -25625,10 +25122,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simpleverifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simpleverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_simpleverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -25637,9 +25131,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -25854,10 +25346,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_splitcoins(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_splitcoins(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_splitcoins(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -25869,10 +25358,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_splitcoins(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_splitcoins(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_splitcoins(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -25979,10 +25465,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_structtag(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_structtag(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_structtag(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -25994,10 +25477,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_structtag(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_structtag(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_structtag(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -26027,9 +25507,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26053,9 +25532,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26109,9 +25586,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26136,9 +25611,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_k
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26149,9 +25622,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_ke
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26162,9 +25633,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pa
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26221,9 +25690,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26232,9 +25700,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26243,9 +25709,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26255,9 +25720,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_c
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26268,9 +25731,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26281,9 +25742,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26308,9 +25767,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26319,9 +25777,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26331,9 +25787,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_e
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26359,9 +25813,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_i
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26372,9 +25824,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(&mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26399,9 +25849,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26410,9 +25858,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26421,9 +25868,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26432,9 +25878,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -26520,10 +25965,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_structtag_name(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_structtag_name(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_structtag_name(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26646,10 +26088,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_systempackage(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_systempackage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_systempackage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26661,10 +26100,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_systempackage(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_systempackage(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_systempackage(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -26788,10 +26224,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transaction(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_transaction(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_transaction(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -26803,10 +26236,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transaction(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_transaction(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_transaction(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -27074,10 +26504,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with
     signer: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(signer),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(signer),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
@@ -27692,10 +27122,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transactionkind(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_transactionkind(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_transactionkind(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -27707,10 +27134,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transactionkind(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_transactionkind(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_transactionkind(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -27978,10 +27402,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
     txn: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(txn),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(txn),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(
@@ -28016,11 +27440,9 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(
     vtable: v_table_callback_interface_transaction_signer_fn::VTableJs,
 ) {
-    uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(
-        std::ptr::NonNull::<
-            v_table_callback_interface_transaction_signer_fn::VTableRs,
-        >::into_rust(vtable),
-    );
+    uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(std::ptr::NonNull::<
+        v_table_callback_interface_transaction_signer_fn::VTableRs,
+    >::into_rust(vtable));
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
@@ -28028,10 +27450,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
     transaction: js::VoidPointer,
 ) -> js::Handle {
     uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(transaction),
-        )
-        .into_js()
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(transaction),
+    )
+    .into_js()
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transactionv1(
@@ -28040,10 +27462,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transactionv1(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_transactionv1(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_transactionv1(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28055,10 +27474,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transactionv1(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_transactionv1(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_transactionv1(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -28274,10 +27690,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_transferobjects(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_transferobjects(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_transferobjects(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28289,10 +27702,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transferobjects(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_transferobjects(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_transferobjects(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -28399,10 +27809,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_typetag(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_typetag(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_typetag(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28413,12 +27820,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_typetag(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_typetag(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_typetag(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -28426,9 +27828,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28437,9 +27837,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28448,9 +27846,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28474,9 +27870,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28485,9 +27879,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28496,9 +27888,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28507,9 +27897,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28518,9 +27906,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28529,9 +27915,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(&mut u_status_)
-    };
+    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -28692,10 +28076,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28722,10 +28103,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28737,10 +28115,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28752,10 +28127,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28878,10 +28250,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_upgrade(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_upgrade(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_upgrade(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -28892,12 +28261,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_upgrade(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_upgrade(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
+    unsafe { uniffi_iota_sdk_ffi_fn_free_upgrade(u::VoidPointer::into_rust(ptr), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -28973,10 +28337,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -29037,10 +28398,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -29052,10 +28410,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_upgradepolicy(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_upgradepolicy(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_upgradepolicy(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -29064,9 +28419,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -29075,9 +28429,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -29086,9 +28439,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -29178,10 +28530,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_usersignature(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_usersignature(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_usersignature(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -29193,10 +28542,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_usersignature(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_usersignature(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_usersignature(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -29658,9 +29004,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -30628,10 +29973,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_zklogininputs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_zklogininputs(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_zklogininputs(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -30643,10 +29985,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_zklogininputs(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_zklogininputs(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_zklogininputs(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -30832,10 +30171,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_zkloginproof(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_zkloginproof(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_zkloginproof(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -30847,10 +30183,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_zkloginproof(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_zkloginproof(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_zkloginproof(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -30880,10 +30213,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -30895,10 +30225,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -30910,10 +30237,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31144,10 +30468,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31159,10 +30480,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_zkloginverifier(
 ) {
     let mut u_status_ = u::RustCallStatus::default();
     unsafe {
-        uniffi_iota_sdk_ffi_fn_free_zkloginverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_free_zkloginverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
 }
@@ -31171,9 +30489,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -31182,9 +30499,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
     f_status_: &mut js::RustCallStatus,
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(&mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(&mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -31320,10 +30636,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_address_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31350,10 +30663,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_address_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_address_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_address_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31365,10 +30675,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_address_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_address_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_address_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31380,10 +30687,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31410,10 +30714,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31560,10 +30861,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_base64_decode(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_base64_decode(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_base64_decode(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31575,10 +30873,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_base64_encode(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_base64_encode(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_base64_encode(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31770,10 +31065,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31785,10 +31077,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_bool_from_json(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_bool_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_bool_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -31799,9 +31088,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(i8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(i8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -31811,9 +31099,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_bool_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_bool_to_json(i8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_bool_to_json(i8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -32484,10 +31771,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_command_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_command_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_command_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32514,10 +31798,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_command_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_command_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_command_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32529,10 +31810,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_command_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_command_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_command_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32664,10 +31942,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32679,10 +31954,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_digest_from_json(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_digest_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_digest_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32694,10 +31966,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32709,10 +31978,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_digest_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_digest_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_digest_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32904,10 +32170,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_event_from_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_event_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_event_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32919,10 +32182,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_event_from_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_event_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_event_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32934,10 +32194,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_event_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_event_to_bcs(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_event_to_bcs(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -32949,10 +32206,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_event_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_event_to_json(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_event_to_json(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33519,10 +32773,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_hex_decode(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_hex_decode(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_hex_decode(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33534,10 +32785,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_hex_encode(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_hex_encode(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_hex_encode(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33549,10 +32797,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
 ) -> js::Int16 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33564,10 +32809,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i16_from_json(
 ) -> js::Int16 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i16_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i16_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33578,9 +32820,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(i16::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(i16::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33590,9 +32831,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i16_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i16_to_json(i16::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i16_to_json(i16::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33603,10 +32843,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
 ) -> js::Int32 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33618,10 +32855,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i32_from_json(
 ) -> js::Int32 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i32_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i32_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33632,9 +32866,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(i32::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(i32::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33644,9 +32877,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i32_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i32_to_json(i32::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i32_to_json(i32::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33657,10 +32889,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
 ) -> js::Int64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33672,10 +32901,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i64_from_json(
 ) -> js::Int64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i64_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i64_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33686,9 +32912,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(i64::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(i64::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33698,9 +32923,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i64_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i64_to_json(i64::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i64_to_json(i64::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33711,10 +32935,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33726,10 +32947,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i8_from_json(
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i8_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_i8_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33740,9 +32958,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(i8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(i8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33752,9 +32969,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_i8_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_i8_to_json(i8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_i8_to_json(i8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -33885,10 +33101,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_input_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_input_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_input_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33900,10 +33113,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_input_from_json(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_input_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_input_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33915,10 +33125,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_input_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33930,10 +33137,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_input_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_input_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_input_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33945,10 +33149,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33960,10 +33161,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_from_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33975,10 +33173,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -33990,10 +33185,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34005,10 +33197,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34020,10 +33209,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34035,10 +33221,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34050,10 +33233,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_jwk_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_jwk_to_json(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_jwk_to_json(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34785,10 +33965,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_object_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_object_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_object_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34800,10 +33977,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_object_from_json(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_object_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_object_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -34905,10 +34079,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(
-            u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(u::RustBuffer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35055,10 +34226,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_object_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_object_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_object_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35070,10 +34238,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_object_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_object_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_object_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35085,10 +34250,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35100,10 +34262,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_owner_from_json(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_owner_from_json(
-            u::RustBuffer::into_rust(json),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_owner_from_json(u::RustBuffer::into_rust(json), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35115,10 +34274,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35130,10 +34286,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_owner_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_owner_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_owner_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35325,10 +34478,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35355,10 +34505,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35370,10 +34517,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_publish_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_publish_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_publish_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35865,10 +35009,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_string_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35895,10 +35036,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_string_to_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -35910,10 +35048,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_string_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_string_to_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_string_to_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36645,10 +35780,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36675,10 +35807,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36705,10 +35834,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
 ) -> js::UInt16 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36720,10 +35846,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u16_from_json(
 ) -> js::UInt16 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u16_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u16_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36734,9 +35857,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(u16::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(u16::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36746,9 +35868,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u16_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u16_to_json(u16::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u16_to_json(u16::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36759,10 +35880,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
 ) -> js::UInt32 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36774,10 +35892,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u32_from_json(
 ) -> js::UInt32 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u32_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u32_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36788,9 +35903,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(u32::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(u32::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36800,9 +35914,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u32_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u32_to_json(u32::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u32_to_json(u32::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36813,10 +35926,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
 ) -> js::UInt64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36828,10 +35938,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u64_from_json(
 ) -> js::UInt64 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u64_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u64_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36842,9 +35949,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(u64::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(u64::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36854,9 +35960,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u64_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u64_to_json(u64::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u64_to_json(u64::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36867,10 +35972,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
 ) -> js::UInt8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36882,10 +35984,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u8_from_json(
 ) -> js::UInt8 {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u8_from_json(
-            u::RustBuffer::into_rust(input),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_u8_from_json(u::RustBuffer::into_rust(input), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -36896,9 +35995,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(u8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(u8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -36908,9 +36006,8 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_u8_to_json(
     f_status_: &mut js::RustCallStatus,
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_u8_to_json(u8::into_rust(input), &mut u_status_)
-    };
+    let value_ =
+        unsafe { uniffi_iota_sdk_ffi_fn_func_u8_to_json(u8::into_rust(input), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -37041,10 +36138,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(
-            u::RustBuffer::into_rust(bcs),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(u::RustBuffer::into_rust(bcs), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -37131,10 +36225,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -37146,10 +36237,7 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_upgrade_to_json(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_upgrade_to_json(
-            u::VoidPointer::into_rust(data),
-            &mut u_status_,
-        )
+        uniffi_iota_sdk_ffi_fn_func_upgrade_to_json(u::VoidPointer::into_rust(data), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -37840,9 +36928,8 @@ pub fn ubrn_ffi_iota_sdk_ffi_rust_future_complete_u8(
     f_status_: &mut js::RustCallStatus,
 ) -> js::UInt8 {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        ffi_iota_sdk_ffi_rust_future_complete_u8(u64::into_rust(handle), &mut u_status_)
-    };
+    let value_ =
+        unsafe { ffi_iota_sdk_ffi_rust_future_complete_u8(u64::into_rust(handle), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -37872,9 +36959,8 @@ pub fn ubrn_ffi_iota_sdk_ffi_rust_future_complete_i8(
     f_status_: &mut js::RustCallStatus,
 ) -> js::Int8 {
     let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        ffi_iota_sdk_ffi_rust_future_complete_i8(u64::into_rust(handle), &mut u_status_)
-    };
+    let value_ =
+        unsafe { ffi_iota_sdk_ffi_rust_future_complete_i8(u64::into_rust(handle), &mut u_status_) };
     f_status_.copy_from(u_status_);
     value_.into_js()
 }
@@ -38161,10 +37247,7 @@ pub fn ubrn_ffi_iota_sdk_ffi_rust_future_complete_pointer(
 ) -> js::VoidPointer {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        ffi_iota_sdk_ffi_rust_future_complete_pointer(
-            u64::into_rust(handle),
-            &mut u_status_,
-        )
+        ffi_iota_sdk_ffi_rust_future_complete_pointer(u64::into_rust(handle), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -38196,10 +37279,7 @@ pub fn ubrn_ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(
 ) -> js::ForeignBytes {
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
-        ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(
-            u64::into_rust(handle),
-            &mut u_status_,
-        )
+        ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(u64::into_rust(handle), &mut u_status_)
     };
     f_status_.copy_from(u_status_);
     value_.into_js()
@@ -38230,12 +37310,7 @@ pub fn ubrn_ffi_iota_sdk_ffi_rust_future_complete_void(
     f_status_: &mut js::RustCallStatus,
 ) {
     let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        ffi_iota_sdk_ffi_rust_future_complete_void(
-            u64::into_rust(handle),
-            &mut u_status_,
-        )
-    };
+    unsafe { ffi_iota_sdk_ffi_rust_future_complete_void(u64::into_rust(handle), &mut u_status_) };
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
@@ -38287,35 +37362,43 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_argument_to_json() -> js::U
     uniffi_iota_sdk_ffi_checksum_func_argument_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -38391,11 +37474,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_bool_to_json() -> js::UInt1
     uniffi_iota_sdk_ffi_checksum_func_bool_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -38455,11 +37540,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_changed_object_to_json() ->
     uniffi_iota_sdk_ffi_checksum_func_changed_object_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -38503,19 +37590,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_json(
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -38551,11 +37642,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json() -> js::
     uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -38563,7 +37656,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_b
     uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -38583,40 +37677,44 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_command_to_json() -> js::UI
     uniffi_iota_sdk_ffi_checksum_func_command_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_json().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_digest_from_bcs() -> js::UInt16 {
@@ -38731,52 +37829,63 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json() 
     uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39096,19 +38205,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json() -> js
     uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39136,35 +38249,43 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json()
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39288,11 +38409,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_owner_to_json() -> js::UInt
     uniffi_iota_sdk_ffi_checksum_func_owner_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39304,11 +38427,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_js
     uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39320,19 +38445,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_js
     uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39352,19 +38481,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_publish_to_json() -> js::UI
     uniffi_iota_sdk_ffi_checksum_func_publish_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39372,7 +38505,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_b
     uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39404,7 +38538,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_b
     uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39544,11 +38679,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_json
     uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39556,7 +38693,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_b
     uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39576,11 +38714,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_json(
     uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39588,7 +38728,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_b
     uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39768,11 +38909,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_u8_to_json() -> js::UInt16 
     uniffi_iota_sdk_ffi_checksum_func_u8_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39784,19 +38927,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_js
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39848,20 +38995,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_user_signature_to_json() ->
     uniffi_iota_sdk_ffi_checksum_func_user_signature_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39873,19 +39023,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_js
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39897,24 +39051,24 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json
     uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs() -> js::UInt16 {
@@ -39949,11 +39103,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json(
     uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -39961,7 +39117,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_b
     uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -39997,19 +39154,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json() ->
     uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json().into_js()
 }
 #[wasm_bindgen]
@@ -40033,7 +39194,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_resul
     uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -40041,16 +39203,17 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme
     uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key().into_js()
 }
 #[wasm_bindgen]
@@ -40062,7 +39225,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_byte
     uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -40082,12 +39246,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_dige
     uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge().into_js()
 }
 #[wasm_bindgen]
@@ -40095,16 +39260,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch() -> js
     uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version().into_js()
 }
 #[wasm_bindgen]
@@ -40120,122 +39287,135 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packag
     uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_protocol_version() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_protocol_version() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_protocol_version().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_charge() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_rebate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_rebate() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_rebate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_system_packages() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv3_system_packages() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv3_system_packages().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_adjust_rewards_by_score() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_adjust_rewards_by_score()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_adjust_rewards_by_score().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_protocol_version() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_protocol_version() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_protocol_version().into_js()
 }
 #[wasm_bindgen]
@@ -40243,42 +39423,48 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_scores() ->
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_scores().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest().into_js()
 }
 #[wasm_bindgen]
@@ -40286,7 +39472,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest(
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data().into_js()
 }
 #[wasm_bindgen]
@@ -40294,142 +39481,168 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch()
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade().into_js()
 }
 #[wasm_bindgen]
@@ -40445,40 +39658,46 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_coin_id() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_coin_id().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions()
         .into_js()
 }
@@ -40495,7 +39714,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() -> js::
     uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -40503,12 +39723,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme(
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction().into_js()
 }
 #[wasm_bindgen]
@@ -40532,19 +39753,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sig
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address().into_js()
 }
 #[wasm_bindgen]
@@ -40556,7 +39781,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes
     uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -40564,7 +39790,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes
     uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple().into_js()
 }
 #[wasm_bindgen]
@@ -40572,7 +39799,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_us
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -40588,19 +39816,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verif
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations().into_js()
 }
 #[wasm_bindgen]
@@ -40608,13 +39840,14 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() ->
     uniffi_iota_sdk_ffi_checksum_method_faucetclient_request().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() -> js::UInt16 {
@@ -40649,7 +39882,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_genesistransaction_object
     uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators().into_js()
 }
 #[wasm_bindgen]
@@ -40669,7 +39903,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector().into_js()
 }
 #[wasm_bindgen]
@@ -40685,7 +39920,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx(
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind().into_js()
 }
 #[wasm_bindgen]
@@ -40693,11 +39929,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fie
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field().into_js()
 }
 #[wasm_bindgen]
@@ -40705,13 +39943,14 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() -> 
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_checkpoints() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_checkpoints()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_checkpoints().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() -> js::UInt16 {
@@ -40726,59 +39965,67 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins()
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module().into_js()
 }
 #[wasm_bindgen]
@@ -40798,11 +40045,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() -
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions().into_js()
 }
 #[wasm_bindgen]
@@ -40810,11 +40059,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() 
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price().into_js()
 }
 #[wasm_bindgen]
@@ -40822,7 +40073,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query()
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config().into_js()
 }
 #[wasm_bindgen]
@@ -40830,7 +40082,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspect
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server().into_js()
 }
 #[wasm_bindgen]
@@ -40838,17 +40091,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_suppl
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_seq_num() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_seq_num()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_seq_num()
         .into_js()
 }
@@ -40857,12 +40111,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects().into_js()
 }
 #[wasm_bindgen]
@@ -40870,12 +40125,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects().into_js()
 }
 #[wasm_bindgen]
@@ -40883,9 +40139,9 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() -> js::UInt16 {
@@ -40928,7 +40184,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1()
     uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish().into_js()
 }
 #[wasm_bindgen]
@@ -40936,16 +40193,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_addre
     uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args().into_js()
 }
 #[wasm_bindgen]
@@ -40985,7 +40244,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movefunction_return_type(
     uniffi_iota_sdk_ffi_checksum_method_movefunction_return_type().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters().into_js()
 }
 #[wasm_bindgen]
@@ -41005,7 +40265,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackage_modules() -> 
     uniffi_iota_sdk_ffi_checksum_method_movepackage_modules().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table().into_js()
 }
 #[wasm_bindgen]
@@ -41013,7 +40274,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackage_version() -> 
     uniffi_iota_sdk_ffi_checksum_method_movepackage_version().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies().into_js()
 }
 #[wasm_bindgen]
@@ -41033,17 +40295,19 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json()
     uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_committee() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_committee()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_committee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish() -> js::UInt16 {
@@ -41054,15 +40318,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifi
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address().into_js()
 }
 #[wasm_bindgen]
@@ -41090,111 +40357,128 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight() -
     uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin().into_js()
 }
 #[wasm_bindgen]
@@ -41202,12 +40486,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify()
     uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier().into_js()
 }
 #[wasm_bindgen]
@@ -41239,9 +40524,9 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_name_parent() -> js::UInt
     uniffi_iota_sdk_ffi_checksum_method_name_parent().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_nameregistration_id() -> js::UInt16 {
@@ -41324,7 +40609,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct() ->
     uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id().into_js()
 }
 #[wasm_bindgen]
@@ -41336,7 +40622,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() -> js
     uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string().into_js()
 }
 #[wasm_bindgen]
@@ -41404,28 +40691,33 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() -> js::
     uniffi_iota_sdk_ffi_checksum_method_owner_is_shared().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address().into_js()
 }
 #[wasm_bindgen]
@@ -41437,23 +40729,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() 
     uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs().into_js()
 }
 #[wasm_bindgen]
@@ -41465,7 +40762,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_publish_modules() -> js::
     uniffi_iota_sdk_ffi_checksum_method_publish_modules().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -41473,20 +40771,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_schem
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -41498,23 +40799,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pe
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address().into_js()
 }
 #[wasm_bindgen]
@@ -41526,7 +40832,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_byt
     uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -41534,39 +40841,48 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_byt
     uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -41574,20 +40890,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_schem
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -41599,23 +40918,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pe
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address().into_js()
 }
 #[wasm_bindgen]
@@ -41627,7 +40951,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_byt
     uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -41635,35 +40960,43 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_byt
     uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user().into_js()
 }
 #[wasm_bindgen]
@@ -41675,11 +41008,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() ->
     uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction().into_js()
 }
 #[wasm_bindgen]
@@ -41711,11 +41046,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_k
     uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key_opt().into_js()
 }
 #[wasm_bindgen]
@@ -41723,7 +41060,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_s
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_sig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_sig_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_sig_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_sig_opt().into_js()
 }
 #[wasm_bindgen]
@@ -41731,11 +41069,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_ed2551
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256k1() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256r1() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_is_secp256r1().into_js()
 }
 #[wasm_bindgen]
@@ -41743,35 +41083,43 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_scheme() 
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_scheme().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_pub_key_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256k1_sig_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_pub_key_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig_opt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig_opt().into_js()
 }
 #[wasm_bindgen]
@@ -41783,7 +41131,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() -
     uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key().into_js()
 }
 #[wasm_bindgen]
@@ -41831,7 +41180,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_structtag_name() -> js::U
     uniffi_iota_sdk_ffi_checksum_method_structtag_name().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string().into_js()
 }
 #[wasm_bindgen]
@@ -41879,7 +41229,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transaction_signing_diges
     uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex().into_js()
 }
 #[wasm_bindgen]
@@ -41887,12 +41238,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() -
     uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration().into_js()
 }
 #[wasm_bindgen]
@@ -41904,28 +41256,33 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() 
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call().into_js()
 }
 #[wasm_bindgen]
@@ -41933,19 +41290,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publis
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins().into_js()
 }
 #[wasm_bindgen]
@@ -41957,7 +41318,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake(
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects().into_js()
 }
 #[wasm_bindgen]
@@ -41969,7 +41331,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrad
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client().into_js()
 }
 #[wasm_bindgen]
@@ -42021,11 +41384,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender() ->
     uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex().into_js()
 }
 #[wasm_bindgen]
@@ -42053,7 +41418,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_ta
     uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt().into_js()
 }
 #[wasm_bindgen]
@@ -42125,31 +41491,33 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() -> 
     uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() -> js::UInt16 {
@@ -42160,17 +41528,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_o
     uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator().into_js()
 }
 #[wasm_bindgen]
@@ -42178,18 +41547,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig
     uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() -> js::UInt16 {
@@ -42204,88 +41573,95 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() 
     uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature().into_js()
 }
 #[wasm_bindgen]
@@ -42301,11 +41677,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inpu
     uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature().into_js()
 }
 #[wasm_bindgen]
@@ -42321,7 +41699,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() -> js
     uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details().into_js()
 }
 #[wasm_bindgen]
@@ -42333,7 +41712,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_point
     uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier().into_js()
 }
 #[wasm_bindgen]
@@ -42349,23 +41729,24 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c() -> js::U
     uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() -> js::UInt16 {
@@ -42420,7 +41801,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_input()
     uniffi_iota_sdk_ffi_checksum_constructor_argument_new_input().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result().into_js()
 }
 #[wasm_bindgen]
@@ -42428,7 +41810,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result(
     uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate().into_js()
 }
 #[wasm_bindgen]
@@ -42436,48 +41819,58 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_n
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new().into_js()
 }
 #[wasm_bindgen]
@@ -42505,7 +41898,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_ne
     uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new().into_js()
 }
 #[wasm_bindgen]
@@ -42521,11 +41915,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object
     uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_make_move_vector() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_make_move_vector()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_make_move_vector().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_merge_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_merge_coins() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_merge_coins().into_js()
 }
 #[wasm_bindgen]
@@ -42537,11 +41933,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_publish(
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_publish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_split_coins() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_split_coins() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_split_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_transfer_objects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_transfer_objects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_transfer_objects().into_js()
 }
 #[wasm_bindgen]
@@ -42549,11 +41947,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_command_new_upgrade(
     uniffi_iota_sdk_ffi_checksum_constructor_command_new_upgrade().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions()
         .into_js()
 }
@@ -42570,28 +41970,33 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() ->
     uniffi_iota_sdk_ffi_checksum_constructor_digest_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate().into_js()
 }
 #[wasm_bindgen]
@@ -42599,27 +42004,33 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_ne
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_str() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_generate() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate().into_js()
 }
 #[wasm_bindgen]
@@ -42627,88 +42038,101 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new(
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1().into_js()
 }
 #[wasm_bindgen]
@@ -42716,15 +42140,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() -
     uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet().into_js()
 }
 #[wasm_bindgen]
@@ -42740,19 +42167,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new() 
     uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet().into_js()
 }
 #[wasm_bindgen]
@@ -42760,7 +42191,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() -> 
     uniffi_iota_sdk_ffi_checksum_constructor_identifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned().into_js()
 }
 #[wasm_bindgen]
@@ -42788,7 +42220,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new() -> js::
     uniffi_iota_sdk_ffi_checksum_constructor_intent_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app().into_js()
 }
 #[wasm_bindgen]
@@ -42796,11 +42229,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app(
     uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message().into_js()
 }
 #[wasm_bindgen]
@@ -42816,7 +42251,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address() ->
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_address().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -42824,7 +42260,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -42840,7 +42277,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest() -> 
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58().into_js()
 }
 #[wasm_bindgen]
@@ -42848,7 +42286,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec()
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58().into_js()
 }
 #[wasm_bindgen]
@@ -42912,20 +42351,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() -> 
     uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared().into_js()
 }
 #[wasm_bindgen]
@@ -42937,11 +42379,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() ->
     uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json().into_js()
 }
 #[wasm_bindgen]
@@ -43005,18 +42449,19 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec()
     uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() -> js::UInt16 {
@@ -43043,11 +42488,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_object_new() -> js::
     uniffi_iota_sdk_ffi_checksum_constructor_object_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct().into_js()
 }
 #[wasm_bindgen]
@@ -43103,15 +42550,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -43131,7 +42581,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest()
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58().into_js()
 }
 #[wasm_bindgen]
@@ -43139,9 +42590,9 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_v
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas() -> js::UInt16 {
@@ -43156,7 +42607,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_i
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -43172,7 +42624,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receivin
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -43180,7 +42633,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared()
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -43188,7 +42642,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_m
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex().into_js()
 }
 #[wasm_bindgen]
@@ -43256,7 +42711,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new(
     uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new().into_js()
 }
 #[wasm_bindgen]
@@ -43264,57 +42720,68 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_publish_new() -> js:
     uniffi_iota_sdk_ffi_checksum_constructor_publish_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate().into_js()
 }
 #[wasm_bindgen]
@@ -43322,69 +42789,83 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_ne
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_bytes()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_str() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_str()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_str().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate().into_js()
 }
 #[wasm_bindgen]
@@ -43392,23 +42873,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_ne
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes().into_js()
 }
 #[wasm_bindgen]
@@ -43416,7 +42902,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_d
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519().into_js()
 }
 #[wasm_bindgen]
@@ -43424,23 +42911,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_p
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1().into_js()
 }
 #[wasm_bindgen]
@@ -43448,11 +42940,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new()
     uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem().into_js()
 }
 #[wasm_bindgen]
@@ -43464,7 +42958,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() -> j
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string().into_js()
 }
 #[wasm_bindgen]
@@ -43480,11 +42975,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin()
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_manager() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_manager()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_manager().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_metadata() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_metadata()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_metadata().into_js()
 }
 #[wasm_bindgen]
@@ -43492,32 +42989,34 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config_setting() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config_setting()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config_setting().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() -> js::UInt16 {
@@ -43532,20 +43031,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() -
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap().into_js()
 }
 #[wasm_bindgen]
@@ -43553,7 +43055,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name()
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota().into_js()
 }
 #[wasm_bindgen]
@@ -43561,25 +43064,28 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_string
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_string().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_time_lock() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_time_lock() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_time_lock().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap().into_js()
 }
 #[wasm_bindgen]
@@ -43587,19 +43093,23 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() 
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated().into_js()
 }
 #[wasm_bindgen]
@@ -43607,7 +43117,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() 
     uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64().into_js()
 }
 #[wasm_bindgen]
@@ -43619,7 +43130,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_n
     uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1().into_js()
 }
 #[wasm_bindgen]
@@ -43627,52 +43139,61 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_ne
     uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1().into_js()
 }
 #[wasm_bindgen]
@@ -43680,7 +43201,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_ne
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64().into_js()
 }
 #[wasm_bindgen]
@@ -43744,7 +43266,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additi
     uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible().into_js()
 }
 #[wasm_bindgen]
@@ -43752,58 +43275,65 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_on
     uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
         .into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
-        .into_js()
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() -> js::UInt16 {
@@ -43814,7 +43344,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_ne
     uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new().into_js()
 }
 #[wasm_bindgen]
@@ -43826,15 +43357,18 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new() -
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() -> js::UInt16
+{
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() -> js::UInt16 {
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet()
+-> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet().into_js()
 }
 #[wasm_bindgen]
@@ -43862,15 +43396,13 @@ mod foreign_future__free {
     }
     pub(super) type FnSig = extern "C" fn(handle: u64);
     extern "C" fn implementation(handle: u64) {
-        CALLBACK
-            .with(|cell_| {
-                cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
-            });
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
+        });
     }
 }
 mod foreign_future {
-    use super::*;
-    use super::foreign_future__free as method_free;
+    use super::{foreign_future__free as method_free, *};
     #[wasm_bindgen]
     extern "C" {
         pub type VTableJs;
@@ -44126,16 +43658,16 @@ mod v_table_callback_interface_transaction_signer_fn__free {
     }
     pub(super) type FnSig = extern "C" fn(handle: u64);
     extern "C" fn implementation(handle: u64) {
-        CALLBACK
-            .with(|cell_| {
-                cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
-            });
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
+        });
     }
 }
 mod v_table_callback_interface_transaction_signer_fn {
-    use super::*;
-    use super::callback_interface_transaction_signer_fn_method0 as method_sign;
-    use super::v_table_callback_interface_transaction_signer_fn__free as method_uniffi_free;
+    use super::{
+        callback_interface_transaction_signer_fn_method0 as method_sign,
+        v_table_callback_interface_transaction_signer_fn__free as method_uniffi_free, *,
+    };
     #[wasm_bindgen]
     extern "C" {
         pub type VTableJs;
@@ -44209,23 +43741,21 @@ mod v_table_callback_interface_graph_ql_request_inspector_fn__free {
     }
     pub(super) type FnSig = extern "C" fn(handle: u64);
     extern "C" fn implementation(handle: u64) {
-        CALLBACK
-            .with(|cell_| {
-                cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
-            });
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
+        });
     }
 }
 mod v_table_callback_interface_graph_ql_request_inspector_fn {
-    use super::*;
-    use super::callback_interface_graph_ql_request_inspector_fn_method0 as method_on_request_complete;
-    use super::v_table_callback_interface_graph_ql_request_inspector_fn__free as method_uniffi_free;
+    use super::{
+        callback_interface_graph_ql_request_inspector_fn_method0 as method_on_request_complete,
+        v_table_callback_interface_graph_ql_request_inspector_fn__free as method_uniffi_free, *,
+    };
     #[wasm_bindgen]
     extern "C" {
         pub type VTableJs;
         #[wasm_bindgen(method, getter, js_name = onRequestComplete)]
-        fn on_request_complete(
-            this: &VTableJs,
-        ) -> method_on_request_complete::JsCallbackFn;
+        fn on_request_complete(this: &VTableJs) -> method_on_request_complete::JsCallbackFn;
         #[wasm_bindgen(method, getter, js_name = uniffiFree)]
         fn uniffi_free(this: &VTableJs) -> method_uniffi_free::JsCallbackFn;
     }
@@ -44415,17 +43945,14 @@ mod foreign_future_complete_pointer {
             callback_data: js::UInt64,
             result: foreign_future_struct_pointer::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_pointer::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_pointer::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_pointer::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44452,17 +43979,14 @@ mod foreign_future_complete_i64 {
             callback_data: js::UInt64,
             result: foreign_future_struct_i64::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_i64::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_i64::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i64::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44489,17 +44013,14 @@ mod foreign_future_complete_rust_buffer {
             callback_data: js::UInt64,
             result: foreign_future_struct_rust_buffer::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_rust_buffer::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_rust_buffer::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_rust_buffer::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44541,14 +44062,11 @@ mod callback_interface_graph_ql_request_inspector_fn_method0 {
         _rs_return: &mut (),
         rs_call_status_: &mut u::RustCallStatus,
     ) {
-        let uniffi_result_ = CALLBACK
-            .with(|cell_| {
-                cell_
-                    .with_value(|callback_| {
-                        callback_
-                            .call(callback_, uniffi_handle.into_js(), result.into_js())
-                    })
-            });
+        let uniffi_result_ = CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| {
+                callback_.call(callback_, uniffi_handle.into_js(), result.into_js())
+            })
+        });
         uniffi_result_.copy_into_status(rs_call_status_);
     }
 }
@@ -44572,17 +44090,14 @@ mod foreign_future_complete_u32 {
             callback_data: js::UInt64,
             result: foreign_future_struct_u32::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_u32::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_u32::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u32::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44609,17 +44124,14 @@ mod foreign_future_complete_u16 {
             callback_data: js::UInt64,
             result: foreign_future_struct_u16::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_u16::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_u16::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u16::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44646,17 +44158,14 @@ mod foreign_future_complete_f32 {
             callback_data: js::UInt64,
             result: foreign_future_struct_f32::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_f32::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_f32::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_f32::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44683,17 +44192,14 @@ mod foreign_future_complete_i32 {
             callback_data: js::UInt64,
             result: foreign_future_struct_i32::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_i32::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_i32::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i32::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44720,17 +44226,14 @@ mod foreign_future_complete_f64 {
             callback_data: js::UInt64,
             result: foreign_future_struct_f64::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_f64::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_f64::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_f64::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44757,17 +44260,14 @@ mod foreign_future_complete_i8 {
             callback_data: js::UInt64,
             result: foreign_future_struct_i8::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_i8::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_i8::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i8::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44799,13 +44299,11 @@ mod rust_future_continuation_callback {
     }
     pub(super) type FnSig = extern "C" fn(data: u64, poll_result: i8);
     extern "C" fn implementation(data: u64, poll_result: i8) {
-        CALLBACK
-            .with(|cell_| {
-                cell_
-                    .with_value(|callback_| {
-                        callback_.call(callback_, data.into_js(), poll_result.into_js())
-                    })
-            });
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| {
+                callback_.call(callback_, data.into_js(), poll_result.into_js())
+            })
+        });
     }
 }
 mod foreign_future_complete_void {
@@ -44828,17 +44326,14 @@ mod foreign_future_complete_void {
             callback_data: js::UInt64,
             result: foreign_future_struct_void::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_void::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_void::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_void::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44865,17 +44360,14 @@ mod foreign_future_complete_u8 {
             callback_data: js::UInt64,
             result: foreign_future_struct_u8::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_u8::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_u8::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u8::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44902,17 +44394,14 @@ mod foreign_future_complete_u64 {
             callback_data: js::UInt64,
             result: foreign_future_struct_u64::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_u64::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_u64::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u64::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44939,17 +44428,14 @@ mod foreign_future_complete_i16 {
             callback_data: js::UInt64,
             result: foreign_future_struct_i16::VTableJs,
         ) {
-            (self
-                .callback)(
+            (self.callback)(
                 u64::into_rust(callback_data),
                 foreign_future_struct_i16::VTableRs::into_rust(result),
             )
         }
     }
-    pub(super) type FnSig = extern "C" fn(
-        callback_data: u64,
-        result: foreign_future_struct_i16::VTableRs,
-    );
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i16::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -44995,20 +44481,17 @@ mod callback_interface_transaction_signer_fn_method0 {
         uniffi_callback_data: u64,
         rs_return_: &mut foreign_future::VTableRs,
     ) {
-        let uniffi_result_ = CALLBACK
-            .with(|cell_| {
-                cell_
-                    .with_value(|callback_| {
-                        callback_
-                            .call(
-                                callback_,
-                                uniffi_handle.into_js(),
-                                transaction.into_js(),
-                                uniffi_future_callback.into_js(),
-                                uniffi_callback_data.into_js(),
-                            )
-                    })
-            });
+        let uniffi_result_ = CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| {
+                callback_.call(
+                    callback_,
+                    uniffi_handle.into_js(),
+                    transaction.into_js(),
+                    uniffi_future_callback.into_js(),
+                    uniffi_callback_data.into_js(),
+                )
+            })
+        });
         uniffi_result_.copy_into_return(rs_return_);
     }
 }
