@@ -61,13 +61,22 @@ wasm-check: ## Check that SDK crates compile to WASM
 .PHONY: wasm
 wasm: ## Build WASM bindings for browsers
 	cd bindings/wasm && pnpm install && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
+	@# Compile the FFI implementation crate (iota-sdk-ffi) directly to wasm32.
+	@# ubrn build web compiles iota-sdk-wasm (which imports iota-sdk-ffi symbols as
+	@# "env" at runtime) but only builds iota-sdk-ffi as an rlib dependency – the
+	@# cdylib WASM artefact is not produced as a side-effect.  We compile it here
+	@# explicitly so we have a standalone iota_sdk_ffi.wasm to feed into wasm-bindgen.
+	cargo build \
+		--target wasm32-unknown-unknown \
+		--profile wasm-release \
+		--manifest-path crates/iota-sdk-ffi/Cargo.toml
 	@# Process the FFI implementation WASM through wasm-bindgen (--target web) so
 	@# that its __wbindgen_placeholder__ imports are replaced with a generated JS
 	@# glue module.  The resulting iota_sdk_ffi_bg.wasm + iota_sdk_ffi.js pair is
 	@# what index.web.ts loads first; its exports satisfy index_bg.wasm's 'env'
 	@# imports at instantiation time.
 	wasm-bindgen --target web --no-typescript \
-		target/wasm32-unknown-unknown/wasm-release/deps/iota_sdk_ffi.wasm \
+		target/wasm32-unknown-unknown/wasm-release/iota_sdk_ffi.wasm \
 		--out-dir bindings/wasm/src/ts/wasm-bindgen-ffi/
 	@# Optionally run wasm-opt on the wasm-bindgen output for size reduction.
 	@if command -v wasm-opt >/dev/null 2>&1; then \
