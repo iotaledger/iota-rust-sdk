@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::types::SignatureScheme;
+
 use crate::{
     error::{Result, SdkFfiError},
     types::{
