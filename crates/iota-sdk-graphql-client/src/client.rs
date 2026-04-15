@@ -35,7 +35,9 @@ fn start_timer() -> Option<std::time::Instant> {
 
 /// Returns the elapsed time since `start`, or zero if timing is unavailable.
 fn elapsed(start: Option<std::time::Instant>) -> std::time::Duration {
-    start.map(|s| s.elapsed()).unwrap_or(std::time::Duration::ZERO)
+    start
+        .map(|s| s.elapsed())
+        .unwrap_or(std::time::Duration::ZERO)
 }
 
 /// Helper function to convert a GraphQL response to a Result.

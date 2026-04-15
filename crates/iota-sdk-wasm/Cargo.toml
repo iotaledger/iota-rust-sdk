@@ -1,3 +1,14 @@
+[package]
+edition = "2018"
+name = "iota-sdk-wasm"
+version = "0.0.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+
 [dependencies]
 wasm-bindgen = "*"
 
@@ -8,23 +19,12 @@ path = "../iota-sdk-ffi/../../crates/iota-sdk-ffi"
 features = ["wasm32"]
 version = "=0.29.3-1"
 
-[features]
-default = []
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[package]
-edition = "2018"
-name = "iota-sdk-wasm"
-version = "0.0.0"
-
-[profile.release]
-opt-level = "s"
-
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 console_error_panic_hook = "0.1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 features = ["wasm_js"]
 version = "0.3"
+
+[profile.release]
+opt-level = "s"
