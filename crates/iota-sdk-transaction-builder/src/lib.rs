@@ -333,7 +333,7 @@ mod tests {
 
     /// Generate a random private key and its corresponding address
     fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
-        let pk = Ed25519PrivateKey::generate(rand::thread_rng());
+        let pk = Ed25519PrivateKey::generate(rand_core::OsRng);
         let address = pk.public_key().derive_address();
         (address, pk)
     }
@@ -408,7 +408,7 @@ mod tests {
             coin_digest.parse().unwrap(),
         );
 
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::generate(rand_core::OsRng);
 
         let result = tx.clone().finish();
         assert!(result.is_err());
@@ -435,7 +435,7 @@ mod tests {
         // get the object information from the client
         let client = Client::new_localnet();
         let coin = coins.first().unwrap().id;
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::generate(rand_core::OsRng);
         tx.transfer_objects(recipient, [coin]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
@@ -471,7 +471,7 @@ mod tests {
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
         tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::generate(rand_core::OsRng);
         tx.transfer_objects(recipient, [assigned("coin")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;

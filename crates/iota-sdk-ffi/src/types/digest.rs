@@ -46,7 +46,7 @@ impl Digest {
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand_core::OsRng;
         Self(iota_sdk::types::Digest::generate(&mut rng))
     }
 

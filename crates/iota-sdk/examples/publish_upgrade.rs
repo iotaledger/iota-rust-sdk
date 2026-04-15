@@ -30,7 +30,7 @@ use iota_sdk::{
     transaction_builder::{TransactionBuilder, assigned},
     types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy},
 };
-use rand::rngs::OsRng;
+use rand_core::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {

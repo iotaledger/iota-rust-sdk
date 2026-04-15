@@ -152,7 +152,7 @@ mod tests {
             DEVNET_HOST => FaucetClient::new_devnet(),
             _ => return,
         };
-        let key = Ed25519PublicKey::generate(rand::thread_rng());
+        let key = Ed25519PublicKey::generate(rand_core::OsRng);
         let address = key.derive_address();
         faucet.request_and_wait(address).await.unwrap();
 

@@ -12,7 +12,7 @@ use iota_sdk::{
     },
     types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
 };
-use rand::rngs::OsRng;
+use rand_core::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {

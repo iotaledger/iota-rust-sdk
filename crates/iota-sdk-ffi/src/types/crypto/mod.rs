@@ -32,7 +32,7 @@ macro_rules! impl_crypto_object {
 
             #[uniffi::constructor]
             pub fn generate() -> Self {
-                let mut rng = rand::thread_rng();
+                let mut rng = rand_core::OsRng;
                 Self(iota_sdk::types::$t::generate(&mut rng))
             }
 

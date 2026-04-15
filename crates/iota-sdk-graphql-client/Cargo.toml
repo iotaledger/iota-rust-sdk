@@ -35,7 +35,7 @@ getrandom = { version = "0.2", features = ["js"] }
 
 [dev-dependencies]
 eyre.workspace = true
-rand.workspace = true
+rand_core.workspace = true
 
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 

@@ -5,8 +5,6 @@ use iota_sdk::{
     crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
     types::SignatureScheme,
 };
-use rand::rngs::OsRng;
-
 use crate::{
     error::{Result, SdkFfiError},
     types::{
@@ -88,7 +86,7 @@ impl Secp256r1PrivateKey {
     #[uniffi::constructor]
     pub fn generate() -> Self {
         Self(iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::generate(
-            OsRng,
+            rand_core::OsRng,
         ))
     }
 

@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::types::SignatureScheme;
-use rand::rngs::OsRng;
-
 use crate::{
     error::{Result, SdkFfiError},
     types::{
@@ -42,7 +40,7 @@ impl Bls12381PrivateKey {
     #[uniffi::constructor]
     pub fn generate() -> Self {
         Self(iota_sdk::crypto::bls12381::Bls12381PrivateKey::generate(
-            OsRng,
+            rand_core::OsRng,
         ))
     }
 

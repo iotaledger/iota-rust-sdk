@@ -73,7 +73,7 @@ bcs.workspace = true
 cynic.workspace = true
 eyre.workspace = true
 hex.workspace = true
-rand.workspace = true
+rand_core.workspace = true
 reqwest = { workspace = true, default-features = false, features = ["rustls-tls", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["full"] }
