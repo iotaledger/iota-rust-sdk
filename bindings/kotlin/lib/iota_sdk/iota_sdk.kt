@@ -661,8 +661,27 @@ internal open class UniffiForeignFutureStructVoid(
 internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
     fun callback(`callbackData`: Long,`result`: UniffiForeignFutureStructVoid.UniffiByValue,)
 }
+internal interface UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0 : com.sun.jna.Callback {
+    fun callback(`uniffiHandle`: Long,`result`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
+}
 internal interface UniffiCallbackInterfaceTransactionSignerFnMethod0 : com.sun.jna.Callback {
     fun callback(`uniffiHandle`: Long,`transaction`: Pointer,`uniffiFutureCallback`: UniffiForeignFutureCompleteRustBuffer,`uniffiCallbackData`: Long,`uniffiOutReturn`: UniffiForeignFuture,)
+}
+@Structure.FieldOrder("onRequestComplete", "uniffiFree")
+internal open class UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn(
+    @JvmField internal var `onRequestComplete`: UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0? = null,
+    @JvmField internal var `uniffiFree`: UniffiCallbackInterfaceFree? = null,
+) : Structure() {
+    class UniffiByValue(
+        `onRequestComplete`: UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0? = null,
+        `uniffiFree`: UniffiCallbackInterfaceFree? = null,
+    ): UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn(`onRequestComplete`,`uniffiFree`,), Structure.ByValue
+
+   internal fun uniffiSetValue(other: UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn) {
+        `onRequestComplete` = other.`onRequestComplete`
+        `uniffiFree` = other.`uniffiFree`
+    }
+
 }
 @Structure.FieldOrder("sign", "uniffiFree")
 internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
@@ -680,6 +699,15 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
     }
 
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5180,6 +5208,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins(
@@ -5254,6 +5284,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply(
@@ -5277,6 +5309,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
 ): Short
@@ -6750,6 +6784,7 @@ internal interface UniffiLib : Library {
             val lib = loadIndirect<UniffiLib>(componentName)
             // No need to check the contract version and checksums, since 
             // we already did that with `IntegrityCheckingUniffiLib` above.
+            uniffiCallbackInterfaceGraphQlRequestInspectorFn.register(lib)
             uniffiCallbackInterfaceTransactionSignerFn.register(lib)
             // Loading of library with integrity check done.
             lib
@@ -7570,6 +7605,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(`ptr`: Pointer,`diges
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(`ptr`: Pointer,`paginationFilter`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(`ptr`: Pointer,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(`ptr`: Pointer,`coinType`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,`coinType`: RustBuffer.ByValue,
@@ -7644,6 +7681,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(`ptr`: Pointer,`query`
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(`ptr`: Pointer,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(`ptr`: Pointer,`inspector`: Pointer,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(`ptr`: Pointer,`server`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_supply(`ptr`: Pointer,`coinType`: RustBuffer.ByValue,
@@ -7668,6 +7707,14 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(`ptr`: Pointer,`digest`: Pointer,`waitFor`: RustBuffer.ByValue,`timeout`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(`vtable`: UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn,
+): Unit
+fun uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(`ptr`: Pointer,`result`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12429,6 +12476,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() != 18004.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12540,6 +12590,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() != 2614.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 63707.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12574,6 +12627,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 10761.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() != 58807.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -28682,6 +28738,11 @@ public interface GraphQlClientInterface {
     suspend fun `checkpoints`(`paginationFilter`: PaginationFilter? = null): CheckpointSummaryPage
     
     /**
+     * Remove any previously set request inspector.
+     */
+    suspend fun `clearInspector`()
+    
+    /**
      * Get the coin metadata for the coin type.
      */
     suspend fun `coinMetadata`(`coinType`: kotlin.String): CoinMetadata?
@@ -28999,6 +29060,12 @@ public interface GraphQlClientInterface {
     suspend fun `serviceConfig`(): ServiceConfig
     
     /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+    suspend fun `setInspector`(`inspector`: GraphQlRequestInspectorFn)
+    
+    /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
@@ -29286,6 +29353,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { FfiConverterTypeCheckpointSummaryPage.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Remove any previously set request inspector.
+     */
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `clearInspector`() {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+                thisPtr,
+                
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
+        // lift function
+        { Unit },
+        
+        // Error FFI converter
+        UniffiNullRustCallStatusErrorHandler,
     )
     }
 
@@ -30311,6 +30402,31 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `setInspector`(`inspector`: GraphQlRequestInspectorFn) {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+                thisPtr,
+                FfiConverterTypeGraphQlRequestInspectorFn.lower(`inspector`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
+        // lift function
+        { Unit },
+        
+        // Error FFI converter
+        UniffiNullRustCallStatusErrorHandler,
+    )
+    }
+
+    
+    /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
@@ -30693,6 +30809,294 @@ public object FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, Pointer
     override fun allocationSize(value: GraphQlClient) = 8UL
 
     override fun write(value: GraphQlClient, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+public interface GraphQlRequestInspectorFn {
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */
+    fun `onRequestComplete`(`result`: GraphQlRequestResult)
+    
+    companion object
+}
+
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+open class GraphQlRequestInspectorFnImpl: Disposable, AutoCloseable, GraphQlRequestInspectorFn
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */override fun `onRequestComplete`(`result`: GraphQlRequestResult)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
+        it, FfiConverterTypeGraphQlRequestResult.lower(`result`),_status)
+}
+    }
+    
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+
+// Put the implementation in an object so we don't pollute the top-level namespace
+internal object uniffiCallbackInterfaceGraphQlRequestInspectorFn {
+    internal object `onRequestComplete`: UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0 {
+        override fun callback(`uniffiHandle`: Long,`result`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeGraphQlRequestInspectorFn.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`onRequestComplete`(
+                    FfiConverterTypeGraphQlRequestResult.lift(`result`),
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
+        override fun callback(handle: Long) {
+            FfiConverterTypeGraphQlRequestInspectorFn.handleMap.remove(handle)
+        }
+    }
+
+    internal var vtable = UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn.UniffiByValue(
+        `onRequestComplete`,
+        uniffiFree,
+    )
+
+    // Registers the foreign callback with the Rust side.
+    // This method is generated for each callback interface.
+    internal fun register(lib: UniffiLib) {
+        lib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(vtable)
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGraphQlRequestInspectorFn: FfiConverter<GraphQlRequestInspectorFn, Pointer> {
+    internal val handleMap = UniffiHandleMap<GraphQlRequestInspectorFn>()
+
+    override fun lower(value: GraphQlRequestInspectorFn): Pointer {
+        return Pointer(handleMap.insert(value))
+    }
+
+    override fun lift(value: Pointer): GraphQlRequestInspectorFn {
+        return GraphQlRequestInspectorFnImpl(value)
+    }
+
+    override fun read(buf: ByteBuffer): GraphQlRequestInspectorFn {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: GraphQlRequestInspectorFn) = 8UL
+
+    override fun write(value: GraphQlRequestInspectorFn, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -61306,6 +61710,54 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.write(value.`owner`, buf)
             FfiConverterULong.write(value.`price`, buf)
             FfiConverterULong.write(value.`budget`, buf)
+    }
+}
+
+
+
+/**
+ * Information about a completed GraphQL request.
+ */
+data class GraphQlRequestResult (
+    /**
+     * The URL of the GraphQL endpoint that was called.
+     */
+    var `url`: kotlin.String, 
+    /**
+     * If the request failed, a description of the error. `None` on success.
+     */
+    var `error`: kotlin.String?, 
+    /**
+     * How long the request took, in milliseconds.
+     */
+    var `durationMs`: kotlin.ULong
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGraphQlRequestResult: FfiConverterRustBuffer<GraphQlRequestResult> {
+    override fun read(buf: ByteBuffer): GraphQlRequestResult {
+        return GraphQlRequestResult(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: GraphQlRequestResult) = (
+            FfiConverterString.allocationSize(value.`url`) +
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterULong.allocationSize(value.`durationMs`)
+    )
+
+    override fun write(value: GraphQlRequestResult, buf: ByteBuffer) {
+            FfiConverterString.write(value.`url`, buf)
+            FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterULong.write(value.`durationMs`, buf)
     }
 }
 

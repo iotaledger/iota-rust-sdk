@@ -694,9 +694,19 @@ static class _UniFFILib {
         ulong @callbackData,_UniFFILib.UniffiForeignFutureStructVoid @result
     );
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0(
+        ulong @uniffiHandle,RustBuffer @result,IntPtr @uniffiOutReturn,ref UniffiRustCallStatus _uniffi_out_err
+    );
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void UniffiCallbackInterfaceTransactionSignerFnMethod0(
         ulong @uniffiHandle,IntPtr @transaction,IntPtr @uniffiFutureCallback,ulong @uniffiCallbackData,ref _UniFFILib.UniffiForeignFuture @uniffiOutReturn
     );
+    [StructLayout(LayoutKind.Sequential)]
+    public struct UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn
+    {
+        public IntPtr @onRequestComplete;
+        public IntPtr @uniffiFree;
+    }
     [StructLayout(LayoutKind.Sequential)]
     public struct UniffiVTableCallbackInterfaceTransactionSignerFn
     {
@@ -3993,11 +4003,21 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
         _UniFFILib.uniffiCheckApiChecksums();
         
+        UniffiCallbackInterfaceGraphQlRequestInspectorFn.Register();
         UniffiCallbackInterfaceTransactionSignerFn.Register();
         }
 
@@ -5618,6 +5638,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(IntPtr @ptr
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(IntPtr @ptr,RustBuffer @coinType
     );
 
@@ -5766,6 +5790,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(IntPtr @ptr,IntPtr @inspector
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(IntPtr @ptr,RustBuffer @server
     );
 
@@ -5811,6 +5839,22 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(IntPtr @ptr,IntPtr @digest,RustBuffer @waitFor,RustBuffer @timeout
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(ref _UniFFILib.UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn @vtable
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(IntPtr @ptr,RustBuffer @result,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14094,6 +14138,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata(
     );
 
@@ -14242,6 +14290,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server(
     );
 
@@ -14287,6 +14339,10 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -20754,6 +20810,12 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector();
+            if (checksum != 18004) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector` checksum `18004`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata();
             if (checksum != 10872) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata` checksum `10872`, library returned `{checksum}`");
@@ -20976,6 +21038,12 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector();
+            if (checksum != 2614) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector` checksum `2614`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server();
             if (checksum != 63707) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server` checksum `63707`, library returned `{checksum}`");
@@ -21045,6 +21113,12 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx();
             if (checksum != 10761) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx` checksum `10761`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete();
+            if (checksum != 58807) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete` checksum `58807`, library returned `{checksum}`");
             }
         }
         {
@@ -34304,6 +34378,10 @@ public interface IGraphQlClient {
     /// <exception cref="SdkFfiException"></exception>
     Task<CheckpointSummaryPage> Checkpoints(PaginationFilter? @paginationFilter = null);
     /// <summary>
+    /// Remove any previously set request inspector.
+    /// </summary>
+    Task ClearInspector();
+    /// <summary>
     /// Get the coin metadata for the coin type.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
@@ -34621,6 +34699,11 @@ public interface IGraphQlClient {
     /// <exception cref="SdkFfiException"></exception>
     Task<ServiceConfig> ServiceConfig();
     /// <summary>
+    /// Attach a request inspector callback that will be invoked after
+    /// every GraphQL request completes (both successes and failures).
+    /// </summary>
+    Task SetInspector(GraphQlRequestInspectorFn @inspector);
+    /// <summary>
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
     /// </summary>
@@ -34916,6 +34999,27 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
         (result) => FfiConverterTypeCheckpointSummaryPage.INSTANCE.Lift(result),
         // Error
         FfiConverterTypeSdkFfiError.INSTANCE
+    );
+    }
+    
+    /// <summary>
+    /// Remove any previously set request inspector.
+    /// </summary>
+    public async Task ClearInspector() {await _UniFFIAsync.UniffiRustCallAsync(
+        // Get rust future
+        CallWithPointer(thisPtr => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(thisPtr);
+        }),
+        // Poll
+        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_void(future, continuation, data),
+        // Complete
+        (IntPtr future, ref UniffiRustCallStatus status) => {_UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_void(future, ref status);
+        },
+        // Free
+        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_void(future),
+        // Error
+        NullCallStatusErrorHandler.INSTANCE
+        
     );
     }
     
@@ -35977,6 +36081,28 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     }
     
     /// <summary>
+    /// Attach a request inspector callback that will be invoked after
+    /// every GraphQL request completes (both successes and failures).
+    /// </summary>
+    public async Task SetInspector(GraphQlRequestInspectorFn @inspector) {await _UniFFIAsync.UniffiRustCallAsync(
+        // Get rust future
+        CallWithPointer(thisPtr => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(thisPtr, FfiConverterTypeGraphQlRequestInspectorFn.INSTANCE.Lower(@inspector));
+        }),
+        // Poll
+        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_void(future, continuation, data),
+        // Complete
+        (IntPtr future, ref UniffiRustCallStatus status) => {_UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_void(future, ref status);
+        },
+        // Free
+        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_void(future),
+        // Error
+        NullCallStatusErrorHandler.INSTANCE
+        
+    );
+    }
+    
+    /// <summary>
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
     /// </summary>
@@ -36344,6 +36470,238 @@ class FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, IntPtr> {
     }
 
     public override void Write(GraphQlClient value, BigEndianStream stream) {
+        stream.WriteLong(Lower(value).ToInt64());
+    }
+}
+
+
+
+/// <summary>
+/// A callback invoked after every GraphQL request completes.
+///
+/// Implement this trait to receive notifications about request outcomes,
+/// for example to report errors to Sentry or a logging service.
+/// </summary>
+public interface GraphQlRequestInspectorFn {
+    /// <summary>
+    /// Called after each GraphQL request with the result.
+    /// </summary>
+    void OnRequestComplete(GraphQlRequestResult @result);
+}
+/// <summary>
+/// A callback invoked after every GraphQL request completes.
+///
+/// Implement this trait to receive notifications about request outcomes,
+/// for example to report errors to Sentry or a logging service.
+/// </summary>
+public class GraphQlRequestInspectorFnImpl : GraphQlRequestInspectorFn, IDisposable {
+    protected IntPtr pointer;
+    private int _wasDestroyed = 0;
+    private long _callCounter = 1;
+
+    public GraphQlRequestInspectorFnImpl(IntPtr pointer) {
+        this.pointer = pointer;
+    }
+
+    ~GraphQlRequestInspectorFnImpl() {
+        Destroy();
+    }
+
+    protected void FreeRustArcPtr() {
+        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(this.pointer, ref status);
+        });
+    }
+
+    protected IntPtr CloneRustArcPtr() {
+        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(this.pointer, ref status);
+        });
+    }
+
+    public void Destroy()
+    {
+        // Only allow a single call to this method.
+        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
+        {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (Interlocked.Decrement(ref _callCounter) == 0)
+            {
+                FreeRustArcPtr();
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        Destroy();
+        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
+    }
+
+    private void IncrementCallCounter() 
+    {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        long count;
+        do
+        {
+            count = Interlocked.Read(ref _callCounter);
+            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
+            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
+
+        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
+    }
+
+    private void DecrementCallCounter() 
+    {
+        // This decrement always matches the increment we performed above.
+        if (Interlocked.Decrement(ref _callCounter) == 0) {
+            FreeRustArcPtr();
+        }
+    }
+
+    internal void CallWithPointer(Action<IntPtr> action)
+    {
+        IncrementCallCounter();
+        try {
+            action(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    internal T CallWithPointer<T>(Func<IntPtr, T> func)
+    {   
+        IncrementCallCounter();
+        try {
+            return func(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    
+    /// <summary>
+    /// Called after each GraphQL request with the result.
+    /// </summary>
+    public void OnRequestComplete(GraphQlRequestResult @result) {
+        CallWithPointer(thisPtr =>
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(thisPtr, FfiConverterTypeGraphQlRequestResult.INSTANCE.Lower(@result), ref _status)
+));
+    }
+    
+    
+    
+
+    
+}
+class UniffiCallbackInterfaceGraphQlRequestInspectorFn {
+    static void OnRequestComplete(ulong @uniffiHandle,RustBuffer @result,IntPtr @uniffiOutReturn,ref UniffiRustCallStatus _uniffi_out_err) {
+        var handle = @uniffiHandle;
+        if (FfiConverterTypeGraphQlRequestInspectorFn.INSTANCE.handleMap.TryGet(handle, out var uniffiObject)) {
+            uniffiObject.OnRequestComplete(
+                FfiConverterTypeGraphQlRequestResult.INSTANCE.Lift(@result));
+        } else {
+            throw new InternalException($"No callback in handlemap '{handle}'");
+        }
+    }
+
+    static void UniffiFree(ulong @handle) {
+        FfiConverterTypeGraphQlRequestInspectorFn.INSTANCE.handleMap.Remove(@handle);
+    }
+    static _UniFFILib.UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0 _m0 = new _UniFFILib.UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0(OnRequestComplete);
+    static _UniFFILib.UniffiCallbackInterfaceFree _callback_interface_free = new _UniFFILib.UniffiCallbackInterfaceFree(UniffiFree);
+
+    public static _UniFFILib.UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn _vtable = new _UniFFILib.UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn {
+        @onRequestComplete = Marshal.GetFunctionPointerForDelegate(_m0),
+        @uniffiFree = Marshal.GetFunctionPointerForDelegate(_callback_interface_free)
+    };
+
+    public static void Register() {
+        _UniFFILib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(ref UniffiCallbackInterfaceGraphQlRequestInspectorFn._vtable);
+    }
+}
+
+class ConcurrentHandleMap<T> where T: notnull {
+    Dictionary<ulong, T> map = new Dictionary<ulong, T>();
+
+    object lock_ = new object();
+    ulong currentHandle = 0;
+
+    public ulong Insert(T obj) {
+        lock (lock_) {
+            currentHandle += 1;
+            map[currentHandle] = obj;
+            return currentHandle;
+        }
+    }
+
+    public bool TryGet(ulong handle, out T result) {
+        lock (lock_) {
+            #pragma warning disable 8601 // Possible null reference assignment
+            return map.TryGetValue(handle, out result);
+            #pragma warning restore 8601
+        }
+    }
+
+    public T Get(ulong handle) {
+        if (TryGet(handle, out var result)) {
+            return result;
+        } else {
+            throw new InternalException("ConcurrentHandleMap: Invalid handle");
+        }
+    }
+
+    public bool Remove(ulong handle) {
+        return Remove(handle, out T result);
+    }
+
+    public bool Remove(ulong handle, out T result) {
+        lock (lock_) {
+            // Possible null reference assignment
+            #pragma warning disable 8601
+            if (map.TryGetValue(handle, out result)) {
+            #pragma warning restore 8601
+                map.Remove(handle);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+static class UniffiCallbackResponseStatus {
+    public static sbyte SUCCESS = 0;
+    public static sbyte ERROR = 1;
+    public static sbyte UNEXPECTED_ERROR = 2;
+}
+
+class FfiConverterTypeGraphQlRequestInspectorFn: FfiConverter<GraphQlRequestInspectorFn, IntPtr> {
+    public ConcurrentHandleMap<GraphQlRequestInspectorFn> handleMap = new ConcurrentHandleMap<GraphQlRequestInspectorFn>();
+    
+    public static FfiConverterTypeGraphQlRequestInspectorFn INSTANCE = new FfiConverterTypeGraphQlRequestInspectorFn();
+
+
+    public override IntPtr Lower(GraphQlRequestInspectorFn value) {
+        return (IntPtr)handleMap.Insert(value);
+    }
+
+    public override GraphQlRequestInspectorFn Lift(IntPtr value) {
+        return new GraphQlRequestInspectorFnImpl(value);
+    }
+
+    public override GraphQlRequestInspectorFn Read(BigEndianStream stream) {
+        return Lift(new IntPtr(stream.ReadLong()));
+    }
+
+    public override int AllocationSize(GraphQlRequestInspectorFn value) {
+        return 8;
+    }
+
+    public override void Write(GraphQlRequestInspectorFn value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }
@@ -50725,59 +51083,8 @@ class UniffiCallbackInterfaceTransactionSignerFn {
     }
 }
 
-class ConcurrentHandleMap<T> where T: notnull {
-    Dictionary<ulong, T> map = new Dictionary<ulong, T>();
 
-    object lock_ = new object();
-    ulong currentHandle = 0;
 
-    public ulong Insert(T obj) {
-        lock (lock_) {
-            currentHandle += 1;
-            map[currentHandle] = obj;
-            return currentHandle;
-        }
-    }
-
-    public bool TryGet(ulong handle, out T result) {
-        lock (lock_) {
-            #pragma warning disable 8601 // Possible null reference assignment
-            return map.TryGetValue(handle, out result);
-            #pragma warning restore 8601
-        }
-    }
-
-    public T Get(ulong handle) {
-        if (TryGet(handle, out var result)) {
-            return result;
-        } else {
-            throw new InternalException("ConcurrentHandleMap: Invalid handle");
-        }
-    }
-
-    public bool Remove(ulong handle) {
-        return Remove(handle, out T result);
-    }
-
-    public bool Remove(ulong handle, out T result) {
-        lock (lock_) {
-            // Possible null reference assignment
-            #pragma warning disable 8601
-            if (map.TryGetValue(handle, out result)) {
-            #pragma warning restore 8601
-                map.Remove(handle);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-}
-static class UniffiCallbackResponseStatus {
-    public static sbyte SUCCESS = 0;
-    public static sbyte ERROR = 1;
-    public static sbyte UNEXPECTED_ERROR = 2;
-}
 
 class FfiConverterTypeTransactionSignerFn: FfiConverter<TransactionSignerFn, IntPtr> {
     public ConcurrentHandleMap<TransactionSignerFn> handleMap = new ConcurrentHandleMap<TransactionSignerFn>();
@@ -56766,6 +57073,61 @@ class FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.INSTANCE.Write(value.@owner, stream);
             FfiConverterUInt64.INSTANCE.Write(value.@price, stream);
             FfiConverterUInt64.INSTANCE.Write(value.@budget, stream);
+    }
+}
+
+
+
+/// <summary>
+/// Information about a completed GraphQL request.
+/// </summary>
+/// <param name="url">
+/// The URL of the GraphQL endpoint that was called.
+/// </param>
+/// <param name="error">
+/// If the request failed, a description of the error. `None` on success.
+/// </param>
+/// <param name="duration_ms">
+/// How long the request took, in milliseconds.
+/// </param>
+public record GraphQlRequestResult (
+    /// <summary>
+    /// The URL of the GraphQL endpoint that was called.
+    /// </summary>
+    string @url, 
+    /// <summary>
+    /// If the request failed, a description of the error. `None` on success.
+    /// </summary>
+    string? @error, 
+    /// <summary>
+    /// How long the request took, in milliseconds.
+    /// </summary>
+    ulong @durationMs
+) {
+}
+
+class FfiConverterTypeGraphQlRequestResult: FfiConverterRustBuffer<GraphQlRequestResult> {
+    public static FfiConverterTypeGraphQlRequestResult INSTANCE = new FfiConverterTypeGraphQlRequestResult();
+
+    public override GraphQlRequestResult Read(BigEndianStream stream) {
+        return new GraphQlRequestResult(
+            @url: FfiConverterString.INSTANCE.Read(stream),
+            @error: FfiConverterOptionalString.INSTANCE.Read(stream),
+            @durationMs: FfiConverterUInt64.INSTANCE.Read(stream)
+        );
+    }
+
+    public override int AllocationSize(GraphQlRequestResult value) {
+        return 0
+            + FfiConverterString.INSTANCE.AllocationSize(value.@url)
+            + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@error)
+            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@durationMs);
+    }
+
+    public override void Write(GraphQlRequestResult value, BigEndianStream stream) {
+            FfiConverterString.INSTANCE.Write(value.@url, stream);
+            FfiConverterOptionalString.INSTANCE.Write(value.@error, stream);
+            FfiConverterUInt64.INSTANCE.Write(value.@durationMs, stream);
     }
 }
 

@@ -9258,6 +9258,11 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
     func checkpoints(paginationFilter: PaginationFilter?) async throws  -> CheckpointSummaryPage
     
     /**
+     * Remove any previously set request inspector.
+     */
+    func clearInspector() async 
+    
+    /**
      * Get the coin metadata for the coin type.
      */
     func coinMetadata(coinType: String) async throws  -> CoinMetadata?
@@ -9575,6 +9580,12 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
     func serviceConfig() async throws  -> ServiceConfig
     
     /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+    func setInspector(inspector: GraphQlRequestInspectorFn) async 
+    
+    /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
@@ -9855,6 +9866,27 @@ open func checkpoints(paginationFilter: PaginationFilter? = nil)async throws  ->
             freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             liftFunc: FfiConverterTypeCheckpointSummaryPage_lift,
             errorHandler: FfiConverterTypeSdkFfiError_lift
+        )
+}
+    
+    /**
+     * Remove any previously set request inspector.
+     */
+open func clearInspector()async   {
+    return
+        try!  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+                    self.uniffiClonePointer()
+                    
+                )
+            },
+            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_void,
+            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_void,
+            freeFunc: ffi_iota_sdk_ffi_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: nil
+            
         )
 }
     
@@ -10731,6 +10763,28 @@ open func serviceConfig()async throws  -> ServiceConfig  {
 }
     
     /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+open func setInspector(inspector: GraphQlRequestInspectorFn)async   {
+    return
+        try!  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+                    self.uniffiClonePointer(),
+                    FfiConverterTypeGraphQlRequestInspectorFn_lower(inspector)
+                )
+            },
+            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_void,
+            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_void,
+            freeFunc: ffi_iota_sdk_ffi_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: nil
+            
+        )
+}
+    
+    /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
@@ -11028,6 +11082,197 @@ public func FfiConverterTypeGraphQLClient_lift(_ pointer: UnsafeMutableRawPointe
 #endif
 public func FfiConverterTypeGraphQLClient_lower(_ value: GraphQlClient) -> UnsafeMutableRawPointer {
     return FfiConverterTypeGraphQLClient.lower(value)
+}
+
+
+
+
+
+
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+public protocol GraphQlRequestInspectorFn: AnyObject, Sendable {
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */
+    func onRequestComplete(result: GraphQlRequestResult) 
+    
+}
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+open class GraphQlRequestInspectorFnImpl: GraphQlRequestInspectorFn, @unchecked Sendable {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(pointer, $0) }
+    }
+
+    
+
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */
+open func onRequestComplete(result: GraphQlRequestResult)  {try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(self.uniffiClonePointer(),
+        FfiConverterTypeGraphQlRequestResult_lower(result),$0
+    )
+}
+}
+    
+
+}
+
+
+// Put the implementation in a struct so we don't pollute the top-level namespace
+fileprivate struct UniffiCallbackInterfaceGraphQlRequestInspectorFn {
+
+    // Create the VTable using a series of closures.
+    // Swift automatically converts these into C callback functions.
+    //
+    // This creates 1-element array, since this seems to be the only way to construct a const
+    // pointer that we can pass to the Rust code.
+    static let vtable: [UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn] = [UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn(
+        onRequestComplete: { (
+            uniffiHandle: UInt64,
+            result: RustBuffer,
+            uniffiOutReturn: UnsafeMutableRawPointer,
+            uniffiCallStatus: UnsafeMutablePointer<RustCallStatus>
+        ) in
+            let makeCall = {
+                () throws -> () in
+                guard let uniffiObj = try? FfiConverterTypeGraphQlRequestInspectorFn.handleMap.get(handle: uniffiHandle) else {
+                    throw UniffiInternalError.unexpectedStaleHandle
+                }
+                return uniffiObj.onRequestComplete(
+                     result: try FfiConverterTypeGraphQlRequestResult_lift(result)
+                )
+            }
+
+            
+            let writeReturn = { () }
+            uniffiTraitInterfaceCall(
+                callStatus: uniffiCallStatus,
+                makeCall: makeCall,
+                writeReturn: writeReturn
+            )
+        },
+        uniffiFree: { (uniffiHandle: UInt64) -> () in
+            let result = try? FfiConverterTypeGraphQlRequestInspectorFn.handleMap.remove(handle: uniffiHandle)
+            if result == nil {
+                print("Uniffi callback interface GraphQlRequestInspectorFn: handle missing in uniffiFree")
+            }
+        }
+    )]
+}
+
+private func uniffiCallbackInitGraphQlRequestInspectorFn() {
+    uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(UniffiCallbackInterfaceGraphQlRequestInspectorFn.vtable)
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGraphQlRequestInspectorFn: FfiConverter {
+    fileprivate static let handleMap = UniffiHandleMap<GraphQlRequestInspectorFn>()
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = GraphQlRequestInspectorFn
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> GraphQlRequestInspectorFn {
+        return GraphQlRequestInspectorFnImpl(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: GraphQlRequestInspectorFn) -> UnsafeMutableRawPointer {
+        guard let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: handleMap.insert(obj: value))) else {
+            fatalError("Cast to UnsafeMutableRawPointer failed")
+        }
+        return ptr
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GraphQlRequestInspectorFn {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: GraphQlRequestInspectorFn, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGraphQlRequestInspectorFn_lift(_ pointer: UnsafeMutableRawPointer) throws -> GraphQlRequestInspectorFn {
+    return try FfiConverterTypeGraphQlRequestInspectorFn.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGraphQlRequestInspectorFn_lower(_ value: GraphQlRequestInspectorFn) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeGraphQlRequestInspectorFn.lower(value)
 }
 
 
@@ -32028,6 +32273,105 @@ public func FfiConverterTypeGasPayment_lower(_ value: GasPayment) -> RustBuffer 
 
 
 /**
+ * Information about a completed GraphQL request.
+ */
+public struct GraphQlRequestResult {
+    /**
+     * The URL of the GraphQL endpoint that was called.
+     */
+    public var url: String
+    /**
+     * If the request failed, a description of the error. `None` on success.
+     */
+    public var error: String?
+    /**
+     * How long the request took, in milliseconds.
+     */
+    public var durationMs: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * The URL of the GraphQL endpoint that was called.
+         */url: String, 
+        /**
+         * If the request failed, a description of the error. `None` on success.
+         */error: String?, 
+        /**
+         * How long the request took, in milliseconds.
+         */durationMs: UInt64) {
+        self.url = url
+        self.error = error
+        self.durationMs = durationMs
+    }
+}
+
+#if compiler(>=6)
+extension GraphQlRequestResult: Sendable {}
+#endif
+
+
+extension GraphQlRequestResult: Equatable, Hashable {
+    public static func ==(lhs: GraphQlRequestResult, rhs: GraphQlRequestResult) -> Bool {
+        if lhs.url != rhs.url {
+            return false
+        }
+        if lhs.error != rhs.error {
+            return false
+        }
+        if lhs.durationMs != rhs.durationMs {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+        hasher.combine(error)
+        hasher.combine(durationMs)
+    }
+}
+
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGraphQlRequestResult: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GraphQlRequestResult {
+        return
+            try GraphQlRequestResult(
+                url: FfiConverterString.read(from: &buf), 
+                error: FfiConverterOptionString.read(from: &buf), 
+                durationMs: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: GraphQlRequestResult, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.url, into: &buf)
+        FfiConverterOptionString.write(value.error, into: &buf)
+        FfiConverterUInt64.write(value.durationMs, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGraphQlRequestResult_lift(_ buf: RustBuffer) throws -> GraphQlRequestResult {
+    return try FfiConverterTypeGraphQlRequestResult.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGraphQlRequestResult_lower(_ value: GraphQlRequestResult) -> RustBuffer {
+    return FfiConverterTypeGraphQlRequestResult.lower(value)
+}
+
+
+/**
  * A JSON Web Key
  *
  * Struct that contains info for a JWK. A list of them for different kids can
@@ -50106,6 +50450,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() != 18004) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -50217,6 +50564,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() != 2614) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 63707) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -50251,6 +50601,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 10761) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() != 58807) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815) {
@@ -52405,6 +52758,7 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
 
+    uniffiCallbackInitGraphQlRequestInspectorFn()
     uniffiCallbackInitTransactionSignerFn()
     return InitializationResult.ok
 }()

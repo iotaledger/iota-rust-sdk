@@ -251,10 +251,25 @@ typedef void (*UniffiForeignFutureCompleteVoid)(uint64_t, UniffiForeignFutureStr
     );
 
 #endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN_METHOD0
+typedef void (*UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0)(uint64_t, RustBuffer, void* _Nonnull, 
+        RustCallStatus *_Nonnull uniffiCallStatus
+    );
+
+#endif
 #ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0
 #define UNIFFI_FFIDEF_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0
 typedef void (*UniffiCallbackInterfaceTransactionSignerFnMethod0)(uint64_t, void*_Nonnull, UniffiForeignFutureCompleteRustBuffer _Nonnull, uint64_t, UniffiForeignFuture* _Nonnull
     );
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN
+typedef struct UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn {
+    UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0 _Nonnull onRequestComplete;
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+} UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn;
 
 #endif
 #ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN
@@ -2313,6 +2328,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(void*_Nonnull pt
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(void*_Nonnull ptr, RustBuffer pagination_filter
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_CLEAR_INSPECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_CLEAR_INSPECTOR
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(void*_Nonnull ptr
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_COIN_METADATA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_COIN_METADATA
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(void*_Nonnull ptr, RustBuffer coin_type
@@ -2498,6 +2518,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(void*_Nonnull ptr
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(void*_Nonnull ptr
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SET_INSPECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SET_INSPECTOR
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(void*_Nonnull ptr, void*_Nonnull inspector
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SET_RPC_SERVER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SET_RPC_SERVER
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(void*_Nonnull ptr, RustBuffer server
@@ -2556,6 +2581,26 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void*_
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_WAIT_FOR_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_WAIT_FOR_TX
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(void*_Nonnull ptr, void*_Nonnull digest, RustBuffer wait_for, RustBuffer timeout
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GRAPHQLREQUESTINSPECTORFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GRAPHQLREQUESTINSPECTORFN
+void*_Nonnull uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GRAPHQLREQUESTINSPECTORFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GRAPHQLREQUESTINSPECTORFN
+void uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_GRAPHQLREQUESTINSPECTORFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_GRAPHQLREQUESTINSPECTORFN
+void uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(const UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLREQUESTINSPECTORFN_ON_REQUEST_COMPLETE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLREQUESTINSPECTORFN_ON_REQUEST_COMPLETE
+void uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(void*_Nonnull ptr, RustBuffer result, RustCallStatus *_Nonnull out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_IDENTIFIER
@@ -13561,6 +13606,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_CLEAR_INSPECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_CLEAR_INSPECTOR
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_COIN_METADATA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_COIN_METADATA
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata(void
@@ -13783,6 +13834,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SET_INSPECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SET_INSPECTOR
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SET_RPC_SERVER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SET_RPC_SERVER
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server(void
@@ -13852,6 +13909,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_WAIT_FOR_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_WAIT_FOR_TX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLREQUESTINSPECTORFN_ON_REQUEST_COMPLETE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLREQUESTINSPECTORFN_ON_REQUEST_COMPLETE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete(void
     
 );
 #endif

@@ -367,6 +367,7 @@ func readFloat64(reader io.Reader) float64 {
 
 func init() {
         
+        FfiConverterGraphQlRequestInspectorFnINSTANCE.register();
         FfiConverterTransactionSignerFnINSTANCE.register();
         uniffiCheckChecksums()
 }
@@ -5758,6 +5759,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector()
+	})
+	if checksum != 18004 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata()
 	})
 	if checksum != 10872 {
@@ -6091,6 +6101,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector()
+	})
+	if checksum != 2614 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server()
 	})
 	if checksum != 63707 {
@@ -6195,6 +6214,15 @@ func uniffiCheckChecksums() {
 	if checksum != 10761 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete()
+	})
+	if checksum != 58807 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19957,6 +19985,8 @@ type GraphQlClientInterface interface {
 	Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error)
 	// Get a page of `CheckpointSummary` for the provided parameters.
 	Checkpoints(paginationFilter *PaginationFilter) (CheckpointSummaryPage, error)
+	// Remove any previously set request inspector.
+	ClearInspector() 
 	// Get the coin metadata for the coin type.
 	CoinMetadata(coinType string) (*CoinMetadata, error)
 	// Get the list of coins for the specified address.
@@ -20163,6 +20193,9 @@ type GraphQlClientInterface interface {
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
 	ServiceConfig() (ServiceConfig, error)
+	// Attach a request inspector callback that will be invoked after
+	// every GraphQL request completes (both successes and failures).
+	SetInspector(inspector GraphQlRequestInspectorFn) 
 	// Set the server address for the GraphQL client. It should be a
 	// valid URL with a host and optionally a port number.
 	SetRpcServer(server string) error
@@ -20431,6 +20464,36 @@ func (_self *GraphQlClient) Checkpoints(paginationFilter *PaginationFilter) (Che
 	}
 
 	return res, err 
+}
+
+// Remove any previously set request inspector.
+func (_self *GraphQlClient) ClearInspector()  {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	uniffiRustCallAsync[error](
+        nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iota_sdk_ffi_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+		_pointer,),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_void(handle)
+		},
+	)
+
+	
+
+	
 }
 
 // Get the coin metadata for the coin type.
@@ -21889,6 +21952,37 @@ func (_self *GraphQlClient) ServiceConfig() (ServiceConfig, error) {
 	return res, err 
 }
 
+// Attach a request inspector callback that will be invoked after
+// every GraphQL request completes (both successes and failures).
+func (_self *GraphQlClient) SetInspector(inspector GraphQlRequestInspectorFn)  {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	uniffiRustCallAsync[error](
+        nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iota_sdk_ffi_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+		_pointer,FfiConverterGraphQlRequestInspectorFnINSTANCE.Lower(inspector)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_void(handle)
+		},
+	)
+
+	
+
+	
+}
+
 // Set the server address for the GraphQL client. It should be a
 // valid URL with a host and optionally a port number.
 func (_self *GraphQlClient) SetRpcServer(server string) error {
@@ -22369,6 +22463,179 @@ func (_ FfiDestroyerGraphQlClient) Destroy(value *GraphQlClient) {
 		value.Destroy()
 }
 
+
+
+
+// A callback invoked after every GraphQL request completes.
+//
+// Implement this trait to receive notifications about request outcomes,
+// for example to report errors to Sentry or a logging service.
+type GraphQlRequestInspectorFn interface {
+	// Called after each GraphQL request with the result.
+	OnRequestComplete(result GraphQlRequestResult) 
+}
+// A callback invoked after every GraphQL request completes.
+//
+// Implement this trait to receive notifications about request outcomes,
+// for example to report errors to Sentry or a logging service.
+type GraphQlRequestInspectorFnImpl struct {
+	ffiObject FfiObject
+}
+
+
+
+
+// Called after each GraphQL request with the result.
+func (_self *GraphQlRequestInspectorFnImpl) OnRequestComplete(result GraphQlRequestResult)  {
+	_pointer := _self.ffiObject.incrementPointer("GraphQlRequestInspectorFn")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
+		_pointer,FfiConverterGraphQlRequestResultINSTANCE.Lower(result),_uniffiStatus)
+		return false
+	})
+}
+func (object *GraphQlRequestInspectorFnImpl) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterGraphQlRequestInspectorFn struct {
+	handleMap *concurrentHandleMap[GraphQlRequestInspectorFn]
+	}
+
+var FfiConverterGraphQlRequestInspectorFnINSTANCE = FfiConverterGraphQlRequestInspectorFn{
+	handleMap: newConcurrentHandleMap[GraphQlRequestInspectorFn](),
+	}
+
+
+func (c FfiConverterGraphQlRequestInspectorFn) Lift(pointer unsafe.Pointer) GraphQlRequestInspectorFn {
+	result := &GraphQlRequestInspectorFnImpl {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*GraphQlRequestInspectorFnImpl).Destroy)
+	return result
+}
+
+func (c FfiConverterGraphQlRequestInspectorFn) Read(reader io.Reader) GraphQlRequestInspectorFn {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterGraphQlRequestInspectorFn) Lower(value GraphQlRequestInspectorFn) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
+	return pointer
+	
+}
+
+func (c FfiConverterGraphQlRequestInspectorFn) Write(writer io.Writer, value GraphQlRequestInspectorFn) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerGraphQlRequestInspectorFn struct {}
+
+func (_ FfiDestroyerGraphQlRequestInspectorFn) Destroy(value GraphQlRequestInspectorFn) {
+	if val, ok := value.(*GraphQlRequestInspectorFnImpl); ok {
+		val.Destroy()
+	} else {
+		panic("Expected *GraphQlRequestInspectorFnImpl")
+	}
+}
+
+type uniffiCallbackResult C.int8_t
+
+const (
+	uniffiIdxCallbackFree               uniffiCallbackResult = 0
+	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
+	uniffiCallbackResultError           uniffiCallbackResult = 1
+	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
+	uniffiCallbackCancelled             uniffiCallbackResult = 3
+)
+
+
+type concurrentHandleMap[T any] struct {
+	handles       map[uint64]T
+	currentHandle uint64
+	lock          sync.RWMutex
+}
+
+func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
+	return &concurrentHandleMap[T]{
+		handles:  map[uint64]T{},
+	}
+}
+
+func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	cm.currentHandle = cm.currentHandle + 1
+	cm.handles[cm.currentHandle] = obj
+	return cm.currentHandle
+}
+
+func (cm *concurrentHandleMap[T]) remove(handle uint64) {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	delete(cm.handles, handle)
+}
+
+func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
+	cm.lock.RLock()
+	defer cm.lock.RUnlock()
+
+	val, ok := cm.handles[handle]
+	return val, ok
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnMethod0
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnMethod0(uniffiHandle C.uint64_t,result C.RustBuffer,uniffiOutReturn *C.void,callStatus *C.RustCallStatus,) {
+	handle := uint64(uniffiHandle)
+	uniffiObj, ok := FfiConverterGraphQlRequestInspectorFnINSTANCE.handleMap.tryGet(handle)
+	if !ok {
+		panic(fmt.Errorf("no callback in handle map: %d", handle))
+	}
+	
+	
+
+	
+    uniffiObj.OnRequestComplete(
+        FfiConverterGraphQlRequestResultINSTANCE.Lift(GoRustBuffer {
+		inner: result,
+	}),
+    )
+	
+    
+
+
+	
+}
+
+var UniffiVTableCallbackInterfaceGraphQlRequestInspectorFnINSTANCE = C.UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn {
+	onRequestComplete: (C.UniffiCallbackInterfaceGraphQlRequestInspectorFnMethod0)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnMethod0),
+
+	uniffiFree: (C.UniffiCallbackInterfaceFree)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnFree),
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnFree
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceGraphQlRequestInspectorFnFree(handle C.uint64_t) {
+	FfiConverterGraphQlRequestInspectorFnINSTANCE.handleMap.remove(uint64(handle))
+}
+
+func (c FfiConverterGraphQlRequestInspectorFn) register() {
+	C.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(&UniffiVTableCallbackInterfaceGraphQlRequestInspectorFnINSTANCE)
+}
 
 
 
@@ -34123,52 +34390,7 @@ func (_ FfiDestroyerTransactionSignerFn) Destroy(value TransactionSignerFn) {
 	}
 }
 
-type uniffiCallbackResult C.int8_t
 
-const (
-	uniffiIdxCallbackFree               uniffiCallbackResult = 0
-	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
-	uniffiCallbackResultError           uniffiCallbackResult = 1
-	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
-	uniffiCallbackCancelled             uniffiCallbackResult = 3
-)
-
-
-type concurrentHandleMap[T any] struct {
-	handles       map[uint64]T
-	currentHandle uint64
-	lock          sync.RWMutex
-}
-
-func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
-	return &concurrentHandleMap[T]{
-		handles:  map[uint64]T{},
-	}
-}
-
-func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
-
-	cm.currentHandle = cm.currentHandle + 1
-	cm.handles[cm.currentHandle] = obj
-	return cm.currentHandle
-}
-
-func (cm *concurrentHandleMap[T]) remove(handle uint64) {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
-
-	delete(cm.handles, handle)
-}
-
-func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
-	cm.lock.RLock()
-	defer cm.lock.RUnlock()
-
-	val, ok := cm.handles[handle]
-	return val, ok
-}
 
 //export iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0
 func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffiHandle C.uint64_t,transaction unsafe.Pointer,uniffiFutureCallback C.UniffiForeignFutureCompleteRustBuffer,uniffiCallbackData C.uint64_t,uniffiOutReturn *C.UniffiForeignFuture,) {
@@ -39260,6 +39482,58 @@ func (c FfiConverterGasPayment) Write(writer io.Writer, value GasPayment) {
 type FfiDestroyerGasPayment struct {}
 
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
+	value.Destroy()
+}
+
+// Information about a completed GraphQL request.
+type GraphQlRequestResult struct {
+	// The URL of the GraphQL endpoint that was called.
+	Url string
+	// If the request failed, a description of the error. `None` on success.
+	Error *string
+	// How long the request took, in milliseconds.
+	DurationMs uint64
+}
+
+func (r *GraphQlRequestResult) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Url);
+		FfiDestroyerOptionalString{}.Destroy(r.Error);
+		FfiDestroyerUint64{}.Destroy(r.DurationMs);
+}
+
+type FfiConverterGraphQlRequestResult struct {}
+
+var FfiConverterGraphQlRequestResultINSTANCE = FfiConverterGraphQlRequestResult{}
+
+func (c FfiConverterGraphQlRequestResult) Lift(rb RustBufferI) GraphQlRequestResult {
+	return LiftFromRustBuffer[GraphQlRequestResult](c, rb)
+}
+
+func (c FfiConverterGraphQlRequestResult) Read(reader io.Reader) GraphQlRequestResult {
+	return GraphQlRequestResult {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterGraphQlRequestResult) Lower(value GraphQlRequestResult) C.RustBuffer {
+	return LowerIntoRustBuffer[GraphQlRequestResult](c, value)
+}
+
+func (c FfiConverterGraphQlRequestResult) LowerExternal(value GraphQlRequestResult) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[GraphQlRequestResult](c, value))
+}
+
+func (c FfiConverterGraphQlRequestResult) Write(writer io.Writer, value GraphQlRequestResult) {
+		FfiConverterStringINSTANCE.Write(writer, value.Url);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
+		FfiConverterUint64INSTANCE.Write(writer, value.DurationMs);
+}
+
+type FfiDestroyerGraphQlRequestResult struct {}
+
+func (_ FfiDestroyerGraphQlRequestResult) Destroy(value GraphQlRequestResult) {
 	value.Destroy()
 }
 

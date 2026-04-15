@@ -1655,6 +1655,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() != 18004:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450:
@@ -1729,6 +1731,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() != 2614:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 63707:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply() != 21504:
@@ -1752,6 +1756,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 10761:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() != 58807:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3293,8 +3299,16 @@ class _UniffiForeignFutureStructVoid(ctypes.Structure):
     ]
 _UNIFFI_FOREIGN_FUTURE_COMPLETE_VOID = ctypes.CFUNCTYPE(None,ctypes.c_uint64,_UniffiForeignFutureStructVoid,
 )
+_UNIFFI_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN_METHOD0 = ctypes.CFUNCTYPE(None,ctypes.c_uint64,_UniffiRustBuffer,ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
 _UNIFFI_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0 = ctypes.CFUNCTYPE(None,ctypes.c_uint64,ctypes.c_void_p,_UNIFFI_FOREIGN_FUTURE_COMPLETE_RUST_BUFFER,ctypes.c_uint64,ctypes.POINTER(_UniffiForeignFuture),
 )
+class _UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn(ctypes.Structure):
+    _fields_ = [
+        ("on_request_complete", _UNIFFI_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN_METHOD0),
+        ("uniffi_free", _UNIFFI_CALLBACK_INTERFACE_FREE),
+    ]
 class _UniffiVTableCallbackInterfaceTransactionSignerFn(ctypes.Structure):
     _fields_ = [
         ("sign", _UNIFFI_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0),
@@ -5478,6 +5492,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints.argtypes = (
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector.argtypes = (
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -5699,6 +5717,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config.argtypes =
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -5763,6 +5786,26 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx.argtypes = (
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn.argtypes = (
+    ctypes.POINTER(_UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_identifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15139,6 +15182,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata.restype = ctypes.c_uint16
@@ -15250,6 +15296,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server.restype = ctypes.c_uint16
@@ -15286,6 +15335,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effect
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
@@ -17910,6 +17962,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
+
+
 class ActiveJwk:
     """
     A new Jwk
@@ -19807,6 +19861,65 @@ class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeAddress.write(value.address, buf)
+
+
+class GraphQlRequestResult:
+    """
+    Information about a completed GraphQL request.
+    """
+
+    url: "str"
+    """
+    The URL of the GraphQL endpoint that was called.
+    """
+
+    error: "typing.Optional[str]"
+    """
+    If the request failed, a description of the error. `None` on success.
+    """
+
+    duration_ms: "int"
+    """
+    How long the request took, in milliseconds.
+    """
+
+    def __init__(self, *, url: "str", error: "typing.Optional[str]", duration_ms: "int"):
+        self.url = url
+        self.error = error
+        self.duration_ms = duration_ms
+
+    def __str__(self):
+        return "GraphQlRequestResult(url={}, error={}, duration_ms={})".format(self.url, self.error, self.duration_ms)
+
+    def __eq__(self, other):
+        if self.url != other.url:
+            return False
+        if self.error != other.error:
+            return False
+        if self.duration_ms != other.duration_ms:
+            return False
+        return True
+
+class _UniffiConverterTypeGraphQlRequestResult(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return GraphQlRequestResult(
+            url=_UniffiConverterString.read(buf),
+            error=_UniffiConverterOptionalString.read(buf),
+            duration_ms=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.url)
+        _UniffiConverterOptionalString.check_lower(value.error)
+        _UniffiConverterUInt64.check_lower(value.duration_ms)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.url, buf)
+        _UniffiConverterOptionalString.write(value.error, buf)
+        _UniffiConverterUInt64.write(value.duration_ms, buf)
 
 
 class Jwk:
@@ -31642,6 +31755,152 @@ class _UniffiConverterTypeValue:
         return _UniffiConverterString.lower(value)
 
 # objects.
+class GraphQlRequestInspectorFnProtocol(typing.Protocol):
+    """
+    A callback invoked after every GraphQL request completes.
+
+    Implement this trait to receive notifications about request outcomes,
+    for example to report errors to Sentry or a logging service.
+    """
+
+    def on_request_complete(self, result: "GraphQlRequestResult"):
+        """
+        Called after each GraphQL request with the result.
+        """
+
+        raise NotImplementedError
+# GraphQlRequestInspectorFn is a foreign trait so treated like a callback interface, where the
+# primary use-case is the trait being implemented locally.
+# It is a base-class local implementations might subclass.
+
+
+class GraphQlRequestInspectorFn():
+    """
+    A callback invoked after every GraphQL request completes.
+
+    Implement this trait to receive notifications about request outcomes,
+    for example to report errors to Sentry or a logging service.
+    """
+
+    def on_request_complete(self, result: "GraphQlRequestResult"):
+        """
+        Called after each GraphQL request with the result.
+        """
+
+        raise NotImplementedError
+# `GraphQlRequestInspectorFnImpl` is the implementation for a Rust implemented version.
+class GraphQlRequestInspectorFnImpl():
+    """
+    A callback invoked after every GraphQL request completes.
+
+    Implement this trait to receive notifications about request outcomes,
+    for example to report errors to Sentry or a logging service.
+    """
+
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def on_request_complete(self, result: "GraphQlRequestResult") -> None:
+        """
+        Called after each GraphQL request with the result.
+        """
+
+        _UniffiConverterTypeGraphQlRequestResult.check_lower(result)
+        
+        _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGraphQlRequestResult.lower(result))
+
+
+
+
+
+
+# Put all the bits inside a class to keep the top-level namespace clean
+class _UniffiTraitImplGraphQlRequestInspectorFn:
+    # For each method, generate a callback function to pass to Rust
+
+    @_UNIFFI_CALLBACK_INTERFACE_GRAPH_QL_REQUEST_INSPECTOR_FN_METHOD0
+    def on_request_complete(
+            uniffi_handle,
+            result,
+            uniffi_out_return,
+            uniffi_call_status_ptr,
+        ):
+        uniffi_obj = _UniffiConverterTypeGraphQlRequestInspectorFn._handle_map.get(uniffi_handle)
+        def make_call():
+            args = (_UniffiConverterTypeGraphQlRequestResult.lift(result), )
+            method = uniffi_obj.on_request_complete
+            return method(*args)
+
+        
+        write_return_value = lambda v: None
+        _uniffi_trait_interface_call(
+                uniffi_call_status_ptr.contents,
+                make_call,
+                write_return_value,
+        )
+
+    @_UNIFFI_CALLBACK_INTERFACE_FREE
+    def _uniffi_free(uniffi_handle):
+        _UniffiConverterTypeGraphQlRequestInspectorFn._handle_map.remove(uniffi_handle)
+
+    # Generate the FFI VTable.  This has a field for each callback interface method.
+    _uniffi_vtable = _UniffiVTableCallbackInterfaceGraphQlRequestInspectorFn(
+        on_request_complete,
+        _uniffi_free
+    )
+    # Send Rust a pointer to the VTable.  Note: this means we need to keep the struct alive forever,
+    # or else bad things will happen when Rust tries to access it.
+    _UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(ctypes.byref(_uniffi_vtable))
+
+
+
+class _UniffiConverterTypeGraphQlRequestInspectorFn:
+    _handle_map = _UniffiHandleMap()
+
+    @staticmethod
+    def lift(value: int):
+        return GraphQlRequestInspectorFnImpl._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: GraphQlRequestInspectorFn):
+        pass
+
+    @staticmethod
+    def lower(value: GraphQlRequestInspectorFnProtocol):
+        return _UniffiConverterTypeGraphQlRequestInspectorFn._handle_map.insert(value)
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: GraphQlRequestInspectorFnProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class TransactionSignerFnProtocol(typing.Protocol):
     """
     Defines a type which can sign a transaction asynchronously.
@@ -39190,6 +39449,12 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def clear_inspector(self, ):
+        """
+        Remove any previously set request inspector.
+        """
+
+        raise NotImplementedError
     def coin_metadata(self, coin_type: "str"):
         """
         Get the coin metadata for the coin type.
@@ -39544,6 +39809,13 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def set_inspector(self, inspector: "GraphQlRequestInspectorFn"):
+        """
+        Attach a request inspector callback that will be invoked after
+        every GraphQL request completes (both successes and failures).
+        """
+
+        raise NotImplementedError
     def set_rpc_server(self, server: "str"):
         """
         Set the server address for the GraphQL client. It should be a
@@ -39846,6 +40118,31 @@ _UniffiConverterTypeSdkFfiError,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def clear_inspector(self, ) -> None:
+
+        """
+        Remove any previously set request inspector.
+        """
+
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+                self._uniffi_clone_pointer(), 
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_void,
+            # lift function
+            lambda val: None,
+            
+            
+    # Error FFI converter
+
+    None,
 
         )
 
@@ -41083,6 +41380,35 @@ _UniffiConverterTypeSdkFfiError,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def set_inspector(self, inspector: "GraphQlRequestInspectorFn") -> None:
+
+        """
+        Attach a request inspector callback that will be invoked after
+        every GraphQL request completes (both successes and failures).
+        """
+
+        _UniffiConverterTypeGraphQlRequestInspectorFn.check_lower(inspector)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeGraphQlRequestInspectorFn.lower(inspector)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_void,
+            # lift function
+            lambda val: None,
+            
+            
+    # Error FFI converter
+
+    None,
 
         )
 
@@ -62026,6 +62352,7 @@ __all__ = [
     "GasCostSummary",
     "GasPayment",
     "GqlAddress",
+    "GraphQlRequestResult",
     "Jwk",
     "JwkId",
     "MoveEnum",
@@ -62558,6 +62885,7 @@ __all__ = [
     "GenesisObject",
     "GenesisTransaction",
     "GraphQlClient",
+    "GraphQlRequestInspectorFn",
     "Identifier",
     "Input",
     "Intent",
