@@ -15,7 +15,7 @@ export default defineConfig({
     // It requires `index_bg.wasm` to already exist in src/ts/wasm-bindgen/
     // (produced by `make wasm` / `ubrn build web` earlier in CI).
     command: "pnpm run serve",
-    url: "http://localhost:5173",
+    url: "http://localhost:5173/examples/chain_id.html",
     // Reuse a running server in local dev; always start fresh in CI.
     reuseExistingServer: !process.env.CI,
     // Give the build + server up to 120 s on first run.
