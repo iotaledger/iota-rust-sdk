@@ -23,30 +23,30 @@ runs:
     - name: Get the IOTA binary and start a local network
       shell: bash
       env:
-        IOTA_BINARY_VERSION: "v1.18.1-rc"
         EPOCH_DURATION_MS: "10000"
         GH_TOKEN: ${{ github.token }}
       run: |
         # Uncomment when using a nightly build
-        nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --branch develop --limit 1 --json startedAt,databaseId,event -q '[.[] | select(.event == "schedule" or .event == "workflow_dispatch")] | first')
-        database_id=$(echo $nightly | jq '.databaseId')
-        event=$(echo $nightly | jq -r '.event')
-        if [ "$event" = "workflow_dispatch" ]; then
-          artifact_name="iota-develop-linux-x86_64"
-        else
-          started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
-          artifact_name="iota-nightly-$started_at-linux-x86_64"
-        fi
-        gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
-        tar -zxvf "$artifact_name.tgz" ./iota
-        tar -zxvf "$artifact_name.tgz" ./iota-localnet
+        # nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --branch develop --limit 1 --json startedAt,databaseId,event -q '[.[] | select(.event == "schedule" or .event == "workflow_dispatch")] | first')
+        # database_id=$(echo $nightly | jq '.databaseId')
+        # event=$(echo $nightly | jq -r '.event')
+        # if [ "$event" = "workflow_dispatch" ]; then
+        #   artifact_name="iota-develop-linux-x86_64"
+        # else
+        #   started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
+        #   artifact_name="iota-nightly-$started_at-linux-x86_64"
+        # fi
+        # gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
+        # tar -zxvf "$artifact_name.tgz" ./iota
+        # tar -zxvf "$artifact_name.tgz" ./iota-localnet
 
         # Uncomment when using a released build
-        # ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
-        # download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
-        # echo "Downloading binary from $download_url"
-        # wget -q $download_url -O iota.tgz
-        # tar -zxvf iota.tgz ./iota
+        IOTA_BINARY_VERSION="v1.21.1-rc"
+        ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+        download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+        echo "Downloading binary from $download_url"
+        wget -q $download_url -O iota.tgz
+        tar -zxvf iota.tgz ./iota
 
         chmod +x ./iota
         chmod +x ./iota-localnet
