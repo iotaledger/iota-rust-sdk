@@ -74,7 +74,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install uniffi-bindgen-go
-        run: cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
+        run: make install-uniffi-bindgen-go
       - name: Build the bindings
         run: make go
       - name: Checks for uncommitted changes

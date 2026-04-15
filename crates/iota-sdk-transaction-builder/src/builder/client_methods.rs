@@ -4,7 +4,7 @@
 use iota_graphql_client::{
     DryRunResult, WaitForTx,
     pagination::{Direction, PaginationFilter},
-    query_types::{ObjectFilter, TransactionMetadata},
+    query_types::ObjectFilter,
 };
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
@@ -232,31 +232,7 @@ impl ClientMethods for iota_graphql_client::Client {
         tx: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        let Transaction::V1(tx) = &tx else {
-            unimplemented!("a new enum variant was added and needs to be handled")
-        };
-        let gas_objects = tx
-            .gas_payment
-            .objects
-            .iter()
-            .map(|r| iota_graphql_client::query_types::ObjectRef {
-                address: r.object_id,
-                digest: r.digest.to_base58(),
-                version: r.version,
-            })
-            .collect::<Vec<_>>();
-        self.dry_run_tx_kind(
-            &tx.kind,
-            skip_checks,
-            TransactionMetadata {
-                gas_budget: (tx.gas_payment.budget > 0).then_some(tx.gas_payment.budget),
-                gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                gas_price: Some(tx.gas_payment.price),
-                gas_sponsor: Some(tx.gas_payment.owner),
-                sender: Some(tx.sender),
-            },
-        )
-        .await
+        (*self).dry_run_tx(tx, skip_checks).await
     }
 
     async fn execute_tx(
