@@ -51,9 +51,24 @@ wasm-check: ## Check that SDK crates compile to WASM
 # Build the full WASM bindings package for browsers.
 # Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
 # to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
+#
+# Architecture: two-WASM dynamic linking
+#   - iota_sdk_ffi.wasm  (8 MB): the actual Rust implementation; exports
+#     uniffi_iota_sdk_ffi_fn_* and ffi_iota_sdk_ffi_* symbols.
+#   - index_bg.wasm      (1 MB): thin wasm-bindgen wrapper; imports those
+#     symbols from the 'env' module at runtime.
+# Both are needed in dist/. The JS bundle wires them together on init.
 .PHONY: wasm
 wasm: ## Build WASM bindings for browsers
 	cd bindings/wasm && pnpm install && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
+	@# Process the FFI implementation WASM through wasm-bindgen (--target web) so
+	@# that its __wbindgen_placeholder__ imports are replaced with a generated JS
+	@# glue module.  The resulting iota_sdk_ffi_bg.wasm + iota_sdk_ffi.js pair is
+	@# what index.web.ts loads first; its exports satisfy index_bg.wasm's 'env'
+	@# imports at instantiation time.
+	wasm-bindgen --target web --no-typescript \
+		target/wasm32-unknown-unknown/wasm-release/deps/iota_sdk_ffi.wasm \
+		--out-dir bindings/wasm/src/ts/wasm-bindgen-ffi/
 	@# Optionally run wasm-opt on the wasm-bindgen output for size reduction.
 	@if command -v wasm-opt >/dev/null 2>&1; then \
 		printf "Running wasm-opt for size reduction...\n"; \

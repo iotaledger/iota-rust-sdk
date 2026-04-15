@@ -9,7 +9,7 @@
   "browser": "src/ts/index.web.ts",
   "scripts": {
     "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
-    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",
+    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/ && cp src/ts/wasm-bindgen-ffi/iota_sdk_ffi_bg.wasm dist/",
     "serve": "pnpm run build && node scripts/serve.mjs 5173",
     "test": "playwright test"
   },
