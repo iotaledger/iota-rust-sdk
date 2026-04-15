@@ -9,7 +9,8 @@
   "excludes": [
     "**/CHANGELOG.md",
     "**/target/",
-    "**/build/"
+    "**/build/",
+    "**/pnpm-lock.yaml"
   ],
   "toml": {
     "lineWidth": 80

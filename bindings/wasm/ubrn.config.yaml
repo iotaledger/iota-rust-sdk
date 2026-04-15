@@ -22,6 +22,8 @@ web:
   # TOML patch merged into the generated wasm crate Cargo.toml.
   manifestPatchFile: ./wasm-cargo-patch.toml
 
-# Protect our custom entrypoint from being overwritten.
+# Protect our custom entrypoint and crate files from being overwritten.
 noOverwrite:
   - "**/index.web.ts"
+  - "**/iota-sdk-wasm/src/lib.rs"
+  - "**/iota-sdk-wasm/Cargo.toml"
