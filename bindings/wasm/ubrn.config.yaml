@@ -25,5 +25,5 @@ web:
 # Protect our custom entrypoint and crate files from being overwritten.
 noOverwrite:
   - "**/index.web.ts"
-  - "../../crates/iota-sdk-wasm/src/lib.rs"
-  - "../../crates/iota-sdk-wasm/Cargo.toml"
+  - ../../crates/iota-sdk-wasm/src/lib.rs
+  - ../../crates/iota-sdk-wasm/Cargo.toml
