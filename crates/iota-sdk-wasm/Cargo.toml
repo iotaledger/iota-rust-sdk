@@ -1,7 +1,9 @@
 [package]
-edition = "2018"
 name = "iota-sdk-wasm"
 version = "0.0.0"
+edition = "2018"
+license = "Apache-2.0"
+publish = false
 
 [lib]
 crate-type = ["cdylib", "rlib"]
