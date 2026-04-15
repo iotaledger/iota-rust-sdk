@@ -45,7 +45,10 @@ jobs:
           npm install -g pnpm@10
 
       - name: Build WASM bindings
-        run: make wasm
+        # Unset RUSTFLAGS so the ubrn tool (compiled via `cargo run` in
+        # node_modules) is not broken by -Dwarnings on its own source.
+        # RUSTFLAGS is still applied to our own crates in the steps above.
+        run: RUSTFLAGS="" make wasm
 
       - run: make is-dirty
 

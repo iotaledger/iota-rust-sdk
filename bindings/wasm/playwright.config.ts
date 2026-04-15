@@ -7,6 +7,8 @@ export default defineConfig({
   testDir: "./tests",
   // Each test gets up to 60 s — network round-trips to testnet may be slow.
   timeout: 60_000,
+  // Retry twice in CI to handle transient testnet network failures.
+  retries: process.env.CI ? 2 : 0,
   use: {
     baseURL: "http://localhost:5173",
   },

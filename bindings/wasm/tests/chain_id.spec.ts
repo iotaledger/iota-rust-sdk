@@ -11,7 +11,7 @@ test("chain_id example fetches and displays the testnet chain ID", async ({
   // Wait for the async WASM + network call to finish.
   // #status is set to "Done" on success or "Error – see console" on failure.
   const status = page.locator("#status");
-  await expect(status).toHaveText("Done", { timeout: 30_000 });
+  await expect(status).toHaveText("Done", { timeout: 50_000 });
 
   // The result element must contain a chain ID in IOTA hex format (0x…).
   const result = page.locator("#result");
