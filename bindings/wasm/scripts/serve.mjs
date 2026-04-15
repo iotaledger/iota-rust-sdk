@@ -33,6 +33,13 @@ const server = createServer((req, res) => {
   // Default to index.html for directory requests.
   if (filePath.endsWith("/")) filePath = join(filePath, "index.html");
 
+  // Guard against path traversal attacks (e.g. /../../../etc/passwd).
+  if (!filePath.startsWith(ROOT + "/") && filePath !== ROOT) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    res.end("403 Forbidden");
+    return;
+  }
+
   if (!existsSync(filePath) || !statSync(filePath).isFile()) {
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("404 Not Found");

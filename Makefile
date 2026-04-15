@@ -346,13 +346,13 @@ swift-examples-format: ## Format all Swift bindings examples
 	@swift-format format --recursive bindings/swift/examples --in-place
 
 # WASM examples are browser-based HTML files served via a local dev server.
-# "make wasm-example chain_id" serves the bindings/wasm directory and opens the example.
+# The extra argument (e.g. "chain_id") is informational: the server hosts all
+# examples at http://localhost:5173/examples/<name>.html.
 .PHONY: wasm-example
-wasm-example: ## Serve a WASM example in the browser. Usage: make wasm-example chain_id
 %:
 	@true
-wasm-example:
-	@printf "\nServing WASM example \"$(word 2,$(MAKECMDGOALS))\" at http://localhost:5173/examples/$(word 2,$(MAKECMDGOALS)).html\n"
+wasm-example: ## Serve WASM examples in the browser. Usage: make wasm-example chain_id
+	@printf "\nServing WASM examples — open http://localhost:5173/examples/$(word 2,$(MAKECMDGOALS)).html\n"
 	@cd bindings/wasm && pnpm run serve
 
 .PHONY: wasm-examples

@@ -1,3 +1,6 @@
 [target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom 0.3 for the generated wasm bridge (uses wasm_js cfg-based backend).
+# Note: iota-sdk-ffi pulls in getrandom 0.2 (for rand 0.8.x) via its own dep;
+# both major versions coexist in cargo's resolution.
 getrandom = { version = "0.3", features = ["wasm_js"] }
 console_error_panic_hook = "0.1"

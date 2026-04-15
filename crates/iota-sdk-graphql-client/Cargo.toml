@@ -25,6 +25,7 @@ strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tracing = "0.1.37"
+web-time = "1"
 url = "2.5.3"
 variadics_please.workspace = true
 

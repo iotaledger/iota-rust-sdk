@@ -1,3 +1,6 @@
+# Local patch of async-compat that replaces the crates.io version via
+# [patch.crates-io] in the workspace Cargo.toml. The version must match the
+# upstream version so cargo's patch resolution applies it correctly.
 [package]
 name = "async-compat"
 version = "0.2.5"

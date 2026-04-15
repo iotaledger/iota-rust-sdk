@@ -8,32 +8,13 @@ use std::sync::Arc;
 
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
+use web_time::Instant;
 
 use crate::{
     error::{Error, Result},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQuery},
 };
-
-/// Returns the current instant (native) or a no-op marker (wasm32 where
-/// `std::time::Instant` is unsupported).
-#[cfg(not(target_arch = "wasm32"))]
-fn now() -> std::time::Instant {
-    std::time::Instant::now()
-}
-
-#[cfg(target_arch = "wasm32")]
-fn now() -> () {}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn elapsed(start: std::time::Instant) -> std::time::Duration {
-    start.elapsed()
-}
-
-#[cfg(target_arch = "wasm32")]
-fn elapsed(_start: ()) -> std::time::Duration {
-    std::time::Duration::ZERO
-}
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 pub(crate) const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
@@ -225,24 +206,13 @@ impl Client {
         V: serde::Serialize,
     {
         let url = self.rpc_server().to_string();
-        let start = now();
-
-        let result = response_to_err(
-            self.inner
-                .post(self.rpc_server().clone())
-                .json(&operation)
-                .send()
-                .await?
-                .json::<GraphQlResponse<T>>()
-                .await?,
-        );
-
+        let start = Instant::now();
+        let result = self.fetch_query(operation).await;
         self.notify_inspector(&GraphQlRequestResult {
             url,
             error: result.as_ref().err().map(|e| e.to_string()),
-            duration: elapsed(start),
+            duration: start.elapsed(),
         });
-
         result
     }
 
@@ -257,28 +227,44 @@ impl Client {
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
         let url = self.rpc_server().to_string();
-        let start = now();
-
-        let result: Result<GraphQlResponse<serde_json::Value>> = async {
-            let res = self
-                .inner
-                .post(self.rpc_server().clone())
-                .json(&json)
-                .send()
-                .await?
-                .json::<GraphQlResponse<serde_json::Value>>()
-                .await?;
-            Ok(res)
-        }
-        .await;
-
+        let start = Instant::now();
+        let result = self.fetch_json(json).await;
         self.notify_inspector(&GraphQlRequestResult {
             url,
             error: result.as_ref().err().map(|e| e.to_string()),
-            duration: elapsed(start),
+            duration: start.elapsed(),
         });
-
         result
+    }
+
+    async fn fetch_query<T, V>(&self, operation: &Operation<T, V>) -> Result<T>
+    where
+        T: serde::de::DeserializeOwned,
+        V: serde::Serialize,
+    {
+        response_to_err(
+            self.inner
+                .post(self.rpc_server().clone())
+                .json(operation)
+                .send()
+                .await?
+                .json::<GraphQlResponse<T>>()
+                .await?,
+        )
+    }
+
+    async fn fetch_json(
+        &self,
+        json: serde_json::Map<String, serde_json::Value>,
+    ) -> Result<GraphQlResponse<serde_json::Value>> {
+        Ok(self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(&json)
+            .send()
+            .await?
+            .json::<GraphQlResponse<serde_json::Value>>()
+            .await?)
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is

@@ -55,5 +55,7 @@ tokio = { workspace = true, features = ["time"] }
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # wasm needs macros+rt for async and sync for tokio::sync::RwLock used in the graphql client
 tokio = { workspace = true, features = ["macros", "rt", "sync"] }
-# Required to make rand/getrandom work in WASM environments
+# rand 0.8.x depends on getrandom 0.2; the `js` feature enables the wasm_js backend
+# for that version. getrandom 0.3 (in wasm-cargo-patch.toml for the generated bridge
+# crate) uses a cfg-based backend instead — both versions can coexist in the dep tree.
 getrandom = { version = "0.2", features = ["js"] }
