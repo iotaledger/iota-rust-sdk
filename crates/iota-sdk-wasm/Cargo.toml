@@ -1,10 +1,30 @@
-# Placeholder — overwritten by `ubrn build web` (see bindings/wasm/ubrn.config.yaml).
-# Must exist so the workspace root can reference this member.
-[package]
-name = "iota-sdk-wasm"
-version = "0.0.0"
-edition = "2021"
-publish = false
+[dependencies]
+wasm-bindgen = "*"
+
+[dependencies.iota-sdk-ffi]
+path = "../iota-sdk-ffi/../../crates/iota-sdk-ffi"
+
+[dependencies.uniffi-runtime-javascript]
+features = ["wasm32"]
+version = "=0.29.3-1"
+
+[features]
+default = []
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+
+[package]
+edition = "2018"
+name = "iota-sdk-wasm"
+version = "0.0.0"
+
+[profile.release]
+opt-level = "s"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
+features = ["wasm_js"]
+version = "0.3"
