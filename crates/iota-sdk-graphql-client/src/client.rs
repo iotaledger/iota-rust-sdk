@@ -157,9 +157,9 @@ impl Client {
     /// GraphQL request completes (both successes and failures).
     ///
     /// ```rust,no_run
-    /// use iota_graphql_client::Client;
+    /// use iota_sdk_graphql_client::{Client, GraphQlRequestResult};
     ///
-    /// let client = Client::new_devnet().with_inspector(|result| {
+    /// let client = Client::new_devnet().with_inspector(|result: &GraphQlRequestResult| {
     ///     if let Some(err) = &result.error {
     ///         eprintln!("GraphQL error at {}: {err}", result.url);
     ///     }

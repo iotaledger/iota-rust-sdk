@@ -5,8 +5,6 @@
 // Allow clippy lints that are commonly triggered by the generated FFI module.
 #![allow(clippy::too_many_arguments)]
 
-#[allow(unused_imports)]
-use iota_sdk_ffi;
 mod iota_sdk_ffi_module;
 
 // end.
