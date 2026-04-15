@@ -75,8 +75,8 @@ impl Address {
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
-        let mut rng = rand_core::OsRng;
-        Self(iota_sdk::types::Address::generate(&mut rng))
+        let rng = rand_core::OsRng;
+        Self(iota_sdk::types::Address::generate(rng))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
