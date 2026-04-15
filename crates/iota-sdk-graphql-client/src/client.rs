@@ -8,7 +8,6 @@ use std::sync::Arc;
 
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
-use web_time::Instant;
 
 use crate::{
     error::{Error, Result},
@@ -23,6 +22,21 @@ pub(crate) const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/graphql";
 pub(crate) static USER_AGENT: &str =
     concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+
+/// Returns the current time, or `None` on wasm32 where `Instant::now()` panics.
+#[cfg(not(target_arch = "wasm32"))]
+fn start_timer() -> Option<std::time::Instant> {
+    Some(std::time::Instant::now())
+}
+#[cfg(target_arch = "wasm32")]
+fn start_timer() -> Option<std::time::Instant> {
+    None
+}
+
+/// Returns the elapsed time since `start`, or zero if timing is unavailable.
+fn elapsed(start: Option<std::time::Instant>) -> std::time::Duration {
+    start.map(|s| s.elapsed()).unwrap_or(std::time::Duration::ZERO)
+}
 
 /// Helper function to convert a GraphQL response to a Result.
 pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Error> {
@@ -206,12 +220,12 @@ impl Client {
         V: serde::Serialize,
     {
         let url = self.rpc_server().to_string();
-        let start = Instant::now();
+        let start = start_timer();
         let result = self.fetch_query(operation).await;
         self.notify_inspector(&GraphQlRequestResult {
             url,
             error: result.as_ref().err().map(|e| e.to_string()),
-            duration: start.elapsed(),
+            duration: elapsed(start),
         });
         result
     }
@@ -227,12 +241,12 @@ impl Client {
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
         let url = self.rpc_server().to_string();
-        let start = Instant::now();
+        let start = start_timer();
         let result = self.fetch_json(json).await;
         self.notify_inspector(&GraphQlRequestResult {
             url,
             error: result.as_ref().err().map(|e| e.to_string()),
-            duration: start.elapsed(),
+            duration: elapsed(start),
         });
         result
     }
