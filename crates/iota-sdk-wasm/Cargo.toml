@@ -5,6 +5,11 @@ edition = "2018"
 license = "Apache-2.0"
 publish = false
 
+# iota-sdk-ffi is referenced via extern "C" linkage in iota_sdk_ffi_module.rs,
+# which cargo-udeps cannot detect when checking native builds.
+[package.metadata.cargo-udeps.ignore]
+normal = ["iota-sdk-ffi"]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
