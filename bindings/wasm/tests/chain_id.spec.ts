@@ -12,14 +12,28 @@ test("chain_id example fetches and displays the testnet chain ID", async ({
   // Intercept every fetch to the testnet GraphQL endpoint and return a
   // deterministic mock response.  This prevents the test from depending on
   // live network access, making it reliable in offline / flaky-network CI.
+  //
+  // The dev server sets COEP/COOP headers, so the browser performs a CORS
+  // preflight OPTIONS request before the POST.  Both must carry CORS headers
+  // or the browser will reject the preflight and the POST never fires.
   await page.route("**graphql.testnet.iota.cafe**", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        data: { chainIdentifier: MOCK_CHAIN_ID },
-      }),
-    });
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": "content-type, accept",
+    };
+    if (route.request().method() === "OPTIONS") {
+      await route.fulfill({ status: 204, headers: corsHeaders });
+    } else {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: corsHeaders,
+        body: JSON.stringify({
+          data: { chainIdentifier: MOCK_CHAIN_ID },
+        }),
+      });
+    }
   });
 
   await page.goto("/examples/chain_id.html");
