@@ -12,7 +12,7 @@ test("chain_id example fetches and displays the testnet chain ID", async ({
   // Intercept every fetch to the testnet GraphQL endpoint and return a
   // deterministic mock response.  This prevents the test from depending on
   // live network access, making it reliable in offline / flaky-network CI.
-  await page.route("**/graphql.testnet.iota.cafe/**", async (route) => {
+  await page.route("**graphql.testnet.iota.cafe**", async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
