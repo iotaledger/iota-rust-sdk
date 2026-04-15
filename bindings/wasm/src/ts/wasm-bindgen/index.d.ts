@@ -391,11 +391,13 @@ export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8(): numb
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec(): number;
 
-export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable(): number;
-
-export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared(): number;
+export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1(): number;
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared(): number;
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(): number;
 
@@ -2155,15 +2157,17 @@ export function ubrn_uniffi_iota_sdk_ffi_checksum_method_mergecoins_coin(): numb
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge(): number;
 
-export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(): number;
-
-export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args(): number;
-
-export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(): number;
-
-export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args(): number;
+export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1(): number;
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate(): number;
+
+export function ubrn_uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args(): number;
 
 export function ubrn_uniffi_iota_sdk_ffi_checksum_method_movecall_arguments(): number;
 
@@ -2955,6 +2959,8 @@ export function ubrn_uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(ptr: bigint,
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder(ptr: bigint, f_status_: RustCallStatus): bigint;
 
+export function ubrn_uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(ptr: bigint, f_status_: RustCallStatus): bigint;
+
 export function ubrn_uniffi_iota_sdk_ffi_fn_clone_movecall(ptr: bigint, f_status_: RustCallStatus): bigint;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_clone_movefunction(ptr: bigint, f_status_: RustCallStatus): bigint;
@@ -3347,11 +3353,13 @@ export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(value: number
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec(values: Uint8Array, f_status_: RustCallStatus): bigint;
 
-export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(call_args: Uint8Array, type_args: Uint8Array, object_to_authenticate: Uint8Array, f_status_: RustCallStatus): bigint;
-
-export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(call_args: Uint8Array, type_args: Uint8Array, object_to_authenticate: bigint, initial_shared_version: bigint, f_status_: RustCallStatus): bigint;
+export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(move_authenticator_v1: bigint, f_status_: RustCallStatus): bigint;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new(account_id: bigint, call_args: Uint8Array, type_args: Uint8Array, f_status_: RustCallStatus): bigint;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(call_args: Uint8Array, type_args: Uint8Array, object_to_authenticate: Uint8Array, f_status_: RustCallStatus): bigint;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(call_args: Uint8Array, type_args: Uint8Array, object_to_authenticate: bigint, initial_shared_version: bigint, f_status_: RustCallStatus): bigint;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_constructor_movecall_new(_package: bigint, module: bigint, _function: bigint, type_arguments: Uint8Array, _arguments: Uint8Array, f_status_: RustCallStatus): bigint;
 
@@ -3886,6 +3894,8 @@ export function ubrn_uniffi_iota_sdk_ffi_fn_free_movearg(ptr: bigint, f_status_:
 export function ubrn_uniffi_iota_sdk_ffi_fn_free_moveauthenticator(ptr: bigint, f_status_: RustCallStatus): void;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder(ptr: bigint, f_status_: RustCallStatus): void;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(ptr: bigint, f_status_: RustCallStatus): void;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_free_movecall(ptr: bigint, f_status_: RustCallStatus): void;
 
@@ -5549,15 +5559,17 @@ export function ubrn_uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne(ptr: bigint, other: bigint, f_status_: RustCallStatus): number;
 
-export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(ptr: bigint, f_status_: RustCallStatus): bigint;
-
-export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(ptr: bigint, f_status_: RustCallStatus): Uint8Array;
-
-export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(ptr: bigint, f_status_: RustCallStatus): bigint;
-
-export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(ptr: bigint, f_status_: RustCallStatus): Uint8Array;
+export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(ptr: bigint, f_status_: RustCallStatus): bigint;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(ptr: bigint, client: bigint): bigint;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(ptr: bigint, f_status_: RustCallStatus): bigint;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(ptr: bigint, f_status_: RustCallStatus): Uint8Array;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(ptr: bigint, f_status_: RustCallStatus): bigint;
+
+export function ubrn_uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(ptr: bigint, f_status_: RustCallStatus): Uint8Array;
 
 export function ubrn_uniffi_iota_sdk_ffi_fn_method_movecall_arguments(ptr: bigint, f_status_: RustCallStatus): Uint8Array;
 
