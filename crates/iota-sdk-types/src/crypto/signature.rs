@@ -322,7 +322,9 @@ impl UserSignature {
         match self {
             UserSignature::Simple(simple) => simple.scheme(),
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
-            UserSignature::ZkLoginAuthenticatorDeprecated => panic!(),
+            UserSignature::ZkLoginAuthenticatorDeprecated => {
+                SignatureScheme::ZkLoginAuthenticatorDeprecated
+            }
             UserSignature::PasskeyAuthenticator(_) => SignatureScheme::PasskeyAuthenticator,
             UserSignature::MoveAuthenticator(_) => SignatureScheme::MoveAuthenticator,
         }
@@ -636,7 +638,7 @@ mod serialization {
                     "bls not supported for user signatures",
                 )),
                 SignatureScheme::ZkLoginAuthenticatorDeprecated => {
-                    panic!()
+                    Ok(Self::ZkLoginAuthenticatorDeprecated)
                 }
                 SignatureScheme::PasskeyAuthenticator => {
                     let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
@@ -678,7 +680,6 @@ mod serialization {
             public_key: &'a Secp256r1PublicKey,
         },
         Multisig(&'a MultisigAggregatedSignature),
-        #[expect(unused)]
         ZkLoginDeprecated,
         Passkey(&'a PasskeyAuthenticator),
         Move(&'a MoveAuthenticator),
@@ -752,7 +753,7 @@ mod serialization {
                         ReadableUserSignatureRef::Multisig(multisig)
                     }
                     UserSignature::ZkLoginAuthenticatorDeprecated => {
-                        panic!()
+                        ReadableUserSignatureRef::ZkLoginDeprecated
                     }
                     UserSignature::PasskeyAuthenticator(passkey) => {
                         ReadableUserSignatureRef::Passkey(passkey)
@@ -807,7 +808,7 @@ mod serialization {
                     }),
                     ReadableUserSignature::Multisig(multisig) => Self::Multisig(multisig),
                     ReadableUserSignature::ZkLoginDeprecated => {
-                        panic!()
+                        Self::ZkLoginAuthenticatorDeprecated
                     }
                     ReadableUserSignature::Passkey(passkey) => Self::PasskeyAuthenticator(passkey),
                     ReadableUserSignature::Move(move_auth) => Self::MoveAuthenticator(move_auth),
