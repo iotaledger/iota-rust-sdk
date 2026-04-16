@@ -767,9 +767,8 @@ mod serialization {
                 match self {
                     UserSignature::Simple(simple) => simple.serialize(serializer),
                     UserSignature::Multisig(multisig) => multisig.serialize(serializer),
-                    UserSignature::ZkLoginAuthenticatorDeprecated => {
-                        panic!()
-                    }
+                    UserSignature::ZkLoginAuthenticatorDeprecated => serializer
+                        .serialize_bytes(&[SignatureScheme::ZkLoginAuthenticatorDeprecated as u8]),
                     UserSignature::PasskeyAuthenticator(passkey) => passkey.serialize(serializer),
                     UserSignature::MoveAuthenticator(move_auth) => move_auth.serialize(serializer),
                 }
