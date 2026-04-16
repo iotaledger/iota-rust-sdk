@@ -21,7 +21,6 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        #[expect(unused)]
         AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
@@ -91,7 +90,7 @@ mod transaction_kind {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
                     Self::AuthenticatorStateUpdateV1Deprecated => {
-                        panic!()
+                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1Deprecated
                     }
                     Self::EndOfEpoch(commands) => {
                         ReadableTransactionKindRef::EndOfEpoch { commands }
@@ -138,7 +137,7 @@ mod transaction_kind {
                         Self::ConsensusCommitPrologueV1(k)
                     }
                     ReadableTransactionKind::AuthenticatorStateUpdateV1Deprecated => {
-                        panic!()
+                        Self::AuthenticatorStateUpdateV1Deprecated
                     }
                     ReadableTransactionKind::EndOfEpoch { commands } => Self::EndOfEpoch(commands),
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
