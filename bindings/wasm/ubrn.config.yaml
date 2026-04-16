@@ -19,6 +19,14 @@ web:
     - "--cfg"
     - 'getrandom_backend="wasm_js"'
 
+  # Extra flags forwarded to wasm-bindgen when processing the wrapper WASM.
+  # --keep-lld-exports preserves LLD-synthesised exports (e.g.
+  # __indirect_function_table) that wasm-bindgen would otherwise strip.
+  # We need __indirect_function_table exported from index_bg.wasm so that the
+  # JS initialisation code can grow and share it with iota_sdk_ffi_bg.wasm.
+  wasmBindgenExtras:
+    - "--keep-lld-exports"
+
   # TOML patch merged into the generated wasm crate Cargo.toml.
   manifestPatchFile: ./wasm-cargo-patch.toml
 

@@ -66,6 +66,12 @@ wasm: ## Build WASM bindings for browsers
 	@# "env" at runtime) but only builds iota-sdk-ffi as an rlib dependency – the
 	@# cdylib WASM artefact is not produced as a side-effect.  We compile it here
 	@# explicitly so we have a standalone iota_sdk_ffi.wasm to feed into wasm-bindgen.
+	@#
+	@# --import-table: instead of declaring its own function table, the ffi module
+	@# IMPORTS __indirect_function_table from env.  This lets both WASM modules share
+	@# the same table so that call_indirect(N) in iota_sdk_ffi_bg.wasm correctly
+	@# resolves cross-module function pointers (continuations, vtable callbacks).
+	RUSTFLAGS="-C link-arg=--import-table" \
 	cargo build \
 		--target wasm32-unknown-unknown \
 		--profile wasm-release \
