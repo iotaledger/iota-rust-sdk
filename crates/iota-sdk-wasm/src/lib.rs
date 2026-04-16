@@ -5,7 +5,12 @@
 // Allow clippy lints that are commonly triggered by the generated FFI module.
 #![allow(clippy::too_many_arguments)]
 
+// Use include!() inside an inline module so that rustfmt does not attempt
+// to resolve the file path (it would fail on a fresh checkout where the
+// generated file does not yet exist).
 #[cfg(target_arch = "wasm32")]
-mod iota_sdk_ffi_module;
+mod iota_sdk_ffi_module {
+    include!("iota_sdk_ffi_module.rs");
+}
 
 // end.
