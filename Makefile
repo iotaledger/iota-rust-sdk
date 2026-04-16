@@ -52,12 +52,14 @@ wasm-check: ## Check that SDK crates compile to WASM
 # Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
 # to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
 #
-# Architecture: two-WASM dynamic linking
-#   - iota_sdk_ffi.wasm  (8 MB): the actual Rust implementation; exports
-#     uniffi_iota_sdk_ffi_fn_* and ffi_iota_sdk_ffi_* symbols.
-#   - index_bg.wasm      (1 MB): thin wasm-bindgen wrapper; imports those
-#     symbols from the 'env' module at runtime.
-# Both are needed in dist/. The JS bundle wires them together on init.
+# Architecture: two-WASM JS-bridged tables
+#   - iota_sdk_ffi_bg.wasm: the actual Rust implementation; exports its own
+#     __indirect_function_table (--export-table --growable-table) so JS can
+#     grow it and copy bgTable entries for cross-module call_indirect bridging.
+#   - index_bg.wasm: thin wasm-bindgen wrapper; imports ffi functions from
+#     'env' at runtime; also exports __indirect_function_table (--keep-lld-exports).
+# Both are needed in dist/. The JS initialisation code in index.web.ts bridges
+# the two function tables and remaps vtable pointers across separate memories.
 .PHONY: wasm
 wasm: ## Build WASM bindings for browsers
 	cd bindings/wasm && pnpm install && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
@@ -67,11 +69,11 @@ wasm: ## Build WASM bindings for browsers
 	@# cdylib WASM artefact is not produced as a side-effect.  We compile it here
 	@# explicitly so we have a standalone iota_sdk_ffi.wasm to feed into wasm-bindgen.
 	@#
-	@# --import-table: instead of declaring its own function table, the ffi module
-	@# IMPORTS __indirect_function_table from env.  This lets both WASM modules share
-	@# the same table so that call_indirect(N) in iota_sdk_ffi_bg.wasm correctly
-	@# resolves cross-module function pointers (continuations, vtable callbacks).
-	RUSTFLAGS="-C link-arg=--import-table" \
+	@# --export-table: the ffi module exports its own __indirect_function_table so JS
+	@# can access it after instantiation and bridge entries across to index_bg.wasm's
+	@# table (see index.web.ts).  --growable-table: no maximum size on the table so
+	@# JS can grow it to hold the extra bgTable entries.
+	RUSTFLAGS="-C link-arg=--export-table -C link-arg=--growable-table" \
 	cargo build \
 		--target wasm32-unknown-unknown \
 		--profile wasm-release \
@@ -81,7 +83,9 @@ wasm: ## Build WASM bindings for browsers
 	@# glue module.  The resulting iota_sdk_ffi_bg.wasm + iota_sdk_ffi.js pair is
 	@# what index.web.ts loads first; its exports satisfy index_bg.wasm's 'env'
 	@# imports at instantiation time.
-	wasm-bindgen --target web --no-typescript \
+	@# --keep-lld-exports: preserve LLD-synthesised exports (__indirect_function_table)
+	@# that wasm-bindgen would otherwise strip, so JS can access ffiTable after init.
+	wasm-bindgen --target web --no-typescript --keep-lld-exports \
 		target/wasm32-unknown-unknown/wasm-release/iota_sdk_ffi.wasm \
 		--out-dir bindings/wasm/src/ts/wasm-bindgen-ffi/
 	@# Optionally run wasm-opt on the wasm-bindgen output for size reduction.

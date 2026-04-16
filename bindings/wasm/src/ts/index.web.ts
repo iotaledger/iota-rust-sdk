@@ -12,175 +12,219 @@ import initFfi from './wasm-bindgen-ffi/iota_sdk_ffi.js';
 /**
  * Load and initialise the WASM modules.
  *
- * Architecture – two-WASM shared-table dynamic linking:
- *
- *   index_bg.wasm      – wasm-bindgen wrapper; built with --export-table
- *                        --growable-table so its __indirect_function_table
- *                        can be grown and shared.  Has ~40 table entries
- *                        (continuation callbacks, vtable stubs, …).
+ * Architecture – two-WASM JS-bridged tables
+ * -----------------------------------------
  *
  *   iota_sdk_ffi_bg.wasm – actual Rust implementation; built with
- *                        --import-table so it imports the shared table
- *                        instead of declaring its own.  Its ~1900 functions
- *                        are placed at tableBase+ in the shared table.
+ *                          --export-table --growable-table so its own
+ *                          __indirect_function_table (~1899 entries) is
+ *                          accessible from JS and can be grown.
  *
- * Why this matters
- * ----------------
- * uniffi-core's scheduler calls the continuation callback via a plain Rust
- * function pointer, which in WASM compiles to call_indirect(N).  N is a
- * table index from index_bg.wasm's table (the `implementation` function in
- * the rust_future_continuation_callback module).  Without a shared table,
- * iota_sdk_ffi_bg.wasm's call_indirect(N) looks up N in its OWN table and
- * finds a completely different function → RuntimeError / silent wrong call.
+ *   index_bg.wasm        – wasm-bindgen wrapper; built with --export-table
+ *                          --growable-table and processed with --keep-lld-exports
+ *                          so its __indirect_function_table (~40 entries) is also
+ *                          exported.  Imports ffi functions from the 'env' module.
  *
- * With --import-table, iota_sdk_ffi_bg.wasm uses the shared table for every
- * call_indirect, so:
- *   N  < tableBase  →  index_bg.wasm callbacks (implementation, vtable fns)
- *   N >= tableBase  →  ffi module's own internal functions
+ * Why bridging is needed
+ * ----------------------
+ * uniffi-core's scheduler calls continuation callbacks via a plain Rust function
+ * pointer, which compiles to call_indirect(N).  N is a table index from
+ * index_bg.wasm's table (the `implementation` fn in rust_future_continuation_callback).
+ * Without bridging, iota_sdk_ffi_bg.wasm's call_indirect(N) looks up N in its OWN
+ * table → wrong function or trap.
  *
- * Both resolve correctly.
+ * After JS-level bridging:
+ *   bgTable[N]               = callback implementation in index_bg.wasm
+ *   ffiTable[ffiOffset + N]  = same function reference (copied from bgTable)
+ *
+ * Poll function wrappers remap arg[1] (a bgTable index N) to ffiOffset + N
+ * so call_indirect uses the correct ffiTable slot.
+ *
+ * Vtable bridging
+ * ---------------
+ * Callback vtables (GraphQlRequestInspector, TransactionSigner) are allocated in
+ * index_bg.wasm's linear memory (bgMemory) and passed to ffi as i32 addresses.
+ * ffi stores the address and later dereferences it from its OWN linear memory
+ * (ffiMemory) → reads garbage.
+ *
+ * Fix: intercept every vtable-init env call, read the two i32 function-pointer
+ * fields from bgMemory at the given address, remap them (bgTable index → ffiOffset +
+ * bgTable index), write the remapped struct into a stable page of ffiMemory, and
+ * pass the ffiMemory address to ffi instead.
  *
  * Initialisation sequence
  * -----------------------
- * Phase 1 – Instantiate index_bg.wasm with a lazy env proxy.
- *   All env.* calls (uniffi_iota_sdk_ffi_fn_*) are deferred until Phase 3.
- *   No env functions are called during WASM instantiation itself (the
- *   wasm-bindgen start function is invoked manually in Phase 3).
+ * Phase 1 – Initialise iota_sdk_ffi_bg.wasm via initFfi().
+ *            Obtain ffiTable, ffiMemory.  Record ffiOffset = ffiTable.length.
+ *            Grow ffiMemory by one page for stable vtable storage.
  *
- * Phase 2 – Grow the shared table, then instantiate iota_sdk_ffi_bg.wasm.
- *   We temporarily monkeypatch WebAssembly.instantiate to inject the
- *   env.{__indirect_function_table, __table_base} imports that --import-table
- *   requires.  initFfi() handles the wbg.* imports (getrandom, etc.).
+ * Phase 2 – Build wrappedEnv: ffiExports base + poll-function wrappers +
+ *            vtable-init wrappers.
  *
- * Phase 3 – Wire the proxy to real ffi exports, run start, initialize.
+ * Phase 3 – Instantiate index_bg.wasm with { './index_bg.js': bg, env: wrappedEnv }.
  *
- * @param wasmUrl - URL to index_bg.wasm.  Defaults to import.meta.url-relative.
+ * Phase 4 – Obtain bgTable.  Grow ffiTable by bgCount; copy bgTable[i] →
+ *            ffiTable[ffiOffset + i] for every entry.
+ *
+ * Phase 5 – Wire bg, run __wbindgen_start, call initialize().
+ *            initialize() triggers vtable-init env calls (Phase 2 wrappers handle them).
+ *
+ * @param wasmUrl - URL to index_bg.wasm. Defaults to import.meta.url-relative path.
  */
 export async function uniffiInitAsync(wasmUrl?: string | URL): Promise<void> {
-  // ─── Phase 1: Instantiate index_bg.wasm with a lazy env proxy ─────────────
-  //
-  // The proxy captures every env.* function import at instantiation time and
-  // forwards calls to the real ffi export once it is available (Phase 3).
-  // This breaks the circular dependency:
-  //   index_bg.wasm needs ffi exports  →  ffi module needs index_bg.wasm's table
-  //   (we resolve the table dependency first, then wire up the functions).
+  // ─── Phase 1: Initialise iota_sdk_ffi_bg.wasm ─────────────────────────────
 
-  const envTarget: Record<string, (...args: unknown[]) => unknown> = {};
-  const envProxy = new Proxy(envTarget, {
-    get(target, name: string) {
-      // Return a closure that defers to the real function at call time.
-      return (...args: unknown[]): unknown => {
-        const fn = target[name];
-        if (typeof fn === 'function') return fn(...args);
-        throw new Error(
-          `env.${name} was called before the FFI module was wired up. ` +
-            'This indicates the WASM start function ran before Phase 3.',
-        );
-      };
-    },
-  });
-
-  const indexUrl = wasmUrl ?? new URL('./index_bg.wasm', import.meta.url);
-  const indexBytes = await fetch(indexUrl).then((r) => r.arrayBuffer());
-
-  // Instantiate index_bg.wasm.  No env functions are called here; the
-  // wasm-bindgen start is invoked manually at the end of Phase 3.
-  const { instance: indexInstance } = await WebAssembly.instantiate(
-    indexBytes,
-    { './index_bg.js': bg as any, env: envProxy as any },
-  );
-
-  // ─── Phase 2: Grow the shared table, instantiate iota_sdk_ffi_bg.wasm ─────
-  //
-  // index_bg.wasm was built with --export-table --growable-table and
-  // wasm-bindgen was invoked with --keep-lld-exports, so the
-  // __indirect_function_table is preserved as an export.
-
-  const bgTable = (indexInstance.exports as any)
-    .__indirect_function_table as WebAssembly.Table | undefined;
-
-  if (!bgTable) {
-    throw new Error(
-      'index_bg.wasm did not export __indirect_function_table.\n' +
-        'Ensure it is built with -C link-arg=--export-table and that ' +
-        'wasm-bindgen is invoked with --keep-lld-exports ' +
-        '(wasmBindgenExtras in ubrn.config.yaml).',
-    );
-  }
-
-  // tableBase is where ffi module functions will start in the shared table.
-  const tableBase = bgTable.length; // e.g. 40
-
-  // Grow generously: iota_sdk_ffi_bg.wasm has ~1900 function-table entries.
-  // Extra null slots are harmless; running out causes an instantiation trap.
-  bgTable.grow(2048);
-
-  // iota_sdk_ffi_bg.wasm was built with --import-table.  It imports:
-  //   env.__indirect_function_table  (table)
-  //   env.__table_base               (i32 global)
-  // The generated iota_sdk_ffi.js only adds wbg.* to the imports object, so
-  // we temporarily monkeypatch WebAssembly.instantiate to inject env.*.
-  //
-  // We pass ffiBytes explicitly (not a URL/Response) so that wasm-bindgen's
-  // init function takes the non-streaming code path and calls
-  // WebAssembly.instantiate(buffer, imports) – exactly what we intercept.
   const ffiWasmUrl = new URL(
     './wasm-bindgen-ffi/iota_sdk_ffi_bg.wasm',
     import.meta.url,
   );
   const ffiBytes = await fetch(ffiWasmUrl).then((r) => r.arrayBuffer());
 
-  const tableBaseGlobal = new WebAssembly.Global(
-    { value: 'i32', mutable: false },
-    tableBase,
-  );
+  // initFfi() compiles + instantiates iota_sdk_ffi_bg.wasm, wires wbg.* imports
+  // (getrandom crypto bindings, etc.), and returns instance.exports.
+  const ffiExports = (await (initFfi as any)(ffiBytes)) as Record<
+    string,
+    unknown
+  >;
 
-  const origInstantiate = WebAssembly.instantiate;
-  (WebAssembly as any).instantiate = async (
-    bytes: any,
-    importObject: any,
-    ...rest: any[]
-  ): Promise<any> => {
-    // Inject the shared-table env imports required by --import-table.
-    // Extra keys in importObject are silently ignored by the WASM runtime,
-    // so this is safe even if the module has no env imports (e.g. if the
-    // binary was built without --import-table for some reason).
-    if (importObject) {
-      importObject['env'] = {
-        __indirect_function_table: bgTable,
-        __table_base: tableBaseGlobal,
-      };
-    }
-    return origInstantiate.call(WebAssembly, bytes, importObject, ...rest);
-  };
-
-  let ffiExports: Record<string, unknown>;
-  try {
-    // initFfi() handles wbg.* imports (getrandom crypto bindings, etc.),
-    // compiles + instantiates iota_sdk_ffi_bg.wasm, sets the internal `wasm`
-    // variable, and returns instance.exports.
-    //
-    // During instantiation, the ffi module's elem segments run and write
-    // function references into bgTable[tableBase .. tableBase+N].
-    ffiExports = (await (initFfi as any)(ffiBytes)) as Record<
-      string,
-      unknown
-    >;
-  } finally {
-    // Always restore the original, even if initFfi throws.
-    (WebAssembly as any).instantiate = origInstantiate;
+  const ffiTable = ffiExports.__indirect_function_table as
+    | WebAssembly.Table
+    | undefined;
+  if (!ffiTable) {
+    throw new Error(
+      'iota_sdk_ffi_bg.wasm did not export __indirect_function_table.\n' +
+        'Build iota-sdk-ffi with RUSTFLAGS="-C link-arg=--export-table" and\n' +
+        'run wasm-bindgen with --keep-lld-exports.',
+    );
   }
 
-  // After instantiation:
-  //   bgTable[0 .. tableBase-1]       = index_bg.wasm callbacks
-  //   bgTable[tableBase .. tableBase+N] = iota_sdk_ffi_bg.wasm functions
+  const ffiMemory = ffiExports.memory as WebAssembly.Memory | undefined;
+  if (!ffiMemory) {
+    throw new Error('iota_sdk_ffi_bg.wasm did not export memory.');
+  }
+
+  // Where bgTable entries will land in ffiTable after bridging (e.g. 1899).
+  const ffiOffset = ffiTable.length;
+
+  // Grow ffi's memory by one 64 KiB page for stable vtable storage.
+  // We do this before ffi's allocator makes its first sbrk call; the allocator
+  // tracks its own high-water mark, so our extra page is invisible to it and
+  // will not be overwritten by heap allocations.
+  const vtablePageBase = ffiMemory.grow(1) * 65536;
+  // Stable ffiMemory byte offsets for each callback vtable (2 × i32 = 8 bytes):
+  const VTABLE_GRAPHQL_OFFSET = vtablePageBase;       // bytes [0..7]
+  const VTABLE_TX_SIGNER_OFFSET = vtablePageBase + 8; // bytes [8..15]
+
+  // ─── Phase 2: Build wrapped env for index_bg.wasm ─────────────────────────
   //
-  // call_indirect(N) in iota_sdk_ffi_bg.wasm now resolves both correctly.
+  // index_bg.wasm's 'env' imports are the ffi function exports.  We copy them
+  // all and override the ones that need cross-module bridging.
 
-  // ─── Phase 3: Wire proxy, complete initialisation ─────────────────────────
+  // Will be set to bgMemory after index_bg.wasm is instantiated (Phase 3).
+  const bgMemHolder: { mem: WebAssembly.Memory | null } = { mem: null };
 
-  // Fill the backing store so every deferred env call reaches the real ffi fn.
-  Object.assign(envTarget, ffiExports);
+  // Base: every ffi export satisfies a matching 'env' import name.
+  const wrappedEnv: Record<string, unknown> = { ...ffiExports };
+
+  // --- Poll function wrappers -----------------------------------------------
+  // Signature: (handle: i64, callback: i32, callbackData: i64)
+  // arg[1] is a bgTable index N; remap to ffiOffset + N so ffi's call_indirect
+  // resolves to the correct bgTable callback copied into ffiTable.
+  for (const name of Object.keys(ffiExports)) {
+    if (/^ffi_iota_sdk_ffi_rust_future_poll_/.test(name)) {
+      const orig = ffiExports[name] as (
+        handle: bigint,
+        callback: number,
+        callbackData: bigint,
+      ) => void;
+      wrappedEnv[name] = (
+        handle: bigint,
+        callback: number,
+        callbackData: bigint,
+      ): void => orig(handle, ffiOffset + callback, callbackData);
+    }
+  }
+
+  // --- Vtable init wrappers -------------------------------------------------
+  // When initialize() calls a vtable-init env function it passes a pointer
+  // (vtablePtr) into bgMemory.  The struct at that address contains two i32
+  // function-table fields (bgTable indices).  We:
+  //   1. Read both i32s from bgMemory.
+  //   2. Remap: bgTable index N → ffiOffset + N.
+  //   3. Write the remapped struct into ffiMemory at a stable offset.
+  //   4. Call the real ffi function with the ffiMemory offset.
+  const makeVtableWrapper =
+    (ffiVtableAddr: number, origFn: (addr: number) => void) =>
+    (vtablePtr: number): void => {
+      const bgView = new DataView(bgMemHolder.mem!.buffer); // fresh each call
+      const field0 = bgView.getInt32(vtablePtr, /* littleEndian */ true);
+      const field1 = bgView.getInt32(vtablePtr + 4, true);
+      const ffiView = new DataView(ffiMemory.buffer); // fresh each call
+      ffiView.setInt32(ffiVtableAddr, ffiOffset + field0, true);
+      ffiView.setInt32(ffiVtableAddr + 4, ffiOffset + field1, true);
+      origFn(ffiVtableAddr);
+    };
+
+  wrappedEnv[
+    'uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn'
+  ] = makeVtableWrapper(
+    VTABLE_GRAPHQL_OFFSET,
+    ffiExports[
+      'uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn'
+    ] as (addr: number) => void,
+  );
+
+  wrappedEnv[
+    'uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn'
+  ] = makeVtableWrapper(
+    VTABLE_TX_SIGNER_OFFSET,
+    ffiExports[
+      'uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn'
+    ] as (addr: number) => void,
+  );
+
+  // ─── Phase 3: Instantiate index_bg.wasm ───────────────────────────────────
+
+  const indexUrl =
+    wasmUrl ?? new URL('./wasm-bindgen/index_bg.wasm', import.meta.url);
+  const indexBytes = await fetch(indexUrl).then((r) => r.arrayBuffer());
+
+  // No start function runs here (we invoke __wbindgen_start manually below).
+  // No env functions are called during WASM element-segment initialisation.
+  const { instance: indexInstance } = await WebAssembly.instantiate(
+    indexBytes,
+    {
+      './index_bg.js': bg as any,
+      env: wrappedEnv as any,
+    },
+  );
+
+  // ─── Phase 4: Bridge function tables ──────────────────────────────────────
+  //
+  // Element segments in index_bg.wasm just ran, filling bgTable[1..N] with
+  // callback functions.  Copy those references into ffiTable[ffiOffset+1 ..
+  // ffiOffset+N] so call_indirect(ffiOffset+K) in ffi resolves to bgTable[K].
+
+  bgMemHolder.mem = (indexInstance.exports as any).memory as WebAssembly.Memory;
+
+  const bgTable = (indexInstance.exports as any)
+    .__indirect_function_table as WebAssembly.Table | undefined;
+  if (!bgTable) {
+    throw new Error(
+      'index_bg.wasm did not export __indirect_function_table.\n' +
+        'Build iota-sdk-wasm with -C link-arg=--export-table --growable-table\n' +
+        'and run wasm-bindgen with --keep-lld-exports (wasmBindgenExtras in ubrn.config.yaml).',
+    );
+  }
+
+  const bgCount = bgTable.length;
+  ffiTable.grow(bgCount);
+  for (let i = 0; i < bgCount; i++) {
+    const ref = bgTable.get(i);
+    if (ref !== null) ffiTable.set(ffiOffset + i, ref);
+  }
+
+  // ─── Phase 5: Complete initialisation ─────────────────────────────────────
 
   // Hand the WASM instance exports to the wasm-bindgen JS glue.
   (bg as any).__wbg_set_wasm(indexInstance.exports);
@@ -190,7 +234,8 @@ export async function uniffiInitAsync(wasmUrl?: string | URL): Promise<void> {
     (indexInstance.exports as any).__wbindgen_start();
   }
 
-  // Initialise the uniffi SDK layer (registers callback vtables etc.).
+  // Initialise the uniffi SDK layer.  This calls uniffiEnsureInitialized()
+  // which registers callback vtables via the vtable-init wrappers above.
   iota_sdk_ffi.default.initialize();
 }
 
