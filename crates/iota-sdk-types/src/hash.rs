@@ -186,14 +186,6 @@ impl crate::MultisigCommittee {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
-    /// refers to the same input used when deriving the address using the
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
-    /// full 32-byte `address_seed` value).
-    ///
-    /// [`ZkLoginPublicIdentifier`]: crate::ZkLoginPublicIdentifier
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::ZkLoginPublicIdentifier::derive_address_padded
     pub fn derive_address(&self) -> Address {
         use crate::MultisigMemberPublicKey::*;
 
