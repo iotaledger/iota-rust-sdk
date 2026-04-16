@@ -5,6 +5,7 @@
 // Allow clippy lints that are commonly triggered by the generated FFI module.
 #![allow(clippy::too_many_arguments)]
 
+#[cfg(target_arch = "wasm32")]
 mod iota_sdk_ffi_module;
 
 // end.

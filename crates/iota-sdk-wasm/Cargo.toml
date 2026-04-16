@@ -5,11 +5,6 @@ edition = "2018"
 license = "Apache-2.0"
 publish = false
 
-# iota-sdk-ffi is referenced via extern "C" linkage in iota_sdk_ffi_module.rs,
-# which cargo-udeps cannot detect when checking native builds.
-[package.metadata.cargo-udeps.ignore]
-normal = ["iota-sdk-ffi"]
-
 [lib]
 crate-type = ["cdylib", "rlib"]
 
@@ -17,17 +12,17 @@ crate-type = ["cdylib", "rlib"]
 default = []
 
 [dependencies]
-wasm-bindgen = "*"
-
-[dependencies.iota-sdk-ffi]
-path = "../iota-sdk-ffi/../../crates/iota-sdk-ffi"
-
-[dependencies.uniffi-runtime-javascript]
-features = ["wasm32"]
-version = "=0.29.3-1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "*"
 console_error_panic_hook = "0.1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.iota-sdk-ffi]
+path = "../iota-sdk-ffi/../../crates/iota-sdk-ffi"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.uniffi-runtime-javascript]
+features = ["wasm32"]
+version = "=0.29.3-1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 features = ["wasm_js"]
