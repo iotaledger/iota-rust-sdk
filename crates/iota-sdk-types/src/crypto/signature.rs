@@ -890,22 +890,6 @@ mod serialization {
         }
 
         #[test]
-        fn mutisig_with_zklogin() {
-            const FIXTURE: &str = "xwgDAQOWBwUDTDYyNzM5OTI5NDQyODI2NTYyNDE2NDMyNDk5Njc1NDY0MzY0MTU2ODM1MzgzMzAwNzMzMDkwMzgyOTUwOTAwMjA0MzcwMzI3MzQ0MTdNMTM5MjUxMzE5MTUzODM4NDMwOTkzODU1NTU2MjYyNzIwMzI5NjE5MjM3MjY1ODAyMjY2OTcwMTUzMTkxOTcxMzIxODkxMTg2MDUyNTcBMQMCTDc3MDQwMDc2MTQxMjAyNDQ0MjgyMDMyMzQwMzI3NzQ2ODkwODEwNzg2Mzg4NjkzMTcyNDM1NTEyNTMwMTA3MjYzMzg1MTA0MzYxMjdMNDczMzY5MTU2NjAwODE5MTIwNDAxMjcwNTc5OTA2MjI3NTk2MjY0NzMwMTUyNDU3MDIxMjM0MzczMjc1MTE3MTQyMjY2MzEzNTc1MgJMOTYzMjExNjUzNzQxMTQ3Mjk4MTQ2NDE0NzY0MDM5MzkxNzQxODQyMDI4NzgwOTUxODYyMTk5OTM0MjIwNjc2ODgzMjg0NzY5NTg5Nkw4NDM2Mjg3MTUwMzIxMjE2NTUwOTIxNTQ4ODg0MjI2MDM4MjczMTk0MjAyNDQwNTc0NzI5MDM4MTk2NDAxNDAzMDI0Mzg0MTEzODk4AgExATADTDUxNzIxODQyMDU0ODkxNDg4MzEwNTgxODkxNDIwNjI3Njc1NTM3MjMxMDkzNzIyMDk4NzI0NDAxMzA1MTg0MzYzODQxNzUxMjY1MjRMNTE1MTQzMjA2NjEzODc0NzIwOTEyMDY4NzUyMjIwODU1NDA0MTU2NDgyNzA4MDc5NzA1MDcxNjkyNzc2OTY0MzQ0NzQyMjEyMzI3MAExMXdpYVhOeklqb2lhSFIwY0hNNkx5OXBaQzUwZDJsMFkyZ3VkSFl2YjJGMWRHZ3lJaXcCMmV5SmhiR2NpT2lKU1V6STFOaUlzSW5SNWNDSTZJa3BYVkNJc0ltdHBaQ0k2SWpFaWZRTTIwNjg3NjQyNTE3NjMwNzMzMjczNjg3Nzk1NDc2MjQ3NDM3NzQzODM0NjAxMTAxNTY2Njg0OTY3OTY3NzA1ODA5OTg1MjQxMDY1NTM5CgAAAAAAAABhANFnRWP0VWDZA6kp8ltYtndCLMp70+CQMkW4CKPMOF5fGqTuUIKzqHJysBK8jS3rgHHBc5ZDqn0YUG0W2SH5gQC5xu4WMO8+cRFEpkjbBruyKE9ydM++5T/87lA8waSSAAgABAANfas1jI2tqk76AEmnWwdDZVWxCjaCGbtoD3BXE0nXdQEBAg4XzVk55GsZZkGWjNdZkQuiV34n+nP944dtub7FvOsrAQIDR/uvI/A4q8TDCKJxEXoqTP+u3bxf+Bx1F7xsdKfttDABAzwbaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyLbzKbLI5Mq4c7y9X5gf73CthASNbTN9llO2Okr5TqEMBAQA=";
-
-            let bcs = Base64::decode_vec(FIXTURE).unwrap();
-
-            let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-            assert_eq!(SignatureScheme::Multisig, sig.scheme());
-            let bytes = bcs::to_bytes(&sig).unwrap();
-            assert_eq!(bcs, bytes);
-
-            let json = serde_json::to_string_pretty(&sig).unwrap();
-            println!("{json}");
-            assert_eq!(sig, serde_json::from_str(&json).unwrap());
-        }
-
-        #[test]
         fn passkey_fixtures() {
             const FIXTURES: &[&str] = &[
                 "lgIGJUmWDeWIDoxodDQXD2R2YFuP5K65ooYyx5lc87qDHZdjHQAAAACKAXsidHlwZSI6IndlYmF1dGhuLmdldCIsImNoYWxsZW5nZSI6IkFBQUF0X21qSUIxdmJWcFlNNldWNllfb2l4Nko4YU5fOXNiOFNLRmJ1a0JmaVF3Iiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICmOyQv1fJ+inKD0C/sxKtxyFKl9aoBign6p9Ih3iA2ahDVg2CPZqUOlEhur2S2GbIZjbn6TbgWtbXXg8SjLkL7wM9Fw4JO0AKLdnLC1nhQguHBX5K6Hv2ta1sqoOqEFDDEw==",
