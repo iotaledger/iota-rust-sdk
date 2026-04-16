@@ -1945,210 +1945,6 @@ public func FfiConverterTypeBls12381VerifyingKey_lower(_ value: Bls12381Verifyin
 
 
 /**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-public protocol Bn254FieldElementProtocol: AnyObject, Sendable {
-    
-    func padded()  -> Data
-    
-    func unpadded()  -> Data
-    
-}
-/**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-open class Bn254FieldElement: Bn254FieldElementProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(self.pointer, $0) }
-    }
-    // No primary constructor declared for this class.
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(pointer, $0) }
-    }
-
-    
-public static func fromBytes(bytes: Data)throws  -> Bn254FieldElement  {
-    return try  FfiConverterTypeBn254FieldElement_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(
-        FfiConverterData.lower(bytes),$0
-    )
-})
-}
-    
-public static func fromStr(s: String)throws  -> Bn254FieldElement  {
-    return try  FfiConverterTypeBn254FieldElement_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(
-        FfiConverterString.lower(s),$0
-    )
-})
-}
-    
-public static func fromStrRadix10(s: String)throws  -> Bn254FieldElement  {
-    return try  FfiConverterTypeBn254FieldElement_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(
-        FfiConverterString.lower(s),$0
-    )
-})
-}
-    
-
-    
-open func padded() -> Data  {
-    return try!  FfiConverterData.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func unpadded() -> Data  {
-    return try!  FfiConverterData.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: Bn254FieldElement, other: Bn254FieldElement) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeBn254FieldElement_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension Bn254FieldElement: CustomDebugStringConvertible {}
-extension Bn254FieldElement: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeBn254FieldElement: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = Bn254FieldElement
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> Bn254FieldElement {
-        return Bn254FieldElement(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: Bn254FieldElement) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Bn254FieldElement {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: Bn254FieldElement, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeBn254FieldElement_lift(_ pointer: UnsafeMutableRawPointer) throws -> Bn254FieldElement {
-    return try FfiConverterTypeBn254FieldElement.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeBn254FieldElement_lower(_ value: Bn254FieldElement) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeBn254FieldElement.lower(value)
-}
-
-
-
-
-
-
-/**
  * A transaction that was cancelled
  *
  * # BCS
@@ -4474,349 +4270,6 @@ public func FfiConverterTypeCheckpointTransactionInfo_lift(_ pointer: UnsafeMuta
 #endif
 public func FfiConverterTypeCheckpointTransactionInfo_lower(_ value: CheckpointTransactionInfo) -> UnsafeMutableRawPointer {
     return FfiConverterTypeCheckpointTransactionInfo.lower(value)
-}
-
-
-
-
-
-
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-public protocol CircomG1Protocol: AnyObject, Sendable {
-    
-}
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-open class CircomG1: CircomG1Protocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_circomg1(self.pointer, $0) }
-    }
-public convenience init(el0: Bn254FieldElement, el1: Bn254FieldElement, el2: Bn254FieldElement) {
-    let pointer =
-        try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(
-        FfiConverterTypeBn254FieldElement_lower(el0),
-        FfiConverterTypeBn254FieldElement_lower(el1),
-        FfiConverterTypeBn254FieldElement_lower(el2),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_circomg1(pointer, $0) }
-    }
-
-    
-
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: CircomG1, other: CircomG1) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeCircomG1_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension CircomG1: CustomDebugStringConvertible {}
-extension CircomG1: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeCircomG1: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = CircomG1
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> CircomG1 {
-        return CircomG1(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: CircomG1) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> CircomG1 {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: CircomG1, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeCircomG1_lift(_ pointer: UnsafeMutableRawPointer) throws -> CircomG1 {
-    return try FfiConverterTypeCircomG1.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeCircomG1_lower(_ value: CircomG1) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeCircomG1.lower(value)
-}
-
-
-
-
-
-
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-public protocol CircomG2Protocol: AnyObject, Sendable {
-    
-}
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-open class CircomG2: CircomG2Protocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_circomg2(self.pointer, $0) }
-    }
-public convenience init(el00: Bn254FieldElement, el01: Bn254FieldElement, el10: Bn254FieldElement, el11: Bn254FieldElement, el20: Bn254FieldElement, el21: Bn254FieldElement) {
-    let pointer =
-        try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(
-        FfiConverterTypeBn254FieldElement_lower(el00),
-        FfiConverterTypeBn254FieldElement_lower(el01),
-        FfiConverterTypeBn254FieldElement_lower(el10),
-        FfiConverterTypeBn254FieldElement_lower(el11),
-        FfiConverterTypeBn254FieldElement_lower(el20),
-        FfiConverterTypeBn254FieldElement_lower(el21),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_circomg2(pointer, $0) }
-    }
-
-    
-
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: CircomG2, other: CircomG2) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeCircomG2_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension CircomG2: CustomDebugStringConvertible {}
-extension CircomG2: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeCircomG2: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = CircomG2
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> CircomG2 {
-        return CircomG2(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: CircomG2) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> CircomG2 {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: CircomG2, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeCircomG2_lift(_ pointer: UnsafeMutableRawPointer) throws -> CircomG2 {
-    return try FfiConverterTypeCircomG2.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeCircomG2_lower(_ value: CircomG2) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeCircomG2.lower(value)
 }
 
 
@@ -7813,21 +7266,6 @@ open class EndOfEpochTransactionKind: EndOfEpochTransactionKindProtocol, @unchec
         try! rustCall { uniffi_iota_sdk_ffi_fn_free_endofepochtransactionkind(pointer, $0) }
     }
 
-    
-public static func newAuthenticatorStateCreate() -> EndOfEpochTransactionKind  {
-    return try!  FfiConverterTypeEndOfEpochTransactionKind_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create($0
-    )
-})
-}
-    
-public static func newAuthenticatorStateExpire(tx: AuthenticatorStateExpire) -> EndOfEpochTransactionKind  {
-    return try!  FfiConverterTypeEndOfEpochTransactionKind_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(
-        FfiConverterTypeAuthenticatorStateExpire_lower(tx),$0
-    )
-})
-}
     
 public static func newChangeEpoch(tx: ChangeEpoch) -> EndOfEpochTransactionKind  {
     return try!  FfiConverterTypeEndOfEpochTransactionKind_lift(try! rustCall() {
@@ -15038,12 +14476,12 @@ public func FfiConverterTypeMultisigMember_lower(_ value: MultisigMember) -> Uns
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated
  *
  * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
  * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
  * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * zklogin-multisig-member-public-key-deprecated   = %x03
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -15071,17 +14509,11 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
     
     func asSecp256r1Opt()  -> Secp256r1PublicKey?
     
-    func asZklogin()  -> ZkLoginPublicIdentifier
-    
-    func asZkloginOpt()  -> ZkLoginPublicIdentifier?
-    
     func isEd25519()  -> Bool
     
     func isSecp256k1()  -> Bool
     
     func isSecp256r1()  -> Bool
-    
-    func isZklogin()  -> Bool
     
     func scheme()  -> SignatureScheme
     
@@ -15097,12 +14529,12 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated
  *
  * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
  * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
  * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * zklogin-multisig-member-public-key-deprecated   = %x03
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -15210,20 +14642,6 @@ open func asSecp256r1Opt() -> Secp256r1PublicKey?  {
 })
 }
     
-open func asZklogin() -> ZkLoginPublicIdentifier  {
-    return try!  FfiConverterTypeZkLoginPublicIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asZkloginOpt() -> ZkLoginPublicIdentifier?  {
-    return try!  FfiConverterOptionTypeZkLoginPublicIdentifier.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func isEd25519() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(self.uniffiClonePointer(),$0
@@ -15241,13 +14659,6 @@ open func isSecp256k1() -> Bool  {
 open func isSecp256r1() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isZklogin() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -15347,12 +14758,12 @@ public func FfiConverterTypeMultisigMemberPublicKey_lower(_ value: MultisigMembe
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated
  *
  * ed25519-multisig-member-signature   = %x00 ed25519-signature
  * secp256k1-multisig-member-signature = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * zklogin-multisig-member-signature-deprecated   = %x03
  * ```
  */
 public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
@@ -15369,17 +14780,11 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
     
     func asSecp256r1Opt()  -> Secp256r1Signature?
     
-    func asZklogin()  -> ZkLoginAuthenticator
-    
-    func asZkloginOpt()  -> ZkLoginAuthenticator?
-    
     func isEd25519()  -> Bool
     
     func isSecp256k1()  -> Bool
     
     func isSecp256r1()  -> Bool
-    
-    func isZklogin()  -> Bool
     
 }
 /**
@@ -15393,12 +14798,12 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated
  *
  * ed25519-multisig-member-signature   = %x00 ed25519-signature
  * secp256k1-multisig-member-signature = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * zklogin-multisig-member-signature-deprecated   = %x03
  * ```
  */
 open class MultisigMemberSignature: MultisigMemberSignatureProtocol, @unchecked Sendable {
@@ -15495,20 +14900,6 @@ open func asSecp256r1Opt() -> Secp256r1Signature?  {
 })
 }
     
-open func asZklogin() -> ZkLoginAuthenticator  {
-    return try!  FfiConverterTypeZkLoginAuthenticator_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asZkloginOpt() -> ZkLoginAuthenticator?  {
-    return try!  FfiConverterOptionTypeZkLoginAuthenticator.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func isEd25519() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(self.uniffiClonePointer(),$0
@@ -15526,13 +14917,6 @@ open func isSecp256k1() -> Bool  {
 open func isSecp256r1() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isZklogin() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -15618,10 +15002,6 @@ public protocol MultisigVerifierProtocol: AnyObject, Sendable {
     
     func verify(message: Data, signature: MultisigAggregatedSignature) throws 
     
-    func withZkloginVerifier(zkloginVerifier: ZkloginVerifier)  -> MultisigVerifier
-    
-    func zkloginVerifier()  -> ZkloginVerifier?
-    
 }
 open class MultisigVerifier: MultisigVerifierProtocol, @unchecked Sendable {
     fileprivate let pointer: UnsafeMutableRawPointer!
@@ -15688,21 +15068,6 @@ open func verify(message: Data, signature: MultisigAggregatedSignature)throws   
         FfiConverterTypeMultisigAggregatedSignature_lower(signature),$0
     )
 }
-}
-    
-open func withZkloginVerifier(zkloginVerifier: ZkloginVerifier) -> MultisigVerifier  {
-    return try!  FfiConverterTypeMultisigVerifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(self.uniffiClonePointer(),
-        FfiConverterTypeZkloginVerifier_lower(zkloginVerifier),$0
-    )
-})
-}
-    
-open func zkloginVerifier() -> ZkloginVerifier?  {
-    return try!  FfiConverterOptionTypeZkloginVerifier.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(self.uniffiClonePointer(),$0
-    )
-})
 }
     
     open var debugDescription: String {
@@ -24964,14 +24329,6 @@ open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
     }
 
     
-public static func newAuthenticatorStateUpdateV1(tx: AuthenticatorStateUpdateV1) -> TransactionKind  {
-    return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
-        FfiConverterTypeAuthenticatorStateUpdateV1_lower(tx),$0
-    )
-})
-}
-    
 public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
@@ -26851,7 +26208,7 @@ public func FfiConverterTypeUpgradePolicy_lower(_ value: UpgradePolicy) -> Unsaf
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -26878,10 +26235,6 @@ public protocol UserSignatureProtocol: AnyObject, Sendable {
     
     func asSimpleOpt()  -> SimpleSignature?
     
-    func asZkloginAuthenticator()  -> ZkLoginAuthenticator
-    
-    func asZkloginAuthenticatorOpt()  -> ZkLoginAuthenticator?
-    
     func isMoveAuthenticator()  -> Bool
     
     func isMultisig()  -> Bool
@@ -26889,8 +26242,6 @@ public protocol UserSignatureProtocol: AnyObject, Sendable {
     func isPasskeyAuthenticator()  -> Bool
     
     func isSimple()  -> Bool
-    
-    func isZkloginAuthenticator()  -> Bool
     
     /**
      * Return the flag for this signature scheme
@@ -26914,7 +26265,7 @@ public protocol UserSignatureProtocol: AnyObject, Sendable {
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -27021,14 +26372,6 @@ public static func newSimple(signature: SimpleSignature) -> UserSignature  {
 })
 }
     
-public static func newZkloginAuthenticator(authenticator: ZkLoginAuthenticator) -> UserSignature  {
-    return try!  FfiConverterTypeUserSignature_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
-        FfiConverterTypeZkLoginAuthenticator_lower(authenticator),$0
-    )
-})
-}
-    
 
     
 open func asMoveAuthenticator() -> MoveAuthenticator  {
@@ -27087,20 +26430,6 @@ open func asSimpleOpt() -> SimpleSignature?  {
 })
 }
     
-open func asZkloginAuthenticator() -> ZkLoginAuthenticator  {
-    return try!  FfiConverterTypeZkLoginAuthenticator_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asZkloginAuthenticatorOpt() -> ZkLoginAuthenticator?  {
-    return try!  FfiConverterOptionTypeZkLoginAuthenticator.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func isMoveAuthenticator() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(self.uniffiClonePointer(),$0
@@ -27125,13 +26454,6 @@ open func isPasskeyAuthenticator() -> Bool  {
 open func isSimple() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isZkloginAuthenticator() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -27244,10 +26566,6 @@ public protocol UserSignatureVerifierProtocol: AnyObject, Sendable {
     
     func verify(message: Data, signature: UserSignature) throws 
     
-    func withZkloginVerifier(zkloginVerifier: ZkloginVerifier)  -> UserSignatureVerifier
-    
-    func zkloginVerifier()  -> ZkloginVerifier?
-    
 }
 /**
  * Verifier that will verify all UserSignature variants
@@ -27317,21 +26635,6 @@ open func verify(message: Data, signature: UserSignature)throws   {try rustCallW
         FfiConverterTypeUserSignature_lower(signature),$0
     )
 }
-}
-    
-open func withZkloginVerifier(zkloginVerifier: ZkloginVerifier) -> UserSignatureVerifier  {
-    return try!  FfiConverterTypeUserSignatureVerifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(self.uniffiClonePointer(),
-        FfiConverterTypeZkloginVerifier_lower(zkloginVerifier),$0
-    )
-})
-}
-    
-open func zkloginVerifier() -> ZkloginVerifier?  {
-    return try!  FfiConverterOptionTypeZkloginVerifier.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(self.uniffiClonePointer(),$0
-    )
-})
 }
     
     open var debugDescription: String {
@@ -28492,1473 +27795,6 @@ public func FfiConverterTypeVersionAssignment_lower(_ value: VersionAssignment) 
 }
 
 
-
-
-
-
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-public protocol ZkLoginAuthenticatorProtocol: AnyObject, Sendable {
-    
-    func inputs()  -> ZkLoginInputs
-    
-    func maxEpoch()  -> UInt64
-    
-    func signature()  -> SimpleSignature
-    
-}
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-open class ZkLoginAuthenticator: ZkLoginAuthenticatorProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(self.pointer, $0) }
-    }
-public convenience init(inputs: ZkLoginInputs, maxEpoch: UInt64, signature: SimpleSignature) {
-    let pointer =
-        try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
-        FfiConverterTypeZkLoginInputs_lower(inputs),
-        FfiConverterUInt64.lower(maxEpoch),
-        FfiConverterTypeSimpleSignature_lower(signature),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(pointer, $0) }
-    }
-
-    
-
-    
-open func inputs() -> ZkLoginInputs  {
-    return try!  FfiConverterTypeZkLoginInputs_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func maxEpoch() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func signature() -> SimpleSignature  {
-    return try!  FfiConverterTypeSimpleSignature_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: ZkLoginAuthenticator, other: ZkLoginAuthenticator) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeZkLoginAuthenticator_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension ZkLoginAuthenticator: CustomDebugStringConvertible {}
-extension ZkLoginAuthenticator: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkLoginAuthenticator: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = ZkLoginAuthenticator
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginAuthenticator {
-        return ZkLoginAuthenticator(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: ZkLoginAuthenticator) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkLoginAuthenticator {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: ZkLoginAuthenticator, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginAuthenticator_lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginAuthenticator {
-    return try FfiConverterTypeZkLoginAuthenticator.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginAuthenticator_lower(_ value: ZkLoginAuthenticator) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeZkLoginAuthenticator.lower(value)
-}
-
-
-
-
-
-
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-public protocol ZkLoginInputsProtocol: AnyObject, Sendable {
-    
-    func addressSeed()  -> Bn254FieldElement
-    
-    func headerBase64()  -> String
-    
-    func iss()  -> String
-    
-    func issBase64Details()  -> ZkLoginClaim
-    
-    func jwkId()  -> JwkId
-    
-    func proofPoints()  -> ZkLoginProof
-    
-    func publicIdentifier()  -> ZkLoginPublicIdentifier
-    
-}
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-open class ZkLoginInputs: ZkLoginInputsProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_zklogininputs(self.pointer, $0) }
-    }
-public convenience init(proofPoints: ZkLoginProof, issBase64Details: ZkLoginClaim, headerBase64: String, addressSeed: Bn254FieldElement)throws  {
-    let pointer =
-        try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
-        FfiConverterTypeZkLoginProof_lower(proofPoints),
-        FfiConverterTypeZkLoginClaim_lower(issBase64Details),
-        FfiConverterString.lower(headerBase64),
-        FfiConverterTypeBn254FieldElement_lower(addressSeed),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_zklogininputs(pointer, $0) }
-    }
-
-    
-
-    
-open func addressSeed() -> Bn254FieldElement  {
-    return try!  FfiConverterTypeBn254FieldElement_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func headerBase64() -> String  {
-    return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func iss() -> String  {
-    return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func issBase64Details() -> ZkLoginClaim  {
-    return try!  FfiConverterTypeZkLoginClaim_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func jwkId() -> JwkId  {
-    return try!  FfiConverterTypeJwkId_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func proofPoints() -> ZkLoginProof  {
-    return try!  FfiConverterTypeZkLoginProof_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func publicIdentifier() -> ZkLoginPublicIdentifier  {
-    return try!  FfiConverterTypeZkLoginPublicIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: ZkLoginInputs, other: ZkLoginInputs) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeZkLoginInputs_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension ZkLoginInputs: CustomDebugStringConvertible {}
-extension ZkLoginInputs: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkLoginInputs: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = ZkLoginInputs
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginInputs {
-        return ZkLoginInputs(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: ZkLoginInputs) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkLoginInputs {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: ZkLoginInputs, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginInputs_lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginInputs {
-    return try FfiConverterTypeZkLoginInputs.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginInputs_lower(_ value: ZkLoginInputs) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeZkLoginInputs.lower(value)
-}
-
-
-
-
-
-
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-public protocol ZkLoginProofProtocol: AnyObject, Sendable {
-    
-    func a()  -> CircomG1
-    
-    func b()  -> CircomG2
-    
-    func c()  -> CircomG1
-    
-}
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-open class ZkLoginProof: ZkLoginProofProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_zkloginproof(self.pointer, $0) }
-    }
-public convenience init(a: CircomG1, b: CircomG2, c: CircomG1) {
-    let pointer =
-        try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
-        FfiConverterTypeCircomG1_lower(a),
-        FfiConverterTypeCircomG2_lower(b),
-        FfiConverterTypeCircomG1_lower(c),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_zkloginproof(pointer, $0) }
-    }
-
-    
-
-    
-open func a() -> CircomG1  {
-    return try!  FfiConverterTypeCircomG1_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func b() -> CircomG2  {
-    return try!  FfiConverterTypeCircomG2_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func c() -> CircomG1  {
-    return try!  FfiConverterTypeCircomG1_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: ZkLoginProof, other: ZkLoginProof) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeZkLoginProof_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension ZkLoginProof: CustomDebugStringConvertible {}
-extension ZkLoginProof: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkLoginProof: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = ZkLoginProof
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginProof {
-        return ZkLoginProof(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: ZkLoginProof) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkLoginProof {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: ZkLoginProof, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginProof_lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginProof {
-    return try FfiConverterTypeZkLoginProof.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginProof_lower(_ value: ZkLoginProof) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeZkLoginProof.lower(value)
-}
-
-
-
-
-
-
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-public protocol ZkLoginPublicIdentifierProtocol: AnyObject, Sendable {
-    
-    func addressSeed()  -> Bn254FieldElement
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */
-    func deriveAddress()  -> [Address]
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */
-    func deriveAddressPadded()  -> Address
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */
-    func deriveAddressUnpadded()  -> Address
-    
-    func iss()  -> String
-    
-}
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-open class ZkLoginPublicIdentifier: ZkLoginPublicIdentifierProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(self.pointer, $0) }
-    }
-public convenience init(iss: String, addressSeed: Bn254FieldElement)throws  {
-    let pointer =
-        try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
-        FfiConverterString.lower(iss),
-        FfiConverterTypeBn254FieldElement_lower(addressSeed),$0
-    )
-}
-    self.init(unsafeFromRawPointer: pointer)
-}
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(pointer, $0) }
-    }
-
-    
-
-    
-open func addressSeed() -> Bn254FieldElement  {
-    return try!  FfiConverterTypeBn254FieldElement_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */
-open func deriveAddress() -> [Address]  {
-    return try!  FfiConverterSequenceTypeAddress.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */
-open func deriveAddressPadded() -> Address  {
-    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */
-open func deriveAddressUnpadded() -> Address  {
-    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func iss() -> String  {
-    return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: ZkLoginPublicIdentifier, other: ZkLoginPublicIdentifier) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeZkLoginPublicIdentifier_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension ZkLoginPublicIdentifier: CustomDebugStringConvertible {}
-extension ZkLoginPublicIdentifier: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkLoginPublicIdentifier: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = ZkLoginPublicIdentifier
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginPublicIdentifier {
-        return ZkLoginPublicIdentifier(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: ZkLoginPublicIdentifier) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkLoginPublicIdentifier {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: ZkLoginPublicIdentifier, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginPublicIdentifier_lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkLoginPublicIdentifier {
-    return try FfiConverterTypeZkLoginPublicIdentifier.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginPublicIdentifier_lower(_ value: ZkLoginPublicIdentifier) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeZkLoginPublicIdentifier.lower(value)
-}
-
-
-
-
-
-
-public protocol ZkloginVerifierProtocol: AnyObject, Sendable {
-    
-    func jwks()  -> [JwkId: Jwk]
-    
-    func verify(message: Data, authenticator: ZkLoginAuthenticator) throws 
-    
-    func withJwks(jwks: [JwkId: Jwk])  -> ZkloginVerifier
-    
-}
-open class ZkloginVerifier: ZkloginVerifierProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(self.pointer, $0) }
-    }
-    // No primary constructor declared for this class.
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_zkloginverifier(pointer, $0) }
-    }
-
-    
-    /**
-     * Load a fixed verifying key from zkLogin.vkey output. This is based on a
-     * local setup and should not be used in production.
-     */
-public static func newDev() -> ZkloginVerifier  {
-    return try!  FfiConverterTypeZkloginVerifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev($0
-    )
-})
-}
-    
-public static func newMainnet() -> ZkloginVerifier  {
-    return try!  FfiConverterTypeZkloginVerifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet($0
-    )
-})
-}
-    
-
-    
-open func jwks() -> [JwkId: Jwk]  {
-    return try!  FfiConverterDictionaryTypeJwkIdTypeJwk.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func verify(message: Data, authenticator: ZkLoginAuthenticator)throws   {try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(self.uniffiClonePointer(),
-        FfiConverterData.lower(message),
-        FfiConverterTypeZkLoginAuthenticator_lower(authenticator),$0
-    )
-}
-}
-    
-open func withJwks(jwks: [JwkId: Jwk]) -> ZkloginVerifier  {
-    return try!  FfiConverterTypeZkloginVerifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(self.uniffiClonePointer(),
-        FfiConverterDictionaryTypeJwkIdTypeJwk.lower(jwks),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-
-}
-extension ZkloginVerifier: CustomDebugStringConvertible {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkloginVerifier: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = ZkloginVerifier
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkloginVerifier {
-        return ZkloginVerifier(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: ZkloginVerifier) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkloginVerifier {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: ZkloginVerifier, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkloginVerifier_lift(_ pointer: UnsafeMutableRawPointer) throws -> ZkloginVerifier {
-    return try FfiConverterTypeZkloginVerifier.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkloginVerifier_lower(_ value: ZkloginVerifier) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeZkloginVerifier.lower(value)
-}
-
-
-
-
-/**
- * A new Jwk
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * active-jwk = jwk-id jwk u64
- * ```
- */
-public struct ActiveJwk {
-    /**
-     * Identifier used to uniquely identify a Jwk
-     */
-    public var jwkId: JwkId
-    /**
-     * The Jwk
-     */
-    public var jwk: Jwk
-    /**
-     * Most recent epoch in which the jwk was validated
-     */
-    public var epoch: UInt64
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(
-        /**
-         * Identifier used to uniquely identify a Jwk
-         */jwkId: JwkId, 
-        /**
-         * The Jwk
-         */jwk: Jwk, 
-        /**
-         * Most recent epoch in which the jwk was validated
-         */epoch: UInt64) {
-        self.jwkId = jwkId
-        self.jwk = jwk
-        self.epoch = epoch
-    }
-}
-
-#if compiler(>=6)
-extension ActiveJwk: Sendable {}
-#endif
-
-
-extension ActiveJwk: Equatable, Hashable {
-    public static func ==(lhs: ActiveJwk, rhs: ActiveJwk) -> Bool {
-        if lhs.jwkId != rhs.jwkId {
-            return false
-        }
-        if lhs.jwk != rhs.jwk {
-            return false
-        }
-        if lhs.epoch != rhs.epoch {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(jwkId)
-        hasher.combine(jwk)
-        hasher.combine(epoch)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeActiveJwk: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ActiveJwk {
-        return
-            try ActiveJwk(
-                jwkId: FfiConverterTypeJwkId.read(from: &buf), 
-                jwk: FfiConverterTypeJwk.read(from: &buf), 
-                epoch: FfiConverterUInt64.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: ActiveJwk, into buf: inout [UInt8]) {
-        FfiConverterTypeJwkId.write(value.jwkId, into: &buf)
-        FfiConverterTypeJwk.write(value.jwk, into: &buf)
-        FfiConverterUInt64.write(value.epoch, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeActiveJwk_lift(_ buf: RustBuffer) throws -> ActiveJwk {
-    return try FfiConverterTypeActiveJwk.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeActiveJwk_lower(_ value: ActiveJwk) -> RustBuffer {
-    return FfiConverterTypeActiveJwk.lower(value)
-}
-
-
-/**
- * Expire old JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-expire = u64 u64
- * ```
- */
-public struct AuthenticatorStateExpire {
-    /**
-     * Expire JWKs that have a lower epoch than this
-     */
-    public var minEpoch: UInt64
-    /**
-     * The initial version of the authenticator object that it was shared at.
-     */
-    public var authenticatorObjInitialSharedVersion: UInt64
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(
-        /**
-         * Expire JWKs that have a lower epoch than this
-         */minEpoch: UInt64, 
-        /**
-         * The initial version of the authenticator object that it was shared at.
-         */authenticatorObjInitialSharedVersion: UInt64) {
-        self.minEpoch = minEpoch
-        self.authenticatorObjInitialSharedVersion = authenticatorObjInitialSharedVersion
-    }
-}
-
-#if compiler(>=6)
-extension AuthenticatorStateExpire: Sendable {}
-#endif
-
-
-extension AuthenticatorStateExpire: Equatable, Hashable {
-    public static func ==(lhs: AuthenticatorStateExpire, rhs: AuthenticatorStateExpire) -> Bool {
-        if lhs.minEpoch != rhs.minEpoch {
-            return false
-        }
-        if lhs.authenticatorObjInitialSharedVersion != rhs.authenticatorObjInitialSharedVersion {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(minEpoch)
-        hasher.combine(authenticatorObjInitialSharedVersion)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeAuthenticatorStateExpire: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> AuthenticatorStateExpire {
-        return
-            try AuthenticatorStateExpire(
-                minEpoch: FfiConverterUInt64.read(from: &buf), 
-                authenticatorObjInitialSharedVersion: FfiConverterUInt64.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: AuthenticatorStateExpire, into buf: inout [UInt8]) {
-        FfiConverterUInt64.write(value.minEpoch, into: &buf)
-        FfiConverterUInt64.write(value.authenticatorObjInitialSharedVersion, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeAuthenticatorStateExpire_lift(_ buf: RustBuffer) throws -> AuthenticatorStateExpire {
-    return try FfiConverterTypeAuthenticatorStateExpire.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeAuthenticatorStateExpire_lower(_ value: AuthenticatorStateExpire) -> RustBuffer {
-    return FfiConverterTypeAuthenticatorStateExpire.lower(value)
-}
-
-
-/**
- * Update the set of valid JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-update = u64 ; epoch
- * u64 ; round
- * (vector active-jwk)
- * u64 ; initial version of the authenticator object
- * ```
- */
-public struct AuthenticatorStateUpdateV1 {
-    /**
-     * Epoch of the authenticator state update transaction
-     */
-    public var epoch: UInt64
-    /**
-     * Consensus round of the authenticator state update
-     */
-    public var round: UInt64
-    /**
-     * newly active jwks
-     */
-    public var newActiveJwks: [ActiveJwk]
-    public var authenticatorObjInitialSharedVersion: UInt64
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(
-        /**
-         * Epoch of the authenticator state update transaction
-         */epoch: UInt64, 
-        /**
-         * Consensus round of the authenticator state update
-         */round: UInt64, 
-        /**
-         * newly active jwks
-         */newActiveJwks: [ActiveJwk], authenticatorObjInitialSharedVersion: UInt64) {
-        self.epoch = epoch
-        self.round = round
-        self.newActiveJwks = newActiveJwks
-        self.authenticatorObjInitialSharedVersion = authenticatorObjInitialSharedVersion
-    }
-}
-
-#if compiler(>=6)
-extension AuthenticatorStateUpdateV1: Sendable {}
-#endif
-
-
-extension AuthenticatorStateUpdateV1: Equatable, Hashable {
-    public static func ==(lhs: AuthenticatorStateUpdateV1, rhs: AuthenticatorStateUpdateV1) -> Bool {
-        if lhs.epoch != rhs.epoch {
-            return false
-        }
-        if lhs.round != rhs.round {
-            return false
-        }
-        if lhs.newActiveJwks != rhs.newActiveJwks {
-            return false
-        }
-        if lhs.authenticatorObjInitialSharedVersion != rhs.authenticatorObjInitialSharedVersion {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(epoch)
-        hasher.combine(round)
-        hasher.combine(newActiveJwks)
-        hasher.combine(authenticatorObjInitialSharedVersion)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> AuthenticatorStateUpdateV1 {
-        return
-            try AuthenticatorStateUpdateV1(
-                epoch: FfiConverterUInt64.read(from: &buf), 
-                round: FfiConverterUInt64.read(from: &buf), 
-                newActiveJwks: FfiConverterSequenceTypeActiveJwk.read(from: &buf), 
-                authenticatorObjInitialSharedVersion: FfiConverterUInt64.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: AuthenticatorStateUpdateV1, into buf: inout [UInt8]) {
-        FfiConverterUInt64.write(value.epoch, into: &buf)
-        FfiConverterUInt64.write(value.round, into: &buf)
-        FfiConverterSequenceTypeActiveJwk.write(value.newActiveJwks, into: &buf)
-        FfiConverterUInt64.write(value.authenticatorObjInitialSharedVersion, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeAuthenticatorStateUpdateV1_lift(_ buf: RustBuffer) throws -> AuthenticatorStateUpdateV1 {
-    return try FfiConverterTypeAuthenticatorStateUpdateV1.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeAuthenticatorStateUpdateV1_lower(_ value: AuthenticatorStateUpdateV1) -> RustBuffer {
-    return FfiConverterTypeAuthenticatorStateUpdateV1.lower(value)
-}
 
 
 public struct BatchSendStatus {
@@ -32024,224 +29860,6 @@ public func FfiConverterTypeGasPayment_lift(_ buf: RustBuffer) throws -> GasPaym
 #endif
 public func FfiConverterTypeGasPayment_lower(_ value: GasPayment) -> RustBuffer {
     return FfiConverterTypeGasPayment.lower(value)
-}
-
-
-/**
- * A JSON Web Key
- *
- * Struct that contains info for a JWK. A list of them for different kids can
- * be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
- * The JWK is used to verify the JWT token.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk = string string string string
- * ```
- */
-public struct Jwk {
-    /**
-     * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-     */
-    public var kty: String
-    /**
-     * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    public var e: String
-    /**
-     * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    public var n: String
-    /**
-     * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-     */
-    public var alg: String
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(
-        /**
-         * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-         */kty: String, 
-        /**
-         * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-         */e: String, 
-        /**
-         * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-         */n: String, 
-        /**
-         * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-         */alg: String) {
-        self.kty = kty
-        self.e = e
-        self.n = n
-        self.alg = alg
-    }
-}
-
-#if compiler(>=6)
-extension Jwk: Sendable {}
-#endif
-
-
-extension Jwk: Equatable, Hashable {
-    public static func ==(lhs: Jwk, rhs: Jwk) -> Bool {
-        if lhs.kty != rhs.kty {
-            return false
-        }
-        if lhs.e != rhs.e {
-            return false
-        }
-        if lhs.n != rhs.n {
-            return false
-        }
-        if lhs.alg != rhs.alg {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(kty)
-        hasher.combine(e)
-        hasher.combine(n)
-        hasher.combine(alg)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeJwk: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Jwk {
-        return
-            try Jwk(
-                kty: FfiConverterString.read(from: &buf), 
-                e: FfiConverterString.read(from: &buf), 
-                n: FfiConverterString.read(from: &buf), 
-                alg: FfiConverterString.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: Jwk, into buf: inout [UInt8]) {
-        FfiConverterString.write(value.kty, into: &buf)
-        FfiConverterString.write(value.e, into: &buf)
-        FfiConverterString.write(value.n, into: &buf)
-        FfiConverterString.write(value.alg, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeJwk_lift(_ buf: RustBuffer) throws -> Jwk {
-    return try FfiConverterTypeJwk.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeJwk_lower(_ value: Jwk) -> RustBuffer {
-    return FfiConverterTypeJwk.lower(value)
-}
-
-
-/**
- * Key to uniquely identify a JWK
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk-id = string string
- * ```
- */
-public struct JwkId {
-    /**
-     * The issuer or identity of the OIDC provider.
-     */
-    public var iss: String
-    /**
-     * A key id use to uniquely identify a key from an OIDC provider.
-     */
-    public var kid: String
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(
-        /**
-         * The issuer or identity of the OIDC provider.
-         */iss: String, 
-        /**
-         * A key id use to uniquely identify a key from an OIDC provider.
-         */kid: String) {
-        self.iss = iss
-        self.kid = kid
-    }
-}
-
-#if compiler(>=6)
-extension JwkId: Sendable {}
-#endif
-
-
-extension JwkId: Equatable, Hashable {
-    public static func ==(lhs: JwkId, rhs: JwkId) -> Bool {
-        if lhs.iss != rhs.iss {
-            return false
-        }
-        if lhs.kid != rhs.kid {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(iss)
-        hasher.combine(kid)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeJwkId: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> JwkId {
-        return
-            try JwkId(
-                iss: FfiConverterString.read(from: &buf), 
-                kid: FfiConverterString.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: JwkId, into buf: inout [UInt8]) {
-        FfiConverterString.write(value.iss, into: &buf)
-        FfiConverterString.write(value.kid, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeJwkId_lift(_ buf: RustBuffer) throws -> JwkId {
-    return try FfiConverterTypeJwkId.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeJwkId_lower(_ value: JwkId) -> RustBuffer {
-    return FfiConverterTypeJwkId.lower(value)
 }
 
 
@@ -36596,87 +34214,6 @@ public func FfiConverterTypeValidatorSet_lower(_ value: ValidatorSet) -> RustBuf
     return FfiConverterTypeValidatorSet.lower(value)
 }
 
-
-/**
- * A claim of the iss in a zklogin proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-claim = string u8
- * ```
- */
-public struct ZkLoginClaim {
-    public var value: String
-    public var indexMod4: UInt8
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(value: String, indexMod4: UInt8) {
-        self.value = value
-        self.indexMod4 = indexMod4
-    }
-}
-
-#if compiler(>=6)
-extension ZkLoginClaim: Sendable {}
-#endif
-
-
-extension ZkLoginClaim: Equatable, Hashable {
-    public static func ==(lhs: ZkLoginClaim, rhs: ZkLoginClaim) -> Bool {
-        if lhs.value != rhs.value {
-            return false
-        }
-        if lhs.indexMod4 != rhs.indexMod4 {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(value)
-        hasher.combine(indexMod4)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ZkLoginClaim {
-        return
-            try ZkLoginClaim(
-                value: FfiConverterString.read(from: &buf), 
-                indexMod4: FfiConverterUInt8.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: ZkLoginClaim, into buf: inout [UInt8]) {
-        FfiConverterString.write(value.value, into: &buf)
-        FfiConverterUInt8.write(value.indexMod4, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginClaim_lift(_ buf: RustBuffer) throws -> ZkLoginClaim {
-    return try FfiConverterTypeZkLoginClaim.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeZkLoginClaim_lower(_ value: ZkLoginClaim) -> RustBuffer {
-    return FfiConverterTypeZkLoginClaim.lower(value)
-}
-
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
@@ -39238,14 +36775,14 @@ extension SdkFfiError: Foundation.LocalizedError {
  *
  * ```text
  * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
- * multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+ * multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
  * move-auth-flag
  * ed25519-flag        = %x00
  * secp256k1-flag      = %x01
  * secp256r1-flag      = %x02
  * multisig-flag       = %x03
  * bls-flag            = %x04
- * zklogin-auth-flag   = %x05
+ * zklogin-auth-flag-deprecated   = %x05
  * passkey-auth-flag   = %x06
  * move-auth-flag      = %x07
  * ```
@@ -39258,7 +36795,7 @@ public enum SignatureScheme : UInt8 {
     case secp256r1 = 2
     case multisig = 3
     case bls12381 = 4
-    case zkLoginAuthenticator = 5
+    case zkLoginAuthenticatorDeprecated = 5
     case passkeyAuthenticator = 6
     case moveAuthenticator = 7
 }
@@ -39288,7 +36825,7 @@ public struct FfiConverterTypeSignatureScheme: FfiConverterRustBuffer {
         
         case 5: return .bls12381
         
-        case 6: return .zkLoginAuthenticator
+        case 6: return .zkLoginAuthenticatorDeprecated
         
         case 7: return .passkeyAuthenticator
         
@@ -39322,7 +36859,7 @@ public struct FfiConverterTypeSignatureScheme: FfiConverterRustBuffer {
             writeInt(&buf, Int32(5))
         
         
-        case .zkLoginAuthenticator:
+        case .zkLoginAuthenticatorDeprecated:
             writeInt(&buf, Int32(6))
         
         
@@ -40729,78 +38266,6 @@ fileprivate struct FfiConverterOptionTypeTypeTag: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterTypeTypeTag.read(from: &buf)
-        default: throw UniffiInternalError.unexpectedOptionalTag
-        }
-    }
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-fileprivate struct FfiConverterOptionTypeZkLoginAuthenticator: FfiConverterRustBuffer {
-    typealias SwiftType = ZkLoginAuthenticator?
-
-    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
-        guard let value = value else {
-            writeInt(&buf, Int8(0))
-            return
-        }
-        writeInt(&buf, Int8(1))
-        FfiConverterTypeZkLoginAuthenticator.write(value, into: &buf)
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
-        switch try readInt(&buf) as Int8 {
-        case 0: return nil
-        case 1: return try FfiConverterTypeZkLoginAuthenticator.read(from: &buf)
-        default: throw UniffiInternalError.unexpectedOptionalTag
-        }
-    }
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-fileprivate struct FfiConverterOptionTypeZkLoginPublicIdentifier: FfiConverterRustBuffer {
-    typealias SwiftType = ZkLoginPublicIdentifier?
-
-    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
-        guard let value = value else {
-            writeInt(&buf, Int8(0))
-            return
-        }
-        writeInt(&buf, Int8(1))
-        FfiConverterTypeZkLoginPublicIdentifier.write(value, into: &buf)
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
-        switch try readInt(&buf) as Int8 {
-        case 0: return nil
-        case 1: return try FfiConverterTypeZkLoginPublicIdentifier.read(from: &buf)
-        default: throw UniffiInternalError.unexpectedOptionalTag
-        }
-    }
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-fileprivate struct FfiConverterOptionTypeZkloginVerifier: FfiConverterRustBuffer {
-    typealias SwiftType = ZkloginVerifier?
-
-    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
-        guard let value = value else {
-            writeInt(&buf, Int8(0))
-            return
-        }
-        writeInt(&buf, Int8(1))
-        FfiConverterTypeZkloginVerifier.write(value, into: &buf)
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
-        switch try readInt(&buf) as Int8 {
-        case 0: return nil
-        case 1: return try FfiConverterTypeZkloginVerifier.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -42789,31 +40254,6 @@ fileprivate struct FfiConverterSequenceTypeVersionAssignment: FfiConverterRustBu
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-fileprivate struct FfiConverterSequenceTypeActiveJwk: FfiConverterRustBuffer {
-    typealias SwiftType = [ActiveJwk]
-
-    public static func write(_ value: [ActiveJwk], into buf: inout [UInt8]) {
-        let len = Int32(value.count)
-        writeInt(&buf, len)
-        for item in value {
-            FfiConverterTypeActiveJwk.write(item, into: &buf)
-        }
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [ActiveJwk] {
-        let len: Int32 = try readInt(&buf)
-        var seq = [ActiveJwk]()
-        seq.reserveCapacity(Int(len))
-        for _ in 0 ..< len {
-            seq.append(try FfiConverterTypeActiveJwk.read(from: &buf))
-        }
-        return seq
-    }
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
 fileprivate struct FfiConverterSequenceTypeChangedObject: FfiConverterRustBuffer {
     typealias SwiftType = [ChangedObject]
 
@@ -43614,32 +41054,6 @@ fileprivate struct FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo: FfiConvert
     }
 }
 
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-fileprivate struct FfiConverterDictionaryTypeJwkIdTypeJwk: FfiConverterRustBuffer {
-    public static func write(_ value: [JwkId: Jwk], into buf: inout [UInt8]) {
-        let len = Int32(value.count)
-        writeInt(&buf, len)
-        for (key, value) in value {
-            FfiConverterTypeJwkId.write(key, into: &buf)
-            FfiConverterTypeJwk.write(value, into: &buf)
-        }
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [JwkId: Jwk] {
-        let len: Int32 = try readInt(&buf)
-        var dict = [JwkId: Jwk]()
-        dict.reserveCapacity(Int(len))
-        for _ in 0..<len {
-            let key = try FfiConverterTypeJwkId.read(from: &buf)
-            let value = try FfiConverterTypeJwk.read(from: &buf)
-            dict[key] = value
-        }
-        return dict
-    }
-}
-
 
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
@@ -43903,46 +41317,6 @@ public func uniffiForeignFutureHandleCountIotaSdkFfi() -> Int {
 /**
  * Create this type from BCS encoded bytes.
  */
-public func activeJwkFromBcs(bcs: Data)throws  -> ActiveJwk  {
-    return try  FfiConverterTypeActiveJwk_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func activeJwkFromJson(json: String)throws  -> ActiveJwk  {
-    return try  FfiConverterTypeActiveJwk_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func activeJwkToBcs(data: ActiveJwk)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
-        FfiConverterTypeActiveJwk_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func activeJwkToJson(data: ActiveJwk)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(
-        FfiConverterTypeActiveJwk_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
 public func addressFromBcs(bcs: Data)throws  -> Address  {
     return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
@@ -44017,86 +41391,6 @@ public func argumentToJson(data: Argument)throws  -> String  {
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_argument_to_json(
         FfiConverterTypeArgument_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func authenticatorStateExpireFromBcs(bcs: Data)throws  -> AuthenticatorStateExpire  {
-    return try  FfiConverterTypeAuthenticatorStateExpire_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func authenticatorStateExpireFromJson(json: String)throws  -> AuthenticatorStateExpire  {
-    return try  FfiConverterTypeAuthenticatorStateExpire_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func authenticatorStateExpireToBcs(data: AuthenticatorStateExpire)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
-        FfiConverterTypeAuthenticatorStateExpire_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func authenticatorStateExpireToJson(data: AuthenticatorStateExpire)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(
-        FfiConverterTypeAuthenticatorStateExpire_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func authenticatorStateUpdateV1FromBcs(bcs: Data)throws  -> AuthenticatorStateUpdateV1  {
-    return try  FfiConverterTypeAuthenticatorStateUpdateV1_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func authenticatorStateUpdateV1FromJson(json: String)throws  -> AuthenticatorStateUpdateV1  {
-    return try  FfiConverterTypeAuthenticatorStateUpdateV1_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func authenticatorStateUpdateV1ToBcs(data: AuthenticatorStateUpdateV1)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
-        FfiConverterTypeAuthenticatorStateUpdateV1_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func authenticatorStateUpdateV1ToJson(data: AuthenticatorStateUpdateV1)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(
-        FfiConverterTypeAuthenticatorStateUpdateV1_lower(data),$0
     )
 })
 }
@@ -44191,46 +41485,6 @@ public func bls12381SignatureToJson(data: Bls12381Signature)throws  -> String  {
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(
         FfiConverterTypeBls12381Signature_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func bn254FieldElementFromBcs(bcs: Data)throws  -> Bn254FieldElement  {
-    return try  FfiConverterTypeBn254FieldElement_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func bn254FieldElementFromJson(json: String)throws  -> Bn254FieldElement  {
-    return try  FfiConverterTypeBn254FieldElement_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func bn254FieldElementToBcs(data: Bn254FieldElement)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
-        FfiConverterTypeBn254FieldElement_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func bn254FieldElementToJson(data: Bn254FieldElement)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(
-        FfiConverterTypeBn254FieldElement_lower(data),$0
     )
 })
 }
@@ -44591,86 +41845,6 @@ public func checkpointTransactionInfoToJson(data: CheckpointTransactionInfo)thro
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(
         FfiConverterTypeCheckpointTransactionInfo_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func circomG1FromBcs(bcs: Data)throws  -> CircomG1  {
-    return try  FfiConverterTypeCircomG1_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func circomG1FromJson(json: String)throws  -> CircomG1  {
-    return try  FfiConverterTypeCircomG1_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func circomG1ToBcs(data: CircomG1)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
-        FfiConverterTypeCircomG1_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func circomG1ToJson(data: CircomG1)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(
-        FfiConverterTypeCircomG1_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func circomG2FromBcs(bcs: Data)throws  -> CircomG2  {
-    return try  FfiConverterTypeCircomG2_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func circomG2FromJson(json: String)throws  -> CircomG2  {
-    return try  FfiConverterTypeCircomG2_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func circomG2ToBcs(data: CircomG2)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
-        FfiConverterTypeCircomG2_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func circomG2ToJson(data: CircomG2)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(
-        FfiConverterTypeCircomG2_lower(data),$0
     )
 })
 }
@@ -45696,86 +42870,6 @@ public func inputToJson(data: Input)throws  -> String  {
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_input_to_json(
         FfiConverterTypeInput_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func jwkFromBcs(bcs: Data)throws  -> Jwk  {
-    return try  FfiConverterTypeJwk_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func jwkFromJson(json: String)throws  -> Jwk  {
-    return try  FfiConverterTypeJwk_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func jwkIdFromBcs(bcs: Data)throws  -> JwkId  {
-    return try  FfiConverterTypeJwkId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func jwkIdFromJson(json: String)throws  -> JwkId  {
-    return try  FfiConverterTypeJwkId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func jwkIdToBcs(data: JwkId)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
-        FfiConverterTypeJwkId_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func jwkIdToJson(data: JwkId)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(
-        FfiConverterTypeJwkId_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func jwkToBcs(data: Jwk)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
-        FfiConverterTypeJwk_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func jwkToJson(data: Jwk)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_jwk_to_json(
-        FfiConverterTypeJwk_lower(data),$0
     )
 })
 }
@@ -48139,166 +45233,6 @@ public func versionAssignmentToJson(data: VersionAssignment)throws  -> String  {
     )
 })
 }
-/**
- * Create this type from BCS encoded bytes.
- */
-public func zkLoginAuthenticatorFromBcs(bcs: Data)throws  -> ZkLoginAuthenticator  {
-    return try  FfiConverterTypeZkLoginAuthenticator_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func zkLoginAuthenticatorFromJson(json: String)throws  -> ZkLoginAuthenticator  {
-    return try  FfiConverterTypeZkLoginAuthenticator_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func zkLoginAuthenticatorToBcs(data: ZkLoginAuthenticator)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
-        FfiConverterTypeZkLoginAuthenticator_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func zkLoginAuthenticatorToJson(data: ZkLoginAuthenticator)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(
-        FfiConverterTypeZkLoginAuthenticator_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func zkLoginClaimFromBcs(bcs: Data)throws  -> ZkLoginClaim  {
-    return try  FfiConverterTypeZkLoginClaim_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func zkLoginClaimFromJson(json: String)throws  -> ZkLoginClaim  {
-    return try  FfiConverterTypeZkLoginClaim_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func zkLoginClaimToBcs(data: ZkLoginClaim)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
-        FfiConverterTypeZkLoginClaim_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func zkLoginClaimToJson(data: ZkLoginClaim)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(
-        FfiConverterTypeZkLoginClaim_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func zkLoginProofFromBcs(bcs: Data)throws  -> ZkLoginProof  {
-    return try  FfiConverterTypeZkLoginProof_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func zkLoginProofFromJson(json: String)throws  -> ZkLoginProof  {
-    return try  FfiConverterTypeZkLoginProof_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func zkLoginProofToBcs(data: ZkLoginProof)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
-        FfiConverterTypeZkLoginProof_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func zkLoginProofToJson(data: ZkLoginProof)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(
-        FfiConverterTypeZkLoginProof_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
-public func zkLoginPublicIdentifierFromBcs(bcs: Data)throws  -> ZkLoginPublicIdentifier  {
-    return try  FfiConverterTypeZkLoginPublicIdentifier_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func zkLoginPublicIdentifierFromJson(json: String)throws  -> ZkLoginPublicIdentifier  {
-    return try  FfiConverterTypeZkLoginPublicIdentifier_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func zkLoginPublicIdentifierToBcs(data: ZkLoginPublicIdentifier)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
-        FfiConverterTypeZkLoginPublicIdentifier_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func zkLoginPublicIdentifierToJson(data: ZkLoginPublicIdentifier)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(
-        FfiConverterTypeZkLoginPublicIdentifier_lower(data),$0
-    )
-})
-}
 
 private enum InitializationResult {
     case ok
@@ -48314,18 +45248,6 @@ private let initializationResult: InitializationResult = {
     let scaffolding_contract_version = ffi_iota_sdk_ffi_uniffi_contract_version()
     if bindings_contract_version != scaffolding_contract_version {
         return InitializationResult.contractVersionMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs() != 65415) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json() != 5693) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs() != 37978) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json() != 56327) {
-        return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_address_from_bcs() != 8229) {
         return InitializationResult.apiChecksumMismatch
@@ -48349,30 +45271,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_argument_to_json() != 34680) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs() != 23378) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json() != 19654) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs() != 26245) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json() != 46170) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs() != 39650) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json() != 30949) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs() != 31251) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json() != 36459) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_base64_decode() != 57367) {
@@ -48403,18 +45301,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json() != 30321) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs() != 13721) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json() != 23224) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json() != 7045) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591) {
@@ -48523,30 +45409,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json() != 12780) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs() != 60233) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json() != 3835) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs() != 19531) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json() != 15996) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs() != 1042) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json() != 48517) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs() != 8225) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json() != 30332) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() != 5998) {
@@ -48856,30 +45718,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_input_to_json() != 58430) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_from_json() != 33813) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs() != 22836) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json() != 1916) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs() != 2155) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json() != 11288) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs() != 29567) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_jwk_to_json() != 53403) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs() != 17479) {
@@ -49590,54 +46428,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() != 48317) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json() != 19619) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs() != 50917) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json() != 43592) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs() != 47140) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json() != 60759) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs() != 58412) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json() != 9777) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs() != 13910) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json() != 31645) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs() != 22664) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json() != 6200) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() != 35391) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json() != 24841) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() != 39685) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() != 12096) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -49678,12 +46468,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() != 54718) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() != 44301) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded() != 33350) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest() != 52811) {
@@ -50421,12 +47205,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin() != 17714) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt() != 23106) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -50434,9 +47212,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() != 16265) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() != 37193) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341) {
@@ -50460,12 +47235,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin() != 39624) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt() != 34526) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -50475,16 +47244,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1() != 51171) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() != 65193) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() != 49901) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() != 20062) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_name_format() != 66) {
@@ -51192,12 +47952,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator() != 64789) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt() != 62080) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -51210,9 +47964,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator() != 35546) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -51223,12 +47974,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() != 47797) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() != 44658) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() != 9821) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() != 59039) {
@@ -51280,69 +48025,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs() != 1512) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() != 9769) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature() != 18838) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed() != 4892) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64() != 32056) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() != 1099) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() != 20914) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id() != 37580) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points() != 28172) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() != 48158) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a() != 6891) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b() != 36477) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c() != 10897) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed() != 3936) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address() != 14353) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() != 45141) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() != 51424) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() != 62366) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() != 29967) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951) {
@@ -51405,15 +48087,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() != 22402) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() != 3672) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str() != 21214) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() != 17556) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 59199) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -51436,12 +48109,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new() != 65327) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new() != 39786) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new() != 50489) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object() != 35349) {
@@ -51532,12 +48199,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() != 23280) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() != 42248) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire() != 58811) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch() != 56235) {
@@ -52254,9 +48915,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 29264) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -52362,9 +49020,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() != 31310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() != 30659) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() != 32322) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -52384,24 +49039,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() != 32812) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new() != 48962) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new() != 19950) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 44446) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123) {
         return InitializationResult.apiChecksumMismatch
     }
 

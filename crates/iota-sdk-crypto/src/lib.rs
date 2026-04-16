@@ -59,58 +59,24 @@ pub mod secp256r1;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 pub mod passkey;
 
-#[cfg(feature = "zklogin")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "zklogin")))]
-pub mod zklogin;
-
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod simple;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod multisig;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;

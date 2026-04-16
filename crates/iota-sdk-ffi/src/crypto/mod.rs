@@ -12,5 +12,3 @@ pub mod secp256r1;
 pub mod simple;
 #[cfg(feature = "bls12381")]
 pub mod validator;
-#[cfg(feature = "zklogin")]
-pub mod zklogin;

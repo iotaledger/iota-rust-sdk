@@ -11,7 +11,6 @@ use crate::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
         multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
-        zklogin::ZkLoginAuthenticator,
     },
 };
 
@@ -23,14 +22,14 @@ use crate::{
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+///                    multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 ///                    move-auth-flag
 /// ed25519-flag        = %x00
 /// secp256k1-flag      = %x01
 /// secp256r1-flag      = %x02
 /// multisig-flag       = %x03
 /// bls-flag            = %x04
-/// zklogin-auth-flag   = %x05
+/// zklogin-auth-flag-deprecated   = %x05
 /// passkey-auth-flag   = %x06
 /// move-auth-flag      = %x07
 /// ```
@@ -43,7 +42,7 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04,
-    ZkLoginAuthenticator = 0x05,
+    ZkLoginAuthenticatorDeprecated = 0x05,
     PasskeyAuthenticator = 0x06,
     MoveAuthenticator = 0x07,
 }
@@ -59,7 +58,7 @@ pub enum SignatureScheme {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -82,13 +81,6 @@ impl UserSignature {
     pub fn new_multisig(signature: &MultisigAggregatedSignature) -> Self {
         Self(iota_sdk::types::UserSignature::Multisig(
             signature.0.clone(),
-        ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_zklogin_authenticator(authenticator: &ZkLoginAuthenticator) -> Self {
-        Self(iota_sdk::types::UserSignature::ZkLoginAuthenticator(
-            Box::new(authenticator.0.clone()),
         ))
     }
 
@@ -159,22 +151,6 @@ impl UserSignature {
 
     pub fn as_multisig(&self) -> MultisigAggregatedSignature {
         self.0.as_multisig().clone().into()
-    }
-
-    pub fn is_zklogin_authenticator(&self) -> bool {
-        self.0.is_zklogin_authenticator()
-    }
-
-    pub fn as_zklogin_authenticator_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
-        self.0
-            .as_zklogin_authenticator_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_zklogin_authenticator(&self) -> ZkLoginAuthenticator {
-        self.0.as_zklogin_authenticator().clone().into()
     }
 
     pub fn is_passkey_authenticator(&self) -> bool {

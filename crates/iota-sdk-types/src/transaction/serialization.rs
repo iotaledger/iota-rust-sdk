@@ -11,8 +11,8 @@ use crate::{ObjectId, ObjectReference};
 mod transaction_kind {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
-        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+        ConsensusCommitPrologueV1, EndOfEpochTransactionKind, GenesisTransaction,
+        ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
     #[derive(serde::Serialize)]
@@ -21,7 +21,8 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
+        #[expect(unused)]
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
@@ -36,7 +37,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
         },
@@ -61,7 +62,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
@@ -70,7 +71,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
     }
@@ -89,8 +90,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1(k)
+                    Self::AuthenticatorStateUpdateV1Deprecated => {
+                        panic!()
                     }
                     Self::EndOfEpoch(commands) => {
                         ReadableTransactionKindRef::EndOfEpoch { commands }
@@ -109,8 +110,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1(k)
+                    Self::AuthenticatorStateUpdateV1Deprecated => {
+                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1Deprecated
                     }
                     Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
                     Self::RandomnessStateUpdate(k) => {
@@ -136,8 +137,8 @@ mod transaction_kind {
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    ReadableTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
+                    ReadableTransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                        panic!()
                     }
                     ReadableTransactionKind::EndOfEpoch { commands } => Self::EndOfEpoch(commands),
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
@@ -153,8 +154,8 @@ mod transaction_kind {
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    BinaryTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
+                    BinaryTransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                        Self::AuthenticatorStateUpdateV1Deprecated
                     }
                     BinaryTransactionKind::EndOfEpoch(k) => Self::EndOfEpoch(k),
                     BinaryTransactionKind::RandomnessStateUpdate(k) => {
@@ -169,8 +170,7 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-        EndOfEpochTransactionKind,
+        ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4, EndOfEpochTransactionKind,
     };
 
     #[derive(serde::Serialize)]
@@ -180,8 +180,8 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
+        AuthenticatorStateCreateDeprecated,
+        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Deserialize)]
@@ -191,8 +191,8 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
+        AuthenticatorStateCreateDeprecated,
+        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Serialize)]
@@ -201,8 +201,8 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
+        AuthenticatorStateCreateDeprecated,
+        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Deserialize)]
@@ -211,8 +211,8 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
+        AuthenticatorStateCreateDeprecated,
+        AuthenticatorStateExpireDeprecated,
     }
 
     impl Serialize for EndOfEpochTransactionKind {
@@ -232,11 +232,11 @@ mod end_of_epoch {
                     Self::ChangeEpochV4(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
                     }
-                    Self::AuthenticatorStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
+                    Self::AuthenticatorStateCreateDeprecated => {
+                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreateDeprecated
                     }
-                    Self::AuthenticatorStateExpire(k) => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
+                    Self::AuthenticatorStateExpireDeprecated => {
+                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpireDeprecated
                     }
                 };
                 readable.serialize(serializer)
@@ -247,11 +247,11 @@ mod end_of_epoch {
                     Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
                     Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
 
-                    Self::AuthenticatorStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
+                    Self::AuthenticatorStateCreateDeprecated => {
+                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreateDeprecated
                     }
-                    Self::AuthenticatorStateExpire(k) => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
+                    Self::AuthenticatorStateExpireDeprecated => {
+                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpireDeprecated
                     }
                 };
                 binary.serialize(serializer)
@@ -277,11 +277,11 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
                             Self::ChangeEpochV4(k)
                         }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
+                        ReadableEndOfEpochTransactionKind::AuthenticatorStateCreateDeprecated => {
+                            Self::AuthenticatorStateCreateDeprecated
                         }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
+                        ReadableEndOfEpochTransactionKind::AuthenticatorStateExpireDeprecated => {
+                            Self::AuthenticatorStateExpireDeprecated
                         }
                     }
                 })
@@ -293,11 +293,11 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
 
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
+                        BinaryEndOfEpochTransactionKind::AuthenticatorStateCreateDeprecated => {
+                            Self::AuthenticatorStateCreateDeprecated
                         }
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
+                        BinaryEndOfEpochTransactionKind::AuthenticatorStateExpireDeprecated => {
+                            Self::AuthenticatorStateExpireDeprecated
                         }
                     },
                 )

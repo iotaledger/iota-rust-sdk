@@ -3735,242 +3735,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3986,15 +3750,7 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
-    fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
+    fun uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_address_from_json(
 ): Short
@@ -4009,22 +3765,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_argument_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_argument_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_argument_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_base64_decode(
 ): Short
@@ -4045,14 +3785,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(
 ): Short
@@ -4125,22 +3857,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs(
 ): Short
@@ -4347,22 +4063,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_input_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs(
 ): Short
@@ -4836,38 +4536,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
@@ -4895,10 +4563,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes(
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest(
 ): Short
@@ -5390,17 +5054,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(
 ): Short
@@ -5416,23 +5074,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_name_format(
 ): Short
@@ -5904,10 +5552,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig(
@@ -5916,8 +5560,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64(
@@ -5925,10 +5567,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64(
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes(
 ): Short
@@ -5963,48 +5601,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature(
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_version(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_framework(
 ): Short
@@ -6046,12 +5642,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new(
@@ -6067,10 +5657,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object(
 ): Short
@@ -6131,10 +5717,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch(
 ): Short
@@ -6612,8 +6194,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch(
@@ -6684,8 +6264,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authentic
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new(
@@ -6699,18 +6277,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_n
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet(
 ): Short
 fun ffi_iota_sdk_ffi_uniffi_contract_version(
 ): Int
@@ -6884,26 +6450,6 @@ fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(`ptr`: Pointer,`me
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7102,30 +6648,6 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures(`ptr`: Po
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_clone_circomg1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_circomg1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(`el0`: Pointer,`el1`: Pointer,`el2`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(`el00`: Pointer,`el01`: Pointer,`el10`: Pointer,`el11`: Pointer,`el20`: Pointer,`el21`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7412,10 +6934,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_endofepochtransactionkind(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_endofepochtransactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8066,17 +7584,11 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8102,17 +7614,11 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8128,10 +7634,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9152,8 +8654,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionkind(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9206,6 +8706,17 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(`kind`: Pointer,`sender
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9366,8 +8877,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9384,10 +8893,6 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(`ptr`: Pointer,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9395,8 +8900,6 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9414,25 +8917,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(`ptr`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9531,114 +9019,6 @@ fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(`ptr`: Po
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(`inputs`: Pointer,`maxEpoch`: Long,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(`proofPoints`: Pointer,`issBase64Details`: RustBuffer.ByValue,`headerBase64`: RustBuffer.ByValue,`addressSeed`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(`a`: Pointer,`b`: Pointer,`c`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(`iss`: RustBuffer.ByValue,`addressSeed`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_address_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_address_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9654,22 +9034,6 @@ fun uniffi_iota_sdk_ffi_fn_func_argument_from_json(`json`: RustBuffer.ByValue,un
 fun uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_argument_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_base64_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9690,14 +9054,6 @@ fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_json(`json`: RustBuffer.
 fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -9770,22 +9126,6 @@ fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_json(`json`: Ru
 fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9992,22 +9332,6 @@ fun uniffi_iota_sdk_ffi_fn_func_input_from_json(`json`: RustBuffer.ByValue,uniff
 fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_input_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10481,38 +9805,6 @@ fun uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(`data`: Pointer,uniffi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun ffi_iota_sdk_ffi_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun ffi_iota_sdk_ffi_rustbuffer_from_bytes(`bytes`: ForeignBytes.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -10638,18 +9930,6 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 }
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs() != 65415.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json() != 5693.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs() != 37978.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json() != 56327.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs() != 8229.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10672,30 +9952,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_argument_to_json() != 34680.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs() != 23378.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json() != 19654.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs() != 26245.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json() != 46170.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs() != 39650.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json() != 30949.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs() != 31251.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json() != 36459.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_base64_decode() != 57367.toShort()) {
@@ -10726,18 +9982,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json() != 30321.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs() != 13721.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json() != 23224.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json() != 7045.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591.toShort()) {
@@ -10846,30 +10090,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json() != 12780.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs() != 60233.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json() != 3835.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs() != 19531.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json() != 15996.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs() != 1042.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json() != 48517.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs() != 8225.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json() != 30332.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() != 5998.toShort()) {
@@ -11179,30 +10399,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_json() != 58430.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_json() != 33813.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs() != 22836.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json() != 1916.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs() != 2155.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json() != 11288.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs() != 29567.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_json() != 53403.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs() != 17479.toShort()) {
@@ -11913,54 +11109,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() != 48317.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json() != 19619.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs() != 50917.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json() != 43592.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs() != 47140.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json() != 60759.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs() != 58412.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json() != 9777.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs() != 13910.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json() != 31645.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs() != 22664.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json() != 6200.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() != 35391.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json() != 24841.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() != 39685.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() != 12096.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12001,12 +11149,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() != 54718.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() != 44301.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded() != 33350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest() != 52811.toShort()) {
@@ -12744,12 +11886,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin() != 17714.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt() != 23106.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12757,9 +11893,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() != 16265.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() != 37193.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341.toShort()) {
@@ -12783,12 +11916,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin() != 39624.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt() != 34526.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12798,16 +11925,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1() != 51171.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() != 65193.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() != 49901.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() != 20062.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_name_format() != 66.toShort()) {
@@ -13515,12 +12633,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator() != 64789.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt() != 62080.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13533,9 +12645,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator() != 35546.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13546,12 +12655,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() != 47797.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() != 44658.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() != 9821.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() != 59039.toShort()) {
@@ -13603,69 +12706,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs() != 1512.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() != 9769.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature() != 18838.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed() != 4892.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64() != 32056.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() != 1099.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() != 20914.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id() != 37580.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points() != 28172.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() != 48158.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a() != 6891.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b() != 36477.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c() != 10897.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed() != 3936.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address() != 14353.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() != 45141.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() != 51424.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() != 62366.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() != 29967.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951.toShort()) {
@@ -13728,15 +12768,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() != 22402.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() != 3672.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str() != 21214.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() != 17556.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 59199.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13759,12 +12790,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new() != 65327.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new() != 39786.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new() != 50489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object() != 35349.toShort()) {
@@ -13855,12 +12880,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() != 23280.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() != 42248.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire() != 58811.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch() != 56235.toShort()) {
@@ -14577,9 +13596,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 29264.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14685,9 +13701,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() != 31310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() != 30659.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() != 32322.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14707,24 +13720,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() != 32812.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new() != 48962.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new() != 19950.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 44446.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -17408,334 +16403,6 @@ public object FfiConverterTypeBls12381VerifyingKey: FfiConverter<Bls12381Verifyi
     override fun allocationSize(value: Bls12381VerifyingKey) = 8UL
 
     override fun write(value: Bls12381VerifyingKey, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-public interface Bn254FieldElementInterface {
-    
-    fun `padded`(): kotlin.ByteArray
-    
-    fun `unpadded`(): kotlin.ByteArray
-    
-    companion object
-}
-
-/**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-open class Bn254FieldElement: Disposable, AutoCloseable, Bn254FieldElementInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(pointer!!, status)
-        }
-    }
-
-    override fun `padded`(): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `unpadded`(): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Bn254FieldElement) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(
-        it, FfiConverterTypeBn254FieldElement.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    companion object {
-        
-    @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(
-        FfiConverterByteArray.lower(`bytes`),_status)
-}
-    )
-    }
-    
-
-        
-    @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(
-        FfiConverterString.lower(`s`),_status)
-}
-    )
-    }
-    
-
-        
-    @Throws(SdkFfiException::class) fun `fromStrRadix10`(`s`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(
-        FfiConverterString.lower(`s`),_status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeBn254FieldElement: FfiConverter<Bn254FieldElement, Pointer> {
-
-    override fun lower(value: Bn254FieldElement): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): Bn254FieldElement {
-        return Bn254FieldElement(value)
-    }
-
-    override fun read(buf: ByteBuffer): Bn254FieldElement {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: Bn254FieldElement) = 8UL
-
-    override fun write(value: Bn254FieldElement, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -21280,548 +19947,6 @@ public object FfiConverterTypeCheckpointTransactionInfo: FfiConverter<Checkpoint
     override fun allocationSize(value: CheckpointTransactionInfo) = 8UL
 
     override fun write(value: CheckpointTransactionInfo, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-public interface CircomG1Interface {
-    
-    companion object
-}
-
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-open class CircomG1: Disposable, AutoCloseable, CircomG1Interface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`el0`: Bn254FieldElement, `el1`: Bn254FieldElement, `el2`: Bn254FieldElement) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(
-        FfiConverterTypeBn254FieldElement.lower(`el0`),FfiConverterTypeBn254FieldElement.lower(`el1`),FfiConverterTypeBn254FieldElement.lower(`el2`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_circomg1(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_circomg1(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CircomG1) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(
-        it, FfiConverterTypeCircomG1.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCircomG1: FfiConverter<CircomG1, Pointer> {
-
-    override fun lower(value: CircomG1): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): CircomG1 {
-        return CircomG1(value)
-    }
-
-    override fun read(buf: ByteBuffer): CircomG1 {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: CircomG1) = 8UL
-
-    override fun write(value: CircomG1, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-public interface CircomG2Interface {
-    
-    companion object
-}
-
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-open class CircomG2: Disposable, AutoCloseable, CircomG2Interface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`el00`: Bn254FieldElement, `el01`: Bn254FieldElement, `el10`: Bn254FieldElement, `el11`: Bn254FieldElement, `el20`: Bn254FieldElement, `el21`: Bn254FieldElement) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(
-        FfiConverterTypeBn254FieldElement.lower(`el00`),FfiConverterTypeBn254FieldElement.lower(`el01`),FfiConverterTypeBn254FieldElement.lower(`el10`),FfiConverterTypeBn254FieldElement.lower(`el11`),FfiConverterTypeBn254FieldElement.lower(`el20`),FfiConverterTypeBn254FieldElement.lower(`el21`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_circomg2(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_circomg2(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CircomG2) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(
-        it, FfiConverterTypeCircomG2.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCircomG2: FfiConverter<CircomG2, Pointer> {
-
-    override fun lower(value: CircomG2): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): CircomG2 {
-        return CircomG2(value)
-    }
-
-    override fun read(buf: ByteBuffer): CircomG2 {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: CircomG2) = 8UL
-
-    override fun write(value: CircomG2, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -26458,26 +24583,6 @@ open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTrans
 
     
     companion object {
-         fun `newAuthenticatorStateCreate`(): EndOfEpochTransactionKind {
-            return FfiConverterTypeEndOfEpochTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newAuthenticatorStateExpire`(`tx`: AuthenticatorStateExpire): EndOfEpochTransactionKind {
-            return FfiConverterTypeEndOfEpochTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`tx`),_status)
-}
-    )
-    }
-    
-
          fun `newChangeEpoch`(`tx`: ChangeEpoch): EndOfEpochTransactionKind {
             return FfiConverterTypeEndOfEpochTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -37035,12 +35140,12 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated
  *
  * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
  * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
  * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * zklogin-multisig-member-public-key-deprecated   = %x03
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -37068,17 +35173,11 @@ public interface MultisigMemberPublicKeyInterface {
     
     fun `asSecp256r1Opt`(): Secp256r1PublicKey?
     
-    fun `asZklogin`(): ZkLoginPublicIdentifier
-    
-    fun `asZkloginOpt`(): ZkLoginPublicIdentifier?
-    
     fun `isEd25519`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
     fun `isSecp256r1`(): kotlin.Boolean
-    
-    fun `isZklogin`(): kotlin.Boolean
     
     fun `scheme`(): SignatureScheme
     
@@ -37096,12 +35195,12 @@ public interface MultisigMemberPublicKeyInterface {
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated
  *
  * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
  * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
  * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * zklogin-multisig-member-public-key-deprecated   = %x03
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -37269,30 +35368,6 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     }
     
 
-    override fun `asZklogin`(): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginOpt`(): ZkLoginPublicIdentifier? {
-            return FfiConverterOptionalTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
     override fun `isEd25519`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -37322,18 +35397,6 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isZklogin`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
         it, _status)
 }
     }
@@ -37513,12 +35576,12 @@ public object FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemb
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated
  *
  * ed25519-multisig-member-signature   = %x00 ed25519-signature
  * secp256k1-multisig-member-signature = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * zklogin-multisig-member-signature-deprecated   = %x03
  * ```
  */
 public interface MultisigMemberSignatureInterface {
@@ -37535,17 +35598,11 @@ public interface MultisigMemberSignatureInterface {
     
     fun `asSecp256r1Opt`(): Secp256r1Signature?
     
-    fun `asZklogin`(): ZkLoginAuthenticator
-    
-    fun `asZkloginOpt`(): ZkLoginAuthenticator?
-    
     fun `isEd25519`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
     fun `isSecp256r1`(): kotlin.Boolean
-    
-    fun `isZklogin`(): kotlin.Boolean
     
     companion object
 }
@@ -37561,12 +35618,12 @@ public interface MultisigMemberSignatureInterface {
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated
  *
  * ed25519-multisig-member-signature   = %x00 ed25519-signature
  * secp256k1-multisig-member-signature = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * zklogin-multisig-member-signature-deprecated   = %x03
  * ```
  */
 open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSignatureInterface
@@ -37723,30 +35780,6 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     }
     
 
-    override fun `asZklogin`(): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginOpt`(): ZkLoginAuthenticator? {
-            return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
     override fun `isEd25519`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -37776,18 +35809,6 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isZklogin`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(
         it, _status)
 }
     }
@@ -37948,10 +35969,6 @@ public interface MultisigVerifierInterface {
     
     fun `verify`(`message`: kotlin.ByteArray, `signature`: MultisigAggregatedSignature)
     
-    fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): MultisigVerifier
-    
-    fun `zkloginVerifier`(): ZkloginVerifier?
-    
     companion object
 }
 
@@ -38054,30 +36071,6 @@ open class MultisigVerifier: Disposable, AutoCloseable, MultisigVerifierInterfac
 }
     }
     
-    
-
-    override fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): MultisigVerifier {
-            return FfiConverterTypeMultisigVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-        it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
-}
-    }
-    )
-    }
-    
-
-    override fun `zkloginVerifier`(): ZkloginVerifier? {
-            return FfiConverterOptionalTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-        it, _status)
-}
-    }
-    )
-    }
     
 
     
@@ -52374,16 +50367,6 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
     
     companion object {
-         fun `newAuthenticatorStateUpdateV1`(`tx`: AuthenticatorStateUpdateV1): TransactionKind {
-            return FfiConverterTypeTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`tx`),_status)
-}
-    )
-    }
-    
-
          fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -53360,7 +51343,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
         it, _status)
 }
     }
@@ -53372,7 +51355,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
         it, _status)
 }
     }
@@ -53384,7 +51367,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
         it, _status)
 }
     }
@@ -53396,7 +51379,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
         it, _status)
 }
     }
@@ -53411,7 +51394,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
         it, _status)
 }
     }
@@ -53426,7 +51409,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
         it, _status)
 }
     }
@@ -53441,7 +51424,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
         it, _status)
 }
     }
@@ -53457,7 +51440,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionV1.lower(`other`),_status)
 }
     }
@@ -53671,7 +51654,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
     constructor(`objects`: List<Argument>, `address`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
         FfiConverterSequenceTypeArgument.lower(`objects`),FfiConverterTypeArgument.lower(`address`),_status)
 }
     )
@@ -53727,7 +51710,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
                 }
             }
         }
@@ -53735,7 +51718,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
         }
     }
 
@@ -53746,7 +51729,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
         it, _status)
 }
     }
@@ -53761,7 +51744,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
         it, _status)
 }
     }
@@ -53777,7 +51760,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransferObjects.lower(`other`),_status)
 }
     }
@@ -54095,7 +52078,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
                 }
             }
         }
@@ -54103,7 +52086,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
         }
     }
 
@@ -54111,7 +52094,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
         it, _status)
 }
     }
@@ -54123,7 +52106,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
         it, _status)
 }
     }
@@ -54135,7 +52118,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
         it, _status)
 }
     }
@@ -54147,7 +52130,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
         it, _status)
 }
     }
@@ -54159,7 +52142,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
         it, _status)
 }
     }
@@ -54171,7 +52154,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
         it, _status)
 }
     }
@@ -54183,7 +52166,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
         it, _status)
 }
     }
@@ -54195,7 +52178,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
         it, _status)
 }
     }
@@ -54207,7 +52190,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
         it, _status)
 }
     }
@@ -54219,7 +52202,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
         it, _status)
 }
     }
@@ -54231,7 +52214,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
         it, _status)
 }
     }
@@ -54243,7 +52226,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
         it, _status)
 }
     }
@@ -54255,7 +52238,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
         it, _status)
 }
     }
@@ -54267,7 +52250,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
         it, _status)
 }
     }
@@ -54279,7 +52262,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
         it, _status)
 }
     }
@@ -54295,7 +52278,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
         it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
@@ -54308,7 +52291,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -54322,7 +52305,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
         it, FfiConverterTypeTypeTag.lower(`other`),_status)
 }
     }
@@ -54333,7 +52316,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -54345,7 +52328,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newAddress`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
         _status)
 }
     )
@@ -54355,7 +52338,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newBool`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
         _status)
 }
     )
@@ -54365,7 +52348,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newSigner`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
         _status)
 }
     )
@@ -54375,7 +52358,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newStruct`(`structTag`: StructTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -54385,7 +52368,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU128`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
         _status)
 }
     )
@@ -54395,7 +52378,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU16`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
         _status)
 }
     )
@@ -54405,7 +52388,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU256`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
         _status)
 }
     )
@@ -54415,7 +52398,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU32`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
         _status)
 }
     )
@@ -54425,7 +52408,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU64`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
         _status)
 }
     )
@@ -54435,7 +52418,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU8`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
         _status)
 }
     )
@@ -54445,7 +52428,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newVector`(`typeTag`: TypeTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -54658,7 +52641,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
     constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
         FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypeArgument.lower(`ticket`),_status)
 }
     )
@@ -54714,7 +52697,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
                 }
             }
         }
@@ -54722,7 +52705,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
         }
     }
 
@@ -54733,7 +52716,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
         it, _status)
 }
     }
@@ -54748,7 +52731,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
         it, _status)
 }
     }
@@ -54763,7 +52746,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
         it, _status)
 }
     }
@@ -54778,7 +52761,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
         it, _status)
 }
     }
@@ -54794,7 +52777,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgrade.lower(`other`),_status)
 }
     }
@@ -55021,7 +53004,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
                 }
             }
         }
@@ -55029,7 +53012,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
         }
     }
 
@@ -55040,7 +53023,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
             return FfiConverterUByte.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
         it, _status)
 }
     }
@@ -55053,7 +53036,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
         it, _status)
 }
     }
@@ -55067,7 +53050,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgradePolicy.lower(`other`),_status)
 }
     }
@@ -55084,7 +53067,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `additive`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
         _status)
 }
     )
@@ -55101,7 +53084,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `compatible`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
         _status)
 }
     )
@@ -55114,7 +53097,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `depOnly`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
         _status)
 }
     )
@@ -55265,7 +53248,7 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -55292,10 +53275,6 @@ public interface UserSignatureInterface {
     
     fun `asSimpleOpt`(): SimpleSignature?
     
-    fun `asZkloginAuthenticator`(): ZkLoginAuthenticator
-    
-    fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator?
-    
     fun `isMoveAuthenticator`(): kotlin.Boolean
     
     fun `isMultisig`(): kotlin.Boolean
@@ -55303,8 +53282,6 @@ public interface UserSignatureInterface {
     fun `isPasskeyAuthenticator`(): kotlin.Boolean
     
     fun `isSimple`(): kotlin.Boolean
-    
-    fun `isZkloginAuthenticator`(): kotlin.Boolean
     
     /**
      * Return the flag for this signature scheme
@@ -55330,7 +53307,7 @@ public interface UserSignatureInterface {
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -55409,7 +53386,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
                 }
             }
         }
@@ -55417,7 +53394,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
         }
     }
 
@@ -55425,7 +53402,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
         it, _status)
 }
     }
@@ -55437,7 +53414,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
         it, _status)
 }
     }
@@ -55449,7 +53426,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
         it, _status)
 }
     }
@@ -55461,7 +53438,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
         it, _status)
 }
     }
@@ -55473,7 +53450,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
         it, _status)
 }
     }
@@ -55485,7 +53462,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
         it, _status)
 }
     }
@@ -55497,7 +53474,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
         it, _status)
 }
     }
@@ -55509,31 +53486,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginAuthenticator`(): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator? {
-            return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
         it, _status)
 }
     }
@@ -55545,7 +53498,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
         it, _status)
 }
     }
@@ -55557,7 +53510,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
         it, _status)
 }
     }
@@ -55569,7 +53522,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
         it, _status)
 }
     }
@@ -55581,19 +53534,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isZkloginAuthenticator`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
         it, _status)
 }
     }
@@ -55608,7 +53549,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
         it, _status)
 }
     }
@@ -55620,7 +53561,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
         it, _status)
 }
     }
@@ -55632,7 +53573,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
         it, _status)
 }
     }
@@ -55648,7 +53589,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeUserSignature.lower(`other`),_status)
 }
     }
@@ -55662,7 +53603,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -55673,7 +53614,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -55683,7 +53624,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMoveAuthenticator`(`authenticator`: MoveAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55693,7 +53634,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMultisig`(`signature`: MultisigAggregatedSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
         FfiConverterTypeMultisigAggregatedSignature.lower(`signature`),_status)
 }
     )
@@ -55703,7 +53644,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newPasskeyAuthenticator`(`authenticator`: PasskeyAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
         FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55713,18 +53654,8 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newSimple`(`signature`: SimpleSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
         FfiConverterTypeSimpleSignature.lower(`signature`),_status)
-}
-    )
-    }
-    
-
-         fun `newZkloginAuthenticator`(`authenticator`: ZkLoginAuthenticator): UserSignature {
-            return FfiConverterTypeUserSignature.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
-        FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     )
     }
@@ -55869,10 +53800,6 @@ public interface UserSignatureVerifierInterface {
     
     fun `verify`(`message`: kotlin.ByteArray, `signature`: UserSignature)
     
-    fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): UserSignatureVerifier
-    
-    fun `zkloginVerifier`(): ZkloginVerifier?
-    
     companion object
 }
 
@@ -55956,7 +53883,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
                 }
             }
         }
@@ -55964,7 +53891,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
         }
     }
 
@@ -55978,30 +53905,6 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 }
     }
     
-    
-
-    override fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): UserSignatureVerifier {
-            return FfiConverterTypeUserSignatureVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-        it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
-}
-    }
-    )
-    }
-    
-
-    override fun `zkloginVerifier`(): ZkloginVerifier? {
-            return FfiConverterOptionalTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-        it, _status)
-}
-    }
-    )
-    }
     
 
     
@@ -57824,1937 +55727,6 @@ public object FfiConverterTypeVersionAssignment: FfiConverter<VersionAssignment,
 }
 
 
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-public interface ZkLoginAuthenticatorInterface {
-    
-    fun `inputs`(): ZkLoginInputs
-    
-    fun `maxEpoch`(): kotlin.ULong
-    
-    fun `signature`(): SimpleSignature
-    
-    companion object
-}
-
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticatorInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`inputs`: ZkLoginInputs, `maxEpoch`: kotlin.ULong, `signature`: SimpleSignature) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
-        FfiConverterTypeZkLoginInputs.lower(`inputs`),FfiConverterULong.lower(`maxEpoch`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
-        }
-    }
-
-    override fun `inputs`(): ZkLoginInputs {
-            return FfiConverterTypeZkLoginInputs.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `maxEpoch`(): kotlin.ULong {
-            return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `signature`(): SimpleSignature {
-            return FfiConverterTypeSimpleSignature.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginAuthenticator) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginAuthenticator: FfiConverter<ZkLoginAuthenticator, Pointer> {
-
-    override fun lower(value: ZkLoginAuthenticator): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginAuthenticator {
-        return ZkLoginAuthenticator(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginAuthenticator {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginAuthenticator) = 8UL
-
-    override fun write(value: ZkLoginAuthenticator, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-public interface ZkLoginInputsInterface {
-    
-    fun `addressSeed`(): Bn254FieldElement
-    
-    fun `headerBase64`(): kotlin.String
-    
-    fun `iss`(): kotlin.String
-    
-    fun `issBase64Details`(): ZkLoginClaim
-    
-    fun `jwkId`(): JwkId
-    
-    fun `proofPoints`(): ZkLoginProof
-    
-    fun `publicIdentifier`(): ZkLoginPublicIdentifier
-    
-    companion object
-}
-
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`proofPoints`: ZkLoginProof, `issBase64Details`: ZkLoginClaim, `headerBase64`: kotlin.String, `addressSeed`: Bn254FieldElement) :
-        this(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
-        FfiConverterTypeZkLoginProof.lower(`proofPoints`),FfiConverterTypeZkLoginClaim.lower(`issBase64Details`),FfiConverterString.lower(`headerBase64`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
-        }
-    }
-
-    override fun `addressSeed`(): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `headerBase64`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `iss`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `issBase64Details`(): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `jwkId`(): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `proofPoints`(): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `publicIdentifier`(): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginInputs) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginInputs: FfiConverter<ZkLoginInputs, Pointer> {
-
-    override fun lower(value: ZkLoginInputs): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginInputs {
-        return ZkLoginInputs(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginInputs {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginInputs) = 8UL
-
-    override fun write(value: ZkLoginInputs, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-public interface ZkLoginProofInterface {
-    
-    fun `a`(): CircomG1
-    
-    fun `b`(): CircomG2
-    
-    fun `c`(): CircomG1
-    
-    companion object
-}
-
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`a`: CircomG1, `b`: CircomG2, `c`: CircomG1) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
-        FfiConverterTypeCircomG1.lower(`a`),FfiConverterTypeCircomG2.lower(`b`),FfiConverterTypeCircomG1.lower(`c`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
-        }
-    }
-
-    override fun `a`(): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `b`(): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `c`(): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginProof) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> {
-
-    override fun lower(value: ZkLoginProof): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginProof {
-        return ZkLoginProof(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginProof {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginProof) = 8UL
-
-    override fun write(value: ZkLoginProof, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-public interface ZkLoginPublicIdentifierInterface {
-    
-    fun `addressSeed`(): Bn254FieldElement
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */
-    fun `deriveAddress`(): List<Address>
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */
-    fun `deriveAddressPadded`(): Address
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */
-    fun `deriveAddressUnpadded`(): Address
-    
-    fun `iss`(): kotlin.String
-    
-    companion object
-}
-
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIdentifierInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`iss`: kotlin.String, `addressSeed`: Bn254FieldElement) :
-        this(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
-        FfiConverterString.lower(`iss`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
-        }
-    }
-
-    override fun `addressSeed`(): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */override fun `deriveAddress`(): List<Address> {
-            return FfiConverterSequenceTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */override fun `deriveAddressPadded`(): Address {
-            return FfiConverterTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */override fun `deriveAddressUnpadded`(): Address {
-            return FfiConverterTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `iss`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginPublicIdentifier) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginPublicIdentifier: FfiConverter<ZkLoginPublicIdentifier, Pointer> {
-
-    override fun lower(value: ZkLoginPublicIdentifier): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginPublicIdentifier {
-        return ZkLoginPublicIdentifier(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginPublicIdentifier {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginPublicIdentifier) = 8UL
-
-    override fun write(value: ZkLoginPublicIdentifier, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface ZkloginVerifierInterface {
-    
-    fun `jwks`(): Map<JwkId, Jwk>
-    
-    fun `verify`(`message`: kotlin.ByteArray, `authenticator`: ZkLoginAuthenticator)
-    
-    fun `withJwks`(`jwks`: Map<JwkId, Jwk>): ZkloginVerifier
-    
-    companion object
-}
-
-open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
-        }
-    }
-
-    override fun `jwks`(): Map<JwkId, Jwk> {
-            return FfiConverterMapTypeJwkIdTypeJwk.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    @Throws(SdkFfiException::class)override fun `verify`(`message`: kotlin.ByteArray, `authenticator`: ZkLoginAuthenticator)
-        = 
-    callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-        it, FfiConverterByteArray.lower(`message`),FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
-}
-    }
-    
-    
-
-    override fun `withJwks`(`jwks`: Map<JwkId, Jwk>): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-        it, FfiConverterMapTypeJwkIdTypeJwk.lower(`jwks`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-
-    
-    companion object {
-        
-    /**
-     * Load a fixed verifying key from zkLogin.vkey output. This is based on a
-     * local setup and should not be used in production.
-     */ fun `newDev`(): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newMainnet`(): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
-        _status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkloginVerifier: FfiConverter<ZkloginVerifier, Pointer> {
-
-    override fun lower(value: ZkloginVerifier): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkloginVerifier {
-        return ZkloginVerifier(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkloginVerifier {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkloginVerifier) = 8UL
-
-    override fun write(value: ZkloginVerifier, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-
-/**
- * A new Jwk
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * active-jwk = jwk-id jwk u64
- * ```
- */
-data class ActiveJwk (
-    /**
-     * Identifier used to uniquely identify a Jwk
-     */
-    var `jwkId`: JwkId, 
-    /**
-     * The Jwk
-     */
-    var `jwk`: Jwk, 
-    /**
-     * Most recent epoch in which the jwk was validated
-     */
-    var `epoch`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeActiveJwk: FfiConverterRustBuffer<ActiveJwk> {
-    override fun read(buf: ByteBuffer): ActiveJwk {
-        return ActiveJwk(
-            FfiConverterTypeJwkId.read(buf),
-            FfiConverterTypeJwk.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ActiveJwk) = (
-            FfiConverterTypeJwkId.allocationSize(value.`jwkId`) +
-            FfiConverterTypeJwk.allocationSize(value.`jwk`) +
-            FfiConverterULong.allocationSize(value.`epoch`)
-    )
-
-    override fun write(value: ActiveJwk, buf: ByteBuffer) {
-            FfiConverterTypeJwkId.write(value.`jwkId`, buf)
-            FfiConverterTypeJwk.write(value.`jwk`, buf)
-            FfiConverterULong.write(value.`epoch`, buf)
-    }
-}
-
-
-
-/**
- * Expire old JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-expire = u64 u64
- * ```
- */
-data class AuthenticatorStateExpire (
-    /**
-     * Expire JWKs that have a lower epoch than this
-     */
-    var `minEpoch`: kotlin.ULong, 
-    /**
-     * The initial version of the authenticator object that it was shared at.
-     */
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeAuthenticatorStateExpire: FfiConverterRustBuffer<AuthenticatorStateExpire> {
-    override fun read(buf: ByteBuffer): AuthenticatorStateExpire {
-        return AuthenticatorStateExpire(
-            FfiConverterULong.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: AuthenticatorStateExpire) = (
-            FfiConverterULong.allocationSize(value.`minEpoch`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
-    )
-
-    override fun write(value: AuthenticatorStateExpire, buf: ByteBuffer) {
-            FfiConverterULong.write(value.`minEpoch`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
-    }
-}
-
-
-
-/**
- * Update the set of valid JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-update = u64 ; epoch
- * u64 ; round
- * (vector active-jwk)
- * u64 ; initial version of the authenticator object
- * ```
- */
-data class AuthenticatorStateUpdateV1 (
-    /**
-     * Epoch of the authenticator state update transaction
-     */
-    var `epoch`: kotlin.ULong, 
-    /**
-     * Consensus round of the authenticator state update
-     */
-    var `round`: kotlin.ULong, 
-    /**
-     * newly active jwks
-     */
-    var `newActiveJwks`: List<ActiveJwk>, 
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer<AuthenticatorStateUpdateV1> {
-    override fun read(buf: ByteBuffer): AuthenticatorStateUpdateV1 {
-        return AuthenticatorStateUpdateV1(
-            FfiConverterULong.read(buf),
-            FfiConverterULong.read(buf),
-            FfiConverterSequenceTypeActiveJwk.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: AuthenticatorStateUpdateV1) = (
-            FfiConverterULong.allocationSize(value.`epoch`) +
-            FfiConverterULong.allocationSize(value.`round`) +
-            FfiConverterSequenceTypeActiveJwk.allocationSize(value.`newActiveJwks`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
-    )
-
-    override fun write(value: AuthenticatorStateUpdateV1, buf: ByteBuffer) {
-            FfiConverterULong.write(value.`epoch`, buf)
-            FfiConverterULong.write(value.`round`, buf)
-            FfiConverterSequenceTypeActiveJwk.write(value.`newActiveJwks`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
-    }
-}
-
-
 
 data class BatchSendStatus (
     var `status`: BatchSendStatusType, 
@@ -61306,122 +57278,6 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.write(value.`owner`, buf)
             FfiConverterULong.write(value.`price`, buf)
             FfiConverterULong.write(value.`budget`, buf)
-    }
-}
-
-
-
-/**
- * A JSON Web Key
- *
- * Struct that contains info for a JWK. A list of them for different kids can
- * be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
- * The JWK is used to verify the JWT token.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk = string string string string
- * ```
- */
-data class Jwk (
-    /**
-     * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-     */
-    var `kty`: kotlin.String, 
-    /**
-     * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    var `e`: kotlin.String, 
-    /**
-     * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    var `n`: kotlin.String, 
-    /**
-     * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-     */
-    var `alg`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeJwk: FfiConverterRustBuffer<Jwk> {
-    override fun read(buf: ByteBuffer): Jwk {
-        return Jwk(
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: Jwk) = (
-            FfiConverterString.allocationSize(value.`kty`) +
-            FfiConverterString.allocationSize(value.`e`) +
-            FfiConverterString.allocationSize(value.`n`) +
-            FfiConverterString.allocationSize(value.`alg`)
-    )
-
-    override fun write(value: Jwk, buf: ByteBuffer) {
-            FfiConverterString.write(value.`kty`, buf)
-            FfiConverterString.write(value.`e`, buf)
-            FfiConverterString.write(value.`n`, buf)
-            FfiConverterString.write(value.`alg`, buf)
-    }
-}
-
-
-
-/**
- * Key to uniquely identify a JWK
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk-id = string string
- * ```
- */
-data class JwkId (
-    /**
-     * The issuer or identity of the OIDC provider.
-     */
-    var `iss`: kotlin.String, 
-    /**
-     * A key id use to uniquely identify a key from an OIDC provider.
-     */
-    var `kid`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeJwkId: FfiConverterRustBuffer<JwkId> {
-    override fun read(buf: ByteBuffer): JwkId {
-        return JwkId(
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: JwkId) = (
-            FfiConverterString.allocationSize(value.`iss`) +
-            FfiConverterString.allocationSize(value.`kid`)
-    )
-
-    override fun write(value: JwkId, buf: ByteBuffer) {
-            FfiConverterString.write(value.`iss`, buf)
-            FfiConverterString.write(value.`kid`, buf)
     }
 }
 
@@ -64287,49 +60143,6 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
 
 
 
-/**
- * A claim of the iss in a zklogin proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-claim = string u8
- * ```
- */
-data class ZkLoginClaim (
-    var `value`: kotlin.String, 
-    var `indexMod4`: kotlin.UByte
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim> {
-    override fun read(buf: ByteBuffer): ZkLoginClaim {
-        return ZkLoginClaim(
-            FfiConverterString.read(buf),
-            FfiConverterUByte.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ZkLoginClaim) = (
-            FfiConverterString.allocationSize(value.`value`) +
-            FfiConverterUByte.allocationSize(value.`indexMod4`)
-    )
-
-    override fun write(value: ZkLoginClaim, buf: ByteBuffer) {
-            FfiConverterString.write(value.`value`, buf)
-            FfiConverterUByte.write(value.`indexMod4`, buf)
-    }
-}
-
-
-
 
 enum class BatchSendStatusType {
     
@@ -66971,14 +62784,14 @@ public object FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiExcepti
  *
  * ```text
  * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
- * multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+ * multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
  * move-auth-flag
  * ed25519-flag        = %x00
  * secp256k1-flag      = %x01
  * secp256r1-flag      = %x02
  * multisig-flag       = %x03
  * bls-flag            = %x04
- * zklogin-auth-flag   = %x05
+ * zklogin-auth-flag-deprecated   = %x05
  * passkey-auth-flag   = %x06
  * move-auth-flag      = %x07
  * ```
@@ -66991,7 +62804,7 @@ enum class SignatureScheme(val value: kotlin.UByte) {
     SECP256R1(2u),
     MULTISIG(3u),
     BLS12381(4u),
-    ZK_LOGIN_AUTHENTICATOR(5u),
+    ZK_LOGIN_AUTHENTICATOR_DEPRECATED(5u),
     PASSKEY_AUTHENTICATOR(6u),
     MOVE_AUTHENTICATOR(7u);
     companion object
@@ -68544,102 +64357,6 @@ public object FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> 
         } else {
             buf.put(1)
             FfiConverterTypeTypeTag.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeZkLoginAuthenticator: FfiConverterRustBuffer<ZkLoginAuthenticator?> {
-    override fun read(buf: ByteBuffer): ZkLoginAuthenticator? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeZkLoginAuthenticator.read(buf)
-    }
-
-    override fun allocationSize(value: ZkLoginAuthenticator?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeZkLoginAuthenticator.allocationSize(value)
-        }
-    }
-
-    override fun write(value: ZkLoginAuthenticator?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeZkLoginAuthenticator.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeZkLoginPublicIdentifier: FfiConverterRustBuffer<ZkLoginPublicIdentifier?> {
-    override fun read(buf: ByteBuffer): ZkLoginPublicIdentifier? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeZkLoginPublicIdentifier.read(buf)
-    }
-
-    override fun allocationSize(value: ZkLoginPublicIdentifier?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeZkLoginPublicIdentifier.allocationSize(value)
-        }
-    }
-
-    override fun write(value: ZkLoginPublicIdentifier?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeZkLoginPublicIdentifier.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeZkloginVerifier: FfiConverterRustBuffer<ZkloginVerifier?> {
-    override fun read(buf: ByteBuffer): ZkloginVerifier? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeZkloginVerifier.read(buf)
-    }
-
-    override fun allocationSize(value: ZkloginVerifier?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeZkloginVerifier.allocationSize(value)
-        }
-    }
-
-    override fun write(value: ZkloginVerifier?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeZkloginVerifier.write(value, buf)
         }
     }
 }
@@ -71098,34 +66815,6 @@ public object FfiConverterSequenceTypeVersionAssignment: FfiConverterRustBuffer<
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeActiveJwk: FfiConverterRustBuffer<List<ActiveJwk>> {
-    override fun read(buf: ByteBuffer): List<ActiveJwk> {
-        val len = buf.getInt()
-        return List<ActiveJwk>(len) {
-            FfiConverterTypeActiveJwk.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<ActiveJwk>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeActiveJwk.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<ActiveJwk>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeActiveJwk.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterSequenceTypeChangedObject: FfiConverterRustBuffer<List<ChangedObject>> {
     override fun read(buf: ByteBuffer): List<ChangedObject> {
         val len = buf.getInt()
@@ -72051,45 +67740,6 @@ public object FfiConverterMapTypeObjectIdTypeUpgradeInfo: FfiConverterRustBuffer
 
 
 
-
-/**
- * @suppress
- */
-public object FfiConverterMapTypeJwkIdTypeJwk: FfiConverterRustBuffer<Map<JwkId, Jwk>> {
-    override fun read(buf: ByteBuffer): Map<JwkId, Jwk> {
-        val len = buf.getInt()
-        return buildMap<JwkId, Jwk>(len) {
-            repeat(len) {
-                val k = FfiConverterTypeJwkId.read(buf)
-                val v = FfiConverterTypeJwk.read(buf)
-                this[k] = v
-            }
-        }
-    }
-
-    override fun allocationSize(value: Map<JwkId, Jwk>): ULong {
-        val spaceForMapSize = 4UL
-        val spaceForChildren = value.map { (k, v) ->
-            FfiConverterTypeJwkId.allocationSize(k) +
-            FfiConverterTypeJwk.allocationSize(v)
-        }.sum()
-        return spaceForMapSize + spaceForChildren
-    }
-
-    override fun write(value: Map<JwkId, Jwk>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        // The parens on `(k, v)` here ensure we're calling the right method,
-        // which is important for compatibility with older android devices.
-        // Ref https://blog.danlew.net/2017/03/16/kotlin-puzzler-whose-line-is-it-anyways/
-        value.forEach { (k, v) ->
-            FfiConverterTypeJwkId.write(k, buf)
-            FfiConverterTypeJwk.write(v, buf)
-        }
-    }
-}
-
-
-
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -72124,58 +67774,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
 
 
 
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkFromBcs`(`bcs`: kotlin.ByteArray): ActiveJwk {
-            return FfiConverterTypeActiveJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkFromJson`(`json`: kotlin.String): ActiveJwk {
-            return FfiConverterTypeActiveJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkToBcs`(`data`: ActiveJwk): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
-        FfiConverterTypeActiveJwk.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkToJson`(`data`: ActiveJwk): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(
-        FfiConverterTypeActiveJwk.lower(`data`),_status)
-}
-    )
-    }
-    
 
         /**
          * Create this type from BCS encoded bytes.
@@ -72276,110 +67874,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_to_json(
         FfiConverterTypeArgument.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateExpire {
-            return FfiConverterTypeAuthenticatorStateExpire.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromJson`(`json`: kotlin.String): AuthenticatorStateExpire {
-            return FfiConverterTypeAuthenticatorStateExpire.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireToBcs`(`data`: AuthenticatorStateExpire): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireToJson`(`data`: AuthenticatorStateExpire): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateUpdateV1 {
-            return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromJson`(`json`: kotlin.String): AuthenticatorStateUpdateV1 {
-            return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToBcs`(`data`: AuthenticatorStateUpdateV1): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToJson`(`data`: AuthenticatorStateUpdateV1): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
 }
     )
     }
@@ -72503,58 +67997,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(
         FfiConverterTypeBls12381Signature.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementFromBcs`(`bcs`: kotlin.ByteArray): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementFromJson`(`json`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementToBcs`(`data`: Bn254FieldElement): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
-        FfiConverterTypeBn254FieldElement.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementToJson`(`data`: Bn254FieldElement): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(
-        FfiConverterTypeBn254FieldElement.lower(`data`),_status)
 }
     )
     }
@@ -73023,110 +68465,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(
         FfiConverterTypeCheckpointTransactionInfo.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1FromBcs`(`bcs`: kotlin.ByteArray): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1FromJson`(`json`: kotlin.String): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1ToBcs`(`data`: CircomG1): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
-        FfiConverterTypeCircomG1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1ToJson`(`data`: CircomG1): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(
-        FfiConverterTypeCircomG1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2FromBcs`(`bcs`: kotlin.ByteArray): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2FromJson`(`json`: kotlin.String): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2ToBcs`(`data`: CircomG2): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
-        FfiConverterTypeCircomG2.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2ToJson`(`data`: CircomG2): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(
-        FfiConverterTypeCircomG2.lower(`data`),_status)
 }
     )
     }
@@ -74459,110 +69797,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_json(
         FfiConverterTypeInput.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkFromBcs`(`bcs`: kotlin.ByteArray): Jwk {
-            return FfiConverterTypeJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkFromJson`(`json`: kotlin.String): Jwk {
-            return FfiConverterTypeJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdFromBcs`(`bcs`: kotlin.ByteArray): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdFromJson`(`json`: kotlin.String): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdToBcs`(`data`: JwkId): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
-        FfiConverterTypeJwkId.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdToJson`(`data`: JwkId): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(
-        FfiConverterTypeJwkId.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkToBcs`(`data`: Jwk): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
-        FfiConverterTypeJwk.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkToJson`(`data`: Jwk): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_json(
-        FfiConverterTypeJwk.lower(`data`),_status)
 }
     )
     }
@@ -77631,214 +72865,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(
         FfiConverterTypeVersionAssignment.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromJson`(`json`: kotlin.String): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToBcs`(`data`: ZkLoginAuthenticator): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
-        FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToJson`(`data`: ZkLoginAuthenticator): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(
-        FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimFromJson`(`json`: kotlin.String): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimToBcs`(`data`: ZkLoginClaim): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
-        FfiConverterTypeZkLoginClaim.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimToJson`(`data`: ZkLoginClaim): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(
-        FfiConverterTypeZkLoginClaim.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofFromJson`(`json`: kotlin.String): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofToBcs`(`data`: ZkLoginProof): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
-        FfiConverterTypeZkLoginProof.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofToJson`(`data`: ZkLoginProof): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(
-        FfiConverterTypeZkLoginProof.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromJson`(`json`: kotlin.String): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToBcs`(`data`: ZkLoginPublicIdentifier): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
-        FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToJson`(`data`: ZkLoginPublicIdentifier): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(
-        FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
 }
     )
     }
