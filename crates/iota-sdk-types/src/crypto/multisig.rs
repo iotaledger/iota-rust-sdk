@@ -70,7 +70,9 @@ impl MultisigMemberPublicKey {
             MultisigMemberPublicKey::Secp256r1(secp256r1_public_key) => {
                 secp256r1_public_key.scheme()
             }
-            MultisigMemberPublicKey::ZkLoginDeprecated => panic!(),
+            MultisigMemberPublicKey::ZkLoginDeprecated => {
+                SignatureScheme::ZkLoginAuthenticatorDeprecated
+            }
         }
     }
 }
@@ -507,7 +509,9 @@ mod serialization {
                             public_key: *public_key,
                         }
                     }
-                    MultisigMemberPublicKey::ZkLoginDeprecated => panic!(),
+                    MultisigMemberPublicKey::ZkLoginDeprecated => {
+                        ReadableMemberPublicKey::ZkLoginDeprecated
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -521,7 +525,9 @@ mod serialization {
                     MultisigMemberPublicKey::Secp256r1(public_key) => {
                         MemberPublicKey::Secp256r1(*public_key)
                     }
-                    MultisigMemberPublicKey::ZkLoginDeprecated => panic!(),
+                    MultisigMemberPublicKey::ZkLoginDeprecated => {
+                        MemberPublicKey::ZkLoginDeprecated
+                    }
                 };
                 binary.serialize(serializer)
             }
@@ -543,7 +549,7 @@ mod serialization {
                     ReadableMemberPublicKey::Secp256r1 { public_key } => {
                         Self::Secp256r1(public_key)
                     }
-                    ReadableMemberPublicKey::ZkLoginDeprecated => panic!(),
+                    ReadableMemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
                 })
             } else {
                 let binary = MemberPublicKey::deserialize(deserializer)?;
@@ -551,7 +557,7 @@ mod serialization {
                     MemberPublicKey::Ed25519(public_key) => Self::Ed25519(public_key),
                     MemberPublicKey::Secp256k1(public_key) => Self::Secp256k1(public_key),
                     MemberPublicKey::Secp256r1(public_key) => Self::Secp256r1(public_key),
-                    MemberPublicKey::ZkLoginDeprecated => panic!(),
+                    MemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
                 })
             }
         }
@@ -611,7 +617,9 @@ mod serialization {
                             signature: *signature,
                         }
                     }
-                    MultisigMemberSignature::ZkLoginDeprecated => panic!(),
+                    MultisigMemberSignature::ZkLoginDeprecated => {
+                        ReadableMemberSignature::ZkLoginDeprecated
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -625,7 +633,9 @@ mod serialization {
                     MultisigMemberSignature::Secp256r1(signature) => {
                         MemberSignature::Secp256r1(*signature)
                     }
-                    MultisigMemberSignature::ZkLoginDeprecated => panic!(),
+                    MultisigMemberSignature::ZkLoginDeprecated => {
+                        MemberSignature::ZkLoginDeprecated
+                    }
                 };
                 binary.serialize(serializer)
             }
@@ -643,7 +653,7 @@ mod serialization {
                     ReadableMemberSignature::Ed25519 { signature } => Self::Ed25519(signature),
                     ReadableMemberSignature::Secp256k1 { signature } => Self::Secp256k1(signature),
                     ReadableMemberSignature::Secp256r1 { signature } => Self::Secp256r1(signature),
-                    ReadableMemberSignature::ZkLoginDeprecated => panic!(),
+                    ReadableMemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
                 })
             } else {
                 let binary = MemberSignature::deserialize(deserializer)?;
@@ -651,7 +661,7 @@ mod serialization {
                     MemberSignature::Ed25519(signature) => Self::Ed25519(signature),
                     MemberSignature::Secp256k1(signature) => Self::Secp256k1(signature),
                     MemberSignature::Secp256r1(signature) => Self::Secp256r1(signature),
-                    MemberSignature::ZkLoginDeprecated => panic!(),
+                    MemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
                 })
             }
         }
