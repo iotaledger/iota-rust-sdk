@@ -6,6 +6,11 @@ import { expect, test } from "@playwright/test";
 // Stub chain ID value used in the mocked GraphQL response.
 const MOCK_CHAIN_ID = "0x243f6a8885a308d3";
 
+// NOTE: This test requires shared WASM function tables between the two
+// dynamically-linked WASM modules (index_bg.wasm and iota_sdk_ffi_bg.wasm).
+// Until that is implemented, async Rust→JS callbacks (used by every uniffi
+// async method, including chainId()) will fail with "function signature
+// mismatch" because call_indirect cannot cross module boundaries.
 test("chain_id example fetches and displays the testnet chain ID", async ({
   page,
 }) => {

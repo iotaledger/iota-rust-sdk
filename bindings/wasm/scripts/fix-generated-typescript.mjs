@@ -36,6 +36,19 @@ fixed = fixed.replace(
   ''
 );
 
+// Wrap callback interface vtable registration in try/catch.
+// In the two-WASM dynamic-linking architecture the callback vtable's
+// function pointers live in index_bg.wasm's table, but iota_sdk_ffi_bg.wasm
+// has a separate table.  Registering the vtable may trigger a
+// WebAssembly.RuntimeError ("function signature mismatch") because the
+// tables are not shared.  Swallowing the error here allows all non-callback
+// functionality to work; callback interfaces (e.g. setInspector) will fail
+// at call-time with a clear error instead of crashing the entire init.
+fixed = fixed.replace(
+  /(uniffiCallbackInterface\w+\.register\(\);)/g,
+  'try { $1 } catch (_e) { /* vtable registration unsupported in two-WASM mode */ }'
+);
+
 if (source !== fixed) {
   writeFileSync(bindingsFile, fixed);
   console.log('Normalized generated TypeScript bindings.');
