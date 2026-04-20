@@ -108,7 +108,6 @@ impl PasskeyAuthenticator {
     derive(serde::Serialize, serde::Deserialize),
     serde(transparent)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct PasskeyPublicKey(Secp256r1PublicKey);
 
@@ -143,24 +142,10 @@ mod serialization {
 
     #[derive(serde::Deserialize)]
     #[serde(rename = "PasskeyAuthenticator")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct Authenticator {
         authenticator_data: Vec<u8>,
         client_data_json: String,
         signature: SimpleSignature,
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for PasskeyAuthenticator {
-        fn schema_name() -> String {
-            Authenticator::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            Authenticator::json_schema(generator)
-        }
     }
 
     impl Serialize for PasskeyAuthenticator {

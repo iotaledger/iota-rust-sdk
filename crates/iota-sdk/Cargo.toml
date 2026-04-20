@@ -51,7 +51,6 @@ serde = ["types", "iota-types/serde"]
 rand = ["types", "iota-types/rand"]
 hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
-schemars = ["types", "iota-types/schemars"]
 
 [dependencies]
 iota-crypto = { workspace = true, features = ["ed25519"], optional = true }

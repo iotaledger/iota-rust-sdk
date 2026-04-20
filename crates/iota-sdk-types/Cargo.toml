@@ -35,7 +35,6 @@ serde = [
   "dep:serde_with",
   "roaring/std",
 ]
-schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
@@ -56,8 +55,6 @@ proptest = { workspace = true, features = ["std"], optional = true }
 # RNG support
 rand_core = { workspace = true, optional = true }
 roaring.workspace = true
-# JsonSchema definitions for types, useful for generating an OpenAPI Specification.
-schemars = { version = "0.8.21", optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }

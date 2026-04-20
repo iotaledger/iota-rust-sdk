@@ -20,7 +20,6 @@
 /// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -34,7 +33,6 @@ pub struct Bls12381PublicKey(
             with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array96, ::serde_with::Bytes>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 
@@ -132,7 +130,6 @@ impl std::fmt::Debug for Bls12381PublicKey {
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -146,7 +143,6 @@ pub struct Bls12381Signature(
             with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array48, [::serde_with::Same; 48]>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 

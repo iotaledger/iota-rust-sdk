@@ -22,7 +22,6 @@ impl MoveAuthenticator {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 pub struct MoveAuthenticatorV1 {
     /// Input objects or primitive values
     call_args: Vec<Input>,
@@ -113,14 +112,6 @@ mod serialization {
         V1(MoveAuthenticatorV1),
     }
 
-    #[cfg(feature = "schemars")]
-    #[derive(schemars::JsonSchema)]
-    #[schemars(rename = "MoveAuthenticator", deny_unknown_fields)]
-    #[allow(dead_code, non_snake_case)]
-    struct MoveAuthenticatorSchema {
-        V1: MoveAuthenticatorV1,
-    }
-
     impl From<MoveAuthenticatorOwned> for MoveAuthenticator {
         fn from(value: MoveAuthenticatorOwned) -> Self {
             match value {
@@ -162,19 +153,6 @@ mod serialization {
             bytes.push(SignatureScheme::MoveAuthenticator as u8);
             bytes.extend(as_bytes);
             bytes
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for MoveAuthenticator {
-        fn schema_name() -> String {
-            MoveAuthenticatorSchema::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            MoveAuthenticatorSchema::json_schema(generator)
         }
     }
 

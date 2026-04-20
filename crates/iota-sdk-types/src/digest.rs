@@ -18,7 +18,6 @@
 /// compact 32 bytes.
 #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -26,9 +25,7 @@
     bcs_schema(definition = "%d32 32OCTET")
 )]
 pub struct Digest(
-    #[cfg_attr(feature = "serde", serde(with = "DigestSerialization"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base58"))]
-    [u8; Self::LENGTH],
+    #[cfg_attr(feature = "serde", serde(with = "DigestSerialization"))] [u8; Self::LENGTH],
 );
 
 impl Digest {
