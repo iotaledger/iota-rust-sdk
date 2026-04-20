@@ -47,12 +47,12 @@ gas-payment = (size *object-reference)   ; objects
 
 ## Attributes
 
-| Attribute                                  | Level         | Purpose                                                |
-| ------------------------------------------ | ------------- | ------------------------------------------------------ |
-| `#[bcs_schema(name = "custom-name")]`      | Type          | Override the ABNF rule name                            |
-| `#[bcs_schema(definition = "32OCTET")]`    | Type          | Replace the generated RHS with a manual definition     |
-| `#[bcs_schema(as_type = "u64")]`           | Field/variant | Reference a different wire type (e.g. for aliases)     |
-| `#[bcs_schema(skip)]`                      | Field         | Omit the field from the schema                         |
+| Attribute                               | Level         | Purpose                                            |
+| --------------------------------------- | ------------- | -------------------------------------------------- |
+| `#[bcs_schema(name = "custom-name")]`   | Type          | Override the ABNF rule name                        |
+| `#[bcs_schema(definition = "32OCTET")]` | Type          | Replace the generated RHS with a manual definition |
+| `#[bcs_schema(as_type = "u64")]`        | Field/variant | Reference a different wire type (e.g. for aliases) |
+| `#[bcs_schema(skip)]`                   | Field         | Omit the field from the schema                     |
 
 ## Regenerating the schema
 
