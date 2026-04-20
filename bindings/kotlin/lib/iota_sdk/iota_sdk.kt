@@ -62951,7 +62951,6 @@ enum class TransactionBlockKindInput {
     PROGRAMMABLE_TX,
     GENESIS,
     CONSENSUS_COMMIT_PROLOGUE_V1,
-    AUTHENTICATOR_STATE_UPDATE_V1,
     RANDOMNESS_STATE_UPDATE,
     END_OF_EPOCH_TX;
     companion object

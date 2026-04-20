@@ -25502,11 +25502,9 @@ class TransactionBlockKindInput(enum.Enum):
     
     CONSENSUS_COMMIT_PROLOGUE_V1 = 3
     
-    AUTHENTICATOR_STATE_UPDATE_V1 = 4
+    RANDOMNESS_STATE_UPDATE = 4
     
-    RANDOMNESS_STATE_UPDATE = 5
-    
-    END_OF_EPOCH_TX = 6
+    END_OF_EPOCH_TX = 5
     
 
 
@@ -25523,10 +25521,8 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
         if variant == 4:
             return TransactionBlockKindInput.CONSENSUS_COMMIT_PROLOGUE_V1
         if variant == 5:
-            return TransactionBlockKindInput.AUTHENTICATOR_STATE_UPDATE_V1
-        if variant == 6:
             return TransactionBlockKindInput.RANDOMNESS_STATE_UPDATE
-        if variant == 7:
+        if variant == 6:
             return TransactionBlockKindInput.END_OF_EPOCH_TX
         raise InternalError("Raw enum value doesn't match any cases")
 
@@ -25539,8 +25535,6 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
         if value == TransactionBlockKindInput.GENESIS:
             return
         if value == TransactionBlockKindInput.CONSENSUS_COMMIT_PROLOGUE_V1:
-            return
-        if value == TransactionBlockKindInput.AUTHENTICATOR_STATE_UPDATE_V1:
             return
         if value == TransactionBlockKindInput.RANDOMNESS_STATE_UPDATE:
             return
@@ -25558,12 +25552,10 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
             buf.write_i32(3)
         if value == TransactionBlockKindInput.CONSENSUS_COMMIT_PROLOGUE_V1:
             buf.write_i32(4)
-        if value == TransactionBlockKindInput.AUTHENTICATOR_STATE_UPDATE_V1:
-            buf.write_i32(5)
         if value == TransactionBlockKindInput.RANDOMNESS_STATE_UPDATE:
-            buf.write_i32(6)
+            buf.write_i32(5)
         if value == TransactionBlockKindInput.END_OF_EPOCH_TX:
-            buf.write_i32(7)
+            buf.write_i32(6)
 
 
 

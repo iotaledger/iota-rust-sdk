@@ -41913,9 +41913,8 @@ const (
 	TransactionBlockKindInputProgrammableTx TransactionBlockKindInput = 2
 	TransactionBlockKindInputGenesis TransactionBlockKindInput = 3
 	TransactionBlockKindInputConsensusCommitPrologueV1 TransactionBlockKindInput = 4
-	TransactionBlockKindInputAuthenticatorStateUpdateV1 TransactionBlockKindInput = 5
-	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 6
-	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 7
+	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 5
+	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 6
 )
 
 type FfiConverterTransactionBlockKindInput struct {}

@@ -37014,7 +37014,6 @@ public enum TransactionBlockKindInput {
     case programmableTx
     case genesis
     case consensusCommitPrologueV1
-    case authenticatorStateUpdateV1
     case randomnessStateUpdate
     case endOfEpochTx
 }
@@ -37042,11 +37041,9 @@ public struct FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer 
         
         case 4: return .consensusCommitPrologueV1
         
-        case 5: return .authenticatorStateUpdateV1
+        case 5: return .randomnessStateUpdate
         
-        case 6: return .randomnessStateUpdate
-        
-        case 7: return .endOfEpochTx
+        case 6: return .endOfEpochTx
         
         default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -37072,16 +37069,12 @@ public struct FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer 
             writeInt(&buf, Int32(4))
         
         
-        case .authenticatorStateUpdateV1:
+        case .randomnessStateUpdate:
             writeInt(&buf, Int32(5))
         
         
-        case .randomnessStateUpdate:
-            writeInt(&buf, Int32(6))
-        
-        
         case .endOfEpochTx:
-            writeInt(&buf, Int32(7))
+            writeInt(&buf, Int32(6))
         
         }
     }

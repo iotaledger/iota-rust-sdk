@@ -58591,7 +58591,6 @@ public enum TransactionBlockKindInput: int {
     ProgrammableTx,
     Genesis,
     ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
     RandomnessStateUpdate,
     EndOfEpochTx
 }
