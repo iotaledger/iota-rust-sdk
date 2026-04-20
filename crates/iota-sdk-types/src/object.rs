@@ -363,18 +363,6 @@ impl MoveStruct {
         &self.contents
     }
 
-    /// Returns a mutable reference to the raw BCS-encoded contents.
-    ///
-    /// # Safety (logical)
-    ///
-    /// The caller must not corrupt the leading [`ObjectId::LENGTH`] bytes,
-    /// which encode the object's [`ObjectId`]. The returned slice has the
-    /// same length as the original contents; use [`Self::set_contents`] to
-    /// replace them entirely.
-    pub fn contents_mut_unchecked(&mut self) -> &mut [u8] {
-        &mut self.contents
-    }
-
     /// Replaces the BCS-encoded contents of this object.
     ///
     /// # Errors
