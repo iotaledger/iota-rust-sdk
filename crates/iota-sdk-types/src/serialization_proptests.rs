@@ -9,6 +9,7 @@ use crate::*;
 macro_rules! serialization_test {
     ($type:ident) => {
         paste::item! {
+            #[cfg(feature = "schemars")]
             #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
             #[cfg_attr(not(target_arch = "wasm32"), proptest)]
             #[allow(non_snake_case)]
@@ -35,6 +36,7 @@ macro_rules! serialization_test {
     };
 }
 
+#[cfg(feature = "schemars")]
 fn assert_valid_json_schema<T>(instance: &T)
 where
     T: serde::Serialize + schemars::JsonSchema,
