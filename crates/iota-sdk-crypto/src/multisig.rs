@@ -58,7 +58,7 @@ impl MultisigVerifier {
                 MultisigMemberPublicKey::ZkLoginDeprecated,
                 MultisigMemberSignature::ZkLoginDeprecated,
             ) => Err(SignatureError::from_source(
-                "support for zklogin is not enabled",
+                "support for zklogin is deprecated",
             )),
             _ => Err(SignatureError::from_source(
                 "member and signature scheme do not match",
@@ -176,7 +176,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             }
             UserSignature::Multisig(signature) => self.inner.verify(message, signature),
             UserSignature::ZkLoginAuthenticatorDeprecated => Err(SignatureError::from_source(
-                "support for zklogin is not enabled",
+                "support for zklogin is deprecated",
             )),
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
@@ -323,7 +323,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
             MultisigMemberSignature::Secp256r1(signature),
         )),
         UserSignature::ZkLoginAuthenticatorDeprecated => Err(SignatureError::from_source(
-            "support for zklogin is not enabled",
+            "support for zklogin is deprecated",
         )),
         UserSignature::Multisig(_)
         | UserSignature::PasskeyAuthenticator(_)

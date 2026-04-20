@@ -28,10 +28,10 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 ///                              secp256r1-multisig-member-public-key /
 ///                              zklogin-multisig-member-public-key-deprecated
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated = %x03
+/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %x03
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -312,10 +312,10 @@ impl Eq for MultisigAggregatedSignature {}
 ///                             secp256r1-multisig-member-signature /
 ///                             zklogin-multisig-member-signature-deprecated
 ///
-/// ed25519-multisig-member-signature   = %x00 ed25519-signature
-/// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-/// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-/// zklogin-multisig-member-signature-deprecated   = %x03
+/// ed25519-multisig-member-signature               = %x00 ed25519-signature
+/// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
+/// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
+/// zklogin-multisig-member-signature-deprecated    = %x03
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]

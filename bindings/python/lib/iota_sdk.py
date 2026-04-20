@@ -25235,14 +25235,14 @@ class SignatureScheme(enum.Enum):
     signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
     multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
     move-auth-flag
-    ed25519-flag        = %x00
-    secp256k1-flag      = %x01
-    secp256r1-flag      = %x02
-    multisig-flag       = %x03
-    bls-flag            = %x04
-    zklogin-auth-flag-deprecated   = %x05
-    passkey-auth-flag   = %x06
-    move-auth-flag      = %x07
+    ed25519-flag                    = %x00
+    secp256k1-flag                  = %x01
+    secp256r1-flag                  = %x02
+    multisig-flag                   = %x03
+    bls-flag                        = %x04
+    zklogin-auth-flag-deprecated    = %x05
+    passkey-auth-flag               = %x06
+    move-auth-flag                  = %x07
     ```
     """
 
@@ -42522,9 +42522,9 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
     secp256r1-multisig-member-public-key /
     zklogin-multisig-member-public-key-deprecated
 
-    ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-    secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-    secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+    ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+    secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+    secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
     zklogin-multisig-member-public-key-deprecated   = %x03
     ```
 
@@ -42575,9 +42575,9 @@ class MultisigMemberPublicKey():
     secp256r1-multisig-member-public-key /
     zklogin-multisig-member-public-key-deprecated
 
-    ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-    secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-    secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+    ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+    secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+    secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
     zklogin-multisig-member-public-key-deprecated   = %x03
     ```
 
@@ -42771,10 +42771,10 @@ class MultisigMemberSignatureProtocol(typing.Protocol):
     secp256r1-multisig-member-signature /
     zklogin-multisig-member-signature-deprecated
 
-    ed25519-multisig-member-signature   = %x00 ed25519-signature
-    secp256k1-multisig-member-signature = %x01 secp256k1-signature
-    secp256r1-multisig-member-signature = %x02 secp256r1-signature
-    zklogin-multisig-member-signature-deprecated   = %x03
+    ed25519-multisig-member-signature               = %x00 ed25519-signature
+    secp256k1-multisig-member-signature             = %x01 secp256k1-signature
+    secp256r1-multisig-member-signature             = %x02 secp256r1-signature
+    zklogin-multisig-member-signature-deprecated    = %x03
     ```
     """
 
@@ -42811,10 +42811,10 @@ class MultisigMemberSignature():
     secp256r1-multisig-member-signature /
     zklogin-multisig-member-signature-deprecated
 
-    ed25519-multisig-member-signature   = %x00 ed25519-signature
-    secp256k1-multisig-member-signature = %x01 secp256k1-signature
-    secp256r1-multisig-member-signature = %x02 secp256r1-signature
-    zklogin-multisig-member-signature-deprecated   = %x03
+    ed25519-multisig-member-signature               = %x00 ed25519-signature
+    secp256k1-multisig-member-signature             = %x01 secp256k1-signature
+    secp256r1-multisig-member-signature             = %x02 secp256r1-signature
+    zklogin-multisig-member-signature-deprecated    = %x03
     ```
     """
 

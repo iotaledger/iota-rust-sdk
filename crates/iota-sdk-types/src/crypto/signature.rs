@@ -204,16 +204,16 @@ impl SimpleSignature {
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+///                    multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 ///                    move-auth-flag
-/// ed25519-flag        = %x00
-/// secp256k1-flag      = %x01
-/// secp256r1-flag      = %x02
-/// multisig-flag       = %x03
-/// bls-flag            = %x04
-/// zklogin-auth-flag   = %x05
-/// passkey-auth-flag   = %x06
-/// move-auth-flag      = %x07
+/// ed25519-flag                    = %x00
+/// secp256k1-flag                  = %x01
+/// secp256r1-flag                  = %x02
+/// multisig-flag                   = %x03
+/// bls-flag                        = %x04
+/// zklogin-auth-flag-deprecated    = %x05
+/// passkey-auth-flag               = %x06
+/// move-auth-flag                  = %x07
 /// ```
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, strum::Display)]
 #[strum(serialize_all = "lowercase")]
