@@ -266,11 +266,6 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
-    /// Create and initialize the authenticator object used for zklogin -
-    /// Deprecated
-    AuthenticatorStateCreateDeprecated,
-    /// Expire JWKs used for zklogin - Deprecated
-    AuthenticatorStateExpireDeprecated,
 }
 
 impl EndOfEpochTransactionKind {

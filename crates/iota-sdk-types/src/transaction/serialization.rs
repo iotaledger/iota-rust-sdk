@@ -179,8 +179,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreateDeprecated,
-        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Deserialize)]
@@ -190,8 +188,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreateDeprecated,
-        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Serialize)]
@@ -200,8 +196,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreateDeprecated,
-        AuthenticatorStateExpireDeprecated,
     }
 
     #[derive(serde::Deserialize)]
@@ -210,8 +204,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreateDeprecated,
-        AuthenticatorStateExpireDeprecated,
     }
 
     impl Serialize for EndOfEpochTransactionKind {
@@ -231,12 +223,6 @@ mod end_of_epoch {
                     Self::ChangeEpochV4(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
                     }
-                    Self::AuthenticatorStateCreateDeprecated => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreateDeprecated
-                    }
-                    Self::AuthenticatorStateExpireDeprecated => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpireDeprecated
-                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -245,13 +231,6 @@ mod end_of_epoch {
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
                     Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
                     Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
-
-                    Self::AuthenticatorStateCreateDeprecated => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreateDeprecated
-                    }
-                    Self::AuthenticatorStateExpireDeprecated => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpireDeprecated
-                    }
                 };
                 binary.serialize(serializer)
             }
@@ -276,12 +255,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
                             Self::ChangeEpochV4(k)
                         }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateCreateDeprecated => {
-                            Self::AuthenticatorStateCreateDeprecated
-                        }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateExpireDeprecated => {
-                            Self::AuthenticatorStateExpireDeprecated
-                        }
                     }
                 })
             } else {
@@ -291,13 +264,6 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
-
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateCreateDeprecated => {
-                            Self::AuthenticatorStateCreateDeprecated
-                        }
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateExpireDeprecated => {
-                            Self::AuthenticatorStateExpireDeprecated
-                        }
                     },
                 )
             }
