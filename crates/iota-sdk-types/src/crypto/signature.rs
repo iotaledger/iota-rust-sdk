@@ -603,7 +603,9 @@ mod serialization {
             match self {
                 UserSignature::Simple(s) => s.to_bytes(),
                 UserSignature::Multisig(m) => m.to_bytes(),
-                UserSignature::ZkLoginAuthenticatorDeprecated => panic!(),
+                UserSignature::ZkLoginAuthenticatorDeprecated => {
+                    panic!("zklogin has been deprecated")
+                }
                 UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
                 UserSignature::MoveAuthenticator(m) => m.to_bytes(),
             }
