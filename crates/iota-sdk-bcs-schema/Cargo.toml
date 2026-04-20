@@ -1,5 +1,5 @@
 [package]
-name = "iota-bcs-schema"
+name = "iota-sdk-bcs-schema"
 version = "0.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
