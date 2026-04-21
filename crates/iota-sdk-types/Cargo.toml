@@ -18,7 +18,6 @@ all-features = true
 rustdoc-args = [
   # Enable doc_cfg showing the required features.
   "--cfg=doc_cfg",
-
   # Generate links to definition in rustdoc source code pages
   # https://github.com/rust-lang/rust/pull/84176
   "-Zunstable-options",
@@ -28,13 +27,13 @@ rustdoc-args = [
 [features]
 default = []
 serde = [
-  "dep:serde",
-  "dep:serde_with",
   "dep:bcs",
-  "dep:serde_json",
-  "roaring/std",
   "dep:itertools",
+  "dep:serde",
+  "dep:serde_json",
   "dep:serde_repr",
+  "dep:serde_with",
+  "roaring/std",
 ]
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
@@ -43,35 +42,30 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
 base64ct = { workspace = true, features = ["alloc"] }
+# Serialization and Deserialization support
+bcs = { workspace = true, optional = true }
+# Hash support
+blake2 = { version = "0.10.6", optional = true }
 bnum.workspace = true
 bs58 = "0.5.1"
 hex.workspace = true
-paste.workspace = true
-roaring.workspace = true
-strum = { workspace = true, features = ["derive"] }
-thiserror.workspace = true
-winnow = "0.7"
-
-# Serialization and Deserialization support
-bcs = { workspace = true, optional = true }
 itertools = { workspace = true, optional = true }
+paste.workspace = true
+# proptest support
+proptest = { workspace = true, features = ["std"], optional = true }
+# RNG support
+rand_core = { workspace = true, optional = true }
+roaring.workspace = true
+# JsonSchema definitions for types, useful for generating an OpenAPI Specification.
+schemars = { version = "0.8.21", optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
-
-# JsonSchema definitions for types, useful for generating an OpenAPI Specification.
-schemars = { version = "0.8.21", optional = true }
-
-# RNG support
-rand_core = { workspace = true, optional = true }
-
-# Hash support
-blake2 = { version = "0.10.6", optional = true }
-
-# proptest support
-proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
+strum = { workspace = true, features = ["derive"] }
 test-strategy = { workspace = true, optional = true }
+thiserror.workspace = true
+winnow = "0.7"
 
 [dev-dependencies]
 bcs.workspace = true
@@ -82,5 +76,5 @@ paste.workspace = true
 serde_json.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-wasm-bindgen-test = "0.3"
 getrandom = { version = "0.3", features = ["wasm_js"] }
+wasm-bindgen-test.workspace = true
