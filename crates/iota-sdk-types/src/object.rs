@@ -279,28 +279,18 @@ impl std::str::FromStr for MoveObjectType {
 /// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize),
-    serde(rename_all = "camelCase")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
     /// The type of this object. Uses optimized BCS serialization.
-    pub object_type: MoveObjectType,
+    object_type: MoveObjectType,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub version: Version,
+    version: Version,
     /// BCS bytes of a Move struct value.
     ///
     /// The first [`ObjectId::LENGTH`] bytes are always the object's
     /// [`ObjectId`].
-    #[cfg_attr(
-        feature = "serde",
-        serde(with = "::serde_with::As::<::serde_with::Bytes>")
-    )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     contents: Vec<u8>,
 }
@@ -350,12 +340,25 @@ impl MoveStruct {
     /// This is always valid because the constructor guarantees that `contents`
     /// is at least [`ObjectId::LENGTH`] bytes long.
     pub fn id(&self) -> ObjectId {
-        ObjectId::from(Address::from_bytes(&self.contents[..ObjectId::LENGTH]).unwrap())
+        ObjectId::from_bytes(&self.contents[..ObjectId::LENGTH]).unwrap()
     }
 
     /// Returns the version (lamport timestamp) of this object.
     pub fn version(&self) -> Version {
         self.version
+    }
+
+    /// Sets the version (lamport timestamp) of this object.
+    pub fn set_version(&mut self, version: Version) {
+        self.version = version;
+    }
+
+    /// Sets the type of this object.
+    ///
+    /// The caller must ensure the existing [`contents`](Self::contents) are a
+    /// valid BCS encoding of the new `object_type`; this is not verified.
+    pub fn set_object_type(&mut self, object_type: MoveObjectType) {
+        self.object_type = object_type;
     }
 
     /// Returns the raw BCS-encoded contents of this object.
@@ -364,6 +367,9 @@ impl MoveStruct {
     }
 
     /// Replaces the BCS-encoded contents of this object.
+    ///
+    /// The caller must ensure the new contents are a valid BCS encoding of the
+    /// object's [`object_type`](Self::object_type); this is not verified.
     ///
     /// # Errors
     ///
@@ -410,30 +416,6 @@ impl MoveStruct {
 )]
 pub struct MoveStructContentsError {
     actual: usize,
-}
-
-#[cfg(feature = "serde")]
-impl<'de> serde::Deserialize<'de> for MoveStruct {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        use super::MoveObjectType;
-
-        #[derive(serde::Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        struct MoveStructData {
-            object_type: MoveObjectType,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
-            contents: Vec<u8>,
-        }
-
-        let data = MoveStructData::deserialize(deserializer)?;
-        MoveStruct::new(data.object_type, data.version, data.contents)
-            .map_err(serde::de::Error::custom)
-    }
 }
 
 /// Type of an IOTA object
@@ -521,7 +503,7 @@ impl Object {
     /// Return this object's version
     pub fn version(&self) -> Version {
         match &self.data {
-            ObjectData::Struct(struct_) => struct_.version,
+            ObjectData::Struct(struct_) => struct_.version(),
             ObjectData::Package(package) => package.version,
         }
     }
@@ -529,7 +511,7 @@ impl Object {
     /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.struct_tag().clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -625,14 +607,14 @@ impl GenesisObject {
 
     pub fn version(&self) -> Version {
         match &self.data {
-            ObjectData::Struct(struct_) => struct_.version,
+            ObjectData::Struct(struct_) => struct_.version(),
             ObjectData::Package(package) => package.version,
         }
     }
 
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.struct_tag().clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -836,6 +818,54 @@ mod serialization {
             } else {
                 MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
             }
+        }
+    }
+
+    #[derive(serde::Serialize)]
+    #[serde(rename = "MoveStruct", rename_all = "camelCase")]
+    struct ReadableMoveStructRef<'a> {
+        object_type: &'a MoveObjectType,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        version: Version,
+        #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
+        contents: &'a [u8],
+    }
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveStruct", rename_all = "camelCase")]
+    struct ReadableMoveStructOwned {
+        object_type: MoveObjectType,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        version: Version,
+        #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
+        contents: Vec<u8>,
+    }
+
+    impl Serialize for MoveStruct {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            ReadableMoveStructRef {
+                object_type: &self.object_type,
+                version: self.version,
+                contents: &self.contents,
+            }
+            .serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for MoveStruct {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let ReadableMoveStructOwned {
+                object_type,
+                version,
+                contents,
+            } = ReadableMoveStructOwned::deserialize(deserializer)?;
+            MoveStruct::new(object_type, version, contents).map_err(serde::de::Error::custom)
         }
     }
 
