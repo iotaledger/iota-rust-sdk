@@ -1,6 +1,7 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
+
 use std::{path::Path, str::FromStr};
 
 use heck::ToPascalCase;
@@ -55,7 +56,7 @@ pub(crate) fn generate_accessors(
 
             // Add IOTA license header
             buf.push_str("// Copyright (c) Mysten Labs, Inc.\n");
-            buf.push_str("// Modifications Copyright (c) 2025 IOTA Stiftung\n");
+            buf.push_str("// Modifications Copyright (c) 2026 IOTA Stiftung\n");
             buf.push_str("// SPDX-License-Identifier: Apache-2.0\n");
             buf.push('\n');
             buf.push_str(&code);

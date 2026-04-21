@@ -1,8 +1,8 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
-//
-// Proto build tool for generating gRPC types with field constants
+
+//! Proto build tool for generating gRPC types with field constants
 
 use std::{collections::HashMap, path::PathBuf};
 
@@ -144,7 +144,7 @@ fn main() {
             // Add license header if missing
             if !content.starts_with("// Copyright") {
                 content = format!(
-                    "// Copyright (c) Mysten Labs, Inc.\n// Modifications Copyright (c) 2025 IOTA Stiftung\n// SPDX-License-Identifier: Apache-2.0\n\n{content}"
+                    "// Copyright (c) Mysten Labs, Inc.\n// Modifications Copyright (c) 2026 IOTA Stiftung\n// SPDX-License-Identifier: Apache-2.0\n\n{content}"
                 );
             }
 
