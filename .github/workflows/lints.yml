@@ -48,18 +48,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Check Cargo.toml format and sorting and consolidate dependencies
-        run: |
-          pushd scripts/cargo_sort
-          ./run_consolidate.sh --skip-dprint
-          popd
+      - name: Install dprint
+        run: curl -fsSL https://dprint.dev/install.sh | sh && echo "$HOME/.dprint/bin" >> $GITHUB_PATH
 
-      - name: Check for Cargo.toml diffs after formatting
+      - name: Sort, consolidate, and format Cargo.toml dependencies
+        run: make cargo-sort
+
+      - name: Check for uncommitted Cargo.toml changes
         run: |
-          if git status --porcelain | grep -q "Cargo.toml"; then
-            echo "Cargo.toml files not formatted and/or sorted properly, or dependencies not consolidated! Please run the 'scripts/cargo_sort/run_consolidate.sh' script."
-            git diff  # Show the actual diffs
-            exit 1    # Fail the workflow
+          if ! git diff --quiet -- '*.toml'; then
+            echo "Cargo.toml files not properly sorted, consolidated, or formatted! Please run 'make cargo-sort'."
+            git diff -- '*.toml'
+            exit 1
           fi
 
   cargo-deny:

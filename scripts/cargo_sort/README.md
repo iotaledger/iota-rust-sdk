@@ -95,3 +95,40 @@ python cargo_sort.py --consolidate-deps [options]
 # Only consolidate, don't sort
 python cargo_sort.py --consolidate-deps --skip-sort
 ```
+
+## Maintenance
+
+When modifying the workspace (adding/removing crates, changing dependencies), the following
+configuration points may need updating:
+
+### Internal crate aliases (`cargo_sort.py`)
+
+The `internal_crates_dict` in `cargo_sort.py` is auto-populated by scanning all `Cargo.toml`
+files in the workspace for their `[package] name`. However, some crates are referenced by an
+**alias** — a dependency name that differs from the actual package name. For example, if a
+crate declares `name = "iota-sdk-crypto"` but other crates depend on it as `iota-crypto` (via
+`package = "iota-sdk-crypto"` renaming), the sort tool won't automatically recognize
+`iota-crypto` as an internal crate.
+
+**When to update:** When a workspace crate is depended on using a different name than its
+`[package] name`, add the alias to the manual `internal_crates_dict` entries in `cargo_sort.py`.
+Without this, the sort tool will misclassify the dependency as external.
+
+### Strict-ignore rules (`run_consolidate.sh`)
+
+The `--strict-ignore` flags in `run_consolidate.sh` suppress strict-mode errors for known,
+acceptable version conflicts. Strict mode (`--strict`) exits with an error if any dependency has
+conflicting versions across workspace crates.
+
+Ignore rules use the format:
+
+- `"dep_name"` — ignore all version conflicts for that dependency
+- `"dep_name:crate/path"` — ignore conflicts only for that dependency in a specific crate
+- `"*:crate/path"` — ignore all dependency conflicts in a specific crate
+
+**When to add entries:** When a dependency legitimately requires different versions in different
+crates (e.g., a crate pins an older version for platform compatibility) and this conflict should
+not block CI.
+
+**When to remove entries:** When the underlying version conflict has been resolved (e.g., all
+crates now use the same version), the ignore rule is no longer needed and should be removed.
