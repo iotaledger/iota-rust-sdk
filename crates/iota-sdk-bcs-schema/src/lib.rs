@@ -167,7 +167,7 @@ fn type_to_schema(ty: &Type) -> String {
                     None => "unknown".into(),
                 },
                 "BTreeMap" | "HashMap" => match extract_two_generics(seg) {
-                    // BCS map: `size` length prefix followed by sorted key-value pairs.
+                    // BCS map: `size` length prefix followed by key-value pairs.
                     Some((k, v)) => {
                         format!("(size *({} {}))", type_to_schema(&k), type_to_schema(&v))
                     }
