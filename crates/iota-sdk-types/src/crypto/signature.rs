@@ -603,8 +603,10 @@ mod serialization {
             match self {
                 UserSignature::Simple(s) => s.to_bytes(),
                 UserSignature::Multisig(m) => m.to_bytes(),
+                // Scheme flag only: the payload was dropped when zklogin was removed, but the
+                // flag is retained to avoid having to panic or make the whole function fallible.
                 UserSignature::ZkLoginAuthenticatorDeprecated => {
-                    panic!("zklogin has been deprecated")
+                    vec![SignatureScheme::ZkLoginAuthenticatorDeprecated as u8]
                 }
                 UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
                 UserSignature::MoveAuthenticator(m) => m.to_bytes(),
