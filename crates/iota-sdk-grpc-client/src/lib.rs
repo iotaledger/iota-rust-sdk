@@ -10,7 +10,7 @@
 //! # Example
 //!
 //! ```no_run
-//! use iota_grpc_client::Client;
+//! use iota_sdk_grpc_client::Client;
 //! use iota_types::{Digest, ObjectId};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -87,8 +87,8 @@ pub use api::{
 };
 // Re-export types for convenience
 pub use api::{
-    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope,
-    Page, ProtocolError, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
+    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope, Page,
+    ProtocolError, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{

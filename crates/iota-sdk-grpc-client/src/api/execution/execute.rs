@@ -13,7 +13,7 @@ use iota_types::SignedTransaction;
 use crate::{
     Client,
     api::{
-        EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtocolError, ProtoResult,
+        EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtoResult, ProtocolError,
         Result, build_proto_transaction, field_mask_with_default,
     },
 };
@@ -93,7 +93,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -127,12 +127,9 @@ impl Client {
         )
         .await?
         .try_map(|results| {
-            results
-                .into_iter()
-                .next()
-                .ok_or_else(|| {
-                    Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
-                })?
+            results.into_iter().next().ok_or_else(|| {
+                Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+            })?
         })
     }
 
@@ -216,9 +213,7 @@ fn build_execute_item(signed_transaction: SignedTransaction) -> Result<ExecuteTr
         signed_transaction
             .signatures
             .into_iter()
-            .map(|sig| {
-                ProtoUserSignature::try_from(sig).map_err(Error::Signature)
-            })
+            .map(|sig| ProtoUserSignature::try_from(sig).map_err(Error::Signature))
             .collect::<Result<Vec<_>>>()?,
     );
 

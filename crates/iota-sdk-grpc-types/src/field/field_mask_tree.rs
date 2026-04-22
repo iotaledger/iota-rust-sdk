@@ -104,7 +104,7 @@ impl FieldMaskTree {
     /// prefix for any contained paths, including if it is an exact match.
     ///
     /// ```
-    /// # use iota_grpc_types::field::FieldMaskTree;
+    /// # use iota_sdk_grpc_types::field::FieldMaskTree;
     /// let mut tree = FieldMaskTree::default();
     /// tree.add_field_path("foo.bar");
     ///

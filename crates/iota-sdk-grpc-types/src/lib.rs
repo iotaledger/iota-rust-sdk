@@ -20,7 +20,7 @@ pub mod read_masks;
 ///
 /// # Example
 /// ```
-/// use iota_grpc_types::field_mask;
+/// use iota_sdk_grpc_types::field_mask;
 ///
 /// const MASK: &str = field_mask!("transaction.digest", "effects.bcs");
 /// assert_eq!(MASK, "transaction.digest,effects.bcs");
@@ -43,7 +43,7 @@ macro_rules! field_mask {
 ///
 /// # Examples
 /// ```
-/// use iota_grpc_types::field_mask_normalize;
+/// use iota_sdk_grpc_types::field_mask_normalize;
 ///
 /// assert_eq!(field_mask_normalize("effects,effects.bcs"), "effects");
 /// assert_eq!(field_mask_normalize("effects.bcs,effects"), "effects");
@@ -82,7 +82,7 @@ pub fn field_mask_normalize(mask: &str) -> String {
 ///
 /// # Examples
 /// ```
-/// use iota_grpc_types::{field_masks_merge, read_masks::*};
+/// use iota_sdk_grpc_types::{field_masks_merge, read_masks::*};
 ///
 /// let mask = field_masks_merge!(CHECKPOINT_RESPONSE_SUMMARY, CHECKPOINT_RESPONSE_CONTENTS,);
 /// assert_eq!(mask, "checkpoint.summary,checkpoint.contents");
@@ -90,7 +90,7 @@ pub fn field_mask_normalize(mask: &str) -> String {
 ///
 /// Broader paths subsume narrower ones:
 /// ```
-/// use iota_grpc_types::field_masks_merge;
+/// use iota_sdk_grpc_types::field_masks_merge;
 ///
 /// let mask = field_masks_merge!("effects", "effects.bcs");
 /// assert_eq!(mask, "effects");

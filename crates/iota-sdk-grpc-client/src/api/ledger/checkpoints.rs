@@ -96,9 +96,9 @@ use iota_types::{CheckpointSequenceNumber, Digest};
 use crate::{
     Client, Error,
     api::{
-        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem,
-        GET_CHECKPOINT_READ_MASK, MetadataEnvelope, ProtocolError, Result, TryFromProtoError,
-        field_mask_with_default, saturating_usize_to_u32,
+        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GET_CHECKPOINT_READ_MASK,
+        MetadataEnvelope, ProtocolError, Result, TryFromProtoError, field_mask_with_default,
+        saturating_usize_to_u32,
     },
 };
 
@@ -120,7 +120,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     /// let checkpoint = client.get_checkpoint_latest(None, None, None).await?;
@@ -161,7 +161,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     /// let checkpoint = client
@@ -205,7 +205,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -324,7 +324,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -413,7 +413,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_grpc_client::{Client, CheckpointStreamItem};
+    /// # use iota_sdk_grpc_client::{Client, CheckpointStreamItem};
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -434,6 +434,7 @@ impl Client {
     ///         } => {
     ///             println!("Scanned up to {latest_scanned_sequence_number}");
     ///         }
+    ///         _ => {}
     ///     }
     /// }
     /// # Ok(())

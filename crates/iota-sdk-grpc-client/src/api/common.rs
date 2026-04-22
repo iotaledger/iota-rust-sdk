@@ -3,6 +3,11 @@
 
 //! Common utilities shared across API modules.
 
+pub use iota_grpc_types::{
+    field::{FieldMask, FieldMaskUtil},
+    google::rpc::Status as RpcStatus,
+    proto::TryFromProtoError,
+};
 use iota_grpc_types::{
     proto::GrpcConversionError,
     v1::{
@@ -15,11 +20,6 @@ use iota_grpc_types::{
         },
         types::ObjectId as ProtoObjectId,
     },
-};
-pub use iota_grpc_types::{
-    field::{FieldMask, FieldMaskUtil},
-    google::rpc::Status as RpcStatus,
-    proto::TryFromProtoError,
 };
 use iota_types::{Digest, ObjectId};
 use serde::Serialize;
@@ -178,7 +178,9 @@ impl ProtoResult for ObjectResult {
             Some(object_result::Result::Object(obj)) => Ok(obj),
             Some(object_result::Result::Error(e)) => Err(Error::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant("object result"))),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+                "object result",
+            ))),
         }
     }
 }

@@ -21,4 +21,4 @@ tonic.workspace = true
 tonic-prost = "0.14"
 
 # internal dependencies
-iota-types.workspace = true
+iota-types = { workspace = true, features = ["serde"] }

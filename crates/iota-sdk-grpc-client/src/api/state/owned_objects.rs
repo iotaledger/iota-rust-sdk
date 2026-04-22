@@ -61,7 +61,7 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -85,7 +85,7 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
