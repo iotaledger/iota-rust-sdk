@@ -38062,14 +38062,14 @@ class FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, IntPtr> {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 /// secp256k1-multisig-member-public-key /
 /// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key /
+/// zklogin-multisig-member-public-key-deprecated /
 /// passkey-multisig-member-public-key
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
 /// zklogin-multisig-member-public-key-deprecated   = %x03
-/// passkey-multisig-member-public-key   = %x04 passkey-public-key
+/// passkey-multisig-member-public-key              = %x04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -38109,14 +38109,14 @@ public interface IMultisigMemberPublicKey: IEquatable<MultisigMemberPublicKey> {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 /// secp256k1-multisig-member-public-key /
 /// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key /
+/// zklogin-multisig-member-public-key-deprecated /
 /// passkey-multisig-member-public-key
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
 /// zklogin-multisig-member-public-key-deprecated   = %x03
-/// passkey-multisig-member-public-key   = %x04 passkey-public-key
+/// passkey-multisig-member-public-key              = %x04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
