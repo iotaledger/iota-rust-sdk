@@ -22,12 +22,7 @@ if [ "$1" == "start" ]; then
 
     # Start PostgreSQL
     echo "Starting PostgreSQL..."
-    docker start postgres || docker run -d --name postgres \
-        -e POSTGRES_PASSWORD=postgrespw \
-        -e POSTGRES_INITDB_ARGS="-U postgres" \
-        ${POSTGRES_DB:+-e POSTGRES_DB="$POSTGRES_DB"} \
-        ${POSTGRES_HOST_AUTH_METHOD:+-e POSTGRES_HOST_AUTH_METHOD="$POSTGRES_HOST_AUTH_METHOD"} \
-        -p 5432:5432 postgres:15 -c max_connections=1000
+    docker start postgres || docker run -d --name postgres -e POSTGRES_PASSWORD=postgrespw -e POSTGRES_INITDB_ARGS="-U postgres" -p 5432:5432 postgres:15 -c max_connections=1000
 
     # Start IOTA network
     echo "Starting IOTA network..."

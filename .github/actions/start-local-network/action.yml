@@ -20,8 +20,7 @@ runs:
         #   artifact_name="iota-nightly-$started_at-linux-x86_64"
         # fi
         # gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
-        # tar -zxvf "$artifact_name.tgz" ./iota
-        # tar -zxvf "$artifact_name.tgz" ./iota-localnet
+        # tar -zxvf "$artifact_name.tgz" ./iota ./iota-localnet
 
         # Uncomment when using a released build
         IOTA_BINARY_VERSION="v1.21.1-rc"
@@ -29,11 +28,9 @@ runs:
         download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
         echo "Downloading binary from $download_url"
         wget -q $download_url -O iota.tgz
-        tar -zxvf iota.tgz ./iota
-        tar -zxvf iota.tgz ./iota-localnet
+        tar -zxvf iota.tgz ./iota ./iota-localnet
 
-        chmod +x ./iota
-        chmod +x ./iota-localnet
+        chmod +x ./iota ./iota-localnet
         # Make `iota` available on PATH for `iota move build` used by test fixtures
         echo "$(pwd)" >> $GITHUB_PATH
 
@@ -46,12 +43,5 @@ runs:
     - name: Start local network and gas station
       shell: bash
       env:
-        EPOCH_DURATION_MS: "10000"
         IOTA_START_EXTRA_ARGS: "--pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms 10000"
-        POSTGRES_DB: "iota_indexer_v2"
-        POSTGRES_HOST_AUTH_METHOD: "trust"
-        GAS_STATION_AUTH: "test"
-      run: |
-        ./run_localnet.sh start ./iota-localnet
-        # Wait for the first epoch to end
-        sleep $((EPOCH_DURATION_MS / 1000))
+      run: ./run_localnet.sh start ./iota-localnet
