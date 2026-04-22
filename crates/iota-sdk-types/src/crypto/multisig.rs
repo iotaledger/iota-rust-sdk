@@ -333,7 +333,7 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLoginDeprecated,
-    Passkey(Box<PasskeyAuthenticator>),
+    Passkey(PasskeyAuthenticator),
 }
 
 impl MultisigMemberSignature {
@@ -341,7 +341,7 @@ impl MultisigMemberSignature {
         Ed25519(Ed25519Signature),
         Secp256k1(Secp256k1Signature),
         Secp256r1(Secp256r1Signature),
-        Passkey(Box<PasskeyAuthenticator>),
+        Passkey(PasskeyAuthenticator),
     );
 }
 
@@ -590,7 +590,7 @@ mod serialization {
         Secp256k1(Secp256k1Signature),
         Secp256r1(Secp256r1Signature),
         ZkLoginDeprecated,
-        Passkey(Box<PasskeyAuthenticator>),
+        Passkey(PasskeyAuthenticator),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
@@ -602,7 +602,7 @@ mod serialization {
         Secp256k1 { signature: Secp256k1Signature },
         Secp256r1 { signature: Secp256r1Signature },
         ZkLoginDeprecated,
-        Passkey(Box<PasskeyAuthenticator>),
+        Passkey(PasskeyAuthenticator),
     }
 
     #[cfg(feature = "schemars")]
@@ -727,9 +727,7 @@ mod tests {
 
         let aggregated = MultisigAggregatedSignature::new(
             committee,
-            vec![MultisigMemberSignature::Passkey(Box::new(
-                passkey_authenticator,
-            ))],
+            vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
             0b1,
         );
 

@@ -79,7 +79,7 @@ impl MultisigVerifier {
                     ));
                 }
 
-                passkey_verifier.verify(message, passkey_authenticator.as_ref())
+                passkey_verifier.verify(message, passkey_authenticator)
             }
 
             _ => Err(SignatureError::from_source(
@@ -381,7 +381,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
         }
         UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
             MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key()),
-            MultisigMemberSignature::Passkey(Box::new(passkey_authenticator)),
+            MultisigMemberSignature::Passkey(passkey_authenticator),
         )),
 
         UserSignature::Multisig(_) | UserSignature::MoveAuthenticator(_) => {
