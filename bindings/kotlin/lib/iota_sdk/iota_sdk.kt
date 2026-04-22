@@ -3735,6 +3735,18 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5046,6 +5058,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt(
@@ -5055,6 +5071,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1(
 ): Short
@@ -5066,6 +5084,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt(
@@ -5075,6 +5097,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1(
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1(
 ): Short
@@ -7576,6 +7600,10 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(`ptr`: Poin
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7585,6 +7613,8 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(`ptr`: Po
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -7606,6 +7636,10 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519(`ptr`: Poin
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7615,6 +7649,8 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(`ptr`: Po
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -11874,6 +11910,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11887,6 +11929,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521.toShort()) {
@@ -11904,6 +11949,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11917,6 +11968,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey() != 45194.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() != 16841.toShort()) {
@@ -35130,12 +35184,14 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
  *
  * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
  * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
  * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
  * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -35155,6 +35211,10 @@ public interface MultisigMemberPublicKeyInterface {
     
     fun `asEd25519Opt`(): Ed25519PublicKey?
     
+    fun `asPasskey`(): PasskeyPublicKey
+    
+    fun `asPasskeyOpt`(): PasskeyPublicKey?
+    
     fun `asSecp256k1`(): Secp256k1PublicKey
     
     fun `asSecp256k1Opt`(): Secp256k1PublicKey?
@@ -35164,6 +35224,8 @@ public interface MultisigMemberPublicKeyInterface {
     fun `asSecp256r1Opt`(): Secp256r1PublicKey?
     
     fun `isEd25519`(): kotlin.Boolean
+    
+    fun `isPasskey`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
@@ -35185,12 +35247,14 @@ public interface MultisigMemberPublicKeyInterface {
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
  *
  * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
  * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
  * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
  * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -35310,6 +35374,30 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     }
     
 
+    override fun `asPasskey`(): PasskeyPublicKey {
+            return FfiConverterTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskeyOpt`(): PasskeyPublicKey? {
+            return FfiConverterOptionalTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asSecp256k1`(): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
@@ -35363,6 +35451,18 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPasskey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(
         it, _status)
 }
     }
@@ -35566,12 +35666,14 @@ public object FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemb
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature-deprecated
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
  * ed25519-multisig-member-signature               = %d00 ed25519-signature
  * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
  * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
  * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 public interface MultisigMemberSignatureInterface {
@@ -35579,6 +35681,10 @@ public interface MultisigMemberSignatureInterface {
     fun `asEd25519`(): Ed25519Signature
     
     fun `asEd25519Opt`(): Ed25519Signature?
+    
+    fun `asPasskey`(): PasskeyAuthenticator
+    
+    fun `asPasskeyOpt`(): PasskeyAuthenticator?
     
     fun `asSecp256k1`(): Secp256k1Signature
     
@@ -35589,6 +35695,8 @@ public interface MultisigMemberSignatureInterface {
     fun `asSecp256r1Opt`(): Secp256r1Signature?
     
     fun `isEd25519`(): kotlin.Boolean
+    
+    fun `isPasskey`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
@@ -35608,12 +35716,14 @@ public interface MultisigMemberSignatureInterface {
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature-deprecated
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
  * ed25519-multisig-member-signature               = %d00 ed25519-signature
  * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
  * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
  * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSignatureInterface
@@ -35722,6 +35832,30 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     }
     
 
+    override fun `asPasskey`(): PasskeyAuthenticator {
+            return FfiConverterTypePasskeyAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskeyOpt`(): PasskeyAuthenticator? {
+            return FfiConverterOptionalTypePasskeyAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asSecp256k1`(): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     callWithPointer {
@@ -35775,6 +35909,18 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPasskey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(
         it, _status)
 }
     }
@@ -64090,6 +64236,38 @@ public object FfiConverterOptionalTypePasskeyAuthenticator: FfiConverterRustBuff
         } else {
             buf.put(1)
             FfiConverterTypePasskeyAuthenticator.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypePasskeyPublicKey: FfiConverterRustBuffer<PasskeyPublicKey?> {
+    override fun read(buf: ByteBuffer): PasskeyPublicKey? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypePasskeyPublicKey.read(buf)
+    }
+
+    override fun allocationSize(value: PasskeyPublicKey?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypePasskeyPublicKey.allocationSize(value)
+        }
+    }
+
+    override fun write(value: PasskeyPublicKey?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypePasskeyPublicKey.write(value, buf)
         }
     }
 }
