@@ -76,7 +76,7 @@ async fn main() -> Result<()> {
     let effects = client.execute_tx(&[user_sig], &tx, None).await?;
 
     println!("Digest: {}", effects.digest());
-    println!("Transaction status: {:?}", effects.status());
+    println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");
 
     Ok(())

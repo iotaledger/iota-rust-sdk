@@ -221,7 +221,7 @@ impl Indexer {
                 .iter()
                 .filter(|td| {
                     self.config.filters.include_failed_txs
-                        || matches!(td.effects.status(), ExecutionStatus::Success)
+                        || matches!(td.effects.as_v1().status, ExecutionStatus::Success)
                 })
                 .map(|td| {
                     let digest = td.effects.as_v1().transaction_digest.to_string();
@@ -249,7 +249,7 @@ impl Indexer {
 
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
-                let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
+                let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
                     r#"
@@ -345,7 +345,7 @@ impl Indexer {
 
             for tx_data in tx_page.data() {
                 if !self.config.filters.include_failed_txs
-                    && !matches!(tx_data.effects.status(), ExecutionStatus::Success)
+                    && !matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success)
                 {
                     continue;
                 }
@@ -353,7 +353,7 @@ impl Indexer {
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
-                let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
+                let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
                     r#"

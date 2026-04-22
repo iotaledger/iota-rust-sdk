@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId, Version, execution_status::ExecutionStatus,
-    object::Owner,
+    Digest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectId, Owner, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -68,20 +67,21 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Digest>,
 }
 
-impl TransactionEffectsV1 {
-    /// The status of the execution
-    pub fn status(&self) -> &ExecutionStatus {
-        &self.status
-    }
-
-    /// The epoch when this transaction was executed.
-    pub fn epoch(&self) -> EpochId {
-        self.epoch
-    }
-
-    /// The gas used in this transaction.
-    pub fn gas_summary(&self) -> &GasCostSummary {
-        &self.gas_used
+impl Default for TransactionEffectsV1 {
+    fn default() -> Self {
+        Self {
+            status: ExecutionStatus::Success,
+            epoch: 0,
+            gas_used: GasCostSummary::default(),
+            transaction_digest: Digest::default(),
+            gas_object_index: None,
+            events_digest: None,
+            dependencies: vec![],
+            lamport_version: Version::default(),
+            changed_objects: vec![],
+            unchanged_shared_objects: vec![],
+            auxiliary_data_digest: None,
+        }
     }
 }
 
@@ -95,7 +95,12 @@ impl TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Deserialize, serde::Serialize),
+    serde(rename = "EffectsObjectChange"),
+    serde(rename_all = "camelCase")
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -319,36 +324,6 @@ impl ObjectOut {
     }
 }
 
-/// Defines what happened to an ObjectId during execution
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation = %d00   ; None
-///              / %d01   ; Created
-///              / %d02   ; Deleted
-/// ```
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[non_exhaustive]
-pub enum IdOperation {
-    None,
-    Created,
-    Deleted,
-}
-
-impl IdOperation {
-    crate::def_is!(None, Created, Deleted);
-}
-
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
@@ -357,6 +332,7 @@ mod serialization {
     use super::*;
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1Ref<'a> {
         #[serde(flatten)]
         status: &'a ExecutionStatus,
@@ -375,6 +351,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1 {
         #[serde(flatten)]
         status: ExecutionStatus,
@@ -393,6 +370,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1Ref<'a> {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
@@ -408,6 +386,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1 {
         status: ExecutionStatus,
         epoch: EpochId,
@@ -539,6 +518,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "UnchangedSharedKind")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -660,6 +640,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectIn")]
     enum ReadableObjectIn {
         Missing,
         Data {
@@ -671,6 +652,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectIn")]
     enum BinaryObjectIn {
         Missing,
         Data {
@@ -754,6 +736,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectOut")]
     enum ReadableObjectOut {
         Missing,
         ObjectWrite {
@@ -768,6 +751,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectOut")]
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {

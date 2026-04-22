@@ -670,6 +670,7 @@ mod serialization {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
+    #[serde(rename = "UserSignature")]
     enum ReadableUserSignatureRef<'a> {
         Ed25519 {
             signature: &'a Ed25519Signature,

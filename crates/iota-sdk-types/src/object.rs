@@ -917,6 +917,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "Package")]
     struct ReadablePackage {
         #[serde(
             with = "::serde_with::As::<BTreeMap<::serde_with::Same, crate::_serde::Base64Encoded>>"
@@ -927,6 +928,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "MoveStruct")]
     struct ReadableMoveStruct {
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
         contents: Vec<u8>,
@@ -1049,6 +1051,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "Object")]
     struct BinaryObject {
         data: ObjectData,
         owner: Owner,

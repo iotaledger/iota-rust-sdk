@@ -10,7 +10,7 @@ use iota_sdk::{
     transaction_builder::{
         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
     },
-    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut},
+    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut, TransactionEffects},
 };
 use rand::rngs::OsRng;
 
@@ -38,11 +38,17 @@ async fn main() -> Result<()> {
         .finish(&client)
         .await?;
 
-    let effects = builder
+    match builder
         .execute(&move_authenticator, WaitForTx::Finalized)
-        .await?;
-
-    println!("Sending IOTA via abstract account: {:?}", effects.status());
+        .await?
+    {
+        TransactionEffects::V1(v1) => {
+            println!("Sending IOTA via abstract account: {:?}", v1.status);
+        }
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    }
 
     Ok(())
 }
@@ -76,7 +82,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
     // Sign and execute the transaction (publish the package)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
 
-    println!("Publishing package: {:?}\n", effects.status());
+    println!("Publishing package: {:?}\n", effects.as_v1().status);
 
     // Get package, package metadata and account IDs from the effects
     let mut package_id = None::<ObjectId>;
@@ -133,7 +139,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     println!(
         "Linking account to authenticate method: {:?}\n",
-        effects.status()
+        effects.as_v1().status
     );
 
     Ok(account_id)
