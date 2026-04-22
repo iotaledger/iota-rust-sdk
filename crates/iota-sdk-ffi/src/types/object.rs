@@ -561,22 +561,24 @@ pub struct MoveStruct {
 
 impl From<iota_sdk::types::MoveStruct> for MoveStruct {
     fn from(value: iota_sdk::types::MoveStruct) -> Self {
-        let struct_tag: iota_sdk::types::StructTag = value.object_type.into();
+        let (object_type, version, contents) = value.into_parts();
+        let struct_tag: iota_sdk::types::StructTag = object_type.into();
         Self {
             struct_type: Arc::new(struct_tag.into()),
-            version: Arc::new(value.version.into()),
-            contents: value.contents,
+            version: Arc::new(version.into()),
+            contents,
         }
     }
 }
 
 impl From<MoveStruct> for iota_sdk::types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
-        Self {
-            object_type: value.struct_type.0.clone().into(),
-            version: **value.version,
-            contents: value.contents,
-        }
+        iota_sdk::types::MoveStruct::new(
+            value.struct_type.0.clone().into(),
+            **value.version,
+            value.contents,
+        )
+        .expect("FFI MoveStruct should always have valid contents")
     }
 }
 

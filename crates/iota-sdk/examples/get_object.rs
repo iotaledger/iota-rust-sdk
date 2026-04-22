@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
             iota_types::ObjectType::Struct(tag) => format!("{tag}"),
         }
     );
-    println!("BCS bytes: {}", hex::encode(&obj.as_struct().contents));
+    println!("BCS bytes: {}", hex::encode(obj.as_struct().contents()));
 
     Ok(())
 }
