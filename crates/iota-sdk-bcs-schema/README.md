@@ -14,7 +14,7 @@ A formal, human- and machine-readable description of the BCS wire format makes i
 
 `#[derive(BcsSchema)]` inspects the type's fields/variants and appends an ABNF rule to `bcs-schema.abnf` at the consuming crate's root. Supported out of the box:
 
-- Primitives: `u8`..`u128`, `i8`..`i128`, `bool`, `String`, `str`
+- Primitives: `u8`..`u128`, `i64`, `bool`, `String`, `str`
 - Generics: `Option<T>`, `Vec<T>`, `Box<T>`, `BTreeMap<K, V>`, `HashMap<K, V>`
 - Fixed-size arrays `[u8; N]` and `[T; N]`
 - Tuples and unit types
