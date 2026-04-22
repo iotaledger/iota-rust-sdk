@@ -22,6 +22,8 @@ A formal, human- and machine-readable description of the BCS wire format makes i
 
 Variant indices are emitted as `%dNN` literals matching the BCS variant discriminant.
 
+Two types whose names kebab-case to the same rule (e.g. `ObjectID` and `ObjectId`) are rejected at compile time. Disambiguate with `#[bcs_schema(name = "…")]` on one of them.
+
 ## Usage
 
 ```rust
