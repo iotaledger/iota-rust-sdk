@@ -7,7 +7,7 @@ COMPOSE_PATH="./.github/actions/start-local-network/gas_station_compose.yml"
 COMPOSE_LOCAL_PATH="./.github/actions/start-local-network/gas_station_compose.local.yml"
 CONFIG_BACKUP="$CONFIG_PATH.backup"
 IOTA_LOG="iota_network.log"
-IOTA_BINARY="${2:-iota-localnet}"
+IOTA_LOCALNET_BINARY="${2:-iota-localnet}"
 
 if [ "$1" == "start" ]; then
     echo "Starting local IOTA network with gas station..."
@@ -31,7 +31,7 @@ if [ "$1" == "start" ]; then
 
     # Start IOTA network
     echo "Starting IOTA network..."
-    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
+    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_LOCALNET_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
     IOTA_PID=$!
 
     # Use all 9's private key for gas station
@@ -140,7 +140,7 @@ elif [ "$1" == "stop" ]; then
 
     # Stop IOTA network
     echo "Stopping IOTA network..."
-    pkill -f "$IOTA_BINARY start" || echo "IOTA process not found or already stopped"
+    pkill -f "$IOTA_LOCALNET_BINARY start" || echo "IOTA process not found or already stopped"
 
     # Stop PostgreSQL
     echo "Stopping PostgreSQL..."
