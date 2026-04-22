@@ -34,7 +34,7 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 /// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
 /// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
 /// zklogin-multisig-member-public-key-deprecated   = %x03
-/// /// passkey-multisig-member-public-key          = %x04 passkey-public-key
+/// passkey-multisig-member-public-key              = %x04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -323,7 +323,7 @@ impl Eq for MultisigAggregatedSignature {}
 /// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
 /// zklogin-multisig-member-signature-deprecated    = %x03
-/// /// passkey-multisig-member-signature           = %x04 passkey-authenticator
+/// passkey-multisig-member-signature               = %x04 passkey-authenticator
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -473,6 +473,7 @@ mod serialization {
         ZkLoginDeprecated,
         Passkey(PasskeyPublicKey),
     }
+
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "MultisigMemberPublicKey")]
