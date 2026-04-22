@@ -5,7 +5,6 @@ pub mod intent;
 pub mod move_authenticator;
 pub mod multisig;
 pub mod passkey;
-pub mod zklogin;
 
 use iota_sdk::types::{PublicKeyExt, SignatureScheme};
 

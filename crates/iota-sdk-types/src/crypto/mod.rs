@@ -11,7 +11,6 @@ mod passkey;
 mod secp256k1;
 mod secp256r1;
 mod signature;
-mod zklogin;
 
 pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
@@ -28,10 +27,6 @@ pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
-pub use zklogin::{
-    Bn254FieldElement, CircomG1, CircomG2, InvalidZkLoginAuthenticatorError, Jwk, JwkId,
-    ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
-};
 
 #[cfg(feature = "serde")]
 #[derive(Debug)]

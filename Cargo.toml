@@ -26,7 +26,6 @@ cynic = "3.7.3"
 derive_more = "2.0"
 eyre = "0.6"
 hex = "0.4.3"
-itertools = "0.13.0"
 paste = "1.0.15"
 primitive-types = { version = "0.14", features = ["impl-serde"] }
 proptest = { version = "1.6.0", default-features = false }

@@ -3757,242 +3757,6 @@ static class _UniFFILib {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -4243,46 +4007,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(RustBuffer @bytes,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(RustBuffer @s,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(RustBuffer @s,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -4679,54 +4403,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_circomg1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_circomg1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(IntPtr @el0,IntPtr @el1,IntPtr @el2,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_circomg2(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_circomg2(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(IntPtr @el00,IntPtr @el01,IntPtr @el10,IntPtr @el11,IntPtr @el20,IntPtr @el21,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5299,14 +4975,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern void uniffi_iota_sdk_ffi_fn_free_endofepochtransactionkind(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(RustBuffer @tx,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6610,14 +6278,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -6627,10 +6287,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6682,14 +6338,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -6699,10 +6347,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6731,14 +6375,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern void uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(IntPtr @ptr,RustBuffer @message,IntPtr @signature,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(IntPtr @ptr,IntPtr @zkloginVerifier,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -8782,10 +8418,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(RustBuffer @tx,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(IntPtr @tx,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -9210,10 +8842,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(IntPtr @authenticator,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -9246,14 +8874,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -9267,10 +8887,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9311,14 +8927,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern void uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(IntPtr @ptr,RustBuffer @message,IntPtr @signature,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(IntPtr @ptr,IntPtr @zkloginVerifier,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9518,222 +9126,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(IntPtr @inputs,ulong @maxEpoch,IntPtr @signature,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_zklogininputs(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_zklogininputs(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(IntPtr @proofPoints,RustBuffer @issBase64Details,RustBuffer @headerBase64,IntPtr @addressSeed,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_zkloginproof(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_zkloginproof(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(IntPtr @a,IntPtr @b,IntPtr @c,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(RustBuffer @iss,IntPtr @addressSeed,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_zkloginverifier(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(IntPtr @ptr,RustBuffer @message,IntPtr @authenticator,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(IntPtr @ptr,RustBuffer @jwks,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_address_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -9763,38 +9155,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_argument_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9835,22 +9195,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9995,38 +9339,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -10439,38 +9751,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -11418,70 +10698,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer ffi_iota_sdk_ffi_rustbuffer_alloc(ulong @size,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -11706,22 +10922,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
     );
 
@@ -11751,38 +10951,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_argument_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -11823,22 +10991,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -11983,38 +11135,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -12427,38 +11547,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_input_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_jwk_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -13406,70 +12494,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
     );
 
@@ -13523,14 +12547,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14514,14 +13530,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
     );
 
@@ -14531,10 +13539,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14566,14 +13570,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519(
     );
 
@@ -14586,19 +13582,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15542,14 +14526,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator(
     );
 
@@ -15566,10 +14542,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme(
     );
 
@@ -15583,14 +14555,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15659,90 +14623,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_versionassignment_version(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15826,18 +14706,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new(
     );
 
@@ -15867,14 +14735,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15995,14 +14855,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -16958,10 +15810,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1(
     );
 
@@ -17102,10 +15950,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new(
     );
 
@@ -17134,30 +15978,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern uint ffi_iota_sdk_ffi_uniffi_contract_version(
     );
 
@@ -17171,30 +15991,6 @@ static class _UniFFILib {
     }
 
     static void uniffiCheckApiChecksums() {
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs();
-            if (checksum != 65415) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs` checksum `65415`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json();
-            if (checksum != 5693) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json` checksum `5693`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs();
-            if (checksum != 37978) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs` checksum `37978`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json();
-            if (checksum != 56327) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json` checksum `56327`, library returned `{checksum}`");
-            }
-        }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs();
             if (checksum != 8229) {
@@ -17241,54 +16037,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_argument_to_json();
             if (checksum != 34680) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_argument_to_json` checksum `34680`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs();
-            if (checksum != 23378) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs` checksum `23378`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json();
-            if (checksum != 19654) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json` checksum `19654`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs();
-            if (checksum != 26245) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs` checksum `26245`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json();
-            if (checksum != 46170) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json` checksum `46170`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs();
-            if (checksum != 39650) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs` checksum `39650`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json();
-            if (checksum != 30949) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json` checksum `30949`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs();
-            if (checksum != 31251) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs` checksum `31251`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json();
-            if (checksum != 36459) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json` checksum `36459`, library returned `{checksum}`");
             }
         }
         {
@@ -17349,30 +16097,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json();
             if (checksum != 30321) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json` checksum `30321`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs();
-            if (checksum != 13721) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs` checksum `13721`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json();
-            if (checksum != 23224) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json` checksum `23224`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs();
-            if (checksum != 3863) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs` checksum `3863`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json();
-            if (checksum != 7045) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json` checksum `7045`, library returned `{checksum}`");
             }
         }
         {
@@ -17589,54 +16313,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json();
             if (checksum != 12780) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json` checksum `12780`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs();
-            if (checksum != 60233) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs` checksum `60233`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json();
-            if (checksum != 3835) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json` checksum `3835`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs();
-            if (checksum != 19531) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs` checksum `19531`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json();
-            if (checksum != 15996) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json` checksum `15996`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs();
-            if (checksum != 1042) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs` checksum `1042`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json();
-            if (checksum != 48517) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json` checksum `48517`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs();
-            if (checksum != 8225) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs` checksum `8225`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json();
-            if (checksum != 30332) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json` checksum `30332`, library returned `{checksum}`");
             }
         }
         {
@@ -18255,54 +16931,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_input_to_json();
             if (checksum != 58430) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_input_to_json` checksum `58430`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs();
-            if (checksum != 14752) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs` checksum `14752`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_json();
-            if (checksum != 33813) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_from_json` checksum `33813`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs();
-            if (checksum != 22836) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs` checksum `22836`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json();
-            if (checksum != 1916) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json` checksum `1916`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs();
-            if (checksum != 2155) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs` checksum `2155`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json();
-            if (checksum != 11288) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json` checksum `11288`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs();
-            if (checksum != 29567) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs` checksum `29567`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_json();
-            if (checksum != 53403) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_jwk_to_json` checksum `53403`, library returned `{checksum}`");
             }
         }
         {
@@ -19722,102 +18350,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs();
-            if (checksum != 48317) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs` checksum `48317`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json();
-            if (checksum != 19619) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json` checksum `19619`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs();
-            if (checksum != 50917) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs` checksum `50917`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json();
-            if (checksum != 43592) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json` checksum `43592`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs();
-            if (checksum != 47140) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs` checksum `47140`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json();
-            if (checksum != 60759) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json` checksum `60759`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs();
-            if (checksum != 58412) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs` checksum `58412`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json();
-            if (checksum != 9777) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json` checksum `9777`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs();
-            if (checksum != 13910) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs` checksum `13910`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json();
-            if (checksum != 31645) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json` checksum `31645`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs();
-            if (checksum != 22664) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs` checksum `22664`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json();
-            if (checksum != 6200) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json` checksum `6200`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs();
-            if (checksum != 35391) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs` checksum `35391`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json();
-            if (checksum != 24841) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json` checksum `24841`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs();
-            if (checksum != 39685) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs` checksum `39685`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json();
-            if (checksum != 12096) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json` checksum `12096`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes();
             if (checksum != 57710) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_bytes` checksum `57710`, library returned `{checksum}`");
@@ -19899,18 +18431,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify();
             if (checksum != 54718) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify` checksum `54718`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded();
-            if (checksum != 44301) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded` checksum `44301`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded();
-            if (checksum != 33350) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded` checksum `33350`, library returned `{checksum}`");
             }
         }
         {
@@ -21307,8 +19827,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address();
-            if (checksum != 26282) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address` checksum `26282`, library returned `{checksum}`");
+            if (checksum != 10481) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address` checksum `10481`, library returned `{checksum}`");
             }
         }
         {
@@ -21384,18 +19904,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin();
-            if (checksum != 17714) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin` checksum `17714`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt();
-            if (checksum != 23106) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt` checksum `23106`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519();
             if (checksum != 1939) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519` checksum `1939`, library returned `{checksum}`");
@@ -21411,12 +19919,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1();
             if (checksum != 16265) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1` checksum `16265`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin();
-            if (checksum != 37193) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin` checksum `37193`, library returned `{checksum}`");
             }
         }
         {
@@ -21462,18 +19964,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin();
-            if (checksum != 39624) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin` checksum `39624`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt();
-            if (checksum != 34526) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt` checksum `34526`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519();
             if (checksum != 18913) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519` checksum `18913`, library returned `{checksum}`");
@@ -21492,27 +19982,9 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin();
-            if (checksum != 65193) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin` checksum `65193`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify();
             if (checksum != 49901) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify` checksum `49901`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier();
-            if (checksum != 20062) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier` checksum `20062`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier();
-            if (checksum != 5971) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier` checksum `5971`, library returned `{checksum}`");
             }
         }
         {
@@ -22926,18 +21398,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator();
-            if (checksum != 64789) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator` checksum `64789`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt();
-            if (checksum != 62080) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt` checksum `62080`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator();
             if (checksum != 59771) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator` checksum `59771`, library returned `{checksum}`");
@@ -22962,12 +21422,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator();
-            if (checksum != 35546) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator` checksum `35546`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme();
             if (checksum != 25381) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme` checksum `25381`, library returned `{checksum}`");
@@ -22989,18 +21443,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify();
             if (checksum != 47797) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify` checksum `47797`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier();
-            if (checksum != 44658) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier` checksum `44658`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier();
-            if (checksum != 9821) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier` checksum `9821`, library returned `{checksum}`");
             }
         }
         {
@@ -23103,132 +21545,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version();
             if (checksum != 51219) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_versionassignment_version` checksum `51219`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs();
-            if (checksum != 1512) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs` checksum `1512`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch();
-            if (checksum != 9769) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch` checksum `9769`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature();
-            if (checksum != 18838) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature` checksum `18838`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed();
-            if (checksum != 4892) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed` checksum `4892`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64();
-            if (checksum != 32056) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64` checksum `32056`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss();
-            if (checksum != 1099) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss` checksum `1099`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details();
-            if (checksum != 20914) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details` checksum `20914`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id();
-            if (checksum != 37580) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id` checksum `37580`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points();
-            if (checksum != 28172) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points` checksum `28172`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier();
-            if (checksum != 48158) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier` checksum `48158`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a();
-            if (checksum != 6891) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a` checksum `6891`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b();
-            if (checksum != 36477) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b` checksum `36477`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c();
-            if (checksum != 10897) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c` checksum `10897`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed();
-            if (checksum != 3936) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed` checksum `3936`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address();
-            if (checksum != 14353) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address` checksum `14353`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded();
-            if (checksum != 45141) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded` checksum `45141`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded();
-            if (checksum != 51424) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded` checksum `51424`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss();
-            if (checksum != 58864) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss` checksum `58864`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks();
-            if (checksum != 62366) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks` checksum `62366`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify();
-            if (checksum != 29967) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify` checksum `29967`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks();
-            if (checksum != 49665) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks` checksum `49665`, library returned `{checksum}`");
             }
         }
         {
@@ -23352,24 +21668,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes();
-            if (checksum != 3672) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes` checksum `3672`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str();
-            if (checksum != 21214) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str` checksum `21214`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10();
-            if (checksum != 17556) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10` checksum `17556`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new();
             if (checksum != 59199) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new` checksum `59199`, library returned `{checksum}`");
@@ -23415,18 +21713,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new();
             if (checksum != 65327) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new` checksum `65327`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new();
-            if (checksum != 39786) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new` checksum `39786`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new();
-            if (checksum != 50489) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new` checksum `50489`, library returned `{checksum}`");
             }
         }
         {
@@ -23607,18 +21893,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new();
             if (checksum != 23280) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new` checksum `23280`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create();
-            if (checksum != 42248) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create` checksum `42248`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire();
-            if (checksum != 58811) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire` checksum `58811`, library returned `{checksum}`");
             }
         }
         {
@@ -25050,12 +23324,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1();
-            if (checksum != 29264) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1` checksum `29264`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1();
             if (checksum != 27756) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1` checksum `27756`, library returned `{checksum}`");
@@ -25266,12 +23534,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator();
-            if (checksum != 30659) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator` checksum `30659`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new();
             if (checksum != 32322) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new` checksum `32322`, library returned `{checksum}`");
@@ -25311,42 +23573,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new();
             if (checksum != 14186) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new` checksum `14186`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new();
-            if (checksum != 32812) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new` checksum `32812`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new();
-            if (checksum != 48962) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new` checksum `48962`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new();
-            if (checksum != 19950) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new` checksum `19950`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new();
-            if (checksum != 53294) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new` checksum `53294`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev();
-            if (checksum != 44446) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev` checksum `44446`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet();
-            if (checksum != 12123) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet` checksum `12123`, library returned `{checksum}`");
             }
         }
     }
@@ -26994,213 +25220,6 @@ class FfiConverterTypeBls12381VerifyingKey: FfiConverter<Bls12381VerifyingKey, I
     }
 
     public override void Write(Bls12381VerifyingKey value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A point on the BN254 elliptic curve.
-///
-/// This is a 32-byte, or 256-bit, value that is generally represented as
-/// radix10 when a human-readable display format is needed, and is represented
-/// as a 32-byte big-endian value while in memory.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
-/// ```
-/// </summary>
-public interface IBn254FieldElement: IEquatable<Bn254FieldElement> {
-    byte[] Padded();
-    byte[] Unpadded();
-}
-/// <summary>
-/// A point on the BN254 elliptic curve.
-///
-/// This is a 32-byte, or 256-bit, value that is generally represented as
-/// radix10 when a human-readable display format is needed, and is represented
-/// as a 32-byte big-endian value while in memory.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
-/// ```
-/// </summary>
-public class Bn254FieldElement : IBn254FieldElement, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public Bn254FieldElement(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~Bn254FieldElement() {
-        Destroy();
-    }
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public byte[] Padded() {
-        return CallWithPointer(thisPtr => FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public byte[] Unpadded() {
-        return CallWithPointer(thisPtr => FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(Bn254FieldElement? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is Bn254FieldElement)) return false;
-        return Equals(obj as Bn254FieldElement);
-    }
-
-    
-    /// <exception cref="SdkFfiException"></exception>
-    public static Bn254FieldElement FromBytes(byte[] @bytes) {
-        return new Bn254FieldElement(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(FfiConverterByteArray.INSTANCE.Lower(@bytes), ref _status)
-));
-    }
-    
-    /// <exception cref="SdkFfiException"></exception>
-    public static Bn254FieldElement FromStr(string @s) {
-        return new Bn254FieldElement(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(FfiConverterString.INSTANCE.Lower(@s), ref _status)
-));
-    }
-    
-    /// <exception cref="SdkFfiException"></exception>
-    public static Bn254FieldElement FromStrRadix10(string @s) {
-        return new Bn254FieldElement(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(FfiConverterString.INSTANCE.Lower(@s), ref _status)
-));
-    }
-    
-    
-}
-class FfiConverterTypeBn254FieldElement: FfiConverter<Bn254FieldElement, IntPtr> {
-    public static FfiConverterTypeBn254FieldElement INSTANCE = new FfiConverterTypeBn254FieldElement();
-
-
-    public override IntPtr Lower(Bn254FieldElement value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override Bn254FieldElement Lift(IntPtr value) {
-        return new Bn254FieldElement(value);
-    }
-
-    public override Bn254FieldElement Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(Bn254FieldElement value) {
-        return 8;
-    }
-
-    public override void Write(Bn254FieldElement value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }
@@ -29511,340 +27530,6 @@ class FfiConverterTypeCheckpointTransactionInfo: FfiConverter<CheckpointTransact
     }
 
     public override void Write(CheckpointTransactionInfo value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A G1 point
-///
-/// This represents the canonical decimal representation of the projective
-/// coordinates in Fq.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// circom-g1 = %x03 3(bn254-field-element)
-/// ```
-/// </summary>
-public interface ICircomG1: IEquatable<CircomG1> {
-}
-/// <summary>
-/// A G1 point
-///
-/// This represents the canonical decimal representation of the projective
-/// coordinates in Fq.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// circom-g1 = %x03 3(bn254-field-element)
-/// ```
-/// </summary>
-public class CircomG1 : ICircomG1, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public CircomG1(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~CircomG1() {
-        Destroy();
-    }
-    public CircomG1(Bn254FieldElement @el0, Bn254FieldElement @el1, Bn254FieldElement @el2) :
-        this(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el0), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el1), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el2), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_circomg1(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_circomg1(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public bool Equals(CircomG1? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeCircomG1.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is CircomG1)) return false;
-        return Equals(obj as CircomG1);
-    }
-
-    
-}
-class FfiConverterTypeCircomG1: FfiConverter<CircomG1, IntPtr> {
-    public static FfiConverterTypeCircomG1 INSTANCE = new FfiConverterTypeCircomG1();
-
-
-    public override IntPtr Lower(CircomG1 value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override CircomG1 Lift(IntPtr value) {
-        return new CircomG1(value);
-    }
-
-    public override CircomG1 Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(CircomG1 value) {
-        return 8;
-    }
-
-    public override void Write(CircomG1 value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A G2 point
-///
-/// This represents the canonical decimal representation of the coefficients of
-/// the projective coordinates in Fq2.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// circom-g2 = %x03 3(%x02 2(bn254-field-element))
-/// ```
-/// </summary>
-public interface ICircomG2: IEquatable<CircomG2> {
-}
-/// <summary>
-/// A G2 point
-///
-/// This represents the canonical decimal representation of the coefficients of
-/// the projective coordinates in Fq2.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// circom-g2 = %x03 3(%x02 2(bn254-field-element))
-/// ```
-/// </summary>
-public class CircomG2 : ICircomG2, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public CircomG2(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~CircomG2() {
-        Destroy();
-    }
-    public CircomG2(Bn254FieldElement @el00, Bn254FieldElement @el01, Bn254FieldElement @el10, Bn254FieldElement @el11, Bn254FieldElement @el20, Bn254FieldElement @el21) :
-        this(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el00), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el01), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el10), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el11), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el20), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@el21), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_circomg2(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_circomg2(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public bool Equals(CircomG2? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeCircomG2.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is CircomG2)) return false;
-        return Equals(obj as CircomG2);
-    }
-
-    
-}
-class FfiConverterTypeCircomG2: FfiConverter<CircomG2, IntPtr> {
-    public static FfiConverterTypeCircomG2 INSTANCE = new FfiConverterTypeCircomG2();
-
-
-    public override IntPtr Lower(CircomG2 value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override CircomG2 Lift(IntPtr value) {
-        return new CircomG2(value);
-    }
-
-    public override CircomG2 Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(CircomG2 value) {
-        return 8;
-    }
-
-    public override void Write(CircomG2 value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }
@@ -32906,20 +30591,6 @@ public class EndOfEpochTransactionKind : IEndOfEpochTransactionKind, IDisposable
         return Equals(obj as EndOfEpochTransactionKind);
     }
 
-    
-    public static EndOfEpochTransactionKind NewAuthenticatorStateCreate() {
-        return new EndOfEpochTransactionKind(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create( ref _status)
-));
-    }
-    
-    public static EndOfEpochTransactionKind NewAuthenticatorStateExpire(AuthenticatorStateExpire @tx) {
-        return new EndOfEpochTransactionKind(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(FfiConverterTypeAuthenticatorStateExpire.INSTANCE.Lower(@tx), ref _status)
-));
-    }
     
     public static EndOfEpochTransactionKind NewChangeEpoch(ChangeEpoch @tx) {
         return new EndOfEpochTransactionKind(
@@ -39804,11 +37475,6 @@ public interface IMultisigCommittee: IEquatable<MultisigCommittee> {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-    /// refers to the same input used when deriving the address using the
-    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-    /// full 32-byte `address_seed` value).
     /// </summary>
     Address DeriveAddress();
     /// <summary>
@@ -39973,11 +37639,6 @@ public class MultisigCommittee : IMultisigCommittee, IDisposable {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-    /// refers to the same input used when deriving the address using the
-    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-    /// full 32-byte `address_seed` value).
     /// </summary>
     public Address DeriveAddress() {
         return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
@@ -40305,12 +37966,12 @@ class FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, IntPtr> {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 /// secp256k1-multisig-member-public-key /
 /// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key
+/// zklogin-multisig-member-public-key-deprecated
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-/// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %x03
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -40331,12 +37992,9 @@ public interface IMultisigMemberPublicKey: IEquatable<MultisigMemberPublicKey> {
     Secp256k1PublicKey? AsSecp256k1Opt();
     Secp256r1PublicKey AsSecp256r1();
     Secp256r1PublicKey? AsSecp256r1Opt();
-    ZkLoginPublicIdentifier AsZklogin();
-    ZkLoginPublicIdentifier? AsZkloginOpt();
     bool IsEd25519();
     bool IsSecp256k1();
     bool IsSecp256r1();
-    bool IsZklogin();
     SignatureScheme Scheme();
 }
 /// <summary>
@@ -40350,12 +38008,12 @@ public interface IMultisigMemberPublicKey: IEquatable<MultisigMemberPublicKey> {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 /// secp256k1-multisig-member-public-key /
 /// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key
+/// zklogin-multisig-member-public-key-deprecated
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-/// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %x03
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -40506,22 +38164,6 @@ public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
     }
     
     
-    public ZkLoginPublicIdentifier AsZklogin() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginPublicIdentifier? AsZkloginOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeZkLoginPublicIdentifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public bool IsEd25519() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -40542,14 +38184,6 @@ public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsZklogin() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(thisPtr,  ref _status)
 )));
     }
     
@@ -40616,12 +38250,12 @@ class FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemberPublic
 /// multisig-member-signature = ed25519-multisig-member-signature /
 /// secp256k1-multisig-member-signature /
 /// secp256r1-multisig-member-signature /
-/// zklogin-multisig-member-signature
+/// zklogin-multisig-member-signature-deprecated
 ///
-/// ed25519-multisig-member-signature   = %x00 ed25519-signature
-/// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-/// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-/// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+/// ed25519-multisig-member-signature               = %x00 ed25519-signature
+/// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
+/// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
+/// zklogin-multisig-member-signature-deprecated    = %x03
 /// ```
 /// </summary>
 public interface IMultisigMemberSignature: IEquatable<MultisigMemberSignature> {
@@ -40631,12 +38265,9 @@ public interface IMultisigMemberSignature: IEquatable<MultisigMemberSignature> {
     Secp256k1Signature? AsSecp256k1Opt();
     Secp256r1Signature AsSecp256r1();
     Secp256r1Signature? AsSecp256r1Opt();
-    ZkLoginAuthenticator AsZklogin();
-    ZkLoginAuthenticator? AsZkloginOpt();
     bool IsEd25519();
     bool IsSecp256k1();
     bool IsSecp256r1();
-    bool IsZklogin();
 }
 /// <summary>
 /// A signature from a member of a multisig committee.
@@ -40649,12 +38280,12 @@ public interface IMultisigMemberSignature: IEquatable<MultisigMemberSignature> {
 /// multisig-member-signature = ed25519-multisig-member-signature /
 /// secp256k1-multisig-member-signature /
 /// secp256r1-multisig-member-signature /
-/// zklogin-multisig-member-signature
+/// zklogin-multisig-member-signature-deprecated
 ///
-/// ed25519-multisig-member-signature   = %x00 ed25519-signature
-/// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-/// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-/// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+/// ed25519-multisig-member-signature               = %x00 ed25519-signature
+/// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
+/// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
+/// zklogin-multisig-member-signature-deprecated    = %x03
 /// ```
 /// </summary>
 public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
@@ -40794,22 +38425,6 @@ public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
     }
     
     
-    public ZkLoginAuthenticator AsZklogin() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginAuthenticator? AsZkloginOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public bool IsEd25519() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -40830,14 +38445,6 @@ public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsZklogin() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(thisPtr,  ref _status)
 )));
     }
     
@@ -40888,8 +38495,6 @@ class FfiConverterTypeMultisigMemberSignature: FfiConverter<MultisigMemberSignat
 public interface IMultisigVerifier {
     /// <exception cref="SdkFfiException"></exception>
     void Verify(byte[] @message, MultisigAggregatedSignature @signature);
-    MultisigVerifier WithZkloginVerifier(ZkloginVerifier @zkloginVerifier);
-    ZkloginVerifier? ZkloginVerifier();
 }
 public class MultisigVerifier : IMultisigVerifier, IDisposable {
     protected IntPtr pointer;
@@ -40993,22 +38598,6 @@ public class MultisigVerifier : IMultisigVerifier, IDisposable {
 ));
     }
     
-    
-    
-    public MultisigVerifier WithZkloginVerifier(ZkloginVerifier @zkloginVerifier) {
-        return CallWithPointer(thisPtr => FfiConverterTypeMultisigVerifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(thisPtr, FfiConverterTypeZkloginVerifier.INSTANCE.Lower(@zkloginVerifier), ref _status)
-)));
-    }
-    
-    
-    public ZkloginVerifier? ZkloginVerifier() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeZkloginVerifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(thisPtr,  ref _status)
-)));
-    }
     
     
 
@@ -50262,13 +47851,6 @@ public class TransactionKind : ITransactionKind, IDisposable {
     }
 
     
-    public static TransactionKind NewAuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1 @tx) {
-        return new TransactionKind(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(FfiConverterTypeAuthenticatorStateUpdateV1.INSTANCE.Lower(@tx), ref _status)
-));
-    }
-    
     public static TransactionKind NewConsensusCommitPrologueV1(ConsensusCommitPrologueV1 @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52144,7 +49726,7 @@ class FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, IntPtr> {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -52162,13 +49744,10 @@ public interface IUserSignature: IEquatable<UserSignature> {
     PasskeyAuthenticator? AsPasskeyAuthenticatorOpt();
     SimpleSignature AsSimple();
     SimpleSignature? AsSimpleOpt();
-    ZkLoginAuthenticator AsZkloginAuthenticator();
-    ZkLoginAuthenticator? AsZkloginAuthenticatorOpt();
     bool IsMoveAuthenticator();
     bool IsMultisig();
     bool IsPasskeyAuthenticator();
     bool IsSimple();
-    bool IsZkloginAuthenticator();
     /// <summary>
     /// Return the flag for this signature scheme
     /// </summary>
@@ -52188,7 +49767,7 @@ public interface IUserSignature: IEquatable<UserSignature> {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -52350,22 +49929,6 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
-    public ZkLoginAuthenticator AsZkloginAuthenticator() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginAuthenticator? AsZkloginAuthenticatorOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public bool IsMoveAuthenticator() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52394,14 +49957,6 @@ public class UserSignature : IUserSignature, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsZkloginAuthenticator() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(thisPtr,  ref _status)
 )));
     }
     
@@ -52492,13 +50047,6 @@ public class UserSignature : IUserSignature, IDisposable {
 ));
     }
     
-    public static UserSignature NewZkloginAuthenticator(ZkLoginAuthenticator @authenticator) {
-        return new UserSignature(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lower(@authenticator), ref _status)
-));
-    }
-    
     
 }
 class FfiConverterTypeUserSignature: FfiConverter<UserSignature, IntPtr> {
@@ -52534,8 +50082,6 @@ class FfiConverterTypeUserSignature: FfiConverter<UserSignature, IntPtr> {
 public interface IUserSignatureVerifier {
     /// <exception cref="SdkFfiException"></exception>
     void Verify(byte[] @message, UserSignature @signature);
-    UserSignatureVerifier WithZkloginVerifier(ZkloginVerifier @zkloginVerifier);
-    ZkloginVerifier? ZkloginVerifier();
 }
 /// <summary>
 /// Verifier that will verify all UserSignature variants
@@ -52642,22 +50188,6 @@ public class UserSignatureVerifier : IUserSignatureVerifier, IDisposable {
 ));
     }
     
-    
-    
-    public UserSignatureVerifier WithZkloginVerifier(ZkloginVerifier @zkloginVerifier) {
-        return CallWithPointer(thisPtr => FfiConverterTypeUserSignatureVerifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(thisPtr, FfiConverterTypeZkloginVerifier.INSTANCE.Lower(@zkloginVerifier), ref _status)
-)));
-    }
-    
-    
-    public ZkloginVerifier? ZkloginVerifier() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeZkloginVerifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(thisPtr,  ref _status)
-)));
-    }
     
     
 
@@ -53771,1330 +51301,6 @@ class FfiConverterTypeVersionAssignment: FfiConverter<VersionAssignment, IntPtr>
 
     public override void Write(VersionAssignment value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A zklogin authenticator
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
-/// zklogin     = zklogin-flag
-/// zklogin-inputs
-/// u64               ; max epoch
-/// simple-signature
-/// ```
-///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
-/// </summary>
-public interface IZkLoginAuthenticator: IEquatable<ZkLoginAuthenticator> {
-    ZkLoginInputs Inputs();
-    ulong MaxEpoch();
-    SimpleSignature Signature();
-}
-/// <summary>
-/// A zklogin authenticator
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
-/// zklogin     = zklogin-flag
-/// zklogin-inputs
-/// u64               ; max epoch
-/// simple-signature
-/// ```
-///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
-/// </summary>
-public class ZkLoginAuthenticator : IZkLoginAuthenticator, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public ZkLoginAuthenticator(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~ZkLoginAuthenticator() {
-        Destroy();
-    }
-    public ZkLoginAuthenticator(ZkLoginInputs @inputs, ulong @maxEpoch, SimpleSignature @signature) :
-        this(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(FfiConverterTypeZkLoginInputs.INSTANCE.Lower(@inputs), FfiConverterUInt64.INSTANCE.Lower(@maxEpoch), FfiConverterTypeSimpleSignature.INSTANCE.Lower(@signature), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public ZkLoginInputs Inputs() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginInputs.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ulong MaxEpoch() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public SimpleSignature Signature() {
-        return CallWithPointer(thisPtr => FfiConverterTypeSimpleSignature.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(ZkLoginAuthenticator? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is ZkLoginAuthenticator)) return false;
-        return Equals(obj as ZkLoginAuthenticator);
-    }
-
-    
-}
-class FfiConverterTypeZkLoginAuthenticator: FfiConverter<ZkLoginAuthenticator, IntPtr> {
-    public static FfiConverterTypeZkLoginAuthenticator INSTANCE = new FfiConverterTypeZkLoginAuthenticator();
-
-
-    public override IntPtr Lower(ZkLoginAuthenticator value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override ZkLoginAuthenticator Lift(IntPtr value) {
-        return new ZkLoginAuthenticator(value);
-    }
-
-    public override ZkLoginAuthenticator Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(ZkLoginAuthenticator value) {
-        return 8;
-    }
-
-    public override void Write(ZkLoginAuthenticator value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A zklogin groth16 proof and the required inputs to perform proof
-/// verification.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-inputs = zklogin-proof
-/// zklogin-claim
-/// string              ; base64url-unpadded encoded JwtHeader
-/// bn254-field-element ; address_seed
-/// ```
-/// </summary>
-public interface IZkLoginInputs: IEquatable<ZkLoginInputs> {
-    Bn254FieldElement AddressSeed();
-    string HeaderBase64();
-    string Iss();
-    ZkLoginClaim IssBase64Details();
-    JwkId JwkId();
-    ZkLoginProof ProofPoints();
-    ZkLoginPublicIdentifier PublicIdentifier();
-}
-/// <summary>
-/// A zklogin groth16 proof and the required inputs to perform proof
-/// verification.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-inputs = zklogin-proof
-/// zklogin-claim
-/// string              ; base64url-unpadded encoded JwtHeader
-/// bn254-field-element ; address_seed
-/// ```
-/// </summary>
-public class ZkLoginInputs : IZkLoginInputs, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public ZkLoginInputs(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~ZkLoginInputs() {
-        Destroy();
-    }
-    public ZkLoginInputs(ZkLoginProof @proofPoints, ZkLoginClaim @issBase64Details, string @headerBase64, Bn254FieldElement @addressSeed) :
-        this(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(FfiConverterTypeZkLoginProof.INSTANCE.Lower(@proofPoints), FfiConverterTypeZkLoginClaim.INSTANCE.Lower(@issBase64Details), FfiConverterString.INSTANCE.Lower(@headerBase64), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@addressSeed), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_zklogininputs(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public Bn254FieldElement AddressSeed() {
-        return CallWithPointer(thisPtr => FfiConverterTypeBn254FieldElement.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public string HeaderBase64() {
-        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public string Iss() {
-        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginClaim IssBase64Details() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginClaim.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public JwkId JwkId() {
-        return CallWithPointer(thisPtr => FfiConverterTypeJwkId.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginProof ProofPoints() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginProof.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public ZkLoginPublicIdentifier PublicIdentifier() {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(ZkLoginInputs? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeZkLoginInputs.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is ZkLoginInputs)) return false;
-        return Equals(obj as ZkLoginInputs);
-    }
-
-    
-}
-class FfiConverterTypeZkLoginInputs: FfiConverter<ZkLoginInputs, IntPtr> {
-    public static FfiConverterTypeZkLoginInputs INSTANCE = new FfiConverterTypeZkLoginInputs();
-
-
-    public override IntPtr Lower(ZkLoginInputs value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override ZkLoginInputs Lift(IntPtr value) {
-        return new ZkLoginInputs(value);
-    }
-
-    public override ZkLoginInputs Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(ZkLoginInputs value) {
-        return 8;
-    }
-
-    public override void Write(ZkLoginInputs value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A zklogin groth16 proof
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-proof = circom-g1 circom-g2 circom-g1
-/// ```
-/// </summary>
-public interface IZkLoginProof: IEquatable<ZkLoginProof> {
-    CircomG1 A();
-    CircomG2 B();
-    CircomG1 C();
-}
-/// <summary>
-/// A zklogin groth16 proof
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-proof = circom-g1 circom-g2 circom-g1
-/// ```
-/// </summary>
-public class ZkLoginProof : IZkLoginProof, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public ZkLoginProof(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~ZkLoginProof() {
-        Destroy();
-    }
-    public ZkLoginProof(CircomG1 @a, CircomG2 @b, CircomG1 @c) :
-        this(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(FfiConverterTypeCircomG1.INSTANCE.Lower(@a), FfiConverterTypeCircomG2.INSTANCE.Lower(@b), FfiConverterTypeCircomG1.INSTANCE.Lower(@c), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_zkloginproof(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public CircomG1 A() {
-        return CallWithPointer(thisPtr => FfiConverterTypeCircomG1.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public CircomG2 B() {
-        return CallWithPointer(thisPtr => FfiConverterTypeCircomG2.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public CircomG1 C() {
-        return CallWithPointer(thisPtr => FfiConverterTypeCircomG1.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(ZkLoginProof? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeZkLoginProof.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is ZkLoginProof)) return false;
-        return Equals(obj as ZkLoginProof);
-    }
-
-    
-}
-class FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, IntPtr> {
-    public static FfiConverterTypeZkLoginProof INSTANCE = new FfiConverterTypeZkLoginProof();
-
-
-    public override IntPtr Lower(ZkLoginProof value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override ZkLoginProof Lift(IntPtr value) {
-        return new ZkLoginProof(value);
-    }
-
-    public override ZkLoginProof Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(ZkLoginProof value) {
-        return 8;
-    }
-
-    public override void Write(ZkLoginProof value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// Public Key equivalent for Zklogin authenticators
-///
-/// A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
-/// account authenticators, and contains the information required to derive the
-/// onchain account `Address` for a Zklogin authenticator.
-///
-/// ## Note
-///
-/// Due to a historical bug that was introduced in the IOTA Typescript SDK when
-/// the zklogin authenticator was first introduced, there are now possibly two
-/// "valid" addresses for each zklogin authenticator depending on the
-/// bit-pattern of the `address_seed` value.
-///
-/// The original bug incorrectly derived a zklogin's address by stripping any
-/// leading zero-bytes that could have been present in the 32-byte length
-/// `address_seed` value prior to hashing, leading to a different derived
-/// address. This incorrectly derived address was presented to users of various
-/// wallets, leading them to sending funds to these addresses that they couldn't
-/// access. Instead of letting these users lose any assets that were sent to
-/// these addresses, the IOTA network decided to change the protocol to allow
-/// for a zklogin authenticator who's `address_seed` value had leading
-/// zero-bytes be authorized to sign for both the addresses derived from both
-/// the unpadded and padded `address_seed` value.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-public-identifier-bcs = bytes ; where the contents are defined by
-/// ; <zklogin-public-identifier>
-///
-/// zklogin-public-identifier = zklogin-public-identifier-iss
-/// address-seed
-///
-/// zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
-/// address-seed-unpadded
-///
-/// ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
-/// ; and is serialized with the iss's length in bytes as a u8 followed by
-/// ; the bytes of the iss
-/// zklogin-public-identifier-iss = u8 *255(OCTET)
-///
-/// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-/// address-seed = 32(OCTET)
-///
-/// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-/// ; with any leading zero bytes stripped
-/// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
-/// ```
-/// </summary>
-public interface IZkLoginPublicIdentifier: IEquatable<ZkLoginPublicIdentifier> {
-    Bn254FieldElement AddressSeed();
-    /// <summary>
-    /// Provides an iterator over the addresses that correspond to this zklogin
-    /// authenticator.
-    ///
-    /// In the majority of instances this will only yield a single address,
-    /// except for the instances where the `address_seed` value has a
-    /// leading zero-byte, in such cases the returned iterator will yield
-    /// two addresses.
-    /// </summary>
-    Address[] DeriveAddress();
-    /// <summary>
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the full 32 byte `address_seed` value, all prefixed with the zklogin
-    /// `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-    /// </summary>
-    Address DeriveAddressPadded();
-    /// <summary>
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the `address_seed` bytes with any leading zero-bytes stripped, all
-    /// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes ||
-    /// unpadded_32_byte_address_seed )`
-    /// </summary>
-    Address DeriveAddressUnpadded();
-    string Iss();
-}
-/// <summary>
-/// Public Key equivalent for Zklogin authenticators
-///
-/// A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
-/// account authenticators, and contains the information required to derive the
-/// onchain account `Address` for a Zklogin authenticator.
-///
-/// ## Note
-///
-/// Due to a historical bug that was introduced in the IOTA Typescript SDK when
-/// the zklogin authenticator was first introduced, there are now possibly two
-/// "valid" addresses for each zklogin authenticator depending on the
-/// bit-pattern of the `address_seed` value.
-///
-/// The original bug incorrectly derived a zklogin's address by stripping any
-/// leading zero-bytes that could have been present in the 32-byte length
-/// `address_seed` value prior to hashing, leading to a different derived
-/// address. This incorrectly derived address was presented to users of various
-/// wallets, leading them to sending funds to these addresses that they couldn't
-/// access. Instead of letting these users lose any assets that were sent to
-/// these addresses, the IOTA network decided to change the protocol to allow
-/// for a zklogin authenticator who's `address_seed` value had leading
-/// zero-bytes be authorized to sign for both the addresses derived from both
-/// the unpadded and padded `address_seed` value.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-public-identifier-bcs = bytes ; where the contents are defined by
-/// ; <zklogin-public-identifier>
-///
-/// zklogin-public-identifier = zklogin-public-identifier-iss
-/// address-seed
-///
-/// zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
-/// address-seed-unpadded
-///
-/// ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
-/// ; and is serialized with the iss's length in bytes as a u8 followed by
-/// ; the bytes of the iss
-/// zklogin-public-identifier-iss = u8 *255(OCTET)
-///
-/// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-/// address-seed = 32(OCTET)
-///
-/// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-/// ; with any leading zero bytes stripped
-/// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
-/// ```
-/// </summary>
-public class ZkLoginPublicIdentifier : IZkLoginPublicIdentifier, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public ZkLoginPublicIdentifier(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~ZkLoginPublicIdentifier() {
-        Destroy();
-    }
-    public ZkLoginPublicIdentifier(string @iss, Bn254FieldElement @addressSeed) :
-        this(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(FfiConverterString.INSTANCE.Lower(@iss), FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@addressSeed), ref _status)
-)) {}
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public Bn254FieldElement AddressSeed() {
-        return CallWithPointer(thisPtr => FfiConverterTypeBn254FieldElement.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
-    /// Provides an iterator over the addresses that correspond to this zklogin
-    /// authenticator.
-    ///
-    /// In the majority of instances this will only yield a single address,
-    /// except for the instances where the `address_seed` value has a
-    /// leading zero-byte, in such cases the returned iterator will yield
-    /// two addresses.
-    /// </summary>
-    public Address[] DeriveAddress() {
-        return CallWithPointer(thisPtr => FfiConverterSequenceTypeAddress.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the full 32 byte `address_seed` value, all prefixed with the zklogin
-    /// `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-    /// </summary>
-    public Address DeriveAddressPadded() {
-        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the `address_seed` bytes with any leading zero-bytes stripped, all
-    /// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes ||
-    /// unpadded_32_byte_address_seed )`
-    /// </summary>
-    public Address DeriveAddressUnpadded() {
-        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public string Iss() {
-        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(ZkLoginPublicIdentifier? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is ZkLoginPublicIdentifier)) return false;
-        return Equals(obj as ZkLoginPublicIdentifier);
-    }
-
-    
-}
-class FfiConverterTypeZkLoginPublicIdentifier: FfiConverter<ZkLoginPublicIdentifier, IntPtr> {
-    public static FfiConverterTypeZkLoginPublicIdentifier INSTANCE = new FfiConverterTypeZkLoginPublicIdentifier();
-
-
-    public override IntPtr Lower(ZkLoginPublicIdentifier value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override ZkLoginPublicIdentifier Lift(IntPtr value) {
-        return new ZkLoginPublicIdentifier(value);
-    }
-
-    public override ZkLoginPublicIdentifier Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(ZkLoginPublicIdentifier value) {
-        return 8;
-    }
-
-    public override void Write(ZkLoginPublicIdentifier value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-public interface IZkloginVerifier {
-    Dictionary<JwkId, Jwk> Jwks();
-    /// <exception cref="SdkFfiException"></exception>
-    void Verify(byte[] @message, ZkLoginAuthenticator @authenticator);
-    ZkloginVerifier WithJwks(Dictionary<JwkId, Jwk> @jwks);
-}
-public class ZkloginVerifier : IZkloginVerifier, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public ZkloginVerifier(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~ZkloginVerifier() {
-        Destroy();
-    }
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public Dictionary<JwkId, Jwk> Jwks() {
-        return CallWithPointer(thisPtr => FfiConverterDictionaryTypeJwkIdTypeJwk.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <exception cref="SdkFfiException"></exception>
-    public void Verify(byte[] @message, ZkLoginAuthenticator @authenticator) {
-        CallWithPointer(thisPtr =>
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(thisPtr, FfiConverterByteArray.INSTANCE.Lower(@message), FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lower(@authenticator), ref _status)
-));
-    }
-    
-    
-    
-    public ZkloginVerifier WithJwks(Dictionary<JwkId, Jwk> @jwks) {
-        return CallWithPointer(thisPtr => FfiConverterTypeZkloginVerifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(thisPtr, FfiConverterDictionaryTypeJwkIdTypeJwk.INSTANCE.Lower(@jwks), ref _status)
-)));
-    }
-    
-    
-
-    
-    /// <summary>
-    /// Load a fixed verifying key from zkLogin.vkey output. This is based on a
-    /// local setup and should not be used in production.
-    /// </summary>
-    public static ZkloginVerifier NewDev() {
-        return new ZkloginVerifier(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev( ref _status)
-));
-    }
-    
-    public static ZkloginVerifier NewMainnet() {
-        return new ZkloginVerifier(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet( ref _status)
-));
-    }
-    
-    
-}
-class FfiConverterTypeZkloginVerifier: FfiConverter<ZkloginVerifier, IntPtr> {
-    public static FfiConverterTypeZkloginVerifier INSTANCE = new FfiConverterTypeZkloginVerifier();
-
-
-    public override IntPtr Lower(ZkloginVerifier value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override ZkloginVerifier Lift(IntPtr value) {
-        return new ZkloginVerifier(value);
-    }
-
-    public override ZkloginVerifier Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(ZkloginVerifier value) {
-        return 8;
-    }
-
-    public override void Write(ZkloginVerifier value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// A new Jwk
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// active-jwk = jwk-id jwk u64
-/// ```
-/// </summary>
-/// <param name="jwk_id">
-/// Identifier used to uniquely identify a Jwk
-/// </param>
-/// <param name="jwk">
-/// The Jwk
-/// </param>
-/// <param name="epoch">
-/// Most recent epoch in which the jwk was validated
-/// </param>
-public record ActiveJwk (
-    /// <summary>
-    /// Identifier used to uniquely identify a Jwk
-    /// </summary>
-    JwkId @jwkId, 
-    /// <summary>
-    /// The Jwk
-    /// </summary>
-    Jwk @jwk, 
-    /// <summary>
-    /// Most recent epoch in which the jwk was validated
-    /// </summary>
-    ulong @epoch
-) {
-}
-
-class FfiConverterTypeActiveJwk: FfiConverterRustBuffer<ActiveJwk> {
-    public static FfiConverterTypeActiveJwk INSTANCE = new FfiConverterTypeActiveJwk();
-
-    public override ActiveJwk Read(BigEndianStream stream) {
-        return new ActiveJwk(
-            @jwkId: FfiConverterTypeJwkId.INSTANCE.Read(stream),
-            @jwk: FfiConverterTypeJwk.INSTANCE.Read(stream),
-            @epoch: FfiConverterUInt64.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(ActiveJwk value) {
-        return 0
-            + FfiConverterTypeJwkId.INSTANCE.AllocationSize(value.@jwkId)
-            + FfiConverterTypeJwk.INSTANCE.AllocationSize(value.@jwk)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@epoch);
-    }
-
-    public override void Write(ActiveJwk value, BigEndianStream stream) {
-            FfiConverterTypeJwkId.INSTANCE.Write(value.@jwkId, stream);
-            FfiConverterTypeJwk.INSTANCE.Write(value.@jwk, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@epoch, stream);
-    }
-}
-
-
-
-/// <summary>
-/// Expire old JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-expire = u64 u64
-/// ```
-/// </summary>
-/// <param name="min_epoch">
-/// Expire JWKs that have a lower epoch than this
-/// </param>
-/// <param name="authenticator_obj_initial_shared_version">
-/// The initial version of the authenticator object that it was shared at.
-/// </param>
-public record AuthenticatorStateExpire (
-    /// <summary>
-    /// Expire JWKs that have a lower epoch than this
-    /// </summary>
-    ulong @minEpoch, 
-    /// <summary>
-    /// The initial version of the authenticator object that it was shared at.
-    /// </summary>
-    ulong @authenticatorObjInitialSharedVersion
-) {
-}
-
-class FfiConverterTypeAuthenticatorStateExpire: FfiConverterRustBuffer<AuthenticatorStateExpire> {
-    public static FfiConverterTypeAuthenticatorStateExpire INSTANCE = new FfiConverterTypeAuthenticatorStateExpire();
-
-    public override AuthenticatorStateExpire Read(BigEndianStream stream) {
-        return new AuthenticatorStateExpire(
-            @minEpoch: FfiConverterUInt64.INSTANCE.Read(stream),
-            @authenticatorObjInitialSharedVersion: FfiConverterUInt64.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(AuthenticatorStateExpire value) {
-        return 0
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@minEpoch)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@authenticatorObjInitialSharedVersion);
-    }
-
-    public override void Write(AuthenticatorStateExpire value, BigEndianStream stream) {
-            FfiConverterUInt64.INSTANCE.Write(value.@minEpoch, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@authenticatorObjInitialSharedVersion, stream);
-    }
-}
-
-
-
-/// <summary>
-/// Update the set of valid JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-update = u64 ; epoch
-/// u64 ; round
-/// (vector active-jwk)
-/// u64 ; initial version of the authenticator object
-/// ```
-/// </summary>
-/// <param name="epoch">
-/// Epoch of the authenticator state update transaction
-/// </param>
-/// <param name="round">
-/// Consensus round of the authenticator state update
-/// </param>
-/// <param name="new_active_jwks">
-/// newly active jwks
-/// </param>
-public record AuthenticatorStateUpdateV1 (
-    /// <summary>
-    /// Epoch of the authenticator state update transaction
-    /// </summary>
-    ulong @epoch, 
-    /// <summary>
-    /// Consensus round of the authenticator state update
-    /// </summary>
-    ulong @round, 
-    /// <summary>
-    /// newly active jwks
-    /// </summary>
-    ActiveJwk[] @newActiveJwks, 
-    ulong @authenticatorObjInitialSharedVersion
-) {
-}
-
-class FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer<AuthenticatorStateUpdateV1> {
-    public static FfiConverterTypeAuthenticatorStateUpdateV1 INSTANCE = new FfiConverterTypeAuthenticatorStateUpdateV1();
-
-    public override AuthenticatorStateUpdateV1 Read(BigEndianStream stream) {
-        return new AuthenticatorStateUpdateV1(
-            @epoch: FfiConverterUInt64.INSTANCE.Read(stream),
-            @round: FfiConverterUInt64.INSTANCE.Read(stream),
-            @newActiveJwks: FfiConverterSequenceTypeActiveJwk.INSTANCE.Read(stream),
-            @authenticatorObjInitialSharedVersion: FfiConverterUInt64.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(AuthenticatorStateUpdateV1 value) {
-        return 0
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@epoch)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@round)
-            + FfiConverterSequenceTypeActiveJwk.INSTANCE.AllocationSize(value.@newActiveJwks)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@authenticatorObjInitialSharedVersion);
-    }
-
-    public override void Write(AuthenticatorStateUpdateV1 value, BigEndianStream stream) {
-            FfiConverterUInt64.INSTANCE.Write(value.@epoch, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@round, stream);
-            FfiConverterSequenceTypeActiveJwk.INSTANCE.Write(value.@newActiveJwks, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@authenticatorObjInitialSharedVersion, stream);
     }
 }
 
@@ -56766,136 +52972,6 @@ class FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.INSTANCE.Write(value.@owner, stream);
             FfiConverterUInt64.INSTANCE.Write(value.@price, stream);
             FfiConverterUInt64.INSTANCE.Write(value.@budget, stream);
-    }
-}
-
-
-
-/// <summary>
-/// A JSON Web Key
-///
-/// Struct that contains info for a JWK. A list of them for different kids can
-/// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
-/// The JWK is used to verify the JWT token.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// jwk = string string string string
-/// ```
-/// </summary>
-/// <param name="kty">
-/// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-/// </param>
-/// <param name="e">
-/// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-/// </param>
-/// <param name="n">
-/// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-/// </param>
-/// <param name="alg">
-/// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-/// </param>
-public record Jwk (
-    /// <summary>
-    /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-    /// </summary>
-    string @kty, 
-    /// <summary>
-    /// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-    /// </summary>
-    string @e, 
-    /// <summary>
-    /// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-    /// </summary>
-    string @n, 
-    /// <summary>
-    /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-    /// </summary>
-    string @alg
-) {
-}
-
-class FfiConverterTypeJwk: FfiConverterRustBuffer<Jwk> {
-    public static FfiConverterTypeJwk INSTANCE = new FfiConverterTypeJwk();
-
-    public override Jwk Read(BigEndianStream stream) {
-        return new Jwk(
-            @kty: FfiConverterString.INSTANCE.Read(stream),
-            @e: FfiConverterString.INSTANCE.Read(stream),
-            @n: FfiConverterString.INSTANCE.Read(stream),
-            @alg: FfiConverterString.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(Jwk value) {
-        return 0
-            + FfiConverterString.INSTANCE.AllocationSize(value.@kty)
-            + FfiConverterString.INSTANCE.AllocationSize(value.@e)
-            + FfiConverterString.INSTANCE.AllocationSize(value.@n)
-            + FfiConverterString.INSTANCE.AllocationSize(value.@alg);
-    }
-
-    public override void Write(Jwk value, BigEndianStream stream) {
-            FfiConverterString.INSTANCE.Write(value.@kty, stream);
-            FfiConverterString.INSTANCE.Write(value.@e, stream);
-            FfiConverterString.INSTANCE.Write(value.@n, stream);
-            FfiConverterString.INSTANCE.Write(value.@alg, stream);
-    }
-}
-
-
-
-/// <summary>
-/// Key to uniquely identify a JWK
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// jwk-id = string string
-/// ```
-/// </summary>
-/// <param name="iss">
-/// The issuer or identity of the OIDC provider.
-/// </param>
-/// <param name="kid">
-/// A key id use to uniquely identify a key from an OIDC provider.
-/// </param>
-public record JwkId (
-    /// <summary>
-    /// The issuer or identity of the OIDC provider.
-    /// </summary>
-    string @iss, 
-    /// <summary>
-    /// A key id use to uniquely identify a key from an OIDC provider.
-    /// </summary>
-    string @kid
-) {
-}
-
-class FfiConverterTypeJwkId: FfiConverterRustBuffer<JwkId> {
-    public static FfiConverterTypeJwkId INSTANCE = new FfiConverterTypeJwkId();
-
-    public override JwkId Read(BigEndianStream stream) {
-        return new JwkId(
-            @iss: FfiConverterString.INSTANCE.Read(stream),
-            @kid: FfiConverterString.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(JwkId value) {
-        return 0
-            + FfiConverterString.INSTANCE.AllocationSize(value.@iss)
-            + FfiConverterString.INSTANCE.AllocationSize(value.@kid);
-    }
-
-    public override void Write(JwkId value, BigEndianStream stream) {
-            FfiConverterString.INSTANCE.Write(value.@iss, stream);
-            FfiConverterString.INSTANCE.Write(value.@kid, stream);
     }
 }
 
@@ -59925,47 +56001,6 @@ class FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet> {
 
 
 
-/// <summary>
-/// A claim of the iss in a zklogin proof
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// zklogin-claim = string u8
-/// ```
-/// </summary>
-public record ZkLoginClaim (
-    string @value, 
-    byte @indexMod4
-) {
-}
-
-class FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim> {
-    public static FfiConverterTypeZkLoginClaim INSTANCE = new FfiConverterTypeZkLoginClaim();
-
-    public override ZkLoginClaim Read(BigEndianStream stream) {
-        return new ZkLoginClaim(
-            @value: FfiConverterString.INSTANCE.Read(stream),
-            @indexMod4: FfiConverterUInt8.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(ZkLoginClaim value) {
-        return 0
-            + FfiConverterString.INSTANCE.AllocationSize(value.@value)
-            + FfiConverterUInt8.INSTANCE.AllocationSize(value.@indexMod4);
-    }
-
-    public override void Write(ZkLoginClaim value, BigEndianStream stream) {
-            FfiConverterString.INSTANCE.Write(value.@value, stream);
-            FfiConverterUInt8.INSTANCE.Write(value.@indexMod4, stream);
-    }
-}
-
-
-
 
 
 public enum BatchSendStatusType: int {
@@ -62394,16 +58429,16 @@ class FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiException>, Cal
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-/// multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+/// multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 /// move-auth-flag
-/// ed25519-flag        = %x00
-/// secp256k1-flag      = %x01
-/// secp256r1-flag      = %x02
-/// multisig-flag       = %x03
-/// bls-flag            = %x04
-/// zklogin-auth-flag   = %x05
-/// passkey-auth-flag   = %x06
-/// move-auth-flag      = %x07
+/// ed25519-flag                    = %x00
+/// secp256k1-flag                  = %x01
+/// secp256r1-flag                  = %x02
+/// multisig-flag                   = %x03
+/// bls-flag                        = %x04
+/// zklogin-auth-flag-deprecated    = %x05
+/// passkey-auth-flag               = %x06
+/// move-auth-flag                  = %x07
 /// ```
 /// </summary>
 public enum SignatureScheme: int {
@@ -62413,7 +58448,7 @@ public enum SignatureScheme: int {
     Secp256r1,
     Multisig,
     Bls12381,
-    ZkLoginAuthenticator,
+    ZkLoginAuthenticatorDeprecated,
     PasskeyAuthenticator,
     MoveAuthenticator
 }
@@ -62546,7 +58581,6 @@ public enum TransactionBlockKindInput: int {
     ProgrammableTx,
     Genesis,
     ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
     RandomnessStateUpdate,
     EndOfEpochTx
 }
@@ -63907,99 +59941,6 @@ class FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> {
         } else {
             stream.WriteByte(1);
             FfiConverterTypeTypeTag.INSTANCE.Write((TypeTag)value, stream);
-        }
-    }
-}
-
-
-
-
-class FfiConverterOptionalTypeZkLoginAuthenticator: FfiConverterRustBuffer<ZkLoginAuthenticator?> {
-    public static FfiConverterOptionalTypeZkLoginAuthenticator INSTANCE = new FfiConverterOptionalTypeZkLoginAuthenticator();
-
-    public override ZkLoginAuthenticator? Read(BigEndianStream stream) {
-        if (stream.ReadByte() == 0) {
-            return null;
-        }
-        return FfiConverterTypeZkLoginAuthenticator.INSTANCE.Read(stream);
-    }
-
-    public override int AllocationSize(ZkLoginAuthenticator? value) {
-        if (value == null) {
-            return 1;
-        } else {
-            return 1 + FfiConverterTypeZkLoginAuthenticator.INSTANCE.AllocationSize((ZkLoginAuthenticator)value);
-        }
-    }
-
-    public override void Write(ZkLoginAuthenticator? value, BigEndianStream stream) {
-        if (value == null) {
-            stream.WriteByte(0);
-        } else {
-            stream.WriteByte(1);
-            FfiConverterTypeZkLoginAuthenticator.INSTANCE.Write((ZkLoginAuthenticator)value, stream);
-        }
-    }
-}
-
-
-
-
-class FfiConverterOptionalTypeZkLoginPublicIdentifier: FfiConverterRustBuffer<ZkLoginPublicIdentifier?> {
-    public static FfiConverterOptionalTypeZkLoginPublicIdentifier INSTANCE = new FfiConverterOptionalTypeZkLoginPublicIdentifier();
-
-    public override ZkLoginPublicIdentifier? Read(BigEndianStream stream) {
-        if (stream.ReadByte() == 0) {
-            return null;
-        }
-        return FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Read(stream);
-    }
-
-    public override int AllocationSize(ZkLoginPublicIdentifier? value) {
-        if (value == null) {
-            return 1;
-        } else {
-            return 1 + FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.AllocationSize((ZkLoginPublicIdentifier)value);
-        }
-    }
-
-    public override void Write(ZkLoginPublicIdentifier? value, BigEndianStream stream) {
-        if (value == null) {
-            stream.WriteByte(0);
-        } else {
-            stream.WriteByte(1);
-            FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Write((ZkLoginPublicIdentifier)value, stream);
-        }
-    }
-}
-
-
-
-
-class FfiConverterOptionalTypeZkloginVerifier: FfiConverterRustBuffer<ZkloginVerifier?> {
-    public static FfiConverterOptionalTypeZkloginVerifier INSTANCE = new FfiConverterOptionalTypeZkloginVerifier();
-
-    public override ZkloginVerifier? Read(BigEndianStream stream) {
-        if (stream.ReadByte() == 0) {
-            return null;
-        }
-        return FfiConverterTypeZkloginVerifier.INSTANCE.Read(stream);
-    }
-
-    public override int AllocationSize(ZkloginVerifier? value) {
-        if (value == null) {
-            return 1;
-        } else {
-            return 1 + FfiConverterTypeZkloginVerifier.INSTANCE.AllocationSize((ZkloginVerifier)value);
-        }
-    }
-
-    public override void Write(ZkloginVerifier? value, BigEndianStream stream) {
-        if (value == null) {
-            stream.WriteByte(0);
-        } else {
-            stream.WriteByte(1);
-            FfiConverterTypeZkloginVerifier.INSTANCE.Write((ZkloginVerifier)value, stream);
         }
     }
 }
@@ -67058,52 +62999,6 @@ class FfiConverterSequenceTypeVersionAssignment: FfiConverterRustBuffer<VersionA
 
 
 
-class FfiConverterSequenceTypeActiveJwk: FfiConverterRustBuffer<ActiveJwk[]> {
-    public static FfiConverterSequenceTypeActiveJwk INSTANCE = new FfiConverterSequenceTypeActiveJwk();
-
-    public override ActiveJwk[]  Read(BigEndianStream stream) {
-        var length = stream.ReadInt();
-        if (length == 0) {
-            return [];
-        }
-
-        var result = new ActiveJwk[(length)];
-        var readFn = FfiConverterTypeActiveJwk.INSTANCE.Read;
-        for (int i = 0; i < length; i++) {
-            result[i] = readFn(stream);
-        }
-        return result;
-    }
-
-    public override int AllocationSize(ActiveJwk[]  value) {
-        var sizeForLength = 4;
-
-        // details/1-empty-list-as-default-method-parameter.md
-        if (value == null) {
-            return sizeForLength;
-        }
-
-        var allocationSizeFn = FfiConverterTypeActiveJwk.INSTANCE.AllocationSize;
-        var sizeForItems = value.Sum(item => allocationSizeFn(item));
-        return sizeForLength + sizeForItems;
-    }
-
-    public override void Write(ActiveJwk[] value, BigEndianStream stream) {
-        // details/1-empty-list-as-default-method-parameter.md
-        if (value == null) {
-            stream.WriteInt(0);
-            return;
-        }
-
-        stream.WriteInt(value.Length);
-        var writerFn = FfiConverterTypeActiveJwk.INSTANCE.Write;
-        value.ForEach(item => writerFn(item, stream));
-    }
-}
-
-
-
-
 class FfiConverterSequenceTypeChangedObject: FfiConverterRustBuffer<ChangedObject[]> {
     public static FfiConverterSequenceTypeChangedObject INSTANCE = new FfiConverterSequenceTypeChangedObject();
 
@@ -68590,57 +64485,6 @@ class FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo: FfiConverterRustBuffer<
 
 
 
-
-class FfiConverterDictionaryTypeJwkIdTypeJwk: FfiConverterRustBuffer<Dictionary<JwkId, Jwk>> {
-    public static FfiConverterDictionaryTypeJwkIdTypeJwk INSTANCE = new FfiConverterDictionaryTypeJwkIdTypeJwk();
-
-    public override Dictionary<JwkId, Jwk> Read(BigEndianStream stream) {
-        var len = stream.ReadInt();
-        var result = new Dictionary<JwkId, Jwk>(len);
-        var readerKey = FfiConverterTypeJwkId.INSTANCE.Read;
-        var readerValue = FfiConverterTypeJwk.INSTANCE.Read;
-        for (int i = 0; i < len; i++) {
-            var key = readerKey(stream);
-            var value = readerValue(stream);
-            result[key] = value;
-        }
-
-        return result;
-    }
-
-    public override int AllocationSize(Dictionary<JwkId, Jwk> value) {
-        var sizeForLength = 4;
-
-        // details/1-empty-list-as-default-method-parameter.md
-        if (value == null) {
-            return sizeForLength;
-        }
-
-        var allocationKeySizeFn = FfiConverterTypeJwkId.INSTANCE.AllocationSize;
-        var allocationKValueSizeFn = FfiConverterTypeJwk.INSTANCE.AllocationSize;
-        var sizeForItems = value.Sum(item => allocationKeySizeFn(item.Key) + allocationKValueSizeFn(item.Value));
-        return sizeForLength + sizeForItems;
-    }
-
-    public override void Write(Dictionary<JwkId, Jwk> value, BigEndianStream stream) {
-        // details/1-empty-list-as-default-method-parameter.md
-        if (value == null) {
-            stream.WriteInt(0);
-            return;
-        }
-
-        stream.WriteInt(value.Count);
-        var writerKey = FfiConverterTypeJwkId.INSTANCE.Write;
-        var writerValue = FfiConverterTypeJwk.INSTANCE.Write;
-        foreach (var item in value) {
-            writerKey(item.Key, stream);
-            writerValue(item.Value, stream);
-        }
-    }
-}
-
-
-
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -68781,54 +64625,6 @@ public static class Iota {
     /// Create this type from BCS encoded bytes.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public static ActiveJwk ActiveJwkFromBcs(byte[] @bcs) {
-        return FfiConverterTypeActiveJwk.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ActiveJwk ActiveJwkFromJson(string @json) {
-        return FfiConverterTypeActiveJwk.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ActiveJwkToBcs(ActiveJwk @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(FfiConverterTypeActiveJwk.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ActiveJwkToJson(ActiveJwk @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(FfiConverterTypeActiveJwk.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
     public static Address AddressFromBcs(byte[] @bcs) {
         return FfiConverterTypeAddress.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
@@ -68917,102 +64713,6 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_argument_to_json(FfiConverterTypeArgument.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static AuthenticatorStateExpire AuthenticatorStateExpireFromBcs(byte[] @bcs) {
-        return FfiConverterTypeAuthenticatorStateExpire.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static AuthenticatorStateExpire AuthenticatorStateExpireFromJson(string @json) {
-        return FfiConverterTypeAuthenticatorStateExpire.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] AuthenticatorStateExpireToBcs(AuthenticatorStateExpire @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(FfiConverterTypeAuthenticatorStateExpire.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string AuthenticatorStateExpireToJson(AuthenticatorStateExpire @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(FfiConverterTypeAuthenticatorStateExpire.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static AuthenticatorStateUpdateV1 AuthenticatorStateUpdateV1FromBcs(byte[] @bcs) {
-        return FfiConverterTypeAuthenticatorStateUpdateV1.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static AuthenticatorStateUpdateV1 AuthenticatorStateUpdateV1FromJson(string @json) {
-        return FfiConverterTypeAuthenticatorStateUpdateV1.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] AuthenticatorStateUpdateV1ToBcs(AuthenticatorStateUpdateV1 @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(FfiConverterTypeAuthenticatorStateUpdateV1.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string AuthenticatorStateUpdateV1ToJson(AuthenticatorStateUpdateV1 @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(FfiConverterTypeAuthenticatorStateUpdateV1.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
@@ -69126,54 +64826,6 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(FfiConverterTypeBls12381Signature.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static Bn254FieldElement Bn254FieldElementFromBcs(byte[] @bcs) {
-        return FfiConverterTypeBn254FieldElement.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static Bn254FieldElement Bn254FieldElementFromJson(string @json) {
-        return FfiConverterTypeBn254FieldElement.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] Bn254FieldElementToBcs(Bn254FieldElement @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string Bn254FieldElementToJson(Bn254FieldElement @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(FfiConverterTypeBn254FieldElement.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
@@ -69606,102 +65258,6 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(FfiConverterTypeCheckpointTransactionInfo.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static CircomG1 CircomG1FromBcs(byte[] @bcs) {
-        return FfiConverterTypeCircomG1.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static CircomG1 CircomG1FromJson(string @json) {
-        return FfiConverterTypeCircomG1.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] CircomG1ToBcs(CircomG1 @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(FfiConverterTypeCircomG1.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string CircomG1ToJson(CircomG1 @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(FfiConverterTypeCircomG1.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static CircomG2 CircomG2FromBcs(byte[] @bcs) {
-        return FfiConverterTypeCircomG2.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static CircomG2 CircomG2FromJson(string @json) {
-        return FfiConverterTypeCircomG2.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] CircomG2ToBcs(CircomG2 @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(FfiConverterTypeCircomG2.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string CircomG2ToJson(CircomG2 @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(FfiConverterTypeCircomG2.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
@@ -70931,102 +66487,6 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_input_to_json(FfiConverterTypeInput.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static Jwk JwkFromBcs(byte[] @bcs) {
-        return FfiConverterTypeJwk.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static Jwk JwkFromJson(string @json) {
-        return FfiConverterTypeJwk.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static JwkId JwkIdFromBcs(byte[] @bcs) {
-        return FfiConverterTypeJwkId.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static JwkId JwkIdFromJson(string @json) {
-        return FfiConverterTypeJwkId.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] JwkIdToBcs(JwkId @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(FfiConverterTypeJwkId.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string JwkIdToJson(JwkId @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(FfiConverterTypeJwkId.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] JwkToBcs(Jwk @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(FfiConverterTypeJwk.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string JwkToJson(Jwk @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_jwk_to_json(FfiConverterTypeJwk.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
@@ -73859,198 +69319,6 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(FfiConverterTypeVersionAssignment.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginAuthenticator ZkLoginAuthenticatorFromBcs(byte[] @bcs) {
-        return FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginAuthenticator ZkLoginAuthenticatorFromJson(string @json) {
-        return FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ZkLoginAuthenticatorToBcs(ZkLoginAuthenticator @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ZkLoginAuthenticatorToJson(ZkLoginAuthenticator @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(FfiConverterTypeZkLoginAuthenticator.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginClaim ZkLoginClaimFromBcs(byte[] @bcs) {
-        return FfiConverterTypeZkLoginClaim.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginClaim ZkLoginClaimFromJson(string @json) {
-        return FfiConverterTypeZkLoginClaim.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ZkLoginClaimToBcs(ZkLoginClaim @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(FfiConverterTypeZkLoginClaim.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ZkLoginClaimToJson(ZkLoginClaim @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(FfiConverterTypeZkLoginClaim.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginProof ZkLoginProofFromBcs(byte[] @bcs) {
-        return FfiConverterTypeZkLoginProof.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginProof ZkLoginProofFromJson(string @json) {
-        return FfiConverterTypeZkLoginProof.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ZkLoginProofToBcs(ZkLoginProof @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(FfiConverterTypeZkLoginProof.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ZkLoginProofToJson(ZkLoginProof @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(FfiConverterTypeZkLoginProof.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginPublicIdentifier ZkLoginPublicIdentifierFromBcs(byte[] @bcs) {
-        return FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ZkLoginPublicIdentifier ZkLoginPublicIdentifierFromJson(string @json) {
-        return FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ZkLoginPublicIdentifierToBcs(ZkLoginPublicIdentifier @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ZkLoginPublicIdentifierToJson(ZkLoginPublicIdentifier @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(FfiConverterTypeZkLoginPublicIdentifier.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
