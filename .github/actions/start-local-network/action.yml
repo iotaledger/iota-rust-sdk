@@ -37,6 +37,12 @@ runs:
         # Make `iota` available on PATH for `iota move build` used by test fixtures
         echo "$(pwd)" >> $GITHUB_PATH
 
+        # Bootstrap ~/.iota/iota_config so subsequent `iota move build` calls
+        # don't fall into the interactive setup wizard (which writes prompts to
+        # stdout and hangs in CI). The network isn't up yet, so the call logs a
+        # connection error but still writes the config and exits 0.
+        ./iota client -y new-env --alias localnet --rpc http://127.0.0.1:9000 || true
+
     - name: Start local network and gas station
       shell: bash
       env:
