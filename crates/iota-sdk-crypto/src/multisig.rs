@@ -81,7 +81,6 @@ impl MultisigVerifier {
 
                 passkey_verifier.verify(message, passkey_authenticator)
             }
-
             _ => Err(SignatureError::from_source(
                 "member and signature scheme do not match",
             )),
