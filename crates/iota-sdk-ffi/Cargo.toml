@@ -15,7 +15,7 @@ name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
 [features]
-default = ["crypto", "bls12381", "zklogin"]
+default = ["crypto", "bls12381"]
 crypto = [
   "iota-sdk/bech32",
   "iota-sdk/crypto",
@@ -27,7 +27,6 @@ crypto = [
   "iota-sdk/secp256r1",
 ]
 bls12381 = ["iota-sdk/bls12381"]
-zklogin = ["iota-sdk/zklogin"]
 
 [lints]
 workspace = true

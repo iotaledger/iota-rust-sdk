@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
-    ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
+    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
+    ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -183,7 +183,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %x01 change-epoch
 ///                     =/ %x02 genesis-transaction
 ///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
+///                     =/ %x04 authenticator-state-update-deprecated
 ///                     =/ %x05 (vector end-of-epoch-transaction-kind)
 ///                     =/ %x06 randomness-state-update
 ///                     =/ %x07 consensus-commit-prologue-v2
@@ -202,8 +202,8 @@ pub enum TransactionKind {
     Genesis(GenesisTransaction),
     /// V1 consensus commit update
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-    /// Update set of valid JWKs used for zklogin
-    AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+    /// Update set of valid JWKs used for zklogin - Deprecated
+    AuthenticatorStateUpdateV1Deprecated,
     /// Set of operations to run at the end of the epoch to close out the
     /// current epoch and start the next one.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
@@ -215,7 +215,6 @@ impl TransactionKind {
     crate::def_is_as_into_opt! {
         ProgrammableTransaction,
         ConsensusCommitPrologueV1,
-        AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
     }
 
@@ -267,16 +266,10 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
-    /// Create and initialize the authenticator object used for zklogin
-    AuthenticatorStateCreate,
-    /// Expire JWKs used for zklogin
-    AuthenticatorStateExpire(AuthenticatorStateExpire),
 }
 
 impl EndOfEpochTransactionKind {
-    crate::def_is!(AuthenticatorStateCreate);
-
-    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
+    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2);
 }
 
 /// Set of Execution Time Observations from the committee.
@@ -388,87 +381,6 @@ impl ExecutionTimeObservationKey {
         MakeMoveVec,
         Upgrade,
     );
-}
-
-/// Expire old JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-expire = u64 u64
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateExpire {
-    /// expire JWKs that have a lower epoch than this
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub min_epoch: u64,
-    /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-/// Update the set of valid JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-update = u64 ; epoch
-///                              u64 ; round
-///                              (vector active-jwk)
-///                              u64 ; initial version of the authenticator object
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateUpdateV1 {
-    /// Epoch of the authenticator state update transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
-    /// Consensus round of the authenticator state update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub round: u64,
-    /// newly active jwks
-    pub new_active_jwks: Vec<ActiveJwk>,
-    /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-/// A new Jwk
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// active-jwk = jwk-id jwk u64
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ActiveJwk {
-    /// Identifier used to uniquely identify a Jwk
-    pub jwk_id: JwkId,
-    /// The Jwk
-    pub jwk: Jwk,
-    /// Most recent epoch in which the jwk was validated
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

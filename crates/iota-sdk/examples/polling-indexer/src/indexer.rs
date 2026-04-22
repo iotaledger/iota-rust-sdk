@@ -500,8 +500,8 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
             iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {
                 "consensus_commit_prologue_v1".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1(_) => {
-                "authenticator_state_update_v1".to_owned()
+            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                "authenticator_state_update_v1_deprecated".to_owned()
             }
             iota_sdk::types::transaction::TransactionKind::EndOfEpoch(_) => {
                 "end_of_epoch".to_owned()

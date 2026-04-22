@@ -3,10 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{
-    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, Jwk, JwkId,
-    RandomnessStateUpdate, TransactionExpiration,
-};
+use iota_sdk::types::{RandomnessStateUpdate, TransactionExpiration};
 
 use crate::{
     error::Result,
@@ -242,11 +239,6 @@ impl TransactionKind {
         Self(iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(
             tx.0.clone(),
         ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1(tx.clone()))
     }
 
     #[uniffi::constructor]
@@ -1391,65 +1383,6 @@ impl ChangeEpochV4 {
     }
 }
 
-/// Expire old JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-expire = u64 u64
-/// ```
-#[uniffi::remote(Record)]
-pub struct AuthenticatorStateExpire {
-    /// Expire JWKs that have a lower epoch than this
-    pub min_epoch: u64,
-    /// The initial version of the authenticator object that it was shared at.
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-/// Update the set of valid JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-update = u64 ; epoch
-///                              u64 ; round
-///                              (vector active-jwk)
-///                              u64 ; initial version of the authenticator object
-/// ```
-#[uniffi::remote(Record)]
-pub struct AuthenticatorStateUpdateV1 {
-    /// Epoch of the authenticator state update transaction
-    pub epoch: u64,
-    /// Consensus round of the authenticator state update
-    pub round: u64,
-    /// newly active jwks
-    pub new_active_jwks: Vec<ActiveJwk>,
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-/// A new Jwk
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// active-jwk = jwk-id jwk u64
-/// ```
-#[uniffi::remote(Record)]
-pub struct ActiveJwk {
-    /// Identifier used to uniquely identify a Jwk
-    pub jwk_id: JwkId,
-    /// The Jwk
-    pub jwk: Jwk,
-    /// Most recent epoch in which the jwk was validated
-    pub epoch: u64,
-}
-
 /// Set of Execution Time Observations from the committee.
 ///
 /// # BCS
@@ -1699,16 +1632,6 @@ impl EndOfEpochTransactionKind {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
             tx.0.clone(),
         ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_authenticator_state_create() -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateCreate)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
     }
 }
 
@@ -1961,9 +1884,6 @@ impl MoveCall {
 
 crate::export_iota_types_bcs_conversion!(
     SignedTransaction,
-    AuthenticatorStateExpire,
-    AuthenticatorStateUpdateV1,
-    ActiveJwk,
     RandomnessStateUpdate,
     GasPayment,
     TransactionExpiration,
@@ -1999,9 +1919,6 @@ crate::export_iota_types_objects_bcs_conversion!(
 );
 crate::export_iota_types_json_conversion!(
     SignedTransaction,
-    AuthenticatorStateExpire,
-    AuthenticatorStateUpdateV1,
-    ActiveJwk,
     RandomnessStateUpdate,
     GasPayment,
     TransactionExpiration,

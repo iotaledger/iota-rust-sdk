@@ -31,18 +31,6 @@ secp256r1 = ["dep:p256", "dep:rand_core"]
 passkey = ["secp256r1", "dep:sha2"]
 secp256k1 = ["dep:k256", "dep:rand_core", "signature/std"]
 bech32 = ["dep:bech32", "signature/std"]
-zklogin = [
-  "dep:ark-bn254",
-  "dep:ark-ff",
-  "dep:ark-groth16",
-  "dep:ark-snark",
-  "dep:ark-std",
-  "dep:base64ct",
-  "dep:bnum",
-  "dep:itertools",
-  "dep:serde_json",
-  "signature/std",
-]
 pem = [
   "dep:pem-rfc7468",
   "dep:pkcs8",
@@ -58,13 +46,6 @@ mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
 
 [dependencies]
 # external dependencies
-# zklogin verification support
-ark-bn254 = { version = "0.4.0", optional = true }
-ark-ff = { version = "0.4.2", features = ["asm"], optional = true }
-ark-groth16 = { version = "0.4.0", default-features = false, optional = true }
-ark-snark = { version = "0.4.0", optional = true }
-ark-std = { version = "0.4.0", optional = true }
-base64ct = { workspace = true, features = ["alloc"], optional = true }
 # bech32 encoding support
 bech32 = { version = "0.11.0", optional = true }
 # mnemonic support
@@ -75,7 +56,6 @@ blst = { version = "0.3.13", optional = true }
 bnum = { workspace = true, optional = true }
 # ed25519 support
 ed25519-dalek = { version = "2.1.1", optional = true }
-itertools = { workspace = true, optional = true }
 # secp256k1 support
 k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"], optional = true }
 # secp256r1 support
@@ -98,6 +78,7 @@ iota-types = { workspace = true, features = ["hash", "serde"] }
 
 [dev-dependencies]
 # external dependencies
+base64ct = { workspace = true, features = ["alloc"] }
 bcs.workspace = true
 hex.workspace = true
 proptest = { workspace = true, features = ["std"] }
