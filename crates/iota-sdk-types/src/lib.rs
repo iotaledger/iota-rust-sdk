@@ -137,15 +137,13 @@ pub use checkpoint::{
     EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary, StakeUnit,
 };
 pub use crypto::{
-    Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError,
-    IntentMessage, IntentScope, IntentVersion, InvalidSignatureScheme,
-    InvalidZkLoginAuthenticatorError, Jwk, JwkId, MoveAuthenticator, MoveAuthenticatorV1,
+    Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
+    INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
+    IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
     Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator, ZkLoginClaim,
-    ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+    SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
@@ -169,14 +167,14 @@ pub use object_id::ObjectId;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4, Command,
-    ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
-    ExecutionTimeObservation, ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment,
-    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
-    Publish, RandomnessStateUpdate, SenderSignedTransaction, SignedTransaction, SplitCoins,
-    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
-    TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
+    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments,
+    EndOfEpochTransactionKind, ExecutionTimeObservation, ExecutionTimeObservationKey,
+    ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
+    SignedTransaction, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
+    TransactionKind, TransactionV1, TransferObjects, Upgrade, ValidatorExecutionTimeObservation,
+    VersionAssignment,
 };
 pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
 pub use validator::{
@@ -463,31 +461,6 @@ mod _schemars {
                 })),
                 instance_type: Some(InstanceType::String.into()),
                 format: Some("i128".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct U256;
-
-    impl JsonSchema for U256 {
-        fn schema_name() -> String {
-            "u256".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 256-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u256".to_owned()),
                 ..Default::default()
             }
             .into()

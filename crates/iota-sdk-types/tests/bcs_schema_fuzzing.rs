@@ -715,11 +715,8 @@ fn grammar_driven_fuzzing() {
 
     let mut test = TestHarness::new();
 
-    test.check_rule::<ActiveJwk>("active-jwk");
     test.check_rule::<Address>("address");
     test.check_rule::<Argument>("argument");
-    test.check_rule::<AuthenticatorStateExpire>("authenticator-state-expire");
-    test.check_rule::<AuthenticatorStateUpdateV1>("authenticator-state-update-v1");
     test.check_rule::<Bls12381PublicKey>("bls12381-public-key");
     test.check_rule::<Bls12381Signature>("bls12381-signature");
     test.check_rule::<CancelledTransaction>("cancelled-transaction");
@@ -750,8 +747,6 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<Identifier>("identifier");
     test.check_rule::<Input>("input");
     test.check_rule::<Intent>("intent");
-    test.check_rule::<Jwk>("jwk");
-    test.check_rule::<JwkId>("jwk-id");
     test.check_rule::<MakeMoveVector>("make-move-vector");
     test.check_rule::<MergeCoins>("merge-coins");
     test.check_rule::<MoveCall>("move-call");

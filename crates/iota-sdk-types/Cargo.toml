@@ -29,7 +29,6 @@ default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = [
   "dep:bcs",
-  "dep:itertools",
   "dep:serde",
   "dep:serde_json",
   "dep:serde_repr",
@@ -51,7 +50,6 @@ blake2 = { version = "0.10.6", optional = true }
 bnum.workspace = true
 bs58 = "0.5.1"
 hex.workspace = true
-itertools = { workspace = true, optional = true }
 paste.workspace = true
 # proptest support
 proptest = { workspace = true, features = ["std"], optional = true }
