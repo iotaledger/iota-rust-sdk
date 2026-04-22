@@ -14466,12 +14466,14 @@ public func FfiConverterTypeMultisigMember_lower(_ value: MultisigMember) -> Uns
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated
+ * zklogin-multisig-member-public-key /
+ * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+ * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+ * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
  * zklogin-multisig-member-public-key-deprecated   = %x03
+ * passkey-multisig-member-public-key   = %x04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -14491,6 +14493,10 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
     
     func asEd25519Opt()  -> Ed25519PublicKey?
     
+    func asPasskey()  -> PasskeyPublicKey
+    
+    func asPasskeyOpt()  -> PasskeyPublicKey?
+    
     func asSecp256k1()  -> Secp256k1PublicKey
     
     func asSecp256k1Opt()  -> Secp256k1PublicKey?
@@ -14500,6 +14506,8 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
     func asSecp256r1Opt()  -> Secp256r1PublicKey?
     
     func isEd25519()  -> Bool
+    
+    func isPasskey()  -> Bool
     
     func isSecp256k1()  -> Bool
     
@@ -14519,12 +14527,14 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated
+ * zklogin-multisig-member-public-key /
+ * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+ * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+ * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
  * zklogin-multisig-member-public-key-deprecated   = %x03
+ * passkey-multisig-member-public-key   = %x04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -14604,6 +14614,20 @@ open func asEd25519Opt() -> Ed25519PublicKey?  {
 })
 }
     
+open func asPasskey() -> PasskeyPublicKey  {
+    return try!  FfiConverterTypePasskeyPublicKey_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asPasskeyOpt() -> PasskeyPublicKey?  {
+    return try!  FfiConverterOptionTypePasskeyPublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
 open func asSecp256k1() -> Secp256k1PublicKey  {
     return try!  FfiConverterTypeSecp256k1PublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(self.uniffiClonePointer(),$0
@@ -14635,6 +14659,13 @@ open func asSecp256r1Opt() -> Secp256r1PublicKey?  {
 open func isEd25519() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isPasskey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -14748,12 +14779,14 @@ public func FfiConverterTypeMultisigMemberPublicKey_lower(_ value: MultisigMembe
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature-deprecated
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
  * ed25519-multisig-member-signature               = %x00 ed25519-signature
  * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
  * zklogin-multisig-member-signature-deprecated    = %x03
+ * passkey-multisig-member-signature               = %x04 passkey-authenticator
  * ```
  */
 public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
@@ -14761,6 +14794,10 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
     func asEd25519()  -> Ed25519Signature
     
     func asEd25519Opt()  -> Ed25519Signature?
+    
+    func asPasskey()  -> PasskeyAuthenticator
+    
+    func asPasskeyOpt()  -> PasskeyAuthenticator?
     
     func asSecp256k1()  -> Secp256k1Signature
     
@@ -14771,6 +14808,8 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
     func asSecp256r1Opt()  -> Secp256r1Signature?
     
     func isEd25519()  -> Bool
+    
+    func isPasskey()  -> Bool
     
     func isSecp256k1()  -> Bool
     
@@ -14788,12 +14827,14 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature-deprecated
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
  * ed25519-multisig-member-signature               = %x00 ed25519-signature
  * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
  * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
  * zklogin-multisig-member-signature-deprecated    = %x03
+ * passkey-multisig-member-signature               = %x04 passkey-authenticator
  * ```
  */
 open class MultisigMemberSignature: MultisigMemberSignatureProtocol, @unchecked Sendable {
@@ -14862,6 +14903,20 @@ open func asEd25519Opt() -> Ed25519Signature?  {
 })
 }
     
+open func asPasskey() -> PasskeyAuthenticator  {
+    return try!  FfiConverterTypePasskeyAuthenticator_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asPasskeyOpt() -> PasskeyAuthenticator?  {
+    return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
 open func asSecp256k1() -> Secp256k1Signature  {
     return try!  FfiConverterTypeSecp256k1Signature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1(self.uniffiClonePointer(),$0
@@ -14893,6 +14948,13 @@ open func asSecp256r1Opt() -> Secp256r1Signature?  {
 open func isEd25519() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isPasskey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -38065,6 +38127,30 @@ fileprivate struct FfiConverterOptionTypePasskeyAuthenticator: FfiConverterRustB
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypePasskeyPublicKey: FfiConverterRustBuffer {
+    typealias SwiftType = PasskeyPublicKey?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypePasskeyPublicKey.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypePasskeyPublicKey.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeSecp256k1PublicKey: FfiConverterRustBuffer {
     typealias SwiftType = Secp256k1PublicKey?
 
@@ -47176,6 +47262,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47189,6 +47281,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521) {
@@ -47206,6 +47301,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47219,6 +47320,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey() != 45194) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() != 16841) {

@@ -103,6 +103,13 @@ impl PasskeyAuthenticator {
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(transparent)
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct PasskeyPublicKey(Secp256r1PublicKey);
 
 impl PasskeyPublicKey {

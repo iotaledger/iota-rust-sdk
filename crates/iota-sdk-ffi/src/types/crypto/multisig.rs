@@ -10,6 +10,7 @@ use crate::types::{
     crypto::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature,
+        passkey::{PasskeyAuthenticator, PasskeyPublicKey},
     },
 };
 
@@ -23,12 +24,14 @@ use crate::types::{
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature-deprecated
+///                             zklogin-multisig-member-signature-deprecated /
+///                             passkey-multisig-member-signature
 ///
 /// ed25519-multisig-member-signature               = %x00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
 /// zklogin-multisig-member-signature-deprecated    = %x03
+/// passkey-multisig-member-signature               = %x04 passkey-authenticator
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -83,6 +86,22 @@ impl MultisigMemberSignature {
     pub fn as_secp256r1(&self) -> Secp256r1Signature {
         (*self.0.as_secp256r1()).into()
     }
+
+    pub fn is_passkey(&self) -> bool {
+        self.0.is_passkey()
+    }
+
+    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
+        self.0
+            .as_passkey_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    pub fn as_passkey(&self) -> PasskeyAuthenticator {
+        self.0.as_passkey().clone().into()
+    }
 }
 
 /// Enum of valid public keys for multisig committee members
@@ -95,12 +114,14 @@ impl MultisigMemberSignature {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 ///                              secp256k1-multisig-member-public-key /
 ///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key-deprecated
+///                              zklogin-multisig-member-public-key /
+///                              passkey-multisig-member-public-key
 ///
-/// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
+/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
 /// zklogin-multisig-member-public-key-deprecated   = %x03
+/// passkey-multisig-member-public-key   = %x04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -165,6 +186,22 @@ impl MultisigMemberPublicKey {
 
     pub fn as_secp256r1(&self) -> Secp256r1PublicKey {
         (*self.0.as_secp256r1()).into()
+    }
+
+    pub fn is_passkey(&self) -> bool {
+        self.0.is_passkey()
+    }
+
+    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyPublicKey>> {
+        self.0
+            .as_passkey_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    pub fn as_passkey(&self) -> PasskeyPublicKey {
+        self.0.as_passkey().clone().into()
     }
 
     pub fn scheme(&self) -> SignatureScheme {

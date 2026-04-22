@@ -5,6 +5,7 @@
 use super::{
     Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme,
+    passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
 use crate::PublicKeyExt;
 
@@ -26,12 +27,14 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 ///                              secp256k1-multisig-member-public-key /
 ///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key-deprecated
+///                              zklogin-multisig-member-public-key-deprecated /
+///                              passkey-multisig-member-public-key
 ///
 /// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
 /// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
 /// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
 /// zklogin-multisig-member-public-key-deprecated   = %x03
+/// /// passkey-multisig-member-public-key          = %x04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -52,6 +55,7 @@ pub enum MultisigMemberPublicKey {
     Secp256k1(Secp256k1PublicKey),
     Secp256r1(Secp256r1PublicKey),
     ZkLoginDeprecated,
+    Passkey(PasskeyPublicKey),
 }
 
 impl MultisigMemberPublicKey {
@@ -59,6 +63,7 @@ impl MultisigMemberPublicKey {
         Ed25519(Ed25519PublicKey),
         Secp256k1(Secp256k1PublicKey),
         Secp256r1(Secp256r1PublicKey),
+        Passkey(PasskeyPublicKey),
     );
 
     pub fn scheme(&self) -> SignatureScheme {
@@ -73,6 +78,7 @@ impl MultisigMemberPublicKey {
             MultisigMemberPublicKey::ZkLoginDeprecated => {
                 SignatureScheme::ZkLoginAuthenticatorDeprecated
             }
+            MultisigMemberPublicKey::Passkey(passkey_public_key) => passkey_public_key.scheme(),
         }
     }
 }
@@ -310,12 +316,14 @@ impl Eq for MultisigAggregatedSignature {}
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature-deprecated
+///                             zklogin-multisig-member-signature-deprecated /
+///                             passkey-multisig-member-signature
 ///
 /// ed25519-multisig-member-signature               = %x00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
 /// zklogin-multisig-member-signature-deprecated    = %x03
+/// /// passkey-multisig-member-signature           = %x04 passkey-authenticator
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -325,6 +333,7 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLoginDeprecated,
+    Passkey(Box<PasskeyAuthenticator>),
 }
 
 impl MultisigMemberSignature {
@@ -332,6 +341,7 @@ impl MultisigMemberSignature {
         Ed25519(Ed25519Signature),
         Secp256k1(Secp256k1Signature),
         Secp256r1(Secp256r1Signature),
+        Passkey(Box<PasskeyAuthenticator>),
     );
 }
 
@@ -461,8 +471,8 @@ mod serialization {
         Secp256k1(Secp256k1PublicKey),
         Secp256r1(Secp256r1PublicKey),
         ZkLoginDeprecated,
+        Passkey(PasskeyPublicKey),
     }
-
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "MultisigMemberPublicKey")]
@@ -472,6 +482,7 @@ mod serialization {
         Secp256k1 { public_key: Secp256k1PublicKey },
         Secp256r1 { public_key: Secp256r1PublicKey },
         ZkLoginDeprecated,
+        Passkey { public_key: PasskeyPublicKey },
     }
 
     #[cfg(feature = "schemars")]
@@ -512,6 +523,11 @@ mod serialization {
                     MultisigMemberPublicKey::ZkLoginDeprecated => {
                         ReadableMemberPublicKey::ZkLoginDeprecated
                     }
+                    MultisigMemberPublicKey::Passkey(public_key) => {
+                        ReadableMemberPublicKey::Passkey {
+                            public_key: public_key.clone(),
+                        }
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -527,6 +543,9 @@ mod serialization {
                     }
                     MultisigMemberPublicKey::ZkLoginDeprecated => {
                         MemberPublicKey::ZkLoginDeprecated
+                    }
+                    MultisigMemberPublicKey::Passkey(public_key) => {
+                        MemberPublicKey::Passkey(public_key.clone())
                     }
                 };
                 binary.serialize(serializer)
@@ -550,6 +569,7 @@ mod serialization {
                         Self::Secp256r1(public_key)
                     }
                     ReadableMemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    ReadableMemberPublicKey::Passkey { public_key } => Self::Passkey(public_key),
                 })
             } else {
                 let binary = MemberPublicKey::deserialize(deserializer)?;
@@ -558,6 +578,7 @@ mod serialization {
                     MemberPublicKey::Secp256k1(public_key) => Self::Secp256k1(public_key),
                     MemberPublicKey::Secp256r1(public_key) => Self::Secp256r1(public_key),
                     MemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    MemberPublicKey::Passkey(public_key) => Self::Passkey(public_key),
                 })
             }
         }
@@ -569,6 +590,7 @@ mod serialization {
         Secp256k1(Secp256k1Signature),
         Secp256r1(Secp256r1Signature),
         ZkLoginDeprecated,
+        Passkey(Box<PasskeyAuthenticator>),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
@@ -580,6 +602,7 @@ mod serialization {
         Secp256k1 { signature: Secp256k1Signature },
         Secp256r1 { signature: Secp256r1Signature },
         ZkLoginDeprecated,
+        Passkey(Box<PasskeyAuthenticator>),
     }
 
     #[cfg(feature = "schemars")]
@@ -620,6 +643,9 @@ mod serialization {
                     MultisigMemberSignature::ZkLoginDeprecated => {
                         ReadableMemberSignature::ZkLoginDeprecated
                     }
+                    MultisigMemberSignature::Passkey(authenticator) => {
+                        ReadableMemberSignature::Passkey(authenticator.clone())
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -635,6 +661,9 @@ mod serialization {
                     }
                     MultisigMemberSignature::ZkLoginDeprecated => {
                         MemberSignature::ZkLoginDeprecated
+                    }
+                    MultisigMemberSignature::Passkey(authenticator) => {
+                        MemberSignature::Passkey(authenticator.clone())
                     }
                 };
                 binary.serialize(serializer)
@@ -654,6 +683,7 @@ mod serialization {
                     ReadableMemberSignature::Secp256k1 { signature } => Self::Secp256k1(signature),
                     ReadableMemberSignature::Secp256r1 { signature } => Self::Secp256r1(signature),
                     ReadableMemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    ReadableMemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             } else {
                 let binary = MemberSignature::deserialize(deserializer)?;
@@ -662,8 +692,72 @@ mod serialization {
                     MemberSignature::Secp256k1(signature) => Self::Secp256k1(signature),
                     MemberSignature::Secp256r1(signature) => Self::Secp256r1(signature),
                     MemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    MemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             }
         }
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod tests {
+    use super::*;
+    use crate::UserSignature;
+
+    /// Roundtrip a multisig committee and aggregated signature that include a
+    /// passkey member.
+    #[test]
+    fn passkey_multisig_roundtrip() {
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+
+        let passkey_pk = passkey_authenticator.public_key();
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                MultisigMemberPublicKey::Passkey(passkey_pk),
+                1,
+            )],
+            1,
+        );
+        assert!(committee.is_valid());
+
+        let aggregated = MultisigAggregatedSignature::new(
+            committee,
+            vec![MultisigMemberSignature::Passkey(Box::new(
+                passkey_authenticator,
+            ))],
+            0b1,
+        );
+
+        let bcs_bytes = bcs::to_bytes(&aggregated).unwrap();
+        let from_bcs: MultisigAggregatedSignature = bcs::from_bytes(&bcs_bytes).unwrap();
+        assert_eq!(aggregated, from_bcs);
+
+        let json = serde_json::to_string(&aggregated).unwrap();
+        let from_json: MultisigAggregatedSignature = serde_json::from_str(&json).unwrap();
+        assert_eq!(aggregated, from_json);
+    }
+
+    /// The passkey tag in the `MultisigMemberPublicKey` BCS enum must be
+    /// `0x04`. Locking this in here guards against accidental reordering,
+    /// since the tag is part of the on-chain wire format.
+    #[test]
+    fn passkey_member_public_key_bcs_tag() {
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+
+        let pk = MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key());
+        let bcs_bytes = bcs::to_bytes(&pk).unwrap();
+        assert_eq!(bcs_bytes[0], 0x04, "passkey must use BCS tag 0x04");
+        // 1 tag byte + 33 bytes for the secp256r1 compressed public key.
+        assert_eq!(bcs_bytes.len(), 34);
     }
 }
