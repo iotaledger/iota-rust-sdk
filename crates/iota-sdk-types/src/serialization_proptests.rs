@@ -104,6 +104,7 @@ serialization_test!(ValidatorCommittee);
 serialization_test!(ValidatorCommitteeMember);
 serialization_test!(ValidatorSignature);
 serialization_test!(PasskeyAuthenticator);
+serialization_test!(PasskeyPublicKey);
 serialization_test!(MoveAuthenticator);
 serialization_test!(Digest);
 serialization_test!(ChangedObject);

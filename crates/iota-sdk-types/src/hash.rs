@@ -201,6 +201,7 @@ impl crate::MultisigCommittee {
                 ZkLoginDeprecated => {
                     panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
                 }
+                Passkey(p) => p.write_into_hasher(&mut hasher),
             }
 
             hasher.update(member.weight().to_le_bytes());

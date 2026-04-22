@@ -1757,6 +1757,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() != 40194:
@@ -1766,6 +1770,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1777,6 +1783,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt() != 26984:
@@ -1786,6 +1796,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey() != 45194:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() != 16841:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6455,6 +6467,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt.
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6480,6 +6502,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6532,6 +6559,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt.
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6557,6 +6594,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14378,6 +14420,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed2551
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1.restype = ctypes.c_uint16
@@ -14393,6 +14441,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp25
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1.restype = ctypes.c_uint16
@@ -14408,6 +14459,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed2551
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1.restype = ctypes.c_uint16
@@ -14423,6 +14480,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp25
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1.restype = ctypes.c_uint16
@@ -26630,6 +26690,33 @@ class _UniffiConverterOptionalTypePasskeyAuthenticator(_UniffiConverterRustBuffe
             return None
         elif flag == 1:
             return _UniffiConverterTypePasskeyAuthenticator.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypePasskeyPublicKey(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypePasskeyPublicKey.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypePasskeyPublicKey.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypePasskeyPublicKey.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -42502,12 +42589,14 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
     multisig-member-public-key = ed25519-multisig-member-public-key /
     secp256k1-multisig-member-public-key /
     secp256r1-multisig-member-public-key /
-    zklogin-multisig-member-public-key-deprecated
+    zklogin-multisig-member-public-key-deprecated /
+    passkey-multisig-member-public-key
 
     ed25519-multisig-member-public-key              = %x00 ed25519-public-key
     secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
     secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
     zklogin-multisig-member-public-key-deprecated   = %x03
+    passkey-multisig-member-public-key              = %x04 passkey-public-key
     ```
 
     There is also a legacy encoding for this type defined as:
@@ -42526,6 +42615,10 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def as_ed25519_opt(self, ):
         raise NotImplementedError
+    def as_passkey(self, ):
+        raise NotImplementedError
+    def as_passkey_opt(self, ):
+        raise NotImplementedError
     def as_secp256k1(self, ):
         raise NotImplementedError
     def as_secp256k1_opt(self, ):
@@ -42535,6 +42628,8 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
     def as_secp256r1_opt(self, ):
         raise NotImplementedError
     def is_ed25519(self, ):
+        raise NotImplementedError
+    def is_passkey(self, ):
         raise NotImplementedError
     def is_secp256k1(self, ):
         raise NotImplementedError
@@ -42555,12 +42650,14 @@ class MultisigMemberPublicKey():
     multisig-member-public-key = ed25519-multisig-member-public-key /
     secp256k1-multisig-member-public-key /
     secp256r1-multisig-member-public-key /
-    zklogin-multisig-member-public-key-deprecated
+    zklogin-multisig-member-public-key-deprecated /
+    passkey-multisig-member-public-key
 
     ed25519-multisig-member-public-key              = %x00 ed25519-public-key
     secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
     secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
     zklogin-multisig-member-public-key-deprecated   = %x03
+    passkey-multisig-member-public-key              = %x04 passkey-public-key
     ```
 
     There is also a legacy encoding for this type defined as:
@@ -42617,6 +42714,24 @@ class MultisigMemberPublicKey():
 
 
 
+    def as_passkey(self, ) -> "PasskeyPublicKey":
+        return _UniffiConverterTypePasskeyPublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_passkey_opt(self, ) -> "typing.Optional[PasskeyPublicKey]":
+        return _UniffiConverterOptionalTypePasskeyPublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def as_secp256k1(self, ) -> "Secp256k1PublicKey":
         return _UniffiConverterTypeSecp256k1PublicKey.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1,self._uniffi_clone_pointer(),)
@@ -42656,6 +42771,15 @@ class MultisigMemberPublicKey():
     def is_ed25519(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_passkey(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey,self._uniffi_clone_pointer(),)
         )
 
 
@@ -42751,18 +42875,24 @@ class MultisigMemberSignatureProtocol(typing.Protocol):
     multisig-member-signature = ed25519-multisig-member-signature /
     secp256k1-multisig-member-signature /
     secp256r1-multisig-member-signature /
-    zklogin-multisig-member-signature-deprecated
+    zklogin-multisig-member-signature-deprecated /
+    passkey-multisig-member-signature
 
     ed25519-multisig-member-signature               = %x00 ed25519-signature
     secp256k1-multisig-member-signature             = %x01 secp256k1-signature
     secp256r1-multisig-member-signature             = %x02 secp256r1-signature
     zklogin-multisig-member-signature-deprecated    = %x03
+    passkey-multisig-member-signature               = %x04 passkey-authenticator
     ```
     """
 
     def as_ed25519(self, ):
         raise NotImplementedError
     def as_ed25519_opt(self, ):
+        raise NotImplementedError
+    def as_passkey(self, ):
+        raise NotImplementedError
+    def as_passkey_opt(self, ):
         raise NotImplementedError
     def as_secp256k1(self, ):
         raise NotImplementedError
@@ -42773,6 +42903,8 @@ class MultisigMemberSignatureProtocol(typing.Protocol):
     def as_secp256r1_opt(self, ):
         raise NotImplementedError
     def is_ed25519(self, ):
+        raise NotImplementedError
+    def is_passkey(self, ):
         raise NotImplementedError
     def is_secp256k1(self, ):
         raise NotImplementedError
@@ -42791,12 +42923,14 @@ class MultisigMemberSignature():
     multisig-member-signature = ed25519-multisig-member-signature /
     secp256k1-multisig-member-signature /
     secp256r1-multisig-member-signature /
-    zklogin-multisig-member-signature-deprecated
+    zklogin-multisig-member-signature-deprecated /
+    passkey-multisig-member-signature
 
     ed25519-multisig-member-signature               = %x00 ed25519-signature
     secp256k1-multisig-member-signature             = %x01 secp256k1-signature
     secp256r1-multisig-member-signature             = %x02 secp256r1-signature
     zklogin-multisig-member-signature-deprecated    = %x03
+    passkey-multisig-member-signature               = %x04 passkey-authenticator
     ```
     """
 
@@ -42842,6 +42976,24 @@ class MultisigMemberSignature():
 
 
 
+    def as_passkey(self, ) -> "PasskeyAuthenticator":
+        return _UniffiConverterTypePasskeyAuthenticator.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_passkey_opt(self, ) -> "typing.Optional[PasskeyAuthenticator]":
+        return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def as_secp256k1(self, ) -> "Secp256k1Signature":
         return _UniffiConverterTypeSecp256k1Signature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1,self._uniffi_clone_pointer(),)
@@ -42881,6 +43033,15 @@ class MultisigMemberSignature():
     def is_ed25519(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_passkey(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey,self._uniffi_clone_pointer(),)
         )
 
 
