@@ -16,22 +16,21 @@ workspace = true
 
 [features]
 default = [
+  "bech32",
   "crypto",
   "ed25519",
-  "secp256r1",
-  "passkey",
-  "secp256k1",
-  "pem",
-  "bech32",
-  "mnemonic",
   "graphql",
+  "hash",
+  "mnemonic",
+  "passkey",
+  "pem",
+  "rand",
+  "secp256k1",
+  "secp256r1",
+  "serde",
   "txn-builder",
   "types",
-  "serde",
-  "rand",
-  "hash",
 ]
-
 # Crypto
 crypto = ["dep:iota-crypto"]
 ed25519 = ["crypto", "iota-crypto/ed25519"]
@@ -43,13 +42,10 @@ pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
 bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
-
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
-
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
-
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde"]
@@ -74,7 +70,7 @@ cynic.workspace = true
 eyre.workspace = true
 hex.workspace = true
 rand.workspace = true
-reqwest = { workspace = true, default-features = false, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls-tls", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["full"] }
 

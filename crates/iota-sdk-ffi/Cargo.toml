@@ -17,14 +17,14 @@ crate-type = ["lib", "cdylib"]
 [features]
 default = ["crypto", "bls12381", "zklogin"]
 crypto = [
+  "iota-sdk/bech32",
   "iota-sdk/crypto",
   "iota-sdk/ed25519",
-  "iota-sdk/secp256r1",
-  "iota-sdk/passkey",
-  "iota-sdk/secp256k1",
-  "iota-sdk/pem",
-  "iota-sdk/bech32",
   "iota-sdk/mnemonic",
+  "iota-sdk/passkey",
+  "iota-sdk/pem",
+  "iota-sdk/secp256k1",
+  "iota-sdk/secp256r1",
 ]
 bls12381 = ["iota-sdk/bls12381"]
 zklogin = ["iota-sdk/zklogin"]
@@ -33,6 +33,7 @@ zklogin = ["iota-sdk/zklogin"]
 workspace = true
 
 [dependencies]
+# external dependencies
 async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
@@ -47,4 +48,5 @@ serde_json.workspace = true
 tokio = { workspace = true, features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
+# internal dependencies
 iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "serde", "rand", "hash"] }

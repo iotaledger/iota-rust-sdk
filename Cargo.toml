@@ -19,13 +19,13 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
 redundant_clone = "warn"
 
 [workspace.dependencies]
+# external dependencies
 base64ct = "1.6.0"
 bcs = "0.1.6"
 bnum = "0.12.0"
 cynic = "3.7.3"
 derive_more = "2.0"
 eyre = "0.6"
-futures = "0.3.29"
 hex = "0.4.3"
 itertools = "0.13.0"
 paste = "1.0.15"
@@ -41,8 +41,11 @@ strum = "0.27.2"
 test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.40.0"
+tracing = "0.1.37"
 variadics_please = "1.1"
+wasm-bindgen-test = "0.3"
 
+# internal dependencies
 iota-bcs-schema = { version = "0.0.0", package = "iota-sdk-bcs-schema", path = "crates/iota-sdk-bcs-schema" }
 iota-crypto = { version = "0.0.1-alpha.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
 iota-graphql-client = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
