@@ -78,14 +78,14 @@
 //! ; --- Named primitives ---
 //! uleb128 = *(%x80-FF) %x00-7F   ; Variable-length unsigned integer
 //! size    = uleb128               ; BCS sequence / string length
-//! opt     = %x00                  ; None — no value follows
-//!         / %x01                  ; Some — value follows
+//! opt     = %d00                  ; None — no value follows
+//!         / %d01                  ; Some — value follows
 //!
 //! ; --- Length-prefixed types ---
 //! bytes   = size *OCTET          ; Raw bytes
 //! string  = size *OCTET          ; UTF-8 string
 //! vector  = size *bcs-value      ; Length-prefixed list of values
-//! option  = %x00 / (%x01 bcs-value)  ; Optional value
+//! option  = %d00 / (%d01 bcs-value)  ; Optional value
 //!
 //! ; --- Fixed-length types ---
 //! u8      = 1OCTET               ; 1-byte unsigned integer
@@ -98,8 +98,8 @@
 //! i32     = 4OCTET               ; 4-byte signed integer, little-endian
 //! i64     = 8OCTET               ; 8-byte signed integer, little-endian
 //! i128    = 16OCTET              ; 16-byte signed integer, little-endian
-//! bool    = %x00                 ; false
-//!         / %x01                 ; true
+//! bool    = %d00                 ; false
+//!         / %d01                 ; true
 //! array   = *(bcs-value)         ; Fixed-length array (no length prefix)
 //! ```
 //!

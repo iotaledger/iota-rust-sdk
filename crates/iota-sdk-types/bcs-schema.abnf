@@ -24,8 +24,8 @@ bls12381-public-key = %d96 96OCTET
 
 bls12381-signature = 48OCTET
 
-bool    = %x00   ; false
-        / %x01   ; true
+bool    = %d00   ; false
+        / %d01   ; true
 
 bytes   = size *OCTET
 
@@ -98,16 +98,16 @@ checkpoint-summary = u64                               ; epoch
                      u64                               ; sequence-number
                      u64                               ; network-total-transactions
                      digest                            ; content-digest
-                     (%x00 / %x01 digest)              ; previous-digest
+                     (%d00 / %d01 digest)              ; previous-digest
                      gas-cost-summary                  ; epoch-rolling-gas-cost-summary
                      u64                               ; timestamp-ms
                      (size *checkpoint-commitment)     ; checkpoint-commitments
-                     (%x00 / %x01 end-of-epoch-data)   ; end-of-epoch-data
+                     (%d00 / %d01 end-of-epoch-data)   ; end-of-epoch-data
                      bytes                             ; version-specific-data
 
 checkpoint-transaction = %d01 intent-signed-transaction     ; transaction
                          transaction-effects                ; effects
-                         (%x00 / %x01 transaction-events)   ; events
+                         (%d00 / %d01 transaction-events)   ; events
                          (size *object)                     ; input-objects
                          (size *object)                     ; output-objects
 
@@ -140,7 +140,7 @@ compressed-struct-tag = %d00 struct-tag   ; Other
 
 consensus-commit-prologue-v1 = u64                                        ; epoch
                                u64                                        ; round
-                               (%x00 / %x01 u64)                          ; sub-dag-index
+                               (%d00 / %d01 u64)                          ; sub-dag-index
                                u64                                        ; commit-timestamp-ms
                                digest                                     ; consensus-commit-digest
                                consensus-determined-version-assignments   ; consensus-determined-version-assignments
@@ -181,7 +181,7 @@ execution-error = %d00   ; InsufficientGas
                 / %d08   ; CoinBalanceOverflow
                 / %d09   ; PublishErrorNonZeroAddress
                 / %d10   ; IotaMoveVerificationError
-                / %d11 (%x00 / %x01 move-location)   ; MovePrimitiveRuntimeError
+                / %d11 (%d00 / %d01 move-location)   ; MovePrimitiveRuntimeError
                 / %d12 move-location u64   ; MoveAbort
                 / %d13   ; VmVerificationOrDeserializationError
                 / %d14   ; VmInvariantViolation
@@ -211,7 +211,7 @@ execution-error = %d00   ; InsufficientGas
                 / %d38   ; InvalidLinkage
 
 execution-status = %d00   ; Success
-                 / %d01 execution-error (%x00 / %x01 u64)   ; Failure
+                 / %d01 execution-error (%d00 / %d01 u64)   ; Failure
 
 execution-time-observation = execution-time-observation-key                 ; key
                              (size *validator-execution-time-observation)   ; observations
@@ -284,7 +284,7 @@ jwk = string   ; kty
 jwk-id = string   ; iss
          string   ; kid
 
-make-move-vector = (%x00 / %x01 type-tag)   ; type-
+make-move-vector = (%d00 / %d01 type-tag)   ; type-
                    (size *argument)         ; elements
 
 merge-coins = argument           ; coin
@@ -300,7 +300,7 @@ move-location = object-id                  ; package
                 identifier                 ; module
                 u16                        ; function
                 u16                        ; instruction
-                (%x00 / %x01 identifier)   ; function-name
+                (%d00 / %d01 identifier)   ; function-name
 
 move-package = object-id                          ; id
                u64                                ; version
@@ -337,8 +337,8 @@ object-reference = object-id   ; object-id
                    u64         ; version
                    digest      ; digest
 
-opt     = %x00   ; None
-        / %x01   ; Some (value follows)
+opt     = %d00   ; None
+        / %d01   ; Some (value follows)
 
 owner = %d00 address   ; Address
       / %d01 object-id   ; Object
@@ -393,13 +393,13 @@ transaction-effects-v1 = execution-status                  ; status
                          u64                               ; epoch
                          gas-cost-summary                  ; gas-used
                          digest                            ; transaction-digest
-                         (%x00 / %x01 u32)                 ; gas-object-index
-                         (%x00 / %x01 digest)              ; events-digest
+                         (%d00 / %d01 u32)                 ; gas-object-index
+                         (%d00 / %d01 digest)              ; events-digest
                          (size *digest)                    ; dependencies
                          u64                               ; lamport-version
                          (size *changed-object)            ; changed-objects
                          (size *unchanged-shared-object)   ; unchanged-shared-objects
-                         (%x00 / %x01 digest)              ; auxiliary-data-digest
+                         (%d00 / %d01 digest)              ; auxiliary-data-digest
 
 transaction-events = (size *event)
 

@@ -146,7 +146,7 @@ fn type_to_schema(ty: &Type) -> String {
                     None => "(size *unknown)".into(),
                 },
                 "Option" => match extract_single_generic(seg) {
-                    // BCS option: opt discriminant (%x00 = None, %x01 = Some) + value.
+                    // BCS option: opt discriminant (%d00 = None, %d01 = Some) + value.
                     Some(inner) => {
                         let inner_str = type_to_schema(&inner);
                         // Wrap complex inner types so the group is unambiguous.
@@ -158,9 +158,9 @@ fn type_to_schema(ty: &Type) -> String {
                         } else {
                             inner_str
                         };
-                        format!("(%x00 / %x01 {rhs})")
+                        format!("(%d00 / %d01 {rhs})")
                     }
-                    None => "(%x00 / %x01 unknown)".into(),
+                    None => "(%d00 / %d01 unknown)".into(),
                 },
                 "Box" => match extract_single_generic(seg) {
                     Some(inner) => type_to_schema(&inner),
@@ -423,12 +423,12 @@ fn schema_file_path() -> std::path::PathBuf {
 /// they are preserved unchanged across regeneration runs.
 fn primitive_entries() -> &'static [(&'static str, &'static str)] {
     &[
-        ("bool", "bool    = %x00   ; false\n        / %x01   ; true"),
+        ("bool", "bool    = %d00   ; false\n        / %d01   ; true"),
         ("bytes", "bytes   = size *OCTET"),
         ("i64", "i64     = 8OCTET"),
         (
             "opt",
-            "opt     = %x00   ; None\n        / %x01   ; Some (value follows)",
+            "opt     = %d00   ; None\n        / %d01   ; Some (value follows)",
         ),
         (
             "size",
