@@ -44,32 +44,30 @@ impl Client {
             .map_err(Into::into)
             .map_err(tonic::Status::from_error)?;
 
-        let mut endpoint = tonic::transport::Endpoint::from(uri.clone());
+        let endpoint = tonic::transport::Endpoint::from(uri.clone());
+
+        #[cfg(all(
+            feature = "tls-ring",
+            any(feature = "tls-native-roots", feature = "tls-webpki-roots")
+        ))]
+        let endpoint = if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
+            endpoint
+                .tls_config(tonic::transport::channel::ClientTlsConfig::new().with_enabled_roots())
+                .map_err(Into::into)
+                .map_err(tonic::Status::from_error)?
+        } else {
+            endpoint
+        };
+
+        #[cfg(not(all(
+            feature = "tls-ring",
+            any(feature = "tls-native-roots", feature = "tls-webpki-roots")
+        )))]
         if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
-            #[cfg(not(feature = "tls-ring"))]
             return Err(tonic::Status::failed_precondition(
-                "the `tls-ring` feature must be enabled for HTTPS",
+                "HTTPS requires the `tls-ring` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
             )
             .into());
-
-            #[cfg(not(any(feature = "tls-native-roots", feature = "tls-webpki-roots")))]
-            return Err(tonic::Status::failed_precondition(
-                "the `tls-native-roots` or `tls-webpki-roots` feature must be enabled for HTTPS",
-            )
-            .into());
-
-            #[cfg(all(
-                feature = "tls-ring",
-                any(feature = "tls-native-roots", feature = "tls-webpki-roots")
-            ))]
-            {
-                endpoint = endpoint
-                    .tls_config(
-                        tonic::transport::channel::ClientTlsConfig::new().with_enabled_roots(),
-                    )
-                    .map_err(Into::into)
-                    .map_err(tonic::Status::from_error)?;
-            }
         }
 
         let channel = endpoint
