@@ -13972,11 +13972,6 @@ public protocol MultisigCommitteeProtocol: AnyObject, Sendable {
      *
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
-     *
-     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-     * refers to the same input used when deriving the address using the
-     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-     * full 32-byte `address_seed` value).
      */
     func deriveAddress()  -> Address
     
@@ -14113,11 +14108,6 @@ public convenience init(members: [MultisigMember], threshold: UInt16) {
      *
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
-     *
-     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-     * refers to the same input used when deriving the address using the
-     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-     * full 32-byte `address_seed` value).
      */
 open func deriveAddress() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
@@ -47159,7 +47149,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 26282) {
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 10481) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468) {

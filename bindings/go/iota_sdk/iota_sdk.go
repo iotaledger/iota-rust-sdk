@@ -6138,7 +6138,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
 	})
-	if checksum != 26282 {
+	if checksum != 10481 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address: UniFFI API checksum mismatch")
 	}
@@ -23728,11 +23728,6 @@ type MultisigCommitteeInterface interface {
 	//
 	// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 	// || ... || flag_n || pk_n || weight_n)`.
-	//
-	// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-	// refers to the same input used when deriving the address using the
-	// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-	// full 32-byte `address_seed` value).
 	DeriveAddress() *Address
 	// Checks if the Committee is valid.
 	//
@@ -23801,11 +23796,6 @@ func NewMultisigCommittee(members []*MultisigMember, threshold uint16) *Multisig
 //
 // `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 // || ... || flag_n || pk_n || weight_n)`.
-//
-// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-// refers to the same input used when deriving the address using the
-// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-// full 32-byte `address_seed` value).
 func (_self *MultisigCommittee) DeriveAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
 	defer _self.ffiObject.decrementPointer()

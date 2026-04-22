@@ -19827,8 +19827,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address();
-            if (checksum != 26282) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address` checksum `26282`, library returned `{checksum}`");
+            if (checksum != 10481) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address` checksum `10481`, library returned `{checksum}`");
             }
         }
         {
@@ -37475,11 +37475,6 @@ public interface IMultisigCommittee: IEquatable<MultisigCommittee> {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-    /// refers to the same input used when deriving the address using the
-    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-    /// full 32-byte `address_seed` value).
     /// </summary>
     Address DeriveAddress();
     /// <summary>
@@ -37644,11 +37639,6 @@ public class MultisigCommittee : IMultisigCommittee, IDisposable {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-    /// refers to the same input used when deriving the address using the
-    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-    /// full 32-byte `address_seed` value).
     /// </summary>
     public Address DeriveAddress() {
         return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
