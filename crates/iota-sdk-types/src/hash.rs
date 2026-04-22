@@ -199,7 +199,7 @@ impl crate::MultisigCommittee {
                 Secp256k1(p) => p.write_into_hasher(&mut hasher),
                 Secp256r1(p) => p.write_into_hasher(&mut hasher),
                 ZkLoginDeprecated => {
-                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is deprecated")
+                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
                 }
             }
 
