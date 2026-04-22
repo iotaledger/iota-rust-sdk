@@ -4,7 +4,7 @@
 
 //! Proto build tool for generating gRPC types with field constants
 
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::BTreeMap, path::PathBuf};
 
 use crate::{
     codegen::generate_fields::FileDescriptorWithPackageVersion, message_graph::DescriptorGraph,
@@ -174,7 +174,7 @@ fn main() {
     );
 
     // Group files by package for field info generation
-    let mut packages: HashMap<String, FileDescriptorWithPackageVersion> = HashMap::new();
+    let mut packages: BTreeMap<String, FileDescriptorWithPackageVersion> = BTreeMap::new();
     for mut file in fds.file {
         // Clear source code info as it's not needed for field generation
         file.source_code_info = None;

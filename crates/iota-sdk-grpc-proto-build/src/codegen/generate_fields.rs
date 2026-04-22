@@ -267,7 +267,7 @@ pub(crate) struct FileDescriptorWithPackageVersion {
 }
 
 pub(crate) fn generate_field_info(
-    packages: &HashMap<String, FileDescriptorWithPackageVersion>,
+    packages: &std::collections::BTreeMap<String, FileDescriptorWithPackageVersion>,
     out_dir: &Path,
     boxed_types: &[String],
     transparent_messages: &HashMap<String, TransparentInfo>,

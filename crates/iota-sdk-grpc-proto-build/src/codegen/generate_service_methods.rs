@@ -22,7 +22,10 @@ pub fn generate_service_method_paths(pool: &prost_reflect::DescriptorPool, out_d
     let mut service_consts = Vec::new();
     let mut all_paths = Vec::new();
 
-    for service in pool.services() {
+    let mut services: Vec<_> = pool.services().collect();
+    services.sort_by_key(|s| s.full_name().to_owned());
+
+    for service in services {
         let service_full_name = service.full_name();
 
         // Skip google/protobuf built-in services
