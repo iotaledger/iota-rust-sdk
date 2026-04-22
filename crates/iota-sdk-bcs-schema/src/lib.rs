@@ -427,10 +427,6 @@ fn primitive_entries() -> &'static [(&'static str, &'static str)] {
         ("bytes", "bytes   = size *OCTET"),
         ("i64", "i64     = 8OCTET"),
         (
-            "opt",
-            "opt     = %d00   ; None\n        / %d01   ; Some (value follows)",
-        ),
-        (
             "size",
             "size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)",
         ),

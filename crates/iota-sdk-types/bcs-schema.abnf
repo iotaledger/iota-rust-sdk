@@ -337,9 +337,6 @@ object-reference = object-id   ; object-id
                    u64         ; version
                    digest      ; digest
 
-opt     = %d00   ; None
-        / %d01   ; Some (value follows)
-
 owner = %d00 address   ; Address
       / %d01 object-id   ; Object
       / %d02 u64   ; Shared
