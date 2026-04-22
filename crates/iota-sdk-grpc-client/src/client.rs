@@ -33,9 +33,8 @@ pub struct Client {
 }
 
 impl Client {
-    /// Connect to a gRPC server and create a new Client instance.
-    #[allow(clippy::result_large_err)]
-    pub async fn connect<T>(uri: T) -> Result<Self>
+    /// Create a new Client instance for the given gRPC server URI.
+    pub async fn new<T>(uri: T) -> Result<Self>
     where
         T: TryInto<http::Uri>,
         T::Error: Into<BoxError>,

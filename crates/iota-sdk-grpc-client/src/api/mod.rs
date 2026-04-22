@@ -16,7 +16,7 @@ mod metadata;
 pub mod move_package;
 pub mod state;
 
-pub use common::{Error, Page, Result, RpcStatus};
+pub use common::{CheckpointStreamError, Error, Page, ProtocolError, Result, RpcStatus};
 pub(crate) use common::{
     ProtoResult, TryFromProtoError, build_proto_transaction, collect_stream, define_list_query,
     field_mask_with_default, proto_object_id, saturating_usize_to_u32,
@@ -36,6 +36,7 @@ pub use metadata::MetadataEnvelope;
 /// arrives within your chosen duration plus some buffer for connection latency,
 /// the connection is likely dead.
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub enum CheckpointStreamItem {
     /// A complete checkpoint with its transactions and events.
     Checkpoint(Box<CheckpointResponse>),
@@ -213,7 +214,7 @@ impl CheckpointResponse {
     /// # use iota_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// use iota_grpc_client::CHECKPOINT_RESPONSE_CHECKPOINT_DATA;
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// let cp = client
     ///     .get_checkpoint_latest(Some(CHECKPOINT_RESPONSE_CHECKPOINT_DATA), None, None)
     ///     .await?;

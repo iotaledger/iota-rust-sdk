@@ -96,8 +96,9 @@ use iota_types::{CheckpointSequenceNumber, Digest};
 use crate::{
     Client, Error,
     api::{
-        CheckpointResponse, CheckpointStreamItem, GET_CHECKPOINT_READ_MASK, MetadataEnvelope,
-        Result, TryFromProtoError, field_mask_with_default, saturating_usize_to_u32,
+        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem,
+        GET_CHECKPOINT_READ_MASK, MetadataEnvelope, ProtocolError, Result, TryFromProtoError,
+        field_mask_with_default, saturating_usize_to_u32,
     },
 };
 
@@ -121,7 +122,7 @@ impl Client {
     /// ```no_run
     /// # use iota_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// let checkpoint = client.get_checkpoint_latest(None, None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
@@ -162,7 +163,7 @@ impl Client {
     /// ```no_run
     /// # use iota_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// let checkpoint = client
     ///     .get_checkpoint_by_sequence_number(100, None, None, None)
     ///     .await?;
@@ -207,7 +208,7 @@ impl Client {
     /// # use iota_grpc_client::Client;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// let digest: Digest = todo!();
     /// let checkpoint = client
     ///     .get_checkpoint_by_digest(digest, None, None, None)
@@ -251,7 +252,9 @@ impl Client {
                 GetCheckpointRequest::default().with_digest(val)
             }
             _ => {
-                return Err(Error::Protocol("Invalid checkpoint ID type".into()));
+                return Err(Error::Protocol(ProtocolError::UnknownVariant(
+                    "checkpoint ID",
+                )));
             }
         }
         .with_read_mask(field_mask_with_default(read_mask, GET_CHECKPOINT_READ_MASK));
@@ -324,7 +327,7 @@ impl Client {
     /// # use iota_grpc_client::Client;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// let mut stream = client
     ///     .stream_checkpoints(Some(0), Some(10), None, None, None)
     ///     .await?;
@@ -414,7 +417,7 @@ impl Client {
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client
@@ -554,7 +557,7 @@ impl Client {
 
                         // Start of new checkpoint - throw error if previous checkpoint was incomplete
                         if current_sequence_number.is_some() {
-                            Err(Error::Protocol("Received new chunked checkpoint header before completing previous checkpoint".into()))?;
+                            Err(Error::Protocol(CheckpointStreamError::IncompleteCheckpoint.into()))?;
                         }
                         current_sequence_number = checkpoint.sequence_number;
 
@@ -575,7 +578,7 @@ impl Client {
 
                     Some(checkpoint_data::Payload::ExecutedTransactions(txs)) => {
                         if current_sequence_number.is_none() {
-                            Err(Error::Protocol("Received new chunked checkpoint transactions before receiving checkpoint header".into()))?;
+                            Err(Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "transactions" }.into()))?;
                         }
 
                         // Accumulate proto transactions (no deserialization)
@@ -584,7 +587,7 @@ impl Client {
 
                     Some(checkpoint_data::Payload::Events(events)) => {
                         if current_sequence_number.is_none() {
-                            Err(Error::Protocol("Received new chunked checkpoint events before receiving checkpoint header".into()))?;
+                            Err(Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "events" }.into()))?;
                         }
 
                         // Accumulate proto events (no deserialization)
@@ -595,15 +598,16 @@ impl Client {
                         // End of current checkpoint - assemble the result and yield it
                          let sequence_number = current_sequence_number
                         .take()
-                        .ok_or_else(|| -> Error { Error::Protocol("Received checkpoint end marker before receiving checkpoint header".into()) })?;
+                        .ok_or_else(|| -> Error { Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "end marker" }.into()) })?;
 
                         let marker_sequence_number = marker.sequence_number
                         .ok_or_else(|| -> Error { TryFromProtoError::missing("end_marker.sequence_number").into() })?;
 
                         if marker_sequence_number != sequence_number {
-                            Err(Error::Protocol(format!(
-                                "EndMarker sequence_number {marker_sequence_number} does not match current checkpoint sequence_number {sequence_number:?}",
-                            )))?;
+                            Err(Error::Protocol(CheckpointStreamError::SequenceNumberMismatch {
+                                expected: sequence_number,
+                                actual: marker_sequence_number,
+                            }.into()))?;
                         }
 
                         let response = CheckpointResponse {
@@ -631,16 +635,14 @@ impl Client {
 
                     Some(_) => {
                         // Unknown payload type
-                        Err(Error::Protocol("Received unknown checkpoint data payload type".into()))?;
+                        Err(Error::Protocol(CheckpointStreamError::UnknownPayload.into()))?;
                     }
                 }
             }
 
             // Check if stream ended with incomplete checkpoint data
             if let Some(sequence_number) = current_sequence_number {
-                Err(Error::Protocol(format!(
-                    "Stream ended with incomplete checkpoint data for sequence number {sequence_number}"
-                )))?;
+                Err(Error::Protocol(CheckpointStreamError::IncompleteStream { sequence_number }.into()))?;
             }
         }
     }

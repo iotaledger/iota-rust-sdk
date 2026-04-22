@@ -12,8 +12,8 @@ use iota_types::Transaction;
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, ProtoResult, Result, SIMULATE_TRANSACTIONS_READ_MASK,
-        build_proto_transaction, field_mask_with_default,
+        Error, MetadataEnvelope, ProtocolError, ProtoResult, Result,
+        SIMULATE_TRANSACTIONS_READ_MASK, build_proto_transaction, field_mask_with_default,
     },
 };
 
@@ -161,7 +161,7 @@ impl Client {
     /// # use iota_grpc_client::Client;
     /// # use iota_types::Transaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     ///
     /// let tx: Transaction = todo!();
     ///
@@ -196,7 +196,9 @@ impl Client {
             results
                 .into_iter()
                 .next()
-                .ok_or_else(|| Error::Protocol("empty transaction_results".into()))?
+                .ok_or_else(|| {
+                    Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+                })?
         })
     }
 

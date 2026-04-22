@@ -3,15 +3,18 @@
 
 //! Common utilities shared across API modules.
 
-use iota_grpc_types::v1::{
-    bcs::BcsData,
-    ledger_service::{ObjectResult, TransactionResult, object_result, transaction_result},
-    transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
-    transaction_execution_service::{
-        ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
-        execute_transaction_result, simulate_transaction_result,
+use iota_grpc_types::{
+    proto::GrpcConversionError,
+    v1::{
+        bcs::BcsData,
+        ledger_service::{ObjectResult, TransactionResult, object_result, transaction_result},
+        transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
+        transaction_execution_service::{
+            ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
+            execute_transaction_result, simulate_transaction_result,
+        },
+        types::ObjectId as ProtoObjectId,
     },
-    types::ObjectId as ProtoObjectId,
 };
 pub use iota_grpc_types::{
     field::{FieldMask, FieldMaskUtil},
@@ -25,6 +28,7 @@ use super::MetadataEnvelope;
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum Error {
     /// Error converting proto types to SDK types.
     #[error("proto conversion error: {0}")]
@@ -37,11 +41,11 @@ pub enum Error {
 
     /// Client-side protocol error (e.g. checkpoint stream reassembly).
     #[error("protocol error: {0}")]
-    Protocol(String),
+    Protocol(ProtocolError),
 
-    /// Error converting signatures.
+    /// Error converting signatures to proto format.
     #[error("signature conversion error: {0}")]
-    Signature(String),
+    Signature(GrpcConversionError),
 
     /// The caller passed an empty request (e.g. no object IDs or digests).
     #[error("empty request: at least one item must be provided")]
@@ -53,12 +57,18 @@ pub enum Error {
 
     /// gRPC transport or protocol error.
     #[error("grpc error: {0}")]
-    Grpc(#[from] tonic::Status),
+    Grpc(Box<tonic::Status>),
 }
 
 impl From<TryFromProtoError> for Error {
     fn from(err: TryFromProtoError) -> Self {
         Error::ProtoConversion(Box::new(err))
+    }
+}
+
+impl From<tonic::Status> for Error {
+    fn from(status: tonic::Status) -> Self {
+        Error::Grpc(Box::new(status))
     }
 }
 
@@ -69,9 +79,9 @@ impl From<Error> for tonic::Status {
                 tonic::Status::internal(format!("proto conversion error: {e}"))
             }
             Error::Server(status) => status.to_tonic_status(),
-            Error::Protocol(msg) => tonic::Status::internal(format!("protocol error: {msg}")),
-            Error::Signature(msg) => {
-                tonic::Status::internal(format!("signature conversion error: {msg}"))
+            Error::Protocol(err) => tonic::Status::internal(format!("protocol error: {err}")),
+            Error::Signature(err) => {
+                tonic::Status::internal(format!("signature conversion error: {err}"))
             }
             Error::EmptyRequest => {
                 tonic::Status::invalid_argument("empty request: at least one item must be provided")
@@ -79,9 +89,51 @@ impl From<Error> for tonic::Status {
             Error::UnexpectedEndOfStream => {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
-            Error::Grpc(status) => status,
+            Error::Grpc(status) => *status,
         }
     }
+}
+
+/// Protocol-level errors encountered while processing gRPC responses.
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum ProtocolError {
+    /// Server returned an unrecognized proto oneof variant.
+    #[error("unknown {0} variant")]
+    UnknownVariant(&'static str),
+
+    /// A required response field was unexpectedly empty.
+    #[error("empty response field: {0}")]
+    EmptyResponseField(&'static str),
+
+    /// Error during checkpoint data stream reassembly.
+    #[error("checkpoint stream error: {0}")]
+    CheckpointStream(#[from] CheckpointStreamError),
+}
+
+/// Errors during checkpoint data stream reassembly.
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum CheckpointStreamError {
+    /// Received a data chunk before the checkpoint header.
+    #[error("received {data_kind} before checkpoint header")]
+    DataBeforeHeader { data_kind: &'static str },
+
+    /// New checkpoint header received while previous was incomplete.
+    #[error("new checkpoint header before previous completed")]
+    IncompleteCheckpoint,
+
+    /// EndMarker sequence number doesn't match current checkpoint.
+    #[error("end marker sequence number {actual} does not match checkpoint {expected}")]
+    SequenceNumberMismatch { expected: u64, actual: u64 },
+
+    /// Unknown checkpoint data payload type.
+    #[error("unknown checkpoint data payload type")]
+    UnknownPayload,
+
+    /// Stream ended with incomplete checkpoint data.
+    #[error("stream ended with incomplete data for checkpoint {sequence_number}")]
+    IncompleteStream { sequence_number: u64 },
 }
 
 /// Result type alias for API operations.
@@ -126,7 +178,7 @@ impl ProtoResult for ObjectResult {
             Some(object_result::Result::Object(obj)) => Ok(obj),
             Some(object_result::Result::Error(e)) => Err(Error::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol("Unknown object result type".into())),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant("object result"))),
         }
     }
 }
@@ -139,7 +191,9 @@ impl ProtoResult for TransactionResult {
             Some(transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
             Some(transaction_result::Result::Error(e)) => Err(Error::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol("Unknown transaction result type".into())),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+                "transaction result",
+            ))),
         }
     }
 }
@@ -152,9 +206,9 @@ impl ProtoResult for ExecuteTransactionResult {
             Some(execute_transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
             Some(execute_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(
-                "Unknown execute transaction result type".into(),
-            )),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+                "execute transaction result",
+            ))),
         }
     }
 }
@@ -167,9 +221,9 @@ impl ProtoResult for SimulateTransactionResult {
             Some(simulate_transaction_result::Result::SimulatedTransaction(tx)) => Ok(tx),
             Some(simulate_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(
-                "Unknown simulate transaction result type".into(),
-            )),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+                "simulate transaction result",
+            ))),
         }
     }
 }
@@ -289,8 +343,9 @@ macro_rules! define_list_query {
             /// If `limit` is `None`, collects all items across all pages.
             pub async fn collect(
                 self,
-                limit: Option<u32>,
+                limit: impl Into<Option<u32>>,
             ) -> $crate::api::Result<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
+                let limit = limit.into();
                 let mut all_items = Vec::new();
                 let mut next_page_token = self.page_token;
                 let mut result_metadata = None;

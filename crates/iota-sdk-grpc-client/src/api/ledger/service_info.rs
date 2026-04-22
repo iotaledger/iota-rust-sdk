@@ -48,7 +48,7 @@ impl Client {
     /// ```no_run
     /// # use iota_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     ///
     /// // Get service info with default fields
     /// let info = client.get_service_info(None).await?;

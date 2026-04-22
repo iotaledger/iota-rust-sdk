@@ -13,8 +13,8 @@ use iota_types::SignedTransaction;
 use crate::{
     Client,
     api::{
-        EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtoResult, Result,
-        build_proto_transaction, field_mask_with_default,
+        EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtocolError, ProtoResult,
+        Result, build_proto_transaction, field_mask_with_default,
     },
 };
 
@@ -96,7 +96,7 @@ impl Client {
     /// # use iota_grpc_client::Client;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::connect("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000").await?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
     ///
@@ -130,7 +130,9 @@ impl Client {
             results
                 .into_iter()
                 .next()
-                .ok_or_else(|| Error::Protocol("empty transaction_results".into()))?
+                .ok_or_else(|| {
+                    Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+                })?
         })
     }
 
@@ -215,7 +217,7 @@ fn build_execute_item(signed_transaction: SignedTransaction) -> Result<ExecuteTr
             .signatures
             .into_iter()
             .map(|sig| {
-                ProtoUserSignature::try_from(sig).map_err(|e| Error::Signature(e.to_string()))
+                ProtoUserSignature::try_from(sig).map_err(Error::Signature)
             })
             .collect::<Result<Vec<_>>>()?,
     );
