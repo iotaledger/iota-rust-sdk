@@ -15,6 +15,8 @@ function cleanup() {
 
 trap cleanup EXIT
 
+echo "Using $(protoc --version)"
+
 rm -Rf crates/iota-sdk-grpc-types/src/proto/generated/
 mkdir -p crates/iota-sdk-grpc-types/src/proto/generated/
 cargo run -p iota-sdk-grpc-proto-build
