@@ -657,30 +657,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json() != 27344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs() != 19124:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json() != 46087:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs() != 3465:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json() != 23737:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs() != 166:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json() != 63452:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs() != 35779:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json() != 26451:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs() != 954:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json() != 31779:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs() != 38212:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json() != 36369:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs() != 305:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_json() != 41962:
@@ -1223,14 +1199,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json() != 40417:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs() != 28604:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json() != 59417:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs() != 35325:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json() != 11778:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs() != 57394:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_json() != 19090:
@@ -1518,10 +1486,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() != 29563:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() != 43622:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() != 10295:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() != 58594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2311,10 +2275,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() != 36331:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() != 59803:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() != 10003:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() != 15301:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key() != 16384:
@@ -2448,24 +2408,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3() != 21107:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4() != 45170:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() != 22119:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() != 1498:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() != 40848:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() != 6711:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() != 6398:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() != 28564:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() != 29560:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() != 26115:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 15001:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2994,8 +2936,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary() != 25823:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() != 17424:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() != 47546:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4804,155 +4744,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetclient.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10103,54 +9894,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uni
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10733,66 +10476,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12148,26 +11831,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12770,42 +12433,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs.restype = ctypes.c_uint16
@@ -13619,18 +13246,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs.restype = ctypes.c_uint16
@@ -14063,12 +13678,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.restype = ctypes.c_uint16
@@ -15251,12 +14860,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifi
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch.restype = ctypes.c_uint16
@@ -15458,33 +15061,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_ne
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.restype = ctypes.c_uint16
@@ -16277,9 +15853,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignaturea
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.restype = ctypes.c_uint16
@@ -16529,14 +16102,6 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
-
-
-
-
-
-
-
-
 
 
 
@@ -28605,31 +28170,6 @@ class _UniffiConverterSequenceTypeEndOfEpochTransactionKind(_UniffiConverterRust
 
 
 
-class _UniffiConverterSequenceTypeExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeExecutionTimeObservation.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeExecutionTimeObservation.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeExecutionTimeObservation.read(buf) for i in range(count)
-        ]
-
-
-
 class _UniffiConverterSequenceTypeGenesisObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -29026,31 +28566,6 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeValidatorExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeValidatorExecutionTimeObservation.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeValidatorExecutionTimeObservation.read(buf) for i in range(count)
         ]
 
 
@@ -36076,430 +35591,6 @@ class _UniffiConverterTypeEndOfEpochTransactionKind:
 
     @classmethod
     def write(cls, value: EndOfEpochTransactionKindProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationProtocol(typing.Protocol):
-    def key(self, ):
-        raise NotImplementedError
-    def observations(self, ):
-        raise NotImplementedError
-# ExecutionTimeObservation is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservation():
-    _pointer: ctypes.c_void_p
-    def __init__(self, key: "ExecutionTimeObservationKey",observations: "typing.List[ValidatorExecutionTimeObservation]"):
-        _UniffiConverterTypeExecutionTimeObservationKey.check_lower(key)
-        
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.check_lower(observations)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(key),
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.lower(observations))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def key(self, ) -> "ExecutionTimeObservationKey":
-        return _UniffiConverterTypeExecutionTimeObservationKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def observations(self, ) -> "typing.List[ValidatorExecutionTimeObservation]":
-        return _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservation:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservation._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservation):
-        if not isinstance(value, ExecutionTimeObservation):
-            raise TypeError("Expected ExecutionTimeObservation instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationProtocol):
-        if not isinstance(value, ExecutionTimeObservation):
-            raise TypeError("Expected ExecutionTimeObservation instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationKeyProtocol(typing.Protocol):
-    """
-    Key for an execution time observation
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation-key  =  %x00 move-entry-point
-    =/ %x01 ; transfer-objects
-    =/ %x02 ; split-coins
-    =/ %x03 ; merge-coins
-    =/ %x04 ; publish
-    =/ %x05 ; make-move-vec
-    =/ %x06 ; upgrade
-
-    move-entry-point = object-id string string (vec type-tag)
-    ```
-    """
-
-    pass
-# ExecutionTimeObservationKey is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservationKey():
-    """
-    Key for an execution time observation
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation-key  =  %x00 move-entry-point
-    =/ %x01 ; transfer-objects
-    =/ %x02 ; split-coins
-    =/ %x03 ; merge-coins
-    =/ %x04 ; publish
-    =/ %x05 ; make-move-vec
-    =/ %x06 ; upgrade
-
-    move-entry-point = object-id string string (vec type-tag)
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-    @classmethod
-    def new_make_move_vec(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_merge_coins(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_move_entry_point(cls, package: "ObjectId",module: "str",function: "str",type_arguments: "typing.List[TypeTag]"):
-        _UniffiConverterTypeObjectId.check_lower(package)
-        
-        _UniffiConverterString.check_lower(module)
-        
-        _UniffiConverterString.check_lower(function)
-        
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_arguments)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point,
-        _UniffiConverterTypeObjectId.lower(package),
-        _UniffiConverterString.lower(module),
-        _UniffiConverterString.lower(function),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_arguments))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_publish(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_split_coins(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_transfer_objects(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_upgrade(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade,)
-        return cls._make_instance_(pointer)
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservationKey):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservationKey):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservationKey:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservationKey._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservationKey):
-        if not isinstance(value, ExecutionTimeObservationKey):
-            raise TypeError("Expected ExecutionTimeObservationKey instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationKeyProtocol):
-        if not isinstance(value, ExecutionTimeObservationKey):
-            raise TypeError("Expected ExecutionTimeObservationKey instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationKeyProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationsProtocol(typing.Protocol):
-    """
-    Set of Execution Time Observations from the committee.
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-
-    v1-stored-execution-time-observations = (vec
-    execution-time-observation-key
-    (vec execution-time-observation)
-    )
-    ```
-    """
-
-    pass
-# ExecutionTimeObservations is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservations():
-    """
-    Set of Execution Time Observations from the committee.
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-
-    v1-stored-execution-time-observations = (vec
-    execution-time-observation-key
-    (vec execution-time-observation)
-    )
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-    @classmethod
-    def new_v1(cls, execution_time_observations: "typing.List[ExecutionTimeObservation]"):
-        _UniffiConverterSequenceTypeExecutionTimeObservation.check_lower(execution_time_observations)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1,
-        _UniffiConverterSequenceTypeExecutionTimeObservation.lower(execution_time_observations))
-        return cls._make_instance_(pointer)
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservations):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservations):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservations:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservations._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservations):
-        if not isinstance(value, ExecutionTimeObservations):
-            raise TypeError("Expected ExecutionTimeObservations instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationsProtocol):
-        if not isinstance(value, ExecutionTimeObservations):
-            raise TypeError("Expected ExecutionTimeObservations instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationsProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class FaucetClientProtocol(typing.Protocol):
     def request(self, address: "Address"):
@@ -53475,147 +52566,6 @@ class _UniffiConverterTypeValidatorCommitteeSignatureVerifier:
     @classmethod
     def write(cls, value: ValidatorCommitteeSignatureVerifierProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class ValidatorExecutionTimeObservationProtocol(typing.Protocol):
-    """
-    An execution time observation from a particular validator
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation = bls-public-key duration
-    duration =  u64 ; seconds
-    u32 ; subsecond nanoseconds
-    ```
-    """
-
-    def duration(self, ):
-        raise NotImplementedError
-    def validator(self, ):
-        raise NotImplementedError
-# ValidatorExecutionTimeObservation is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ValidatorExecutionTimeObservation():
-    """
-    An execution time observation from a particular validator
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation = bls-public-key duration
-    duration =  u64 ; seconds
-    u32 ; subsecond nanoseconds
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    def __init__(self, validator: "Bls12381PublicKey",duration: "Duration"):
-        _UniffiConverterTypeBls12381PublicKey.check_lower(validator)
-        
-        _UniffiConverterDuration.check_lower(duration)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new,
-        _UniffiConverterTypeBls12381PublicKey.lower(validator),
-        _UniffiConverterDuration.lower(duration))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def duration(self, ) -> "Duration":
-        return _UniffiConverterDuration.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def validator(self, ) -> "Bls12381PublicKey":
-        return _UniffiConverterTypeBls12381PublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ValidatorExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ValidatorExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeValidatorExecutionTimeObservation:
-
-    @staticmethod
-    def lift(value: int):
-        return ValidatorExecutionTimeObservation._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ValidatorExecutionTimeObservation):
-        if not isinstance(value, ValidatorExecutionTimeObservation):
-            raise TypeError("Expected ValidatorExecutionTimeObservation instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ValidatorExecutionTimeObservationProtocol):
-        if not isinstance(value, ValidatorExecutionTimeObservation):
-            raise TypeError("Expected ValidatorExecutionTimeObservation instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ValidatorExecutionTimeObservationProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class ValidatorSignatureProtocol(typing.Protocol):
     """
     A signature from a Validator
@@ -55088,138 +54038,6 @@ def execution_status_to_json(data: "ExecutionStatus") -> "str":
     
     return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json,
         _UniffiConverterTypeExecutionStatus.lower(data)))
-
-
-def execution_time_observation_from_bcs(bcs: "bytes") -> "ExecutionTimeObservation":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observation_from_json(json: "str") -> "ExecutionTimeObservation":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observation_key_from_bcs(bcs: "bytes") -> "ExecutionTimeObservationKey":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservationKey.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observation_key_from_json(json: "str") -> "ExecutionTimeObservationKey":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservationKey.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observation_key_to_bcs(data: "ExecutionTimeObservationKey") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservationKey.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(data)))
-
-
-def execution_time_observation_key_to_json(data: "ExecutionTimeObservationKey") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservationKey.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(data)))
-
-
-def execution_time_observation_to_bcs(data: "ExecutionTimeObservation") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservation.lower(data)))
-
-
-def execution_time_observation_to_json(data: "ExecutionTimeObservation") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json,
-        _UniffiConverterTypeExecutionTimeObservation.lower(data)))
-
-
-def execution_time_observations_from_bcs(bcs: "bytes") -> "ExecutionTimeObservations":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservations.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observations_from_json(json: "str") -> "ExecutionTimeObservations":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservations.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observations_to_bcs(data: "ExecutionTimeObservations") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservations.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservations.lower(data)))
-
-
-def execution_time_observations_to_json(data: "ExecutionTimeObservations") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservations.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json,
-        _UniffiConverterTypeExecutionTimeObservations.lower(data)))
 
 
 def gas_cost_summary_from_bcs(bcs: "bytes") -> "GasCostSummary":
@@ -58196,50 +57014,6 @@ def validator_committee_to_json(data: "ValidatorCommittee") -> "str":
         _UniffiConverterTypeValidatorCommittee.lower(data)))
 
 
-def validator_execution_time_observation_from_bcs(bcs: "bytes") -> "ValidatorExecutionTimeObservation":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeValidatorExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def validator_execution_time_observation_from_json(json: "str") -> "ValidatorExecutionTimeObservation":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeValidatorExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def validator_execution_time_observation_to_bcs(data: "ValidatorExecutionTimeObservation") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs,
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(data)))
-
-
-def validator_execution_time_observation_to_json(data: "ValidatorExecutionTimeObservation") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json,
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(data)))
-
-
 def validator_signature_from_bcs(bcs: "bytes") -> "ValidatorSignature":
     """
     Create this type from BCS encoded bytes.
@@ -58530,18 +57304,6 @@ __all__ = [
     "execution_status_from_json",
     "execution_status_to_bcs",
     "execution_status_to_json",
-    "execution_time_observation_from_bcs",
-    "execution_time_observation_from_json",
-    "execution_time_observation_key_from_bcs",
-    "execution_time_observation_key_from_json",
-    "execution_time_observation_key_to_bcs",
-    "execution_time_observation_key_to_json",
-    "execution_time_observation_to_bcs",
-    "execution_time_observation_to_json",
-    "execution_time_observations_from_bcs",
-    "execution_time_observations_from_json",
-    "execution_time_observations_to_bcs",
-    "execution_time_observations_to_json",
     "gas_cost_summary_from_bcs",
     "gas_cost_summary_from_json",
     "gas_cost_summary_to_bcs",
@@ -58813,10 +57575,6 @@ __all__ = [
     "validator_committee_member_to_json",
     "validator_committee_to_bcs",
     "validator_committee_to_json",
-    "validator_execution_time_observation_from_bcs",
-    "validator_execution_time_observation_from_json",
-    "validator_execution_time_observation_to_bcs",
-    "validator_execution_time_observation_to_json",
     "validator_signature_from_bcs",
     "validator_signature_from_json",
     "validator_signature_to_bcs",
@@ -58852,9 +57610,6 @@ __all__ = [
     "Ed25519Verifier",
     "Ed25519VerifyingKey",
     "EndOfEpochTransactionKind",
-    "ExecutionTimeObservation",
-    "ExecutionTimeObservationKey",
-    "ExecutionTimeObservations",
     "FaucetClient",
     "GenesisObject",
     "GenesisTransaction",
@@ -58928,7 +57683,6 @@ __all__ = [
     "ValidatorAggregatedSignature",
     "ValidatorCommitteeSignatureAggregator",
     "ValidatorCommitteeSignatureVerifier",
-    "ValidatorExecutionTimeObservation",
     "ValidatorSignature",
     "VersionAssignment",
 ]
