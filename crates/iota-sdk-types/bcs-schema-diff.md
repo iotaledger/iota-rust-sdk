@@ -75,17 +75,6 @@ Both ABNF rules force one specific length; YAML nominally permits any length.
 
 ## B. Types present in ABNF but not in YAML
 
-### B1. Execution-time observations (entire family)
-
-[bcs-schema.abnf:202-213](crates/iota-sdk-types/bcs-schema.abnf#L202-L213), [bcs-schema.abnf:459-460](crates/iota-sdk-types/bcs-schema.abnf#L459-L460)
-
-- `execution-time-observation`
-- `execution-time-observation-key` (7 variants, incl. `MoveEntryPoint` with `object-id string string (size *type-tag)`)
-- `execution-time-observations` (`%d00 (size *...)`, V1)
-- `validator-execution-time-observation` (96OCTET validator + u64 u32 duration)
-
-None of these exist in the YAML schema.
-
 ### B2. Standalone `validator-committee` rule
 
 [bcs-schema.abnf:453-454](crates/iota-sdk-types/bcs-schema.abnf#L453-L454)

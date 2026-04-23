@@ -199,19 +199,6 @@ execution-error = %d00   ; InsufficientGas
 execution-status = %d00   ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure
 
-execution-time-observation = execution-time-observation-key                 ; key
-                             (size *validator-execution-time-observation)   ; observations
-
-execution-time-observation-key = %d00 object-id string string (size *type-tag)   ; MoveEntryPoint
-                               / %d01   ; TransferObjects
-                               / %d02   ; SplitCoins
-                               / %d03   ; MergeCoins
-                               / %d04   ; Publish
-                               / %d05   ; MakeMoveVec
-                               / %d06   ; Upgrade
-
-execution-time-observations = %d00 (size *execution-time-observation)   ; V1
-
 gas-cost-summary = u64   ; computation-cost
                    u64   ; computation-cost-burned
                    u64   ; storage-cost
@@ -455,9 +442,6 @@ validator-committee = u64                                  ; epoch
 
 validator-committee-member = bls12381-public-key   ; public-key
                              u64                   ; stake
-
-validator-execution-time-observation = 96OCTET   ; validator
-                                       u64 u32   ; duration
 
 version-assignment = object-id   ; object-id
                      u64         ; version
