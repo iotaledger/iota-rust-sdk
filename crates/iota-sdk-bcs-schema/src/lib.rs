@@ -349,11 +349,11 @@ fn gen_struct(schema_name: &str, data: &syn::DataStruct) -> syn::Result<String> 
 // ---------------------------------------------------------------------------
 
 fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
-    let mut lines = Vec::new();
     let indent = " ".repeat(schema_name.len() + 1);
+    let mut rows: Vec<(String, String, String)> = Vec::new(); // (prefix, fields_str, variant_name)
 
     for (idx, variant) in data.variants.iter().enumerate() {
-        let variant_name = &variant.ident;
+        let variant_name = variant.ident.to_string();
         let prefix = format!("%d{idx:02}");
         let va = parse_variant_attrs(variant)?;
 
@@ -392,14 +392,27 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
             }
         };
 
-        let comment = format!("   ; {variant_name}");
-
-        if idx == 0 {
-            lines.push(format!("{schema_name} = {prefix}{fields_str}{comment}"));
-        } else {
-            lines.push(format!("{indent}/ {prefix}{fields_str}{comment}"));
-        }
+        rows.push((prefix, fields_str, variant_name));
     }
+
+    let max_body_len = rows
+        .iter()
+        .map(|(p, f, _)| p.len() + f.len())
+        .max()
+        .unwrap_or(0);
+
+    let lines: Vec<String> = rows
+        .iter()
+        .enumerate()
+        .map(|(idx, (prefix, fields_str, variant_name))| {
+            let pad = " ".repeat(max_body_len - prefix.len() - fields_str.len());
+            if idx == 0 {
+                format!("{schema_name} = {prefix}{fields_str}{pad}   ; {variant_name}")
+            } else {
+                format!("{indent}/ {prefix}{fields_str}{pad}   ; {variant_name}")
+            }
+        })
+        .collect();
 
     Ok(lines.join("\n"))
 }

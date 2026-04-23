@@ -1,24 +1,5 @@
 ## A. Structural / variant mismatches (different bytes on the wire)
 
-These are real encoding divergences — the two specs disagree on the wire format.
-
-### A1. `end-of-epoch-transaction-kind` is missing two variants
-
-[bcs-schema.abnf:145-148](crates/iota-sdk-types/bcs-schema.abnf#L145-L148)
-
-YAML `EndOfEpochTransactionKind` has **6** variants:
-
-- 0 `ChangeEpoch`, 1 `ChangeEpochV2`, 2 `ChangeEpochV3`, 3 `ChangeEpochV4`
-- **4 `AuthenticatorStateCreate` (UNIT)** — absent in ABNF
-- **5 `AuthenticatorStateExpire` (payload `AuthenticatorStateExpire`)** — absent in ABNF
-
-### A2. `transaction-kind` variant %d03 differs
-
-[bcs-schema.abnf:384-389](crates/iota-sdk-types/bcs-schema.abnf#L384-L389)
-
-- YAML: `3: AuthenticatorStateUpdateV1` carries a `NEWTYPE<AuthenticatorStateUpdateV1>` payload (epoch, round, new_active_jwks, authenticator_obj_initial_shared_version).
-- ABNF: `%d03` has **no payload** (`AuthenticatorStateUpdateV1Deprecated`).
-
 ### A3. `move-call.type-arguments` uses the wrong element type
 
 [bcs-schema.abnf:271-275](crates/iota-sdk-types/bcs-schema.abnf#L271-L275)
@@ -71,8 +52,6 @@ Both ABNF rules force one specific length; YAML nominally permits any length.
   - [bcs-schema.abnf:263](crates/iota-sdk-types/bcs-schema.abnf#L263) `intent-version` = `%d00` (only V0)
   - [bcs-schema.abnf:245-246](crates/iota-sdk-types/bcs-schema.abnf#L245-L246) `intent-app-id` ∈ {0, 1}
 
----
-
 ## B. Types present in ABNF but not in YAML
 
 ### B2. Standalone `validator-committee` rule
@@ -80,8 +59,6 @@ Both ABNF rules force one specific length; YAML nominally permits any length.
 [bcs-schema.abnf:453-454](crates/iota-sdk-types/bcs-schema.abnf#L453-L454)
 
 `validator-committee = u64 (size *validator-committee-member)` has no standalone YAML counterpart (YAML inlines the pairs in `EndOfEpochData.nextEpochCommittee`).
-
----
 
 ## C. Types present in YAML but not in ABNF
 
@@ -95,8 +72,6 @@ All of the following are YAML-only:
 - `DeleteKind` (appears unreferenced in YAML itself)
 - `TypedStoreError` (SDK-internal error type)
 
----
-
 ## E. YAML NEWTYPESTRUCT wrappers that ABNF inlines (same bytes)
 
 ABNF doesn't give these names; it substitutes the underlying rule everywhere they'd appear:
@@ -109,11 +84,7 @@ ABNF doesn't give these names; it substitutes the underlying rule everywhere the
 - `TransactionEvents` (struct with one field `data: SEQ<Event>`) → `(size *event)` (line 379)
 - `EmptySignInfo` (empty struct) → silently omitted in `signed-checkpoint-summary` and the `checkpoint-transaction` transaction slot
 
----
-
 ## Summary of actionable gaps in the ABNF
-
-If the goal is for the ABNF to faithfully describe the BCS schema, these need fixing:
 
 1. **Add** `%d04` (`AuthenticatorStateCreate`) and `%d05 authenticator-state-expire` to `end-of-epoch-transaction-kind`, plus the backing `authenticator-state-expire` and supporting `authenticator-state-update-v1`, `active-jwk`, `jwk`, `jwk-id` rules (A1).
 2. **Attach a payload** to `transaction-kind` `%d03` (A2) — or confirm this variant is actually deprecated/empty in the SDK and the YAML is stale.
