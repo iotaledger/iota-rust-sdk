@@ -31,5 +31,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
-	fmt.Printf("Total Balance = %d\n", *balance)
+	var totalBalance uint64
+	if balance != nil {
+		totalBalance = *balance
+	}
+	fmt.Printf("Total Balance = %d\n", totalBalance)
 }
