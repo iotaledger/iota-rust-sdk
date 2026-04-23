@@ -50969,7 +50969,8 @@ class FfiConverterTypeEndOfEpochData: FfiConverterRustBuffer<EndOfEpochData> {
 /// by one at every epoch change.
 /// </param>
 /// <param name="start_timestamp">
-/// The epoch's starting timestamp.
+/// The epoch's starting timestamp. RFC3339 in UTC with format:
+/// YYYY-MM-DDTHH:MM:SS.mmmZ
 /// </param>
 /// <param name="fund_inflow">
 /// The storage fees paid for transactions executed during the epoch.
@@ -51002,7 +51003,7 @@ class FfiConverterTypeEndOfEpochData: FfiConverterRustBuffer<EndOfEpochData> {
 /// </param>
 /// <param name="end_timestamp">
 /// The epoch's ending timestamp. Note that this is available only on epochs
-/// that have ended.
+/// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
 /// </param>
 /// <param name="system_state_version">
 /// The value of the `version` field of `0x5`, the
@@ -51040,9 +51041,10 @@ public record Epoch (
     /// </summary>
     ulong @epochId, 
     /// <summary>
-    /// The epoch's starting timestamp.
+    /// The epoch's starting timestamp. RFC3339 in UTC with format:
+    /// YYYY-MM-DDTHH:MM:SS.mmmZ
     /// </summary>
-    ulong @startTimestamp, 
+    string @startTimestamp, 
     /// <summary>
     /// The storage fees paid for transactions executed during the epoch.
     /// </summary>
@@ -51081,9 +51083,9 @@ public record Epoch (
     string? @referenceGasPrice = null, 
     /// <summary>
     /// The epoch's ending timestamp. Note that this is available only on epochs
-    /// that have ended.
+    /// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     /// </summary>
-    ulong? @endTimestamp = null, 
+    string? @endTimestamp = null, 
     /// <summary>
     /// The value of the `version` field of `0x5`, the
     /// `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -51149,8 +51151,8 @@ class FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             @netInflow: FfiConverterOptionalString.INSTANCE.Read(stream),
             @protocolConfigs: FfiConverterOptionalTypeProtocolConfigs.INSTANCE.Read(stream),
             @referenceGasPrice: FfiConverterOptionalString.INSTANCE.Read(stream),
-            @startTimestamp: FfiConverterUInt64.INSTANCE.Read(stream),
-            @endTimestamp: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
+            @startTimestamp: FfiConverterString.INSTANCE.Read(stream),
+            @endTimestamp: FfiConverterOptionalString.INSTANCE.Read(stream),
             @systemStateVersion: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
             @totalCheckpoints: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
             @totalGasFees: FfiConverterOptionalString.INSTANCE.Read(stream),
@@ -51170,8 +51172,8 @@ class FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@netInflow)
             + FfiConverterOptionalTypeProtocolConfigs.INSTANCE.AllocationSize(value.@protocolConfigs)
             + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@referenceGasPrice)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@startTimestamp)
-            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@endTimestamp)
+            + FfiConverterString.INSTANCE.AllocationSize(value.@startTimestamp)
+            + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@endTimestamp)
             + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@systemStateVersion)
             + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@totalCheckpoints)
             + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@totalGasFees)
@@ -51189,8 +51191,8 @@ class FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.INSTANCE.Write(value.@netInflow, stream);
             FfiConverterOptionalTypeProtocolConfigs.INSTANCE.Write(value.@protocolConfigs, stream);
             FfiConverterOptionalString.INSTANCE.Write(value.@referenceGasPrice, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@startTimestamp, stream);
-            FfiConverterOptionalUInt64.INSTANCE.Write(value.@endTimestamp, stream);
+            FfiConverterString.INSTANCE.Write(value.@startTimestamp, stream);
+            FfiConverterOptionalString.INSTANCE.Write(value.@endTimestamp, stream);
             FfiConverterOptionalUInt64.INSTANCE.Write(value.@systemStateVersion, stream);
             FfiConverterOptionalUInt64.INSTANCE.Write(value.@totalCheckpoints, stream);
             FfiConverterOptionalString.INSTANCE.Write(value.@totalGasFees, stream);

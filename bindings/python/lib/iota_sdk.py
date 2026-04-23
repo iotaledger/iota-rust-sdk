@@ -17260,15 +17260,16 @@ class Epoch:
     a transaction for.
     """
 
-    start_timestamp: "int"
+    start_timestamp: "str"
     """
-    The epoch's starting timestamp.
+    The epoch's starting timestamp. RFC3339 in UTC with format:
+    YYYY-MM-DDTHH:MM:SS.mmmZ
     """
 
-    end_timestamp: "typing.Optional[int]"
+    end_timestamp: "typing.Optional[str]"
     """
     The epoch's ending timestamp. Note that this is available only on epochs
-    that have ended.
+    that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     """
 
     system_state_version: "typing.Optional[int]"
@@ -17307,7 +17308,7 @@ class Epoch:
     of the epoch.
     """
 
-    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "int", end_timestamp: "typing.Optional[int]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT):
+    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "str", end_timestamp: "typing.Optional[str]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT):
         self.epoch_id = epoch_id
         if fund_inflow is _DEFAULT:
             self.fund_inflow = None
@@ -17417,8 +17418,8 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
             net_inflow=_UniffiConverterOptionalString.read(buf),
             protocol_configs=_UniffiConverterOptionalTypeProtocolConfigs.read(buf),
             reference_gas_price=_UniffiConverterOptionalString.read(buf),
-            start_timestamp=_UniffiConverterUInt64.read(buf),
-            end_timestamp=_UniffiConverterOptionalUInt64.read(buf),
+            start_timestamp=_UniffiConverterString.read(buf),
+            end_timestamp=_UniffiConverterOptionalString.read(buf),
             system_state_version=_UniffiConverterOptionalUInt64.read(buf),
             total_checkpoints=_UniffiConverterOptionalUInt64.read(buf),
             total_gas_fees=_UniffiConverterOptionalString.read(buf),
@@ -17437,8 +17438,8 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.check_lower(value.net_inflow)
         _UniffiConverterOptionalTypeProtocolConfigs.check_lower(value.protocol_configs)
         _UniffiConverterOptionalString.check_lower(value.reference_gas_price)
-        _UniffiConverterUInt64.check_lower(value.start_timestamp)
-        _UniffiConverterOptionalUInt64.check_lower(value.end_timestamp)
+        _UniffiConverterString.check_lower(value.start_timestamp)
+        _UniffiConverterOptionalString.check_lower(value.end_timestamp)
         _UniffiConverterOptionalUInt64.check_lower(value.system_state_version)
         _UniffiConverterOptionalUInt64.check_lower(value.total_checkpoints)
         _UniffiConverterOptionalString.check_lower(value.total_gas_fees)
@@ -17456,8 +17457,8 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.net_inflow, buf)
         _UniffiConverterOptionalTypeProtocolConfigs.write(value.protocol_configs, buf)
         _UniffiConverterOptionalString.write(value.reference_gas_price, buf)
-        _UniffiConverterUInt64.write(value.start_timestamp, buf)
-        _UniffiConverterOptionalUInt64.write(value.end_timestamp, buf)
+        _UniffiConverterString.write(value.start_timestamp, buf)
+        _UniffiConverterOptionalString.write(value.end_timestamp, buf)
         _UniffiConverterOptionalUInt64.write(value.system_state_version, buf)
         _UniffiConverterOptionalUInt64.write(value.total_checkpoints, buf)
         _UniffiConverterOptionalString.write(value.total_gas_fees, buf)

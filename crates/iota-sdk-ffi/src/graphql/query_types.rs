@@ -226,12 +226,13 @@ pub struct Epoch {
     /// a transaction for.
     #[uniffi(default = None)]
     pub reference_gas_price: Option<String>,
-    /// The epoch's starting timestamp.
-    pub start_timestamp: u64,
+    /// The epoch's starting timestamp. RFC3339 in UTC with format:
+    /// YYYY-MM-DDTHH:MM:SS.mmmZ
+    pub start_timestamp: String,
     /// The epoch's ending timestamp. Note that this is available only on epochs
-    /// that have ended.
+    /// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     #[uniffi(default = None)]
-    pub end_timestamp: Option<u64>,
+    pub end_timestamp: Option<String>,
     /// The value of the `version` field of `0x5`, the
     /// `0x3::iota::IotaSystemState` object.  This version changes whenever
     /// the fields contained in the system state object (held in a dynamic
@@ -269,8 +270,8 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
             net_inflow: value.net_inflow.map(|v| v.0),
             protocol_configs: value.protocol_configs,
             reference_gas_price: value.reference_gas_price.map(|v| v.0),
-            start_timestamp: value.start_timestamp.0.parse().unwrap_or(0),
-            end_timestamp: value.end_timestamp.map(|dt| dt.0.parse().unwrap_or(0)),
+            start_timestamp: value.start_timestamp.0,
+            end_timestamp: value.end_timestamp.map(|dt| dt.0),
             system_state_version: value.system_state_version,
             total_checkpoints: value.total_checkpoints,
             total_gas_fees: value.total_gas_fees.map(|v| v.0),
@@ -306,12 +307,10 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
             net_inflow: value.net_inflow.map(|v| v.into()),
             protocol_configs: value.protocol_configs,
             reference_gas_price: value.reference_gas_price.map(|v| v.into()),
-            start_timestamp: iota_sdk::graphql_client::query_types::DateTime(
-                value.start_timestamp.to_string(),
-            ),
+            start_timestamp: iota_sdk::graphql_client::query_types::DateTime(value.start_timestamp),
             end_timestamp: value
                 .end_timestamp
-                .map(|ts| iota_sdk::graphql_client::query_types::DateTime(ts.to_string())),
+                .map(iota_sdk::graphql_client::query_types::DateTime),
             system_state_version: value.system_state_version,
             total_checkpoints: value.total_checkpoints,
             total_gas_fees: value.total_gas_fees.map(|v| v.into()),

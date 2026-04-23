@@ -55169,14 +55169,15 @@ data class Epoch (
      */
     var `referenceGasPrice`: kotlin.String? = null, 
     /**
-     * The epoch's starting timestamp.
+     * The epoch's starting timestamp. RFC3339 in UTC with format:
+     * YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    var `startTimestamp`: kotlin.ULong, 
+    var `startTimestamp`: kotlin.String, 
     /**
      * The epoch's ending timestamp. Note that this is available only on epochs
-     * that have ended.
+     * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    var `endTimestamp`: kotlin.ULong? = null, 
+    var `endTimestamp`: kotlin.String? = null, 
     /**
      * The value of the `version` field of `0x5`, the
      * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -55249,8 +55250,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.read(buf),
             FfiConverterOptionalTypeProtocolConfigs.read(buf),
             FfiConverterOptionalString.read(buf),
-            FfiConverterULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
             FfiConverterOptionalULong.read(buf),
             FfiConverterOptionalULong.read(buf),
             FfiConverterOptionalString.read(buf),
@@ -55269,8 +55270,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.allocationSize(value.`netInflow`) +
             FfiConverterOptionalTypeProtocolConfigs.allocationSize(value.`protocolConfigs`) +
             FfiConverterOptionalString.allocationSize(value.`referenceGasPrice`) +
-            FfiConverterULong.allocationSize(value.`startTimestamp`) +
-            FfiConverterOptionalULong.allocationSize(value.`endTimestamp`) +
+            FfiConverterString.allocationSize(value.`startTimestamp`) +
+            FfiConverterOptionalString.allocationSize(value.`endTimestamp`) +
             FfiConverterOptionalULong.allocationSize(value.`systemStateVersion`) +
             FfiConverterOptionalULong.allocationSize(value.`totalCheckpoints`) +
             FfiConverterOptionalString.allocationSize(value.`totalGasFees`) +
@@ -55288,8 +55289,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.write(value.`netInflow`, buf)
             FfiConverterOptionalTypeProtocolConfigs.write(value.`protocolConfigs`, buf)
             FfiConverterOptionalString.write(value.`referenceGasPrice`, buf)
-            FfiConverterULong.write(value.`startTimestamp`, buf)
-            FfiConverterOptionalULong.write(value.`endTimestamp`, buf)
+            FfiConverterString.write(value.`startTimestamp`, buf)
+            FfiConverterOptionalString.write(value.`endTimestamp`, buf)
             FfiConverterOptionalULong.write(value.`systemStateVersion`, buf)
             FfiConverterOptionalULong.write(value.`totalCheckpoints`, buf)
             FfiConverterOptionalString.write(value.`totalGasFees`, buf)
