@@ -36180,10 +36180,11 @@ type Epoch struct {
 	// The minimum gas price that a quorum of validators are guaranteed to sign
 	// a transaction for.
 	ReferenceGasPrice *string
-	// The epoch's starting timestamp.
+	// The epoch's starting timestamp. RFC3339 in UTC with format:
+	// YYYY-MM-DDTHH:MM:SS.mmmZ
 	StartTimestamp string
 	// The epoch's ending timestamp. Note that this is available only on epochs
-	// that have ended.
+	// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
 	EndTimestamp *string
 	// The value of the `version` field of `0x5`, the
 	// `0x3::iota::IotaSystemState` object.  This version changes whenever
