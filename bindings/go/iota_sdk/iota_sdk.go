@@ -36181,10 +36181,10 @@ type Epoch struct {
 	// a transaction for.
 	ReferenceGasPrice *string
 	// The epoch's starting timestamp.
-	StartTimestamp uint64
+	StartTimestamp string
 	// The epoch's ending timestamp. Note that this is available only on epochs
 	// that have ended.
-	EndTimestamp *uint64
+	EndTimestamp *string
 	// The value of the `version` field of `0x5`, the
 	// `0x3::iota::IotaSystemState` object.  This version changes whenever
 	// the fields contained in the system state object (held in a dynamic
@@ -36214,8 +36214,8 @@ func (r *Epoch) Destroy() {
 		FfiDestroyerOptionalString{}.Destroy(r.NetInflow);
 		FfiDestroyerOptionalProtocolConfigs{}.Destroy(r.ProtocolConfigs);
 		FfiDestroyerOptionalString{}.Destroy(r.ReferenceGasPrice);
-		FfiDestroyerUint64{}.Destroy(r.StartTimestamp);
-		FfiDestroyerOptionalUint64{}.Destroy(r.EndTimestamp);
+		FfiDestroyerString{}.Destroy(r.StartTimestamp);
+		FfiDestroyerOptionalString{}.Destroy(r.EndTimestamp);
 		FfiDestroyerOptionalUint64{}.Destroy(r.SystemStateVersion);
 		FfiDestroyerOptionalUint64{}.Destroy(r.TotalCheckpoints);
 		FfiDestroyerOptionalString{}.Destroy(r.TotalGasFees);
@@ -36242,8 +36242,8 @@ func (c FfiConverterEpoch) Read(reader io.Reader) Epoch {
 			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalProtocolConfigsINSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalUint64INSTANCE.Read(reader),
 			FfiConverterOptionalUint64INSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
@@ -36270,8 +36270,8 @@ func (c FfiConverterEpoch) Write(writer io.Writer, value Epoch) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.NetInflow);
 		FfiConverterOptionalProtocolConfigsINSTANCE.Write(writer, value.ProtocolConfigs);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.ReferenceGasPrice);
-		FfiConverterUint64INSTANCE.Write(writer, value.StartTimestamp);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.EndTimestamp);
+		FfiConverterStringINSTANCE.Write(writer, value.StartTimestamp);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.EndTimestamp);
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.SystemStateVersion);
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.TotalCheckpoints);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalGasFees);

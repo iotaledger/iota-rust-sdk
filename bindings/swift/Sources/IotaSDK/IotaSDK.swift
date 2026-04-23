@@ -29021,14 +29021,15 @@ public struct Epoch {
      */
     public var referenceGasPrice: String?
     /**
-     * The epoch's starting timestamp.
+     * The epoch's starting timestamp. RFC3339 in UTC with format:
+     * YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    public var startTimestamp: UInt64
+    public var startTimestamp: String
     /**
      * The epoch's ending timestamp. Note that this is available only on epochs
-     * that have ended.
+     * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    public var endTimestamp: UInt64?
+    public var endTimestamp: String?
     /**
      * The value of the `version` field of `0x5`, the
      * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -29097,12 +29098,13 @@ public struct Epoch {
          * a transaction for.
          */referenceGasPrice: String? = nil, 
         /**
-         * The epoch's starting timestamp.
-         */startTimestamp: UInt64, 
+         * The epoch's starting timestamp. RFC3339 in UTC with format:
+         * YYYY-MM-DDTHH:MM:SS.mmmZ
+         */startTimestamp: String, 
         /**
          * The epoch's ending timestamp. Note that this is available only on epochs
-         * that have ended.
-         */endTimestamp: UInt64? = nil, 
+         * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
+         */endTimestamp: String? = nil, 
         /**
          * The value of the `version` field of `0x5`, the
          * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -29167,8 +29169,8 @@ public struct FfiConverterTypeEpoch: FfiConverterRustBuffer {
                 netInflow: FfiConverterOptionString.read(from: &buf), 
                 protocolConfigs: FfiConverterOptionTypeProtocolConfigs.read(from: &buf), 
                 referenceGasPrice: FfiConverterOptionString.read(from: &buf), 
-                startTimestamp: FfiConverterUInt64.read(from: &buf), 
-                endTimestamp: FfiConverterOptionUInt64.read(from: &buf), 
+                startTimestamp: FfiConverterString.read(from: &buf), 
+                endTimestamp: FfiConverterOptionString.read(from: &buf), 
                 systemStateVersion: FfiConverterOptionUInt64.read(from: &buf), 
                 totalCheckpoints: FfiConverterOptionUInt64.read(from: &buf), 
                 totalGasFees: FfiConverterOptionString.read(from: &buf), 
@@ -29187,8 +29189,8 @@ public struct FfiConverterTypeEpoch: FfiConverterRustBuffer {
         FfiConverterOptionString.write(value.netInflow, into: &buf)
         FfiConverterOptionTypeProtocolConfigs.write(value.protocolConfigs, into: &buf)
         FfiConverterOptionString.write(value.referenceGasPrice, into: &buf)
-        FfiConverterUInt64.write(value.startTimestamp, into: &buf)
-        FfiConverterOptionUInt64.write(value.endTimestamp, into: &buf)
+        FfiConverterString.write(value.startTimestamp, into: &buf)
+        FfiConverterOptionString.write(value.endTimestamp, into: &buf)
         FfiConverterOptionUInt64.write(value.systemStateVersion, into: &buf)
         FfiConverterOptionUInt64.write(value.totalCheckpoints, into: &buf)
         FfiConverterOptionString.write(value.totalGasFees, into: &buf)

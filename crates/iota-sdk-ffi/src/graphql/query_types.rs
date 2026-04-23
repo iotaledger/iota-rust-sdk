@@ -226,10 +226,11 @@ pub struct Epoch {
     /// a transaction for.
     #[uniffi(default = None)]
     pub reference_gas_price: Option<String>,
-    /// The epoch's starting timestamp.
+    /// The epoch's starting timestamp. RFC3339 in UTC with format:
+    /// YYYY-MM-DDTHH:MM:SS.mmmZ
     pub start_timestamp: String,
     /// The epoch's ending timestamp. Note that this is available only on epochs
-    /// that have ended.
+    /// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     #[uniffi(default = None)]
     pub end_timestamp: Option<String>,
     /// The value of the `version` field of `0x5`, the
