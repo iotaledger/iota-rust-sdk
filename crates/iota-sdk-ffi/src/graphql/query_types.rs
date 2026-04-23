@@ -310,7 +310,7 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
             start_timestamp: iota_sdk::graphql_client::query_types::DateTime(value.start_timestamp),
             end_timestamp: value
                 .end_timestamp
-                .map(|ts| iota_sdk::graphql_client::query_types::DateTime(ts)),
+                .map(iota_sdk::graphql_client::query_types::DateTime),
             system_state_version: value.system_state_version,
             total_checkpoints: value.total_checkpoints,
             total_gas_fees: value.total_gas_fees.map(|v| v.into()),
