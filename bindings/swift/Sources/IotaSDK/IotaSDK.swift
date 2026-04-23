@@ -1003,10 +1003,10 @@ public func FfiConverterTypeAddress_lower(_ value: Address) -> UnsafeMutableRawP
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 public protocol ArgumentProtocol: AnyObject, Sendable {
@@ -1031,10 +1031,10 @@ public protocol ArgumentProtocol: AnyObject, Sendable {
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 open class Argument: ArgumentProtocol, @unchecked Sendable {
@@ -1409,7 +1409,7 @@ public func FfiConverterTypeBls12381PrivateKey_lower(_ value: Bls12381PrivateKey
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -1430,7 +1430,7 @@ public protocol Bls12381PublicKeyProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -1599,20 +1599,15 @@ public func FfiConverterTypeBls12381PublicKey_lower(_ value: Bls12381PublicKey) 
 
 
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 public protocol Bls12381SignatureProtocol: AnyObject, Sendable {
     
@@ -1620,20 +1615,15 @@ public protocol Bls12381SignatureProtocol: AnyObject, Sendable {
     
 }
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 open class Bls12381Signature: Bls12381SignatureProtocol, @unchecked Sendable {
     fileprivate let pointer: UnsafeMutableRawPointer!
@@ -2438,7 +2428,7 @@ public func FfiConverterTypeChangeEpoch_lower(_ value: ChangeEpoch) -> UnsafeMut
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -2506,7 +2496,7 @@ public protocol ChangeEpochV2Protocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -3384,7 +3374,7 @@ public func FfiConverterTypeChangeEpochV4_lower(_ value: ChangeEpochV4) -> Unsaf
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 public protocol CheckpointCommitmentProtocol: AnyObject, Sendable {
@@ -3404,7 +3394,7 @@ public protocol CheckpointCommitmentProtocol: AnyObject, Sendable {
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 open class CheckpointCommitment: CheckpointCommitmentProtocol, @unchecked Sendable {
@@ -3543,12 +3533,14 @@ public func FfiConverterTypeCheckpointCommitment_lower(_ value: CheckpointCommit
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 public protocol CheckpointContentsProtocol: AnyObject, Sendable {
@@ -3570,12 +3562,14 @@ public protocol CheckpointContentsProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 open class CheckpointContents: CheckpointContentsProtocol, @unchecked Sendable {
@@ -5079,13 +5073,13 @@ public func FfiConverterTypeCoin_lower(_ value: Coin) -> UnsafeMutableRawPointer
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 public protocol CommandProtocol: AnyObject, Sendable {
@@ -5107,13 +5101,13 @@ public protocol CommandProtocol: AnyObject, Sendable {
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 open class Command: CommandProtocol, @unchecked Sendable {
@@ -5760,7 +5754,7 @@ public func FfiConverterTypeConsensusDeterminedVersionAssignments_lower(_ value:
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -5788,7 +5782,7 @@ public protocol DigestProtocol: AnyObject, Sendable {
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -7168,23 +7162,10 @@ public func FfiConverterTypeEd25519VerifyingKey_lower(_ value: Ed25519VerifyingK
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 public protocol EndOfEpochTransactionKindProtocol: AnyObject, Sendable {
@@ -7198,23 +7179,10 @@ public protocol EndOfEpochTransactionKindProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 open class EndOfEpochTransactionKind: EndOfEpochTransactionKindProtocol, @unchecked Sendable {
@@ -7691,7 +7659,7 @@ public func FfiConverterTypeFaucetClient_lower(_ value: FaucetClient) -> UnsafeM
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 public protocol GenesisObjectProtocol: AnyObject, Sendable {
@@ -7718,7 +7686,7 @@ public protocol GenesisObjectProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 open class GenesisObject: GenesisObjectProtocol, @unchecked Sendable {
@@ -9897,7 +9865,7 @@ public func FfiConverterTypeGraphQLClient_lower(_ value: GraphQlClient) -> Unsaf
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -9917,7 +9885,7 @@ public protocol IdentifierProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -10095,12 +10063,14 @@ public func FfiConverterTypeIdentifier_lower(_ value: Identifier) -> UnsafeMutab
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 public protocol InputProtocol: AnyObject, Sendable {
@@ -10114,12 +10084,14 @@ public protocol InputProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 open class Input: InputProtocol, @unchecked Sendable {
@@ -12253,11 +12225,11 @@ public func FfiConverterTypeMoveFunction_lower(_ value: MoveFunction) -> UnsafeM
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 public protocol MovePackageProtocol: AnyObject, Sendable {
@@ -12281,11 +12253,11 @@ public protocol MovePackageProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 open class MovePackage: MovePackageProtocol, @unchecked Sendable {
@@ -13885,11 +13857,11 @@ public func FfiConverterTypeMultisigMember_lower(_ value: MultisigMember) -> Uns
  * zklogin-multisig-member-public-key-deprecated /
  * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %x03
- * passkey-multisig-member-public-key              = %x04 passkey-public-key
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -13946,11 +13918,11 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
  * zklogin-multisig-member-public-key-deprecated /
  * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %x03
- * passkey-multisig-member-public-key              = %x04 passkey-public-key
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -14198,11 +14170,11 @@ public func FfiConverterTypeMultisigMemberPublicKey_lower(_ value: MultisigMembe
  * zklogin-multisig-member-signature-deprecated /
  * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature               = %x00 ed25519-signature
- * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
- * zklogin-multisig-member-signature-deprecated    = %x03
- * passkey-multisig-member-signature               = %x04 passkey-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
@@ -14246,11 +14218,11 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
  * zklogin-multisig-member-signature-deprecated /
  * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature               = %x00 ed25519-signature
- * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
- * zklogin-multisig-member-signature-deprecated    = %x03
- * passkey-multisig-member-signature               = %x04 passkey-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 open class MultisigMemberSignature: MultisigMemberSignatureProtocol, @unchecked Sendable {
@@ -15440,8 +15412,8 @@ public func FfiConverterTypeObject_lower(_ value: Object) -> UnsafeMutableRawPoi
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 public protocol ObjectDataProtocol: AnyObject, Sendable {
@@ -15477,8 +15449,8 @@ public protocol ObjectDataProtocol: AnyObject, Sendable {
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 open class ObjectData: ObjectDataProtocol, @unchecked Sendable {
@@ -15699,7 +15671,7 @@ public func FfiConverterTypeObjectData_lower(_ value: ObjectData) -> UnsafeMutab
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 public protocol ObjectIdProtocol: AnyObject, Sendable {
@@ -15747,7 +15719,7 @@ public protocol ObjectIdProtocol: AnyObject, Sendable {
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 open class ObjectId: ObjectIdProtocol, @unchecked Sendable {
@@ -16215,10 +16187,10 @@ public func FfiConverterTypeObjectType_lower(_ value: ObjectType) -> UnsafeMutab
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 public protocol OwnerProtocol: AnyObject, Sendable {
@@ -16254,10 +16226,10 @@ public protocol OwnerProtocol: AnyObject, Sendable {
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 open class Owner: OwnerProtocol, @unchecked Sendable {
@@ -18484,14 +18456,14 @@ public func FfiConverterTypeSecp256k1PrivateKey_lower(_ value: Secp256k1PrivateK
 
 
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 public protocol Secp256k1PublicKeyProtocol: AnyObject, Sendable {
@@ -18521,14 +18493,14 @@ public protocol Secp256k1PublicKeyProtocol: AnyObject, Sendable {
     
 }
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 open class Secp256k1PublicKey: Secp256k1PublicKeyProtocol, @unchecked Sendable {
@@ -18728,14 +18700,14 @@ public func FfiConverterTypeSecp256k1PublicKey_lower(_ value: Secp256k1PublicKey
 
 
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 public protocol Secp256k1SignatureProtocol: AnyObject, Sendable {
@@ -18744,14 +18716,14 @@ public protocol Secp256k1SignatureProtocol: AnyObject, Sendable {
     
 }
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 open class Secp256k1Signature: Secp256k1SignatureProtocol, @unchecked Sendable {
@@ -19682,14 +19654,14 @@ public func FfiConverterTypeSecp256r1PrivateKey_lower(_ value: Secp256r1PrivateK
 
 
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 public protocol Secp256r1PublicKeyProtocol: AnyObject, Sendable {
@@ -19719,14 +19691,14 @@ public protocol Secp256r1PublicKeyProtocol: AnyObject, Sendable {
     
 }
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 open class Secp256r1PublicKey: Secp256r1PublicKeyProtocol, @unchecked Sendable {
@@ -19926,14 +19898,14 @@ public func FfiConverterTypeSecp256r1PublicKey_lower(_ value: Secp256r1PublicKey
 
 
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 public protocol Secp256r1SignatureProtocol: AnyObject, Sendable {
@@ -19942,14 +19914,14 @@ public protocol Secp256r1SignatureProtocol: AnyObject, Sendable {
     
 }
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 open class Secp256r1Signature: Secp256r1SignatureProtocol, @unchecked Sendable {
@@ -22477,7 +22449,7 @@ public func FfiConverterTypeSystemPackage_lower(_ value: SystemPackage) -> Unsaf
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -22520,7 +22492,7 @@ public protocol TransactionProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -23362,8 +23334,8 @@ public func FfiConverterTypeTransactionBuilder_lower(_ value: TransactionBuilder
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 public protocol TransactionEffectsProtocol: AnyObject, Sendable {
@@ -23383,8 +23355,8 @@ public protocol TransactionEffectsProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 open class TransactionEffects: TransactionEffectsProtocol, @unchecked Sendable {
@@ -23714,15 +23686,12 @@ public func FfiConverterTypeTransactionEvents_lower(_ value: TransactionEvents) 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 public protocol TransactionKindProtocol: AnyObject, Sendable {
@@ -23736,15 +23705,12 @@ public protocol TransactionKindProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
@@ -24332,7 +24298,7 @@ public func FfiConverterTypeTransactionSignerFn_lower(_ value: TransactionSigner
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -24373,7 +24339,7 @@ public protocol TransactionV1Protocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -24807,17 +24773,17 @@ public func FfiConverterTypeTransferObjects_lower(_ value: TransferObjects) -> U
  * type-tag-vector \
  * type-tag-struct
  *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag-u8 = %d01
+ * type-tag-u16 = %d08
+ * type-tag-u32 = %d09
+ * type-tag-u64 = %d02
+ * type-tag-u128 = %d03
+ * type-tag-u256 = %d10
+ * type-tag-bool = %d00
+ * type-tag-address = %d04
+ * type-tag-signer = %d05
+ * type-tag-vector = %d06 type-tag
+ * type-tag-struct = %d07 struct-tag
  * ```
  */
 public protocol TypeTagProtocol: AnyObject, Sendable {
@@ -24879,17 +24845,17 @@ public protocol TypeTagProtocol: AnyObject, Sendable {
  * type-tag-vector \
  * type-tag-struct
  *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag-u8 = %d01
+ * type-tag-u16 = %d08
+ * type-tag-u32 = %d09
+ * type-tag-u64 = %d02
+ * type-tag-u128 = %d03
+ * type-tag-u256 = %d10
+ * type-tag-bool = %d00
+ * type-tag-address = %d04
+ * type-tag-signer = %d05
+ * type-tag-vector = %d06 type-tag
+ * type-tag-struct = %d07 struct-tag
  * ```
  */
 open class TypeTag: TypeTagProtocol, @unchecked Sendable {
@@ -26180,12 +26146,11 @@ public func FfiConverterTypeUserSignatureVerifier_lower(_ value: UserSignatureVe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -26208,12 +26173,11 @@ public protocol ValidatorAggregatedSignatureProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -26704,9 +26668,9 @@ public func FfiConverterTypeValidatorCommitteeSignatureVerifier_lower(_ value: V
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 public protocol ValidatorSignatureProtocol: AnyObject, Sendable {
@@ -26726,9 +26690,9 @@ public protocol ValidatorSignatureProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 open class ValidatorSignature: ValidatorSignatureProtocol, @unchecked Sendable {
@@ -28137,6 +28101,7 @@ public func FfiConverterTypeDynamicFieldValue_lower(_ value: DynamicFieldValue) 
  * end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
  * u64                                 ; next_epoch_protocol_version
  * (vector checkpoint-commitment)      ; epoch_commitments
+ * i64                                 ; epoch_supply_change
  * ```
  */
 public struct EndOfEpochData {
@@ -28242,14 +28207,15 @@ public struct Epoch {
      */
     public var referenceGasPrice: String?
     /**
-     * The epoch's starting timestamp.
+     * The epoch's starting timestamp. RFC3339 in UTC with format:
+     * YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    public var startTimestamp: UInt64
+    public var startTimestamp: String
     /**
      * The epoch's ending timestamp. Note that this is available only on epochs
-     * that have ended.
+     * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    public var endTimestamp: UInt64?
+    public var endTimestamp: String?
     /**
      * The value of the `version` field of `0x5`, the
      * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -28318,12 +28284,13 @@ public struct Epoch {
          * a transaction for.
          */referenceGasPrice: String? = nil, 
         /**
-         * The epoch's starting timestamp.
-         */startTimestamp: UInt64, 
+         * The epoch's starting timestamp. RFC3339 in UTC with format:
+         * YYYY-MM-DDTHH:MM:SS.mmmZ
+         */startTimestamp: String, 
         /**
          * The epoch's ending timestamp. Note that this is available only on epochs
-         * that have ended.
-         */endTimestamp: UInt64? = nil, 
+         * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
+         */endTimestamp: String? = nil, 
         /**
          * The value of the `version` field of `0x5`, the
          * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -28388,8 +28355,8 @@ public struct FfiConverterTypeEpoch: FfiConverterRustBuffer {
                 netInflow: FfiConverterOptionString.read(from: &buf), 
                 protocolConfigs: FfiConverterOptionTypeProtocolConfigs.read(from: &buf), 
                 referenceGasPrice: FfiConverterOptionString.read(from: &buf), 
-                startTimestamp: FfiConverterUInt64.read(from: &buf), 
-                endTimestamp: FfiConverterOptionUInt64.read(from: &buf), 
+                startTimestamp: FfiConverterString.read(from: &buf), 
+                endTimestamp: FfiConverterOptionString.read(from: &buf), 
                 systemStateVersion: FfiConverterOptionUInt64.read(from: &buf), 
                 totalCheckpoints: FfiConverterOptionUInt64.read(from: &buf), 
                 totalGasFees: FfiConverterOptionString.read(from: &buf), 
@@ -28408,8 +28375,8 @@ public struct FfiConverterTypeEpoch: FfiConverterRustBuffer {
         FfiConverterOptionString.write(value.netInflow, into: &buf)
         FfiConverterOptionTypeProtocolConfigs.write(value.protocolConfigs, into: &buf)
         FfiConverterOptionString.write(value.referenceGasPrice, into: &buf)
-        FfiConverterUInt64.write(value.startTimestamp, into: &buf)
-        FfiConverterOptionUInt64.write(value.endTimestamp, into: &buf)
+        FfiConverterString.write(value.startTimestamp, into: &buf)
+        FfiConverterOptionString.write(value.endTimestamp, into: &buf)
         FfiConverterOptionUInt64.write(value.systemStateVersion, into: &buf)
         FfiConverterOptionUInt64.write(value.totalCheckpoints, into: &buf)
         FfiConverterOptionString.write(value.totalGasFees, into: &buf)
@@ -29046,10 +29013,10 @@ public func FfiConverterTypeGasCostSummary_lower(_ value: GasCostSummary) -> Rus
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * gas-payment = (vector object-ref) ; gas coin objects
- * address             ; owner
- * u64                 ; price
- * u64                 ; budget
+ * gas-payment = (vector object-reference) ; gas coin objects
+ * address                   ; owner
+ * u64                       ; price
+ * u64                       ; budget
  * ```
  */
 public struct GasPayment {
@@ -30012,16 +29979,15 @@ public func FfiConverterTypeMovePackageQuery_lower(_ value: MovePackageQuery) ->
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-struct = compressed-struct-tag bool u64 object-contents
+ * move-struct = compressed-struct-tag u64 bytes
  *
  * compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
- * other-struct-type     = %x00 struct-tag
- * gas-coin-type         = %x01
- * staked-iota-type      = %x02
- * coin-type             = %x03 type-tag
+ * other-struct-type     = %d00 struct-tag
+ * gas-coin-type         = %d01
+ * staked-iota-type      = %d02
+ * coin-type             = %d03 type-tag
  *
- * ; first 32 bytes of the contents are the object's object-id
- * object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+ * ; The first 32 bytes of the `bytes` contents are the object's object-id.
  * ```
  */
 public struct MoveStruct {
@@ -30680,7 +30646,7 @@ public func FfiConverterTypeObjectRef_lower(_ value: ObjectRef) -> RustBuffer {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-ref = object-id u64 digest
+ * object-reference = object-id u64 digest
  * ```
  */
 public struct ObjectReference {
@@ -33042,7 +33008,7 @@ public func FfiConverterTypeValidatorCommittee_lower(_ value: ValidatorCommittee
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-committee-member = bls-public-key
+ * validator-committee-member = bls12381-public-key
  * u64 ; stake
  * ```
  */
@@ -33587,18 +33553,18 @@ extension BatchSendStatusType: Equatable, Hashable {}
  * =/ invalid-object-by-mut-ref
  * =/ shared-object-operation-not-allowed
  *
- * type-mismatch                               = %x00
- * invalid-bcs-bytes                           = %x01
- * invalid-usage-of-pure-argument              = %x02
- * invalid-argument-to-private-entry-function  = %x03
- * index-out-of-bounds                         = %x04 u16
- * secondary-index-out-of-bound                = %x05 u16 u16
- * invalid-result-arity                        = %x06 u16
- * invalid-gas-coin-usage                      = %x07
- * invalid-value-usage                         = %x08
- * invalid-object-by-value                     = %x09
- * invalid-object-by-mut-ref                   = %x0a
- * shared-object-operation-not-allowed         = %x0b
+ * type-mismatch                               = %d00
+ * invalid-bcs-bytes                           = %d01
+ * invalid-usage-of-pure-argument              = %d02
+ * invalid-argument-to-private-entry-function  = %d03
+ * index-out-of-bounds                         = %d04 u16
+ * secondary-index-out-of-bound                = %d05 u16 u16
+ * invalid-result-arity                        = %d06 u16
+ * invalid-gas-coin-usage                      = %d07
+ * invalid-value-usage                         = %d08
+ * invalid-object-by-value                     = %d09
+ * invalid-object-by-mut-ref                   = %d10
+ * shared-object-operation-not-allowed         = %d11
  * ```
  */
 
@@ -33921,44 +33887,48 @@ extension Direction: Equatable, Hashable {}
  * =/ address-denied-for-coin
  * =/ coin-type-global-pause
  * =/ execution-cancelled-due-to-randomness-unavailable
+ * =/ execution-cancelled-due-to-shared-object-congestion-v2
+ * =/ invalid-linkage
  *
- * insufficient-gas                                    = %x00
- * invalid-gas-object                                  = %x01
- * invariant-violation                                 = %x02
- * feature-not-yet-supported                           = %x03
- * object-too-big                                      = %x04 u64 u64
- * package-too-big                                     = %x05 u64 u64
- * circular-object-ownership                           = %x06 object-id
- * insufficient-coin-balance                           = %x07
- * coin-balance-overflow                               = %x08
- * publish-error-non-zero-address                      = %x09
- * iota-move-verification-error                        = %x0a
- * move-primitive-runtime-error                        = %x0b (option move-location)
- * move-abort                                          = %x0c move-location u64
- * vm-verification-or-deserialization-error            = %x0d
- * vm-invariant-violation                              = %x0e
- * function-not-found                                  = %x0f
- * arity-mismatch                                      = %x10
- * type-arity-mismatch                                 = %x11
- * non-entry-function-invoked                          = %x12
- * command-argument-error                              = %x13 u16 command-argument-error
- * type-argument-error                                 = %x14 u16 type-argument-error
- * unused-value-without-drop                           = %x15 u16 u16
- * invalid-public-function-return-type                 = %x16 u16
- * invalid-transfer-object                             = %x17
- * effects-too-large                                   = %x18 u64 u64
- * publish-upgrade-missing-dependency                  = %x19
- * publish-upgrade-dependency-downgrade                = %x1a
- * package-upgrade-error                               = %x1b package-upgrade-error
- * written-objects-too-large                           = %x1c u64 u64
- * certificate-denied                                  = %x1d
- * iota-move-verification-timeout                      = %x1e
- * shared-object-operation-not-allowed                 = %x1f
- * input-object-deleted                                = %x20
- * execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
- * address-denied-for-coin                             = %x22 address string
- * coin-type-global-pause                              = %x23 string
- * execution-cancelled-due-to-randomness-unavailable   = %x24
+ * insufficient-gas                                       = %d00
+ * invalid-gas-object                                     = %d01
+ * invariant-violation                                    = %d02
+ * feature-not-yet-supported                              = %d03
+ * object-too-big                                         = %d04 u64 u64
+ * package-too-big                                        = %d05 u64 u64
+ * circular-object-ownership                              = %d06 object-id
+ * insufficient-coin-balance                              = %d07
+ * coin-balance-overflow                                  = %d08
+ * publish-error-non-zero-address                         = %d09
+ * iota-move-verification-error                           = %d10
+ * move-primitive-runtime-error                           = %d11 (option move-location)
+ * move-abort                                             = %d12 move-location u64
+ * vm-verification-or-deserialization-error               = %d13
+ * vm-invariant-violation                                 = %d14
+ * function-not-found                                     = %d15
+ * arity-mismatch                                         = %d16
+ * type-arity-mismatch                                    = %d17
+ * non-entry-function-invoked                             = %d18
+ * command-argument-error                                 = %d19 u16 command-argument-error
+ * type-argument-error                                    = %d20 u16 type-argument-error
+ * unused-value-without-drop                              = %d21 u16 u16
+ * invalid-public-function-return-type                    = %d22 u16
+ * invalid-transfer-object                                = %d23
+ * effects-too-large                                      = %d24 u64 u64
+ * publish-upgrade-missing-dependency                     = %d25
+ * publish-upgrade-dependency-downgrade                   = %d26
+ * package-upgrade-error                                  = %d27 package-upgrade-error
+ * written-objects-too-large                              = %d28 u64 u64
+ * certificate-denied                                     = %d29
+ * iota-move-verification-timeout                         = %d30
+ * shared-object-operation-not-allowed                    = %d31
+ * input-object-deleted                                   = %d32
+ * execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+ * address-denied-for-coin                                = %d34 address string
+ * coin-type-global-pause                                 = %d35 string
+ * execution-cancelled-due-to-randomness-unavailable      = %d36
+ * execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+ * invalid-linkage                                        = %d38
  * ```
  */
 
@@ -34487,8 +34457,8 @@ public func FfiConverterTypeExecutionError_lower(_ value: ExecutionError) -> Rus
  *
  * ```text
  * execution-status = success / failure
- * success = %x00
- * failure = %x01 execution-error (option u64)
+ * success = %d00
+ * failure = %d01 execution-error (option u64)
  * ```
  */
 
@@ -34757,9 +34727,9 @@ extension HashingIntentScope: Equatable, Hashable {}
  * =/ id-operation-created
  * =/ id-operation-deleted
  *
- * id-operation-none       = %x00
- * id-operation-created    = %x01
- * id-operation-deleted    = %x02
+ * id-operation-none       = %d00
+ * id-operation-created    = %d01
+ * id-operation-deleted    = %d02
  * ```
  */
 
@@ -35622,8 +35592,8 @@ extension NameFormat: Equatable, Hashable {}
  * ```text
  * object-in = object-in-missing / object-in-data
  *
- * object-in-missing = %x00
- * object-in-data    = %x01 u64 digest owner
+ * object-in-missing = %d00
+ * object-in-data    = %d01 u64 digest owner
  * ```
  */
 
@@ -35714,9 +35684,9 @@ public func FfiConverterTypeObjectIn_lower(_ value: ObjectIn) -> RustBuffer {
  * =/ object-out-package-write
  *
  *
- * object-out-missing        = %x00
- * object-out-object-write   = %x01 digest owner
- * object-out-package-write  = %x02 version digest
+ * object-out-missing        = %d00
+ * object-out-object-write   = %d01 digest owner
+ * object-out-package-write  = %d02 version digest
  * ```
  */
 
@@ -35826,12 +35796,12 @@ public func FfiConverterTypeObjectOut_lower(_ value: ObjectOut) -> RustBuffer {
  * unknown-upgrade-policy  /
  * package-id-does-not-match
  *
- * unable-to-fetch-package     = %x00 object-id
- * not-a-package               = %x01 object-id
- * incompatible-upgrade        = %x02
- * digest-does-not-match       = %x03 digest
- * unknown-upgrade-policy      = %x04 u8
- * package-id-does-not-match   = %x05 object-id object-id
+ * unable-to-fetch-package     = %d00 object-id
+ * not-a-package               = %d01 object-id
+ * incompatible-upgrade        = %d02
+ * digest-does-not-match       = %d03 digest
+ * unknown-upgrade-policy      = %d04 u8
+ * package-id-does-not-match   = %d05 object-id object-id
  * ```
  */
 
@@ -36050,14 +36020,14 @@ extension SdkFfiError: Foundation.LocalizedError {
  * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
  * multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
  * move-auth-flag
- * ed25519-flag                    = %x00
- * secp256k1-flag                  = %x01
- * secp256r1-flag                  = %x02
- * multisig-flag                   = %x03
- * bls-flag                        = %x04
- * zklogin-auth-flag-deprecated    = %x05
- * passkey-auth-flag               = %x06
- * move-auth-flag                  = %x07
+ * ed25519-flag                    = %d00
+ * secp256k1-flag                  = %d01
+ * secp256r1-flag                  = %d02
+ * multisig-flag                   = %d03
+ * bls-flag                        = %d04
+ * zklogin-auth-flag-deprecated    = %d05
+ * passkey-auth-flag               = %d06
+ * move-auth-flag                  = %d07
  * ```
  */
 
@@ -36386,8 +36356,8 @@ extension TransactionBlockKindInput: Equatable, Hashable {}
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-expiration =  %x00      ; none
- * =/ %x01 u64  ; epoch
+ * transaction-expiration =  %d00      ; none
+ * =/ %d01 u64  ; epoch
  * ```
  */
 
@@ -36479,8 +36449,8 @@ extension TransactionExpiration: Equatable, Hashable {}
  *
  * ```text
  * type-argument-error = type-not-found / constraint-not-satisfied
- * type-not-found = %x00
- * constraint-not-satisfied = %x01
+ * type-not-found = %d00
+ * constraint-not-satisfied = %d01
  * ```
  */
 
@@ -36573,11 +36543,11 @@ extension TypeArgumentError: Equatable, Hashable {}
  * =/ cancelled
  * =/ per-epoch-config
  *
- * read-only-root      = %x00 u64 digest
- * mutate-deleted      = %x01 u64
- * read-deleted        = %x02 u64
- * cancelled           = %x03 u64
- * per-epoch-config    = %x04
+ * read-only-root      = %d00 u64 digest
+ * mutate-deleted      = %d01 u64
+ * read-deleted        = %d02 u64
+ * cancelled           = %d03 u64
+ * per-epoch-config    = %d04
  * ```
  */
 

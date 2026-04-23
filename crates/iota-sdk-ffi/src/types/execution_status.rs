@@ -15,8 +15,8 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 ///
 /// ```text
 /// execution-status = success / failure
-/// success = %x00
-/// failure = %x01 execution-error (option u64)
+/// success = %d00
+/// failure = %d01 execution-error (option u64)
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionStatus {
@@ -106,44 +106,48 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ address-denied-for-coin
 ///                 =/ coin-type-global-pause
 ///                 =/ execution-cancelled-due-to-randomness-unavailable
+///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
+///                 =/ invalid-linkage
 ///
-/// insufficient-gas                                    = %x00
-/// invalid-gas-object                                  = %x01
-/// invariant-violation                                 = %x02
-/// feature-not-yet-supported                           = %x03
-/// object-too-big                                      = %x04 u64 u64
-/// package-too-big                                     = %x05 u64 u64
-/// circular-object-ownership                           = %x06 object-id
-/// insufficient-coin-balance                           = %x07
-/// coin-balance-overflow                               = %x08
-/// publish-error-non-zero-address                      = %x09
-/// iota-move-verification-error                        = %x0a
-/// move-primitive-runtime-error                        = %x0b (option move-location)
-/// move-abort                                          = %x0c move-location u64
-/// vm-verification-or-deserialization-error            = %x0d
-/// vm-invariant-violation                              = %x0e
-/// function-not-found                                  = %x0f
-/// arity-mismatch                                      = %x10
-/// type-arity-mismatch                                 = %x11
-/// non-entry-function-invoked                          = %x12
-/// command-argument-error                              = %x13 u16 command-argument-error
-/// type-argument-error                                 = %x14 u16 type-argument-error
-/// unused-value-without-drop                           = %x15 u16 u16
-/// invalid-public-function-return-type                 = %x16 u16
-/// invalid-transfer-object                             = %x17
-/// effects-too-large                                   = %x18 u64 u64
-/// publish-upgrade-missing-dependency                  = %x19
-/// publish-upgrade-dependency-downgrade                = %x1a
-/// package-upgrade-error                               = %x1b package-upgrade-error
-/// written-objects-too-large                           = %x1c u64 u64
-/// certificate-denied                                  = %x1d
-/// iota-move-verification-timeout                      = %x1e
-/// shared-object-operation-not-allowed                 = %x1f
-/// input-object-deleted                                = %x20
-/// execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
-/// address-denied-for-coin                             = %x22 address string
-/// coin-type-global-pause                              = %x23 string
-/// execution-cancelled-due-to-randomness-unavailable   = %x24
+/// insufficient-gas                                       = %d00
+/// invalid-gas-object                                     = %d01
+/// invariant-violation                                    = %d02
+/// feature-not-yet-supported                              = %d03
+/// object-too-big                                         = %d04 u64 u64
+/// package-too-big                                        = %d05 u64 u64
+/// circular-object-ownership                              = %d06 object-id
+/// insufficient-coin-balance                              = %d07
+/// coin-balance-overflow                                  = %d08
+/// publish-error-non-zero-address                         = %d09
+/// iota-move-verification-error                           = %d10
+/// move-primitive-runtime-error                           = %d11 (option move-location)
+/// move-abort                                             = %d12 move-location u64
+/// vm-verification-or-deserialization-error               = %d13
+/// vm-invariant-violation                                 = %d14
+/// function-not-found                                     = %d15
+/// arity-mismatch                                         = %d16
+/// type-arity-mismatch                                    = %d17
+/// non-entry-function-invoked                             = %d18
+/// command-argument-error                                 = %d19 u16 command-argument-error
+/// type-argument-error                                    = %d20 u16 type-argument-error
+/// unused-value-without-drop                              = %d21 u16 u16
+/// invalid-public-function-return-type                    = %d22 u16
+/// invalid-transfer-object                                = %d23
+/// effects-too-large                                      = %d24 u64 u64
+/// publish-upgrade-missing-dependency                     = %d25
+/// publish-upgrade-dependency-downgrade                   = %d26
+/// package-upgrade-error                                  = %d27 package-upgrade-error
+/// written-objects-too-large                              = %d28 u64 u64
+/// certificate-denied                                     = %d29
+/// iota-move-verification-timeout                         = %d30
+/// shared-object-operation-not-allowed                    = %d31
+/// input-object-deleted                                   = %d32
+/// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+/// address-denied-for-coin                                = %d34 address string
+/// coin-type-global-pause                                 = %d35 string
+/// execution-cancelled-due-to-randomness-unavailable      = %d36
+/// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+/// invalid-linkage                                        = %d38
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionError {
@@ -598,18 +602,18 @@ impl From<MoveLocation> for iota_sdk::types::MoveLocation {
 ///                        =/ invalid-object-by-mut-ref
 ///                        =/ shared-object-operation-not-allowed
 ///
-/// type-mismatch                               = %x00
-/// invalid-bcs-bytes                           = %x01
-/// invalid-usage-of-pure-argument              = %x02
-/// invalid-argument-to-private-entry-function  = %x03
-/// index-out-of-bounds                         = %x04 u16
-/// secondary-index-out-of-bound                = %x05 u16 u16
-/// invalid-result-arity                        = %x06 u16
-/// invalid-gas-coin-usage                      = %x07
-/// invalid-value-usage                         = %x08
-/// invalid-object-by-value                     = %x09
-/// invalid-object-by-mut-ref                   = %x0a
-/// shared-object-operation-not-allowed         = %x0b
+/// type-mismatch                               = %d00
+/// invalid-bcs-bytes                           = %d01
+/// invalid-usage-of-pure-argument              = %d02
+/// invalid-argument-to-private-entry-function  = %d03
+/// index-out-of-bounds                         = %d04 u16
+/// secondary-index-out-of-bound                = %d05 u16 u16
+/// invalid-result-arity                        = %d06 u16
+/// invalid-gas-coin-usage                      = %d07
+/// invalid-value-usage                         = %d08
+/// invalid-object-by-value                     = %d09
+/// invalid-object-by-mut-ref                   = %d10
+/// shared-object-operation-not-allowed         = %d11
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
@@ -664,12 +668,12 @@ pub enum CommandArgumentError {
 ///                         unknown-upgrade-policy  /
 ///                         package-id-does-not-match
 ///
-/// unable-to-fetch-package     = %x00 object-id
-/// not-a-package               = %x01 object-id
-/// incompatible-upgrade        = %x02
-/// digest-does-not-match       = %x03 digest
-/// unknown-upgrade-policy      = %x04 u8
-/// package-id-does-not-match   = %x05 object-id object-id
+/// unable-to-fetch-package     = %d00 object-id
+/// not-a-package               = %d01 object-id
+/// incompatible-upgrade        = %d02
+/// digest-does-not-match       = %d03 digest
+/// unknown-upgrade-policy      = %d04 u8
+/// package-id-does-not-match   = %d05 object-id object-id
 /// ```
 #[derive(uniffi::Enum)]
 pub enum PackageUpgradeError {
@@ -759,8 +763,8 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 ///
 /// ```text
 /// type-argument-error = type-not-found / constraint-not-satisfied
-/// type-not-found = %x00
-/// constraint-not-satisfied = %x01
+/// type-not-found = %d00
+/// constraint-not-satisfied = %d01
 /// ```
 #[uniffi::remote(Enum)]
 #[repr(u8)]

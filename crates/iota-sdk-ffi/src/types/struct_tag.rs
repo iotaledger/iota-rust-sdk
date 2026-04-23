@@ -15,7 +15,7 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// identifier = %x01-80    ; length of the identifier
+/// identifier = %d1-128    ; length of the identifier
 ///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 ///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 ///

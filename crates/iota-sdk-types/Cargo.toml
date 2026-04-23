@@ -26,6 +26,7 @@ rustdoc-args = [
 
 [features]
 default = []
+bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = [
   "dep:bcs",
   "dep:serde",
@@ -40,6 +41,7 @@ hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
+# external dependencies
 base64ct = { workspace = true, features = ["alloc"] }
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
@@ -65,12 +67,19 @@ test-strategy = { workspace = true, optional = true }
 thiserror.workspace = true
 winnow = "0.7"
 
+# internal dependencies
+iota-bcs-schema = { workspace = true, optional = true }
+
+[build-dependencies]
+filetime = "0.2"
+
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
+rand.workspace = true
 serde_json.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
