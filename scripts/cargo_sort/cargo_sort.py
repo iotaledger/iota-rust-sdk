@@ -1759,11 +1759,12 @@ Examples:
     internal_crates_dict = get_package_names_from_cargo_tomls(target_dir, None)
 
     # add special cases (aliases that differ from package names in this workspace)
+    internal_crates_dict["iota-bcs-schema"] = None
     internal_crates_dict["iota-crypto"] = None
-    internal_crates_dict["iota-types"] = None
-    internal_crates_dict["iota-transaction-builder"] = None
     internal_crates_dict["iota-graphql-client"] = None
     internal_crates_dict["iota-graphql-client-build"] = None
+    internal_crates_dict["iota-transaction-builder"] = None
+    internal_crates_dict["iota-types"] = None
 
     print("Processing Cargo.toml files...")
     find_and_process_toml_files(

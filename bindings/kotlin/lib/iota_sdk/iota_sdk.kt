@@ -14664,10 +14664,10 @@ public object FfiConverterTypeAddress: FfiConverter<Address, Pointer> {
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 public interface ArgumentInterface {
@@ -14694,10 +14694,10 @@ public interface ArgumentInterface {
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 open class Argument: Disposable, AutoCloseable, ArgumentInterface
@@ -15323,7 +15323,7 @@ public object FfiConverterTypeBls12381PrivateKey: FfiConverter<Bls12381PrivateKe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -15346,7 +15346,7 @@ public interface Bls12381PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -15641,20 +15641,15 @@ public object FfiConverterTypeBls12381PublicKey: FfiConverter<Bls12381PublicKey,
 
 
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 public interface Bls12381SignatureInterface {
     
@@ -15664,20 +15659,15 @@ public interface Bls12381SignatureInterface {
 }
 
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 open class Bls12381Signature: Disposable, AutoCloseable, Bls12381SignatureInterface
 {
@@ -16964,7 +16954,7 @@ public object FfiConverterTypeChangeEpoch: FfiConverter<ChangeEpoch, Pointer> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -17034,7 +17024,7 @@ public interface ChangeEpochV2Interface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -18351,7 +18341,7 @@ public object FfiConverterTypeChangeEpochV4: FfiConverter<ChangeEpochV4, Pointer
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 public interface CheckpointCommitmentInterface {
@@ -18373,7 +18363,7 @@ public interface CheckpointCommitmentInterface {
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 open class CheckpointCommitment: Disposable, AutoCloseable, CheckpointCommitmentInterface
@@ -18629,12 +18619,14 @@ public object FfiConverterTypeCheckpointCommitment: FfiConverter<CheckpointCommi
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 public interface CheckpointContentsInterface {
@@ -18658,12 +18650,14 @@ public interface CheckpointContentsInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 open class CheckpointContents: Disposable, AutoCloseable, CheckpointContentsInterface
@@ -20863,13 +20857,13 @@ public object FfiConverterTypeCoin: FfiConverter<Coin, Pointer> {
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 public interface CommandInterface {
@@ -20893,13 +20887,13 @@ public interface CommandInterface {
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 open class Command: Disposable, AutoCloseable, CommandInterface
@@ -21908,7 +21902,7 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -21938,7 +21932,7 @@ public interface DigestInterface {
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -24146,23 +24140,10 @@ public object FfiConverterTypeEd25519VerifyingKey: FfiConverter<Ed25519Verifying
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 public interface EndOfEpochTransactionKindInterface {
@@ -24178,23 +24159,10 @@ public interface EndOfEpochTransactionKindInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTransactionKindInterface
@@ -24916,7 +24884,7 @@ public object FfiConverterTypeFaucetClient: FfiConverter<FaucetClient, Pointer> 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 public interface GenesisObjectInterface {
@@ -24945,7 +24913,7 @@ public interface GenesisObjectInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 open class GenesisObject: Disposable, AutoCloseable, GenesisObjectInterface
@@ -27700,7 +27668,7 @@ public object FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, Pointer
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -27722,7 +27690,7 @@ public interface IdentifierInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -28008,12 +27976,14 @@ public object FfiConverterTypeIdentifier: FfiConverter<Identifier, Pointer> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 public interface InputInterface {
@@ -28029,12 +27999,14 @@ public interface InputInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 open class Input: Disposable, AutoCloseable, InputInterface
@@ -31419,11 +31391,11 @@ public object FfiConverterTypeMoveFunction: FfiConverter<MoveFunction, Pointer> 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 public interface MovePackageInterface {
@@ -31449,11 +31421,11 @@ public interface MovePackageInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
@@ -33922,11 +33894,11 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
  * zklogin-multisig-member-public-key-deprecated /
  * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %x03
- * passkey-multisig-member-public-key              = %x04 passkey-public-key
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -33985,11 +33957,11 @@ public interface MultisigMemberPublicKeyInterface {
  * zklogin-multisig-member-public-key-deprecated /
  * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key              = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %x03
- * passkey-multisig-member-public-key              = %x04 passkey-public-key
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -34404,11 +34376,11 @@ public object FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemb
  * zklogin-multisig-member-signature-deprecated /
  * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature               = %x00 ed25519-signature
- * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
- * zklogin-multisig-member-signature-deprecated    = %x03
- * passkey-multisig-member-signature               = %x04 passkey-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 public interface MultisigMemberSignatureInterface {
@@ -34454,11 +34426,11 @@ public interface MultisigMemberSignatureInterface {
  * zklogin-multisig-member-signature-deprecated /
  * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature               = %x00 ed25519-signature
- * secp256k1-multisig-member-signature             = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature             = %x02 secp256r1-signature
- * zklogin-multisig-member-signature-deprecated    = %x03
- * passkey-multisig-member-signature               = %x04 passkey-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSignatureInterface
@@ -36342,8 +36314,8 @@ public object FfiConverterTypeObject: FfiConverter<Object, Pointer> {
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 public interface ObjectDataInterface {
@@ -36381,8 +36353,8 @@ public interface ObjectDataInterface {
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
@@ -36730,7 +36702,7 @@ public object FfiConverterTypeObjectData: FfiConverter<ObjectData, Pointer> {
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 public interface ObjectIdInterface {
@@ -36780,7 +36752,7 @@ public interface ObjectIdInterface {
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
@@ -37527,10 +37499,10 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 public interface OwnerInterface {
@@ -37568,10 +37540,10 @@ public interface OwnerInterface {
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 open class Owner: Disposable, AutoCloseable, OwnerInterface
@@ -41026,14 +40998,14 @@ public object FfiConverterTypeSecp256k1PrivateKey: FfiConverter<Secp256k1Private
 
 
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 public interface Secp256k1PublicKeyInterface {
@@ -41065,14 +41037,14 @@ public interface Secp256k1PublicKeyInterface {
 }
 
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInterface
@@ -41413,14 +41385,14 @@ public object FfiConverterTypeSecp256k1PublicKey: FfiConverter<Secp256k1PublicKe
 
 
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 public interface Secp256k1SignatureInterface {
@@ -41431,14 +41403,14 @@ public interface Secp256k1SignatureInterface {
 }
 
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInterface
@@ -42923,14 +42895,14 @@ public object FfiConverterTypeSecp256r1PrivateKey: FfiConverter<Secp256r1Private
 
 
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 public interface Secp256r1PublicKeyInterface {
@@ -42962,14 +42934,14 @@ public interface Secp256r1PublicKeyInterface {
 }
 
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInterface
@@ -43310,14 +43282,14 @@ public object FfiConverterTypeSecp256r1PublicKey: FfiConverter<Secp256r1PublicKe
 
 
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 public interface Secp256r1SignatureInterface {
@@ -43328,14 +43300,14 @@ public interface Secp256r1SignatureInterface {
 }
 
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInterface
@@ -47307,7 +47279,7 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -47352,7 +47324,7 @@ public interface TransactionInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -48511,8 +48483,8 @@ public object FfiConverterTypeTransactionBuilder: FfiConverter<TransactionBuilde
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 public interface TransactionEffectsInterface {
@@ -48534,8 +48506,8 @@ public interface TransactionEffectsInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInterface
@@ -49103,15 +49075,12 @@ public object FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents,
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 public interface TransactionKindInterface {
@@ -49127,15 +49096,12 @@ public interface TransactionKindInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
@@ -50061,7 +50027,7 @@ public object FfiConverterTypeTransactionSignerFn: FfiConverter<TransactionSigne
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -50104,7 +50070,7 @@ public interface TransactionV1Interface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -50792,17 +50758,17 @@ public object FfiConverterTypeTransferObjects: FfiConverter<TransferObjects, Poi
  * type-tag-vector \
  * type-tag-struct
  *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag-u8 = %d01
+ * type-tag-u16 = %d08
+ * type-tag-u32 = %d09
+ * type-tag-u64 = %d02
+ * type-tag-u128 = %d03
+ * type-tag-u256 = %d10
+ * type-tag-bool = %d00
+ * type-tag-address = %d04
+ * type-tag-signer = %d05
+ * type-tag-vector = %d06 type-tag
+ * type-tag-struct = %d07 struct-tag
  * ```
  */
 public interface TypeTagInterface {
@@ -50866,17 +50832,17 @@ public interface TypeTagInterface {
  * type-tag-vector \
  * type-tag-struct
  *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag-u8 = %d01
+ * type-tag-u16 = %d08
+ * type-tag-u32 = %d09
+ * type-tag-u64 = %d02
+ * type-tag-u128 = %d03
+ * type-tag-u256 = %d10
+ * type-tag-bool = %d00
+ * type-tag-address = %d04
+ * type-tag-signer = %d05
+ * type-tag-vector = %d06 type-tag
+ * type-tag-struct = %d07 struct-tag
  * ```
  */
 open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
@@ -52921,12 +52887,11 @@ public object FfiConverterTypeUserSignatureVerifier: FfiConverter<UserSignatureV
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -52951,12 +52916,11 @@ public interface ValidatorAggregatedSignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -53793,9 +53757,9 @@ public object FfiConverterTypeValidatorCommitteeSignatureVerifier: FfiConverter<
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 public interface ValidatorSignatureInterface {
@@ -53817,9 +53781,9 @@ public interface ValidatorSignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInterface
@@ -55108,6 +55072,7 @@ public object FfiConverterTypeDynamicFieldValue: FfiConverterRustBuffer<DynamicF
  * end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
  * u64                                 ; next_epoch_protocol_version
  * (vector checkpoint-commitment)      ; epoch_commitments
+ * i64                                 ; epoch_supply_change
  * ```
  */
 data class EndOfEpochData (
@@ -55778,10 +55743,10 @@ public object FfiConverterTypeGasCostSummary: FfiConverterRustBuffer<GasCostSumm
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * gas-payment = (vector object-ref) ; gas coin objects
- * address             ; owner
- * u64                 ; price
- * u64                 ; budget
+ * gas-payment = (vector object-reference) ; gas coin objects
+ * address                   ; owner
+ * u64                       ; price
+ * u64                       ; budget
  * ```
  */
 data class GasPayment (
@@ -56401,16 +56366,15 @@ public object FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePacka
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-struct = compressed-struct-tag bool u64 object-contents
+ * move-struct = compressed-struct-tag u64 bytes
  *
  * compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
- * other-struct-type     = %x00 struct-tag
- * gas-coin-type         = %x01
- * staked-iota-type      = %x02
- * coin-type             = %x03 type-tag
+ * other-struct-type     = %d00 struct-tag
+ * gas-coin-type         = %d01
+ * staked-iota-type      = %d02
+ * coin-type             = %d03 type-tag
  *
- * ; first 32 bytes of the contents are the object's object-id
- * object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+ * ; The first 32 bytes of the `bytes` contents are the object's object-id.
  * ```
  */
 data class MoveStruct (
@@ -56825,7 +56789,7 @@ public object FfiConverterTypeObjectRef: FfiConverterRustBuffer<ObjectRef> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-ref = object-id u64 digest
+ * object-reference = object-id u64 digest
  * ```
  */
 data class ObjectReference (
@@ -58398,7 +58362,7 @@ public object FfiConverterTypeValidatorCommittee: FfiConverterRustBuffer<Validat
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-committee-member = bls-public-key
+ * validator-committee-member = bls12381-public-key
  * u64 ; stake
  * ```
  */
@@ -58759,18 +58723,18 @@ public object FfiConverterTypeBatchSendStatusType: FfiConverterRustBuffer<BatchS
  * =/ invalid-object-by-mut-ref
  * =/ shared-object-operation-not-allowed
  *
- * type-mismatch                               = %x00
- * invalid-bcs-bytes                           = %x01
- * invalid-usage-of-pure-argument              = %x02
- * invalid-argument-to-private-entry-function  = %x03
- * index-out-of-bounds                         = %x04 u16
- * secondary-index-out-of-bound                = %x05 u16 u16
- * invalid-result-arity                        = %x06 u16
- * invalid-gas-coin-usage                      = %x07
- * invalid-value-usage                         = %x08
- * invalid-object-by-value                     = %x09
- * invalid-object-by-mut-ref                   = %x0a
- * shared-object-operation-not-allowed         = %x0b
+ * type-mismatch                               = %d00
+ * invalid-bcs-bytes                           = %d01
+ * invalid-usage-of-pure-argument              = %d02
+ * invalid-argument-to-private-entry-function  = %d03
+ * index-out-of-bounds                         = %d04 u16
+ * secondary-index-out-of-bound                = %d05 u16 u16
+ * invalid-result-arity                        = %d06 u16
+ * invalid-gas-coin-usage                      = %d07
+ * invalid-value-usage                         = %d08
+ * invalid-object-by-value                     = %d09
+ * invalid-object-by-mut-ref                   = %d10
+ * shared-object-operation-not-allowed         = %d11
  * ```
  */
 sealed class CommandArgumentError {
@@ -59130,44 +59094,48 @@ public object FfiConverterTypeDirection: FfiConverterRustBuffer<Direction> {
  * =/ address-denied-for-coin
  * =/ coin-type-global-pause
  * =/ execution-cancelled-due-to-randomness-unavailable
+ * =/ execution-cancelled-due-to-shared-object-congestion-v2
+ * =/ invalid-linkage
  *
- * insufficient-gas                                    = %x00
- * invalid-gas-object                                  = %x01
- * invariant-violation                                 = %x02
- * feature-not-yet-supported                           = %x03
- * object-too-big                                      = %x04 u64 u64
- * package-too-big                                     = %x05 u64 u64
- * circular-object-ownership                           = %x06 object-id
- * insufficient-coin-balance                           = %x07
- * coin-balance-overflow                               = %x08
- * publish-error-non-zero-address                      = %x09
- * iota-move-verification-error                        = %x0a
- * move-primitive-runtime-error                        = %x0b (option move-location)
- * move-abort                                          = %x0c move-location u64
- * vm-verification-or-deserialization-error            = %x0d
- * vm-invariant-violation                              = %x0e
- * function-not-found                                  = %x0f
- * arity-mismatch                                      = %x10
- * type-arity-mismatch                                 = %x11
- * non-entry-function-invoked                          = %x12
- * command-argument-error                              = %x13 u16 command-argument-error
- * type-argument-error                                 = %x14 u16 type-argument-error
- * unused-value-without-drop                           = %x15 u16 u16
- * invalid-public-function-return-type                 = %x16 u16
- * invalid-transfer-object                             = %x17
- * effects-too-large                                   = %x18 u64 u64
- * publish-upgrade-missing-dependency                  = %x19
- * publish-upgrade-dependency-downgrade                = %x1a
- * package-upgrade-error                               = %x1b package-upgrade-error
- * written-objects-too-large                           = %x1c u64 u64
- * certificate-denied                                  = %x1d
- * iota-move-verification-timeout                      = %x1e
- * shared-object-operation-not-allowed                 = %x1f
- * input-object-deleted                                = %x20
- * execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
- * address-denied-for-coin                             = %x22 address string
- * coin-type-global-pause                              = %x23 string
- * execution-cancelled-due-to-randomness-unavailable   = %x24
+ * insufficient-gas                                       = %d00
+ * invalid-gas-object                                     = %d01
+ * invariant-violation                                    = %d02
+ * feature-not-yet-supported                              = %d03
+ * object-too-big                                         = %d04 u64 u64
+ * package-too-big                                        = %d05 u64 u64
+ * circular-object-ownership                              = %d06 object-id
+ * insufficient-coin-balance                              = %d07
+ * coin-balance-overflow                                  = %d08
+ * publish-error-non-zero-address                         = %d09
+ * iota-move-verification-error                           = %d10
+ * move-primitive-runtime-error                           = %d11 (option move-location)
+ * move-abort                                             = %d12 move-location u64
+ * vm-verification-or-deserialization-error               = %d13
+ * vm-invariant-violation                                 = %d14
+ * function-not-found                                     = %d15
+ * arity-mismatch                                         = %d16
+ * type-arity-mismatch                                    = %d17
+ * non-entry-function-invoked                             = %d18
+ * command-argument-error                                 = %d19 u16 command-argument-error
+ * type-argument-error                                    = %d20 u16 type-argument-error
+ * unused-value-without-drop                              = %d21 u16 u16
+ * invalid-public-function-return-type                    = %d22 u16
+ * invalid-transfer-object                                = %d23
+ * effects-too-large                                      = %d24 u64 u64
+ * publish-upgrade-missing-dependency                     = %d25
+ * publish-upgrade-dependency-downgrade                   = %d26
+ * package-upgrade-error                                  = %d27 package-upgrade-error
+ * written-objects-too-large                              = %d28 u64 u64
+ * certificate-denied                                     = %d29
+ * iota-move-verification-timeout                         = %d30
+ * shared-object-operation-not-allowed                    = %d31
+ * input-object-deleted                                   = %d32
+ * execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+ * address-denied-for-coin                                = %d34 address string
+ * coin-type-global-pause                                 = %d35 string
+ * execution-cancelled-due-to-randomness-unavailable      = %d36
+ * execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+ * invalid-linkage                                        = %d38
  * ```
  */
 sealed class ExecutionError: Disposable  {
@@ -60198,8 +60166,8 @@ public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionE
  *
  * ```text
  * execution-status = success / failure
- * success = %x00
- * failure = %x01 execution-error (option u64)
+ * success = %d00
+ * failure = %d01 execution-error (option u64)
  * ```
  */
 sealed class ExecutionStatus: Disposable  {
@@ -60383,9 +60351,9 @@ public object FfiConverterTypeHashingIntentScope: FfiConverterRustBuffer<Hashing
  * =/ id-operation-created
  * =/ id-operation-deleted
  *
- * id-operation-none       = %x00
- * id-operation-created    = %x01
- * id-operation-deleted    = %x02
+ * id-operation-none       = %d00
+ * id-operation-created    = %d01
+ * id-operation-deleted    = %d02
  * ```
  */
 
@@ -60824,8 +60792,8 @@ public object FfiConverterTypeNameFormat: FfiConverterRustBuffer<NameFormat> {
  * ```text
  * object-in = object-in-missing / object-in-data
  *
- * object-in-missing = %x00
- * object-in-data    = %x01 u64 digest owner
+ * object-in-missing = %d00
+ * object-in-data    = %d01 u64 digest owner
  * ```
  */
 sealed class ObjectIn: Disposable  {
@@ -60933,9 +60901,9 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
  * =/ object-out-package-write
  *
  *
- * object-out-missing        = %x00
- * object-out-object-write   = %x01 digest owner
- * object-out-package-write  = %x02 version digest
+ * object-out-missing        = %d00
+ * object-out-object-write   = %d01 digest owner
+ * object-out-package-write  = %d02 version digest
  * ```
  */
 sealed class ObjectOut: Disposable  {
@@ -61079,12 +61047,12 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
  * unknown-upgrade-policy  /
  * package-id-does-not-match
  *
- * unable-to-fetch-package     = %x00 object-id
- * not-a-package               = %x01 object-id
- * incompatible-upgrade        = %x02
- * digest-does-not-match       = %x03 digest
- * unknown-upgrade-policy      = %x04 u8
- * package-id-does-not-match   = %x05 object-id object-id
+ * unable-to-fetch-package     = %d00 object-id
+ * not-a-package               = %d01 object-id
+ * incompatible-upgrade        = %d02
+ * digest-does-not-match       = %d03 digest
+ * unknown-upgrade-policy      = %d04 u8
+ * package-id-does-not-match   = %d05 object-id object-id
  * ```
  */
 sealed class PackageUpgradeError: Disposable  {
@@ -61350,14 +61318,14 @@ public object FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiExcepti
  * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
  * multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
  * move-auth-flag
- * ed25519-flag                    = %x00
- * secp256k1-flag                  = %x01
- * secp256r1-flag                  = %x02
- * multisig-flag                   = %x03
- * bls-flag                        = %x04
- * zklogin-auth-flag-deprecated    = %x05
- * passkey-auth-flag               = %x06
- * move-auth-flag                  = %x07
+ * ed25519-flag                    = %d00
+ * secp256k1-flag                  = %d01
+ * secp256r1-flag                  = %d02
+ * multisig-flag                   = %d03
+ * bls-flag                        = %d04
+ * zklogin-auth-flag-deprecated    = %d05
+ * passkey-auth-flag               = %d06
+ * move-auth-flag                  = %d07
  * ```
  */
 
@@ -61550,8 +61518,8 @@ public object FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer<
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-expiration =  %x00      ; none
- * =/ %x01 u64  ; epoch
+ * transaction-expiration =  %d00      ; none
+ * =/ %d01 u64  ; epoch
  * ```
  */
 sealed class TransactionExpiration {
@@ -61634,8 +61602,8 @@ public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<Tra
  *
  * ```text
  * type-argument-error = type-not-found / constraint-not-satisfied
- * type-not-found = %x00
- * constraint-not-satisfied = %x01
+ * type-not-found = %d00
+ * constraint-not-satisfied = %d01
  * ```
  */
 
@@ -61688,11 +61656,11 @@ public object FfiConverterTypeTypeArgumentError: FfiConverterRustBuffer<TypeArgu
  * =/ cancelled
  * =/ per-epoch-config
  *
- * read-only-root      = %x00 u64 digest
- * mutate-deleted      = %x01 u64
- * read-deleted        = %x02 u64
- * cancelled           = %x03 u64
- * per-epoch-config    = %x04
+ * read-only-root      = %d00 u64 digest
+ * mutate-deleted      = %d01 u64
+ * read-deleted        = %d02 u64
+ * cancelled           = %d03 u64
+ * per-epoch-config    = %d04
  * ```
  */
 sealed class UnchangedSharedKind: Disposable  {

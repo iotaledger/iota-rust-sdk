@@ -20,12 +20,13 @@ use super::Address;
 /// An `ObjectId`'s BCS serialized form is defined by the following:
 ///
 /// ```text
-/// object-id = 32*OCTET
+/// object-id = address
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectId(Address);
 
 impl ObjectId {
