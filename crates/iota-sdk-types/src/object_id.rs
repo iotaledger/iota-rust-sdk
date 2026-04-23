@@ -20,7 +20,7 @@ use super::Address;
 /// An `ObjectId`'s BCS serialized form is defined by the following:
 ///
 /// ```text
-/// object-id = 32*OCTET
+/// object-id = address
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

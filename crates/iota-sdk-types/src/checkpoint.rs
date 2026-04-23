@@ -198,10 +198,12 @@ pub struct SignedCheckpointSummary {
 /// ```text
 /// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 ///
-/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
-///                                                               ; transaction. MUST be the same
-///                                                               ; length as the vector of digests
+/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+///                          (vector (vector user-signature)) ; set of user signatures for each
+///                                                           ; transaction. MUST be the same
+///                                                           ; length as the vector of digests
+///
+/// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]

@@ -115,10 +115,10 @@ impl TransactionExpiration {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// gas-payment = (vector object-ref) ; gas coin objects
-///               address             ; owner
-///               u64                 ; price
-///               u64                 ; budget
+/// gas-payment = (vector object-reference) ; gas coin objects
+///               address                   ; owner
+///               u64                       ; price
+///               u64                       ; budget
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -185,15 +185,12 @@ pub struct RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb
-///                     =/ %d01 change-epoch
-///                     =/ %d02 genesis-transaction
-///                     =/ %d03 consensus-commit-prologue
-///                     =/ %d04 authenticator-state-update-deprecated
-///                     =/ %d05 (vector end-of-epoch-transaction-kind)
-///                     =/ %d06 randomness-state-update
-///                     =/ %d07 consensus-commit-prologue-v2
-///                     =/ %d08 consensus-commit-prologue-v3
+/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+///                     =/ %d01 genesis-transaction                    ; Genesis
+///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -238,23 +235,10 @@ impl TransactionKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// end-of-epoch-transaction-kind   =  eoe-change-epoch
-///                                 =/ eoe-authenticator-state-create
-///                                 =/ eoe-authenticator-state-expire
-///                                 =/ eoe-randomness-state-create
-///                                 =/ eoe-deny-list-state-create
-///                                 =/ eoe-bridge-state-create
-///                                 =/ eoe-bridge-committee-init
-///                                 =/ eoe-store-execution-time-observations
-///
-/// eoe-change-epoch                = %d00 change-epoch
-/// eoe-authenticator-state-create  = %d01
-/// eoe-authenticator-state-expire  = %d02 authenticator-state-expire
-/// eoe-randomness-state-create     = %d03
-/// eoe-deny-list-state-create      = %d04
-/// eoe-bridge-state-create         = %d05 digest
-/// eoe-bridge-committee-init       = %d06 u64
-/// eoe-store-execution-time-observations = %d07 stored-execution-time-observations
+/// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
+///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
+///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
@@ -462,15 +446,15 @@ pub struct ChangeEpoch {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// change-epoch = u64  ; next epoch
-///                u64  ; protocol version
-///                u64  ; storage charge
-///                u64  ; computation charge
-///                u64  ; computation charge burned
-///                u64  ; storage rebate
-///                u64  ; non-refundable storage fee
-///                u64  ; epoch start timestamp
-///                (vector system-package)
+/// change-epoch-v2 = u64  ; next epoch
+///                   u64  ; protocol version
+///                   u64  ; storage charge
+///                   u64  ; computation charge
+///                   u64  ; computation charge burned
+///                   u64  ; storage rebate
+///                   u64  ; non-refundable storage fee
+///                   u64  ; epoch start timestamp
+///                   (vector system-package)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -710,12 +694,14 @@ pub struct ProgrammableTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+/// input = call-arg
 ///
-/// input-pure                  = %d00 bytes
-/// input-immutable-or-owned    = %d01 object-ref
-/// input-shared                = %d02 object-id u64 bool
-/// input-receiving             = %d04 object-ref
+/// call-arg   =  %d00 bytes        ; Pure
+///            =/ %d01 object-arg   ; Object
+///
+/// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+///            =/ %d01 object-id u64 bool   ; Shared
+///            =/ %d02 object-reference     ; Receiving
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(

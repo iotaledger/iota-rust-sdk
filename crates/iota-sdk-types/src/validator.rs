@@ -35,7 +35,7 @@ pub struct ValidatorCommittee {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-committee-member = bls-public-key
+/// validator-committee-member = bls12381-public-key
 ///                              u64 ; stake
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -60,12 +60,11 @@ pub struct ValidatorCommitteeMember {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-aggregated-signature = u64               ; epoch
-///                                  bls-signature
-///                                  roaring-bitmap
-/// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-///                         ; according to the serialized spec for
-///                         ; roaring bitmaps
+/// validator-aggregated-signature = u64                  ; epoch
+///                                  bls12381-signature   ; signature
+///                                  bytes                ; bitmap — contents of the bytes are
+///                                                       ; valid according to the serialized
+///                                                       ; spec for roaring bitmaps
 /// ```
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
@@ -138,9 +137,9 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-signature = u64               ; epoch
-///                       bls-public-key
-///                       bls-signature
+/// validator-signature = u64                  ; epoch
+///                       bls12381-public-key
+///                       bls12381-signature
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

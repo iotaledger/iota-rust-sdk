@@ -31,7 +31,7 @@ use crate::{
 /// An `ObjectId`'s BCS serialized form is defined by the following:
 ///
 /// ```text
-/// object-id = 32*OCTET
+/// object-id = address
 /// ```
 #[derive(
     Debug,
@@ -126,7 +126,7 @@ named_object_id!(ZERO, SYSTEM, CLOCK);
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-ref = object-id u64 digest
+/// object-reference = object-id u64 digest
 /// ```
 #[derive(uniffi::Record)]
 pub struct ObjectReference {
@@ -389,11 +389,11 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-///
-/// move-modules = map (identifier bytes)
-/// type-origin-table = vector type-origin
-/// linkage-table = map (object-id upgrade-info)
+/// move-package = object-id                          ; id
+///                u64                                ; version
+///                (vector (identifier bytes))        ; modules
+///                (vector type-origin)               ; type-origin-table
+///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
 #[derive(Debug, Eq, Hash, PartialEq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
@@ -465,7 +465,7 @@ impl MovePackage {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-move-struct = compressed-struct-tag bool u64 object-contents
+/// move-struct = compressed-struct-tag u64 bytes
 ///
 /// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
 /// other-struct-type     = %d00 struct-tag
@@ -473,8 +473,7 @@ impl MovePackage {
 /// staked-iota-type      = %d02
 /// coin-type             = %d03 type-tag
 ///
-/// ; first 32 bytes of the contents are the object's object-id
-/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
 #[derive(uniffi::Record)]
 pub struct MoveStruct {
@@ -658,7 +657,7 @@ impl ObjectType {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// genesis-object = object-data owner
+/// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]

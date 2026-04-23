@@ -17,7 +17,7 @@ pub type Version = u64;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-ref = object-id u64 digest
+/// object-reference = object-id u64 digest
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -172,11 +172,11 @@ impl ObjectData {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-///
-/// move-modules = map (identifier bytes)
-/// type-origin-table = vector type-origin
-/// linkage-table = map (object-id upgrade-info)
+/// move-package = object-id                          ; id
+///                u64                                ; version
+///                (vector (identifier bytes))        ; modules
+///                (vector type-origin)               ; type-origin-table
+///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -276,7 +276,7 @@ pub struct UpgradeInfo {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-move-struct = compressed-struct-tag bool u64 object-contents
+/// move-struct = compressed-struct-tag u64 bytes
 ///
 /// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
 /// other-struct-type     = %d00 struct-tag
@@ -284,8 +284,7 @@ pub struct UpgradeInfo {
 /// staked-iota-type      = %d02
 /// coin-type             = %d03 type-tag
 ///
-/// ; first 32 bytes of the contents are the object's object-id
-/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
@@ -492,7 +491,7 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// genesis-object = object-data owner
+/// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]

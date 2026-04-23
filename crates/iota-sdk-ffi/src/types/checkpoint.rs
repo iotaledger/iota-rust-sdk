@@ -181,10 +181,12 @@ impl CheckpointSummary {
 /// ```text
 /// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 ///
-/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
-///                                                               ; transaction. MUST be the same
-///                                                               ; length as the vector of digests
+/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+///                          (vector (vector user-signature)) ; set of user signatures for each
+///                                                           ; transaction. MUST be the same
+///                                                           ; length as the vector of digests
+///
+/// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
@@ -287,6 +289,7 @@ impl CheckpointCommitment {
 /// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
 ///                     u64                                 ; next_epoch_protocol_version
 ///                     (vector checkpoint-commitment)      ; epoch_commitments
+///                     i64                                 ; epoch_supply_change
 /// ```
 #[derive(uniffi::Record)]
 pub struct EndOfEpochData {
