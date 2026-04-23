@@ -24155,14 +24155,14 @@ public object FfiConverterTypeEd25519VerifyingKey: FfiConverter<Ed25519Verifying
  * =/ eoe-bridge-committee-init
  * =/ eoe-store-execution-time-observations
  *
- * eoe-change-epoch                = %d00 change-epoch
- * eoe-authenticator-state-create  = %d01
- * eoe-authenticator-state-expire  = %d02 authenticator-state-expire
- * eoe-randomness-state-create     = %d03
- * eoe-deny-list-state-create      = %d04
- * eoe-bridge-state-create         = %d05 digest
- * eoe-bridge-committee-init       = %d06 u64
- * eoe-store-execution-time-observations = %d07 stored-execution-time-observations
+ * eoe-change-epoch                        = %d00 change-epoch
+ * eoe-authenticator-state-create          = %d01
+ * eoe-authenticator-state-expire          = %d02 authenticator-state-expire
+ * eoe-randomness-state-create             = %d03
+ * eoe-deny-list-state-create              = %d04
+ * eoe-bridge-state-create                 = %d05 digest
+ * eoe-bridge-committee-init               = %d06 u64
+ * eoe-store-execution-time-observations   = %d07 stored-execution-time-observations
  * ```
  */
 public interface EndOfEpochTransactionKindInterface {
@@ -24187,14 +24187,14 @@ public interface EndOfEpochTransactionKindInterface {
  * =/ eoe-bridge-committee-init
  * =/ eoe-store-execution-time-observations
  *
- * eoe-change-epoch                = %d00 change-epoch
- * eoe-authenticator-state-create  = %d01
- * eoe-authenticator-state-expire  = %d02 authenticator-state-expire
- * eoe-randomness-state-create     = %d03
- * eoe-deny-list-state-create      = %d04
- * eoe-bridge-state-create         = %d05 digest
- * eoe-bridge-committee-init       = %d06 u64
- * eoe-store-execution-time-observations = %d07 stored-execution-time-observations
+ * eoe-change-epoch                        = %d00 change-epoch
+ * eoe-authenticator-state-create          = %d01
+ * eoe-authenticator-state-expire          = %d02 authenticator-state-expire
+ * eoe-randomness-state-create             = %d03
+ * eoe-deny-list-state-create              = %d04
+ * eoe-bridge-state-create                 = %d05 digest
+ * eoe-bridge-committee-init               = %d06 u64
+ * eoe-store-execution-time-observations   = %d07 stored-execution-time-observations
  * ```
  */
 open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTransactionKindInterface

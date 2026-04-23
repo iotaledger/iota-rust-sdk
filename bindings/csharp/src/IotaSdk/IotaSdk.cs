@@ -29945,14 +29945,14 @@ class FfiConverterTypeEd25519VerifyingKey: FfiConverter<Ed25519VerifyingKey, Int
 /// =/ eoe-bridge-committee-init
 /// =/ eoe-store-execution-time-observations
 ///
-/// eoe-change-epoch                = %d00 change-epoch
-/// eoe-authenticator-state-create  = %d01
-/// eoe-authenticator-state-expire  = %d02 authenticator-state-expire
-/// eoe-randomness-state-create     = %d03
-/// eoe-deny-list-state-create      = %d04
-/// eoe-bridge-state-create         = %d05 digest
-/// eoe-bridge-committee-init       = %d06 u64
-/// eoe-store-execution-time-observations = %d07 stored-execution-time-observations
+/// eoe-change-epoch                        = %d00 change-epoch
+/// eoe-authenticator-state-create          = %d01
+/// eoe-authenticator-state-expire          = %d02 authenticator-state-expire
+/// eoe-randomness-state-create             = %d03
+/// eoe-deny-list-state-create              = %d04
+/// eoe-bridge-state-create                 = %d05 digest
+/// eoe-bridge-committee-init               = %d06 u64
+/// eoe-store-execution-time-observations   = %d07 stored-execution-time-observations
 /// ```
 /// </summary>
 public interface IEndOfEpochTransactionKind: IEquatable<EndOfEpochTransactionKind> {
@@ -29974,14 +29974,14 @@ public interface IEndOfEpochTransactionKind: IEquatable<EndOfEpochTransactionKin
 /// =/ eoe-bridge-committee-init
 /// =/ eoe-store-execution-time-observations
 ///
-/// eoe-change-epoch                = %d00 change-epoch
-/// eoe-authenticator-state-create  = %d01
-/// eoe-authenticator-state-expire  = %d02 authenticator-state-expire
-/// eoe-randomness-state-create     = %d03
-/// eoe-deny-list-state-create      = %d04
-/// eoe-bridge-state-create         = %d05 digest
-/// eoe-bridge-committee-init       = %d06 u64
-/// eoe-store-execution-time-observations = %d07 stored-execution-time-observations
+/// eoe-change-epoch                        = %d00 change-epoch
+/// eoe-authenticator-state-create          = %d01
+/// eoe-authenticator-state-expire          = %d02 authenticator-state-expire
+/// eoe-randomness-state-create             = %d03
+/// eoe-deny-list-state-create              = %d04
+/// eoe-bridge-state-create                 = %d05 digest
+/// eoe-bridge-committee-init               = %d06 u64
+/// eoe-store-execution-time-observations   = %d07 stored-execution-time-observations
 /// ```
 /// </summary>
 public class EndOfEpochTransactionKind : IEndOfEpochTransactionKind, IDisposable {
