@@ -68,7 +68,6 @@ thiserror.workspace = true
 winnow = "0.7"
 
 # internal dependencies
-# BCS schema generation
 iota-bcs-schema = { workspace = true, optional = true }
 
 [build-dependencies]
