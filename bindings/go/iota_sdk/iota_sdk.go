@@ -20350,7 +20350,7 @@ func (_ FfiDestroyerGraphQlClient) Destroy(value *GraphQlClient) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %d01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //
@@ -20366,7 +20366,7 @@ type IdentifierInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %d01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //

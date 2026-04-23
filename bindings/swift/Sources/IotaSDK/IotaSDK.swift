@@ -9865,7 +9865,7 @@ public func FfiConverterTypeGraphQLClient_lower(_ value: GraphQlClient) -> Unsaf
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %d01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -9885,7 +9885,7 @@ public protocol IdentifierProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %d01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *

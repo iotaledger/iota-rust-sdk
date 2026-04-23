@@ -38439,7 +38439,7 @@ class IdentifierProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    identifier = %d01-80    ; length of the identifier
+    identifier = %d1-128    ; length of the identifier
     (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
     (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 
@@ -38459,7 +38459,7 @@ class Identifier():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    identifier = %d01-80    ; length of the identifier
+    identifier = %d1-128    ; length of the identifier
     (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
     (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 

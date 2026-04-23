@@ -32922,7 +32922,7 @@ class FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, IntPtr> {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// identifier = %d01-80    ; length of the identifier
+/// identifier = %d1-128    ; length of the identifier
 /// (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 /// (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 ///
@@ -32940,7 +32940,7 @@ public interface IIdentifier: IEquatable<Identifier> {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// identifier = %d01-80    ; length of the identifier
+/// identifier = %d1-128    ; length of the identifier
 /// (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 /// (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 ///
