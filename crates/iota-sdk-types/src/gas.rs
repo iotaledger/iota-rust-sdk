@@ -33,15 +33,17 @@
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// gas-cost-summary = u64 ; computation-cost
-///                    u64 ; storage-cost
-///                    u64 ; storage-rebate
-///                    u64 ; non-refundable-storage-fee
+/// gas-cost-summary = u64   ; computation-cost
+///                    u64   ; computation-cost-burned
+///                    u64   ; storage-cost
+///                    u64   ; storage-rebate
+///                    u64   ; non-refundable-storage-fee
 /// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct GasCostSummary {
     /// Cost of computation/execution
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]

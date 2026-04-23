@@ -10,7 +10,7 @@ use crate::error::Result;
 /// A `Digest`'s BCS serialized form is defined by the following:
 ///
 /// ```text
-/// digest = %x20 32OCTET
+/// digest = %d32 32OCTET
 /// ```
 ///
 /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,

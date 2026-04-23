@@ -24,17 +24,17 @@ use crate::types::struct_tag::StructTag;
 ///            type-tag-vector \
 ///            type-tag-struct
 ///
-/// type-tag-u8 = %x01
-/// type-tag-u16 = %x08
-/// type-tag-u32 = %x09
-/// type-tag-u64 = %x02
-/// type-tag-u128 = %x03
-/// type-tag-u256 = %x0a
-/// type-tag-bool = %x00
-/// type-tag-address = %x04
-/// type-tag-signer = %x05
-/// type-tag-vector = %x06 type-tag
-/// type-tag-struct = %x07 struct-tag
+/// type-tag-u8 = %d01
+/// type-tag-u16 = %d08
+/// type-tag-u32 = %d09
+/// type-tag-u64 = %d02
+/// type-tag-u128 = %d03
+/// type-tag-u256 = %d10
+/// type-tag-bool = %d00
+/// type-tag-address = %d04
+/// type-tag-signer = %d05
+/// type-tag-vector = %d06 type-tag
+/// type-tag-struct = %d07 struct-tag
 /// ```
 #[derive(
     Debug,

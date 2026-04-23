@@ -15,27 +15,29 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
+/// transaction-effects-v1 = execution-status                   ; status
+///                          u64                                ; epoch
+///                          gas-cost-summary                   ; gas-used
+///                          digest                             ; transaction-digest
+///                          (option u32)                       ; gas-object-index
+///                          (option digest)                    ; events-digest
+///                          (vector digest)                    ; dependencies
+///                          u64                                ; lamport-version
+///                          (vector changed-object)            ; changed-objects
+///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
+///                          (option digest)                    ; auxiliary-data-digest
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     #[cfg_attr(feature = "schemars", schemars(flatten))]
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
     pub gas_used: GasCostSummary,
@@ -53,6 +55,7 @@ pub struct TransactionEffectsV1 {
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -101,6 +104,7 @@ impl TransactionEffectsV1 {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: ObjectId,
@@ -121,12 +125,14 @@ pub struct ChangedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
+/// unchanged-shared-object = object-id               ; object-id
+///                           unchanged-shared-kind   ; kind
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnchangedSharedObject {
     pub object_id: ObjectId,
     pub kind: UnchangedSharedKind,
@@ -139,17 +145,11 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ cancelled
-///                              =/ per-epoch-config
-///
-/// read-only-root      = %x00 u64 digest
-/// mutate-deleted      = %x01 u64
-/// read-deleted        = %x02 u64
-/// cancelled           = %x03 u64
-/// per-epoch-config    = %x04
+/// unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
+///                       / %d01 u64           ; MutateDeleted
+///                       / %d02 u64           ; ReadDeleted
+///                       / %d03 u64           ; Cancelled
+///                       / %d04               ; PerEpochConfig
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -158,6 +158,7 @@ pub struct UnchangedSharedObject {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
@@ -165,23 +166,27 @@ pub enum UnchangedSharedKind {
     /// verify untrusted read.
     ReadOnlyRoot {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
     },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
     Cancelled {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
     /// Read of a per-epoch config object that should remain the same during an
@@ -210,10 +215,8 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-missing / object-in-data
-///
-/// object-in-missing = %x00
-/// object-in-data    = %x01 u64 digest owner
+/// object-in = %d00           ; Missing
+///           / %d01 u64 digest owner   ; Data
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -222,12 +225,14 @@ impl UnchangedSharedKind {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
         owner: Owner,
@@ -281,14 +286,9 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-missing
-///             =/ object-out-object-write
-///             =/ object-out-package-write
-///
-///
-/// object-out-missing        = %x00
-/// object-out-object-write   = %x01 digest owner
-/// object-out-package-write  = %x02 version digest
+/// object-out = %d00                ; Missing
+///            / %d01 digest owner   ; ObjectWrite
+///            / %d02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -297,6 +297,7 @@ impl ObjectIn {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
@@ -307,6 +308,7 @@ pub enum ObjectOut {
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
     },
@@ -371,13 +373,9 @@ impl ObjectOut {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// id-operation =  id-operation-none
-///              =/ id-operation-created
-///              =/ id-operation-deleted
-///
-/// id-operation-none       = %x00
-/// id-operation-created    = %x01
-/// id-operation-deleted    = %x02
+/// id-operation = %d00   ; None
+///              / %d01   ; Created
+///              / %d02   ; Deleted
 /// ```
 #[derive(Eq, PartialEq, Copy, Clone, Debug)]
 #[cfg_attr(
@@ -387,6 +385,7 @@ impl ObjectOut {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum IdOperation {
     None,

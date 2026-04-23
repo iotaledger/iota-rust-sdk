@@ -657,30 +657,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json() != 27344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs() != 19124:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json() != 46087:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs() != 3465:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json() != 23737:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs() != 166:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json() != 63452:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs() != 35779:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json() != 26451:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs() != 954:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json() != 31779:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs() != 38212:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json() != 36369:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs() != 305:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_json() != 41962:
@@ -1223,14 +1199,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json() != 40417:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs() != 28604:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json() != 59417:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs() != 35325:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json() != 11778:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs() != 57394:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_json() != 19090:
@@ -1518,10 +1486,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() != 29563:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() != 43622:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() != 10295:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() != 58594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2311,10 +2275,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() != 36331:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() != 59803:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() != 10003:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() != 15301:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key() != 16384:
@@ -2448,24 +2408,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3() != 21107:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4() != 45170:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() != 22119:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() != 1498:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() != 40848:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() != 6711:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() != 6398:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() != 28564:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() != 29560:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() != 26115:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 15001:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2994,8 +2936,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary() != 25823:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() != 17424:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() != 47546:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4804,155 +4744,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetclient.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10103,54 +9894,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uni
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10733,66 +10476,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12148,26 +11831,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12770,42 +12433,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs.restype = ctypes.c_uint16
@@ -13619,18 +13246,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs.restype = ctypes.c_uint16
@@ -14063,12 +13678,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.restype = ctypes.c_uint16
@@ -15251,12 +14860,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifi
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch.restype = ctypes.c_uint16
@@ -15458,33 +15061,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_ne
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.restype = ctypes.c_uint16
@@ -16277,9 +15853,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignaturea
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.restype = ctypes.c_uint16
@@ -16529,14 +16102,6 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
-
-
-
-
-
-
-
-
 
 
 
@@ -17592,6 +17157,7 @@ class EndOfEpochData:
     end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
     u64                                 ; next_epoch_protocol_version
     (vector checkpoint-commitment)      ; epoch_commitments
+    i64                                 ; epoch_supply_change
     ```
     """
 
@@ -18343,10 +17909,10 @@ class GasPayment:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    gas-payment = (vector object-ref) ; gas coin objects
-    address             ; owner
-    u64                 ; price
-    u64                 ; budget
+    gas-payment = (vector object-reference) ; gas coin objects
+    address                   ; owner
+    u64                       ; price
+    u64                       ; budget
     ```
     """
 
@@ -19041,16 +18607,15 @@ class MoveStruct:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-move-struct = compressed-struct-tag bool u64 object-contents
+    move-struct = compressed-struct-tag u64 bytes
 
     compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-    other-struct-type     = %x00 struct-tag
-    gas-coin-type         = %x01
-    staked-iota-type      = %x02
-    coin-type             = %x03 type-tag
+    other-struct-type     = %d00 struct-tag
+    gas-coin-type         = %d01
+    staked-iota-type      = %d02
+    coin-type             = %d03 type-tag
 
-    ; first 32 bytes of the contents are the object's object-id
-    object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+    ; The first 32 bytes of the `bytes` contents are the object's object-id.
     ```
     """
 
@@ -19505,7 +19070,7 @@ class ObjectReference:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-ref = object-id u64 digest
+    object-reference = object-id u64 digest
     ```
     """
 
@@ -21400,7 +20965,7 @@ class ValidatorCommitteeMember:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    validator-committee-member = bls-public-key
+    validator-committee-member = bls12381-public-key
     u64 ; stake
     ```
     """
@@ -21860,18 +21425,18 @@ class CommandArgumentError:
     =/ invalid-object-by-mut-ref
     =/ shared-object-operation-not-allowed
 
-    type-mismatch                               = %x00
-    invalid-bcs-bytes                           = %x01
-    invalid-usage-of-pure-argument              = %x02
-    invalid-argument-to-private-entry-function  = %x03
-    index-out-of-bounds                         = %x04 u16
-    secondary-index-out-of-bound                = %x05 u16 u16
-    invalid-result-arity                        = %x06 u16
-    invalid-gas-coin-usage                      = %x07
-    invalid-value-usage                         = %x08
-    invalid-object-by-value                     = %x09
-    invalid-object-by-mut-ref                   = %x0a
-    shared-object-operation-not-allowed         = %x0b
+    type-mismatch                               = %d00
+    invalid-bcs-bytes                           = %d01
+    invalid-usage-of-pure-argument              = %d02
+    invalid-argument-to-private-entry-function  = %d03
+    index-out-of-bounds                         = %d04 u16
+    secondary-index-out-of-bound                = %d05 u16 u16
+    invalid-result-arity                        = %d06 u16
+    invalid-gas-coin-usage                      = %d07
+    invalid-value-usage                         = %d08
+    invalid-object-by-value                     = %d09
+    invalid-object-by-mut-ref                   = %d10
+    shared-object-operation-not-allowed         = %d11
     ```
     """
 
@@ -22407,44 +21972,48 @@ class ExecutionError:
     =/ address-denied-for-coin
     =/ coin-type-global-pause
     =/ execution-cancelled-due-to-randomness-unavailable
+    =/ execution-cancelled-due-to-shared-object-congestion-v2
+    =/ invalid-linkage
 
-    insufficient-gas                                    = %x00
-    invalid-gas-object                                  = %x01
-    invariant-violation                                 = %x02
-    feature-not-yet-supported                           = %x03
-    object-too-big                                      = %x04 u64 u64
-    package-too-big                                     = %x05 u64 u64
-    circular-object-ownership                           = %x06 object-id
-    insufficient-coin-balance                           = %x07
-    coin-balance-overflow                               = %x08
-    publish-error-non-zero-address                      = %x09
-    iota-move-verification-error                        = %x0a
-    move-primitive-runtime-error                        = %x0b (option move-location)
-    move-abort                                          = %x0c move-location u64
-    vm-verification-or-deserialization-error            = %x0d
-    vm-invariant-violation                              = %x0e
-    function-not-found                                  = %x0f
-    arity-mismatch                                      = %x10
-    type-arity-mismatch                                 = %x11
-    non-entry-function-invoked                          = %x12
-    command-argument-error                              = %x13 u16 command-argument-error
-    type-argument-error                                 = %x14 u16 type-argument-error
-    unused-value-without-drop                           = %x15 u16 u16
-    invalid-public-function-return-type                 = %x16 u16
-    invalid-transfer-object                             = %x17
-    effects-too-large                                   = %x18 u64 u64
-    publish-upgrade-missing-dependency                  = %x19
-    publish-upgrade-dependency-downgrade                = %x1a
-    package-upgrade-error                               = %x1b package-upgrade-error
-    written-objects-too-large                           = %x1c u64 u64
-    certificate-denied                                  = %x1d
-    iota-move-verification-timeout                      = %x1e
-    shared-object-operation-not-allowed                 = %x1f
-    input-object-deleted                                = %x20
-    execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
-    address-denied-for-coin                             = %x22 address string
-    coin-type-global-pause                              = %x23 string
-    execution-cancelled-due-to-randomness-unavailable   = %x24
+    insufficient-gas                                       = %d00
+    invalid-gas-object                                     = %d01
+    invariant-violation                                    = %d02
+    feature-not-yet-supported                              = %d03
+    object-too-big                                         = %d04 u64 u64
+    package-too-big                                        = %d05 u64 u64
+    circular-object-ownership                              = %d06 object-id
+    insufficient-coin-balance                              = %d07
+    coin-balance-overflow                                  = %d08
+    publish-error-non-zero-address                         = %d09
+    iota-move-verification-error                           = %d10
+    move-primitive-runtime-error                           = %d11 (option move-location)
+    move-abort                                             = %d12 move-location u64
+    vm-verification-or-deserialization-error               = %d13
+    vm-invariant-violation                                 = %d14
+    function-not-found                                     = %d15
+    arity-mismatch                                         = %d16
+    type-arity-mismatch                                    = %d17
+    non-entry-function-invoked                             = %d18
+    command-argument-error                                 = %d19 u16 command-argument-error
+    type-argument-error                                    = %d20 u16 type-argument-error
+    unused-value-without-drop                              = %d21 u16 u16
+    invalid-public-function-return-type                    = %d22 u16
+    invalid-transfer-object                                = %d23
+    effects-too-large                                      = %d24 u64 u64
+    publish-upgrade-missing-dependency                     = %d25
+    publish-upgrade-dependency-downgrade                   = %d26
+    package-upgrade-error                                  = %d27 package-upgrade-error
+    written-objects-too-large                              = %d28 u64 u64
+    certificate-denied                                     = %d29
+    iota-move-verification-timeout                         = %d30
+    shared-object-operation-not-allowed                    = %d31
+    input-object-deleted                                   = %d32
+    execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+    address-denied-for-coin                                = %d34 address string
+    coin-type-global-pause                                 = %d35 string
+    execution-cancelled-due-to-randomness-unavailable      = %d36
+    execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+    invalid-linkage                                        = %d38
     ```
     """
 
@@ -23808,8 +23377,8 @@ class ExecutionStatus:
 
     ```text
     execution-status = success / failure
-    success = %x00
-    failure = %x01 execution-error (option u64)
+    success = %d00
+    failure = %d01 execution-error (option u64)
     ```
     """
 
@@ -24052,9 +23621,9 @@ class IdOperation(enum.Enum):
     =/ id-operation-created
     =/ id-operation-deleted
 
-    id-operation-none       = %x00
-    id-operation-created    = %x01
-    id-operation-deleted    = %x02
+    id-operation-none       = %d00
+    id-operation-created    = %d01
+    id-operation-deleted    = %d02
     ```
     """
 
@@ -24684,8 +24253,8 @@ class ObjectIn:
     ```text
     object-in = object-in-missing / object-in-data
 
-    object-in-missing = %x00
-    object-in-data    = %x01 u64 digest owner
+    object-in-missing = %d00
+    object-in-data    = %d01 u64 digest owner
     ```
     """
 
@@ -24813,9 +24382,9 @@ class ObjectOut:
     =/ object-out-package-write
 
 
-    object-out-missing        = %x00
-    object-out-object-write   = %x01 digest owner
-    object-out-package-write  = %x02 version digest
+    object-out-missing        = %d00
+    object-out-object-write   = %d01 digest owner
+    object-out-package-write  = %d02 version digest
     ```
     """
 
@@ -24985,12 +24554,12 @@ class PackageUpgradeError:
     unknown-upgrade-policy  /
     package-id-does-not-match
 
-    unable-to-fetch-package     = %x00 object-id
-    not-a-package               = %x01 object-id
-    incompatible-upgrade        = %x02
-    digest-does-not-match       = %x03 digest
-    unknown-upgrade-policy      = %x04 u8
-    package-id-does-not-match   = %x05 object-id object-id
+    unable-to-fetch-package     = %d00 object-id
+    not-a-package               = %d01 object-id
+    incompatible-upgrade        = %d02
+    digest-does-not-match       = %d03 digest
+    unknown-upgrade-policy      = %d04 u8
+    package-id-does-not-match   = %d05 object-id object-id
     ```
     """
 
@@ -25296,14 +24865,14 @@ class SignatureScheme(enum.Enum):
     signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
     multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
     move-auth-flag
-    ed25519-flag                    = %x00
-    secp256k1-flag                  = %x01
-    secp256r1-flag                  = %x02
-    multisig-flag                   = %x03
-    bls-flag                        = %x04
-    zklogin-auth-flag-deprecated    = %x05
-    passkey-auth-flag               = %x06
-    move-auth-flag                  = %x07
+    ed25519-flag                    = %d00
+    secp256k1-flag                  = %d01
+    secp256r1-flag                  = %d02
+    multisig-flag                   = %d03
+    bls-flag                        = %d04
+    zklogin-auth-flag-deprecated    = %d05
+    passkey-auth-flag               = %d06
+    move-auth-flag                  = %d07
     ```
     """
 
@@ -25633,8 +25202,8 @@ class TransactionExpiration:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-expiration =  %x00      ; none
-    =/ %x01 u64  ; epoch
+    transaction-expiration =  %d00      ; none
+    =/ %d01 u64  ; epoch
     ```
     """
 
@@ -25749,8 +25318,8 @@ class TypeArgumentError(enum.Enum):
 
     ```text
     type-argument-error = type-not-found / constraint-not-satisfied
-    type-not-found = %x00
-    constraint-not-satisfied = %x01
+    type-not-found = %d00
+    constraint-not-satisfied = %d01
     ```
     """
 
@@ -25814,11 +25383,11 @@ class UnchangedSharedKind:
     =/ cancelled
     =/ per-epoch-config
 
-    read-only-root      = %x00 u64 digest
-    mutate-deleted      = %x01 u64
-    read-deleted        = %x02 u64
-    cancelled           = %x03 u64
-    per-epoch-config    = %x04
+    read-only-root      = %d00 u64 digest
+    mutate-deleted      = %d01 u64
+    read-deleted        = %d02 u64
+    cancelled           = %d03 u64
+    per-epoch-config    = %d04
     ```
     """
 
@@ -28606,31 +28175,6 @@ class _UniffiConverterSequenceTypeEndOfEpochTransactionKind(_UniffiConverterRust
 
 
 
-class _UniffiConverterSequenceTypeExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeExecutionTimeObservation.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeExecutionTimeObservation.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeExecutionTimeObservation.read(buf) for i in range(count)
-        ]
-
-
-
 class _UniffiConverterSequenceTypeGenesisObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -29027,31 +28571,6 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeValidatorExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeValidatorExecutionTimeObservation.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeValidatorExecutionTimeObservation.read(buf) for i in range(count)
         ]
 
 
@@ -30458,10 +29977,10 @@ class ArgumentProtocol(typing.Protocol):
     =/ argument-result
     =/ argument-nested-result
 
-    argument-gas            = %x00
-    argument-input          = %x01 u16
-    argument-result         = %x02 u16
-    argument-nested-result  = %x03 u16 u16
+    argument-gas            = %d00
+    argument-input          = %d01 u16
+    argument-result         = %d02 u16
+    argument-nested-result  = %d03 u16 u16
     ```
     """
 
@@ -30487,10 +30006,10 @@ class Argument():
     =/ argument-result
     =/ argument-nested-result
 
-    argument-gas            = %x00
-    argument-input          = %x01 u16
-    argument-result         = %x02 u16
-    argument-nested-result  = %x03 u16 u16
+    argument-gas            = %d00
+    argument-input          = %d01 u16
+    argument-result         = %d02 u16
+    argument-nested-result  = %d03 u16 u16
     ```
     """
 
@@ -30774,7 +30293,7 @@ class Bls12381PublicKeyProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTET
+    bls12381-public-key = %d96 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -30795,7 +30314,7 @@ class Bls12381PublicKey():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTET
+    bls12381-public-key = %d96 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -30913,20 +30432,15 @@ class _UniffiConverterTypeBls12381PublicKey:
         buf.write_u64(cls.lower(value))
 class Bls12381SignatureProtocol(typing.Protocol):
     """
-    A bls12381 min-sig public key.
+    A bls12381 min-sig signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTET
+    bls12381-signature = 48OCTET
     ```
-
-    Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-    fixed-length of 96, IOTA's binary representation of a min-sig
-    `Bls12381PublicKey` is prefixed with its length meaning its serialized
-    binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
     """
 
     def to_bytes(self, ):
@@ -30934,20 +30448,15 @@ class Bls12381SignatureProtocol(typing.Protocol):
 # Bls12381Signature is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Bls12381Signature():
     """
-    A bls12381 min-sig public key.
+    A bls12381 min-sig signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTET
+    bls12381-signature = 48OCTET
     ```
-
-    Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-    fixed-length of 96, IOTA's binary representation of a min-sig
-    `Bls12381PublicKey` is prefixed with its length meaning its serialized
-    binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
     """
 
     _pointer: ctypes.c_void_p
@@ -31579,7 +31088,7 @@ class ChangeEpochV2Protocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    change-epoch = u64  ; next epoch
+    change-epoch-v2 = u64  ; next epoch
     u64  ; protocol version
     u64  ; storage charge
     u64  ; computation charge
@@ -31656,7 +31165,7 @@ class ChangeEpochV2():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    change-epoch = u64  ; next epoch
+    change-epoch-v2 = u64  ; next epoch
     u64  ; protocol version
     u64  ; storage charge
     u64  ; computation charge
@@ -32521,7 +32030,7 @@ class CheckpointCommitmentProtocol(typing.Protocol):
     ```text
     ; CheckpointCommitment is an enum and each variant is prefixed with its index
     checkpoint-commitment = ecmh-live-object-set
-    ecmh-live-object-set = %x00 digest
+    ecmh-live-object-set = %d00 digest
     ```
     """
 
@@ -32541,7 +32050,7 @@ class CheckpointCommitment():
     ```text
     ; CheckpointCommitment is an enum and each variant is prefixed with its index
     checkpoint-commitment = ecmh-live-object-set
-    ecmh-live-object-set = %x00 digest
+    ecmh-live-object-set = %d00 digest
     ```
     """
 
@@ -32628,12 +32137,14 @@ class CheckpointContentsProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+    checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 
-    checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-    (vector (vector bcs-user-signature)) ; set of user signatures for each
+    checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+    (vector (vector user-signature)) ; set of user signatures for each
     ; transaction. MUST be the same
     ; length as the vector of digests
+
+    execution-digests = digest digest   ; transaction, effects
     ```
     """
 
@@ -32655,12 +32166,14 @@ class CheckpointContents():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+    checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 
-    checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-    (vector (vector bcs-user-signature)) ; set of user signatures for each
+    checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+    (vector (vector user-signature)) ; set of user signatures for each
     ; transaction. MUST be the same
     ; length as the vector of digests
+
+    execution-digests = digest digest   ; transaction, effects
     ```
     """
 
@@ -34151,13 +33664,13 @@ class CommandProtocol(typing.Protocol):
     =/ command-make-move-vector
     =/ command-upgrade
 
-    command-move-call           = %x00 move-call
-    command-transfer-objects    = %x01 transfer-objects
-    command-split-coins         = %x02 split-coins
-    command-merge-coins         = %x03 merge-coins
-    command-publish             = %x04 publish
-    command-make-move-vector    = %x05 make-move-vector
-    command-upgrade             = %x06 upgrade
+    command-move-call           = %d00 move-call
+    command-transfer-objects    = %d01 transfer-objects
+    command-split-coins         = %d02 split-coins
+    command-merge-coins         = %d03 merge-coins
+    command-publish             = %d04 publish
+    command-make-move-vector    = %d05 make-move-vector
+    command-upgrade             = %d06 upgrade
     ```
     """
 
@@ -34180,13 +33693,13 @@ class Command():
     =/ command-make-move-vector
     =/ command-upgrade
 
-    command-move-call           = %x00 move-call
-    command-transfer-objects    = %x01 transfer-objects
-    command-split-coins         = %x02 split-coins
-    command-merge-coins         = %x03 merge-coins
-    command-publish             = %x04 publish
-    command-make-move-vector    = %x05 make-move-vector
-    command-upgrade             = %x06 upgrade
+    command-move-call           = %d00 move-call
+    command-transfer-objects    = %d01 transfer-objects
+    command-split-coins         = %d02 split-coins
+    command-merge-coins         = %d03 merge-coins
+    command-publish             = %d04 publish
+    command-make-move-vector    = %d05 make-move-vector
+    command-upgrade             = %d06 upgrade
     ```
     """
 
@@ -34719,7 +34232,7 @@ class DigestProtocol(typing.Protocol):
     A `Digest`'s BCS serialized form is defined by the following:
 
     ```text
-    digest = %x20 32OCTET
+    digest = %d32 32OCTET
     ```
 
     Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -34748,7 +34261,7 @@ class Digest():
     A `Digest`'s BCS serialized form is defined by the following:
 
     ```text
-    digest = %x20 32OCTET
+    digest = %d32 32OCTET
     ```
 
     Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -35917,23 +35430,10 @@ class EndOfEpochTransactionKindProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    end-of-epoch-transaction-kind   =  eoe-change-epoch
-    =/ eoe-authenticator-state-create
-    =/ eoe-authenticator-state-expire
-    =/ eoe-randomness-state-create
-    =/ eoe-deny-list-state-create
-    =/ eoe-bridge-state-create
-    =/ eoe-bridge-committee-init
-    =/ eoe-store-execution-time-observations
-
-    eoe-change-epoch                = %x00 change-epoch
-    eoe-authenticator-state-create  = %x01
-    eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-    eoe-randomness-state-create     = %x03
-    eoe-deny-list-state-create      = %x04
-    eoe-bridge-state-create         = %x05 digest
-    eoe-bridge-committee-init       = %x06 u64
-    eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+    end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+    =/ %d01 change-epoch-v2  ; ChangeEpochV2
+    =/ %d02 change-epoch-v3  ; ChangeEpochV3
+    =/ %d03 change-epoch-v4  ; ChangeEpochV4
     ```
     """
 
@@ -35948,23 +35448,10 @@ class EndOfEpochTransactionKind():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    end-of-epoch-transaction-kind   =  eoe-change-epoch
-    =/ eoe-authenticator-state-create
-    =/ eoe-authenticator-state-expire
-    =/ eoe-randomness-state-create
-    =/ eoe-deny-list-state-create
-    =/ eoe-bridge-state-create
-    =/ eoe-bridge-committee-init
-    =/ eoe-store-execution-time-observations
-
-    eoe-change-epoch                = %x00 change-epoch
-    eoe-authenticator-state-create  = %x01
-    eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-    eoe-randomness-state-create     = %x03
-    eoe-deny-list-state-create      = %x04
-    eoe-bridge-state-create         = %x05 digest
-    eoe-bridge-committee-init       = %x06 u64
-    eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+    end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+    =/ %d01 change-epoch-v2  ; ChangeEpochV2
+    =/ %d02 change-epoch-v3  ; ChangeEpochV3
+    =/ %d03 change-epoch-v4  ; ChangeEpochV4
     ```
     """
 
@@ -36077,430 +35564,6 @@ class _UniffiConverterTypeEndOfEpochTransactionKind:
 
     @classmethod
     def write(cls, value: EndOfEpochTransactionKindProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationProtocol(typing.Protocol):
-    def key(self, ):
-        raise NotImplementedError
-    def observations(self, ):
-        raise NotImplementedError
-# ExecutionTimeObservation is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservation():
-    _pointer: ctypes.c_void_p
-    def __init__(self, key: "ExecutionTimeObservationKey",observations: "typing.List[ValidatorExecutionTimeObservation]"):
-        _UniffiConverterTypeExecutionTimeObservationKey.check_lower(key)
-        
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.check_lower(observations)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(key),
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.lower(observations))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def key(self, ) -> "ExecutionTimeObservationKey":
-        return _UniffiConverterTypeExecutionTimeObservationKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def observations(self, ) -> "typing.List[ValidatorExecutionTimeObservation]":
-        return _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservation:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservation._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservation):
-        if not isinstance(value, ExecutionTimeObservation):
-            raise TypeError("Expected ExecutionTimeObservation instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationProtocol):
-        if not isinstance(value, ExecutionTimeObservation):
-            raise TypeError("Expected ExecutionTimeObservation instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationKeyProtocol(typing.Protocol):
-    """
-    Key for an execution time observation
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation-key  =  %x00 move-entry-point
-    =/ %x01 ; transfer-objects
-    =/ %x02 ; split-coins
-    =/ %x03 ; merge-coins
-    =/ %x04 ; publish
-    =/ %x05 ; make-move-vec
-    =/ %x06 ; upgrade
-
-    move-entry-point = object-id string string (vec type-tag)
-    ```
-    """
-
-    pass
-# ExecutionTimeObservationKey is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservationKey():
-    """
-    Key for an execution time observation
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation-key  =  %x00 move-entry-point
-    =/ %x01 ; transfer-objects
-    =/ %x02 ; split-coins
-    =/ %x03 ; merge-coins
-    =/ %x04 ; publish
-    =/ %x05 ; make-move-vec
-    =/ %x06 ; upgrade
-
-    move-entry-point = object-id string string (vec type-tag)
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-    @classmethod
-    def new_make_move_vec(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_merge_coins(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_move_entry_point(cls, package: "ObjectId",module: "str",function: "str",type_arguments: "typing.List[TypeTag]"):
-        _UniffiConverterTypeObjectId.check_lower(package)
-        
-        _UniffiConverterString.check_lower(module)
-        
-        _UniffiConverterString.check_lower(function)
-        
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_arguments)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point,
-        _UniffiConverterTypeObjectId.lower(package),
-        _UniffiConverterString.lower(module),
-        _UniffiConverterString.lower(function),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_arguments))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_publish(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_split_coins(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_transfer_objects(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_upgrade(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade,)
-        return cls._make_instance_(pointer)
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservationKey):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservationKey):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservationKey:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservationKey._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservationKey):
-        if not isinstance(value, ExecutionTimeObservationKey):
-            raise TypeError("Expected ExecutionTimeObservationKey instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationKeyProtocol):
-        if not isinstance(value, ExecutionTimeObservationKey):
-            raise TypeError("Expected ExecutionTimeObservationKey instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationKeyProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class ExecutionTimeObservationsProtocol(typing.Protocol):
-    """
-    Set of Execution Time Observations from the committee.
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-
-    v1-stored-execution-time-observations = (vec
-    execution-time-observation-key
-    (vec execution-time-observation)
-    )
-    ```
-    """
-
-    pass
-# ExecutionTimeObservations is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ExecutionTimeObservations():
-    """
-    Set of Execution Time Observations from the committee.
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-
-    v1-stored-execution-time-observations = (vec
-    execution-time-observation-key
-    (vec execution-time-observation)
-    )
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-    @classmethod
-    def new_v1(cls, execution_time_observations: "typing.List[ExecutionTimeObservation]"):
-        _UniffiConverterSequenceTypeExecutionTimeObservation.check_lower(execution_time_observations)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1,
-        _UniffiConverterSequenceTypeExecutionTimeObservation.lower(execution_time_observations))
-        return cls._make_instance_(pointer)
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservations):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ExecutionTimeObservations):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeExecutionTimeObservations:
-
-    @staticmethod
-    def lift(value: int):
-        return ExecutionTimeObservations._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ExecutionTimeObservations):
-        if not isinstance(value, ExecutionTimeObservations):
-            raise TypeError("Expected ExecutionTimeObservations instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ExecutionTimeObservationsProtocol):
-        if not isinstance(value, ExecutionTimeObservations):
-            raise TypeError("Expected ExecutionTimeObservations instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ExecutionTimeObservationsProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class FaucetClientProtocol(typing.Protocol):
     def request(self, address: "Address"):
@@ -36780,7 +35843,7 @@ class GenesisObjectProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    genesis-object = object-data owner
+    genesis-object = %d00 object-data owner   ; RawObject
     ```
     """
 
@@ -36807,7 +35870,7 @@ class GenesisObject():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    genesis-object = object-data owner
+    genesis-object = %d00 object-data owner   ; RawObject
     ```
     """
 
@@ -39377,7 +38440,7 @@ class IdentifierProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    identifier = %x01-80    ; length of the identifier
+    identifier = %d1-128    ; length of the identifier
     (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
     (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 
@@ -39397,7 +38460,7 @@ class Identifier():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    identifier = %x01-80    ; length of the identifier
+    identifier = %d1-128    ; length of the identifier
     (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
     (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 
@@ -39517,12 +38580,14 @@ class InputProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+    input = call-arg
 
-    input-pure                  = %x00 bytes
-    input-immutable-or-owned    = %x01 object-ref
-    input-shared                = %x02 object-id u64 bool
-    input-receiving             = %x04 object-ref
+    call-arg   =  %d00 bytes        ; Pure
+    =/ %d01 object-arg   ; Object
+
+    object-arg =  %d00 object-reference     ; ImmutableOrOwned
+    =/ %d01 object-id u64 bool   ; Shared
+    =/ %d02 object-reference     ; Receiving
     ```
     """
 
@@ -39537,12 +38602,14 @@ class Input():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+    input = call-arg
 
-    input-pure                  = %x00 bytes
-    input-immutable-or-owned    = %x01 object-ref
-    input-shared                = %x02 object-id u64 bool
-    input-receiving             = %x04 object-ref
+    call-arg   =  %d00 bytes        ; Pure
+    =/ %d01 object-arg   ; Object
+
+    object-arg =  %d00 object-reference     ; ImmutableOrOwned
+    =/ %d01 object-id u64 bool   ; Shared
+    =/ %d02 object-reference     ; Receiving
     ```
     """
 
@@ -41256,11 +40323,11 @@ class MovePackageProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-move-package = object-id u64 move-modules type-origin-table linkage-table
-
-    move-modules = map (identifier bytes)
-    type-origin-table = vector type-origin
-    linkage-table = map (object-id upgrade-info)
+    move-package = object-id                          ; id
+    u64                                ; version
+    (vector (identifier bytes))        ; modules
+    (vector type-origin)               ; type-origin-table
+    (vector (object-id upgrade-info))  ; linkage-table
     ```
     """
 
@@ -41284,11 +40351,11 @@ class MovePackage():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-move-package = object-id u64 move-modules type-origin-table linkage-table
-
-    move-modules = map (identifier bytes)
-    type-origin-table = vector type-origin
-    linkage-table = map (object-id upgrade-info)
+    move-package = object-id                          ; id
+    u64                                ; version
+    (vector (identifier bytes))        ; modules
+    (vector type-origin)               ; type-origin-table
+    (vector (object-id upgrade-info))  ; linkage-table
     ```
     """
 
@@ -42593,11 +41660,11 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
     zklogin-multisig-member-public-key-deprecated /
     passkey-multisig-member-public-key
 
-    ed25519-multisig-member-public-key              = %x00 ed25519-public-key
-    secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
-    secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
-    zklogin-multisig-member-public-key-deprecated   = %x03
-    passkey-multisig-member-public-key              = %x04 passkey-public-key
+    ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+    secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+    secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+    zklogin-multisig-member-public-key-deprecated   = %d03
+    passkey-multisig-member-public-key              = %d04 passkey-public-key
     ```
 
     There is also a legacy encoding for this type defined as:
@@ -42654,11 +41721,11 @@ class MultisigMemberPublicKey():
     zklogin-multisig-member-public-key-deprecated /
     passkey-multisig-member-public-key
 
-    ed25519-multisig-member-public-key              = %x00 ed25519-public-key
-    secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
-    secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
-    zklogin-multisig-member-public-key-deprecated   = %x03
-    passkey-multisig-member-public-key              = %x04 passkey-public-key
+    ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+    secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+    secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+    zklogin-multisig-member-public-key-deprecated   = %d03
+    passkey-multisig-member-public-key              = %d04 passkey-public-key
     ```
 
     There is also a legacy encoding for this type defined as:
@@ -42879,11 +41946,11 @@ class MultisigMemberSignatureProtocol(typing.Protocol):
     zklogin-multisig-member-signature-deprecated /
     passkey-multisig-member-signature
 
-    ed25519-multisig-member-signature               = %x00 ed25519-signature
-    secp256k1-multisig-member-signature             = %x01 secp256k1-signature
-    secp256r1-multisig-member-signature             = %x02 secp256r1-signature
-    zklogin-multisig-member-signature-deprecated    = %x03
-    passkey-multisig-member-signature               = %x04 passkey-authenticator
+    ed25519-multisig-member-signature               = %d00 ed25519-signature
+    secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+    secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+    zklogin-multisig-member-signature-deprecated    = %d03
+    passkey-multisig-member-signature               = %d04 passkey-authenticator
     ```
     """
 
@@ -42927,11 +41994,11 @@ class MultisigMemberSignature():
     zklogin-multisig-member-signature-deprecated /
     passkey-multisig-member-signature
 
-    ed25519-multisig-member-signature               = %x00 ed25519-signature
-    secp256k1-multisig-member-signature             = %x01 secp256k1-signature
-    secp256r1-multisig-member-signature             = %x02 secp256r1-signature
-    zklogin-multisig-member-signature-deprecated    = %x03
-    passkey-multisig-member-signature               = %x04 passkey-authenticator
+    ed25519-multisig-member-signature               = %d00 ed25519-signature
+    secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+    secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+    zklogin-multisig-member-signature-deprecated    = %d03
+    passkey-multisig-member-signature               = %d04 passkey-authenticator
     ```
     """
 
@@ -43963,8 +43030,8 @@ class ObjectDataProtocol(typing.Protocol):
     ```text
     object-data = object-data-struct / object-data-package
 
-    object-data-struct  = %x00 object-move-struct
-    object-data-package = %x01 object-move-package
+    object-data-struct  = %d00 object-move-struct
+    object-data-package = %d01 object-move-package
     ```
     """
 
@@ -44004,8 +43071,8 @@ class ObjectData():
     ```text
     object-data = object-data-struct / object-data-package
 
-    object-data-struct  = %x00 object-move-struct
-    object-data-package = %x01 object-move-package
+    object-data-struct  = %d00 object-move-struct
+    object-data-package = %d01 object-move-package
     ```
     """
 
@@ -44188,7 +43255,7 @@ class ObjectIdProtocol(typing.Protocol):
     An `ObjectId`'s BCS serialized form is defined by the following:
 
     ```text
-    object-id = 32*OCTET
+    object-id = address
     ```
     """
 
@@ -44239,7 +43306,7 @@ class ObjectId():
     An `ObjectId`'s BCS serialized form is defined by the following:
 
     ```text
-    object-id = 32*OCTET
+    object-id = address
     ```
     """
 
@@ -44634,10 +43701,10 @@ class OwnerProtocol(typing.Protocol):
     ```text
     owner = owner-address / owner-object / owner-shared / owner-immutable
 
-    owner-address   = %x00 address
-    owner-object    = %x01 object-id
-    owner-shared    = %x02 u64
-    owner-immutable = %x03
+    owner-address   = %d00 address
+    owner-object    = %d01 object-id
+    owner-shared    = %d02 u64
+    owner-immutable = %d03
     ```
     """
 
@@ -44673,10 +43740,10 @@ class Owner():
     ```text
     owner = owner-address / owner-object / owner-shared / owner-immutable
 
-    owner-address   = %x00 address
-    owner-object    = %x01 object-id
-    owner-shared    = %x02 u64
-    owner-immutable = %x03
+    owner-address   = %d00 address
+    owner-object    = %d01 object-id
+    owner-shared    = %d02 u64
+    owner-immutable = %d03
     ```
     """
 
@@ -46566,14 +45633,14 @@ class _UniffiConverterTypeSecp256k1PrivateKey:
         buf.write_u64(cls.lower(value))
 class Secp256k1PublicKeyProtocol(typing.Protocol):
     """
-    A secp256k1 signature.
+    A secp256k1 public key.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-signature = 64OCTET
+    secp256k1-public-key = 33OCTET
     ```
     """
 
@@ -46606,14 +45673,14 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
 # Secp256k1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256k1PublicKey():
     """
-    A secp256k1 signature.
+    A secp256k1 public key.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-signature = 64OCTET
+    secp256k1-public-key = 33OCTET
     ```
     """
 
@@ -46771,14 +45838,14 @@ class _UniffiConverterTypeSecp256k1PublicKey:
         buf.write_u64(cls.lower(value))
 class Secp256k1SignatureProtocol(typing.Protocol):
     """
-    A secp256k1 public key.
+    A secp256k1 signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-public-key = 33OCTET
+    secp256k1-signature = 64OCTET
     ```
     """
 
@@ -46787,14 +45854,14 @@ class Secp256k1SignatureProtocol(typing.Protocol):
 # Secp256k1Signature is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256k1Signature():
     """
-    A secp256k1 public key.
+    A secp256k1 signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-public-key = 33OCTET
+    secp256k1-signature = 64OCTET
     ```
     """
 
@@ -47608,14 +46675,14 @@ class _UniffiConverterTypeSecp256r1PrivateKey:
         buf.write_u64(cls.lower(value))
 class Secp256r1PublicKeyProtocol(typing.Protocol):
     """
-    A secp256r1 signature.
+    A secp256r1 public key.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-signature = 64OCTET
+    secp256r1-public-key = 33OCTET
     ```
     """
 
@@ -47648,14 +46715,14 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
 # Secp256r1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256r1PublicKey():
     """
-    A secp256r1 signature.
+    A secp256r1 public key.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-signature = 64OCTET
+    secp256r1-public-key = 33OCTET
     ```
     """
 
@@ -47813,14 +46880,14 @@ class _UniffiConverterTypeSecp256r1PublicKey:
         buf.write_u64(cls.lower(value))
 class Secp256r1SignatureProtocol(typing.Protocol):
     """
-    A secp256r1 public key.
+    A secp256r1 signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-public-key = 33OCTET
+    secp256r1-signature = 64OCTET
     ```
     """
 
@@ -47829,14 +46896,14 @@ class Secp256r1SignatureProtocol(typing.Protocol):
 # Secp256r1Signature is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256r1Signature():
     """
-    A secp256r1 public key.
+    A secp256r1 signature.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-public-key = 33OCTET
+    secp256r1-signature = 64OCTET
     ```
     """
 
@@ -49994,7 +49061,7 @@ class TransactionProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction = %x00 transaction-v1
+    transaction = %d00 transaction-v1
 
     transaction-v1 = transaction-kind address gas-payment transaction-expiration
     ```
@@ -50040,7 +49107,7 @@ class Transaction():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction = %x00 transaction-v1
+    transaction = %d00 transaction-v1
 
     transaction-v1 = transaction-kind address gas-payment transaction-expiration
     ```
@@ -50972,8 +50039,8 @@ class TransactionEffectsProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-effects =  %x00 effects-v1
-    =/ %x01 effects-v2
+    transaction-effects =  %d00 effects-v1
+    =/ %d01 effects-v2
     ```
     """
 
@@ -50993,8 +50060,8 @@ class TransactionEffects():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-effects =  %x00 effects-v1
-    =/ %x01 effects-v2
+    transaction-effects =  %d00 effects-v1
+    =/ %d01 effects-v2
     ```
     """
 
@@ -51220,15 +50287,12 @@ class TransactionKindProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-kind    =  %x00 ptb
-    =/ %x01 change-epoch
-    =/ %x02 genesis-transaction
-    =/ %x03 consensus-commit-prologue
-    =/ %x04 authenticator-state-update
-    =/ %x05 (vector end-of-epoch-transaction-kind)
-    =/ %x06 randomness-state-update
-    =/ %x07 consensus-commit-prologue-v2
-    =/ %x08 consensus-commit-prologue-v3
+    transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+    =/ %d01 genesis-transaction                    ; Genesis
+    =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+    =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+    =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+    =/ %d05 randomness-state-update                ; RandomnessStateUpdate
     ```
     """
 
@@ -51243,15 +50307,12 @@ class TransactionKind():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-kind    =  %x00 ptb
-    =/ %x01 change-epoch
-    =/ %x02 genesis-transaction
-    =/ %x03 consensus-commit-prologue
-    =/ %x04 authenticator-state-update
-    =/ %x05 (vector end-of-epoch-transaction-kind)
-    =/ %x06 randomness-state-update
-    =/ %x07 consensus-commit-prologue-v2
-    =/ %x08 consensus-commit-prologue-v3
+    transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+    =/ %d01 genesis-transaction                    ; Genesis
+    =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+    =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+    =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+    =/ %d05 randomness-state-update                ; RandomnessStateUpdate
     ```
     """
 
@@ -51518,7 +50579,7 @@ class TransactionV1Protocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction = %x00 transaction-v1
+    transaction = %d00 transaction-v1
 
     transaction-v1 = transaction-kind address gas-payment transaction-expiration
     ```
@@ -51562,7 +50623,7 @@ class TransactionV1():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction = %x00 transaction-v1
+    transaction = %d00 transaction-v1
 
     transaction-v1 = transaction-kind address gas-payment transaction-expiration
     ```
@@ -51915,17 +50976,17 @@ class TypeTagProtocol(typing.Protocol):
     type-tag-vector \
     type-tag-struct
 
-    type-tag-u8 = %x01
-    type-tag-u16 = %x08
-    type-tag-u32 = %x09
-    type-tag-u64 = %x02
-    type-tag-u128 = %x03
-    type-tag-u256 = %x0a
-    type-tag-bool = %x00
-    type-tag-address = %x04
-    type-tag-signer = %x05
-    type-tag-vector = %x06 type-tag
-    type-tag-struct = %x07 struct-tag
+    type-tag-u8 = %d01
+    type-tag-u16 = %d08
+    type-tag-u32 = %d09
+    type-tag-u64 = %d02
+    type-tag-u128 = %d03
+    type-tag-u256 = %d10
+    type-tag-bool = %d00
+    type-tag-address = %d04
+    type-tag-signer = %d05
+    type-tag-vector = %d06 type-tag
+    type-tag-struct = %d07 struct-tag
     ```
     """
 
@@ -51988,17 +51049,17 @@ class TypeTag():
     type-tag-vector \
     type-tag-struct
 
-    type-tag-u8 = %x01
-    type-tag-u16 = %x08
-    type-tag-u32 = %x09
-    type-tag-u64 = %x02
-    type-tag-u128 = %x03
-    type-tag-u256 = %x0a
-    type-tag-bool = %x00
-    type-tag-address = %x04
-    type-tag-signer = %x05
-    type-tag-vector = %x06 type-tag
-    type-tag-struct = %x07 struct-tag
+    type-tag-u8 = %d01
+    type-tag-u16 = %d08
+    type-tag-u32 = %d09
+    type-tag-u64 = %d02
+    type-tag-u128 = %d03
+    type-tag-u256 = %d10
+    type-tag-bool = %d00
+    type-tag-address = %d04
+    type-tag-signer = %d05
+    type-tag-vector = %d06 type-tag
+    type-tag-struct = %d07 struct-tag
     ```
     """
 
@@ -53104,12 +52165,11 @@ class ValidatorAggregatedSignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    validator-aggregated-signature = u64               ; epoch
-    bls-signature
-    roaring-bitmap
-    roaring-bitmap = bytes  ; where the contents of the bytes are valid
-    ; according to the serialized spec for
-    ; roaring bitmaps
+    validator-aggregated-signature = u64                  ; epoch
+    bls12381-signature   ; signature
+    bytes                ; bitmap — contents of the bytes are
+    ; valid according to the serialized
+    ; spec for roaring bitmaps
     ```
 
     See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -53132,12 +52192,11 @@ class ValidatorAggregatedSignature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    validator-aggregated-signature = u64               ; epoch
-    bls-signature
-    roaring-bitmap
-    roaring-bitmap = bytes  ; where the contents of the bytes are valid
-    ; according to the serialized spec for
-    ; roaring bitmaps
+    validator-aggregated-signature = u64                  ; epoch
+    bls12381-signature   ; signature
+    bytes                ; bitmap — contents of the bytes are
+    ; valid according to the serialized
+    ; spec for roaring bitmaps
     ```
 
     See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -53476,147 +52535,6 @@ class _UniffiConverterTypeValidatorCommitteeSignatureVerifier:
     @classmethod
     def write(cls, value: ValidatorCommitteeSignatureVerifierProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class ValidatorExecutionTimeObservationProtocol(typing.Protocol):
-    """
-    An execution time observation from a particular validator
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation = bls-public-key duration
-    duration =  u64 ; seconds
-    u32 ; subsecond nanoseconds
-    ```
-    """
-
-    def duration(self, ):
-        raise NotImplementedError
-    def validator(self, ):
-        raise NotImplementedError
-# ValidatorExecutionTimeObservation is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ValidatorExecutionTimeObservation():
-    """
-    An execution time observation from a particular validator
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    execution-time-observation = bls-public-key duration
-    duration =  u64 ; seconds
-    u32 ; subsecond nanoseconds
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    def __init__(self, validator: "Bls12381PublicKey",duration: "Duration"):
-        _UniffiConverterTypeBls12381PublicKey.check_lower(validator)
-        
-        _UniffiConverterDuration.check_lower(duration)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new,
-        _UniffiConverterTypeBls12381PublicKey.lower(validator),
-        _UniffiConverterDuration.lower(duration))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def duration(self, ) -> "Duration":
-        return _UniffiConverterDuration.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def validator(self, ) -> "Bls12381PublicKey":
-        return _UniffiConverterTypeBls12381PublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def __repr__(self, ) -> "str":
-        return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
-        )
-
-
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ValidatorExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
-
-    def __ne__(self, other: object) -> bool:
-        if not isinstance(other, ValidatorExecutionTimeObservation):
-            return NotImplemented
-
-        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
-
-
-    def __hash__(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeValidatorExecutionTimeObservation:
-
-    @staticmethod
-    def lift(value: int):
-        return ValidatorExecutionTimeObservation._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ValidatorExecutionTimeObservation):
-        if not isinstance(value, ValidatorExecutionTimeObservation):
-            raise TypeError("Expected ValidatorExecutionTimeObservation instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ValidatorExecutionTimeObservationProtocol):
-        if not isinstance(value, ValidatorExecutionTimeObservation):
-            raise TypeError("Expected ValidatorExecutionTimeObservation instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ValidatorExecutionTimeObservationProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class ValidatorSignatureProtocol(typing.Protocol):
     """
     A signature from a Validator
@@ -53626,9 +52544,9 @@ class ValidatorSignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    validator-signature = u64               ; epoch
-    bls-public-key
-    bls-signature
+    validator-signature = u64                  ; epoch
+    bls12381-public-key
+    bls12381-signature
     ```
     """
 
@@ -53648,9 +52566,9 @@ class ValidatorSignature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    validator-signature = u64               ; epoch
-    bls-public-key
-    bls-signature
+    validator-signature = u64                  ; epoch
+    bls12381-public-key
+    bls12381-signature
     ```
     """
 
@@ -55089,138 +54007,6 @@ def execution_status_to_json(data: "ExecutionStatus") -> "str":
     
     return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json,
         _UniffiConverterTypeExecutionStatus.lower(data)))
-
-
-def execution_time_observation_from_bcs(bcs: "bytes") -> "ExecutionTimeObservation":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observation_from_json(json: "str") -> "ExecutionTimeObservation":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observation_key_from_bcs(bcs: "bytes") -> "ExecutionTimeObservationKey":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservationKey.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observation_key_from_json(json: "str") -> "ExecutionTimeObservationKey":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservationKey.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observation_key_to_bcs(data: "ExecutionTimeObservationKey") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservationKey.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(data)))
-
-
-def execution_time_observation_key_to_json(data: "ExecutionTimeObservationKey") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservationKey.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json,
-        _UniffiConverterTypeExecutionTimeObservationKey.lower(data)))
-
-
-def execution_time_observation_to_bcs(data: "ExecutionTimeObservation") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservation.lower(data)))
-
-
-def execution_time_observation_to_json(data: "ExecutionTimeObservation") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json,
-        _UniffiConverterTypeExecutionTimeObservation.lower(data)))
-
-
-def execution_time_observations_from_bcs(bcs: "bytes") -> "ExecutionTimeObservations":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeExecutionTimeObservations.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def execution_time_observations_from_json(json: "str") -> "ExecutionTimeObservations":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeExecutionTimeObservations.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def execution_time_observations_to_bcs(data: "ExecutionTimeObservations") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservations.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs,
-        _UniffiConverterTypeExecutionTimeObservations.lower(data)))
-
-
-def execution_time_observations_to_json(data: "ExecutionTimeObservations") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeExecutionTimeObservations.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json,
-        _UniffiConverterTypeExecutionTimeObservations.lower(data)))
 
 
 def gas_cost_summary_from_bcs(bcs: "bytes") -> "GasCostSummary":
@@ -58197,50 +56983,6 @@ def validator_committee_to_json(data: "ValidatorCommittee") -> "str":
         _UniffiConverterTypeValidatorCommittee.lower(data)))
 
 
-def validator_execution_time_observation_from_bcs(bcs: "bytes") -> "ValidatorExecutionTimeObservation":
-    """
-    Create this type from BCS encoded bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeValidatorExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def validator_execution_time_observation_from_json(json: "str") -> "ValidatorExecutionTimeObservation":
-    """
-    Create this type from JSON encoded string.
-    """
-
-    _UniffiConverterString.check_lower(json)
-    
-    return _UniffiConverterTypeValidatorExecutionTimeObservation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json,
-        _UniffiConverterString.lower(json)))
-
-
-def validator_execution_time_observation_to_bcs(data: "ValidatorExecutionTimeObservation") -> "bytes":
-    """
-    Convert this type to BCS encoded bytes.
-    """
-
-    _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs,
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(data)))
-
-
-def validator_execution_time_observation_to_json(data: "ValidatorExecutionTimeObservation") -> "str":
-    """
-    Convert this type to JSON encoded string.
-    """
-
-    _UniffiConverterTypeValidatorExecutionTimeObservation.check_lower(data)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json,
-        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(data)))
-
-
 def validator_signature_from_bcs(bcs: "bytes") -> "ValidatorSignature":
     """
     Create this type from BCS encoded bytes.
@@ -58531,18 +57273,6 @@ __all__ = [
     "execution_status_from_json",
     "execution_status_to_bcs",
     "execution_status_to_json",
-    "execution_time_observation_from_bcs",
-    "execution_time_observation_from_json",
-    "execution_time_observation_key_from_bcs",
-    "execution_time_observation_key_from_json",
-    "execution_time_observation_key_to_bcs",
-    "execution_time_observation_key_to_json",
-    "execution_time_observation_to_bcs",
-    "execution_time_observation_to_json",
-    "execution_time_observations_from_bcs",
-    "execution_time_observations_from_json",
-    "execution_time_observations_to_bcs",
-    "execution_time_observations_to_json",
     "gas_cost_summary_from_bcs",
     "gas_cost_summary_from_json",
     "gas_cost_summary_to_bcs",
@@ -58814,10 +57544,6 @@ __all__ = [
     "validator_committee_member_to_json",
     "validator_committee_to_bcs",
     "validator_committee_to_json",
-    "validator_execution_time_observation_from_bcs",
-    "validator_execution_time_observation_from_json",
-    "validator_execution_time_observation_to_bcs",
-    "validator_execution_time_observation_to_json",
     "validator_signature_from_bcs",
     "validator_signature_from_json",
     "validator_signature_to_bcs",
@@ -58853,9 +57579,6 @@ __all__ = [
     "Ed25519Verifier",
     "Ed25519VerifyingKey",
     "EndOfEpochTransactionKind",
-    "ExecutionTimeObservation",
-    "ExecutionTimeObservationKey",
-    "ExecutionTimeObservations",
     "FaucetClient",
     "GenesisObject",
     "GenesisTransaction",
@@ -58929,7 +57652,6 @@ __all__ = [
     "ValidatorAggregatedSignature",
     "ValidatorCommitteeSignatureAggregator",
     "ValidatorCommitteeSignatureVerifier",
-    "ValidatorExecutionTimeObservation",
     "ValidatorSignature",
     "VersionAssignment",
 ]

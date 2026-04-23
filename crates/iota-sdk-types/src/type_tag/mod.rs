@@ -17,29 +17,17 @@ use super::Address;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// type-tag = type-tag-u8 \
-///            type-tag-u16 \
-///            type-tag-u32 \
-///            type-tag-u64 \
-///            type-tag-u128 \
-///            type-tag-u256 \
-///            type-tag-bool \
-///            type-tag-address \
-///            type-tag-signer \
-///            type-tag-vector \
-///            type-tag-struct
-///
-/// type-tag-u8 = %x01
-/// type-tag-u16 = %x08
-/// type-tag-u32 = %x09
-/// type-tag-u64 = %x02
-/// type-tag-u128 = %x03
-/// type-tag-u256 = %x0a
-/// type-tag-bool = %x00
-/// type-tag-address = %x04
-/// type-tag-signer = %x05
-/// type-tag-vector = %x06 type-tag
-/// type-tag-struct = %x07 struct-tag
+/// type-tag = %d00            ; Bool
+///          / %d01            ; U8
+///          / %d02            ; U64
+///          / %d03            ; U128
+///          / %d04            ; Address
+///          / %d05            ; Signer
+///          / %d06 type-tag   ; Vector
+///          / %d07 struct-tag ; Struct
+///          / %d08            ; U16
+///          / %d09            ; U32
+///          / %d10            ; U256
 /// ```
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -214,7 +202,7 @@ impl std::error::Error for TypeParseError {}
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// identifier = %x01-80    ; length of the identifier
+/// identifier = %d1-128    ; length of the identifier
 ///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 ///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 ///
@@ -222,6 +210,11 @@ impl std::error::Error for TypeParseError {}
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "string")
+)]
 pub struct Identifier(
     #[cfg_attr(
         feature = "proptest",
@@ -500,6 +493,7 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StructTag {
     address: Address,
     module: Identifier,

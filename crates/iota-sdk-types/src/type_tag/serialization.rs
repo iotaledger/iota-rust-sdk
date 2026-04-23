@@ -25,7 +25,17 @@ impl<'de> Deserialize<'de> for Identifier {
     }
 }
 
+/// BCS wire-format variant indices for [`TypeTag`].
+///
+/// The variant order here matches the on-chain BCS encoding, which differs from
+/// the Rust [`TypeTag`] enum declaration order. This type is also used to
+/// generate the ABNF schema via [`BcsSchema`](iota_bcs_schema::BcsSchema).
 #[repr(u32)]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(name = "type-tag")
+)]
 enum SerializedTypeTagVariant {
     Bool = 0,
     U8 = 1,
@@ -33,7 +43,9 @@ enum SerializedTypeTagVariant {
     U128 = 3,
     Address = 4,
     Signer = 5,
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "type-tag"))]
     Vector = 6,
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "struct-tag"))]
     Struct = 7,
     U16 = 8,
     U32 = 9,

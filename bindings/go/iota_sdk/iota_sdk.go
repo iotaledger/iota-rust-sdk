@@ -1267,114 +1267,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs()
-	})
-	if checksum != 19124 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json()
-	})
-	if checksum != 46087 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs()
-	})
-	if checksum != 3465 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json()
-	})
-	if checksum != 23737 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs()
-	})
-	if checksum != 166 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json()
-	})
-	if checksum != 63452 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs()
-	})
-	if checksum != 35779 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json()
-	})
-	if checksum != 26451 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs()
-	})
-	if checksum != 954 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json()
-	})
-	if checksum != 31779 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs()
-	})
-	if checksum != 38212 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json()
-	})
-	if checksum != 36369 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs()
 	})
 	if checksum != 305 {
@@ -3814,42 +3706,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs()
-	})
-	if checksum != 28604 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json()
-	})
-	if checksum != 59417 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs()
-	})
-	if checksum != 35325 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json()
-	})
-	if checksum != 11778 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs()
 	})
 	if checksum != 57394 {
@@ -5142,24 +4998,6 @@ func uniffiCheckChecksums() {
 	if checksum != 43622 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key()
-	})
-	if checksum != 10295 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations()
-	})
-	if checksum != 58594 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8710,24 +8548,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
-	})
-	if checksum != 59803 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator()
-	})
-	if checksum != 10003 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch()
 	})
 	if checksum != 15301 {
@@ -9327,87 +9147,6 @@ func uniffiCheckChecksums() {
 	if checksum != 45170 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new()
-	})
-	if checksum != 22119 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
-	})
-	if checksum != 1498 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins()
-	})
-	if checksum != 40848 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
-	})
-	if checksum != 6711 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish()
-	})
-	if checksum != 6398 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins()
-	})
-	if checksum != 28564 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
-	})
-	if checksum != 29560 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade()
-	})
-	if checksum != 26115 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1()
-	})
-	if checksum != 19098 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11788,15 +11527,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
-	})
-	if checksum != 47546 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new()
 	})
 	if checksum != 2599 {
@@ -12572,10 +12302,10 @@ func (_ FfiDestroyerAddress) Destroy(value *Address) {
 // =/ argument-result
 // =/ argument-nested-result
 //
-// argument-gas            = %x00
-// argument-input          = %x01 u16
-// argument-result         = %x02 u16
-// argument-nested-result  = %x03 u16 u16
+// argument-gas            = %d00
+// argument-input          = %d01 u16
+// argument-result         = %d02 u16
+// argument-nested-result  = %d03 u16 u16
 // ```
 type ArgumentInterface interface {
 	// Get the nested result for this result at the given index. Returns None
@@ -12594,10 +12324,10 @@ type ArgumentInterface interface {
 // =/ argument-result
 // =/ argument-nested-result
 //
-// argument-gas            = %x00
-// argument-input          = %x01 u16
-// argument-result         = %x02 u16
-// argument-nested-result  = %x03 u16 u16
+// argument-gas            = %d00
+// argument-input          = %d01 u16
+// argument-result         = %d02 u16
+// argument-nested-result  = %d03 u16 u16
 // ```
 type Argument struct {
 	ffiObject FfiObject
@@ -12879,7 +12609,7 @@ func (_ FfiDestroyerBls12381PrivateKey) Destroy(value *Bls12381PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-public-key = %d96 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -12896,7 +12626,7 @@ type Bls12381PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-public-key = %d96 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13034,37 +12764,27 @@ func (_ FfiDestroyerBls12381PublicKey) Destroy(value *Bls12381PublicKey) {
 
 
 
-// A bls12381 min-sig public key.
+// A bls12381 min-sig signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-signature = 48OCTET
 // ```
-//
-// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-// fixed-length of 96, IOTA's binary representation of a min-sig
-// `Bls12381PublicKey` is prefixed with its length meaning its serialized
-// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
 type Bls12381SignatureInterface interface {
 	ToBytes() []byte
 }
-// A bls12381 min-sig public key.
+// A bls12381 min-sig signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-signature = 48OCTET
 // ```
-//
-// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-// fixed-length of 96, IOTA's binary representation of a min-sig
-// `Bls12381PublicKey` is prefixed with its length meaning its serialized
-// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
 type Bls12381Signature struct {
 	ffiObject FfiObject
 }
@@ -13680,7 +13400,7 @@ func (_ FfiDestroyerChangeEpoch) Destroy(value *ChangeEpoch) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// change-epoch = u64  ; next epoch
+// change-epoch-v2 = u64  ; next epoch
 // u64  ; protocol version
 // u64  ; storage charge
 // u64  ; computation charge
@@ -13718,7 +13438,7 @@ type ChangeEpochV2Interface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// change-epoch = u64  ; next epoch
+// change-epoch-v2 = u64  ; next epoch
 // u64  ; protocol version
 // u64  ; storage charge
 // u64  ; computation charge
@@ -14376,7 +14096,7 @@ func (_ FfiDestroyerChangeEpochV4) Destroy(value *ChangeEpochV4) {
 // ```text
 // ; CheckpointCommitment is an enum and each variant is prefixed with its index
 // checkpoint-commitment = ecmh-live-object-set
-// ecmh-live-object-set = %x00 digest
+// ecmh-live-object-set = %d00 digest
 // ```
 type CheckpointCommitmentInterface interface {
 	AsEcmhLiveObjectSetDigest() *Digest
@@ -14391,7 +14111,7 @@ type CheckpointCommitmentInterface interface {
 // ```text
 // ; CheckpointCommitment is an enum and each variant is prefixed with its index
 // checkpoint-commitment = ecmh-live-object-set
-// ecmh-live-object-set = %x00 digest
+// ecmh-live-object-set = %d00 digest
 // ```
 type CheckpointCommitment struct {
 	ffiObject FfiObject
@@ -14481,12 +14201,14 @@ func (_ FfiDestroyerCheckpointCommitment) Destroy(value *CheckpointCommitment) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 //
-// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+// (vector (vector user-signature)) ; set of user signatures for each
 // ; transaction. MUST be the same
 // ; length as the vector of digests
+//
+// execution-digests = digest digest   ; transaction, effects
 // ```
 type CheckpointContentsInterface interface {
 	Digest() *Digest
@@ -14503,12 +14225,14 @@ type CheckpointContentsInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 //
-// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+// (vector (vector user-signature)) ; set of user signatures for each
 // ; transaction. MUST be the same
 // ; length as the vector of digests
+//
+// execution-digests = digest digest   ; transaction, effects
 // ```
 type CheckpointContents struct {
 	ffiObject FfiObject
@@ -15683,13 +15407,13 @@ func (_ FfiDestroyerCoin) Destroy(value *Coin) {
 // =/ command-make-move-vector
 // =/ command-upgrade
 //
-// command-move-call           = %x00 move-call
-// command-transfer-objects    = %x01 transfer-objects
-// command-split-coins         = %x02 split-coins
-// command-merge-coins         = %x03 merge-coins
-// command-publish             = %x04 publish
-// command-make-move-vector    = %x05 make-move-vector
-// command-upgrade             = %x06 upgrade
+// command-move-call           = %d00 move-call
+// command-transfer-objects    = %d01 transfer-objects
+// command-split-coins         = %d02 split-coins
+// command-merge-coins         = %d03 merge-coins
+// command-publish             = %d04 publish
+// command-make-move-vector    = %d05 make-move-vector
+// command-upgrade             = %d06 upgrade
 // ```
 type CommandInterface interface {
 }
@@ -15708,13 +15432,13 @@ type CommandInterface interface {
 // =/ command-make-move-vector
 // =/ command-upgrade
 //
-// command-move-call           = %x00 move-call
-// command-transfer-objects    = %x01 transfer-objects
-// command-split-coins         = %x02 split-coins
-// command-merge-coins         = %x03 merge-coins
-// command-publish             = %x04 publish
-// command-make-move-vector    = %x05 make-move-vector
-// command-upgrade             = %x06 upgrade
+// command-move-call           = %d00 move-call
+// command-transfer-objects    = %d01 transfer-objects
+// command-split-coins         = %d02 split-coins
+// command-merge-coins         = %d03 merge-coins
+// command-publish             = %d04 publish
+// command-make-move-vector    = %d05 make-move-vector
+// command-upgrade             = %d06 upgrade
 // ```
 type Command struct {
 	ffiObject FfiObject
@@ -16192,7 +15916,7 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // A `Digest`'s BCS serialized form is defined by the following:
 //
 // ```text
-// digest = %x20 32OCTET
+// digest = %d32 32OCTET
 // ```
 //
 // Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -16212,7 +15936,7 @@ type DigestInterface interface {
 // A `Digest`'s BCS serialized form is defined by the following:
 //
 // ```text
-// digest = %x20 32OCTET
+// digest = %d32 32OCTET
 // ```
 //
 // Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -17449,23 +17173,10 @@ func (_ FfiDestroyerEd25519VerifyingKey) Destroy(value *Ed25519VerifyingKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// end-of-epoch-transaction-kind   =  eoe-change-epoch
-// =/ eoe-authenticator-state-create
-// =/ eoe-authenticator-state-expire
-// =/ eoe-randomness-state-create
-// =/ eoe-deny-list-state-create
-// =/ eoe-bridge-state-create
-// =/ eoe-bridge-committee-init
-// =/ eoe-store-execution-time-observations
-//
-// eoe-change-epoch                = %x00 change-epoch
-// eoe-authenticator-state-create  = %x01
-// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-// eoe-randomness-state-create     = %x03
-// eoe-deny-list-state-create      = %x04
-// eoe-bridge-state-create         = %x05 digest
-// eoe-bridge-committee-init       = %x06 u64
-// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+// =/ %d01 change-epoch-v2  ; ChangeEpochV2
+// =/ %d02 change-epoch-v3  ; ChangeEpochV3
+// =/ %d03 change-epoch-v4  ; ChangeEpochV4
 // ```
 type EndOfEpochTransactionKindInterface interface {
 }
@@ -17476,23 +17187,10 @@ type EndOfEpochTransactionKindInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// end-of-epoch-transaction-kind   =  eoe-change-epoch
-// =/ eoe-authenticator-state-create
-// =/ eoe-authenticator-state-expire
-// =/ eoe-randomness-state-create
-// =/ eoe-deny-list-state-create
-// =/ eoe-bridge-state-create
-// =/ eoe-bridge-committee-init
-// =/ eoe-store-execution-time-observations
-//
-// eoe-change-epoch                = %x00 change-epoch
-// eoe-authenticator-state-create  = %x01
-// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-// eoe-randomness-state-create     = %x03
-// eoe-deny-list-state-create      = %x04
-// eoe-bridge-state-create         = %x05 digest
-// eoe-bridge-committee-init       = %x06 u64
-// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+// =/ %d01 change-epoch-v2  ; ChangeEpochV2
+// =/ %d02 change-epoch-v3  ; ChangeEpochV3
+// =/ %d03 change-epoch-v4  ; ChangeEpochV4
 // ```
 type EndOfEpochTransactionKind struct {
 	ffiObject FfiObject
@@ -17604,458 +17302,6 @@ func (c FfiConverterEndOfEpochTransactionKind) Write(writer io.Writer, value *En
 type FfiDestroyerEndOfEpochTransactionKind struct {}
 
 func (_ FfiDestroyerEndOfEpochTransactionKind) Destroy(value *EndOfEpochTransactionKind) {
-		value.Destroy()
-}
-
-
-
-
-type ExecutionTimeObservationInterface interface {
-	Key() *ExecutionTimeObservationKey
-	Observations() []*ValidatorExecutionTimeObservation
-}
-type ExecutionTimeObservation struct {
-	ffiObject FfiObject
-}
-func NewExecutionTimeObservation(key *ExecutionTimeObservationKey, observations []*ValidatorExecutionTimeObservation) *ExecutionTimeObservation {
-	return FfiConverterExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(key), FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lower(observations),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ExecutionTimeObservation) Key() *ExecutionTimeObservationKey {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservation) Observations() []*ValidatorExecutionTimeObservation {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ExecutionTimeObservation) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservation) Eq(other *ExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservation) Ne(other *ExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservation) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservation) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservation struct {}
-
-var FfiConverterExecutionTimeObservationINSTANCE = FfiConverterExecutionTimeObservation{}
-
-
-func (c FfiConverterExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ExecutionTimeObservation {
-	result := &ExecutionTimeObservation {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservation).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservation) Read(reader io.Reader) *ExecutionTimeObservation {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservation) Lower(value *ExecutionTimeObservation) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservation) Write(writer io.Writer, value *ExecutionTimeObservation) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservation struct {}
-
-func (_ FfiDestroyerExecutionTimeObservation) Destroy(value *ExecutionTimeObservation) {
-		value.Destroy()
-}
-
-
-
-
-// Key for an execution time observation
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation-key  =  %x00 move-entry-point
-// =/ %x01 ; transfer-objects
-// =/ %x02 ; split-coins
-// =/ %x03 ; merge-coins
-// =/ %x04 ; publish
-// =/ %x05 ; make-move-vec
-// =/ %x06 ; upgrade
-//
-// move-entry-point = object-id string string (vec type-tag)
-// ```
-type ExecutionTimeObservationKeyInterface interface {
-}
-// Key for an execution time observation
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation-key  =  %x00 move-entry-point
-// =/ %x01 ; transfer-objects
-// =/ %x02 ; split-coins
-// =/ %x03 ; merge-coins
-// =/ %x04 ; publish
-// =/ %x05 ; make-move-vec
-// =/ %x06 ; upgrade
-//
-// move-entry-point = object-id string string (vec type-tag)
-// ```
-type ExecutionTimeObservationKey struct {
-	ffiObject FfiObject
-}
-
-
-func ExecutionTimeObservationKeyNewMakeMoveVec() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewMergeCoins() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewMoveEntryPoint(varPackage *ObjectId, module string, function string, typeArguments []*TypeTag) *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArguments),_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewPublish() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewSplitCoins() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewTransferObjects() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewUpgrade() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) Eq(other *ExecutionTimeObservationKey) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservationKey) Ne(other *ExecutionTimeObservationKey) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservationKey) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservationKey struct {}
-
-var FfiConverterExecutionTimeObservationKeyINSTANCE = FfiConverterExecutionTimeObservationKey{}
-
-
-func (c FfiConverterExecutionTimeObservationKey) Lift(pointer unsafe.Pointer) *ExecutionTimeObservationKey {
-	result := &ExecutionTimeObservationKey {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservationKey).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Read(reader io.Reader) *ExecutionTimeObservationKey {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Lower(value *ExecutionTimeObservationKey) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Write(writer io.Writer, value *ExecutionTimeObservationKey) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservationKey struct {}
-
-func (_ FfiDestroyerExecutionTimeObservationKey) Destroy(value *ExecutionTimeObservationKey) {
-		value.Destroy()
-}
-
-
-
-
-// Set of Execution Time Observations from the committee.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-//
-// v1-stored-execution-time-observations = (vec
-// execution-time-observation-key
-// (vec execution-time-observation)
-// )
-// ```
-type ExecutionTimeObservationsInterface interface {
-}
-// Set of Execution Time Observations from the committee.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-//
-// v1-stored-execution-time-observations = (vec
-// execution-time-observation-key
-// (vec execution-time-observation)
-// )
-// ```
-type ExecutionTimeObservations struct {
-	ffiObject FfiObject
-}
-
-
-func ExecutionTimeObservationsNewV1(executionTimeObservations []*ExecutionTimeObservation) *ExecutionTimeObservations {
-	return FfiConverterExecutionTimeObservationsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(FfiConverterSequenceExecutionTimeObservationINSTANCE.Lower(executionTimeObservations),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) Eq(other *ExecutionTimeObservations) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservations) Ne(other *ExecutionTimeObservations) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservations) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservations struct {}
-
-var FfiConverterExecutionTimeObservationsINSTANCE = FfiConverterExecutionTimeObservations{}
-
-
-func (c FfiConverterExecutionTimeObservations) Lift(pointer unsafe.Pointer) *ExecutionTimeObservations {
-	result := &ExecutionTimeObservations {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservations).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservations) Read(reader io.Reader) *ExecutionTimeObservations {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservations) Lower(value *ExecutionTimeObservations) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservations) Write(writer io.Writer, value *ExecutionTimeObservations) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservations struct {}
-
-func (_ FfiDestroyerExecutionTimeObservations) Destroy(value *ExecutionTimeObservations) {
 		value.Destroy()
 }
 
@@ -18360,7 +17606,7 @@ func (_ FfiDestroyerFaucetClient) Destroy(value *FaucetClient) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// genesis-object = object-data owner
+// genesis-object = %d00 object-data owner   ; RawObject
 // ```
 type GenesisObjectInterface interface {
 	Data() *ObjectData
@@ -18379,7 +17625,7 @@ type GenesisObjectInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// genesis-object = object-data owner
+// genesis-object = %d00 object-data owner   ; RawObject
 // ```
 type GenesisObject struct {
 	ffiObject FfiObject
@@ -21104,7 +20350,7 @@ func (_ FfiDestroyerGraphQlClient) Destroy(value *GraphQlClient) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %x01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //
@@ -21120,7 +20366,7 @@ type IdentifierInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %x01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //
@@ -21271,12 +20517,14 @@ func (_ FfiDestroyerIdentifier) Destroy(value *Identifier) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+// input = call-arg
 //
-// input-pure                  = %x00 bytes
-// input-immutable-or-owned    = %x01 object-ref
-// input-shared                = %x02 object-id u64 bool
-// input-receiving             = %x04 object-ref
+// call-arg   =  %d00 bytes        ; Pure
+// =/ %d01 object-arg   ; Object
+//
+// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+// =/ %d01 object-id u64 bool   ; Shared
+// =/ %d02 object-reference     ; Receiving
 // ```
 type InputInterface interface {
 }
@@ -21287,12 +20535,14 @@ type InputInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+// input = call-arg
 //
-// input-pure                  = %x00 bytes
-// input-immutable-or-owned    = %x01 object-ref
-// input-shared                = %x02 object-id u64 bool
-// input-receiving             = %x04 object-ref
+// call-arg   =  %d00 bytes        ; Pure
+// =/ %d01 object-arg   ; Object
+//
+// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+// =/ %d01 object-id u64 bool   ; Shared
+// =/ %d02 object-reference     ; Receiving
 // ```
 type Input struct {
 	ffiObject FfiObject
@@ -22903,11 +22153,11 @@ func (_ FfiDestroyerMoveFunction) Destroy(value *MoveFunction) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-//
-// move-modules = map (identifier bytes)
-// type-origin-table = vector type-origin
-// linkage-table = map (object-id upgrade-info)
+// move-package = object-id                          ; id
+// u64                                ; version
+// (vector (identifier bytes))        ; modules
+// (vector type-origin)               ; type-origin-table
+// (vector (object-id upgrade-info))  ; linkage-table
 // ```
 type MovePackageInterface interface {
 	Id() *ObjectId
@@ -22923,11 +22173,11 @@ type MovePackageInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-//
-// move-modules = map (identifier bytes)
-// type-origin-table = vector type-origin
-// linkage-table = map (object-id upgrade-info)
+// move-package = object-id                          ; id
+// u64                                ; version
+// (vector (identifier bytes))        ; modules
+// (vector type-origin)               ; type-origin-table
+// (vector (object-id upgrade-info))  ; linkage-table
 // ```
 type MovePackage struct {
 	ffiObject FfiObject
@@ -24169,11 +23419,11 @@ func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 // zklogin-multisig-member-public-key-deprecated /
 // passkey-multisig-member-public-key
 //
-// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
-// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
-// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
-// zklogin-multisig-member-public-key-deprecated   = %x03
-// passkey-multisig-member-public-key              = %x04 passkey-public-key
+// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+// zklogin-multisig-member-public-key-deprecated   = %d03
+// passkey-multisig-member-public-key              = %d04 passkey-public-key
 // ```
 //
 // There is also a legacy encoding for this type defined as:
@@ -24214,11 +23464,11 @@ type MultisigMemberPublicKeyInterface interface {
 // zklogin-multisig-member-public-key-deprecated /
 // passkey-multisig-member-public-key
 //
-// ed25519-multisig-member-public-key              = %x00 ed25519-public-key
-// secp256k1-multisig-member-public-key            = %x01 secp256k1-public-key
-// secp256r1-multisig-member-public-key            = %x02 secp256r1-public-key
-// zklogin-multisig-member-public-key-deprecated   = %x03
-// passkey-multisig-member-public-key              = %x04 passkey-public-key
+// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+// zklogin-multisig-member-public-key-deprecated   = %d03
+// passkey-multisig-member-public-key              = %d04 passkey-public-key
 // ```
 //
 // There is also a legacy encoding for this type defined as:
@@ -24463,11 +23713,11 @@ func (_ FfiDestroyerMultisigMemberPublicKey) Destroy(value *MultisigMemberPublic
 // zklogin-multisig-member-signature-deprecated /
 // passkey-multisig-member-signature
 //
-// ed25519-multisig-member-signature               = %x00 ed25519-signature
-// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
-// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
-// zklogin-multisig-member-signature-deprecated    = %x03
-// passkey-multisig-member-signature               = %x04 passkey-authenticator
+// ed25519-multisig-member-signature               = %d00 ed25519-signature
+// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+// zklogin-multisig-member-signature-deprecated    = %d03
+// passkey-multisig-member-signature               = %d04 passkey-authenticator
 // ```
 type MultisigMemberSignatureInterface interface {
 	AsEd25519() *Ed25519Signature
@@ -24496,11 +23746,11 @@ type MultisigMemberSignatureInterface interface {
 // zklogin-multisig-member-signature-deprecated /
 // passkey-multisig-member-signature
 //
-// ed25519-multisig-member-signature               = %x00 ed25519-signature
-// secp256k1-multisig-member-signature             = %x01 secp256k1-signature
-// secp256r1-multisig-member-signature             = %x02 secp256r1-signature
-// zklogin-multisig-member-signature-deprecated    = %x03
-// passkey-multisig-member-signature               = %x04 passkey-authenticator
+// ed25519-multisig-member-signature               = %d00 ed25519-signature
+// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+// zklogin-multisig-member-signature-deprecated    = %d03
+// passkey-multisig-member-signature               = %d04 passkey-authenticator
 // ```
 type MultisigMemberSignature struct {
 	ffiObject FfiObject
@@ -25470,8 +24720,8 @@ func (_ FfiDestroyerObject) Destroy(value *Object) {
 // ```text
 // object-data = object-data-struct / object-data-package
 //
-// object-data-struct  = %x00 object-move-struct
-// object-data-package = %x01 object-move-package
+// object-data-struct  = %d00 object-move-struct
+// object-data-package = %d01 object-move-package
 // ```
 type ObjectDataInterface interface {
 	// Try to interpret this object as a `MovePackage`
@@ -25492,8 +24742,8 @@ type ObjectDataInterface interface {
 // ```text
 // object-data = object-data-struct / object-data-package
 //
-// object-data-struct  = %x00 object-move-struct
-// object-data-package = %x01 object-move-package
+// object-data-struct  = %d00 object-move-struct
+// object-data-package = %d01 object-move-package
 // ```
 type ObjectData struct {
 	ffiObject FfiObject
@@ -25672,7 +24922,7 @@ func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 // An `ObjectId`'s BCS serialized form is defined by the following:
 //
 // ```text
-// object-id = 32*OCTET
+// object-id = address
 // ```
 type ObjectIdInterface interface {
 	// Derive an ObjectId for a Dynamic Child Object.
@@ -25705,7 +24955,7 @@ type ObjectIdInterface interface {
 // An `ObjectId`'s BCS serialized form is defined by the following:
 //
 // ```text
-// object-id = 32*OCTET
+// object-id = address
 // ```
 type ObjectId struct {
 	ffiObject FfiObject
@@ -26114,10 +25364,10 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // ```text
 // owner = owner-address / owner-object / owner-shared / owner-immutable
 //
-// owner-address   = %x00 address
-// owner-object    = %x01 object-id
-// owner-shared    = %x02 u64
-// owner-immutable = %x03
+// owner-address   = %d00 address
+// owner-object    = %d01 object-id
+// owner-shared    = %d02 u64
+// owner-immutable = %d03
 // ```
 type OwnerInterface interface {
 	AsAddress() *Address
@@ -26140,10 +25390,10 @@ type OwnerInterface interface {
 // ```text
 // owner = owner-address / owner-object / owner-shared / owner-immutable
 //
-// owner-address   = %x00 address
-// owner-object    = %x01 object-id
-// owner-shared    = %x02 u64
-// owner-immutable = %x03
+// owner-address   = %d00 address
+// owner-object    = %d01 object-id
+// owner-shared    = %d02 u64
+// owner-immutable = %d03
 // ```
 type Owner struct {
 	ffiObject FfiObject
@@ -28023,14 +27273,14 @@ func (_ FfiDestroyerSecp256k1PrivateKey) Destroy(value *Secp256k1PrivateKey) {
 
 
 
-// A secp256k1 signature.
+// A secp256k1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTET
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -28047,14 +27297,14 @@ type Secp256k1PublicKeyInterface interface {
 	// Returns the bytes with signature scheme flag prepended.
 	ToFlaggedBytes() []byte
 }
-// A secp256k1 signature.
+// A secp256k1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTET
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1PublicKey struct {
 	ffiObject FfiObject
@@ -28227,26 +27477,26 @@ func (_ FfiDestroyerSecp256k1PublicKey) Destroy(value *Secp256k1PublicKey) {
 
 
 
-// A secp256k1 public key.
+// A secp256k1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTET
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1SignatureInterface interface {
 	ToBytes() []byte
 }
-// A secp256k1 public key.
+// A secp256k1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTET
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1Signature struct {
 	ffiObject FfiObject
@@ -29079,14 +28329,14 @@ func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
 
 
 
-// A secp256r1 signature.
+// A secp256r1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTET
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -29103,14 +28353,14 @@ type Secp256r1PublicKeyInterface interface {
 	// Returns the bytes with signature scheme flag prepended
 	ToFlaggedBytes() []byte
 }
-// A secp256r1 signature.
+// A secp256r1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTET
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1PublicKey struct {
 	ffiObject FfiObject
@@ -29283,26 +28533,26 @@ func (_ FfiDestroyerSecp256r1PublicKey) Destroy(value *Secp256r1PublicKey) {
 
 
 
-// A secp256r1 public key.
+// A secp256r1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTET
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1SignatureInterface interface {
 	ToBytes() []byte
 }
-// A secp256r1 public key.
+// A secp256r1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTET
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1Signature struct {
 	ffiObject FfiObject
@@ -31446,7 +30696,7 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -31471,7 +30721,7 @@ type TransactionInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -32164,8 +31414,8 @@ func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-effects =  %x00 effects-v1
-// =/ %x01 effects-v2
+// transaction-effects =  %d00 effects-v1
+// =/ %d01 effects-v2
 // ```
 type TransactionEffectsInterface interface {
 	AsV1() TransactionEffectsV1
@@ -32179,8 +31429,8 @@ type TransactionEffectsInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-effects =  %x00 effects-v1
-// =/ %x01 effects-v2
+// transaction-effects =  %d00 effects-v1
+// =/ %d01 effects-v2
 // ```
 type TransactionEffects struct {
 	ffiObject FfiObject
@@ -32422,15 +31672,12 @@ func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// =/ %d01 genesis-transaction                    ; Genesis
+// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+// =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+// =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 // ```
 type TransactionKindInterface interface {
 }
@@ -32441,15 +31688,12 @@ type TransactionKindInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// =/ %d01 genesis-transaction                    ; Genesis
+// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+// =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+// =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 // ```
 type TransactionKind struct {
 	ffiObject FfiObject
@@ -32951,7 +32195,7 @@ func (c FfiConverterTransactionSignerFn) register() {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -32975,7 +32219,7 @@ type TransactionV1Interface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -33336,17 +32580,17 @@ func (_ FfiDestroyerTransferObjects) Destroy(value *TransferObjects) {
 // type-tag-vector \
 // type-tag-struct
 //
-// type-tag-u8 = %x01
-// type-tag-u16 = %x08
-// type-tag-u32 = %x09
-// type-tag-u64 = %x02
-// type-tag-u128 = %x03
-// type-tag-u256 = %x0a
-// type-tag-bool = %x00
-// type-tag-address = %x04
-// type-tag-signer = %x05
-// type-tag-vector = %x06 type-tag
-// type-tag-struct = %x07 struct-tag
+// type-tag-u8 = %d01
+// type-tag-u16 = %d08
+// type-tag-u32 = %d09
+// type-tag-u64 = %d02
+// type-tag-u128 = %d03
+// type-tag-u256 = %d10
+// type-tag-bool = %d00
+// type-tag-address = %d04
+// type-tag-signer = %d05
+// type-tag-vector = %d06 type-tag
+// type-tag-struct = %d07 struct-tag
 // ```
 type TypeTagInterface interface {
 	AsStructTag() *StructTag
@@ -33387,17 +32631,17 @@ type TypeTagInterface interface {
 // type-tag-vector \
 // type-tag-struct
 //
-// type-tag-u8 = %x01
-// type-tag-u16 = %x08
-// type-tag-u32 = %x09
-// type-tag-u64 = %x02
-// type-tag-u128 = %x03
-// type-tag-u256 = %x0a
-// type-tag-bool = %x00
-// type-tag-address = %x04
-// type-tag-signer = %x05
-// type-tag-vector = %x06 type-tag
-// type-tag-struct = %x07 struct-tag
+// type-tag-u8 = %d01
+// type-tag-u16 = %d08
+// type-tag-u32 = %d09
+// type-tag-u64 = %d02
+// type-tag-u128 = %d03
+// type-tag-u256 = %d10
+// type-tag-bool = %d00
+// type-tag-address = %d04
+// type-tag-signer = %d05
+// type-tag-vector = %d06 type-tag
+// type-tag-struct = %d07 struct-tag
 // ```
 type TypeTag struct {
 	ffiObject FfiObject
@@ -34501,12 +33745,11 @@ func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier)
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-aggregated-signature = u64               ; epoch
-// bls-signature
-// roaring-bitmap
-// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-// ; according to the serialized spec for
-// ; roaring bitmaps
+// validator-aggregated-signature = u64                  ; epoch
+// bls12381-signature   ; signature
+// bytes                ; bitmap — contents of the bytes are
+// ; valid according to the serialized
+// ; spec for roaring bitmaps
 // ```
 //
 // See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -34523,12 +33766,11 @@ type ValidatorAggregatedSignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-aggregated-signature = u64               ; epoch
-// bls-signature
-// roaring-bitmap
-// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-// ; according to the serialized spec for
-// ; roaring bitmaps
+// validator-aggregated-signature = u64                  ; epoch
+// bls12381-signature   ; signature
+// bytes                ; bitmap — contents of the bytes are
+// ; valid according to the serialized
+// ; spec for roaring bitmaps
 // ```
 //
 // See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -34910,160 +34152,6 @@ func (_ FfiDestroyerValidatorCommitteeSignatureVerifier) Destroy(value *Validato
 
 
 
-// An execution time observation from a particular validator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation = bls-public-key duration
-// duration =  u64 ; seconds
-// u32 ; subsecond nanoseconds
-// ```
-type ValidatorExecutionTimeObservationInterface interface {
-	Duration() time.Duration
-	Validator() *Bls12381PublicKey
-}
-// An execution time observation from a particular validator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation = bls-public-key duration
-// duration =  u64 ; seconds
-// u32 ; subsecond nanoseconds
-// ```
-type ValidatorExecutionTimeObservation struct {
-	ffiObject FfiObject
-}
-func NewValidatorExecutionTimeObservation(validator *Bls12381PublicKey, duration time.Duration) *ValidatorExecutionTimeObservation {
-	return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(FfiConverterBls12381PublicKeyINSTANCE.Lower(validator), FfiConverterDurationINSTANCE.Lower(duration),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Duration() time.Duration {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterDurationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) Validator() *Bls12381PublicKey {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Eq(other *ValidatorExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
-		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) Ne(other *ValidatorExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne(
-		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ValidatorExecutionTimeObservation) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterValidatorExecutionTimeObservation struct {}
-
-var FfiConverterValidatorExecutionTimeObservationINSTANCE = FfiConverterValidatorExecutionTimeObservation{}
-
-
-func (c FfiConverterValidatorExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ValidatorExecutionTimeObservation {
-	result := &ValidatorExecutionTimeObservation {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ValidatorExecutionTimeObservation).Destroy)
-	return result
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Read(reader io.Reader) *ValidatorExecutionTimeObservation {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Lower(value *ValidatorExecutionTimeObservation) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Write(writer io.Writer, value *ValidatorExecutionTimeObservation) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerValidatorExecutionTimeObservation struct {}
-
-func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorExecutionTimeObservation) {
-		value.Destroy()
-}
-
-
-
-
 // A signature from a Validator
 //
 // # BCS
@@ -35071,9 +34159,9 @@ func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorE
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-signature = u64               ; epoch
-// bls-public-key
-// bls-signature
+// validator-signature = u64                  ; epoch
+// bls12381-public-key
+// bls12381-signature
 // ```
 type ValidatorSignatureInterface interface {
 	Epoch() uint64
@@ -35087,9 +34175,9 @@ type ValidatorSignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-signature = u64               ; epoch
-// bls-public-key
-// bls-signature
+// validator-signature = u64                  ; epoch
+// bls12381-public-key
+// bls12381-signature
 // ```
 type ValidatorSignature struct {
 	ffiObject FfiObject
@@ -36101,6 +35189,7 @@ func (_ FfiDestroyerDynamicFieldValue) Destroy(value DynamicFieldValue) {
 // end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
 // u64                                 ; next_epoch_protocol_version
 // (vector checkpoint-commitment)      ; epoch_commitments
+// i64                                 ; epoch_supply_change
 // ```
 type EndOfEpochData struct {
 	NextEpochCommittee []ValidatorCommitteeMember
@@ -36710,10 +35799,10 @@ func (_ FfiDestroyerGasCostSummary) Destroy(value GasCostSummary) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// gas-payment = (vector object-ref) ; gas coin objects
-// address             ; owner
-// u64                 ; price
-// u64                 ; budget
+// gas-payment = (vector object-reference) ; gas coin objects
+// address                   ; owner
+// u64                       ; price
+// u64                       ; budget
 // ```
 type GasPayment struct {
 	Objects []ObjectReference
@@ -37395,16 +36484,15 @@ func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-struct = compressed-struct-tag bool u64 object-contents
+// move-struct = compressed-struct-tag u64 bytes
 //
 // compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-// other-struct-type     = %x00 struct-tag
-// gas-coin-type         = %x01
-// staked-iota-type      = %x02
-// coin-type             = %x03 type-tag
+// other-struct-type     = %d00 struct-tag
+// gas-coin-type         = %d01
+// staked-iota-type      = %d02
+// coin-type             = %d03 type-tag
 //
-// ; first 32 bytes of the contents are the object's object-id
-// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 // ```
 type MoveStruct struct {
 	// The type of this object
@@ -37853,7 +36941,7 @@ func (_ FfiDestroyerObjectRef) Destroy(value ObjectRef) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-ref = object-id u64 digest
+// object-reference = object-id u64 digest
 // ```
 type ObjectReference struct {
 	ObjectId *ObjectId
@@ -39361,7 +38449,7 @@ func (_ FfiDestroyerValidatorCommittee) Destroy(value ValidatorCommittee) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-committee-member = bls-public-key
+// validator-committee-member = bls12381-public-key
 // u64 ; stake
 // ```
 type ValidatorCommitteeMember struct {
@@ -39717,18 +38805,18 @@ func (_ FfiDestroyerBatchSendStatusType) Destroy(value BatchSendStatusType) {
 // =/ invalid-object-by-mut-ref
 // =/ shared-object-operation-not-allowed
 //
-// type-mismatch                               = %x00
-// invalid-bcs-bytes                           = %x01
-// invalid-usage-of-pure-argument              = %x02
-// invalid-argument-to-private-entry-function  = %x03
-// index-out-of-bounds                         = %x04 u16
-// secondary-index-out-of-bound                = %x05 u16 u16
-// invalid-result-arity                        = %x06 u16
-// invalid-gas-coin-usage                      = %x07
-// invalid-value-usage                         = %x08
-// invalid-object-by-value                     = %x09
-// invalid-object-by-mut-ref                   = %x0a
-// shared-object-operation-not-allowed         = %x0b
+// type-mismatch                               = %d00
+// invalid-bcs-bytes                           = %d01
+// invalid-usage-of-pure-argument              = %d02
+// invalid-argument-to-private-entry-function  = %d03
+// index-out-of-bounds                         = %d04 u16
+// secondary-index-out-of-bound                = %d05 u16 u16
+// invalid-result-arity                        = %d06 u16
+// invalid-gas-coin-usage                      = %d07
+// invalid-value-usage                         = %d08
+// invalid-object-by-value                     = %d09
+// invalid-object-by-mut-ref                   = %d10
+// shared-object-operation-not-allowed         = %d11
 // ```
 type CommandArgumentError interface {
 	Destroy()
@@ -40021,44 +39109,48 @@ func (_ FfiDestroyerDirection) Destroy(value Direction) {
 // =/ address-denied-for-coin
 // =/ coin-type-global-pause
 // =/ execution-cancelled-due-to-randomness-unavailable
+// =/ execution-cancelled-due-to-shared-object-congestion-v2
+// =/ invalid-linkage
 //
-// insufficient-gas                                    = %x00
-// invalid-gas-object                                  = %x01
-// invariant-violation                                 = %x02
-// feature-not-yet-supported                           = %x03
-// object-too-big                                      = %x04 u64 u64
-// package-too-big                                     = %x05 u64 u64
-// circular-object-ownership                           = %x06 object-id
-// insufficient-coin-balance                           = %x07
-// coin-balance-overflow                               = %x08
-// publish-error-non-zero-address                      = %x09
-// iota-move-verification-error                        = %x0a
-// move-primitive-runtime-error                        = %x0b (option move-location)
-// move-abort                                          = %x0c move-location u64
-// vm-verification-or-deserialization-error            = %x0d
-// vm-invariant-violation                              = %x0e
-// function-not-found                                  = %x0f
-// arity-mismatch                                      = %x10
-// type-arity-mismatch                                 = %x11
-// non-entry-function-invoked                          = %x12
-// command-argument-error                              = %x13 u16 command-argument-error
-// type-argument-error                                 = %x14 u16 type-argument-error
-// unused-value-without-drop                           = %x15 u16 u16
-// invalid-public-function-return-type                 = %x16 u16
-// invalid-transfer-object                             = %x17
-// effects-too-large                                   = %x18 u64 u64
-// publish-upgrade-missing-dependency                  = %x19
-// publish-upgrade-dependency-downgrade                = %x1a
-// package-upgrade-error                               = %x1b package-upgrade-error
-// written-objects-too-large                           = %x1c u64 u64
-// certificate-denied                                  = %x1d
-// iota-move-verification-timeout                      = %x1e
-// shared-object-operation-not-allowed                 = %x1f
-// input-object-deleted                                = %x20
-// execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
-// address-denied-for-coin                             = %x22 address string
-// coin-type-global-pause                              = %x23 string
-// execution-cancelled-due-to-randomness-unavailable   = %x24
+// insufficient-gas                                       = %d00
+// invalid-gas-object                                     = %d01
+// invariant-violation                                    = %d02
+// feature-not-yet-supported                              = %d03
+// object-too-big                                         = %d04 u64 u64
+// package-too-big                                        = %d05 u64 u64
+// circular-object-ownership                              = %d06 object-id
+// insufficient-coin-balance                              = %d07
+// coin-balance-overflow                                  = %d08
+// publish-error-non-zero-address                         = %d09
+// iota-move-verification-error                           = %d10
+// move-primitive-runtime-error                           = %d11 (option move-location)
+// move-abort                                             = %d12 move-location u64
+// vm-verification-or-deserialization-error               = %d13
+// vm-invariant-violation                                 = %d14
+// function-not-found                                     = %d15
+// arity-mismatch                                         = %d16
+// type-arity-mismatch                                    = %d17
+// non-entry-function-invoked                             = %d18
+// command-argument-error                                 = %d19 u16 command-argument-error
+// type-argument-error                                    = %d20 u16 type-argument-error
+// unused-value-without-drop                              = %d21 u16 u16
+// invalid-public-function-return-type                    = %d22 u16
+// invalid-transfer-object                                = %d23
+// effects-too-large                                      = %d24 u64 u64
+// publish-upgrade-missing-dependency                     = %d25
+// publish-upgrade-dependency-downgrade                   = %d26
+// package-upgrade-error                                  = %d27 package-upgrade-error
+// written-objects-too-large                              = %d28 u64 u64
+// certificate-denied                                     = %d29
+// iota-move-verification-timeout                         = %d30
+// shared-object-operation-not-allowed                    = %d31
+// input-object-deleted                                   = %d32
+// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+// address-denied-for-coin                                = %d34 address string
+// coin-type-global-pause                                 = %d35 string
+// execution-cancelled-due-to-randomness-unavailable      = %d36
+// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+// invalid-linkage                                        = %d38
 // ```
 type ExecutionError interface {
 	Destroy()
@@ -40657,8 +39749,8 @@ func (_ FfiDestroyerExecutionError) Destroy(value ExecutionError) {
 //
 // ```text
 // execution-status = success / failure
-// success = %x00
-// failure = %x01 execution-error (option u64)
+// success = %d00
+// failure = %d01 execution-error (option u64)
 // ```
 type ExecutionStatus interface {
 	Destroy()
@@ -40831,9 +39923,9 @@ func (_ FfiDestroyerHashingIntentScope) Destroy(value HashingIntentScope) {
 // =/ id-operation-created
 // =/ id-operation-deleted
 //
-// id-operation-none       = %x00
-// id-operation-created    = %x01
-// id-operation-deleted    = %x02
+// id-operation-none       = %d00
+// id-operation-created    = %d01
+// id-operation-deleted    = %d02
 // ```
 type IdOperation uint8
 
@@ -41431,8 +40523,8 @@ func (_ FfiDestroyerNameFormat) Destroy(value NameFormat) {
 // ```text
 // object-in = object-in-missing / object-in-data
 //
-// object-in-missing = %x00
-// object-in-data    = %x01 u64 digest owner
+// object-in-missing = %d00
+// object-in-data    = %d01 u64 digest owner
 // ```
 type ObjectIn interface {
 	Destroy()
@@ -41522,9 +40614,9 @@ func (_ FfiDestroyerObjectIn) Destroy(value ObjectIn) {
 // =/ object-out-package-write
 //
 //
-// object-out-missing        = %x00
-// object-out-object-write   = %x01 digest owner
-// object-out-package-write  = %x02 version digest
+// object-out-missing        = %d00
+// object-out-object-write   = %d01 digest owner
+// object-out-package-write  = %d02 version digest
 // ```
 type ObjectOut interface {
 	Destroy()
@@ -41633,12 +40725,12 @@ func (_ FfiDestroyerObjectOut) Destroy(value ObjectOut) {
 // unknown-upgrade-policy  /
 // package-id-does-not-match
 //
-// unable-to-fetch-package     = %x00 object-id
-// not-a-package               = %x01 object-id
-// incompatible-upgrade        = %x02
-// digest-does-not-match       = %x03 digest
-// unknown-upgrade-policy      = %x04 u8
-// package-id-does-not-match   = %x05 object-id object-id
+// unable-to-fetch-package     = %d00 object-id
+// not-a-package               = %d01 object-id
+// incompatible-upgrade        = %d02
+// digest-does-not-match       = %d03 digest
+// unknown-upgrade-policy      = %d04 u8
+// package-id-does-not-match   = %d05 object-id object-id
 // ```
 type PackageUpgradeError interface {
 	Destroy()
@@ -41881,14 +40973,14 @@ func (_ FfiDestroyerSdkFfiError) Destroy(value *SdkFfiError) {
 // signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
 // multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 // move-auth-flag
-// ed25519-flag                    = %x00
-// secp256k1-flag                  = %x01
-// secp256r1-flag                  = %x02
-// multisig-flag                   = %x03
-// bls-flag                        = %x04
-// zklogin-auth-flag-deprecated    = %x05
-// passkey-auth-flag               = %x06
-// move-auth-flag                  = %x07
+// ed25519-flag                    = %d00
+// secp256k1-flag                  = %d01
+// secp256r1-flag                  = %d02
+// multisig-flag                   = %d03
+// bls-flag                        = %d04
+// zklogin-auth-flag-deprecated    = %d05
+// passkey-auth-flag               = %d06
+// move-auth-flag                  = %d07
 // ```
 type SignatureScheme uint8
 
@@ -42072,8 +41164,8 @@ func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKin
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-expiration =  %x00      ; none
-// =/ %x01 u64  ; epoch
+// transaction-expiration =  %d00      ; none
+// =/ %d01 u64  ; epoch
 // ```
 type TransactionExpiration interface {
 	Destroy()
@@ -42153,8 +41245,8 @@ func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) 
 //
 // ```text
 // type-argument-error = type-not-found / constraint-not-satisfied
-// type-not-found = %x00
-// constraint-not-satisfied = %x01
+// type-not-found = %d00
+// constraint-not-satisfied = %d01
 // ```
 type TypeArgumentError uint8
 
@@ -42209,11 +41301,11 @@ func (_ FfiDestroyerTypeArgumentError) Destroy(value TypeArgumentError) {
 // =/ cancelled
 // =/ per-epoch-config
 //
-// read-only-root      = %x00 u64 digest
-// mutate-deleted      = %x01 u64
-// read-deleted        = %x02 u64
-// cancelled           = %x03 u64
-// per-epoch-config    = %x04
+// read-only-root      = %d00 u64 digest
+// mutate-deleted      = %d01 u64
+// read-deleted        = %d02 u64
+// cancelled           = %d03 u64
+// per-epoch-config    = %d04
 // ```
 type UnchangedSharedKind interface {
 	Destroy()
@@ -46444,54 +45536,6 @@ func (FfiDestroyerSequenceEndOfEpochTransactionKind) Destroy(sequence []*EndOfEp
 }
 
 
-type FfiConverterSequenceExecutionTimeObservation struct{}
-
-var FfiConverterSequenceExecutionTimeObservationINSTANCE = FfiConverterSequenceExecutionTimeObservation{}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Lift(rb RustBufferI) []*ExecutionTimeObservation {
-	return LiftFromRustBuffer[[]*ExecutionTimeObservation](c, rb)
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Read(reader io.Reader) []*ExecutionTimeObservation {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*ExecutionTimeObservation, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterExecutionTimeObservationINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Lower(value []*ExecutionTimeObservation) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value)
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) LowerExternal(value []*ExecutionTimeObservation) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value))
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Write(writer io.Writer, value []*ExecutionTimeObservation) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*ExecutionTimeObservation is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterExecutionTimeObservationINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceExecutionTimeObservation struct {}
-
-func (FfiDestroyerSequenceExecutionTimeObservation) Destroy(sequence []*ExecutionTimeObservation) {
-	for _, value := range sequence {
-		FfiDestroyerExecutionTimeObservation{}.Destroy(value)	
-	}
-}
-
-
 type FfiConverterSequenceGenesisObject struct{}
 
 var FfiConverterSequenceGenesisObjectINSTANCE = FfiConverterSequenceGenesisObject{}
@@ -47256,54 +46300,6 @@ type FfiDestroyerSequenceUserSignature struct {}
 func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 	for _, value := range sequence {
 		FfiDestroyerUserSignature{}.Destroy(value)	
-	}
-}
-
-
-type FfiConverterSequenceValidatorExecutionTimeObservation struct{}
-
-var FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE = FfiConverterSequenceValidatorExecutionTimeObservation{}
-
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lift(rb RustBufferI) []*ValidatorExecutionTimeObservation {
-	return LiftFromRustBuffer[[]*ValidatorExecutionTimeObservation](c, rb)
-}
-
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Read(reader io.Reader) []*ValidatorExecutionTimeObservation {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*ValidatorExecutionTimeObservation, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterValidatorExecutionTimeObservationINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lower(value []*ValidatorExecutionTimeObservation) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value)
-}
-
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) LowerExternal(value []*ValidatorExecutionTimeObservation) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value))
-}
-
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Write(writer io.Writer, value []*ValidatorExecutionTimeObservation) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*ValidatorExecutionTimeObservation is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterValidatorExecutionTimeObservationINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceValidatorExecutionTimeObservation struct {}
-
-func (FfiDestroyerSequenceValidatorExecutionTimeObservation) Destroy(sequence []*ValidatorExecutionTimeObservation) {
-	for _, value := range sequence {
-		FfiDestroyerValidatorExecutionTimeObservation{}.Destroy(value)	
 	}
 }
 
@@ -50368,174 +49364,6 @@ func ExecutionStatusToJson(data ExecutionStatus) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json(FfiConverterExecutionStatusINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationFromBcs(bcs []byte) (*ExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationFromJson(json string) (*ExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationKeyFromBcs(bcs []byte) (*ExecutionTimeObservationKey, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservationKey
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationKeyFromJson(json string) (*ExecutionTimeObservationKey, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservationKey
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationKeyToBcs(data *ExecutionTimeObservationKey) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationKeyToJson(data *ExecutionTimeObservationKey) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationToBcs(data *ExecutionTimeObservation) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(FfiConverterExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationToJson(data *ExecutionTimeObservation) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json(FfiConverterExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationsFromBcs(bcs []byte) (*ExecutionTimeObservations, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservations
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationsINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationsFromJson(json string) (*ExecutionTimeObservations, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservations
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationsINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationsToBcs(data *ExecutionTimeObservations) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(FfiConverterExecutionTimeObservationsINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationsToJson(data *ExecutionTimeObservations) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json(FfiConverterExecutionTimeObservationsINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -54404,62 +53232,6 @@ func ValidatorCommitteeToJson(data ValidatorCommittee) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json(FfiConverterValidatorCommitteeINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ValidatorExecutionTimeObservationFromBcs(bcs []byte) (*ValidatorExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ValidatorExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ValidatorExecutionTimeObservationFromJson(json string) (*ValidatorExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ValidatorExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ValidatorExecutionTimeObservationToBcs(data *ValidatorExecutionTimeObservation) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ValidatorExecutionTimeObservationToJson(data *ValidatorExecutionTimeObservation) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json(FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {

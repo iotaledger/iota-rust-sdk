@@ -10,7 +10,6 @@ use crate::{
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-        crypto::Bls12381PublicKey,
         digest::Digest,
         events::Event,
         object::{GenesisObject, ObjectId, ObjectReference, Version},
@@ -30,7 +29,7 @@ pub mod v1;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction = %x00 transaction-v1
+/// transaction = %d00 transaction-v1
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
@@ -103,7 +102,7 @@ impl Transaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction = %x00 transaction-v1
+/// transaction = %d00 transaction-v1
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
@@ -206,15 +205,12 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %x00 ptb
-///                     =/ %x01 change-epoch
-///                     =/ %x02 genesis-transaction
-///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
-///                     =/ %x05 (vector end-of-epoch-transaction-kind)
-///                     =/ %x06 randomness-state-update
-///                     =/ %x07 consensus-commit-prologue-v2
-///                     =/ %x08 consensus-commit-prologue-v3
+/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+///                     =/ %d01 genesis-transaction                    ; Genesis
+///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -313,12 +309,14 @@ impl ProgrammableTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+/// input = call-arg
 ///
-/// input-pure                  = %x00 bytes
-/// input-immutable-or-owned    = %x01 object-ref
-/// input-shared                = %x02 object-id u64 bool
-/// input-receiving             = %x04 object-ref
+/// call-arg   =  %d00 bytes        ; Pure
+///            =/ %d01 object-arg   ; Object
+///
+/// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+///            =/ %d01 object-id u64 bool   ; Shared
+///            =/ %d02 object-reference     ; Receiving
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -370,13 +368,13 @@ impl Input {
 ///         =/ command-make-move-vector
 ///         =/ command-upgrade
 ///
-/// command-move-call           = %x00 move-call
-/// command-transfer-objects    = %x01 transfer-objects
-/// command-split-coins         = %x02 split-coins
-/// command-merge-coins         = %x03 merge-coins
-/// command-publish             = %x04 publish
-/// command-make-move-vector    = %x05 make-move-vector
-/// command-upgrade             = %x06 upgrade
+/// command-move-call           = %d00 move-call
+/// command-transfer-objects    = %d01 transfer-objects
+/// command-split-coins         = %d02 split-coins
+/// command-merge-coins         = %d03 merge-coins
+/// command-publish             = %d04 publish
+/// command-make-move-vector    = %d05 make-move-vector
+/// command-upgrade             = %d06 upgrade
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1079,15 +1077,15 @@ impl SystemPackage {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// change-epoch = u64  ; next epoch
-///                u64  ; protocol version
-///                u64  ; storage charge
-///                u64  ; computation charge
-///                u64  ; computation charge burned
-///                u64  ; storage rebate
-///                u64  ; non-refundable storage fee
-///                u64  ; epoch start timestamp
-///                (vector system-package)
+/// change-epoch-v2 = u64  ; next epoch
+///                   u64  ; protocol version
+///                   u64  ; storage charge
+///                   u64  ; computation charge
+///                   u64  ; computation charge burned
+///                   u64  ; storage rebate
+///                   u64  ; non-refundable storage fee
+///                   u64  ; epoch start timestamp
+///                   (vector system-package)
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1383,177 +1381,6 @@ impl ChangeEpochV4 {
     }
 }
 
-/// Set of Execution Time Observations from the committee.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-///
-/// v1-stored-execution-time-observations = (vec
-///                                          execution-time-observation-key
-///                                          (vec execution-time-observation)
-///                                         )
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservations(pub iota_sdk::types::ExecutionTimeObservations);
-
-#[uniffi::export]
-impl ExecutionTimeObservations {
-    #[uniffi::constructor]
-    pub fn new_v1(execution_time_observations: Vec<Arc<ExecutionTimeObservation>>) -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservations::V1(
-            execution_time_observations
-                .iter()
-                .map(|obs| obs.0.clone())
-                .collect(),
-        ))
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservation(pub iota_sdk::types::ExecutionTimeObservation);
-
-#[uniffi::export]
-impl ExecutionTimeObservation {
-    #[uniffi::constructor]
-    pub fn new(
-        key: &ExecutionTimeObservationKey,
-        observations: Vec<Arc<ValidatorExecutionTimeObservation>>,
-    ) -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservation {
-            key: key.0.clone(),
-            observations: observations.into_iter().map(|obs| obs.0.clone()).collect(),
-        })
-    }
-
-    pub fn key(&self) -> ExecutionTimeObservationKey {
-        self.0.key.clone().into()
-    }
-
-    pub fn observations(&self) -> Vec<Arc<ValidatorExecutionTimeObservation>> {
-        self.0
-            .observations
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
-    }
-}
-
-/// An execution time observation from a particular validator
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation = bls-public-key duration
-/// duration =  u64 ; seconds
-///             u32 ; subsecond nanoseconds
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ValidatorExecutionTimeObservation(iota_sdk::types::ValidatorExecutionTimeObservation);
-
-#[uniffi::export]
-impl ValidatorExecutionTimeObservation {
-    #[uniffi::constructor]
-    pub fn new(validator: &Bls12381PublicKey, duration: std::time::Duration) -> Self {
-        Self(iota_sdk::types::ValidatorExecutionTimeObservation {
-            validator: validator.0,
-            duration,
-        })
-    }
-
-    pub fn validator(&self) -> Bls12381PublicKey {
-        self.0.validator.into()
-    }
-
-    pub fn duration(&self) -> std::time::Duration {
-        self.0.duration
-    }
-}
-
-/// Key for an execution time observation
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation-key  =  %x00 move-entry-point
-///                                 =/ %x01 ; transfer-objects
-///                                 =/ %x02 ; split-coins
-///                                 =/ %x03 ; merge-coins
-///                                 =/ %x04 ; publish
-///                                 =/ %x05 ; make-move-vec
-///                                 =/ %x06 ; upgrade
-///
-/// move-entry-point = object-id string string (vec type-tag)
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservationKey(iota_sdk::types::ExecutionTimeObservationKey);
-
-#[uniffi::export]
-impl ExecutionTimeObservationKey {
-    #[uniffi::constructor]
-    pub fn new_move_entry_point(
-        package: Arc<ObjectId>,
-        module: String,
-        function: String,
-        type_arguments: Vec<Arc<TypeTag>>,
-    ) -> Self {
-        Self(
-            iota_sdk::types::ExecutionTimeObservationKey::MoveEntryPoint {
-                package: package.0,
-                module,
-                function,
-                type_arguments: type_arguments
-                    .into_iter()
-                    .map(|tag| tag.0.clone())
-                    .collect(),
-            },
-        )
-    }
-
-    #[uniffi::constructor]
-    pub fn new_transfer_objects() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::TransferObjects)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_split_coins() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::SplitCoins)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_merge_coins() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::MergeCoins)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_publish() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::Publish)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_make_move_vec() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::MakeMoveVec)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_upgrade() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::Upgrade)
-    }
-}
-
 /// Randomness update
 ///
 /// # BCS
@@ -1582,23 +1409,10 @@ pub struct RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// end-of-epoch-transaction-kind   =  eoe-change-epoch
-///                                 =/ eoe-authenticator-state-create
-///                                 =/ eoe-authenticator-state-expire
-///                                 =/ eoe-randomness-state-create
-///                                 =/ eoe-deny-list-state-create
-///                                 =/ eoe-bridge-state-create
-///                                 =/ eoe-bridge-committee-init
-///                                 =/ eoe-store-execution-time-observations
-///
-/// eoe-change-epoch                = %x00 change-epoch
-/// eoe-authenticator-state-create  = %x01
-/// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-/// eoe-randomness-state-create     = %x03
-/// eoe-deny-list-state-create      = %x04
-/// eoe-bridge-state-create         = %x05 digest
-/// eoe-bridge-committee-init       = %x06 u64
-/// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+/// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
+///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
+///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1642,10 +1456,10 @@ impl EndOfEpochTransactionKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// gas-payment = (vector object-ref) ; gas coin objects
-///               address             ; owner
-///               u64                 ; price
-///               u64                 ; budget
+/// gas-payment = (vector object-reference) ; gas coin objects
+///               address                   ; owner
+///               u64                       ; price
+///               u64                       ; budget
 /// ```
 #[derive(uniffi::Record)]
 pub struct GasPayment {
@@ -1690,8 +1504,8 @@ impl From<GasPayment> for iota_sdk::types::GasPayment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-effects =  %x00 effects-v1
-///                     =/ %x01 effects-v2
+/// transaction-effects =  %d00 effects-v1
+///                     =/ %d01 effects-v2
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1726,8 +1540,8 @@ impl TransactionEffects {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-expiration =  %x00      ; none
-///                        =/ %x01 u64  ; epoch
+/// transaction-expiration =  %d00      ; none
+///                        =/ %d01 u64  ; epoch
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
@@ -1751,10 +1565,10 @@ pub enum TransactionExpiration {
 ///             =/ argument-result
 ///             =/ argument-nested-result
 ///
-/// argument-gas            = %x00
-/// argument-input          = %x01 u16
-/// argument-result         = %x02 u16
-/// argument-nested-result  = %x03 u16 u16
+/// argument-gas            = %d00
+/// argument-input          = %d01 u16
+/// argument-result         = %d02 u16
+/// argument-nested-result  = %d03 u16 u16
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::Deref, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1909,10 +1723,6 @@ crate::export_iota_types_objects_bcs_conversion!(
     ChangeEpoch,
     SystemPackage,
     ChangeEpochV2,
-    ExecutionTimeObservation,
-    ExecutionTimeObservations,
-    ValidatorExecutionTimeObservation,
-    ExecutionTimeObservationKey,
     TransactionEffects,
     Argument,
     MoveCall,
@@ -1944,10 +1754,6 @@ crate::export_iota_types_objects_json_conversion!(
     ChangeEpoch,
     SystemPackage,
     ChangeEpochV2,
-    ExecutionTimeObservation,
-    ExecutionTimeObservations,
-    ValidatorExecutionTimeObservation,
-    ExecutionTimeObservationKey,
     TransactionEffects,
     Argument,
     MoveCall,
