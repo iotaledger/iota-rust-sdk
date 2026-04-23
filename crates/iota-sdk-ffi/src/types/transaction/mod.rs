@@ -10,7 +10,6 @@ use crate::{
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-        crypto::Bls12381PublicKey,
         digest::Digest,
         events::Event,
         object::{GenesisObject, ObjectId, ObjectReference, Version},
@@ -1383,177 +1382,6 @@ impl ChangeEpochV4 {
     }
 }
 
-/// Set of Execution Time Observations from the committee.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// stored-execution-time-observations =  %d00 v1-stored-execution-time-observations
-///
-/// v1-stored-execution-time-observations = (vec
-///                                          execution-time-observation-key
-///                                          (vec execution-time-observation)
-///                                         )
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservations(pub iota_sdk::types::ExecutionTimeObservations);
-
-#[uniffi::export]
-impl ExecutionTimeObservations {
-    #[uniffi::constructor]
-    pub fn new_v1(execution_time_observations: Vec<Arc<ExecutionTimeObservation>>) -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservations::V1(
-            execution_time_observations
-                .iter()
-                .map(|obs| obs.0.clone())
-                .collect(),
-        ))
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservation(pub iota_sdk::types::ExecutionTimeObservation);
-
-#[uniffi::export]
-impl ExecutionTimeObservation {
-    #[uniffi::constructor]
-    pub fn new(
-        key: &ExecutionTimeObservationKey,
-        observations: Vec<Arc<ValidatorExecutionTimeObservation>>,
-    ) -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservation {
-            key: key.0.clone(),
-            observations: observations.into_iter().map(|obs| obs.0.clone()).collect(),
-        })
-    }
-
-    pub fn key(&self) -> ExecutionTimeObservationKey {
-        self.0.key.clone().into()
-    }
-
-    pub fn observations(&self) -> Vec<Arc<ValidatorExecutionTimeObservation>> {
-        self.0
-            .observations
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
-    }
-}
-
-/// An execution time observation from a particular validator
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation = bls-public-key duration
-/// duration =  u64 ; seconds
-///             u32 ; subsecond nanoseconds
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ValidatorExecutionTimeObservation(iota_sdk::types::ValidatorExecutionTimeObservation);
-
-#[uniffi::export]
-impl ValidatorExecutionTimeObservation {
-    #[uniffi::constructor]
-    pub fn new(validator: &Bls12381PublicKey, duration: std::time::Duration) -> Self {
-        Self(iota_sdk::types::ValidatorExecutionTimeObservation {
-            validator: validator.0,
-            duration,
-        })
-    }
-
-    pub fn validator(&self) -> Bls12381PublicKey {
-        self.0.validator.into()
-    }
-
-    pub fn duration(&self) -> std::time::Duration {
-        self.0.duration
-    }
-}
-
-/// Key for an execution time observation
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation-key  =  %d00 move-entry-point
-///                                 =/ %d01 ; transfer-objects
-///                                 =/ %d02 ; split-coins
-///                                 =/ %d03 ; merge-coins
-///                                 =/ %d04 ; publish
-///                                 =/ %d05 ; make-move-vec
-///                                 =/ %d06 ; upgrade
-///
-/// move-entry-point = object-id string string (vec type-tag)
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq, Hash)]
-pub struct ExecutionTimeObservationKey(iota_sdk::types::ExecutionTimeObservationKey);
-
-#[uniffi::export]
-impl ExecutionTimeObservationKey {
-    #[uniffi::constructor]
-    pub fn new_move_entry_point(
-        package: Arc<ObjectId>,
-        module: String,
-        function: String,
-        type_arguments: Vec<Arc<TypeTag>>,
-    ) -> Self {
-        Self(
-            iota_sdk::types::ExecutionTimeObservationKey::MoveEntryPoint {
-                package: package.0,
-                module,
-                function,
-                type_arguments: type_arguments
-                    .into_iter()
-                    .map(|tag| tag.0.clone())
-                    .collect(),
-            },
-        )
-    }
-
-    #[uniffi::constructor]
-    pub fn new_transfer_objects() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::TransferObjects)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_split_coins() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::SplitCoins)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_merge_coins() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::MergeCoins)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_publish() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::Publish)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_make_move_vec() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::MakeMoveVec)
-    }
-
-    #[uniffi::constructor]
-    pub fn new_upgrade() -> Self {
-        Self(iota_sdk::types::ExecutionTimeObservationKey::Upgrade)
-    }
-}
-
 /// Randomness update
 ///
 /// # BCS
@@ -1909,10 +1737,6 @@ crate::export_iota_types_objects_bcs_conversion!(
     ChangeEpoch,
     SystemPackage,
     ChangeEpochV2,
-    ExecutionTimeObservation,
-    ExecutionTimeObservations,
-    ValidatorExecutionTimeObservation,
-    ExecutionTimeObservationKey,
     TransactionEffects,
     Argument,
     MoveCall,
@@ -1944,10 +1768,6 @@ crate::export_iota_types_objects_json_conversion!(
     ChangeEpoch,
     SystemPackage,
     ChangeEpochV2,
-    ExecutionTimeObservation,
-    ExecutionTimeObservations,
-    ValidatorExecutionTimeObservation,
-    ExecutionTimeObservationKey,
     TransactionEffects,
     Argument,
     MoveCall,
