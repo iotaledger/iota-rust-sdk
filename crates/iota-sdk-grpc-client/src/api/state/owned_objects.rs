@@ -3,16 +3,11 @@
 
 //! High-level API for listing owned objects.
 //!
-//! # Available Read Mask Fields
+//! # Read Mask
 //!
-//! Object fields mirror those of `GetObjects`:
-//! - `reference` - the object reference (includes sub-fields below)
-//!   - `reference.object_id` - the object ID
-//!   - `reference.version` - the object version
-//!   - `reference.digest` - the object digest
-//! - `object_type` - the Move type of the object
-//! - `owner` - the object owner
-//! - `bcs` - the full BCS-encoded object
+//! Use [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
+//! with [`ReadMask::from_fields`](crate::ReadMask::from_fields) for type-safe
+//! field selection.
 
 use iota_grpc_types::v1::{
     object::Object,
@@ -23,7 +18,7 @@ use iota_types::{Address, StructTag};
 
 use crate::{
     Client, InterceptedChannel,
-    api::{LIST_OWNED_OBJECTS_READ_MASK, define_list_query, field_mask_with_default},
+    api::{LIST_OWNED_OBJECTS_READ_MASK, ReadMask, define_list_query, field_mask_with_default},
 };
 
 define_list_query! {
@@ -107,7 +102,7 @@ impl Client {
         object_type: Option<StructTag>,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
     ) -> ListOwnedObjectsQuery {
         let mut base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))

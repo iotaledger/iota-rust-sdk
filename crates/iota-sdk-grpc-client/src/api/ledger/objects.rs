@@ -13,8 +13,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ProtoResult, Result, collect_stream,
-        field_mask_with_default, proto_object_id, saturating_usize_to_u32,
+        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ProtoResult, ReadMask, Result,
+        collect_stream, field_mask_with_default, proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -31,34 +31,36 @@ impl Client {
     ///
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
     ///
-    /// # Available Read Mask Fields
+    /// # Read Mask
     ///
     /// The optional `read_mask` parameter controls which fields the server
     /// returns. If `None`, uses [`GET_OBJECTS_READ_MASK`].
     ///
-    /// ## Reference Fields
-    /// - `reference` - includes all reference fields
-    ///   - `reference.object_id` - the ID of the object to fetch
-    ///   - `reference.version` - the version of the object, which can be used
-    ///     to fetch a specific historical version or the latest version if not
-    ///     provided
-    ///   - `reference.digest` - the digest of the object contents, which can be
-    ///     used for integrity verification
-    ///
-    /// ## Data Fields
-    /// - `bcs` - the full BCS-encoded object
+    /// Use [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField)
+    /// with [`ReadMask::from_fields`] for type-safe field selection.
     ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::{Client, ReadMask};
+    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReferenceField};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
-    /// // Get proto objects
+    /// // Get objects with default mask
     /// let objs = client.get_objects(&[(object_id, None)], None).await?;
+    ///
+    /// // Get objects with typed field mask (only reference, no BCS)
+    /// let objs = client
+    ///     .get_objects(
+    ///         &[(object_id, None)],
+    ///         Some(ReadMask::from_fields(&[ObjectField::Reference(
+    ///             ObjectReferenceField::All,
+    ///         )])),
+    ///     )
+    ///     .await?;
     ///
     /// for obj in objs.body() {
     ///     // Convert proto object to SDK type
@@ -73,7 +75,7 @@ impl Client {
     pub async fn get_objects(
         &self,
         refs: &[(ObjectId, Option<Version>)],
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<Vec<Object>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);

@@ -11,7 +11,8 @@ use iota_grpc_types::{
 use crate::{
     Client,
     api::{
-        GET_EPOCH_READ_MASK, MetadataEnvelope, Result, TryFromProtoError, field_mask_with_default,
+        GET_EPOCH_READ_MASK, MetadataEnvelope, ReadMask, Result, TryFromProtoError,
+        field_mask_with_default,
     },
 };
 
@@ -27,53 +28,22 @@ impl Client {
     /// * `read_mask` - Optional field mask specifying which fields to include.
     ///   If `None`, uses [`GET_EPOCH_READ_MASK`].
     ///
-    /// # Available Read Mask Fields
+    /// # Read Mask
     ///
-    /// ## Epoch Fields
-    /// - `epoch` - the epoch number
-    /// - `committee` - the validator committee for this epoch
-    /// - `bcs_system_state` - the BCS-encoded system state at the beginning of
-    ///   the epoch for past epochs or the current system state for the current
-    ///   epoch, which can be used for historical state queries or to get the
-    ///   current state respectively
-    ///
-    /// ## Checkpoint Fields
-    /// - `first_checkpoint` - the first checkpoint included in the epoch
-    /// - `last_checkpoint` - the last checkpoint included in the epoch, which
-    ///   may be unavailable for the current epoch if it has not ended yet
-    ///
-    /// ## Timing Fields
-    /// - `start` - the timestamp of the first checkpoint included in the epoch
-    /// - `end` - the timestamp of the last checkpoint included in the epoch,
-    ///   which may be unavailable for the current epoch if it has not ended yet
-    ///
-    /// ## Gas Fields
-    /// - `reference_gas_price` - the reference gas price during the epoch,
-    ///   denominated in NANOS
-    ///
-    /// ## Protocol Configuration Fields
-    /// - `protocol_config` - the protocol configuration during the epoch
-    ///   - `protocol_config.protocol_version` - the protocol version during the
-    ///     epoch
-    ///   - `protocol_config.feature_flags` - the individual protocol feature
-    ///     flags during the epoch (use `protocol_config.feature_flags.<key>` to
-    ///     filter specific flags)
-    ///   - `protocol_config.attributes` - the individual protocol attributes
-    ///     during the epoch (use `protocol_config.attributes.<key>` to filter
-    ///     specific attributes)
-    ///
-    ///   > **Note:** Other than for all other fields, wildcards don't work for
-    ///   > `protocol_config.feature_flags` and `protocol_config.attributes`
-    ///   > since they are maps (`protocol_config` is not enough). If you want
-    ///   > all entries, you must specify the map directly, or single entries of
-    ///   > it by name.
-    ///   > (e.g. `protocol_config.feature_flags` to get all entries, or
-    ///   > `protocol_config.feature_flags.enable_vdf` to get a single flag)
+    /// Use [`EpochField`](iota_grpc_types::read_mask_fields::EpochField)
+    /// with [`ReadMask::from_fields`] for type-safe field selection. For
+    /// individual protocol config map entries, use
+    /// [`EpochField::feature_flag`](iota_grpc_types::read_mask_fields::EpochField::feature_flag)
+    /// and
+    /// [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
     ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::{Client, ReadMask};
+    /// # use iota_sdk_grpc_client::read_mask_fields::{
+    /// #     EpochField, ProtocolConfigField,
+    /// # };
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     ///
@@ -83,24 +53,46 @@ impl Client {
     ///
     /// // Get specific epoch with custom fields
     /// let epoch = client
-    ///     .get_epoch(Some(0), Some("epoch,reference_gas_price,first_checkpoint"))
+    ///     .get_epoch(
+    ///         Some(0),
+    ///         Some(ReadMask::from_fields(&[
+    ///             EpochField::Epoch,
+    ///             EpochField::ReferenceGasPrice,
+    ///             EpochField::FirstCheckpoint,
+    ///         ])),
+    ///     )
     ///     .await?;
     ///
     /// // Get all feature flags for the current epoch
     /// let epoch = client
-    ///     .get_epoch(None, Some("protocol_config.feature_flags"))
+    ///     .get_epoch(
+    ///         None,
+    ///         Some(ReadMask::from_fields(&[EpochField::ProtocolConfig(
+    ///             ProtocolConfigField::FeatureFlags,
+    ///         )])),
+    ///     )
     ///     .await?
     ///     .into_inner();
     /// let flags = epoch.protocol_config.unwrap().feature_flags.unwrap().flags;
     ///
     /// // Get a single named feature flag
     /// let epoch = client
-    ///     .get_epoch(None, Some("protocol_config.feature_flags.enable_vdf"))
+    ///     .get_epoch(
+    ///         None,
+    ///         Some(ReadMask::from_fields(&[EpochField::feature_flag(
+    ///             "enable_vdf",
+    ///         )])),
+    ///     )
     ///     .await?;
     ///
     /// // Get all protocol attributes for the current epoch
     /// let epoch = client
-    ///     .get_epoch(None, Some("protocol_config.attributes"))
+    ///     .get_epoch(
+    ///         None,
+    ///         Some(ReadMask::from_fields(&[EpochField::ProtocolConfig(
+    ///             ProtocolConfigField::Attributes,
+    ///         )])),
+    ///     )
     ///     .await?
     ///     .into_inner();
     /// let attributes = epoch
@@ -112,7 +104,12 @@ impl Client {
     ///
     /// // Get a single named attribute
     /// let epoch = client
-    ///     .get_epoch(None, Some("protocol_config.attributes.max_tx_gas"))
+    ///     .get_epoch(
+    ///         None,
+    ///         Some(ReadMask::from_fields(&[EpochField::attribute(
+    ///             "max_tx_gas",
+    ///         )])),
+    ///     )
     ///     .await?;
     /// # Ok(())
     /// # }
@@ -120,7 +117,7 @@ impl Client {
     pub async fn get_epoch(
         &self,
         epoch: Option<u64>,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<Epoch>> {
         let mut request = GetEpochRequest::default()
             .with_read_mask(field_mask_with_default(read_mask, GET_EPOCH_READ_MASK));

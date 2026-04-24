@@ -88,7 +88,7 @@ pub use api::{
 // Re-export types for convenience
 pub use api::{
     CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope, Page,
-    ProtocolError, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
+    ProtocolError, ReadMask, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{
@@ -108,6 +108,8 @@ pub use api::{
     move_package::package_versions::ListPackageVersionsQuery,
     state::{dynamic_fields::ListDynamicFieldsQuery, owned_objects::ListOwnedObjectsQuery},
 };
+// Re-export typed read mask field enums
+pub use iota_grpc_types::read_mask_fields;
 
 mod client;
 pub use client::{Client, InterceptedChannel};

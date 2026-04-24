@@ -7,7 +7,9 @@ use iota_grpc_types::v1::ledger_service::{GetServiceInfoRequest, GetServiceInfoR
 
 use crate::{
     Client,
-    api::{GET_SERVICE_INFO_READ_MASK, MetadataEnvelope, Result, field_mask_with_default},
+    api::{
+        GET_SERVICE_INFO_READ_MASK, MetadataEnvelope, ReadMask, Result, field_mask_with_default,
+    },
 };
 
 impl Client {
@@ -16,37 +18,19 @@ impl Client {
     /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
     /// according to the `read_mask`.
     ///
-    /// # Available Read Mask Fields
+    /// # Read Mask
     ///
     /// The optional `read_mask` parameter controls which fields the server
     /// returns. If `None`, uses [`GET_SERVICE_INFO_READ_MASK`].
     ///
-    /// ## Network Fields
-    /// - `chain_id` - the ID of the chain, which can be used to identify the
-    ///   network
-    /// - `chain` - the chain identifier, which can be used to identify the
-    ///   network
-    ///
-    /// ## Current State Fields
-    /// - `epoch` - the current epoch
-    /// - `executed_checkpoint_height` - the height of the last executed
-    ///   checkpoint
-    /// - `executed_checkpoint_timestamp` - the timestamp of the last executed
-    ///   checkpoint
-    ///
-    /// ## Availability Fields
-    /// - `lowest_available_checkpoint` - lowest available checkpoint for which
-    ///   transaction and checkpoint data can be requested
-    /// - `lowest_available_checkpoint_objects` - lowest available checkpoint
-    ///   for which object data can be requested
-    ///
-    /// ## Server Fields
-    /// - `server` - the server version
+    /// Use [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
+    /// with [`ReadMask::from_fields`] for type-safe field selection.
     ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::{Client, ReadMask};
+    /// # use iota_sdk_grpc_client::read_mask_fields::ServiceInfoField;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     ///
@@ -55,20 +39,20 @@ impl Client {
     /// println!("Chain ID: {:?}", info.body().chain_id);
     /// println!("Epoch: {:?}", info.body().epoch);
     ///
-    /// // Get service info with all fields
+    /// // Get service info with specific fields
     /// let info = client
-    ///     .get_service_info(Some(
-    ///         "chain_id,chain,epoch,executed_checkpoint_height,\
-    ///          executed_checkpoint_timestamp,lowest_available_checkpoint,\
-    ///          lowest_available_checkpoint_objects,server",
-    ///     ))
+    ///     .get_service_info(Some(ReadMask::from_fields(&[
+    ///         ServiceInfoField::ChainId,
+    ///         ServiceInfoField::Epoch,
+    ///         ServiceInfoField::ExecutedCheckpointHeight,
+    ///     ])))
     ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_service_info(
         &self,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<GetServiceInfoResponse>> {
         let request = GetServiceInfoRequest::default().with_read_mask(field_mask_with_default(
             read_mask,

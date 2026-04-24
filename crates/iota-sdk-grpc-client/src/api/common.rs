@@ -3,10 +3,13 @@
 
 //! Common utilities shared across API modules.
 
+use std::borrow::Cow;
+
 pub use iota_grpc_types::{
     field::{FieldMask, FieldMaskUtil},
     google::rpc::Status as RpcStatus,
     proto::TryFromProtoError,
+    read_mask_fields::ReadMaskField,
 };
 use iota_grpc_types::{
     proto::GrpcConversionError,
@@ -143,12 +146,73 @@ pub type Result<T> = std::result::Result<T, Error>;
 // Field Masks
 // =============================================================================
 
+/// A read mask that can be passed to client methods.
+///
+/// Construct from a raw string or from typed field selectors:
+///
+/// ```
+/// use iota_sdk_grpc_client::{
+///     ReadMask,
+///     read_mask_fields::{EffectsSubField, TransactionField},
+/// };
+///
+/// // From typed fields
+/// let mask = ReadMask::from_fields(&[
+///     TransactionField::Effects(EffectsSubField::All),
+///     TransactionField::Checkpoint,
+/// ]);
+/// assert_eq!(mask.as_str(), "effects,checkpoint");
+///
+/// // From a raw string
+/// let mask = ReadMask::from("effects,checkpoint");
+/// assert_eq!(mask.as_str(), "effects,checkpoint");
+/// ```
+#[derive(Debug, Clone)]
+pub struct ReadMask<'a>(Cow<'a, str>);
+
+impl<'a> ReadMask<'a> {
+    /// Build a read mask from a slice of typed field selectors.
+    pub fn from_fields<F: ReadMaskField>(fields: &[F]) -> Self {
+        let joined = fields
+            .iter()
+            .map(|f| f.as_str())
+            .collect::<Vec<_>>()
+            .join(",");
+        Self(Cow::Owned(joined))
+    }
+
+    /// Build a read mask from a single typed field selector.
+    pub fn from_field(field: &dyn ReadMaskField) -> Self {
+        Self(Cow::Owned(field.as_str().to_owned()))
+    }
+
+    /// Returns the comma-separated field mask string.
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl<'a> From<&'a str> for ReadMask<'a> {
+    fn from(s: &'a str) -> Self {
+        Self(Cow::Borrowed(s))
+    }
+}
+
+impl From<String> for ReadMask<'_> {
+    fn from(s: String) -> Self {
+        Self(Cow::Owned(s))
+    }
+}
+
 /// Build a field mask with a custom value or default.
 ///
 /// This is a convenience helper that handles the common pattern of using
 /// a user-provided field mask or falling back to a default.
-pub fn field_mask_with_default(custom: Option<&str>, default: &str) -> FieldMask {
-    FieldMask::from_str(custom.unwrap_or(default))
+pub fn field_mask_with_default(custom: Option<ReadMask<'_>>, default: &str) -> FieldMask {
+    match custom {
+        Some(mask) => FieldMask::from_str(mask.as_str()),
+        None => FieldMask::from_str(default),
+    }
 }
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of

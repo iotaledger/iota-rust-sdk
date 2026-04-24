@@ -3,17 +3,11 @@
 
 //! High-level API for listing dynamic fields.
 //!
-//! # Available Read Mask Fields
+//! # Read Mask
 //!
-//! - `kind` - the kind of dynamic field (field or object)
-//! - `parent` - the parent object ID
-//! - `field_id` - the field object ID
-//! - `child_id` - the child object ID (for dynamic object fields)
-//! - `name` - BCS-encoded field name
-//! - `value` - BCS-encoded field value
-//! - `value_type` - the Move type of the value
-//! - `field_object` - the full field object (sub-fields match `GetObjects`)
-//! - `child_object` - the full child object (sub-fields match `GetObjects`)
+//! Use [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+//! with [`ReadMask::from_fields`](crate::ReadMask::from_fields) for type-safe
+//! field selection.
 
 use iota_grpc_types::v1::{
     dynamic_field::DynamicField,
@@ -24,7 +18,8 @@ use iota_types::ObjectId;
 use crate::{
     Client, InterceptedChannel,
     api::{
-        LIST_DYNAMIC_FIELDS_READ_MASK, define_list_query, field_mask_with_default, proto_object_id,
+        LIST_DYNAMIC_FIELDS_READ_MASK, ReadMask, define_list_query, field_mask_with_default,
+        proto_object_id,
     },
 };
 
@@ -99,7 +94,7 @@ impl Client {
         parent: ObjectId,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
     ) -> ListDynamicFieldsQuery {
         let base_request = ListDynamicFieldsRequest::default()
             .with_parent(proto_object_id(parent))

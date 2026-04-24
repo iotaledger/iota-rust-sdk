@@ -14,7 +14,7 @@ use crate::{
     Client,
     api::{
         EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtoResult, ProtocolError,
-        Result, build_proto_transaction, field_mask_with_default,
+        ReadMask, Result, build_proto_transaction, field_mask_with_default,
     },
 };
 
@@ -31,57 +31,14 @@ impl Client {
     /// - `result.input_objects()` - Get input objects (if requested)
     /// - `result.output_objects()` - Get output objects (if requested)
     ///
-    /// # Available Read Mask Fields
+    /// # Read Mask
     ///
     /// The optional `read_mask` parameter controls which fields the server
     /// returns. If `None`, uses [`EXECUTE_TRANSACTIONS_READ_MASK`] which
     /// includes effects, events, and input/output objects.
     ///
-    /// ## Transaction Fields
-    /// - `transaction` - includes all transaction fields
-    ///   - `transaction.digest` - the transaction digest
-    ///   - `transaction.bcs` - the full BCS-encoded transaction
-    /// - `signatures` - includes all signature fields
-    ///   - `signatures.bcs` - the full BCS-encoded signature
-    /// - `effects` - includes all effects fields
-    ///   - `effects.digest` - the effects digest
-    ///   - `effects.bcs` - the full BCS-encoded effects
-    /// - `checkpoint` - the checkpoint that included the transaction. Requires
-    ///   `checkpoint_inclusion_timeout_ms` to be set.
-    /// - `timestamp` - the timestamp of the checkpoint. Requires
-    ///   `checkpoint_inclusion_timeout_ms` to be set.
-    ///
-    /// ## Event Fields
-    /// - `events` - includes all event fields (all events of the transaction)
-    ///   - `events.digest` - the events digest
-    ///   - `events.events.bcs` - the full BCS-encoded event
-    ///   - `events.events.package_id` - the ID of the package that emitted the
-    ///     event
-    ///   - `events.events.module` - the module that emitted the event
-    ///   - `events.events.sender` - the sender that triggered the event
-    ///   - `events.events.event_type` - the type of the event
-    ///   - `events.events.bcs_contents` - the full BCS-encoded contents of the
-    ///     event
-    ///   - `events.events.json_contents` - the JSON-encoded contents of the
-    ///     event
-    ///
-    /// ## Object Fields
-    /// - `input_objects` - includes all input object fields
-    ///   - `input_objects.reference` - includes all reference fields
-    ///     - `input_objects.reference.object_id` - the ID of the input object
-    ///     - `input_objects.reference.version` - the version of the input
-    ///       object
-    ///     - `input_objects.reference.digest` - the digest of the input object
-    ///       contents
-    ///   - `input_objects.bcs` - the full BCS-encoded object
-    /// - `output_objects` - includes all output object fields
-    ///   - `output_objects.reference` - includes all reference fields
-    ///     - `output_objects.reference.object_id` - the ID of the output object
-    ///     - `output_objects.reference.version` - the version of the output
-    ///       object
-    ///     - `output_objects.reference.digest` - the digest of the output
-    ///       object contents
-    ///   - `output_objects.bcs` - the full BCS-encoded object
+    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// with [`ReadMask::from_fields`] for type-safe field selection.
     ///
     /// # Checkpoint Inclusion
     ///
@@ -117,7 +74,7 @@ impl Client {
     pub async fn execute_transaction(
         &self,
         signed_transaction: SignedTransaction,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
     ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
         self.execute_transactions(
@@ -142,15 +99,15 @@ impl Client {
     /// input. Each element is either the successfully executed transaction or
     /// the per-item error returned by the server.
     ///
-    /// # Available Read Mask Fields
+    /// # Read Mask
     ///
     /// The optional `read_mask` parameter controls which fields the server
     /// returns for each `ExecutedTransaction`. If `None`, uses
     /// [`EXECUTE_TRANSACTIONS_READ_MASK`] which includes effects, events, and
     /// input/output objects.
     ///
-    /// See [`execute_transaction`](Self::execute_transaction) for the full list
-    /// of supported read mask fields.
+    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// with [`ReadMask::from_fields`] for type-safe field selection.
     ///
     /// # Checkpoint Inclusion
     ///
@@ -167,7 +124,7 @@ impl Client {
     pub async fn execute_transactions(
         &self,
         transactions: Vec<SignedTransaction>,
-        read_mask: Option<&str>,
+        read_mask: Option<ReadMask<'_>>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if transactions.is_empty() {

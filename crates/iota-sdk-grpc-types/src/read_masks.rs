@@ -3,6 +3,11 @@
 
 //! Read mask constants for the gRPC API.
 //!
+//! For type-safe field selection, prefer the enums in
+//! [`read_mask_fields`](crate::read_mask_fields) instead. The constants in
+//! this module are still useful with the [`field_mask!`](crate::field_mask)
+//! and [`field_masks_merge!`](crate::field_masks_merge) macros.
+//!
 //! This module provides two categories of constants:
 //!
 //! ## Endpoint defaults
