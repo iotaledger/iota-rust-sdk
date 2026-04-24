@@ -73,7 +73,6 @@ filetime = "0.2"
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
-jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
 rand.workspace = true
