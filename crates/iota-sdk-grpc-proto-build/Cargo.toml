@@ -15,14 +15,14 @@ heck = { version = ">=0.4, <=0.5" }
 itertools = "0.14.0"
 petgraph = "0.8"
 prettyplease = "0.2"
-proc-macro2 = "1.0"
+proc-macro2.workspace = true
 prost.workspace = true
 prost-reflect = "0.16"
 prost-types.workspace = true
 protox = "0.9"
-quote = "1.0"
+quote.workspace = true
 regex = "1.12"
-syn = { version = "2.0", features = ["full"] }
+syn.workspace = true
 tonic-build = "0.14"
 tonic-prost-build = "0.14"
 walkdir = "2.5"
