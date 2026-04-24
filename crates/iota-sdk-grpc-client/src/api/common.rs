@@ -7,6 +7,7 @@ use std::borrow::Cow;
 
 pub use iota_grpc_types::{
     field::{FieldMask, FieldMaskUtil},
+    field_mask_normalize,
     google::rpc::Status as RpcStatus,
     proto::TryFromProtoError,
     read_mask_fields::ReadMaskField,
@@ -172,13 +173,16 @@ pub struct ReadMask<'a>(Cow<'a, str>);
 
 impl<'a> ReadMask<'a> {
     /// Build a read mask from a slice of typed field selectors.
+    ///
+    /// Overlapping paths are normalized: a broader path subsumes all of its
+    /// sub-paths (e.g. `Effects(All)` + `Effects(Bcs)` → `"effects"`).
     pub fn from_fields<F: ReadMaskField>(fields: &[F]) -> Self {
         let joined = fields
             .iter()
             .map(|f| f.as_str())
             .collect::<Vec<_>>()
             .join(",");
-        Self(Cow::Owned(joined))
+        Self(Cow::Owned(field_mask_normalize(&joined)))
     }
 
     /// Build a read mask from a single typed field selector.
@@ -201,6 +205,20 @@ impl<'a> From<&'a str> for ReadMask<'a> {
 impl From<String> for ReadMask<'_> {
     fn from(s: String) -> Self {
         Self(Cow::Owned(s))
+    }
+}
+
+impl From<&[&str]> for ReadMask<'_> {
+    /// Paths are normalized: broader paths subsume their sub-paths.
+    fn from(paths: &[&str]) -> Self {
+        Self(Cow::Owned(field_mask_normalize(&paths.join(","))))
+    }
+}
+
+impl From<FieldMask> for ReadMask<'_> {
+    /// Paths are normalized: broader paths subsume their sub-paths.
+    fn from(mask: FieldMask) -> Self {
+        Self(Cow::Owned(field_mask_normalize(&mask.paths.join(","))))
     }
 }
 
