@@ -18,7 +18,7 @@ struct CoinBalancesExample {
       )
     }
 
-    let balance = try await client.balance(address: address)
-    print("Total Balance = \(String(describing: balance))")
+    let balance = try await client.balance(address: address) ?? 0
+    print("Total Balance = \(balance)")
   }
 }
