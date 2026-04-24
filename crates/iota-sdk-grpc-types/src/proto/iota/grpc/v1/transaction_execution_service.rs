@@ -9,7 +9,6 @@ include!("../../../generated/iota.grpc.v1.transaction_execution_service.accessor
 use crate::proto::TryFromProtoError;
 
 // ExecuteTransactionResult
-//
 
 impl ExecuteTransactionResult {
     /// Get the executed transaction from the result, if it succeeded.
@@ -34,7 +33,6 @@ impl ExecuteTransactionResult {
 }
 
 // ExecutionError
-//
 
 impl ExecutionError {
     /// Deserialize the execution error kind from BCS.
@@ -78,7 +76,6 @@ impl ExecutionError {
 }
 
 // SimulatedTransaction
-//
 
 impl SimulatedTransaction {
     /// Get the simulated executed transaction.
@@ -161,7 +158,6 @@ impl SimulatedTransaction {
 }
 
 // SimulateTransactionResult
-//
 
 impl SimulateTransactionResult {
     /// Get the simulated transaction from the result, if it succeeded.

@@ -9,7 +9,6 @@ include!("../../../generated/iota.grpc.v1.ledger_service.accessors.rs");
 use crate::proto::{TryFromProtoError, get_inner_field};
 
 // GetServiceInfoResponse
-//
 
 impl GetServiceInfoResponse {
     /// Get the chain identifier (digest of genesis checkpoint).
@@ -77,7 +76,6 @@ impl GetServiceInfoResponse {
 }
 
 // ObjectResult
-//
 
 impl ObjectResult {
     /// Get the object if this result is an object.
@@ -106,7 +104,6 @@ impl ObjectResult {
 }
 
 // TransactionResult
-//
 
 impl TransactionResult {
     /// Get the executed transaction if this result is a transaction.
@@ -137,7 +134,6 @@ impl TransactionResult {
 }
 
 // GetEpochResponse
-//
 
 impl GetEpochResponse {
     pub fn epoch(&self) -> Result<&crate::v1::epoch::Epoch, TryFromProtoError> {

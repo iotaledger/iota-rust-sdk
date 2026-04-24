@@ -12,7 +12,6 @@ use crate::{
 };
 
 // ValidatorAggregatedSignature
-//
 
 impl From<iota_types::ValidatorAggregatedSignature> for ValidatorAggregatedSignature {
     fn from(value: iota_types::ValidatorAggregatedSignature) -> Self {
@@ -51,7 +50,6 @@ impl ValidatorAggregatedSignature {
 }
 
 // UserSignature
-//
 
 impl TryFrom<iota_types::UserSignature> for UserSignature {
     type Error = GrpcConversionError;
@@ -90,7 +88,6 @@ impl UserSignature {
 }
 
 // UserSignatures
-//
 
 // TryFrom implementation for UserSignatures
 impl TryFrom<&UserSignatures> for Vec<iota_types::UserSignature> {

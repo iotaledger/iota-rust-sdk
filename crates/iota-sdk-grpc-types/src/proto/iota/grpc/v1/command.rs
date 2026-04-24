@@ -78,7 +78,6 @@ impl TryFrom<&Argument> for iota_types::transaction::Argument {
 }
 
 // Argument
-//
 
 impl Argument {
     /// Deserialize the argument to SDK type.
@@ -88,7 +87,6 @@ impl Argument {
 }
 
 // CommandOutput
-//
 
 impl CommandOutput {
     /// Deserialize the argument to SDK type.
@@ -127,7 +125,6 @@ impl CommandOutput {
 }
 
 // CommandResult
-//
 
 impl CommandResult {
     /// Get the mutated-by-reference outputs.

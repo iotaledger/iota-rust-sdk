@@ -12,7 +12,6 @@ use crate::{
 };
 
 // CheckpointSummary
-//
 
 impl TryFrom<&CheckpointSummary> for iota_types::CheckpointSummary {
     type Error = TryFromProtoError;
@@ -58,7 +57,6 @@ impl CheckpointSummary {
 }
 
 // CheckpointContents
-//
 
 impl TryFrom<&CheckpointContents> for iota_types::CheckpointContents {
     type Error = TryFromProtoError;

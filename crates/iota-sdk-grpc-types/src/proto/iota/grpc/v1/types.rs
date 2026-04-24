@@ -222,7 +222,6 @@ impl TryFrom<&TypeTag> for iota_types::TypeTag {
 }
 
 // TypeTag
-//
 
 impl TypeTag {
     /// Deserialize the type tag to SDK type.

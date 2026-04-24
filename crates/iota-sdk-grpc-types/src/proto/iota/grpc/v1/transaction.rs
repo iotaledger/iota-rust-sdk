@@ -134,7 +134,6 @@ impl TransactionEvents {
 }
 
 // ExecutedTransaction
-//
 
 // Lazy conversion methods for ExecutedTransaction
 impl ExecutedTransaction {

@@ -11,7 +11,6 @@ use tap::Pipe;
 use crate::{proto::TryFromProtoError, v1::bcs::BcsData};
 
 // ValidatorCommitteeMember
-//
 
 impl From<iota_types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
     fn from(value: iota_types::ValidatorCommitteeMember) -> Self {
@@ -47,7 +46,6 @@ impl TryFrom<&ValidatorCommitteeMember> for iota_types::ValidatorCommitteeMember
 }
 
 // ValidatorCommittee
-//
 
 impl From<iota_types::ValidatorCommittee> for ValidatorCommittee {
     fn from(value: iota_types::ValidatorCommittee) -> Self {
@@ -183,7 +181,6 @@ impl Epoch {
 }
 
 // ProtocolConfig
-//
 
 impl ProtocolConfig {
     /// Get the protocol version number.
