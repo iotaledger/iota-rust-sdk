@@ -79,5 +79,6 @@ rand.workspace = true
 serde_json.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-getrandom = { version = "0.3", features = ["wasm_js"] }
+getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
+getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
 wasm-bindgen-test.workspace = true

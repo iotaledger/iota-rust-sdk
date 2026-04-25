@@ -162,13 +162,11 @@ pub enum ExecutionError {
     /// Move object is larger than the maximum allowed size
     ObjectTooBig {
         object_size: u64,
-
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
     PackageTooBig {
         object_size: u64,
-
         max_object_size: u64,
     },
     /// Circular Object Ownership
@@ -235,7 +233,6 @@ pub enum ExecutionError {
     /// Indicates the transaction tried to write objects too large to storage
     WrittenObjectsTooLarge {
         object_size: u64,
-
         max_object_size: u64,
     },
     /// Certificate is on the deny list
@@ -529,7 +526,6 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-
     struct FailureStatus {
         error: ExecutionError,
         #[serde(skip_serializing_if = "Option::is_none")]
