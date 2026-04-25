@@ -25,11 +25,6 @@ pub type ProtocolVersion = u64;
 /// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "type", rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -64,7 +59,6 @@ impl CheckpointCommitment {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct EndOfEpochData {
@@ -73,7 +67,6 @@ pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     /// The protocol version that is in effect during the next epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub next_epoch_protocol_version: ProtocolVersion,
     /// Commitments to epoch specific state (e.g. live object set)
@@ -123,21 +116,17 @@ pub struct EndOfEpochData {
 ///                      bytes                          ; version_specific_data
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The height of this checkpoint.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub sequence_number: CheckpointSequenceNumber,
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
     pub content_digest: Digest,
@@ -152,14 +141,9 @@ pub struct CheckpointSummary {
     /// Checkpoint timestamps are monotonic, but not strongly monotonic -
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub timestamp_ms: CheckpointTimestamp,
     /// Commitments to checkpoint-specific state.
-    #[cfg_attr(
-        feature = "schemars",
-        schemars(with = "Option<Vec<CheckpointCommitment>>")
-    )]
     pub checkpoint_commitments: Vec<CheckpointCommitment>,
     /// Extra data only present in the final checkpoint of an epoch.
     pub end_of_epoch_data: Option<EndOfEpochData>,
@@ -168,16 +152,11 @@ pub struct CheckpointSummary {
     /// be added to CheckpointSummary, we allow opaque data to be added to
     /// checkpoints which can be deserialized based on the current
     /// protocol version.
-    #[cfg_attr(
-        feature = "schemars",
-        schemars(with = "Option<crate::_schemars::Base64>")
-    )]
     pub version_specific_data: Vec<u8>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SignedCheckpointSummary {
@@ -206,7 +185,6 @@ pub struct SignedCheckpointSummary {
 /// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointContents(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -230,7 +208,6 @@ impl CheckpointContents {
 /// Transaction information committed to in a checkpoint
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
     pub transaction: Digest,
@@ -241,7 +218,6 @@ pub struct CheckpointTransactionInfo {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointData {
@@ -253,7 +229,6 @@ pub struct CheckpointData {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointTransaction {
@@ -262,7 +237,6 @@ pub struct CheckpointTransaction {
         feature = "serde",
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "SignedTransaction"))]
     #[cfg_attr(
         feature = "bcs-schema",
         bcs_schema(as_type = "%d01 intent-signed-transaction")

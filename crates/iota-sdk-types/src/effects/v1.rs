@@ -28,15 +28,12 @@ use crate::{
 ///                          (option digest)                    ; auxiliary-data-digest
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
-    #[cfg_attr(feature = "schemars", schemars(flatten))]
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
@@ -54,7 +51,6 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
@@ -102,7 +98,6 @@ impl TransactionEffectsV1 {
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -130,7 +125,6 @@ pub struct ChangedObject {
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnchangedSharedObject {
@@ -152,11 +146,6 @@ pub struct UnchangedSharedObject {
 ///                       / %d04               ; PerEpochConfig
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -165,27 +154,23 @@ pub enum UnchangedSharedKind {
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
     ReadOnlyRoot {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
     },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
     Cancelled {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
     },
@@ -219,11 +204,6 @@ impl UnchangedSharedKind {
 ///           / %d01 u64 digest owner   ; Data
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "state", rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -231,7 +211,6 @@ pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
@@ -291,11 +270,6 @@ impl ObjectIn {
 ///            / %d02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "state", rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -307,7 +281,6 @@ pub enum ObjectOut {
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
@@ -383,7 +356,6 @@ impl ObjectOut {
     derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "lowercase")
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]

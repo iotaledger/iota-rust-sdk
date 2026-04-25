@@ -31,11 +31,6 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "scheme", rename_all = "lowercase")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum SimpleSignature {
@@ -697,7 +692,6 @@ mod serialization {
     #[derive(serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "UserSignature")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableUserSignature {
         Ed25519 {
             signature: Ed25519Signature,
@@ -715,19 +709,6 @@ mod serialization {
         ZkLoginDeprecated,
         Passkey(PasskeyAuthenticator),
         Move(MoveAuthenticator),
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for UserSignature {
-        fn schema_name() -> String {
-            ReadableUserSignature::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            ReadableUserSignature::json_schema(generator)
-        }
     }
 
     impl serde::Serialize for UserSignature {
