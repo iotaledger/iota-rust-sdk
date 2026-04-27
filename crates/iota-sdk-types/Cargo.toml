@@ -48,7 +48,7 @@ bcs = { workspace = true, optional = true }
 blake2 = { version = "0.10.6", optional = true }
 bnum.workspace = true
 bs58 = "0.5.1"
-derive_more = { version = "2.1.1", features = ["full"] }
+derive_more = { workspace = true, features = ["full"] }
 hex.workspace = true
 paste.workspace = true
 # proptest support

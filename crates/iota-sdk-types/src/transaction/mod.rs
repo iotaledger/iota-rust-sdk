@@ -306,7 +306,6 @@ pub struct CancelledTransaction {
 pub struct VersionAssignment {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
 }
 
@@ -559,7 +558,6 @@ pub struct ChangeEpochV4 {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemPackage {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     #[cfg_attr(
         feature = "serde",

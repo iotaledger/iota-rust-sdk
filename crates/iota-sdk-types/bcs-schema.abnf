@@ -268,13 +268,13 @@ move-location = object-id                  ; package
                 (%d00 / %d01 identifier)   ; function-name
 
 move-package = object-id                          ; id
-               u64                                ; version
+               version                            ; version
                (size *(identifier bytes))         ; modules
                (size *type-origin)                ; type-origin-table
                (size *(object-id upgrade-info))   ; linkage-table
 
 move-struct = compressed-struct-tag   ; type-
-              u64                     ; version
+              version                 ; version
               bytes                   ; contents
 
 object = object-data   ; data
@@ -282,29 +282,29 @@ object = object-data   ; data
          digest        ; previous-transaction
          u64           ; storage-rebate
 
-object-arg = %d00 object-reference     ; ImmutableOrOwned
-           / %d01 object-id u64 bool   ; Shared
-           / %d02 object-reference     ; Receiving
+object-arg = %d00 object-reference         ; ImmutableOrOwned
+           / %d01 object-id version bool   ; Shared
+           / %d02 object-reference         ; Receiving
 
 object-data = %d00 move-struct    ; Struct
             / %d01 move-package   ; Package
 
 object-id = address
 
-object-in = %d00                    ; Missing
-          / %d01 u64 digest owner   ; Data
+object-in = %d00                        ; Missing
+          / %d01 version digest owner   ; Data
 
-object-out = %d00                ; Missing
-           / %d01 digest owner   ; ObjectWrite
-           / %d02 u64 digest     ; PackageWrite
+object-out = %d00                  ; Missing
+           / %d01 digest owner     ; ObjectWrite
+           / %d02 version digest   ; PackageWrite
 
 object-reference = object-id   ; object-id
-                   u64         ; version
+                   version     ; version
                    digest      ; digest
 
 owner = %d00 address     ; Address
       / %d01 object-id   ; Object
-      / %d02 u64         ; Shared
+      / %d02 version     ; Shared
       / %d03             ; Immutable
 
 package-upgrade-error = %d00 object-id             ; UnableToFetchPackage
@@ -320,10 +320,10 @@ programmable-transaction = (size *input)     ; inputs
 publish = (size *bytes)       ; modules
           (size *object-id)   ; dependencies
 
-randomness-state-update = u64     ; epoch
-                          u64     ; randomness-round
-                          bytes   ; random-bytes
-                          u64     ; randomness-obj-initial-shared-version
+randomness-state-update = u64       ; epoch
+                          u64       ; randomness-round
+                          bytes     ; random-bytes
+                          version   ; randomness-obj-initial-shared-version
 
 signed-checkpoint-summary = checkpoint-summary               ; checkpoint
                             validator-aggregated-signature   ; signature
@@ -343,7 +343,7 @@ struct-tag = address            ; address
              identifier         ; name
              (size *type-tag)   ; type-params
 
-system-package = u64                 ; version
+system-package = version             ; version
                  (size *bytes)       ; modules
                  (size *object-id)   ; dependencies
 
@@ -358,7 +358,7 @@ transaction-effects-v1 = execution-status                  ; status
                          (%d00 / %d01 u32)                 ; gas-object-index
                          (%d00 / %d01 digest)              ; events-digest
                          (size *digest)                    ; dependencies
-                         u64                               ; lamport-version
+                         version                           ; lamport-version
                          (size *changed-object)            ; changed-objects
                          (size *unchanged-shared-object)   ; unchanged-shared-objects
                          (%d00 / %d01 digest)              ; auxiliary-data-digest
@@ -414,11 +414,11 @@ u8      = 1OCTET
 
 uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer
 
-unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
-                      / %d01 u64          ; MutateDeleted
-                      / %d02 u64          ; ReadDeleted
-                      / %d03 u64          ; Cancelled
-                      / %d04              ; PerEpochConfig
+unchanged-shared-kind = %d00 version digest   ; ReadOnlyRoot
+                      / %d01 version          ; MutateDeleted
+                      / %d02 version          ; ReadDeleted
+                      / %d03 version          ; Cancelled
+                      / %d04                  ; PerEpochConfig
 
 unchanged-shared-object = object-id               ; object-id
                           unchanged-shared-kind   ; kind
@@ -429,7 +429,7 @@ upgrade = (size *bytes)       ; modules
           argument            ; ticket
 
 upgrade-info = object-id   ; upgraded-id
-               u64         ; upgraded-version
+               version     ; upgraded-version
 
 user-signature = bytes
 
@@ -443,5 +443,7 @@ validator-committee = u64                                  ; epoch
 validator-committee-member = bls12381-public-key   ; public-key
                              u64                   ; stake
 
+version = u64
+
 version-assignment = object-id   ; object-id
-                     u64         ; version
+                     version     ; version

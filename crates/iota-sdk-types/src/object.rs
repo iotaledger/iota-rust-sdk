@@ -27,7 +27,6 @@ pub struct ObjectReference {
     pub object_id: ObjectId,
     /// The version of this object.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -106,7 +105,6 @@ pub enum Owner {
     Shared(
         /// The version at which the object became shared
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -192,7 +190,6 @@ pub struct MovePackage {
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// Set of modules defined by this package
     #[cfg_attr(
@@ -257,7 +254,6 @@ pub struct UpgradeInfo {
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub upgraded_version: Version,
 }
 
@@ -295,7 +291,6 @@ pub struct MoveStruct {
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(

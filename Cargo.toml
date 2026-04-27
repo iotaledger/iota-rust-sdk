@@ -24,7 +24,7 @@ base64ct = "1.6.0"
 bcs = "0.1.6"
 bnum = "0.12.0"
 cynic = "3.7.3"
-derive_more = "2.0"
+derive_more = "2.1.1"
 eyre = "0.6"
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
@@ -42,7 +42,7 @@ strum = "0.27.2"
 test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.40.0"
-tracing = "0.1.37"
+tracing = "0.1"
 variadics_please = "1.1"
 wasm-bindgen-test = "0.3"
 

@@ -47,6 +47,7 @@ pub enum VersionError {
     derive(serde::Serialize, serde::Deserialize),
     serde(transparent)
 )]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[repr(transparent)]
 pub struct Version(u64);
 

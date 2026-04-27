@@ -50,7 +50,6 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -152,27 +151,14 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
-        version: Version,
-        digest: Digest,
-    },
+    ReadOnlyRoot { version: Version, digest: Digest },
     /// Deleted shared objects that appear mutably/owned in the input.
-    MutateDeleted {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
-        version: Version,
-    },
+    MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
-    ReadDeleted {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
-        version: Version,
-    },
+    ReadDeleted { version: Version },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
-        version: Version,
-    },
+    Cancelled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -210,7 +196,6 @@ pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         version: Version,
         digest: Digest,
         owner: Owner,
@@ -279,11 +264,7 @@ pub enum ObjectOut {
     ObjectWrite { digest: Digest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite {
-        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
-        version: Version,
-        digest: Digest,
-    },
+    PackageWrite { version: Version, digest: Digest },
 }
 
 impl ObjectOut {
