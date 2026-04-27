@@ -826,9 +826,9 @@ public static func fromHex(hex: String)throws  -> Address  {
 })
 }
     
-public static func generate() -> Address  {
+public static func random() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_address_generate($0
+    uniffi_iota_sdk_ffi_fn_constructor_address_random($0
     )
 })
 }
@@ -47416,7 +47416,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998) {
