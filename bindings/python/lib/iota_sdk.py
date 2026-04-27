@@ -1215,6 +1215,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168:
@@ -13507,6 +13511,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16

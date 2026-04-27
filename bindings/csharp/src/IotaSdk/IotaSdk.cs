@@ -3739,6 +3739,22 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -3793,6 +3809,14 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_address_zero(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -4676,11 +4700,27 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_digest_generate(ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_digest_random(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6565,6 +6605,14 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(IntPtr @ptr,IntPtr @keyTypeTag,RustBuffer @keyBytes,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -12332,6 +12380,14 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
     );
 
@@ -12772,7 +12828,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -13561,6 +13633,14 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14688,7 +14768,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_digest_random(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -18164,6 +18244,18 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical();
+            if (checksum != 10365) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical` checksum `10365`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt();
+            if (checksum != 51160) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt` checksum `51160`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes();
             if (checksum != 57710) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_bytes` checksum `57710`, library returned `{checksum}`");
@@ -18824,9 +18916,33 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive();
+            if (checksum != 57678) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive` checksum `57678`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted();
+            if (checksum != 32964) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted` checksum `32964`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped();
+            if (checksum != 15502) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped` checksum `15502`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical();
             if (checksum != 53914) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical` checksum `53914`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt();
+            if (checksum != 23877) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt` checksum `23877`, library returned `{checksum}`");
             }
         }
         {
@@ -20009,6 +20125,18 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id();
             if (checksum != 47819) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id` checksum `47819`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical();
+            if (checksum != 15534) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical` checksum `15534`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt();
+            if (checksum != 278) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt` checksum `278`, library returned `{checksum}`");
             }
         }
         {
@@ -21698,9 +21826,9 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate();
-            if (checksum != 8094) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_digest_generate` checksum `8094`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_digest_random();
+            if (checksum != 18621) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_digest_random` checksum `18621`, library returned `{checksum}`");
             }
         }
         {
@@ -23880,6 +24008,15 @@ class FfiConverterDuration: FfiConverterRustBuffer<TimeSpan> {
 /// ```
 /// </summary>
 public interface IAddress: IEquatable<Address> {
+    /// <summary>
+    /// Returns the next digest in byte-increasing order.
+    /// </summary>
+    Address NextLexicographical();
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    Address? NextLexicographicalOpt();
     byte[] ToBytes();
     /// <summary>
     /// Returns the string representation of this address using the
@@ -24037,6 +24174,29 @@ public class Address : IAddress, IDisposable {
         }
     }
 
+    
+    /// <summary>
+    /// Returns the next digest in byte-increasing order.
+    /// </summary>
+    public Address NextLexicographical() {
+        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    public Address? NextLexicographicalOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeAddress.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(thisPtr,  ref _status)
+)));
+    }
+    
     
     public byte[] ToBytes() {
         return CallWithPointer(thisPtr => FfiConverterByteArray.INSTANCE.Lift(
@@ -29009,9 +29169,28 @@ class FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverter<Consen
 /// </summary>
 public interface IDigest: IEquatable<Digest> {
     /// <summary>
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    /// </summary>
+    bool IsObjectAlive();
+    /// <summary>
+    /// Returns whether the digest represents a deleted object
+    /// </summary>
+    bool IsObjectDeleted();
+    /// <summary>
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    /// </summary>
+    bool IsObjectWrapped();
+    /// <summary>
     /// Returns the next digest in byte-increasing order.
     /// </summary>
     Digest NextLexicographical();
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    Digest? NextLexicographicalOpt();
     string ToBase58();
     byte[] ToBytes();
 }
@@ -29121,12 +29300,59 @@ public class Digest : IDigest, IDisposable {
 
     
     /// <summary>
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    /// </summary>
+    public bool IsObjectAlive() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns whether the digest represents a deleted object
+    /// </summary>
+    public bool IsObjectDeleted() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    /// </summary>
+    public bool IsObjectWrapped() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
     /// Returns the next digest in byte-increasing order.
     /// </summary>
     public Digest NextLexicographical() {
         return CallWithPointer(thisPtr => FfiConverterTypeDigest.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    public Digest? NextLexicographicalOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeDigest.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(thisPtr,  ref _status)
 )));
     }
     
@@ -29190,10 +29416,10 @@ public class Digest : IDigest, IDisposable {
 ));
     }
     
-    public static Digest Generate() {
+    public static Digest Random() {
         return new Digest(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_digest_generate( ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_digest_random( ref _status)
 ));
     }
     
@@ -39191,6 +39417,15 @@ public interface IObjectId: IEquatable<ObjectId> {
     /// hash(parent || len(key) || key || key_type_tag)
     /// </summary>
     ObjectId DeriveDynamicChildId(TypeTag @keyTypeTag, byte[] @keyBytes);
+    /// <summary>
+    /// Returns the next digest in byte-increasing order.
+    /// </summary>
+    ObjectId NextLexicographical();
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    ObjectId? NextLexicographicalOpt();
     Address ToAddress();
     byte[] ToBytes();
     /// <summary>
@@ -39337,6 +39572,29 @@ public class ObjectId : IObjectId, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterTypeObjectId.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(thisPtr, FfiConverterTypeTypeTag.INSTANCE.Lower(@keyTypeTag), FfiConverterByteArray.INSTANCE.Lower(@keyBytes), ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the next digest in byte-increasing order.
+    /// </summary>
+    public ObjectId NextLexicographical() {
+        return CallWithPointer(thisPtr => FfiConverterTypeObjectId.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    /// </summary>
+    public ObjectId? NextLexicographicalOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeObjectId.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(thisPtr,  ref _status)
 )));
     }
     

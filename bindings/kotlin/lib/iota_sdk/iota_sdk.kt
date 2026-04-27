@@ -3717,6 +3717,22 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4485,6 +4501,10 @@ fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
@@ -11035,6 +11055,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {

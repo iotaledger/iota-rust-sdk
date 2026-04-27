@@ -689,6 +689,17 @@ fileprivate struct FfiConverterDuration: FfiConverterRustBuffer {
  */
 public protocol AddressProtocol: AnyObject, Sendable {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    func nextLexicographical()  -> Address
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> Address?
+    
     func toBytes()  -> Data
     
     /**
@@ -910,6 +921,27 @@ public static func zero() -> Address  {
 }
     
 
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+open func nextLexicographical() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> Address?  {
+    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
     
 open func toBytes() -> Data  {
     return try!  FfiConverterData.lift(try! rustCall() {
@@ -5845,9 +5877,32 @@ public func FfiConverterTypeConsensusDeterminedVersionAssignments_lower(_ value:
 public protocol DigestProtocol: AnyObject, Sendable {
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+    func isObjectAlive()  -> Bool
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+    func isObjectDeleted()  -> Bool
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+    func isObjectWrapped()  -> Bool
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
     func nextLexicographical()  -> Digest
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> Digest?
     
     func toBase58()  -> String
     
@@ -5936,9 +5991,9 @@ public static func fromBytes(bytes: Data)throws  -> Digest  {
 })
 }
     
-public static func generate() -> Digest  {
+public static func random() -> Digest  {
     return try!  FfiConverterTypeDigest_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_digest_generate($0
+    uniffi_iota_sdk_ffi_fn_constructor_digest_random($0
     )
 })
 }
@@ -5946,11 +6001,54 @@ public static func generate() -> Digest  {
 
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+open func isObjectAlive() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+open func isObjectDeleted() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+open func isObjectWrapped() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
 open func nextLexicographical() -> Digest  {
     return try!  FfiConverterTypeDigest_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> Digest?  {
+    return try!  FfiConverterOptionTypeDigest.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -15771,6 +15869,17 @@ public protocol ObjectIdProtocol: AnyObject, Sendable {
      */
     func deriveDynamicChildId(keyTypeTag: TypeTag, keyBytes: Data)  -> ObjectId
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    func nextLexicographical()  -> ObjectId
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> ObjectId?
+    
     func toAddress()  -> Address
     
     func toBytes()  -> Data
@@ -15982,6 +16091,27 @@ open func deriveDynamicChildId(keyTypeTag: TypeTag, keyBytes: Data) -> ObjectId 
     uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(self.uniffiClonePointer(),
         FfiConverterTypeTypeTag_lower(keyTypeTag),
         FfiConverterData.lower(keyBytes),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+open func nextLexicographical() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> ObjectId?  {
+    return try!  FfiConverterOptionTypeObjectId.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -45954,6 +46084,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -46284,7 +46420,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt() != 23877) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638) {
@@ -46876,6 +47024,12 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical() != 15534) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt() != 278) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880) {
@@ -47721,7 +47875,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() != 65530) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_digest_random() != 18621) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842) {
