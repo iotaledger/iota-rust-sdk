@@ -3685,6 +3685,38 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -5002,7 +5034,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_genesisobject_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_genesisobject_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5350,7 +5382,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(IntPtr @objectId,ulong @initialSharedVersion,sbyte @mutable,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(IntPtr @objectId,IntPtr @initialSharedVersion,sbyte @mutable,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5650,7 +5682,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,ulong @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,IntPtr @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5762,7 +5794,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(IntPtr @id,ulong @version,RustBuffer @modules,RustBuffer @typeOriginTable,RustBuffer @linkageTable,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(IntPtr @id,IntPtr @version,RustBuffer @modules,RustBuffer @typeOriginTable,RustBuffer @linkageTable,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5782,7 +5814,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_movepackage_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_movepackage_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6378,7 +6410,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_object_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_object_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6586,7 +6618,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(ulong @version,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(IntPtr @version,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6606,7 +6638,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_owner_as_shared(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_owner_as_shared(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -7998,7 +8030,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(ulong @version,RustBuffer @modules,RustBuffer @dependencies,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(IntPtr @version,RustBuffer @modules,RustBuffer @dependencies,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -8010,7 +8042,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_systempackage_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_systempackage_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -8894,6 +8926,74 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_free_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(ulong @value,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(RustBuffer @inputs,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(ulong @suggestedGasPrice,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ulong uniffi_iota_sdk_ffi_fn_method_version_as_u64(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ulong uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_version_is_congested(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_version_is_valid(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_version_next(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_version_previous(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_versionassignment(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -8902,7 +9002,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(IntPtr @objectId,ulong @version,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(IntPtr @objectId,IntPtr @version,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -8910,7 +9010,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ulong uniffi_iota_sdk_ffi_fn_method_versionassignment_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_versionassignment_version(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14298,6 +14398,34 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_as_u64(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_is_congested(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_is_valid(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_next(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_version_previous(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
     );
 
@@ -15611,6 +15739,38 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -18759,8 +18919,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version();
-            if (checksum != 36305) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_genesisobject_version` checksum `36305`, library returned `{checksum}`");
+            if (checksum != 26576) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_genesisobject_version` checksum `26576`, library returned `{checksum}`");
             }
         }
         {
@@ -18927,14 +19087,14 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents();
-            if (checksum != 40412) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents` checksum `40412`, library returned `{checksum}`");
+            if (checksum != 42627) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents` checksum `42627`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs();
-            if (checksum != 49694) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs` checksum `49694`, library returned `{checksum}`");
+            if (checksum != 16500) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs` checksum `16500`, library returned `{checksum}`");
             }
         }
         {
@@ -18951,20 +19111,20 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function();
-            if (checksum != 16965) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function` checksum `16965`, library returned `{checksum}`");
+            if (checksum != 13444) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function` checksum `13444`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module();
-            if (checksum != 51355) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module` checksum `51355`, library returned `{checksum}`");
+            if (checksum != 1782) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module` checksum `1782`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object();
-            if (checksum != 27424) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object` checksum `27424`, library returned `{checksum}`");
+            if (checksum != 56456) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object` checksum `56456`, library returned `{checksum}`");
             }
         }
         {
@@ -18981,8 +19141,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package();
-            if (checksum != 7913) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package` checksum `7913`, library returned `{checksum}`");
+            if (checksum != 2773) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package` checksum `2773`, library returned `{checksum}`");
             }
         }
         {
@@ -18993,8 +19153,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions();
-            if (checksum != 34213) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions` checksum `34213`, library returned `{checksum}`");
+            if (checksum != 15150) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions` checksum `15150`, library returned `{checksum}`");
             }
         }
         {
@@ -19281,8 +19441,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version();
-            if (checksum != 22970) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_movepackage_version` checksum `22970`, library returned `{checksum}`");
+            if (checksum != 7483) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_movepackage_version` checksum `7483`, library returned `{checksum}`");
             }
         }
         {
@@ -19695,8 +19855,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_object_version();
-            if (checksum != 18433) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_version` checksum `18433`, library returned `{checksum}`");
+            if (checksum != 59848) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_version` checksum `59848`, library returned `{checksum}`");
             }
         }
         {
@@ -19809,14 +19969,14 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared();
-            if (checksum != 56096) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared` checksum `56096`, library returned `{checksum}`");
+            if (checksum != 17030) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared` checksum `17030`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt();
-            if (checksum != 4209) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt` checksum `4209`, library returned `{checksum}`");
+            if (checksum != 58784) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt` checksum `58784`, library returned `{checksum}`");
             }
         }
         {
@@ -20505,8 +20665,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version();
-            if (checksum != 39738) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_systempackage_version` checksum `39738`, library returned `{checksum}`");
+            if (checksum != 53823) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_systempackage_version` checksum `53823`, library returned `{checksum}`");
             }
         }
         {
@@ -21092,6 +21252,48 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64();
+            if (checksum != 37415) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_as_u64` checksum `37415`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price();
+            if (checksum != 50172) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price` checksum `50172`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled();
+            if (checksum != 7823) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled` checksum `7823`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested();
+            if (checksum != 54746) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_is_congested` checksum `54746`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid();
+            if (checksum != 4593) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_is_valid` checksum `4593`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_next();
+            if (checksum != 46748) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_next` checksum `46748`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_version_previous();
+            if (checksum != 59091) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_version_previous` checksum `59091`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id();
             if (checksum != 50440) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id` checksum `50440`, library returned `{checksum}`");
@@ -21099,8 +21301,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version();
-            if (checksum != 51219) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_versionassignment_version` checksum `51219`, library returned `{checksum}`");
+            if (checksum != 9820) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_versionassignment_version` checksum `9820`, library returned `{checksum}`");
             }
         }
         {
@@ -21567,8 +21769,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared();
-            if (checksum != 61970) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared` checksum `61970`, library returned `{checksum}`");
+            if (checksum != 48143) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared` checksum `48143`, library returned `{checksum}`");
             }
         }
         {
@@ -21795,8 +21997,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared();
-            if (checksum != 22895) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared` checksum `22895`, library returned `{checksum}`");
+            if (checksum != 45977) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared` checksum `45977`, library returned `{checksum}`");
             }
         }
         {
@@ -21807,8 +22009,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new();
-            if (checksum != 17506) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new` checksum `17506`, library returned `{checksum}`");
+            if (checksum != 31500) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new` checksum `31500`, library returned `{checksum}`");
             }
         }
         {
@@ -22047,8 +22249,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared();
-            if (checksum != 36753) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared` checksum `36753`, library returned `{checksum}`");
+            if (checksum != 22241) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared` checksum `22241`, library returned `{checksum}`");
             }
         }
         {
@@ -22791,8 +22993,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new();
-            if (checksum != 25070) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new` checksum `25070`, library returned `{checksum}`");
+            if (checksum != 23944) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new` checksum `23944`, library returned `{checksum}`");
             }
         }
         {
@@ -23066,9 +23268,57 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read();
+            if (checksum != 19561) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read` checksum `19561`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback();
+            if (checksum != 34609) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback` checksum `34609`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64();
+            if (checksum != 29677) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64` checksum `29677`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment();
+            if (checksum != 45842) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment` checksum `45842`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl();
+            if (checksum != 16135) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl` checksum `16135`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl();
+            if (checksum != 30140) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl` checksum `30140`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price();
+            if (checksum != 14) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price` checksum `14`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable();
+            if (checksum != 14185) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable` checksum `14185`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new();
-            if (checksum != 14186) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new` checksum `14186`, library returned `{checksum}`");
+            if (checksum != 50135) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new` checksum `50135`, library returned `{checksum}`");
             }
         }
     }
@@ -30460,7 +30710,7 @@ public interface IGenesisObject: IEquatable<GenesisObject> {
     ObjectId ObjectId();
     ObjectType ObjectType();
     Owner Owner();
-    ulong Version();
+    Version Version();
 }
 /// <summary>
 /// An object part of the initial chain state
@@ -30602,8 +30852,8 @@ public class GenesisObject : IGenesisObject, IDisposable {
     }
     
     
-    public ulong Version() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version Version() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(thisPtr,  ref _status)
 )));
@@ -31020,7 +31270,7 @@ public interface IGraphQlClient {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<Value?> MoveObjectContents(ObjectId @objectId, ulong? @version = null);
+    Task<Value?> MoveObjectContents(ObjectId @objectId, Version? @version = null);
     /// <summary>
     /// Return the BCS of an object that is a Move object.
     ///
@@ -31029,7 +31279,7 @@ public interface IGraphQlClient {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<byte[]?> MoveObjectContentsBcs(ObjectId @objectId, ulong? @version = null);
+    Task<byte[]?> MoveObjectContentsBcs(ObjectId @objectId, Version? @version = null);
     /// <summary>
     /// Execute a Move View Function.
     ///
@@ -31090,12 +31340,12 @@ public interface IGraphQlClient {
     /// module, and function.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, ulong? @version = null);
+    Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, Version? @version = null);
     /// <summary>
     /// Return the normalized Move module data for the provided module.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null);
+    Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, Version? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null);
     /// <summary>
     /// Return an object based on the provided `Address`.
     ///
@@ -31104,7 +31354,7 @@ public interface IGraphQlClient {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<Object?> Object(ObjectId @objectId, ulong? @version = null);
+    Task<Object?> Object(ObjectId @objectId, Version? @version = null);
     /// <summary>
     /// Return the object's bcs content `Vec<u8>` based on the provided
     /// `Address`.
@@ -31133,7 +31383,7 @@ public interface IGraphQlClient {
     /// object read (the interpretation of version for the object query).
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<MovePackage?> Package(Address @address, ulong? @version = null);
+    Task<MovePackage?> Package(Address @address, Version? @version = null);
     /// <summary>
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
@@ -31147,7 +31397,7 @@ public interface IGraphQlClient {
     /// from below with afterVersion, or from above with beforeVersion.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<MovePackagePage> PackageVersions(Address @address, ulong? @afterVersion = null, ulong? @beforeVersion = null, PaginationFilter? @paginationFilter = null);
+    Task<MovePackagePage> PackageVersions(Address @address, Version? @afterVersion = null, Version? @beforeVersion = null, PaginationFilter? @paginationFilter = null);
     /// <summary>
     /// The Move packages that exist in the network, optionally filtered to be
     /// strictly before beforeCheckpoint and/or strictly after
@@ -32036,11 +32286,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<Value?> MoveObjectContents(ObjectId @objectId, ulong? @version = null) {
+    public async Task<Value?> MoveObjectContents(ObjectId @objectId, Version? @version = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32065,11 +32315,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<byte[]?> MoveObjectContentsBcs(ObjectId @objectId, ulong? @version = null) {
+    public async Task<byte[]?> MoveObjectContentsBcs(ObjectId @objectId, Version? @version = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32186,11 +32436,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// module, and function.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, ulong? @version = null) {
+    public async Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, Version? @version = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterString.INSTANCE.Lower(@function), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterString.INSTANCE.Lower(@function), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32211,11 +32461,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// Return the normalized Move module data for the provided module.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null) {
+    public async Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, Version? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterOptionalUInt64.INSTANCE.Lower(@version), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterEnums), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFriends), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFunctions), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterStructs));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterEnums), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFriends), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFunctions), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterStructs));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32240,11 +32490,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// will return `Ok(None)`.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<Object?> Object(ObjectId @objectId, ulong? @version = null) {
+    public async Task<Object?> Object(ObjectId @objectId, Version? @version = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(thisPtr, FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32329,11 +32579,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// object read (the interpretation of version for the object query).
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<MovePackage?> Package(Address @address, ulong? @version = null) {
+    public async Task<MovePackage?> Package(Address @address, Version? @version = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@address), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@address), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@version));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -32383,11 +32633,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// from below with afterVersion, or from above with beforeVersion.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<MovePackagePage> PackageVersions(Address @address, ulong? @afterVersion = null, ulong? @beforeVersion = null, PaginationFilter? @paginationFilter = null) {
+    public async Task<MovePackagePage> PackageVersions(Address @address, Version? @afterVersion = null, Version? @beforeVersion = null, PaginationFilter? @paginationFilter = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@address), FfiConverterOptionalUInt64.INSTANCE.Lower(@afterVersion), FfiConverterOptionalUInt64.INSTANCE.Lower(@beforeVersion), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@address), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@afterVersion), FfiConverterOptionalTypeVersion.INSTANCE.Lower(@beforeVersion), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -33277,10 +33527,10 @@ public class Input : IInput, IDisposable {
     /// <summary>
     /// A move object whose owner is "Shared"
     /// </summary>
-    public static Input NewShared(ObjectId @objectId, ulong @initialSharedVersion, bool @mutable) {
+    public static Input NewShared(ObjectId @objectId, Version @initialSharedVersion, bool @mutable) {
         return new Input(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), FfiConverterBoolean.INSTANCE.Lower(@mutable), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterTypeVersion.INSTANCE.Lower(@initialSharedVersion), FfiConverterBoolean.INSTANCE.Lower(@mutable), ref _status)
 ));
     }
     
@@ -34783,10 +35033,10 @@ public class MoveAuthenticatorV1 : IMoveAuthenticatorV1, IDisposable {
     /// <summary>
     /// Create a new move authenticator from a shared object.
     /// </summary>
-    public static MoveAuthenticatorV1 NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, ulong @initialSharedVersion) {
+    public static MoveAuthenticatorV1 NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, Version @initialSharedVersion) {
         return new MoveAuthenticatorV1(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterTypeVersion.INSTANCE.Lower(@initialSharedVersion), ref _status)
 ));
     }
     
@@ -35272,7 +35522,7 @@ public interface IMovePackage: IEquatable<MovePackage> {
     Dictionary<ObjectId, UpgradeInfo> LinkageTable();
     Dictionary<Identifier, byte[]> Modules();
     TypeOrigin[] TypeOriginTable();
-    ulong Version();
+    Version Version();
 }
 /// <summary>
 /// A move package
@@ -35301,10 +35551,10 @@ public class MovePackage : IMovePackage, IDisposable {
     ~MovePackage() {
         Destroy();
     }
-    public MovePackage(ObjectId @id, ulong @version, Dictionary<Identifier, byte[]> @modules, TypeOrigin[] @typeOriginTable, Dictionary<ObjectId, UpgradeInfo> @linkageTable) :
+    public MovePackage(ObjectId @id, Version @version, Dictionary<Identifier, byte[]> @modules, TypeOrigin[] @typeOriginTable, Dictionary<ObjectId, UpgradeInfo> @linkageTable) :
         this(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterTypeObjectId.INSTANCE.Lower(@id), FfiConverterUInt64.INSTANCE.Lower(@version), FfiConverterDictionaryTypeIdentifierByteArray.INSTANCE.Lower(@modules), FfiConverterSequenceTypeTypeOrigin.INSTANCE.Lower(@typeOriginTable), FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo.INSTANCE.Lower(@linkageTable), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterTypeObjectId.INSTANCE.Lower(@id), FfiConverterTypeVersion.INSTANCE.Lower(@version), FfiConverterDictionaryTypeIdentifierByteArray.INSTANCE.Lower(@modules), FfiConverterSequenceTypeTypeOrigin.INSTANCE.Lower(@typeOriginTable), FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo.INSTANCE.Lower(@linkageTable), ref _status)
 )) {}
 
     protected void FreeRustArcPtr() {
@@ -35415,8 +35665,8 @@ public class MovePackage : IMovePackage, IDisposable {
     }
     
     
-    public ulong Version() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version Version() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_movepackage_version(thisPtr,  ref _status)
 )));
@@ -38102,7 +38352,7 @@ public interface IObject: IEquatable<Object> {
     /// <summary>
     /// Return this object's version
     /// </summary>
-    ulong Version();
+    Version Version();
 }
 /// <summary>
 /// An object on the IOTA blockchain
@@ -38349,8 +38599,8 @@ public class Object : IObject, IDisposable {
     /// <summary>
     /// Return this object's version
     /// </summary>
-    public ulong Version() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version Version() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_object_version(thisPtr,  ref _status)
 )));
@@ -39182,8 +39432,8 @@ public interface IOwner: IEquatable<Owner> {
     Address? AsAddressOpt();
     ObjectId AsObject();
     ObjectId? AsObjectOpt();
-    ulong AsShared();
-    ulong? AsSharedOpt();
+    Version AsShared();
+    Version? AsSharedOpt();
     bool IsAddress();
     bool IsImmutable();
     bool IsObject();
@@ -39326,16 +39576,16 @@ public class Owner : IOwner, IDisposable {
     }
     
     
-    public ulong AsShared() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version AsShared() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(thisPtr,  ref _status)
 )));
     }
     
     
-    public ulong? AsSharedOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalUInt64.INSTANCE.Lift(
+    public Version? AsSharedOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(thisPtr,  ref _status)
 )));
@@ -39422,10 +39672,10 @@ public class Owner : IOwner, IDisposable {
 ));
     }
     
-    public static Owner NewShared(ulong @version) {
+    public static Owner NewShared(Version @version) {
         return new Owner(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterUInt64.INSTANCE.Lower(@version), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterTypeVersion.INSTANCE.Lower(@version), ref _status)
 ));
     }
     
@@ -45279,7 +45529,7 @@ class FfiConverterTypeStructTag: FfiConverter<StructTag, IntPtr> {
 public interface ISystemPackage: IEquatable<SystemPackage> {
     ObjectId[] Dependencies();
     byte[][] Modules();
-    ulong Version();
+    Version Version();
 }
 /// <summary>
 /// System package
@@ -45306,10 +45556,10 @@ public class SystemPackage : ISystemPackage, IDisposable {
     ~SystemPackage() {
         Destroy();
     }
-    public SystemPackage(ulong @version, byte[][] @modules, ObjectId[] @dependencies) :
+    public SystemPackage(Version @version, byte[][] @modules, ObjectId[] @dependencies) :
         this(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterUInt64.INSTANCE.Lower(@version), FfiConverterSequenceByteArray.INSTANCE.Lower(@modules), FfiConverterSequenceTypeObjectId.INSTANCE.Lower(@dependencies), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterTypeVersion.INSTANCE.Lower(@version), FfiConverterSequenceByteArray.INSTANCE.Lower(@modules), FfiConverterSequenceTypeObjectId.INSTANCE.Lower(@dependencies), ref _status)
 )) {}
 
     protected void FreeRustArcPtr() {
@@ -45404,8 +45654,8 @@ public class SystemPackage : ISystemPackage, IDisposable {
     }
     
     
-    public ulong Version() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version Version() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_systempackage_version(thisPtr,  ref _status)
 )));
@@ -49889,6 +50139,348 @@ class FfiConverterTypeValidatorSignature: FfiConverter<ValidatorSignature, IntPt
 
 
 
+public interface IVersion {
+    /// <summary>
+    /// Get the underlying u64 value of this version
+    /// </summary>
+    ulong AsU64();
+    /// <summary>
+    /// Returns the `suggested_gas_price` embedded in this congested shared
+    /// object version. The `suggested_gas_price` here is used for a
+    /// gas price feedback mechanism for transactions cancelled due to
+    /// shared object congestion.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    ulong GetCongestedVersionSuggestedGasPrice();
+    /// <summary>
+    /// Checks if this version is cancelled, i.e., the corresponding
+    /// object appears in a cancelled transaction.
+    /// </summary>
+    bool IsCancelled();
+    /// <summary>
+    /// Check if this version is congested, i.e., the corresponding
+    /// object is the reason for transaction cancellation.
+    /// </summary>
+    bool IsCongested();
+    /// <summary>
+    /// Checks if this version is valid, i.e., the corresponding
+    /// object does not appear in a cancelled transaction.
+    /// </summary>
+    bool IsValid();
+    /// <summary>
+    /// Returns the next version, or an error if overflow occurs.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    Version Next();
+    /// <summary>
+    /// Returns the previous version, or an error if underflow occurs.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    Version Previous();
+}
+public class Version : IVersion, IDisposable {
+    protected IntPtr pointer;
+    private int _wasDestroyed = 0;
+    private long _callCounter = 1;
+
+    public Version(IntPtr pointer) {
+        this.pointer = pointer;
+    }
+
+    ~Version() {
+        Destroy();
+    }
+
+    protected void FreeRustArcPtr() {
+        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_version(this.pointer, ref status);
+        });
+    }
+
+    protected IntPtr CloneRustArcPtr() {
+        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_version(this.pointer, ref status);
+        });
+    }
+
+    public void Destroy()
+    {
+        // Only allow a single call to this method.
+        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
+        {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (Interlocked.Decrement(ref _callCounter) == 0)
+            {
+                FreeRustArcPtr();
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        Destroy();
+        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
+    }
+
+    private void IncrementCallCounter() 
+    {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        long count;
+        do
+        {
+            count = Interlocked.Read(ref _callCounter);
+            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
+            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
+
+        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
+    }
+
+    private void DecrementCallCounter() 
+    {
+        // This decrement always matches the increment we performed above.
+        if (Interlocked.Decrement(ref _callCounter) == 0) {
+            FreeRustArcPtr();
+        }
+    }
+
+    internal void CallWithPointer(Action<IntPtr> action)
+    {
+        IncrementCallCounter();
+        try {
+            action(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    internal T CallWithPointer<T>(Func<IntPtr, T> func)
+    {   
+        IncrementCallCounter();
+        try {
+            return func(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    
+    /// <summary>
+    /// Get the underlying u64 value of this version
+    /// </summary>
+    public ulong AsU64() {
+        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_as_u64(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the `suggested_gas_price` embedded in this congested shared
+    /// object version. The `suggested_gas_price` here is used for a
+    /// gas price feedback mechanism for transactions cancelled due to
+    /// shared object congestion.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public ulong GetCongestedVersionSuggestedGasPrice() {
+        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Checks if this version is cancelled, i.e., the corresponding
+    /// object appears in a cancelled transaction.
+    /// </summary>
+    public bool IsCancelled() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Check if this version is congested, i.e., the corresponding
+    /// object is the reason for transaction cancellation.
+    /// </summary>
+    public bool IsCongested() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_is_congested(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Checks if this version is valid, i.e., the corresponding
+    /// object does not appear in a cancelled transaction.
+    /// </summary>
+    public bool IsValid() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_is_valid(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the next version, or an error if overflow occurs.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public Version Next() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_next(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the previous version, or an error if underflow occurs.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public Version Previous() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_version_previous(thisPtr,  ref _status)
+)));
+    }
+    
+    
+
+    
+    /// <summary>
+    /// Special version that is assigned to objects which are accessed
+    /// immutably in a cancelled transaction.
+    /// </summary>
+    public static Version CancelledRead() {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read( ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Special version that was assigned to congested objects which
+    /// cause transaction cancellations. Note that this special version
+    /// was only used prior to the introduction of a gas price feedback
+    /// mechanism, but it is kept for backward compatibility.
+    /// </summary>
+    public static Version CongestedPriorToGasPriceFeedback() {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback( ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Create a new Version from a u64 value
+    /// </summary>
+    public static Version FromU64(ulong @value) {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(FfiConverterUInt64.INSTANCE.Lower(@value), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Returns a new version that is greater than all versions
+    /// in `inputs`, assuming this operation will not overflow.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static Version LamportIncrement(Version[] @inputs) {
+        return new Version(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(FfiConverterSequenceTypeVersion.INSTANCE.Lower(@inputs), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// An exclusive upper limit on a valid version: versions
+    /// strictly smaller than this limit are valid versions.
+    ///
+    /// A valid version means an object, which this version
+    /// is assigned to, does not appear in a cancelled transaction.
+    /// Versions larger than this value are "special" and
+    /// assigned to objects that appear in cancelled transactions.
+    /// </summary>
+    public static Version MaxValidExcl() {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl( ref _status)
+));
+    }
+    
+    /// <summary>
+    /// An inclusive lower limit on a valid version.
+    ///
+    /// A valid version means an object, which this version
+    /// is assigned to, does not appear in a cancelled transaction.
+    /// </summary>
+    public static Version MinValidIncl() {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl( ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Returns a special version used for congested shared objects:
+    /// `Version::MIN_CONGESTED + suggested_gas_price`,
+    /// where `suggested_gas_price` is embedded into a congested version
+    /// to facilitate a gas price feedback mechanism for transactions
+    /// cancelled due to shared object congestion.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static Version NewCongestedWithSuggestedGasPrice(ulong @suggestedGasPrice) {
+        return new Version(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(FfiConverterUInt64.INSTANCE.Lower(@suggestedGasPrice), ref _status)
+));
+    }
+    
+    public static Version RandomnessUnavailable() {
+        return new Version(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable( ref _status)
+));
+    }
+    
+    
+}
+class FfiConverterTypeVersion: FfiConverter<Version, IntPtr> {
+    public static FfiConverterTypeVersion INSTANCE = new FfiConverterTypeVersion();
+
+
+    public override IntPtr Lower(Version value) {
+        return value.CallWithPointer(thisPtr => thisPtr);
+    }
+
+    public override Version Lift(IntPtr value) {
+        return new Version(value);
+    }
+
+    public override Version Read(BigEndianStream stream) {
+        return Lift(new IntPtr(stream.ReadLong()));
+    }
+
+    public override int AllocationSize(Version value) {
+        return 8;
+    }
+
+    public override void Write(Version value, BigEndianStream stream) {
+        stream.WriteLong(Lower(value).ToInt64());
+    }
+}
+
+
+
 /// <summary>
 /// Object version assignment from consensus
 ///
@@ -49902,7 +50494,7 @@ class FfiConverterTypeValidatorSignature: FfiConverter<ValidatorSignature, IntPt
 /// </summary>
 public interface IVersionAssignment: IEquatable<VersionAssignment> {
     ObjectId ObjectId();
-    ulong Version();
+    Version Version();
 }
 /// <summary>
 /// Object version assignment from consensus
@@ -49927,10 +50519,10 @@ public class VersionAssignment : IVersionAssignment, IDisposable {
     ~VersionAssignment() {
         Destroy();
     }
-    public VersionAssignment(ObjectId @objectId, ulong @version) :
+    public VersionAssignment(ObjectId @objectId, Version @version) :
         this(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterUInt64.INSTANCE.Lower(@version), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterTypeObjectId.INSTANCE.Lower(@objectId), FfiConverterTypeVersion.INSTANCE.Lower(@version), ref _status)
 )) {}
 
     protected void FreeRustArcPtr() {
@@ -50017,8 +50609,8 @@ public class VersionAssignment : IVersionAssignment, IDisposable {
     }
     
     
-    public ulong Version() {
-        return CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    public Version Version() {
+        return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(thisPtr,  ref _status)
 )));
@@ -52312,7 +52904,7 @@ public record MoveStruct (
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     /// </summary>
-    ulong @version, 
+    Version @version, 
     /// <summary>
     /// BCS bytes of a Move struct value
     /// </summary>
@@ -52332,7 +52924,7 @@ class FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
     public override MoveStruct Read(BigEndianStream stream) {
         return new MoveStruct(
             @structType: FfiConverterTypeStructTag.INSTANCE.Read(stream),
-            @version: FfiConverterUInt64.INSTANCE.Read(stream),
+            @version: FfiConverterTypeVersion.INSTANCE.Read(stream),
             @contents: FfiConverterByteArray.INSTANCE.Read(stream)
         );
     }
@@ -52340,13 +52932,13 @@ class FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
     public override int AllocationSize(MoveStruct value) {
         return 0
             + FfiConverterTypeStructTag.INSTANCE.AllocationSize(value.@structType)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@version)
+            + FfiConverterTypeVersion.INSTANCE.AllocationSize(value.@version)
             + FfiConverterByteArray.INSTANCE.AllocationSize(value.@contents);
     }
 
     public override void Write(MoveStruct value, BigEndianStream stream) {
             FfiConverterTypeStructTag.INSTANCE.Write(value.@structType, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@version, stream);
+            FfiConverterTypeVersion.INSTANCE.Write(value.@version, stream);
             FfiConverterByteArray.INSTANCE.Write(value.@contents, stream);
     }
 }
@@ -52707,7 +53299,7 @@ class FfiConverterTypeObjectRef: FfiConverterRustBuffer<ObjectRef> {
 /// </summary>
 public record ObjectReference (
     ObjectId @objectId, 
-    ulong @version, 
+    Version @version, 
     Digest @digest
 ) : IDisposable {
     public void Dispose() {
@@ -52724,7 +53316,7 @@ class FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectReference> {
     public override ObjectReference Read(BigEndianStream stream) {
         return new ObjectReference(
             @objectId: FfiConverterTypeObjectId.INSTANCE.Read(stream),
-            @version: FfiConverterUInt64.INSTANCE.Read(stream),
+            @version: FfiConverterTypeVersion.INSTANCE.Read(stream),
             @digest: FfiConverterTypeDigest.INSTANCE.Read(stream)
         );
     }
@@ -52732,13 +53324,13 @@ class FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectReference> {
     public override int AllocationSize(ObjectReference value) {
         return 0
             + FfiConverterTypeObjectId.INSTANCE.AllocationSize(value.@objectId)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@version)
+            + FfiConverterTypeVersion.INSTANCE.AllocationSize(value.@version)
             + FfiConverterTypeDigest.INSTANCE.AllocationSize(value.@digest);
     }
 
     public override void Write(ObjectReference value, BigEndianStream stream) {
             FfiConverterTypeObjectId.INSTANCE.Write(value.@objectId, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@version, stream);
+            FfiConverterTypeVersion.INSTANCE.Write(value.@version, stream);
             FfiConverterTypeDigest.INSTANCE.Write(value.@digest, stream);
     }
 }
@@ -53103,8 +53695,15 @@ public record RandomnessStateUpdate (
     /// <summary>
     /// The initial version of the randomness object that it was shared at
     /// </summary>
-    ulong @randomnessObjInitialSharedVersion
-) {
+    Version @randomnessObjInitialSharedVersion
+) : IDisposable {
+    public void Dispose() {
+    FFIObjectUtil.DisposeAll(
+            this.@epoch,
+            this.@randomnessRound,
+            this.@randomBytes,
+            this.@randomnessObjInitialSharedVersion);
+    }
 }
 
 class FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<RandomnessStateUpdate> {
@@ -53115,7 +53714,7 @@ class FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<RandomnessSt
             @epoch: FfiConverterUInt64.INSTANCE.Read(stream),
             @randomnessRound: FfiConverterUInt64.INSTANCE.Read(stream),
             @randomBytes: FfiConverterByteArray.INSTANCE.Read(stream),
-            @randomnessObjInitialSharedVersion: FfiConverterUInt64.INSTANCE.Read(stream)
+            @randomnessObjInitialSharedVersion: FfiConverterTypeVersion.INSTANCE.Read(stream)
         );
     }
 
@@ -53124,14 +53723,14 @@ class FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<RandomnessSt
             + FfiConverterUInt64.INSTANCE.AllocationSize(value.@epoch)
             + FfiConverterUInt64.INSTANCE.AllocationSize(value.@randomnessRound)
             + FfiConverterByteArray.INSTANCE.AllocationSize(value.@randomBytes)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@randomnessObjInitialSharedVersion);
+            + FfiConverterTypeVersion.INSTANCE.AllocationSize(value.@randomnessObjInitialSharedVersion);
     }
 
     public override void Write(RandomnessStateUpdate value, BigEndianStream stream) {
             FfiConverterUInt64.INSTANCE.Write(value.@epoch, stream);
             FfiConverterUInt64.INSTANCE.Write(value.@randomnessRound, stream);
             FfiConverterByteArray.INSTANCE.Write(value.@randomBytes, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@randomnessObjInitialSharedVersion, stream);
+            FfiConverterTypeVersion.INSTANCE.Write(value.@randomnessObjInitialSharedVersion, stream);
     }
 }
 
@@ -53652,7 +54251,7 @@ public record TransactionEffectsV1 (
     /// <summary>
     /// The version number of all the written Move objects by this transaction.
     /// </summary>
-    ulong @lamportVersion, 
+    Version @lamportVersion, 
     /// <summary>
     /// Objects whose state are changed in the object store.
     /// </summary>
@@ -53712,7 +54311,7 @@ class FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<TransactionEf
             @gasObjectIndex: FfiConverterOptionalUInt32.INSTANCE.Read(stream),
             @eventsDigest: FfiConverterOptionalTypeDigest.INSTANCE.Read(stream),
             @dependencies: FfiConverterSequenceTypeDigest.INSTANCE.Read(stream),
-            @lamportVersion: FfiConverterUInt64.INSTANCE.Read(stream),
+            @lamportVersion: FfiConverterTypeVersion.INSTANCE.Read(stream),
             @changedObjects: FfiConverterSequenceTypeChangedObject.INSTANCE.Read(stream),
             @unchangedSharedObjects: FfiConverterSequenceTypeUnchangedSharedObject.INSTANCE.Read(stream),
             @auxiliaryDataDigest: FfiConverterOptionalTypeDigest.INSTANCE.Read(stream)
@@ -53728,7 +54327,7 @@ class FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<TransactionEf
             + FfiConverterOptionalUInt32.INSTANCE.AllocationSize(value.@gasObjectIndex)
             + FfiConverterOptionalTypeDigest.INSTANCE.AllocationSize(value.@eventsDigest)
             + FfiConverterSequenceTypeDigest.INSTANCE.AllocationSize(value.@dependencies)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@lamportVersion)
+            + FfiConverterTypeVersion.INSTANCE.AllocationSize(value.@lamportVersion)
             + FfiConverterSequenceTypeChangedObject.INSTANCE.AllocationSize(value.@changedObjects)
             + FfiConverterSequenceTypeUnchangedSharedObject.INSTANCE.AllocationSize(value.@unchangedSharedObjects)
             + FfiConverterOptionalTypeDigest.INSTANCE.AllocationSize(value.@auxiliaryDataDigest);
@@ -53742,7 +54341,7 @@ class FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<TransactionEf
             FfiConverterOptionalUInt32.INSTANCE.Write(value.@gasObjectIndex, stream);
             FfiConverterOptionalTypeDigest.INSTANCE.Write(value.@eventsDigest, stream);
             FfiConverterSequenceTypeDigest.INSTANCE.Write(value.@dependencies, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@lamportVersion, stream);
+            FfiConverterTypeVersion.INSTANCE.Write(value.@lamportVersion, stream);
             FfiConverterSequenceTypeChangedObject.INSTANCE.Write(value.@changedObjects, stream);
             FfiConverterSequenceTypeUnchangedSharedObject.INSTANCE.Write(value.@unchangedSharedObjects, stream);
             FfiConverterOptionalTypeDigest.INSTANCE.Write(value.@auxiliaryDataDigest, stream);
@@ -54036,7 +54635,7 @@ public record UpgradeInfo (
     /// <summary>
     /// Version of the upgraded package
     /// </summary>
-    ulong @upgradedVersion
+    Version @upgradedVersion
 ) : IDisposable {
     public void Dispose() {
     FFIObjectUtil.DisposeAll(
@@ -54051,19 +54650,19 @@ class FfiConverterTypeUpgradeInfo: FfiConverterRustBuffer<UpgradeInfo> {
     public override UpgradeInfo Read(BigEndianStream stream) {
         return new UpgradeInfo(
             @upgradedId: FfiConverterTypeObjectId.INSTANCE.Read(stream),
-            @upgradedVersion: FfiConverterUInt64.INSTANCE.Read(stream)
+            @upgradedVersion: FfiConverterTypeVersion.INSTANCE.Read(stream)
         );
     }
 
     public override int AllocationSize(UpgradeInfo value) {
         return 0
             + FfiConverterTypeObjectId.INSTANCE.AllocationSize(value.@upgradedId)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@upgradedVersion);
+            + FfiConverterTypeVersion.INSTANCE.AllocationSize(value.@upgradedVersion);
     }
 
     public override void Write(UpgradeInfo value, BigEndianStream stream) {
             FfiConverterTypeObjectId.INSTANCE.Write(value.@upgradedId, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@upgradedVersion, stream);
+            FfiConverterTypeVersion.INSTANCE.Write(value.@upgradedVersion, stream);
     }
 }
 
@@ -56723,7 +57322,7 @@ public record ObjectIn: IDisposable  {
     /// The old version, digest and owner.
     /// </summary>
     public record Data (
-        ulong @version,
+        Version @version,
         Digest @digest,
         Owner @owner
     ) : ObjectIn {}
@@ -56759,7 +57358,7 @@ class FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
                 );
             case 2:
                 return new ObjectIn.Data(
-                    FfiConverterUInt64.INSTANCE.Read(stream),
+                    FfiConverterTypeVersion.INSTANCE.Read(stream),
                     FfiConverterTypeDigest.INSTANCE.Read(stream),
                     FfiConverterTypeOwner.INSTANCE.Read(stream)
                 );
@@ -56774,7 +57373,7 @@ class FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
                 return 4;
             case ObjectIn.Data variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version)
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version)
                     + FfiConverterTypeDigest.INSTANCE.AllocationSize(variant_value.@digest)
                     + FfiConverterTypeOwner.INSTANCE.AllocationSize(variant_value.@owner);
             default:
@@ -56789,7 +57388,7 @@ class FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
                 break;
             case ObjectIn.Data variant_value:
                 stream.WriteInt(2);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 FfiConverterTypeDigest.INSTANCE.Write(variant_value.@digest, stream);
                 FfiConverterTypeOwner.INSTANCE.Write(variant_value.@owner, stream);
                 break;
@@ -56844,7 +57443,7 @@ public record ObjectOut: IDisposable  {
     /// we don't use lamport version for package publish and upgrades.
     /// </summary>
     public record PackageWrite (
-        ulong @version,
+        Version @version,
         Digest @digest
     ) : ObjectOut {}
     
@@ -56889,7 +57488,7 @@ class FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
                 );
             case 3:
                 return new ObjectOut.PackageWrite(
-                    FfiConverterUInt64.INSTANCE.Read(stream),
+                    FfiConverterTypeVersion.INSTANCE.Read(stream),
                     FfiConverterTypeDigest.INSTANCE.Read(stream)
                 );
             default:
@@ -56907,7 +57506,7 @@ class FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
                     + FfiConverterTypeOwner.INSTANCE.AllocationSize(variant_value.@owner);
             case ObjectOut.PackageWrite variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version)
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version)
                     + FfiConverterTypeDigest.INSTANCE.AllocationSize(variant_value.@digest);
             default:
                 throw new InternalException(string.Format("invalid enum value '{0}' in FfiConverterTypeObjectOut.AllocationSize()", value));
@@ -56926,7 +57525,7 @@ class FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
                 break;
             case ObjectOut.PackageWrite variant_value:
                 stream.WriteInt(3);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 FfiConverterTypeDigest.INSTANCE.Write(variant_value.@digest, stream);
                 break;
             default:
@@ -57544,7 +58143,7 @@ public record UnchangedSharedKind: IDisposable  {
     /// verify untrusted read.
     /// </summary>
     public record ReadOnlyRoot (
-        ulong @version,
+        Version @version,
         Digest @digest
     ) : UnchangedSharedKind {}
     
@@ -57552,14 +58151,14 @@ public record UnchangedSharedKind: IDisposable  {
     /// Deleted shared objects that appear mutably/owned in the input.
     /// </summary>
     public record MutateDeleted (
-        ulong @version
+        Version @version
     ) : UnchangedSharedKind {}
     
     /// <summary>
     /// Deleted shared objects that appear as read-only in the input.
     /// </summary>
     public record ReadDeleted (
-        ulong @version
+        Version @version
     ) : UnchangedSharedKind {}
     
     /// <summary>
@@ -57567,7 +58166,7 @@ public record UnchangedSharedKind: IDisposable  {
     /// cancellation reason.
     /// </summary>
     public record Cancelled (
-        ulong @version
+        Version @version
     ) : UnchangedSharedKind {}
     
     /// <summary>
@@ -57619,20 +58218,20 @@ class FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<UnchangedShar
         switch (value) {
             case 1:
                 return new UnchangedSharedKind.ReadOnlyRoot(
-                    FfiConverterUInt64.INSTANCE.Read(stream),
+                    FfiConverterTypeVersion.INSTANCE.Read(stream),
                     FfiConverterTypeDigest.INSTANCE.Read(stream)
                 );
             case 2:
                 return new UnchangedSharedKind.MutateDeleted(
-                    FfiConverterUInt64.INSTANCE.Read(stream)
+                    FfiConverterTypeVersion.INSTANCE.Read(stream)
                 );
             case 3:
                 return new UnchangedSharedKind.ReadDeleted(
-                    FfiConverterUInt64.INSTANCE.Read(stream)
+                    FfiConverterTypeVersion.INSTANCE.Read(stream)
                 );
             case 4:
                 return new UnchangedSharedKind.Cancelled(
-                    FfiConverterUInt64.INSTANCE.Read(stream)
+                    FfiConverterTypeVersion.INSTANCE.Read(stream)
                 );
             case 5:
                 return new UnchangedSharedKind.PerEpochConfig(
@@ -57646,17 +58245,17 @@ class FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<UnchangedShar
         switch (value) {
             case UnchangedSharedKind.ReadOnlyRoot variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version)
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version)
                     + FfiConverterTypeDigest.INSTANCE.AllocationSize(variant_value.@digest);
             case UnchangedSharedKind.MutateDeleted variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version);
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version);
             case UnchangedSharedKind.ReadDeleted variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version);
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version);
             case UnchangedSharedKind.Cancelled variant_value:
                 return 4
-                    + FfiConverterUInt64.INSTANCE.AllocationSize(variant_value.@version);
+                    + FfiConverterTypeVersion.INSTANCE.AllocationSize(variant_value.@version);
             case UnchangedSharedKind.PerEpochConfig variant_value:
                 return 4;
             default:
@@ -57668,20 +58267,20 @@ class FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<UnchangedShar
         switch (value) {
             case UnchangedSharedKind.ReadOnlyRoot variant_value:
                 stream.WriteInt(1);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 FfiConverterTypeDigest.INSTANCE.Write(variant_value.@digest, stream);
                 break;
             case UnchangedSharedKind.MutateDeleted variant_value:
                 stream.WriteInt(2);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 break;
             case UnchangedSharedKind.ReadDeleted variant_value:
                 stream.WriteInt(3);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 break;
             case UnchangedSharedKind.Cancelled variant_value:
                 stream.WriteInt(4);
-                FfiConverterUInt64.INSTANCE.Write(variant_value.@version, stream);
+                FfiConverterTypeVersion.INSTANCE.Write(variant_value.@version, stream);
                 break;
             case UnchangedSharedKind.PerEpochConfig variant_value:
                 stream.WriteInt(5);
@@ -58740,6 +59339,37 @@ class FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> {
         } else {
             stream.WriteByte(1);
             FfiConverterTypeTypeTag.INSTANCE.Write((TypeTag)value, stream);
+        }
+    }
+}
+
+
+
+
+class FfiConverterOptionalTypeVersion: FfiConverterRustBuffer<Version?> {
+    public static FfiConverterOptionalTypeVersion INSTANCE = new FfiConverterOptionalTypeVersion();
+
+    public override Version? Read(BigEndianStream stream) {
+        if (stream.ReadByte() == 0) {
+            return null;
+        }
+        return FfiConverterTypeVersion.INSTANCE.Read(stream);
+    }
+
+    public override int AllocationSize(Version? value) {
+        if (value == null) {
+            return 1;
+        } else {
+            return 1 + FfiConverterTypeVersion.INSTANCE.AllocationSize((Version)value);
+        }
+    }
+
+    public override void Write(Version? value, BigEndianStream stream) {
+        if (value == null) {
+            stream.WriteByte(0);
+        } else {
+            stream.WriteByte(1);
+            FfiConverterTypeVersion.INSTANCE.Write((Version)value, stream);
         }
     }
 }
@@ -61653,6 +62283,52 @@ class FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<UserSignatur
 
         stream.WriteInt(value.Length);
         var writerFn = FfiConverterTypeUserSignature.INSTANCE.Write;
+        value.ForEach(item => writerFn(item, stream));
+    }
+}
+
+
+
+
+class FfiConverterSequenceTypeVersion: FfiConverterRustBuffer<Version[]> {
+    public static FfiConverterSequenceTypeVersion INSTANCE = new FfiConverterSequenceTypeVersion();
+
+    public override Version[]  Read(BigEndianStream stream) {
+        var length = stream.ReadInt();
+        if (length == 0) {
+            return [];
+        }
+
+        var result = new Version[(length)];
+        var readFn = FfiConverterTypeVersion.INSTANCE.Read;
+        for (int i = 0; i < length; i++) {
+            result[i] = readFn(stream);
+        }
+        return result;
+    }
+
+    public override int AllocationSize(Version[]  value) {
+        var sizeForLength = 4;
+
+        // details/1-empty-list-as-default-method-parameter.md
+        if (value == null) {
+            return sizeForLength;
+        }
+
+        var allocationSizeFn = FfiConverterTypeVersion.INSTANCE.AllocationSize;
+        var sizeForItems = value.Sum(item => allocationSizeFn(item));
+        return sizeForLength + sizeForItems;
+    }
+
+    public override void Write(Version[] value, BigEndianStream stream) {
+        // details/1-empty-list-as-default-method-parameter.md
+        if (value == null) {
+            stream.WriteInt(0);
+            return;
+        }
+
+        stream.WriteInt(value.Length);
+        var writerFn = FfiConverterTypeVersion.INSTANCE.Write;
         value.ForEach(item => writerFn(item, stream));
     }
 }

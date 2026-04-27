@@ -3663,6 +3663,38 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -7216,7 +7248,7 @@ fun uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(`ptr`: Pointer,uniffi_out_er
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8520,19 +8552,6 @@ fun uniffi_iota_sdk_ffi_fn_free_transactionkind(`ptr`: Pointer,uniffi_out_err: U
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
-): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8567,6 +8586,19 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(`ptr`: Pointer,`txn`: P
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
@@ -12882,7 +12914,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
@@ -30652,11 +30684,11 @@ open class MoveAuthenticatorV1: Disposable, AutoCloseable, MoveAuthenticatorV1In
         
     /**
      * Create a new move authenticator from a shared object.
-     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticatorV1 {
+     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: Version): MoveAuthenticatorV1 {
             return FfiConverterTypeMoveAuthenticatorV1.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
-        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterTypeVersion.lower(`initialSharedVersion`),_status)
 }
     )
     }
@@ -49303,7 +49335,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionKind.lower(`other`),_status)
 }
     }
@@ -49326,7 +49358,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
         FfiConverterSequenceTypeEndOfEpochTransactionKind.lower(`tx`),_status)
 }
     )
@@ -49336,7 +49368,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newGenesis`(`tx`: GenesisTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
         FfiConverterTypeGenesisTransaction.lower(`tx`),_status)
 }
     )
@@ -49346,7 +49378,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newProgrammableTransaction`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
         FfiConverterTypeProgrammableTransaction.lower(`tx`),_status)
 }
     )
@@ -49356,7 +49388,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
         FfiConverterTypeRandomnessStateUpdate.lower(`tx`),_status)
 }
     )
@@ -49531,7 +49563,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     constructor(`signerFn`: TransactionSignerFn) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
         FfiConverterTypeTransactionSignerFn.lower(`signerFn`),_status)
 }
     )
@@ -49587,7 +49619,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
                 }
             }
         }
@@ -49595,7 +49627,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
         }
     }
 
@@ -49605,7 +49637,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     override suspend fun `sign`(`txn`: Transaction) : UserSignature {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
                 thisPtr,
                 FfiConverterTypeTransaction.lower(`txn`),
             )
@@ -49627,7 +49659,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromEd25519`(`key`: Ed25519PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
         FfiConverterTypeEd25519PrivateKey.lower(`key`),_status)
 }
     )
@@ -49637,7 +49669,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromKeypair`(`key`: SimpleKeypair): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
         FfiConverterTypeSimpleKeypair.lower(`key`),_status)
 }
     )
@@ -49647,7 +49679,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromMoveAuthenticator`(`auth`: MoveAuthenticator): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`auth`),_status)
 }
     )
@@ -49657,7 +49689,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256k1`(`key`: Secp256k1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`key`),_status)
 }
     )
@@ -49667,7 +49699,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256r1`(`key`: Secp256r1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`key`),_status)
 }
     )
@@ -49906,7 +49938,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
         }
     }
 
@@ -54285,7 +54317,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
                 }
             }
         }
@@ -54293,7 +54325,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
         }
     }
 
@@ -54304,7 +54336,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
         it, _status)
 }
     }
@@ -54323,7 +54355,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
         it, _status)
 }
     }
@@ -54339,7 +54371,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
         it, _status)
 }
     }
@@ -54355,7 +54387,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
         it, _status)
 }
     }
@@ -54371,7 +54403,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
         it, _status)
 }
     }
@@ -54387,7 +54419,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
         it, _status)
 }
     }
@@ -54403,7 +54435,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
         it, _status)
 }
     }
@@ -54422,7 +54454,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `cancelledRead`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
         _status)
 }
     )
@@ -54438,7 +54470,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `congestedPriorToGasPriceFeedback`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
         _status)
 }
     )
@@ -54451,7 +54483,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `fromU64`(`value`: kotlin.ULong): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
         FfiConverterULong.lower(`value`),_status)
 }
     )
@@ -54466,7 +54498,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     @Throws(SdkFfiException::class) fun `lamportIncrement`(`inputs`: List<Version>): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
         FfiConverterSequenceTypeVersion.lower(`inputs`),_status)
 }
     )
@@ -54485,7 +54517,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `maxValidExcl`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
         _status)
 }
     )
@@ -54501,7 +54533,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `minValidIncl`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
         _status)
 }
     )
@@ -54519,7 +54551,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     @Throws(SdkFfiException::class) fun `newCongestedWithSuggestedGasPrice`(`suggestedGasPrice`: kotlin.ULong): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
         FfiConverterULong.lower(`suggestedGasPrice`),_status)
 }
     )
@@ -54529,7 +54561,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
          fun `randomnessUnavailable`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
         _status)
 }
     )
@@ -54721,7 +54753,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         this(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),_status)
+        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
 
@@ -63550,6 +63582,38 @@ public object FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> 
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeVersion: FfiConverterRustBuffer<Version?> {
+    override fun read(buf: ByteBuffer): Version? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeVersion.read(buf)
+    }
+
+    override fun allocationSize(value: Version?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeVersion.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Version?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeVersion.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeBatchSendStatus: FfiConverterRustBuffer<BatchSendStatus?> {
     override fun read(buf: ByteBuffer): BatchSendStatus? {
         if (buf.get().toInt() == 0) {
@@ -65904,6 +65968,34 @@ public object FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeUserSignature.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeVersion: FfiConverterRustBuffer<List<Version>> {
+    override fun read(buf: ByteBuffer): List<Version> {
+        val len = buf.getInt()
+        return List<Version>(len) {
+            FfiConverterTypeVersion.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Version>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeVersion.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Version>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeVersion.write(it, buf)
         }
     }
 }

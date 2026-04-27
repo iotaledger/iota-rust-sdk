@@ -1567,7 +1567,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2529,7 +2529,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5733,7 +5733,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.arg
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.restype = ctypes.c_void_p
@@ -16463,6 +16463,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
+
+
 class BatchSendStatus:
     status: "BatchSendStatusType"
     transferred_gas_objects: "typing.Optional[FaucetReceipt]"
@@ -26690,6 +26692,33 @@ class _UniffiConverterOptionalTypeTypeTag(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeVersion(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeVersion.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeVersion.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeVersion.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeBatchSendStatus(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -28726,6 +28755,31 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeVersion(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeVersion.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeVersion.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeVersion.read(buf) for i in range(count)
         ]
 
 
@@ -36564,7 +36618,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -37777,7 +37831,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
+    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -40017,7 +40071,7 @@ class MoveAuthenticatorV1():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
+    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "Version"):
         """
         Create a new move authenticator from a shared object.
         """
@@ -40028,14 +40082,14 @@ class MoveAuthenticatorV1():
         
         _UniffiConverterTypeObjectId.check_lower(object_to_authenticate)
         
-        _UniffiConverterUInt64.check_lower(initial_shared_version)
+        _UniffiConverterTypeVersion.check_lower(initial_shared_version)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared,
         _UniffiConverterSequenceTypeInput.lower(call_args),
         _UniffiConverterSequenceTypeTypeTag.lower(type_args),
         _UniffiConverterTypeObjectId.lower(object_to_authenticate),
-        _UniffiConverterUInt64.lower(initial_shared_version))
+        _UniffiConverterTypeVersion.lower(initial_shared_version))
         return cls._make_instance_(pointer)
 
 

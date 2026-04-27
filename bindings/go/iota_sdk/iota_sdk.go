@@ -9693,7 +9693,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared()
 	})
-	if checksum != 22895 {
+	if checksum != 45977 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared: UniFFI API checksum mismatch")
 	}
@@ -18159,7 +18159,7 @@ type GraphQlClientInterface interface {
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error)
 	// Execute a Move View Function.
 	//
 	// A View Function is a function in a Move module with a return type that
@@ -21827,9 +21827,9 @@ func MoveAuthenticatorV1NewImmutable(callArgs []*Input, typeArgs []*TypeTag, obj
 }
 
 // Create a new move authenticator from a shared object.
-func MoveAuthenticatorV1NewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticatorV1 {
+func MoveAuthenticatorV1NewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion *Version) *MoveAuthenticatorV1 {
 	return FfiConverterMoveAuthenticatorV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterVersionINSTANCE.Lower(initialSharedVersion),_uniffiStatus)
 	}))
 }
 
@@ -34438,6 +34438,266 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 
 
 
+type VersionInterface interface {
+	// Get the underlying u64 value of this version
+	AsU64() uint64
+	// Returns the `suggested_gas_price` embedded in this congested shared
+	// object version. The `suggested_gas_price` here is used for a
+	// gas price feedback mechanism for transactions cancelled due to
+	// shared object congestion.
+	GetCongestedVersionSuggestedGasPrice() (uint64, error)
+	// Checks if this version is cancelled, i.e., the corresponding
+	// object appears in a cancelled transaction.
+	IsCancelled() bool
+	// Check if this version is congested, i.e., the corresponding
+	// object is the reason for transaction cancellation.
+	IsCongested() bool
+	// Checks if this version is valid, i.e., the corresponding
+	// object does not appear in a cancelled transaction.
+	IsValid() bool
+	// Returns the next version, or an error if overflow occurs.
+	Next() (*Version, error)
+	// Returns the previous version, or an error if underflow occurs.
+	Previous() (*Version, error)
+}
+type Version struct {
+	ffiObject FfiObject
+}
+
+
+// Special version that is assigned to objects which are accessed
+// immutably in a cancelled transaction.
+func VersionCancelledRead() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(_uniffiStatus)
+	}))
+}
+
+// Special version that was assigned to congested objects which
+// cause transaction cancellations. Note that this special version
+// was only used prior to the introduction of a gas price feedback
+// mechanism, but it is kept for backward compatibility.
+func VersionCongestedPriorToGasPriceFeedback() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(_uniffiStatus)
+	}))
+}
+
+// Create a new Version from a u64 value
+func VersionFromU64(value uint64) *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(FfiConverterUint64INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+// Returns a new version that is greater than all versions
+// in `inputs`, assuming this operation will not overflow.
+func VersionLamportIncrement(inputs []*Version) (*Version, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(FfiConverterSequenceVersionINSTANCE.Lower(inputs),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// An exclusive upper limit on a valid version: versions
+// strictly smaller than this limit are valid versions.
+//
+// A valid version means an object, which this version
+// is assigned to, does not appear in a cancelled transaction.
+// Versions larger than this value are "special" and
+// assigned to objects that appear in cancelled transactions.
+func VersionMaxValidExcl() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(_uniffiStatus)
+	}))
+}
+
+// An inclusive lower limit on a valid version.
+//
+// A valid version means an object, which this version
+// is assigned to, does not appear in a cancelled transaction.
+func VersionMinValidIncl() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(_uniffiStatus)
+	}))
+}
+
+// Returns a special version used for congested shared objects:
+// `Version::MIN_CONGESTED + suggested_gas_price`,
+// where `suggested_gas_price` is embedded into a congested version
+// to facilitate a gas price feedback mechanism for transactions
+// cancelled due to shared object congestion.
+func VersionNewCongestedWithSuggestedGasPrice(suggestedGasPrice uint64) (*Version, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(FfiConverterUint64INSTANCE.Lower(suggestedGasPrice),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func VersionRandomnessUnavailable() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(_uniffiStatus)
+	}))
+}
+
+
+
+// Get the underlying u64 value of this version
+func (_self *Version) AsU64() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the `suggested_gas_price` embedded in this congested shared
+// object version. The `suggested_gas_price` here is used for a
+// gas price feedback mechanism for transactions cancelled due to
+// shared object congestion.
+func (_self *Version) GetCongestedVersionSuggestedGasPrice() (uint64, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue uint64
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUint64INSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Checks if this version is cancelled, i.e., the corresponding
+// object appears in a cancelled transaction.
+func (_self *Version) IsCancelled() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Check if this version is congested, i.e., the corresponding
+// object is the reason for transaction cancellation.
+func (_self *Version) IsCongested() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Checks if this version is valid, i.e., the corresponding
+// object does not appear in a cancelled transaction.
+func (_self *Version) IsValid() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next version, or an error if overflow occurs.
+func (_self *Version) Next() (*Version, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_next(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Returns the previous version, or an error if underflow occurs.
+func (_self *Version) Previous() (*Version, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_previous(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+func (object *Version) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterVersion struct {}
+
+var FfiConverterVersionINSTANCE = FfiConverterVersion{}
+
+
+func (c FfiConverterVersion) Lift(pointer unsafe.Pointer) *Version {
+	result := &Version {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_version(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_version(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Version).Destroy)
+	return result
+}
+
+func (c FfiConverterVersion) Read(reader io.Reader) *Version {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterVersion) Lower(value *Version) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Version")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+	
+}
+
+func (c FfiConverterVersion) Write(writer io.Writer, value *Version) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerVersion struct {}
+
+func (_ FfiDestroyerVersion) Destroy(value *Version) {
+		value.Destroy()
+}
+
+
+
+
 // Object version assignment from consensus
 //
 // # BCS
@@ -42965,6 +43225,48 @@ func (_ FfiDestroyerOptionalTypeTag) Destroy(value **TypeTag) {
 }
 
 
+type FfiConverterOptionalVersion struct{}
+
+var FfiConverterOptionalVersionINSTANCE = FfiConverterOptionalVersion{}
+
+func (c FfiConverterOptionalVersion) Lift(rb RustBufferI) **Version {
+	return LiftFromRustBuffer[**Version](c, rb)
+}
+
+func (_ FfiConverterOptionalVersion) Read(reader io.Reader) **Version {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterVersionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalVersion) Lower(value **Version) C.RustBuffer {
+	return LowerIntoRustBuffer[**Version](c, value)
+}
+
+func (c FfiConverterOptionalVersion) LowerExternal(value **Version) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Version](c, value))
+}
+
+func (_ FfiConverterOptionalVersion) Write(writer io.Writer, value **Version) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterVersionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalVersion struct {}
+
+func (_ FfiDestroyerOptionalVersion) Destroy(value **Version) {
+	if value != nil {
+		FfiDestroyerVersion{}.Destroy(*value)
+	}
+}
+
+
 type FfiConverterOptionalBatchSendStatus struct{}
 
 var FfiConverterOptionalBatchSendStatusINSTANCE = FfiConverterOptionalBatchSendStatus{}
@@ -46463,6 +46765,10 @@ func (c FfiConverterSequenceVersion) Lower(value []*Version) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Version](c, value)
 }
 
+func (c FfiConverterSequenceVersion) LowerExternal(value []*Version) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Version](c, value))
+}
+
 func (c FfiConverterSequenceVersion) Write(writer io.Writer, value []*Version) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Version is too large to fit into Int32")
@@ -46478,9 +46784,10 @@ type FfiDestroyerSequenceVersion struct {}
 
 func (FfiDestroyerSequenceVersion) Destroy(sequence []*Version) {
 	for _, value := range sequence {
-		FfiDestroyerVersion{}.Destroy(value)
+		FfiDestroyerVersion{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceVersionAssignment struct{}
 
