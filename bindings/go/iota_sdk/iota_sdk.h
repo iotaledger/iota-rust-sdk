@@ -426,9 +426,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(RustBuffer bytes, Ru
 void* uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(RustBuffer hex, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_GENERATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_GENERATE
-void* uniffi_iota_sdk_ffi_fn_constructor_address_generate(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_RANDOM
+void* uniffi_iota_sdk_ffi_fn_constructor_address_random(RustCallStatus *out_status
     
 );
 #endif
@@ -14802,9 +14802,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_GENERATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_GENERATE
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_generate(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_RANDOM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_random(void
     
 );
 #endif
