@@ -194,14 +194,14 @@ struct GasObjectRef {
     pub object_id: ObjectId,
     /// The version of this object.
     #[serde(deserialize_with = "deserialize_readable_u64")]
-    pub version: Version,
+    pub version: u64,
     /// The digest of this object.
     pub digest: Digest,
 }
 
 fn deserialize_readable_u64<'de, D: serde::Deserializer<'de>>(
     deserializer: D,
-) -> Result<Version, D::Error> {
+) -> Result<u64, D::Error> {
     #[derive(Deserialize)]
     #[serde(untagged)]
     enum NumOrString {
@@ -400,7 +400,7 @@ impl GasStationData {
                     .into_iter()
                     .map(|obj_ref| ObjectReference {
                         object_id: obj_ref.object_id,
-                        version: obj_ref.version as _,
+                        version: Version::from_u64(obj_ref.version),
                         digest: obj_ref.digest,
                     })
                     .collect();

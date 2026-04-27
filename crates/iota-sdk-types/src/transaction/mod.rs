@@ -164,7 +164,7 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Version,
 }
 
 /// Transaction type
@@ -306,7 +306,6 @@ pub struct CancelledTransaction {
 pub struct VersionAssignment {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
 }
 
@@ -559,7 +558,6 @@ pub struct ChangeEpochV4 {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemPackage {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     #[cfg_attr(
         feature = "serde",
@@ -653,8 +651,7 @@ pub enum Input {
     /// A move object whose owner is "Shared"
     Shared {
         object_id: ObjectId,
-
-        initial_shared_version: u64,
+        initial_shared_version: Version,
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.
         mutable: bool,

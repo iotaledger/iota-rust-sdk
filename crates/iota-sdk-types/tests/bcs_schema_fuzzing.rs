@@ -95,13 +95,11 @@ fn parse_rule_block(block: &str) -> Option<(String, Expr)> {
         if let Some(stripped) = content.strip_prefix('/') {
             alternatives.push(current);
             current = stripped.trim().to_string();
+        } else if current.is_empty() {
+            current = content;
         } else {
-            if current.is_empty() {
-                current = content;
-            } else {
-                current.push(' ');
-                current.push_str(&content);
-            }
+            current.push(' ');
+            current.push_str(&content);
         }
     }
     alternatives.push(current);

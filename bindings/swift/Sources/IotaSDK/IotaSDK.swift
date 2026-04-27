@@ -7672,7 +7672,7 @@ public protocol GenesisObjectProtocol: AnyObject, Sendable {
     
     func owner()  -> Owner
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -7778,8 +7778,8 @@ open func owner() -> Owner  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_genesisobject_version(self.uniffiClonePointer(),$0
     )
 })
@@ -8231,7 +8231,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func moveObjectContents(objectId: ObjectId, version: UInt64?) async throws  -> Value?
+    func moveObjectContents(objectId: ObjectId, version: Version?) async throws  -> Value?
     
     /**
      * Return the BCS of an object that is a Move object.
@@ -8240,7 +8240,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func moveObjectContentsBcs(objectId: ObjectId, version: UInt64?) async throws  -> Data?
+    func moveObjectContentsBcs(objectId: ObjectId, version: Version?) async throws  -> Data?
     
     /**
      * Execute a Move View Function.
@@ -8301,12 +8301,12 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64?) async throws  -> MoveFunction?
+    func normalizedMoveFunction(package: Address, module: String, function: String, version: Version?) async throws  -> MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    func normalizedMoveModule(package: Address, module: String, version: UInt64?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
+    func normalizedMoveModule(package: Address, module: String, version: Version?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -8315,7 +8315,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func object(objectId: ObjectId, version: UInt64?) async throws  -> Object?
+    func object(objectId: ObjectId, version: Version?) async throws  -> Object?
     
     /**
      * Return the object's bcs content `Vec<u8>` based on the provided
@@ -8344,7 +8344,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-    func package(address: Address, version: UInt64?) async throws  -> MovePackage?
+    func package(address: Address, version: Version?) async throws  -> MovePackage?
     
     /**
      * Fetch the latest version of the package at address.
@@ -8358,7 +8358,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    func packageVersions(address: Address, afterVersion: UInt64?, beforeVersion: UInt64?, paginationFilter: PaginationFilter?) async throws  -> MovePackagePage
+    func packageVersions(address: Address, afterVersion: Version?, beforeVersion: Version?, paginationFilter: PaginationFilter?) async throws  -> MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -9132,13 +9132,13 @@ open func maxPageSize()async throws  -> Int32  {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func moveObjectContents(objectId: ObjectId, version: UInt64? = nil)async throws  -> Value?  {
+open func moveObjectContents(objectId: ObjectId, version: Version? = nil)async throws  -> Value?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9156,13 +9156,13 @@ open func moveObjectContents(objectId: ObjectId, version: UInt64? = nil)async th
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func moveObjectContentsBcs(objectId: ObjectId, version: UInt64? = nil)async throws  -> Data?  {
+open func moveObjectContentsBcs(objectId: ObjectId, version: Version? = nil)async throws  -> Data?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9262,13 +9262,13 @@ open func moveViewCallJson(functionName: String, typeArguments: [String]? = nil,
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-open func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64? = nil)async throws  -> MoveFunction?  {
+open func normalizedMoveFunction(package: Address, module: String, function: String, version: Version? = nil)async throws  -> MoveFunction?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9282,13 +9282,13 @@ open func normalizedMoveFunction(package: Address, module: String, function: Str
     /**
      * Return the normalized Move module data for the provided module.
      */
-open func normalizedMoveModule(package: Address, module: String, version: UInt64? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
+open func normalizedMoveModule(package: Address, module: String, version: Version? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionUInt64.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionTypeVersion.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9306,13 +9306,13 @@ open func normalizedMoveModule(package: Address, module: String, version: UInt64
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func object(objectId: ObjectId, version: UInt64? = nil)async throws  -> Object?  {
+open func object(objectId: ObjectId, version: Version? = nil)async throws  -> Object?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9380,13 +9380,13 @@ open func objects(filter: ObjectFilter? = nil, paginationFilter: PaginationFilte
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-open func package(address: Address, version: UInt64? = nil)async throws  -> MovePackage?  {
+open func package(address: Address, version: Version? = nil)async throws  -> MovePackage?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(address),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeAddress_lower(address),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9424,13 +9424,13 @@ open func packageLatest(address: Address)async throws  -> MovePackage?  {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-open func packageVersions(address: Address, afterVersion: UInt64? = nil, beforeVersion: UInt64? = nil, paginationFilter: PaginationFilter? = nil)async throws  -> MovePackagePage  {
+open func packageVersions(address: Address, afterVersion: Version? = nil, beforeVersion: Version? = nil, paginationFilter: PaginationFilter? = nil)async throws  -> MovePackagePage  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(address),FfiConverterOptionUInt64.lower(afterVersion),FfiConverterOptionUInt64.lower(beforeVersion),FfiConverterOptionTypePaginationFilter.lower(paginationFilter)
+                    FfiConverterTypeAddress_lower(address),FfiConverterOptionTypeVersion.lower(afterVersion),FfiConverterOptionTypeVersion.lower(beforeVersion),FfiConverterOptionTypePaginationFilter.lower(paginationFilter)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -10178,11 +10178,11 @@ public static func newReceiving(objectRef: ObjectReference) -> Input  {
     /**
      * A move object whose owner is "Shared"
      */
-public static func newShared(objectId: ObjectId, initialSharedVersion: UInt64, mutable: Bool) -> Input  {
+public static func newShared(objectId: ObjectId, initialSharedVersion: Version, mutable: Bool) -> Input  {
     return try!  FfiConverterTypeInput_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(
         FfiConverterTypeObjectId_lower(objectId),
-        FfiConverterUInt64.lower(initialSharedVersion),
+        FfiConverterTypeVersion_lower(initialSharedVersion),
         FfiConverterBool.lower(mutable),$0
     )
 })
@@ -11676,13 +11676,13 @@ public static func newImmutable(callArgs: [Input], typeArgs: [TypeTag], objectTo
     /**
      * Create a new move authenticator from a shared object.
      */
-public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: UInt64) -> MoveAuthenticatorV1  {
+public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: Version) -> MoveAuthenticatorV1  {
     return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
         FfiConverterSequenceTypeInput.lower(callArgs),
         FfiConverterSequenceTypeTypeTag.lower(typeArgs),
         FfiConverterTypeObjectId_lower(objectToAuthenticate),
-        FfiConverterUInt64.lower(initialSharedVersion),$0
+        FfiConverterTypeVersion_lower(initialSharedVersion),$0
     )
 })
 }
@@ -12242,7 +12242,7 @@ public protocol MovePackageProtocol: AnyObject, Sendable {
     
     func typeOriginTable()  -> [TypeOrigin]
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -12299,12 +12299,12 @@ open class MovePackage: MovePackageProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_movepackage(self.pointer, $0) }
     }
-public convenience init(id: ObjectId, version: UInt64, modules: [Identifier: Data], typeOriginTable: [TypeOrigin], linkageTable: [ObjectId: UpgradeInfo])throws  {
+public convenience init(id: ObjectId, version: Version, modules: [Identifier: Data], typeOriginTable: [TypeOrigin], linkageTable: [ObjectId: UpgradeInfo])throws  {
     let pointer =
         try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(
         FfiConverterTypeObjectId_lower(id),
-        FfiConverterUInt64.lower(version),
+        FfiConverterTypeVersion_lower(version),
         FfiConverterDictionaryTypeIdentifierData.lower(modules),
         FfiConverterSequenceTypeTypeOrigin.lower(typeOriginTable),
         FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo.lower(linkageTable),$0
@@ -12352,8 +12352,8 @@ open func typeOriginTable() -> [TypeOrigin]  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_movepackage_version(self.uniffiClonePointer(),$0
     )
 })
@@ -15113,7 +15113,7 @@ public protocol ObjectProtocol: AnyObject, Sendable {
     /**
      * Return this object's version
      */
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -15318,8 +15318,8 @@ open func storageRebate() -> UInt64  {
     /**
      * Return this object's version
      */
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_object_version(self.uniffiClonePointer(),$0
     )
 })
@@ -16203,9 +16203,9 @@ public protocol OwnerProtocol: AnyObject, Sendable {
     
     func asObjectOpt()  -> ObjectId?
     
-    func asShared()  -> UInt64
+    func asShared()  -> Version
     
-    func asSharedOpt()  -> UInt64?
+    func asSharedOpt()  -> Version?
     
     func isAddress()  -> Bool
     
@@ -16305,10 +16305,10 @@ public static func newObject(id: ObjectId) -> Owner  {
 })
 }
     
-public static func newShared(version: UInt64) -> Owner  {
+public static func newShared(version: Version) -> Owner  {
     return try!  FfiConverterTypeOwner_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
-        FfiConverterUInt64.lower(version),$0
+        FfiConverterTypeVersion_lower(version),$0
     )
 })
 }
@@ -16343,15 +16343,15 @@ open func asObjectOpt() -> ObjectId?  {
 })
 }
     
-open func asShared() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func asShared() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared(self.uniffiClonePointer(),$0
     )
 })
 }
     
-open func asSharedOpt() -> UInt64?  {
-    return try!  FfiConverterOptionUInt64.lift(try! rustCall() {
+open func asSharedOpt() -> Version?  {
+    return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(self.uniffiClonePointer(),$0
     )
 })
@@ -22265,7 +22265,7 @@ public protocol SystemPackageProtocol: AnyObject, Sendable {
     
     func modules()  -> [Data]
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -22320,11 +22320,11 @@ open class SystemPackage: SystemPackageProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_systempackage(self.pointer, $0) }
     }
-public convenience init(version: UInt64, modules: [Data], dependencies: [ObjectId]) {
+public convenience init(version: Version, modules: [Data], dependencies: [ObjectId]) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
-        FfiConverterUInt64.lower(version),
+        FfiConverterTypeVersion_lower(version),
         FfiConverterSequenceData.lower(modules),
         FfiConverterSequenceTypeObjectId.lower(dependencies),$0
     )
@@ -22357,8 +22357,8 @@ open func modules() -> [Data]  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_systempackage_version(self.uniffiClonePointer(),$0
     )
 })
@@ -26855,6 +26855,334 @@ public func FfiConverterTypeValidatorSignature_lower(_ value: ValidatorSignature
 
 
 
+public protocol VersionProtocol: AnyObject, Sendable {
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+    func asU64()  -> UInt64
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    func getCongestedVersionSuggestedGasPrice() throws  -> UInt64
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+    func isCancelled()  -> Bool
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+    func isCongested()  -> Bool
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+    func isValid()  -> Bool
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    func next() throws  -> Version
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    func previous() throws  -> Version
+    
+}
+open class Version: VersionProtocol, @unchecked Sendable {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_version(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_iota_sdk_ffi_fn_free_version(pointer, $0) }
+    }
+
+    
+    /**
+     * Special version that is assigned to objects which are accessed
+     * immutably in a cancelled transaction.
+     */
+public static func cancelledRead() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read($0
+    )
+})
+}
+    
+    /**
+     * Special version that was assigned to congested objects which
+     * cause transaction cancellations. Note that this special version
+     * was only used prior to the introduction of a gas price feedback
+     * mechanism, but it is kept for backward compatibility.
+     */
+public static func congestedPriorToGasPriceFeedback() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback($0
+    )
+})
+}
+    
+    /**
+     * Create a new Version from a u64 value
+     */
+public static func fromU64(value: UInt64) -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+        FfiConverterUInt64.lower(value),$0
+    )
+})
+}
+    
+    /**
+     * Returns a new version that is greater than all versions
+     * in `inputs`, assuming this operation will not overflow.
+     */
+public static func lamportIncrement(inputs: [Version])throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+        FfiConverterSequenceTypeVersion.lower(inputs),$0
+    )
+})
+}
+    
+    /**
+     * An exclusive upper limit on a valid version: versions
+     * strictly smaller than this limit are valid versions.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     * Versions larger than this value are "special" and
+     * assigned to objects that appear in cancelled transactions.
+     */
+public static func maxValidExcl() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl($0
+    )
+})
+}
+    
+    /**
+     * An inclusive lower limit on a valid version.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     */
+public static func minValidIncl() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl($0
+    )
+})
+}
+    
+    /**
+     * Returns a special version used for congested shared objects:
+     * `Version::MIN_CONGESTED + suggested_gas_price`,
+     * where `suggested_gas_price` is embedded into a congested version
+     * to facilitate a gas price feedback mechanism for transactions
+     * cancelled due to shared object congestion.
+     */
+public static func newCongestedWithSuggestedGasPrice(suggestedGasPrice: UInt64)throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+        FfiConverterUInt64.lower(suggestedGasPrice),$0
+    )
+})
+}
+    
+public static func randomnessUnavailable() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable($0
+    )
+})
+}
+    
+
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+open func asU64() -> UInt64  {
+    return try!  FfiConverterUInt64.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_as_u64(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+open func getCongestedVersionSuggestedGasPrice()throws  -> UInt64  {
+    return try  FfiConverterUInt64.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+open func isCancelled() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+open func isCongested() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_congested(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+open func isValid() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_valid(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+open func next()throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_next(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+open func previous()throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_previous(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeVersion: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = Version
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> Version {
+        return Version(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: Version) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Version {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: Version, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeVersion_lift(_ pointer: UnsafeMutableRawPointer) throws -> Version {
+    return try FfiConverterTypeVersion.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeVersion_lower(_ value: Version) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeVersion.lower(value)
+}
+
+
+
+
+
+
 /**
  * Object version assignment from consensus
  *
@@ -26870,7 +27198,7 @@ public protocol VersionAssignmentProtocol: AnyObject, Sendable {
     
     func objectId()  -> ObjectId
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -26923,12 +27251,12 @@ open class VersionAssignment: VersionAssignmentProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_versionassignment(self.pointer, $0) }
     }
-public convenience init(objectId: ObjectId, version: UInt64) {
+public convenience init(objectId: ObjectId, version: Version) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
         FfiConverterTypeObjectId_lower(objectId),
-        FfiConverterUInt64.lower(version),$0
+        FfiConverterTypeVersion_lower(version),$0
     )
 }
     self.init(unsafeFromRawPointer: pointer)
@@ -26952,8 +27280,8 @@ open func objectId() -> ObjectId  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_versionassignment_version(self.uniffiClonePointer(),$0
     )
 })
@@ -30000,7 +30328,7 @@ public struct MoveStruct {
      * input This is a lamport timestamp, not a sequentially increasing
      * version
      */
-    public var version: UInt64
+    public var version: Version
     /**
      * BCS bytes of a Move struct value
      */
@@ -30016,7 +30344,7 @@ public struct MoveStruct {
          * Number that increases each time a tx takes this object as a mutable
          * input This is a lamport timestamp, not a sequentially increasing
          * version
-         */version: UInt64, 
+         */version: Version, 
         /**
          * BCS bytes of a Move struct value
          */contents: Data) {
@@ -30040,14 +30368,14 @@ public struct FfiConverterTypeMoveStruct: FfiConverterRustBuffer {
         return
             try MoveStruct(
                 structType: FfiConverterTypeStructTag.read(from: &buf), 
-                version: FfiConverterUInt64.read(from: &buf), 
+                version: FfiConverterTypeVersion.read(from: &buf), 
                 contents: FfiConverterData.read(from: &buf)
         )
     }
 
     public static func write(_ value: MoveStruct, into buf: inout [UInt8]) {
         FfiConverterTypeStructTag.write(value.structType, into: &buf)
-        FfiConverterUInt64.write(value.version, into: &buf)
+        FfiConverterTypeVersion.write(value.version, into: &buf)
         FfiConverterData.write(value.contents, into: &buf)
     }
 }
@@ -30651,12 +30979,12 @@ public func FfiConverterTypeObjectRef_lower(_ value: ObjectRef) -> RustBuffer {
  */
 public struct ObjectReference {
     public var objectId: ObjectId
-    public var version: UInt64
+    public var version: Version
     public var digest: Digest
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(objectId: ObjectId, version: UInt64, digest: Digest) {
+    public init(objectId: ObjectId, version: Version, digest: Digest) {
         self.objectId = objectId
         self.version = version
         self.digest = digest
@@ -30677,14 +31005,14 @@ public struct FfiConverterTypeObjectReference: FfiConverterRustBuffer {
         return
             try ObjectReference(
                 objectId: FfiConverterTypeObjectId.read(from: &buf), 
-                version: FfiConverterUInt64.read(from: &buf), 
+                version: FfiConverterTypeVersion.read(from: &buf), 
                 digest: FfiConverterTypeDigest.read(from: &buf)
         )
     }
 
     public static func write(_ value: ObjectReference, into buf: inout [UInt8]) {
         FfiConverterTypeObjectId.write(value.objectId, into: &buf)
-        FfiConverterUInt64.write(value.version, into: &buf)
+        FfiConverterTypeVersion.write(value.version, into: &buf)
         FfiConverterTypeDigest.write(value.digest, into: &buf)
     }
 }
@@ -31343,7 +31671,7 @@ public struct RandomnessStateUpdate {
     /**
      * The initial version of the randomness object that it was shared at
      */
-    public var randomnessObjInitialSharedVersion: UInt64
+    public var randomnessObjInitialSharedVersion: Version
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -31359,7 +31687,7 @@ public struct RandomnessStateUpdate {
          */randomBytes: Data, 
         /**
          * The initial version of the randomness object that it was shared at
-         */randomnessObjInitialSharedVersion: UInt64) {
+         */randomnessObjInitialSharedVersion: Version) {
         self.epoch = epoch
         self.randomnessRound = randomnessRound
         self.randomBytes = randomBytes
@@ -31370,32 +31698,6 @@ public struct RandomnessStateUpdate {
 #if compiler(>=6)
 extension RandomnessStateUpdate: Sendable {}
 #endif
-
-
-extension RandomnessStateUpdate: Equatable, Hashable {
-    public static func ==(lhs: RandomnessStateUpdate, rhs: RandomnessStateUpdate) -> Bool {
-        if lhs.epoch != rhs.epoch {
-            return false
-        }
-        if lhs.randomnessRound != rhs.randomnessRound {
-            return false
-        }
-        if lhs.randomBytes != rhs.randomBytes {
-            return false
-        }
-        if lhs.randomnessObjInitialSharedVersion != rhs.randomnessObjInitialSharedVersion {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(epoch)
-        hasher.combine(randomnessRound)
-        hasher.combine(randomBytes)
-        hasher.combine(randomnessObjInitialSharedVersion)
-    }
-}
 
 
 
@@ -31409,7 +31711,7 @@ public struct FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer {
                 epoch: FfiConverterUInt64.read(from: &buf), 
                 randomnessRound: FfiConverterUInt64.read(from: &buf), 
                 randomBytes: FfiConverterData.read(from: &buf), 
-                randomnessObjInitialSharedVersion: FfiConverterUInt64.read(from: &buf)
+                randomnessObjInitialSharedVersion: FfiConverterTypeVersion.read(from: &buf)
         )
     }
 
@@ -31417,7 +31719,7 @@ public struct FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer {
         FfiConverterUInt64.write(value.epoch, into: &buf)
         FfiConverterUInt64.write(value.randomnessRound, into: &buf)
         FfiConverterData.write(value.randomBytes, into: &buf)
-        FfiConverterUInt64.write(value.randomnessObjInitialSharedVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.randomnessObjInitialSharedVersion, into: &buf)
     }
 }
 
@@ -32084,7 +32386,7 @@ public struct TransactionEffectsV1 {
     /**
      * The version number of all the written Move objects by this transaction.
      */
-    public var lamportVersion: UInt64
+    public var lamportVersion: Version
     /**
      * Objects whose state are changed in the object store.
      */
@@ -32134,7 +32436,7 @@ public struct TransactionEffectsV1 {
          */dependencies: [Digest], 
         /**
          * The version number of all the written Move objects by this transaction.
-         */lamportVersion: UInt64, 
+         */lamportVersion: Version, 
         /**
          * Objects whose state are changed in the object store.
          */changedObjects: [ChangedObject], 
@@ -32185,7 +32487,7 @@ public struct FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer {
                 gasObjectIndex: FfiConverterOptionUInt32.read(from: &buf), 
                 eventsDigest: FfiConverterOptionTypeDigest.read(from: &buf), 
                 dependencies: FfiConverterSequenceTypeDigest.read(from: &buf), 
-                lamportVersion: FfiConverterUInt64.read(from: &buf), 
+                lamportVersion: FfiConverterTypeVersion.read(from: &buf), 
                 changedObjects: FfiConverterSequenceTypeChangedObject.read(from: &buf), 
                 unchangedSharedObjects: FfiConverterSequenceTypeUnchangedSharedObject.read(from: &buf), 
                 auxiliaryDataDigest: FfiConverterOptionTypeDigest.read(from: &buf)
@@ -32200,7 +32502,7 @@ public struct FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer {
         FfiConverterOptionUInt32.write(value.gasObjectIndex, into: &buf)
         FfiConverterOptionTypeDigest.write(value.eventsDigest, into: &buf)
         FfiConverterSequenceTypeDigest.write(value.dependencies, into: &buf)
-        FfiConverterUInt64.write(value.lamportVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.lamportVersion, into: &buf)
         FfiConverterSequenceTypeChangedObject.write(value.changedObjects, into: &buf)
         FfiConverterSequenceTypeUnchangedSharedObject.write(value.unchangedSharedObjects, into: &buf)
         FfiConverterOptionTypeDigest.write(value.auxiliaryDataDigest, into: &buf)
@@ -32575,7 +32877,7 @@ public struct UpgradeInfo {
     /**
      * Version of the upgraded package
      */
-    public var upgradedVersion: UInt64
+    public var upgradedVersion: Version
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -32585,7 +32887,7 @@ public struct UpgradeInfo {
          */upgradedId: ObjectId, 
         /**
          * Version of the upgraded package
-         */upgradedVersion: UInt64) {
+         */upgradedVersion: Version) {
         self.upgradedId = upgradedId
         self.upgradedVersion = upgradedVersion
     }
@@ -32605,13 +32907,13 @@ public struct FfiConverterTypeUpgradeInfo: FfiConverterRustBuffer {
         return
             try UpgradeInfo(
                 upgradedId: FfiConverterTypeObjectId.read(from: &buf), 
-                upgradedVersion: FfiConverterUInt64.read(from: &buf)
+                upgradedVersion: FfiConverterTypeVersion.read(from: &buf)
         )
     }
 
     public static func write(_ value: UpgradeInfo, into buf: inout [UInt8]) {
         FfiConverterTypeObjectId.write(value.upgradedId, into: &buf)
-        FfiConverterUInt64.write(value.upgradedVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.upgradedVersion, into: &buf)
     }
 }
 
@@ -35603,7 +35905,7 @@ public enum ObjectIn {
     /**
      * The old version, digest and owner.
      */
-    case data(version: UInt64, digest: Digest, owner: Owner
+    case data(version: Version, digest: Digest, owner: Owner
     )
 }
 
@@ -35624,7 +35926,7 @@ public struct FfiConverterTypeObjectIn: FfiConverterRustBuffer {
         
         case 1: return .missing
         
-        case 2: return .data(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
+        case 2: return .data(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
         )
         
         default: throw UniffiInternalError.unexpectedEnumCase
@@ -35641,7 +35943,7 @@ public struct FfiConverterTypeObjectIn: FfiConverterRustBuffer {
         
         case let .data(version,digest,owner):
             writeInt(&buf, Int32(2))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             FfiConverterTypeOwner.write(owner, into: &buf)
             
@@ -35705,7 +36007,7 @@ public enum ObjectOut {
      * Packages writes need to be tracked separately with version because
      * we don't use lamport version for package publish and upgrades.
      */
-    case packageWrite(version: UInt64, digest: Digest
+    case packageWrite(version: Version, digest: Digest
     )
 }
 
@@ -35729,7 +36031,7 @@ public struct FfiConverterTypeObjectOut: FfiConverterRustBuffer {
         case 2: return .objectWrite(digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
         )
         
-        case 3: return .packageWrite(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
+        case 3: return .packageWrite(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
         )
         
         default: throw UniffiInternalError.unexpectedEnumCase
@@ -35752,7 +36054,7 @@ public struct FfiConverterTypeObjectOut: FfiConverterRustBuffer {
         
         case let .packageWrite(version,digest):
             writeInt(&buf, Int32(3))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             
         }
@@ -36558,23 +36860,23 @@ public enum UnchangedSharedKind {
      * ObjectDigest for protocol correctness, but it will make it easier to
      * verify untrusted read.
      */
-    case readOnlyRoot(version: UInt64, digest: Digest
+    case readOnlyRoot(version: Version, digest: Digest
     )
     /**
      * Deleted shared objects that appear mutably/owned in the input.
      */
-    case mutateDeleted(version: UInt64
+    case mutateDeleted(version: Version
     )
     /**
      * Deleted shared objects that appear as read-only in the input.
      */
-    case readDeleted(version: UInt64
+    case readDeleted(version: Version
     )
     /**
      * Shared objects in cancelled transaction. The sequence number embed
      * cancellation reason.
      */
-    case cancelled(version: UInt64
+    case cancelled(version: Version
     )
     /**
      * Read of a per-epoch config object that should remain the same during an
@@ -36598,16 +36900,16 @@ public struct FfiConverterTypeUnchangedSharedKind: FfiConverterRustBuffer {
         let variant: Int32 = try readInt(&buf)
         switch variant {
         
-        case 1: return .readOnlyRoot(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
+        case 1: return .readOnlyRoot(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
         )
         
-        case 2: return .mutateDeleted(version: try FfiConverterUInt64.read(from: &buf)
+        case 2: return .mutateDeleted(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
-        case 3: return .readDeleted(version: try FfiConverterUInt64.read(from: &buf)
+        case 3: return .readDeleted(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
-        case 4: return .cancelled(version: try FfiConverterUInt64.read(from: &buf)
+        case 4: return .cancelled(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
         case 5: return .perEpochConfig
@@ -36622,23 +36924,23 @@ public struct FfiConverterTypeUnchangedSharedKind: FfiConverterRustBuffer {
         
         case let .readOnlyRoot(version,digest):
             writeInt(&buf, Int32(1))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             
         
         case let .mutateDeleted(version):
             writeInt(&buf, Int32(2))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case let .readDeleted(version):
             writeInt(&buf, Int32(3))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case let .cancelled(version):
             writeInt(&buf, Int32(4))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case .perEpochConfig:
@@ -37526,6 +37828,30 @@ fileprivate struct FfiConverterOptionTypeTypeTag: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterTypeTypeTag.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeVersion: FfiConverterRustBuffer {
+    typealias SwiftType = Version?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeVersion.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeVersion.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -39431,6 +39757,31 @@ fileprivate struct FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
             seq.append(try FfiConverterTypeUserSignature.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeVersion: FfiConverterRustBuffer {
+    typealias SwiftType = [Version]
+
+    public static func write(_ value: [Version], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeVersion.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Version] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Version]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeVersion.read(from: &buf))
         }
         return seq
     }
@@ -45862,7 +46213,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305) {
+    if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 26576) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664) {
@@ -45946,10 +46297,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742) {
@@ -45958,13 +46309,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653) {
@@ -45973,13 +46324,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891) {
@@ -46123,7 +46474,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970) {
+    if (uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 7483) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113) {
@@ -46330,7 +46681,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate() != 24969) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433) {
+    if (uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334) {
@@ -46387,10 +46738,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982) {
@@ -46735,7 +47086,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738) {
+    if (uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 53823) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004) {
@@ -47029,10 +47380,31 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219) {
+    if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951) {
@@ -47266,7 +47638,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 48143) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795) {
@@ -47380,13 +47752,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 31500) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420) {
@@ -47506,7 +47878,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 22241) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619) {
@@ -47878,7 +48250,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255) {
@@ -48016,7 +48388,31 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 50135) {
         return InitializationResult.apiChecksumMismatch
     }
 
