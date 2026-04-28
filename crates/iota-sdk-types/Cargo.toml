@@ -68,6 +68,9 @@ winnow = "0.7"
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rand_core = { workspace = true, optional = true, features = ["getrandom"] }
+
 [build-dependencies]
 filetime = "0.2"
 
