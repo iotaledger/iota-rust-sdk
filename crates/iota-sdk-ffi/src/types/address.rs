@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
 /// Unique identifier for an Account on the IOTA blockchain.
@@ -136,6 +138,17 @@ impl Address {
     /// with leading zeroes trimmed), without `0x` prefix.
     pub fn to_raw_short_hex(&self) -> String {
         self.0.to_raw_short_hex()
+    }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        Self(self.0.next_lexicographical())
+    }
+
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
+        self.0.next_lexicographical_opt().map(Self).map(Arc::new)
     }
 }
 

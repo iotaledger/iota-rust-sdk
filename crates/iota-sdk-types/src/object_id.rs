@@ -163,6 +163,15 @@ impl ObjectId {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
 
+    /// Returns the next object id in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub const fn next_lexicographical_opt(&self) -> Option<Self> {
+        match crate::next_lexicographical_array_opt(self.bytes()) {
+            Some(val) => Some(Self::new(val)),
+            None => None,
+        }
+    }
+
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn generate<R>(rng: R) -> Self

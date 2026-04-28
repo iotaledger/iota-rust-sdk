@@ -265,6 +265,15 @@ impl Address {
     pub const fn next_lexicographical(&self) -> Self {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
+
+    /// Returns the next address in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub const fn next_lexicographical_opt(&self) -> Option<Self> {
+        match crate::next_lexicographical_array_opt(self.bytes()) {
+            Some(val) => Some(Self::new(val)),
+            None => None,
+        }
+    }
 }
 
 impl std::str::FromStr for Address {
