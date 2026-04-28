@@ -184,21 +184,10 @@ mod serialization_proptests;
 
 /// Returns the next array in byte-increasing order.
 pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
-    let mut next = *array;
-    let mut i = N;
-
-    // We manually iterate backwards from N-1 down to 0
-    while i > 0 {
-        i -= 1;
-        let (new_byte, overflow) = next[i].overflowing_add(1);
-        next[i] = new_byte;
-
-        if !overflow {
-            break;
-        }
+    match next_lexicographical_array_opt(array) {
+        Some(next) => next,
+        None => [0; N],
     }
-
-    next
 }
 
 /// Returns the next array in byte-increasing order, or `None` if the result
