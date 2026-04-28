@@ -154,6 +154,7 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch: u64,
     /// Randomness round of the update
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub randomness_round: RandomnessRound,
     /// Updated random bytes
     #[cfg_attr(
@@ -163,6 +164,7 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub randomness_obj_initial_shared_version: Version,
 }
 

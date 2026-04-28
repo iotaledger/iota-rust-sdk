@@ -488,6 +488,7 @@ mod input_argument {
         ImmutableOrOwned(ObjectReference),
         Shared {
             object_id: ObjectId,
+            #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
             initial_shared_version: Version,
             mutable: bool,
         },
