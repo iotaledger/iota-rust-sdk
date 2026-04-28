@@ -33,7 +33,7 @@ variadics_please.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2", features = ["js"] }
+getrandom_2.workspace = true
 
 [dev-dependencies]
 # external dependencies
