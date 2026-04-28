@@ -95,7 +95,7 @@ impl GasCostSummary {
     pub fn gas_used(&self) -> u64 {
         self.computation_cost
             .checked_add(self.storage_cost)
-            .unwrap()
+            .expect("gas_used overflow")
     }
 
     /// The net gas usage, which is the total gas used minus the storage rebate.
@@ -103,7 +103,7 @@ impl GasCostSummary {
     pub fn net_gas_usage(&self) -> i64 {
         (self.gas_used() as i64)
             .checked_sub(self.storage_rebate as i64)
-            .unwrap()
+            .expect("net_gas_usage underflow")
     }
 }
 
@@ -112,20 +112,23 @@ impl std::ops::AddAssign<&Self> for GasCostSummary {
         self.computation_cost = self
             .computation_cost
             .checked_add(other.computation_cost)
-            .unwrap();
+            .expect("computation_cost overflow");
         self.computation_cost_burned = self
             .computation_cost_burned
             .checked_add(other.computation_cost_burned)
-            .unwrap();
-        self.storage_cost = self.storage_cost.checked_add(other.storage_cost).unwrap();
+            .expect("computation_cost_burned overflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_add(other.storage_cost)
+            .expect("storage_cost overflow");
         self.storage_rebate = self
             .storage_rebate
             .checked_add(other.storage_rebate)
-            .unwrap();
+            .expect("storage_rebate overflow");
         self.non_refundable_storage_fee = self
             .non_refundable_storage_fee
             .checked_add(other.non_refundable_storage_fee)
-            .unwrap();
+            .expect("non_refundable_storage_fee overflow");
     }
 }
 
@@ -134,20 +137,23 @@ impl std::ops::SubAssign<&Self> for GasCostSummary {
         self.computation_cost = self
             .computation_cost
             .checked_sub(other.computation_cost)
-            .unwrap();
+            .expect("computation_cost underflow");
         self.computation_cost_burned = self
             .computation_cost_burned
             .checked_sub(other.computation_cost_burned)
-            .unwrap();
-        self.storage_cost = self.storage_cost.checked_sub(other.storage_cost).unwrap();
+            .expect("computation_cost_burned underflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_sub(other.storage_cost)
+            .expect("storage_cost underflow");
         self.storage_rebate = self
             .storage_rebate
             .checked_sub(other.storage_rebate)
-            .unwrap();
+            .expect("storage_rebate underflow");
         self.non_refundable_storage_fee = self
             .non_refundable_storage_fee
             .checked_sub(other.non_refundable_storage_fee)
-            .unwrap();
+            .expect("non_refundable_storage_fee underflow");
     }
 }
 
