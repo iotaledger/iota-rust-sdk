@@ -3717,6 +3717,28 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -3743,6 +3765,18 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -3774,7 +3808,15 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_short_string(IntPtr @ptr,sbyte @withPrefix,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -5546,6 +5588,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(RustBuffer @addresses,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -6498,6 +6544,18 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(RustBuffer @hex,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectid_system(ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -6526,7 +6584,15 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(IntPtr @ptr,sbyte @withPrefix,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -12278,7 +12344,15 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -13506,7 +13580,15 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14446,6 +14528,18 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_address_random(
     );
 
@@ -14790,6 +14884,10 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
     );
 
@@ -15031,6 +15129,18 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -18067,14 +18177,26 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex();
-            if (checksum != 22032) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_hex` checksum `22032`, library returned `{checksum}`");
+            if (checksum != 2770) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_hex` checksum `2770`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string();
-            if (checksum != 56908) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_short_string` checksum `56908`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex();
+            if (checksum != 32277) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex` checksum `32277`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex();
+            if (checksum != 57104) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex` checksum `57104`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex();
+            if (checksum != 9559) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex` checksum `9559`, library returned `{checksum}`");
             }
         }
         {
@@ -19909,14 +20031,26 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex();
-            if (checksum != 4418) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex` checksum `4418`, library returned `{checksum}`");
+            if (checksum != 13326) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex` checksum `13326`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string();
-            if (checksum != 63526) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string` checksum `63526`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex();
+            if (checksum != 56907) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex` checksum `56907`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex();
+            if (checksum != 17836) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex` checksum `17836`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex();
+            if (checksum != 29478) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex` checksum `29478`, library returned `{checksum}`");
             }
         }
         {
@@ -21319,8 +21453,26 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex();
-            if (checksum != 38044) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex` checksum `38044`, library returned `{checksum}`");
+            if (checksum != 59948) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex` checksum `59948`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex();
+            if (checksum != 61183) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex` checksum `61183`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex();
+            if (checksum != 62018) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex` checksum `62018`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex();
+            if (checksum != 60759) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex` checksum `60759`, library returned `{checksum}`");
             }
         }
         {
@@ -21840,6 +21992,12 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex();
+            if (checksum != 35587) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex` checksum `35587`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec();
             if (checksum != 6097) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec` checksum `6097`, library returned `{checksum}`");
@@ -22201,8 +22359,26 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex();
-            if (checksum != 30954) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex` checksum `30954`, library returned `{checksum}`");
+            if (checksum != 39262) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex` checksum `39262`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex();
+            if (checksum != 58728) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex` checksum `58728`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex();
+            if (checksum != 12289) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex` checksum `12289`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex();
+            if (checksum != 24855) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex` checksum `24855`, library returned `{checksum}`");
             }
         }
         {
@@ -23710,12 +23886,26 @@ public interface IAddress: IEquatable<Address> {
     /// canonical display, with or without a `0x` prefix.
     /// </summary>
     string ToCanonicalString(bool @withPrefix);
+    /// <summary>
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
+    /// </summary>
     string ToHex();
+    /// <summary>
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    /// </summary>
+    string ToRawHex();
+    /// <summary>
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    /// </summary>
+    string ToRawShortHex();
     /// <summary>
     /// Returns the shortest possible string representation of the address (i.e.
     /// with leading zeroes trimmed).
     /// </summary>
-    string ToShortString(bool @withPrefix);
+    string ToShortHex();
 }
 /// <summary>
 /// Unique identifier for an Account on the IOTA blockchain.
@@ -23868,6 +24058,10 @@ public class Address : IAddress, IDisposable {
     }
     
     
+    /// <summary>
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
+    /// </summary>
     public string ToHex() {
         return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -23877,13 +24071,37 @@ public class Address : IAddress, IDisposable {
     
     
     /// <summary>
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    /// </summary>
+    public string ToRawHex() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    /// </summary>
+    public string ToRawShortHex() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
     /// Returns the shortest possible string representation of the address (i.e.
     /// with leading zeroes trimmed).
     /// </summary>
-    public string ToShortString(bool @withPrefix) {
+    public string ToShortHex() {
         return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(thisPtr, FfiConverterBoolean.INSTANCE.Lower(@withPrefix), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(thisPtr,  ref _status)
 )));
     }
     
@@ -23931,15 +24149,54 @@ public class Address : IAddress, IDisposable {
     }
     
     /// <summary>
-    /// Parses an Address from a hex string, with or without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
     public static Address FromHex(string @hex) {
         return new Address(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static Address FromPrefixedHex(string @hex) {
+        return new Address(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an Address from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static Address FromPrefixedShortHex(string @hex) {
+        return new Address(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an Address from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static Address FromShortHex(string @hex) {
+        return new Address(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
 ));
     }
     
@@ -34376,6 +34633,14 @@ public class MoveArg : IMoveArg, IDisposable {
 ));
     }
     
+    /// <exception cref="SdkFfiException"></exception>
+    public static MoveArg AddressFromShortHex(string @hex) {
+        return new MoveArg(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
     public static MoveArg AddressVec(Address[] @addresses) {
         return new MoveArg(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -38933,12 +39198,26 @@ public interface IObjectId: IEquatable<ObjectId> {
     /// canonical display, with or without a `0x` prefix.
     /// </summary>
     string ToCanonicalString(bool @withPrefix);
+    /// <summary>
+    /// Returns the string representation of this object id in hex format with
+    /// `0x` prefix.
+    /// </summary>
     string ToHex();
+    /// <summary>
+    /// Returns the string representation of this object id in hex format
+    /// without `0x` prefix.
+    /// </summary>
+    string ToRawHex();
+    /// <summary>
+    /// Returns the shortest possible string representation of the object id
+    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    /// </summary>
+    string ToRawShortHex();
     /// <summary>
     /// Returns the shortest possible string representation of the object ID
     /// (i.e. with leading zeroes trimmed).
     /// </summary>
-    string ToShortString(bool @withPrefix);
+    string ToShortHex();
 }
 /// <summary>
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
@@ -39090,6 +39369,10 @@ public class ObjectId : IObjectId, IDisposable {
     }
     
     
+    /// <summary>
+    /// Returns the string representation of this object id in hex format with
+    /// `0x` prefix.
+    /// </summary>
     public string ToHex() {
         return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -39099,13 +39382,37 @@ public class ObjectId : IObjectId, IDisposable {
     
     
     /// <summary>
+    /// Returns the string representation of this object id in hex format
+    /// without `0x` prefix.
+    /// </summary>
+    public string ToRawHex() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Returns the shortest possible string representation of the object id
+    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    /// </summary>
+    public string ToRawShortHex() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
     /// Returns the shortest possible string representation of the object ID
     /// (i.e. with leading zeroes trimmed).
     /// </summary>
-    public string ToShortString(bool @withPrefix) {
+    public string ToShortHex() {
         return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(thisPtr, FfiConverterBoolean.INSTANCE.Lower(@withPrefix), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(thisPtr,  ref _status)
 )));
     }
     
@@ -39163,11 +39470,55 @@ public class ObjectId : IObjectId, IDisposable {
 ));
     }
     
+    /// <summary>
+    /// Parses an ObjectId from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// </summary>
     /// <exception cref="SdkFfiException"></exception>
     public static ObjectId FromHex(string @hex) {
         return new ObjectId(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an ObjectId from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static ObjectId FromPrefixedHex(string @hex) {
+        return new ObjectId(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static ObjectId FromPrefixedShortHex(string @hex) {
+        return new ObjectId(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static ObjectId FromShortHex(string @hex) {
+        return new ObjectId(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(FfiConverterString.INSTANCE.Lower(@hex), ref _status)
 ));
     }
     

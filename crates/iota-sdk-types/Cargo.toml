@@ -35,7 +35,7 @@ serde = [
   "dep:serde_with",
   "roaring/std",
 ]
-rand = ["dep:rand_core"]
+rand = ["dep:rand_core", "rand_core/getrandom"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
