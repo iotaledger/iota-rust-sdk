@@ -60,14 +60,19 @@ impl Event {
             && *self.type_.name() == name
     }
 
+    /// Checks if this is a `SystemEpochInfoEvent` of any version (V1 or V2).
     pub fn is_system_epoch_info_event(&self) -> bool {
         self.is_system_epoch_info_event_v1() || self.is_system_epoch_info_event_v2()
     }
 
+    /// Checks if this is
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
     pub fn is_system_epoch_info_event_v1(&self) -> bool {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V1)
     }
 
+    /// Checks if this is
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
     pub fn is_system_epoch_info_event_v2(&self) -> bool {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
     }

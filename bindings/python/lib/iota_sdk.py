@@ -2679,6 +2679,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1() != 53365:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2() != 44726:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module() != 25559:
@@ -5885,6 +5889,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -16552,6 +16564,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock.restype = ctypes.c_uint16
@@ -40716,6 +40734,18 @@ class Identifier():
     def system_epoch_info_event(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def system_epoch_info_event_v1(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def system_epoch_info_event_v2(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2,)
         return cls._make_instance_(pointer)
 
     @classmethod
