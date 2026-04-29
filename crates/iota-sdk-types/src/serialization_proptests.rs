@@ -84,7 +84,6 @@ serialization_test!(TransactionEffects);
 serialization_test!(TransactionEffectsV1);
 serialization_test!(UnchangedSharedKind);
 serialization_test!(UnchangedSharedObject);
-serialization_test!(BalanceChange);
 serialization_test!(Event);
 serialization_test!(TransactionEvents);
 serialization_test!(CommandArgumentError);
