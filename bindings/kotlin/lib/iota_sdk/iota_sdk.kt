@@ -4001,10 +4001,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6132,10 +6128,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module(
@@ -7734,10 +7726,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(uniffi_out_err: UniffiRustCallStatus, 
@@ -13908,12 +13896,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account() != 29826.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module() != 2078.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161.toShort()) {
@@ -29691,26 +29673,6 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
 
     
     companion object {
-         fun `abstractAccount`(): Identifier {
-            return FfiConverterTypeIdentifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(
-        _status)
-}
-    )
-    }
-    
-
-         fun `abstractAccountModule`(): Identifier {
-            return FfiConverterTypeIdentifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(
-        _status)
-}
-    )
-    }
-    
-
          fun `addressKey`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->

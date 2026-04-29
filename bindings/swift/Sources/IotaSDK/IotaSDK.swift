@@ -10191,20 +10191,6 @@ public convenience init(identifier: String)throws  {
     }
 
     
-public static func abstractAccount() -> Identifier  {
-    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account($0
-    )
-})
-}
-    
-public static func abstractAccountModule() -> Identifier  {
-    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module($0
-    )
-})
-}
-    
 public static func addressKey() -> Identifier  {
     return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key($0
@@ -49158,12 +49144,6 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account() != 29826) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module() != 2078) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161) {
