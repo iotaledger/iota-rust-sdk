@@ -10191,6 +10191,20 @@ public convenience init(identifier: String)throws  {
     }
 
     
+public static func abstractAccount() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account($0
+    )
+})
+}
+    
+public static func abstractAccountModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module($0
+    )
+})
+}
+    
 public static func addressKey() -> Identifier  {
     return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key($0
@@ -10639,16 +10653,16 @@ public static func upgradeTicket() -> Identifier  {
 })
 }
     
-public static func urlModule() -> Identifier  {
+public static func url() -> Identifier  {
     return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module($0
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url($0
     )
 })
 }
     
-public static func urlType() -> Identifier  {
+public static func urlModule() -> Identifier  {
     return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type($0
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module($0
     )
 })
 }
@@ -49130,6 +49144,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account() != 29826) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module() != 2078) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -49325,10 +49345,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url() != 55140) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type() != 23055) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018) {

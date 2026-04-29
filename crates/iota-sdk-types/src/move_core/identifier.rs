@@ -134,6 +134,7 @@ impl Identifier {
     // Module name constants
     // ========================================================================
 
+    pub const ABSTRACT_ACCOUNT_MODULE: Self = Self::from_static("abstract_account");
     pub const ASCII_MODULE: Self = Self::from_static("ascii");
     pub const AUTHENTICATOR_STATE_MODULE: Self = Self::from_static("authenticator_state");
     pub const BAG_MODULE: Self = Self::from_static("bag");
@@ -169,6 +170,7 @@ impl Identifier {
     // Type/struct name constants
     // ========================================================================
 
+    pub const ABSTRACT_ACCOUNT: Self = Self::from_static("AbstractAccount");
     pub const ADDRESS_KEY: Self = Self::from_static("AddressKey");
     pub const AUTHENTICATOR_STATE: Self = Self::from_static("AuthenticatorState");
     pub const BAG: Self = Self::from_static("Bag");

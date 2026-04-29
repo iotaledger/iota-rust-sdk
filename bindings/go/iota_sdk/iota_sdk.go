@@ -9889,6 +9889,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account()
+	})
+	if checksum != 29826 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module()
+	})
+	if checksum != 2078 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key()
 	})
 	if checksum != 24161 {
@@ -10474,20 +10492,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url()
+	})
+	if checksum != 55140 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_url: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module()
 	})
 	if checksum != 18366 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type()
-	})
-	if checksum != 23055 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -22119,6 +22137,18 @@ func NewIdentifier(identifier string) (*Identifier, error) {
 }
 
 
+func IdentifierAbstractAccount() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(_uniffiStatus)
+	}))
+}
+
+func IdentifierAbstractAccountModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(_uniffiStatus)
+	}))
+}
+
 func IdentifierAddressKey() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(_uniffiStatus)
@@ -22503,15 +22533,15 @@ func IdentifierUpgradeTicket() *Identifier {
 	}))
 }
 
-func IdentifierUrlModule() *Identifier {
+func IdentifierUrl() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url(_uniffiStatus)
 	}))
 }
 
-func IdentifierUrlType() *Identifier {
+func IdentifierUrlModule() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(_uniffiStatus)
 	}))
 }
 

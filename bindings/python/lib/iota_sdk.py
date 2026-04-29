@@ -2573,6 +2573,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account() != 29826:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module() != 2078:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861:
@@ -2703,9 +2707,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url() != 55140:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type() != 23055:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5672,6 +5676,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_identifier.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_identifier.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -5933,14 +5945,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -16393,6 +16405,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key.restype = ctypes.c_uint16
@@ -16588,12 +16606,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated.restype = ctypes.c_uint16
@@ -40407,6 +40425,18 @@ class Identifier():
         inst._pointer = pointer
         return inst
     @classmethod
+    def abstract_account(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def abstract_account_module(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def address_key(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key,)
@@ -40791,15 +40821,15 @@ class Identifier():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def url_module(cls, ):
+    def url(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url,)
         return cls._make_instance_(pointer)
 
     @classmethod
-    def url_type(cls, ):
+    def url_module(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module,)
         return cls._make_instance_(pointer)
 
     @classmethod

@@ -4023,6 +4023,10 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -5720,6 +5724,14 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -5980,11 +5992,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_url(ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15900,6 +15912,14 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key(
     );
 
@@ -16160,11 +16180,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_url(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -23658,6 +23678,18 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account();
+            if (checksum != 29826) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account` checksum `29826`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module();
+            if (checksum != 2078) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module` checksum `2078`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key();
             if (checksum != 24161) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key` checksum `24161`, library returned `{checksum}`");
@@ -24048,15 +24080,15 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module();
-            if (checksum != 18366) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module` checksum `18366`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url();
+            if (checksum != 55140) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_url` checksum `55140`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type();
-            if (checksum != 23055) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type` checksum `23055`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module();
+            if (checksum != 18366) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module` checksum `18366`, library returned `{checksum}`");
             }
         }
         {
@@ -36016,6 +36048,20 @@ public class Identifier : IIdentifier, IDisposable {
     }
 
     
+    public static Identifier AbstractAccount() {
+        return new Identifier(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account( ref _status)
+));
+    }
+    
+    public static Identifier AbstractAccountModule() {
+        return new Identifier(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module( ref _status)
+));
+    }
+    
     public static Identifier AddressKey() {
         return new Identifier(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -36464,17 +36510,17 @@ public class Identifier : IIdentifier, IDisposable {
 ));
     }
     
+    public static Identifier Url() {
+        return new Identifier(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url( ref _status)
+));
+    }
+    
     public static Identifier UrlModule() {
         return new Identifier(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module( ref _status)
-));
-    }
-    
-    public static Identifier UrlType() {
-        return new Identifier(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type( ref _status)
 ));
     }
     

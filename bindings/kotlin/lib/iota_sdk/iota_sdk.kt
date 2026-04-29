@@ -4001,6 +4001,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6128,6 +6132,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module(
@@ -6258,9 +6266,9 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type(
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated(
 ): Short
@@ -7726,6 +7734,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(uniffi_out_err: UniffiRustCallStatus, 
@@ -7856,9 +7868,9 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -13898,6 +13910,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account() != 29826.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_abstract_account_module() != 2078.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14093,10 +14111,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url() != 55140.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type() != 23055.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018.toShort()) {
@@ -29673,6 +29691,26 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
 
     
     companion object {
+         fun `abstractAccount`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account(
+        _status)
+}
+    )
+    }
+    
+
+         fun `abstractAccountModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_abstract_account_module(
+        _status)
+}
+    )
+    }
+    
+
          fun `addressKey`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
@@ -30313,20 +30351,20 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     }
     
 
-         fun `urlModule`(): Identifier {
+         fun `url`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url(
         _status)
 }
     )
     }
     
 
-         fun `urlType`(): Identifier {
+         fun `urlModule`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(
         _status)
 }
     )

@@ -46,6 +46,7 @@ macro_rules! export_identifier_consts {
 
 export_identifier_consts!(
     // Module name constants
+    ABSTRACT_ACCOUNT_MODULE,
     ASCII_MODULE,
     AUTHENTICATOR_STATE_MODULE,
     BAG_MODULE,
@@ -77,6 +78,7 @@ export_identifier_consts!(
     TX_CONTEXT_MODULE,
     URL_MODULE,
     // Struct/type name constants
+    ABSTRACT_ACCOUNT,
     ADDRESS_KEY,
     AUTHENTICATOR_STATE,
     BAG,
