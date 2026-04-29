@@ -320,6 +320,8 @@ programmable-transaction = (size *input)     ; inputs
 publish = (size *bytes)       ; modules
           (size *object-id)   ; dependencies
 
+randomness-round = u64
+
 randomness-state-update = u64                ; epoch
                           randomness-round   ; randomness-round
                           bytes              ; random-bytes

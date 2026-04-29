@@ -24,6 +24,7 @@
     serde(transparent)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[repr(transparent)]
 pub struct RandomnessRound(
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] u64,
