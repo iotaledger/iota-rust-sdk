@@ -6,15 +6,15 @@
 ///
 /// Storage is charged independently of computation.
 /// There are 3 parts to the storage charges:
-/// `storage_cost`: it is the charge of storage at the time the transaction is
-/// executed.                 The cost of storage is the number of bytes of the
-/// objects being mutated                 multiplied by a variable storage cost
-/// per byte `storage_rebate`: this is the amount a user gets back when
-/// manipulating an object.                   The `storage_rebate` is the
-/// `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
-/// all the value of the object storage cost is                               
-/// given back to user and there is a small fraction that                       
-/// is kept by the system. This value tracks that charge.
+/// - `storage_cost`: it is the charge of storage at the time the transaction is
+///   executed. The cost of storage is the number of bytes of the objects being
+///   mutated multiplied by a variable storage cost per byte
+/// - `storage_rebate`: this is the amount a user gets back when manipulating an
+///   object. The `storage_rebate` is the `storage_cost` for an object minus
+///   fees.
+/// - `non_refundable_storage_fee`: not all the value of the object storage cost
+///   is given back to user and there is a small fraction that is kept by the
+///   system. This value tracks that charge.
 ///
 /// When looking at a gas cost summary the amount charged to the user is
 /// `computation_cost + storage_cost - storage_rebate`
@@ -93,13 +93,79 @@ impl GasCostSummary {
 
     /// The total gas used, which is the sum of computation and storage costs.
     pub fn gas_used(&self) -> u64 {
-        self.computation_cost + self.storage_cost
+        self.computation_cost
+            .checked_add(self.storage_cost)
+            .expect("gas_used overflow")
     }
 
     /// The net gas usage, which is the total gas used minus the storage rebate.
     /// A positive number means used gas; negative number means refund.
     pub fn net_gas_usage(&self) -> i64 {
-        self.gas_used() as i64 - self.storage_rebate as i64
+        (self.gas_used() as i64)
+            .checked_sub(self.storage_rebate as i64)
+            .expect("net_gas_usage underflow")
+    }
+}
+
+impl std::ops::AddAssign<&Self> for GasCostSummary {
+    fn add_assign(&mut self, other: &Self) {
+        self.computation_cost = self
+            .computation_cost
+            .checked_add(other.computation_cost)
+            .expect("computation_cost overflow");
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_add(other.computation_cost_burned)
+            .expect("computation_cost_burned overflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_add(other.storage_cost)
+            .expect("storage_cost overflow");
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_add(other.storage_rebate)
+            .expect("storage_rebate overflow");
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_add(other.non_refundable_storage_fee)
+            .expect("non_refundable_storage_fee overflow");
+    }
+}
+
+impl std::ops::SubAssign<&Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: &Self) {
+        self.computation_cost = self
+            .computation_cost
+            .checked_sub(other.computation_cost)
+            .expect("computation_cost underflow");
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_sub(other.computation_cost_burned)
+            .expect("computation_cost_burned underflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_sub(other.storage_cost)
+            .expect("storage_cost underflow");
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_sub(other.storage_rebate)
+            .expect("storage_rebate underflow");
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_sub(other.non_refundable_storage_fee)
+            .expect("non_refundable_storage_fee underflow");
+    }
+}
+
+impl std::ops::AddAssign<Self> for GasCostSummary {
+    fn add_assign(&mut self, other: Self) {
+        self.add_assign(&other);
+    }
+}
+
+impl std::ops::SubAssign<Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: Self) {
+        self.sub_assign(&other);
     }
 }
 
