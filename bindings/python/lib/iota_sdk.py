@@ -1651,7 +1651,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 52452:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1869,25 +1869,25 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 40785:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 64545:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 14080:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2285,35 +2285,35 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_objects() != 24154:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 51024:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 12717:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 26078:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 559:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 3196:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 8646:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 64789:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 53288:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 16044:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 11071:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 45225:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 18818:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 25432:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 48795:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 34277:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2327,29 +2327,29 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 30648:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 47124:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 8542:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -41951,6 +41951,11 @@ class MoveAuthenticatorProtocol(typing.Protocol):
     """
 
     def as_v1(self, ):
+        """
+        Convert this move authenticator into a version 1 move authenticator if
+        it is one, or panic otherwise
+        """
+
         raise NotImplementedError
 # MoveAuthenticator is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MoveAuthenticator():
@@ -41995,6 +42000,11 @@ class MoveAuthenticator():
 
 
     def as_v1(self, ) -> "MoveAuthenticatorV1":
+        """
+        Convert this move authenticator into a version 1 move authenticator if
+        it is one, or panic otherwise
+        """
+
         return _UniffiConverterTypeMoveAuthenticatorV1.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1,self._uniffi_clone_pointer(),)
         )
@@ -46240,24 +46250,68 @@ class OwnerProtocol(typing.Protocol):
     """
 
     def as_address(self, ):
+        """
+        Convert this owner into an address owner if it is one, or panic
+        otherwise
+        """
+
         raise NotImplementedError
     def as_address_opt(self, ):
+        """
+        Convert this owner into an address owner if it is one, or return `None`
+        otherwise
+        """
+
         raise NotImplementedError
     def as_object(self, ):
+        """
+        Convert this owner into an object owner if it is one, or panic otherwise
+        """
+
         raise NotImplementedError
     def as_object_opt(self, ):
+        """
+        Convert this owner into an object owner if it is one, or return `None`
+        otherwise
+        """
+
         raise NotImplementedError
     def as_shared(self, ):
+        """
+        Convert this owner into a shared owner if it is one, or panic otherwise
+        """
+
         raise NotImplementedError
     def as_shared_opt(self, ):
+        """
+        Convert this owner into a shared owner if it is one, or return `None`
+        otherwise
+        """
+
         raise NotImplementedError
     def is_address(self, ):
+        """
+        Check if this is an address owner
+        """
+
         raise NotImplementedError
     def is_immutable(self, ):
+        """
+        Check if this is an immutable owner
+        """
+
         raise NotImplementedError
     def is_object(self, ):
+        """
+        Check if this is an object owner
+        """
+
         raise NotImplementedError
     def is_shared(self, ):
+        """
+        Check if this is a shared owner
+        """
+
         raise NotImplementedError
 # Owner is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Owner():
@@ -46336,6 +46390,11 @@ class Owner():
 
 
     def as_address(self, ) -> "Address":
+        """
+        Convert this owner into an address owner if it is one, or panic
+        otherwise
+        """
+
         return _UniffiConverterTypeAddress.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address,self._uniffi_clone_pointer(),)
         )
@@ -46345,6 +46404,11 @@ class Owner():
 
 
     def as_address_opt(self, ) -> "typing.Optional[Address]":
+        """
+        Convert this owner into an address owner if it is one, or return `None`
+        otherwise
+        """
+
         return _UniffiConverterOptionalTypeAddress.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt,self._uniffi_clone_pointer(),)
         )
@@ -46354,6 +46418,10 @@ class Owner():
 
 
     def as_object(self, ) -> "ObjectId":
+        """
+        Convert this owner into an object owner if it is one, or panic otherwise
+        """
+
         return _UniffiConverterTypeObjectId.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object,self._uniffi_clone_pointer(),)
         )
@@ -46363,6 +46431,11 @@ class Owner():
 
 
     def as_object_opt(self, ) -> "typing.Optional[ObjectId]":
+        """
+        Convert this owner into an object owner if it is one, or return `None`
+        otherwise
+        """
+
         return _UniffiConverterOptionalTypeObjectId.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt,self._uniffi_clone_pointer(),)
         )
@@ -46372,6 +46445,10 @@ class Owner():
 
 
     def as_shared(self, ) -> "Version":
+        """
+        Convert this owner into a shared owner if it is one, or panic otherwise
+        """
+
         return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared,self._uniffi_clone_pointer(),)
         )
@@ -46381,6 +46458,11 @@ class Owner():
 
 
     def as_shared_opt(self, ) -> "typing.Optional[Version]":
+        """
+        Convert this owner into a shared owner if it is one, or return `None`
+        otherwise
+        """
+
         return _UniffiConverterOptionalTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt,self._uniffi_clone_pointer(),)
         )
@@ -46390,6 +46472,10 @@ class Owner():
 
 
     def is_address(self, ) -> "bool":
+        """
+        Check if this is an address owner
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_address,self._uniffi_clone_pointer(),)
         )
@@ -46399,6 +46485,10 @@ class Owner():
 
 
     def is_immutable(self, ) -> "bool":
+        """
+        Check if this is an immutable owner
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable,self._uniffi_clone_pointer(),)
         )
@@ -46408,6 +46498,10 @@ class Owner():
 
 
     def is_object(self, ) -> "bool":
+        """
+        Check if this is an object owner
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_object,self._uniffi_clone_pointer(),)
         )
@@ -46417,6 +46511,10 @@ class Owner():
 
 
     def is_shared(self, ) -> "bool":
+        """
+        Check if this is a shared owner
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared,self._uniffi_clone_pointer(),)
         )
@@ -54031,34 +54129,98 @@ class TypeTagProtocol(typing.Protocol):
     """
 
     def as_struct_tag(self, ):
+        """
+        Converts this type tag into a struct tag, if it is one, or panics
+        otherwise.
+        """
+
         raise NotImplementedError
     def as_struct_tag_opt(self, ):
+        """
+        Converts this type tag into a struct tag, if it is one, or returns
+        `None` otherwise.
+        """
+
         raise NotImplementedError
     def as_vector_type_tag(self, ):
+        """
+        Converts this type tag into the inner type tag of a vector, if it is
+        one, or panics otherwise.
+        """
+
         raise NotImplementedError
     def as_vector_type_tag_opt(self, ):
+        """
+        Converts this type tag into the inner type tag of a vector, if it is
+        one, or returns `None` otherwise.
+        """
+
         raise NotImplementedError
     def is_address(self, ):
+        """
+        Checks if this type tag is an address.
+        """
+
         raise NotImplementedError
     def is_bool(self, ):
+        """
+        Checks if this type tag is a boolean.
+        """
+
         raise NotImplementedError
     def is_signer(self, ):
+        """
+        Checks if this type tag is a signer.
+        """
+
         raise NotImplementedError
     def is_struct(self, ):
+        """
+        Checks if this type tag is a struct.
+        """
+
         raise NotImplementedError
     def is_u128(self, ):
+        """
+        Checks if this type tag is a u128.
+        """
+
         raise NotImplementedError
     def is_u16(self, ):
+        """
+        Checks if this type tag is a u16.
+        """
+
         raise NotImplementedError
     def is_u256(self, ):
+        """
+        Checks if this type tag is a u256.
+        """
+
         raise NotImplementedError
     def is_u32(self, ):
+        """
+        Checks if this type tag is a u32.
+        """
+
         raise NotImplementedError
     def is_u64(self, ):
+        """
+        Checks if this type tag is a u64.
+        """
+
         raise NotImplementedError
     def is_u8(self, ):
+        """
+        Checks if this type tag is a u8.
+        """
+
         raise NotImplementedError
     def is_vector(self, ):
+        """
+        Checks if this type tag is a vector.
+        """
+
         raise NotImplementedError
     def to_canonical_string(self, with_prefix: "bool"):
         """
@@ -54188,6 +54350,11 @@ class TypeTag():
 
 
     def as_struct_tag(self, ) -> "StructTag":
+        """
+        Converts this type tag into a struct tag, if it is one, or panics
+        otherwise.
+        """
+
         return _UniffiConverterTypeStructTag.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag,self._uniffi_clone_pointer(),)
         )
@@ -54197,6 +54364,11 @@ class TypeTag():
 
 
     def as_struct_tag_opt(self, ) -> "typing.Optional[StructTag]":
+        """
+        Converts this type tag into a struct tag, if it is one, or returns
+        `None` otherwise.
+        """
+
         return _UniffiConverterOptionalTypeStructTag.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt,self._uniffi_clone_pointer(),)
         )
@@ -54206,6 +54378,11 @@ class TypeTag():
 
 
     def as_vector_type_tag(self, ) -> "TypeTag":
+        """
+        Converts this type tag into the inner type tag of a vector, if it is
+        one, or panics otherwise.
+        """
+
         return _UniffiConverterTypeTypeTag.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag,self._uniffi_clone_pointer(),)
         )
@@ -54215,6 +54392,11 @@ class TypeTag():
 
 
     def as_vector_type_tag_opt(self, ) -> "typing.Optional[TypeTag]":
+        """
+        Converts this type tag into the inner type tag of a vector, if it is
+        one, or returns `None` otherwise.
+        """
+
         return _UniffiConverterOptionalTypeTypeTag.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt,self._uniffi_clone_pointer(),)
         )
@@ -54224,6 +54406,10 @@ class TypeTag():
 
 
     def is_address(self, ) -> "bool":
+        """
+        Checks if this type tag is an address.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_address,self._uniffi_clone_pointer(),)
         )
@@ -54233,6 +54419,10 @@ class TypeTag():
 
 
     def is_bool(self, ) -> "bool":
+        """
+        Checks if this type tag is a boolean.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool,self._uniffi_clone_pointer(),)
         )
@@ -54242,6 +54432,10 @@ class TypeTag():
 
 
     def is_signer(self, ) -> "bool":
+        """
+        Checks if this type tag is a signer.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer,self._uniffi_clone_pointer(),)
         )
@@ -54251,6 +54445,10 @@ class TypeTag():
 
 
     def is_struct(self, ) -> "bool":
+        """
+        Checks if this type tag is a struct.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct,self._uniffi_clone_pointer(),)
         )
@@ -54260,6 +54458,10 @@ class TypeTag():
 
 
     def is_u128(self, ) -> "bool":
+        """
+        Checks if this type tag is a u128.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128,self._uniffi_clone_pointer(),)
         )
@@ -54269,6 +54471,10 @@ class TypeTag():
 
 
     def is_u16(self, ) -> "bool":
+        """
+        Checks if this type tag is a u16.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16,self._uniffi_clone_pointer(),)
         )
@@ -54278,6 +54484,10 @@ class TypeTag():
 
 
     def is_u256(self, ) -> "bool":
+        """
+        Checks if this type tag is a u256.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256,self._uniffi_clone_pointer(),)
         )
@@ -54287,6 +54497,10 @@ class TypeTag():
 
 
     def is_u32(self, ) -> "bool":
+        """
+        Checks if this type tag is a u32.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32,self._uniffi_clone_pointer(),)
         )
@@ -54296,6 +54510,10 @@ class TypeTag():
 
 
     def is_u64(self, ) -> "bool":
+        """
+        Checks if this type tag is a u64.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64,self._uniffi_clone_pointer(),)
         )
@@ -54305,6 +54523,10 @@ class TypeTag():
 
 
     def is_u8(self, ) -> "bool":
+        """
+        Checks if this type tag is a u8.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8,self._uniffi_clone_pointer(),)
         )
@@ -54314,6 +54536,10 @@ class TypeTag():
 
 
     def is_vector(self, ) -> "bool":
+        """
+        Checks if this type tag is a vector.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector,self._uniffi_clone_pointer(),)
         )
@@ -54773,28 +54999,84 @@ class UserSignatureProtocol(typing.Protocol):
     """
 
     def as_move_authenticator(self, ):
+        """
+        Convert this signature into a move authenticator if it is one, or panic
+        otherwise
+        """
+
         raise NotImplementedError
     def as_move_authenticator_opt(self, ):
+        """
+        Convert this signature into a move authenticator if it is one, or return
+        `None` otherwise
+        """
+
         raise NotImplementedError
     def as_multisig(self, ):
+        """
+        Convert this signature into a multisig aggregated signature if it is
+        one, or panic otherwise
+        """
+
         raise NotImplementedError
     def as_multisig_opt(self, ):
+        """
+        Convert this signature into a multisig aggregated signature if it is
+        one, or return `None` otherwise
+        """
+
         raise NotImplementedError
     def as_passkey_authenticator(self, ):
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        panic otherwise
+        """
+
         raise NotImplementedError
     def as_passkey_authenticator_opt(self, ):
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        return `None` otherwise
+        """
+
         raise NotImplementedError
     def as_simple(self, ):
+        """
+        Convert this signature into a simple signature if it is one, or panic
+        otherwise
+        """
+
         raise NotImplementedError
     def as_simple_opt(self, ):
+        """
+        Convert this signature into a simple signature if it is one, or return
+        `None` otherwise
+        """
+
         raise NotImplementedError
     def is_move_authenticator(self, ):
+        """
+        Check if this signature is a move authenticator
+        """
+
         raise NotImplementedError
     def is_multisig(self, ):
+        """
+        Check if this signature is a multisig aggregated signature
+        """
+
         raise NotImplementedError
     def is_passkey_authenticator(self, ):
+        """
+        Check if this signature is a passkey authenticator
+        """
+
         raise NotImplementedError
     def is_simple(self, ):
+        """
+        Check if this signature is a simple signature
+        """
+
         raise NotImplementedError
     def scheme(self, ):
         """
@@ -54909,6 +55191,11 @@ class UserSignature():
 
 
     def as_move_authenticator(self, ) -> "MoveAuthenticator":
+        """
+        Convert this signature into a move authenticator if it is one, or panic
+        otherwise
+        """
+
         return _UniffiConverterTypeMoveAuthenticator.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator,self._uniffi_clone_pointer(),)
         )
@@ -54918,6 +55205,11 @@ class UserSignature():
 
 
     def as_move_authenticator_opt(self, ) -> "typing.Optional[MoveAuthenticator]":
+        """
+        Convert this signature into a move authenticator if it is one, or return
+        `None` otherwise
+        """
+
         return _UniffiConverterOptionalTypeMoveAuthenticator.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt,self._uniffi_clone_pointer(),)
         )
@@ -54927,6 +55219,11 @@ class UserSignature():
 
 
     def as_multisig(self, ) -> "MultisigAggregatedSignature":
+        """
+        Convert this signature into a multisig aggregated signature if it is
+        one, or panic otherwise
+        """
+
         return _UniffiConverterTypeMultisigAggregatedSignature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig,self._uniffi_clone_pointer(),)
         )
@@ -54936,6 +55233,11 @@ class UserSignature():
 
 
     def as_multisig_opt(self, ) -> "typing.Optional[MultisigAggregatedSignature]":
+        """
+        Convert this signature into a multisig aggregated signature if it is
+        one, or return `None` otherwise
+        """
+
         return _UniffiConverterOptionalTypeMultisigAggregatedSignature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt,self._uniffi_clone_pointer(),)
         )
@@ -54945,6 +55247,11 @@ class UserSignature():
 
 
     def as_passkey_authenticator(self, ) -> "PasskeyAuthenticator":
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        panic otherwise
+        """
+
         return _UniffiConverterTypePasskeyAuthenticator.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator,self._uniffi_clone_pointer(),)
         )
@@ -54954,6 +55261,11 @@ class UserSignature():
 
 
     def as_passkey_authenticator_opt(self, ) -> "typing.Optional[PasskeyAuthenticator]":
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        return `None` otherwise
+        """
+
         return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt,self._uniffi_clone_pointer(),)
         )
@@ -54963,6 +55275,11 @@ class UserSignature():
 
 
     def as_simple(self, ) -> "SimpleSignature":
+        """
+        Convert this signature into a simple signature if it is one, or panic
+        otherwise
+        """
+
         return _UniffiConverterTypeSimpleSignature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple,self._uniffi_clone_pointer(),)
         )
@@ -54972,6 +55289,11 @@ class UserSignature():
 
 
     def as_simple_opt(self, ) -> "typing.Optional[SimpleSignature]":
+        """
+        Convert this signature into a simple signature if it is one, or return
+        `None` otherwise
+        """
+
         return _UniffiConverterOptionalTypeSimpleSignature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt,self._uniffi_clone_pointer(),)
         )
@@ -54981,6 +55303,10 @@ class UserSignature():
 
 
     def is_move_authenticator(self, ) -> "bool":
+        """
+        Check if this signature is a move authenticator
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator,self._uniffi_clone_pointer(),)
         )
@@ -54990,6 +55316,10 @@ class UserSignature():
 
 
     def is_multisig(self, ) -> "bool":
+        """
+        Check if this signature is a multisig aggregated signature
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig,self._uniffi_clone_pointer(),)
         )
@@ -54999,6 +55329,10 @@ class UserSignature():
 
 
     def is_passkey_authenticator(self, ) -> "bool":
+        """
+        Check if this signature is a passkey authenticator
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator,self._uniffi_clone_pointer(),)
         )
@@ -55008,6 +55342,10 @@ class UserSignature():
 
 
     def is_simple(self, ) -> "bool":
+        """
+        Check if this signature is a simple signature
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple,self._uniffi_clone_pointer(),)
         )

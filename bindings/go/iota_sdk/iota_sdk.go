@@ -5742,7 +5742,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1()
 	})
-	if checksum != 3713 {
+	if checksum != 52452 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1: UniFFI API checksum mismatch")
 	}
@@ -6723,7 +6723,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address()
 	})
-	if checksum != 19200 {
+	if checksum != 13454 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address: UniFFI API checksum mismatch")
 	}
@@ -6732,7 +6732,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
 	})
-	if checksum != 36265 {
+	if checksum != 12290 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt: UniFFI API checksum mismatch")
 	}
@@ -6741,7 +6741,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object()
 	})
-	if checksum != 42917 {
+	if checksum != 59703 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object: UniFFI API checksum mismatch")
 	}
@@ -6750,7 +6750,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
 	})
-	if checksum != 17159 {
+	if checksum != 36165 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
 	}
@@ -6759,7 +6759,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared()
 	})
-	if checksum != 17030 {
+	if checksum != 29299 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
 	}
@@ -6768,7 +6768,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt()
 	})
-	if checksum != 58784 {
+	if checksum != 50412 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt: UniFFI API checksum mismatch")
 	}
@@ -6777,7 +6777,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_address()
 	})
-	if checksum != 26982 {
+	if checksum != 32708 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_address: UniFFI API checksum mismatch")
 	}
@@ -6786,7 +6786,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable()
 	})
-	if checksum != 23542 {
+	if checksum != 40785 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable: UniFFI API checksum mismatch")
 	}
@@ -6795,7 +6795,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_object()
 	})
-	if checksum != 29892 {
+	if checksum != 64545 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_object: UniFFI API checksum mismatch")
 	}
@@ -6804,7 +6804,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared()
 	})
-	if checksum != 6506 {
+	if checksum != 14080 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_shared: UniFFI API checksum mismatch")
 	}
@@ -8595,7 +8595,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag()
 	})
-	if checksum != 1715 {
+	if checksum != 51024 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag: UniFFI API checksum mismatch")
 	}
@@ -8604,7 +8604,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt()
 	})
-	if checksum != 15734 {
+	if checksum != 12717 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt: UniFFI API checksum mismatch")
 	}
@@ -8613,7 +8613,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag()
 	})
-	if checksum != 20180 {
+	if checksum != 26078 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag: UniFFI API checksum mismatch")
 	}
@@ -8622,7 +8622,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt()
 	})
-	if checksum != 55130 {
+	if checksum != 559 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt: UniFFI API checksum mismatch")
 	}
@@ -8631,7 +8631,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address()
 	})
-	if checksum != 38219 {
+	if checksum != 3196 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_address: UniFFI API checksum mismatch")
 	}
@@ -8640,7 +8640,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool()
 	})
-	if checksum != 30264 {
+	if checksum != 8646 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool: UniFFI API checksum mismatch")
 	}
@@ -8649,7 +8649,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer()
 	})
-	if checksum != 57678 {
+	if checksum != 64789 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer: UniFFI API checksum mismatch")
 	}
@@ -8658,7 +8658,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct()
 	})
-	if checksum != 39029 {
+	if checksum != 53288 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct: UniFFI API checksum mismatch")
 	}
@@ -8667,7 +8667,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128()
 	})
-	if checksum != 65460 {
+	if checksum != 16044 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128: UniFFI API checksum mismatch")
 	}
@@ -8676,7 +8676,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16()
 	})
-	if checksum != 34540 {
+	if checksum != 11071 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16: UniFFI API checksum mismatch")
 	}
@@ -8685,7 +8685,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256()
 	})
-	if checksum != 65130 {
+	if checksum != 45225 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256: UniFFI API checksum mismatch")
 	}
@@ -8694,7 +8694,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32()
 	})
-	if checksum != 40795 {
+	if checksum != 18818 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32: UniFFI API checksum mismatch")
 	}
@@ -8703,7 +8703,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64()
 	})
-	if checksum != 28705 {
+	if checksum != 25432 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64: UniFFI API checksum mismatch")
 	}
@@ -8712,7 +8712,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8()
 	})
-	if checksum != 18761 {
+	if checksum != 48795 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8: UniFFI API checksum mismatch")
 	}
@@ -8721,7 +8721,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector()
 	})
-	if checksum != 49992 {
+	if checksum != 34277 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector: UniFFI API checksum mismatch")
 	}
@@ -8784,7 +8784,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator()
 	})
-	if checksum != 62044 {
+	if checksum != 15704 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8793,7 +8793,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
 	})
-	if checksum != 31940 {
+	if checksum != 59885 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt: UniFFI API checksum mismatch")
 	}
@@ -8802,7 +8802,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig()
 	})
-	if checksum != 36332 {
+	if checksum != 28431 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig: UniFFI API checksum mismatch")
 	}
@@ -8811,7 +8811,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt()
 	})
-	if checksum != 21895 {
+	if checksum != 59107 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt: UniFFI API checksum mismatch")
 	}
@@ -8820,7 +8820,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator()
 	})
-	if checksum != 38663 {
+	if checksum != 45173 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8829,7 +8829,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
 	})
-	if checksum != 5213 {
+	if checksum != 48689 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt: UniFFI API checksum mismatch")
 	}
@@ -8838,7 +8838,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple()
 	})
-	if checksum != 57455 {
+	if checksum != 46116 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple: UniFFI API checksum mismatch")
 	}
@@ -8847,7 +8847,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt()
 	})
-	if checksum != 47248 {
+	if checksum != 31595 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt: UniFFI API checksum mismatch")
 	}
@@ -8856,7 +8856,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator()
 	})
-	if checksum != 59771 {
+	if checksum != 60222 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8865,7 +8865,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig()
 	})
-	if checksum != 61839 {
+	if checksum != 30648 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig: UniFFI API checksum mismatch")
 	}
@@ -8874,7 +8874,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator()
 	})
-	if checksum != 7851 {
+	if checksum != 47124 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8883,7 +8883,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple()
 	})
-	if checksum != 58211 {
+	if checksum != 8542 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple: UniFFI API checksum mismatch")
 	}
@@ -23636,6 +23636,8 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 // by the Move authenticate function during the Account Abstraction
 // authentication flow.
 type MoveAuthenticatorInterface interface {
+	// Convert this move authenticator into a version 1 move authenticator if
+	// it is one, or panic otherwise
 	AsV1() *MoveAuthenticatorV1
 }
 // MoveAuthenticator is a signature variant that enables a method of
@@ -23655,6 +23657,8 @@ func MoveAuthenticatorNewV1(moveAuthenticatorV1 *MoveAuthenticatorV1) *MoveAuthe
 
 
 
+// Convert this move authenticator into a version 1 move authenticator if
+// it is one, or panic otherwise
 func (_self *MoveAuthenticator) AsV1() *MoveAuthenticatorV1 {
 	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
 	defer _self.ffiObject.decrementPointer()
@@ -27693,15 +27697,29 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // owner-immutable = %d03
 // ```
 type OwnerInterface interface {
+	// Convert this owner into an address owner if it is one, or panic
+	// otherwise
 	AsAddress() *Address
+	// Convert this owner into an address owner if it is one, or return `None`
+	// otherwise
 	AsAddressOpt() **Address
+	// Convert this owner into an object owner if it is one, or panic otherwise
 	AsObject() *ObjectId
+	// Convert this owner into an object owner if it is one, or return `None`
+	// otherwise
 	AsObjectOpt() **ObjectId
+	// Convert this owner into a shared owner if it is one, or panic otherwise
 	AsShared() *Version
+	// Convert this owner into a shared owner if it is one, or return `None`
+	// otherwise
 	AsSharedOpt() **Version
+	// Check if this is an address owner
 	IsAddress() bool
+	// Check if this is an immutable owner
 	IsImmutable() bool
+	// Check if this is an object owner
 	IsObject() bool
+	// Check if this is a shared owner
 	IsShared() bool
 }
 // Enum of different types of ownership for an object.
@@ -27749,6 +27767,8 @@ func OwnerNewShared(version *Version) *Owner {
 
 
 
+// Convert this owner into an address owner if it is one, or panic
+// otherwise
 func (_self *Owner) AsAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27758,6 +27778,8 @@ func (_self *Owner) AsAddress() *Address {
 	}))
 }
 
+// Convert this owner into an address owner if it is one, or return `None`
+// otherwise
 func (_self *Owner) AsAddressOpt() **Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27769,6 +27791,7 @@ func (_self *Owner) AsAddressOpt() **Address {
 	}))
 }
 
+// Convert this owner into an object owner if it is one, or panic otherwise
 func (_self *Owner) AsObject() *ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27778,6 +27801,8 @@ func (_self *Owner) AsObject() *ObjectId {
 	}))
 }
 
+// Convert this owner into an object owner if it is one, or return `None`
+// otherwise
 func (_self *Owner) AsObjectOpt() **ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27789,6 +27814,7 @@ func (_self *Owner) AsObjectOpt() **ObjectId {
 	}))
 }
 
+// Convert this owner into a shared owner if it is one, or panic otherwise
 func (_self *Owner) AsShared() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27798,6 +27824,8 @@ func (_self *Owner) AsShared() *Version {
 	}))
 }
 
+// Convert this owner into a shared owner if it is one, or return `None`
+// otherwise
 func (_self *Owner) AsSharedOpt() **Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27809,6 +27837,7 @@ func (_self *Owner) AsSharedOpt() **Version {
 	}))
 }
 
+// Check if this is an address owner
 func (_self *Owner) IsAddress() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27818,6 +27847,7 @@ func (_self *Owner) IsAddress() bool {
 	}))
 }
 
+// Check if this is an immutable owner
 func (_self *Owner) IsImmutable() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27827,6 +27857,7 @@ func (_self *Owner) IsImmutable() bool {
 	}))
 }
 
+// Check if this is an object owner
 func (_self *Owner) IsObject() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27836,6 +27867,7 @@ func (_self *Owner) IsObject() bool {
 	}))
 }
 
+// Check if this is a shared owner
 func (_self *Owner) IsShared() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -35364,20 +35396,39 @@ func (_ FfiDestroyerTransferObjects) Destroy(value *TransferObjects) {
 // / %d10            ; U256
 // ```
 type TypeTagInterface interface {
+	// Converts this type tag into a struct tag, if it is one, or panics
+	// otherwise.
 	AsStructTag() *StructTag
+	// Converts this type tag into a struct tag, if it is one, or returns
+	// `None` otherwise.
 	AsStructTagOpt() **StructTag
+	// Converts this type tag into the inner type tag of a vector, if it is
+	// one, or panics otherwise.
 	AsVectorTypeTag() *TypeTag
+	// Converts this type tag into the inner type tag of a vector, if it is
+	// one, or returns `None` otherwise.
 	AsVectorTypeTagOpt() **TypeTag
+	// Checks if this type tag is an address.
 	IsAddress() bool
+	// Checks if this type tag is a boolean.
 	IsBool() bool
+	// Checks if this type tag is a signer.
 	IsSigner() bool
+	// Checks if this type tag is a struct.
 	IsStruct() bool
+	// Checks if this type tag is a u128.
 	IsU128() bool
+	// Checks if this type tag is a u16.
 	IsU16() bool
+	// Checks if this type tag is a u256.
 	IsU256() bool
+	// Checks if this type tag is a u32.
 	IsU32() bool
+	// Checks if this type tag is a u64.
 	IsU64() bool
+	// Checks if this type tag is a u8.
 	IsU8() bool
+	// Checks if this type tag is a vector.
 	IsVector() bool
 	// Returns the string representation of this type tag using the
 	// canonical display, with or without a `0x` prefix.
@@ -35475,6 +35526,8 @@ func TypeTagNewVector(typeTag *TypeTag) *TypeTag {
 
 
 
+// Converts this type tag into a struct tag, if it is one, or panics
+// otherwise.
 func (_self *TypeTag) AsStructTag() *StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35484,6 +35537,8 @@ func (_self *TypeTag) AsStructTag() *StructTag {
 	}))
 }
 
+// Converts this type tag into a struct tag, if it is one, or returns
+// `None` otherwise.
 func (_self *TypeTag) AsStructTagOpt() **StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35495,6 +35550,8 @@ func (_self *TypeTag) AsStructTagOpt() **StructTag {
 	}))
 }
 
+// Converts this type tag into the inner type tag of a vector, if it is
+// one, or panics otherwise.
 func (_self *TypeTag) AsVectorTypeTag() *TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35504,6 +35561,8 @@ func (_self *TypeTag) AsVectorTypeTag() *TypeTag {
 	}))
 }
 
+// Converts this type tag into the inner type tag of a vector, if it is
+// one, or returns `None` otherwise.
 func (_self *TypeTag) AsVectorTypeTagOpt() **TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35515,6 +35574,7 @@ func (_self *TypeTag) AsVectorTypeTagOpt() **TypeTag {
 	}))
 }
 
+// Checks if this type tag is an address.
 func (_self *TypeTag) IsAddress() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35524,6 +35584,7 @@ func (_self *TypeTag) IsAddress() bool {
 	}))
 }
 
+// Checks if this type tag is a boolean.
 func (_self *TypeTag) IsBool() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35533,6 +35594,7 @@ func (_self *TypeTag) IsBool() bool {
 	}))
 }
 
+// Checks if this type tag is a signer.
 func (_self *TypeTag) IsSigner() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35542,6 +35604,7 @@ func (_self *TypeTag) IsSigner() bool {
 	}))
 }
 
+// Checks if this type tag is a struct.
 func (_self *TypeTag) IsStruct() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35551,6 +35614,7 @@ func (_self *TypeTag) IsStruct() bool {
 	}))
 }
 
+// Checks if this type tag is a u128.
 func (_self *TypeTag) IsU128() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35560,6 +35624,7 @@ func (_self *TypeTag) IsU128() bool {
 	}))
 }
 
+// Checks if this type tag is a u16.
 func (_self *TypeTag) IsU16() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35569,6 +35634,7 @@ func (_self *TypeTag) IsU16() bool {
 	}))
 }
 
+// Checks if this type tag is a u256.
 func (_self *TypeTag) IsU256() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35578,6 +35644,7 @@ func (_self *TypeTag) IsU256() bool {
 	}))
 }
 
+// Checks if this type tag is a u32.
 func (_self *TypeTag) IsU32() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35587,6 +35654,7 @@ func (_self *TypeTag) IsU32() bool {
 	}))
 }
 
+// Checks if this type tag is a u64.
 func (_self *TypeTag) IsU64() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35596,6 +35664,7 @@ func (_self *TypeTag) IsU64() bool {
 	}))
 }
 
+// Checks if this type tag is a u8.
 func (_self *TypeTag) IsU8() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35605,6 +35674,7 @@ func (_self *TypeTag) IsU8() bool {
 	}))
 }
 
+// Checks if this type tag is a vector.
 func (_self *TypeTag) IsVector() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -36078,17 +36148,37 @@ func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 // as `bytes` meaning it has a length prefix that defines the length of
 // the completely serialized signature.
 type UserSignatureInterface interface {
+	// Convert this signature into a move authenticator if it is one, or panic
+	// otherwise
 	AsMoveAuthenticator() *MoveAuthenticator
+	// Convert this signature into a move authenticator if it is one, or return
+	// `None` otherwise
 	AsMoveAuthenticatorOpt() **MoveAuthenticator
+	// Convert this signature into a multisig aggregated signature if it is
+	// one, or panic otherwise
 	AsMultisig() *MultisigAggregatedSignature
+	// Convert this signature into a multisig aggregated signature if it is
+	// one, or return `None` otherwise
 	AsMultisigOpt() **MultisigAggregatedSignature
+	// Convert this signature into a passkey authenticator if it is one, or
+	// panic otherwise
 	AsPasskeyAuthenticator() *PasskeyAuthenticator
+	// Convert this signature into a passkey authenticator if it is one, or
+	// return `None` otherwise
 	AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator
+	// Convert this signature into a simple signature if it is one, or panic
+	// otherwise
 	AsSimple() *SimpleSignature
+	// Convert this signature into a simple signature if it is one, or return
+	// `None` otherwise
 	AsSimpleOpt() **SimpleSignature
+	// Check if this signature is a move authenticator
 	IsMoveAuthenticator() bool
+	// Check if this signature is a multisig aggregated signature
 	IsMultisig() bool
+	// Check if this signature is a passkey authenticator
 	IsPasskeyAuthenticator() bool
+	// Check if this signature is a simple signature
 	IsSimple() bool
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
@@ -36169,6 +36259,8 @@ func UserSignatureNewSimple(signature *SimpleSignature) *UserSignature {
 
 
 
+// Convert this signature into a move authenticator if it is one, or panic
+// otherwise
 func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36178,6 +36270,8 @@ func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
 	}))
 }
 
+// Convert this signature into a move authenticator if it is one, or return
+// `None` otherwise
 func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36189,6 +36283,8 @@ func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
 	}))
 }
 
+// Convert this signature into a multisig aggregated signature if it is
+// one, or panic otherwise
 func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36198,6 +36294,8 @@ func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	}))
 }
 
+// Convert this signature into a multisig aggregated signature if it is
+// one, or return `None` otherwise
 func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36209,6 +36307,8 @@ func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
 	}))
 }
 
+// Convert this signature into a passkey authenticator if it is one, or
+// panic otherwise
 func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36218,6 +36318,8 @@ func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	}))
 }
 
+// Convert this signature into a passkey authenticator if it is one, or
+// return `None` otherwise
 func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36229,6 +36331,8 @@ func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
 	}))
 }
 
+// Convert this signature into a simple signature if it is one, or panic
+// otherwise
 func (_self *UserSignature) AsSimple() *SimpleSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36238,6 +36342,8 @@ func (_self *UserSignature) AsSimple() *SimpleSignature {
 	}))
 }
 
+// Convert this signature into a simple signature if it is one, or return
+// `None` otherwise
 func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36249,6 +36355,7 @@ func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
 	}))
 }
 
+// Check if this signature is a move authenticator
 func (_self *UserSignature) IsMoveAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36258,6 +36365,7 @@ func (_self *UserSignature) IsMoveAuthenticator() bool {
 	}))
 }
 
+// Check if this signature is a multisig aggregated signature
 func (_self *UserSignature) IsMultisig() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36267,6 +36375,7 @@ func (_self *UserSignature) IsMultisig() bool {
 	}))
 }
 
+// Check if this signature is a passkey authenticator
 func (_self *UserSignature) IsPasskeyAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -36276,6 +36385,7 @@ func (_self *UserSignature) IsPasskeyAuthenticator() bool {
 	}))
 }
 
+// Check if this signature is a simple signature
 func (_self *UserSignature) IsSimple() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()

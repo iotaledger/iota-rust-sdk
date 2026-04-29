@@ -12030,6 +12030,10 @@ public func FfiConverterTypeMoveArg_lower(_ value: MoveArg) -> UnsafeMutableRawP
  */
 public protocol MoveAuthenticatorProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
     func asV1()  -> MoveAuthenticatorV1
     
 }
@@ -12099,6 +12103,10 @@ public static func newV1(moveAuthenticatorV1: MoveAuthenticatorV1) -> MoveAuthen
     
 
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
 open func asV1() -> MoveAuthenticatorV1  {
     return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(self.uniffiClonePointer(),$0
@@ -17107,24 +17115,58 @@ public func FfiConverterTypeObjectType_lower(_ value: ObjectType) -> UnsafeMutab
  */
 public protocol OwnerProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
     func asAddress()  -> Address
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
     func asAddressOpt()  -> Address?
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
     func asObject()  -> ObjectId
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
     func asObjectOpt()  -> ObjectId?
     
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
     func asShared()  -> Version
     
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
     func asSharedOpt()  -> Version?
     
+    /**
+     * Check if this is an address owner
+     */
     func isAddress()  -> Bool
     
+    /**
+     * Check if this is an immutable owner
+     */
     func isImmutable()  -> Bool
     
+    /**
+     * Check if this is an object owner
+     */
     func isObject()  -> Bool
     
+    /**
+     * Check if this is a shared owner
+     */
     func isShared()  -> Bool
     
 }
@@ -17227,6 +17269,10 @@ public static func newShared(version: Version) -> Owner  {
     
 
     
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
 open func asAddress() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_address(self.uniffiClonePointer(),$0
@@ -17234,6 +17280,10 @@ open func asAddress() -> Address  {
 })
 }
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
 open func asAddressOpt() -> Address?  {
     return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(self.uniffiClonePointer(),$0
@@ -17241,6 +17291,9 @@ open func asAddressOpt() -> Address?  {
 })
 }
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
 open func asObject() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_object(self.uniffiClonePointer(),$0
@@ -17248,6 +17301,10 @@ open func asObject() -> ObjectId  {
 })
 }
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
 open func asObjectOpt() -> ObjectId?  {
     return try!  FfiConverterOptionTypeObjectId.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(self.uniffiClonePointer(),$0
@@ -17255,6 +17312,9 @@ open func asObjectOpt() -> ObjectId?  {
 })
 }
     
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
 open func asShared() -> Version  {
     return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared(self.uniffiClonePointer(),$0
@@ -17262,6 +17322,10 @@ open func asShared() -> Version  {
 })
 }
     
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
 open func asSharedOpt() -> Version?  {
     return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(self.uniffiClonePointer(),$0
@@ -17269,6 +17333,9 @@ open func asSharedOpt() -> Version?  {
 })
 }
     
+    /**
+     * Check if this is an address owner
+     */
 open func isAddress() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_address(self.uniffiClonePointer(),$0
@@ -17276,6 +17343,9 @@ open func isAddress() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is an immutable owner
+     */
 open func isImmutable() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(self.uniffiClonePointer(),$0
@@ -17283,6 +17353,9 @@ open func isImmutable() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is an object owner
+     */
 open func isObject() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_object(self.uniffiClonePointer(),$0
@@ -17290,6 +17363,9 @@ open func isObject() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is a shared owner
+     */
 open func isShared() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_shared(self.uniffiClonePointer(),$0
@@ -26128,34 +26204,83 @@ public func FfiConverterTypeTransferObjects_lower(_ value: TransferObjects) -> U
  */
 public protocol TypeTagProtocol: AnyObject, Sendable {
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
     func asStructTag()  -> StructTag
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
     func asStructTagOpt()  -> StructTag?
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
     func asVectorTypeTag()  -> TypeTag
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
     func asVectorTypeTagOpt()  -> TypeTag?
     
+    /**
+     * Checks if this type tag is an address.
+     */
     func isAddress()  -> Bool
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
     func isBool()  -> Bool
     
+    /**
+     * Checks if this type tag is a signer.
+     */
     func isSigner()  -> Bool
     
+    /**
+     * Checks if this type tag is a struct.
+     */
     func isStruct()  -> Bool
     
+    /**
+     * Checks if this type tag is a u128.
+     */
     func isU128()  -> Bool
     
+    /**
+     * Checks if this type tag is a u16.
+     */
     func isU16()  -> Bool
     
+    /**
+     * Checks if this type tag is a u256.
+     */
     func isU256()  -> Bool
     
+    /**
+     * Checks if this type tag is a u32.
+     */
     func isU32()  -> Bool
     
+    /**
+     * Checks if this type tag is a u64.
+     */
     func isU64()  -> Bool
     
+    /**
+     * Checks if this type tag is a u8.
+     */
     func isU8()  -> Bool
     
+    /**
+     * Checks if this type tag is a vector.
+     */
     func isVector()  -> Bool
     
     /**
@@ -26317,6 +26442,10 @@ public static func newVector(typeTag: TypeTag) -> TypeTag  {
     
 
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
 open func asStructTag() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(self.uniffiClonePointer(),$0
@@ -26324,6 +26453,10 @@ open func asStructTag() -> StructTag  {
 })
 }
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
 open func asStructTagOpt() -> StructTag?  {
     return try!  FfiConverterOptionTypeStructTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(self.uniffiClonePointer(),$0
@@ -26331,6 +26464,10 @@ open func asStructTagOpt() -> StructTag?  {
 })
 }
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
 open func asVectorTypeTag() -> TypeTag  {
     return try!  FfiConverterTypeTypeTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(self.uniffiClonePointer(),$0
@@ -26338,6 +26475,10 @@ open func asVectorTypeTag() -> TypeTag  {
 })
 }
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
 open func asVectorTypeTagOpt() -> TypeTag?  {
     return try!  FfiConverterOptionTypeTypeTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(self.uniffiClonePointer(),$0
@@ -26345,6 +26486,9 @@ open func asVectorTypeTagOpt() -> TypeTag?  {
 })
 }
     
+    /**
+     * Checks if this type tag is an address.
+     */
 open func isAddress() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_address(self.uniffiClonePointer(),$0
@@ -26352,6 +26496,9 @@ open func isAddress() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
 open func isBool() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(self.uniffiClonePointer(),$0
@@ -26359,6 +26506,9 @@ open func isBool() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a signer.
+     */
 open func isSigner() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(self.uniffiClonePointer(),$0
@@ -26366,6 +26516,9 @@ open func isSigner() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a struct.
+     */
 open func isStruct() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(self.uniffiClonePointer(),$0
@@ -26373,6 +26526,9 @@ open func isStruct() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u128.
+     */
 open func isU128() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(self.uniffiClonePointer(),$0
@@ -26380,6 +26536,9 @@ open func isU128() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u16.
+     */
 open func isU16() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(self.uniffiClonePointer(),$0
@@ -26387,6 +26546,9 @@ open func isU16() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u256.
+     */
 open func isU256() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(self.uniffiClonePointer(),$0
@@ -26394,6 +26556,9 @@ open func isU256() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u32.
+     */
 open func isU32() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(self.uniffiClonePointer(),$0
@@ -26401,6 +26566,9 @@ open func isU32() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u64.
+     */
 open func isU64() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(self.uniffiClonePointer(),$0
@@ -26408,6 +26576,9 @@ open func isU64() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u8.
+     */
 open func isU8() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(self.uniffiClonePointer(),$0
@@ -26415,6 +26586,9 @@ open func isU8() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a vector.
+     */
 open func isVector() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(self.uniffiClonePointer(),$0
@@ -26981,28 +27155,72 @@ public func FfiConverterTypeUpgradePolicy_lower(_ value: UpgradePolicy) -> Unsaf
  */
 public protocol UserSignatureProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
     func asMoveAuthenticator()  -> MoveAuthenticator
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
     func asMoveAuthenticatorOpt()  -> MoveAuthenticator?
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
     func asMultisig()  -> MultisigAggregatedSignature
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
     func asMultisigOpt()  -> MultisigAggregatedSignature?
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
     func asPasskeyAuthenticator()  -> PasskeyAuthenticator
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
     func asPasskeyAuthenticatorOpt()  -> PasskeyAuthenticator?
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
     func asSimple()  -> SimpleSignature
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
     func asSimpleOpt()  -> SimpleSignature?
     
+    /**
+     * Check if this signature is a move authenticator
+     */
     func isMoveAuthenticator()  -> Bool
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
     func isMultisig()  -> Bool
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
     func isPasskeyAuthenticator()  -> Bool
     
+    /**
+     * Check if this signature is a simple signature
+     */
     func isSimple()  -> Bool
     
     /**
@@ -27136,6 +27354,10 @@ public static func newSimple(signature: SimpleSignature) -> UserSignature  {
     
 
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
 open func asMoveAuthenticator() -> MoveAuthenticator  {
     return try!  FfiConverterTypeMoveAuthenticator_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(self.uniffiClonePointer(),$0
@@ -27143,6 +27365,10 @@ open func asMoveAuthenticator() -> MoveAuthenticator  {
 })
 }
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
 open func asMoveAuthenticatorOpt() -> MoveAuthenticator?  {
     return try!  FfiConverterOptionTypeMoveAuthenticator.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(self.uniffiClonePointer(),$0
@@ -27150,6 +27376,10 @@ open func asMoveAuthenticatorOpt() -> MoveAuthenticator?  {
 })
 }
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
 open func asMultisig() -> MultisigAggregatedSignature  {
     return try!  FfiConverterTypeMultisigAggregatedSignature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(self.uniffiClonePointer(),$0
@@ -27157,6 +27387,10 @@ open func asMultisig() -> MultisigAggregatedSignature  {
 })
 }
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
 open func asMultisigOpt() -> MultisigAggregatedSignature?  {
     return try!  FfiConverterOptionTypeMultisigAggregatedSignature.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(self.uniffiClonePointer(),$0
@@ -27164,6 +27398,10 @@ open func asMultisigOpt() -> MultisigAggregatedSignature?  {
 })
 }
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
 open func asPasskeyAuthenticator() -> PasskeyAuthenticator  {
     return try!  FfiConverterTypePasskeyAuthenticator_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(self.uniffiClonePointer(),$0
@@ -27171,6 +27409,10 @@ open func asPasskeyAuthenticator() -> PasskeyAuthenticator  {
 })
 }
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
 open func asPasskeyAuthenticatorOpt() -> PasskeyAuthenticator?  {
     return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(self.uniffiClonePointer(),$0
@@ -27178,6 +27420,10 @@ open func asPasskeyAuthenticatorOpt() -> PasskeyAuthenticator?  {
 })
 }
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
 open func asSimple() -> SimpleSignature  {
     return try!  FfiConverterTypeSimpleSignature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(self.uniffiClonePointer(),$0
@@ -27185,6 +27431,10 @@ open func asSimple() -> SimpleSignature  {
 })
 }
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
 open func asSimpleOpt() -> SimpleSignature?  {
     return try!  FfiConverterOptionTypeSimpleSignature.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(self.uniffiClonePointer(),$0
@@ -27192,6 +27442,9 @@ open func asSimpleOpt() -> SimpleSignature?  {
 })
 }
     
+    /**
+     * Check if this signature is a move authenticator
+     */
 open func isMoveAuthenticator() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(self.uniffiClonePointer(),$0
@@ -27199,6 +27452,9 @@ open func isMoveAuthenticator() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
 open func isMultisig() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(self.uniffiClonePointer(),$0
@@ -27206,6 +27462,9 @@ open func isMultisig() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
 open func isPasskeyAuthenticator() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(self.uniffiClonePointer(),$0
@@ -27213,6 +27472,9 @@ open func isPasskeyAuthenticator() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a simple signature
+     */
 open func isSimple() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(self.uniffiClonePointer(),$0
@@ -47763,7 +48025,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713) {
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 52452) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948) {
@@ -48090,34 +48352,34 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 40785) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 64545) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 14080) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642) {
@@ -48714,49 +48976,49 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_transferobjects_objects() != 24154) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 51024) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 12717) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 26078) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 559) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 3196) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 8646) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 64789) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 53288) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 16044) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 11071) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 45225) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 18818) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 25432) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 48795) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 34277) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741) {
@@ -48777,40 +49039,40 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 30648) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 47124) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 8542) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381) {

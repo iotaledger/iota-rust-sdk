@@ -20893,8 +20893,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1();
-            if (checksum != 3713) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1` checksum `3713`, library returned `{checksum}`");
+            if (checksum != 52452) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1` checksum `52452`, library returned `{checksum}`");
             }
         }
         {
@@ -21547,62 +21547,62 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address();
-            if (checksum != 19200) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_address` checksum `19200`, library returned `{checksum}`");
+            if (checksum != 13454) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_address` checksum `13454`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt();
-            if (checksum != 36265) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt` checksum `36265`, library returned `{checksum}`");
+            if (checksum != 12290) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt` checksum `12290`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object();
-            if (checksum != 42917) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object` checksum `42917`, library returned `{checksum}`");
+            if (checksum != 59703) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object` checksum `59703`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt();
-            if (checksum != 17159) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt` checksum `17159`, library returned `{checksum}`");
+            if (checksum != 36165) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt` checksum `36165`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared();
-            if (checksum != 17030) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared` checksum `17030`, library returned `{checksum}`");
+            if (checksum != 29299) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared` checksum `29299`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt();
-            if (checksum != 58784) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt` checksum `58784`, library returned `{checksum}`");
+            if (checksum != 50412) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt` checksum `50412`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address();
-            if (checksum != 26982) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_address` checksum `26982`, library returned `{checksum}`");
+            if (checksum != 32708) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_address` checksum `32708`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable();
-            if (checksum != 23542) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable` checksum `23542`, library returned `{checksum}`");
+            if (checksum != 40785) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable` checksum `40785`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object();
-            if (checksum != 29892) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_object` checksum `29892`, library returned `{checksum}`");
+            if (checksum != 64545) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_object` checksum `64545`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared();
-            if (checksum != 6506) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_shared` checksum `6506`, library returned `{checksum}`");
+            if (checksum != 14080) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_is_shared` checksum `14080`, library returned `{checksum}`");
             }
         }
         {
@@ -22795,92 +22795,92 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag();
-            if (checksum != 1715) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag` checksum `1715`, library returned `{checksum}`");
+            if (checksum != 51024) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag` checksum `51024`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt();
-            if (checksum != 15734) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt` checksum `15734`, library returned `{checksum}`");
+            if (checksum != 12717) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt` checksum `12717`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag();
-            if (checksum != 20180) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag` checksum `20180`, library returned `{checksum}`");
+            if (checksum != 26078) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag` checksum `26078`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt();
-            if (checksum != 55130) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt` checksum `55130`, library returned `{checksum}`");
+            if (checksum != 559) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt` checksum `559`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address();
-            if (checksum != 38219) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_address` checksum `38219`, library returned `{checksum}`");
+            if (checksum != 3196) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_address` checksum `3196`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool();
-            if (checksum != 30264) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool` checksum `30264`, library returned `{checksum}`");
+            if (checksum != 8646) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool` checksum `8646`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer();
-            if (checksum != 57678) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer` checksum `57678`, library returned `{checksum}`");
+            if (checksum != 64789) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer` checksum `64789`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct();
-            if (checksum != 39029) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct` checksum `39029`, library returned `{checksum}`");
+            if (checksum != 53288) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct` checksum `53288`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128();
-            if (checksum != 65460) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128` checksum `65460`, library returned `{checksum}`");
+            if (checksum != 16044) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128` checksum `16044`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16();
-            if (checksum != 34540) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16` checksum `34540`, library returned `{checksum}`");
+            if (checksum != 11071) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16` checksum `11071`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256();
-            if (checksum != 65130) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256` checksum `65130`, library returned `{checksum}`");
+            if (checksum != 45225) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256` checksum `45225`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32();
-            if (checksum != 40795) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32` checksum `40795`, library returned `{checksum}`");
+            if (checksum != 18818) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32` checksum `18818`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64();
-            if (checksum != 28705) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64` checksum `28705`, library returned `{checksum}`");
+            if (checksum != 25432) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64` checksum `25432`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8();
-            if (checksum != 18761) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8` checksum `18761`, library returned `{checksum}`");
+            if (checksum != 48795) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8` checksum `48795`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector();
-            if (checksum != 49992) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector` checksum `49992`, library returned `{checksum}`");
+            if (checksum != 34277) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector` checksum `34277`, library returned `{checksum}`");
             }
         }
         {
@@ -22921,74 +22921,74 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator();
-            if (checksum != 62044) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator` checksum `62044`, library returned `{checksum}`");
+            if (checksum != 15704) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator` checksum `15704`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt();
-            if (checksum != 31940) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt` checksum `31940`, library returned `{checksum}`");
+            if (checksum != 59885) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt` checksum `59885`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig();
-            if (checksum != 36332) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig` checksum `36332`, library returned `{checksum}`");
+            if (checksum != 28431) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig` checksum `28431`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt();
-            if (checksum != 21895) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt` checksum `21895`, library returned `{checksum}`");
+            if (checksum != 59107) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt` checksum `59107`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator();
-            if (checksum != 38663) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator` checksum `38663`, library returned `{checksum}`");
+            if (checksum != 45173) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator` checksum `45173`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt();
-            if (checksum != 5213) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt` checksum `5213`, library returned `{checksum}`");
+            if (checksum != 48689) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt` checksum `48689`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple();
-            if (checksum != 57455) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple` checksum `57455`, library returned `{checksum}`");
+            if (checksum != 46116) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple` checksum `46116`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt();
-            if (checksum != 47248) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt` checksum `47248`, library returned `{checksum}`");
+            if (checksum != 31595) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt` checksum `31595`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator();
-            if (checksum != 59771) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator` checksum `59771`, library returned `{checksum}`");
+            if (checksum != 60222) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator` checksum `60222`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig();
-            if (checksum != 61839) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig` checksum `61839`, library returned `{checksum}`");
+            if (checksum != 30648) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig` checksum `30648`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator();
-            if (checksum != 7851) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator` checksum `7851`, library returned `{checksum}`");
+            if (checksum != 47124) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator` checksum `47124`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple();
-            if (checksum != 58211) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple` checksum `58211`, library returned `{checksum}`");
+            if (checksum != 8542) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple` checksum `8542`, library returned `{checksum}`");
             }
         }
         {
@@ -37755,6 +37755,10 @@ class FfiConverterTypeMoveArg: FfiConverter<MoveArg, IntPtr> {
 /// authentication flow.
 /// </summary>
 public interface IMoveAuthenticator {
+    /// <summary>
+    /// Convert this move authenticator into a version 1 move authenticator if
+    /// it is one, or panic otherwise
+    /// </summary>
     MoveAuthenticatorV1 AsV1();
 }
 /// <summary>
@@ -37852,6 +37856,10 @@ public class MoveAuthenticator : IMoveAuthenticator, IDisposable {
     }
 
     
+    /// <summary>
+    /// Convert this move authenticator into a version 1 move authenticator if
+    /// it is one, or panic otherwise
+    /// </summary>
     public MoveAuthenticatorV1 AsV1() {
         return CallWithPointer(thisPtr => FfiConverterTypeMoveAuthenticatorV1.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42791,15 +42799,49 @@ class FfiConverterTypeObjectType: FfiConverter<ObjectType, IntPtr> {
 /// ```
 /// </summary>
 public interface IOwner: IEquatable<Owner> {
+    /// <summary>
+    /// Convert this owner into an address owner if it is one, or panic
+    /// otherwise
+    /// </summary>
     Address AsAddress();
+    /// <summary>
+    /// Convert this owner into an address owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     Address? AsAddressOpt();
+    /// <summary>
+    /// Convert this owner into an object owner if it is one, or panic otherwise
+    /// </summary>
     ObjectId AsObject();
+    /// <summary>
+    /// Convert this owner into an object owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     ObjectId? AsObjectOpt();
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or panic otherwise
+    /// </summary>
     Version AsShared();
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     Version? AsSharedOpt();
+    /// <summary>
+    /// Check if this is an address owner
+    /// </summary>
     bool IsAddress();
+    /// <summary>
+    /// Check if this is an immutable owner
+    /// </summary>
     bool IsImmutable();
+    /// <summary>
+    /// Check if this is an object owner
+    /// </summary>
     bool IsObject();
+    /// <summary>
+    /// Check if this is a shared owner
+    /// </summary>
     bool IsShared();
 }
 /// <summary>
@@ -42907,6 +42949,10 @@ public class Owner : IOwner, IDisposable {
     }
 
     
+    /// <summary>
+    /// Convert this owner into an address owner if it is one, or panic
+    /// otherwise
+    /// </summary>
     public Address AsAddress() {
         return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42915,6 +42961,10 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this owner into an address owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     public Address? AsAddressOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeAddress.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42923,6 +42973,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this owner into an object owner if it is one, or panic otherwise
+    /// </summary>
     public ObjectId AsObject() {
         return CallWithPointer(thisPtr => FfiConverterTypeObjectId.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42931,6 +42984,10 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this owner into an object owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     public ObjectId? AsObjectOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeObjectId.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42939,6 +42996,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or panic otherwise
+    /// </summary>
     public Version AsShared() {
         return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42947,6 +43007,10 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
     public Version? AsSharedOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42955,6 +43019,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this is an address owner
+    /// </summary>
     public bool IsAddress() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42963,6 +43030,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this is an immutable owner
+    /// </summary>
     public bool IsImmutable() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42971,6 +43041,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this is an object owner
+    /// </summary>
     public bool IsObject() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -42979,6 +43052,9 @@ public class Owner : IOwner, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this is a shared owner
+    /// </summary>
     public bool IsShared() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -51875,20 +51951,69 @@ class FfiConverterTypeTransferObjects: FfiConverter<TransferObjects, IntPtr> {
 /// ```
 /// </summary>
 public interface ITypeTag: IEquatable<TypeTag> {
+    /// <summary>
+    /// Converts this type tag into a struct tag, if it is one, or panics
+    /// otherwise.
+    /// </summary>
     StructTag AsStructTag();
+    /// <summary>
+    /// Converts this type tag into a struct tag, if it is one, or returns
+    /// `None` otherwise.
+    /// </summary>
     StructTag? AsStructTagOpt();
+    /// <summary>
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or panics otherwise.
+    /// </summary>
     TypeTag AsVectorTypeTag();
+    /// <summary>
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or returns `None` otherwise.
+    /// </summary>
     TypeTag? AsVectorTypeTagOpt();
+    /// <summary>
+    /// Checks if this type tag is an address.
+    /// </summary>
     bool IsAddress();
+    /// <summary>
+    /// Checks if this type tag is a boolean.
+    /// </summary>
     bool IsBool();
+    /// <summary>
+    /// Checks if this type tag is a signer.
+    /// </summary>
     bool IsSigner();
+    /// <summary>
+    /// Checks if this type tag is a struct.
+    /// </summary>
     bool IsStruct();
+    /// <summary>
+    /// Checks if this type tag is a u128.
+    /// </summary>
     bool IsU128();
+    /// <summary>
+    /// Checks if this type tag is a u16.
+    /// </summary>
     bool IsU16();
+    /// <summary>
+    /// Checks if this type tag is a u256.
+    /// </summary>
     bool IsU256();
+    /// <summary>
+    /// Checks if this type tag is a u32.
+    /// </summary>
     bool IsU32();
+    /// <summary>
+    /// Checks if this type tag is a u64.
+    /// </summary>
     bool IsU64();
+    /// <summary>
+    /// Checks if this type tag is a u8.
+    /// </summary>
     bool IsU8();
+    /// <summary>
+    /// Checks if this type tag is a vector.
+    /// </summary>
     bool IsVector();
     /// <summary>
     /// Returns the string representation of this type tag using the
@@ -52006,6 +52131,10 @@ public class TypeTag : ITypeTag, IDisposable {
     }
 
     
+    /// <summary>
+    /// Converts this type tag into a struct tag, if it is one, or panics
+    /// otherwise.
+    /// </summary>
     public StructTag AsStructTag() {
         return CallWithPointer(thisPtr => FfiConverterTypeStructTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52014,6 +52143,10 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Converts this type tag into a struct tag, if it is one, or returns
+    /// `None` otherwise.
+    /// </summary>
     public StructTag? AsStructTagOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeStructTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52022,6 +52155,10 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or panics otherwise.
+    /// </summary>
     public TypeTag AsVectorTypeTag() {
         return CallWithPointer(thisPtr => FfiConverterTypeTypeTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52030,6 +52167,10 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or returns `None` otherwise.
+    /// </summary>
     public TypeTag? AsVectorTypeTagOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeTypeTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52038,6 +52179,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is an address.
+    /// </summary>
     public bool IsAddress() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52046,6 +52190,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a boolean.
+    /// </summary>
     public bool IsBool() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52054,6 +52201,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a signer.
+    /// </summary>
     public bool IsSigner() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52062,6 +52212,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a struct.
+    /// </summary>
     public bool IsStruct() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52070,6 +52223,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u128.
+    /// </summary>
     public bool IsU128() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52078,6 +52234,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u16.
+    /// </summary>
     public bool IsU16() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52086,6 +52245,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u256.
+    /// </summary>
     public bool IsU256() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52094,6 +52256,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u32.
+    /// </summary>
     public bool IsU32() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52102,6 +52267,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u64.
+    /// </summary>
     public bool IsU64() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52110,6 +52278,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a u8.
+    /// </summary>
     public bool IsU8() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52118,6 +52289,9 @@ public class TypeTag : ITypeTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this type tag is a vector.
+    /// </summary>
     public bool IsVector() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52717,17 +52891,61 @@ class FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, IntPtr> {
 /// the completely serialized signature.
 /// </summary>
 public interface IUserSignature: IEquatable<UserSignature> {
+    /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or panic
+    /// otherwise
+    /// </summary>
     MoveAuthenticator AsMoveAuthenticator();
+    /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
+    /// </summary>
     MoveAuthenticator? AsMoveAuthenticatorOpt();
+    /// <summary>
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or panic otherwise
+    /// </summary>
     MultisigAggregatedSignature AsMultisig();
+    /// <summary>
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or return `None` otherwise
+    /// </summary>
     MultisigAggregatedSignature? AsMultisigOpt();
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// panic otherwise
+    /// </summary>
     PasskeyAuthenticator AsPasskeyAuthenticator();
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
+    /// </summary>
     PasskeyAuthenticator? AsPasskeyAuthenticatorOpt();
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or panic
+    /// otherwise
+    /// </summary>
     SimpleSignature AsSimple();
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
+    /// </summary>
     SimpleSignature? AsSimpleOpt();
+    /// <summary>
+    /// Check if this signature is a move authenticator
+    /// </summary>
     bool IsMoveAuthenticator();
+    /// <summary>
+    /// Check if this signature is a multisig aggregated signature
+    /// </summary>
     bool IsMultisig();
+    /// <summary>
+    /// Check if this signature is a passkey authenticator
+    /// </summary>
     bool IsPasskeyAuthenticator();
+    /// <summary>
+    /// Check if this signature is a simple signature
+    /// </summary>
     bool IsSimple();
     /// <summary>
     /// Return the flag for this signature scheme
@@ -52846,6 +53064,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
 
     
+    /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or panic
+    /// otherwise
+    /// </summary>
     public MoveAuthenticator AsMoveAuthenticator() {
         return CallWithPointer(thisPtr => FfiConverterTypeMoveAuthenticator.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52854,6 +53076,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
+    /// </summary>
     public MoveAuthenticator? AsMoveAuthenticatorOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveAuthenticator.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52862,6 +53088,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or panic otherwise
+    /// </summary>
     public MultisigAggregatedSignature AsMultisig() {
         return CallWithPointer(thisPtr => FfiConverterTypeMultisigAggregatedSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52870,6 +53100,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or return `None` otherwise
+    /// </summary>
     public MultisigAggregatedSignature? AsMultisigOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeMultisigAggregatedSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52878,6 +53112,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// panic otherwise
+    /// </summary>
     public PasskeyAuthenticator AsPasskeyAuthenticator() {
         return CallWithPointer(thisPtr => FfiConverterTypePasskeyAuthenticator.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52886,6 +53124,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
+    /// </summary>
     public PasskeyAuthenticator? AsPasskeyAuthenticatorOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyAuthenticator.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52894,6 +53136,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or panic
+    /// otherwise
+    /// </summary>
     public SimpleSignature AsSimple() {
         return CallWithPointer(thisPtr => FfiConverterTypeSimpleSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52902,6 +53148,10 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
+    /// </summary>
     public SimpleSignature? AsSimpleOpt() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeSimpleSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52910,6 +53160,9 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this signature is a move authenticator
+    /// </summary>
     public bool IsMoveAuthenticator() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52918,6 +53171,9 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this signature is a multisig aggregated signature
+    /// </summary>
     public bool IsMultisig() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52926,6 +53182,9 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this signature is a passkey authenticator
+    /// </summary>
     public bool IsPasskeyAuthenticator() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -52934,6 +53193,9 @@ public class UserSignature : IUserSignature, IDisposable {
     }
     
     
+    /// <summary>
+    /// Check if this signature is a simple signature
+    /// </summary>
     public bool IsSimple() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>

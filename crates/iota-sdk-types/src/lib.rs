@@ -213,6 +213,7 @@ pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> 
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
         paste::paste! {$(
+        #[doc = "Checks if this is a " $variant:snake " variant."]
         #[inline]
         pub fn [< is_ $variant:snake >](&self) -> bool {
             matches!(self, Self::$variant { .. })
@@ -225,6 +226,7 @@ macro_rules! def_is {
 macro_rules! def_is_as_into_opt {
     (@into $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
@@ -235,6 +237,7 @@ macro_rules! def_is_as_into_opt {
             }
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
             self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($rename)))
@@ -243,6 +246,7 @@ macro_rules! def_is_as_into_opt {
     };
     (@into $variant:ident ($rename:ident) [$inner:ty]) => {
         paste::paste! {
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
@@ -253,6 +257,7 @@ macro_rules! def_is_as_into_opt {
             }
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
             self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
@@ -261,16 +266,19 @@ macro_rules! def_is_as_into_opt {
     };
     (@impl $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
+        #[doc = "Checks if this is a " $rename:snake " variant."]
         #[inline]
         pub fn [< is_ $rename >](&self) -> bool {
             matches!(self, Self::$variant(_))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
             self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
@@ -286,16 +294,19 @@ macro_rules! def_is_as_into_opt {
     };
     (@impl $variant:ident ($rename:ident) [$inner:ty]) => {
         paste::paste! {
+        #[doc = "Checks if this is a " $rename:snake " variant."]
         #[inline]
         pub fn [< is_ $rename >](&self) -> bool {
             matches!(self, Self::$variant(_))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
             self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]

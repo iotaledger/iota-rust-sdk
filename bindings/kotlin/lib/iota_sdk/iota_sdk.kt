@@ -12515,7 +12515,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 52452.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948.toShort()) {
@@ -12842,34 +12842,34 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 40785.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 64545.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 14080.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642.toShort()) {
@@ -13466,49 +13466,49 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_objects() != 24154.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 51024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 12717.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 26078.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 3196.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 8646.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 64789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 53288.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 16044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 11071.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 45225.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 18818.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 25432.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 48795.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 34277.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741.toShort()) {
@@ -13529,40 +13529,40 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 30648.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 47124.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 8542.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381.toShort()) {
@@ -32387,6 +32387,10 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
  */
 public interface MoveAuthenticatorInterface {
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
     fun `asV1`(): MoveAuthenticatorV1
     
     companion object
@@ -32480,7 +32484,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         }
     }
 
-    override fun `asV1`(): MoveAuthenticatorV1 {
+    
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */override fun `asV1`(): MoveAuthenticatorV1 {
             return FfiConverterTypeMoveAuthenticatorV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40282,24 +40290,58 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
  */
 public interface OwnerInterface {
     
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
     fun `asAddress`(): Address
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
     fun `asAddressOpt`(): Address?
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
     fun `asObject`(): ObjectId
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
     fun `asObjectOpt`(): ObjectId?
     
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
     fun `asShared`(): Version
     
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
     fun `asSharedOpt`(): Version?
     
+    /**
+     * Check if this is an address owner
+     */
     fun `isAddress`(): kotlin.Boolean
     
+    /**
+     * Check if this is an immutable owner
+     */
     fun `isImmutable`(): kotlin.Boolean
     
+    /**
+     * Check if this is an object owner
+     */
     fun `isObject`(): kotlin.Boolean
     
+    /**
+     * Check if this is a shared owner
+     */
     fun `isShared`(): kotlin.Boolean
     
     companion object
@@ -40403,7 +40445,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
         }
     }
 
-    override fun `asAddress`(): Address {
+    
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */override fun `asAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40415,7 +40461,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asAddressOpt`(): Address? {
+    
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */override fun `asAddressOpt`(): Address? {
             return FfiConverterOptionalTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40427,7 +40477,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asObject`(): ObjectId {
+    
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */override fun `asObject`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40439,7 +40492,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asObjectOpt`(): ObjectId? {
+    
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */override fun `asObjectOpt`(): ObjectId? {
             return FfiConverterOptionalTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40451,7 +40508,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asShared`(): Version {
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */override fun `asShared`(): Version {
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40463,7 +40523,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asSharedOpt`(): Version? {
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */override fun `asSharedOpt`(): Version? {
             return FfiConverterOptionalTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40475,7 +40539,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isAddress`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an address owner
+     */override fun `isAddress`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40487,7 +40554,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isImmutable`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an immutable owner
+     */override fun `isImmutable`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40499,7 +40569,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isObject`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an object owner
+     */override fun `isObject`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40511,7 +40584,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isShared`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is a shared owner
+     */override fun `isShared`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54196,34 +54272,83 @@ public object FfiConverterTypeTransferObjects: FfiConverter<TransferObjects, Poi
  */
 public interface TypeTagInterface {
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
     fun `asStructTag`(): StructTag
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
     fun `asStructTagOpt`(): StructTag?
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
     fun `asVectorTypeTag`(): TypeTag
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
     fun `asVectorTypeTagOpt`(): TypeTag?
     
+    /**
+     * Checks if this type tag is an address.
+     */
     fun `isAddress`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
     fun `isBool`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a signer.
+     */
     fun `isSigner`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a struct.
+     */
     fun `isStruct`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u128.
+     */
     fun `isU128`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u16.
+     */
     fun `isU16`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u256.
+     */
     fun `isU256`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u32.
+     */
     fun `isU32`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u64.
+     */
     fun `isU64`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u8.
+     */
     fun `isU8`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a vector.
+     */
     fun `isVector`(): kotlin.Boolean
     
     /**
@@ -54338,7 +54463,11 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         }
     }
 
-    override fun `asStructTag`(): StructTag {
+    
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */override fun `asStructTag`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54350,7 +54479,11 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asStructTagOpt`(): StructTag? {
+    
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */override fun `asStructTagOpt`(): StructTag? {
             return FfiConverterOptionalTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54362,7 +54495,11 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asVectorTypeTag`(): TypeTag {
+    
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */override fun `asVectorTypeTag`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54374,7 +54511,11 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asVectorTypeTagOpt`(): TypeTag? {
+    
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */override fun `asVectorTypeTagOpt`(): TypeTag? {
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54386,7 +54527,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isAddress`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is an address.
+     */override fun `isAddress`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54398,7 +54542,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isBool`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a boolean.
+     */override fun `isBool`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54410,7 +54557,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isSigner`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a signer.
+     */override fun `isSigner`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54422,7 +54572,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isStruct`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a struct.
+     */override fun `isStruct`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54434,7 +54587,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU128`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u128.
+     */override fun `isU128`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54446,7 +54602,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU16`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u16.
+     */override fun `isU16`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54458,7 +54617,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU256`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u256.
+     */override fun `isU256`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54470,7 +54632,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU32`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u32.
+     */override fun `isU32`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54482,7 +54647,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU64`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u64.
+     */override fun `isU64`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54494,7 +54662,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU8`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u8.
+     */override fun `isU8`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -54506,7 +54677,10 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isVector`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a vector.
+     */override fun `isVector`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55507,28 +55681,72 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  */
 public interface UserSignatureInterface {
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
     fun `asMoveAuthenticator`(): MoveAuthenticator
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
     fun `asMoveAuthenticatorOpt`(): MoveAuthenticator?
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
     fun `asMultisig`(): MultisigAggregatedSignature
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
     fun `asMultisigOpt`(): MultisigAggregatedSignature?
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
     fun `asPasskeyAuthenticator`(): PasskeyAuthenticator
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
     fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator?
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
     fun `asSimple`(): SimpleSignature
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
     fun `asSimpleOpt`(): SimpleSignature?
     
+    /**
+     * Check if this signature is a move authenticator
+     */
     fun `isMoveAuthenticator`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
     fun `isMultisig`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
     fun `isPasskeyAuthenticator`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a simple signature
+     */
     fun `isSimple`(): kotlin.Boolean
     
     /**
@@ -55646,7 +55864,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         }
     }
 
-    override fun `asMoveAuthenticator`(): MoveAuthenticator {
+    
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */override fun `asMoveAuthenticator`(): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55658,7 +55880,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMoveAuthenticatorOpt`(): MoveAuthenticator? {
+    
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */override fun `asMoveAuthenticatorOpt`(): MoveAuthenticator? {
             return FfiConverterOptionalTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55670,7 +55896,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMultisig`(): MultisigAggregatedSignature {
+    
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */override fun `asMultisig`(): MultisigAggregatedSignature {
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55682,7 +55912,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMultisigOpt`(): MultisigAggregatedSignature? {
+    
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */override fun `asMultisigOpt`(): MultisigAggregatedSignature? {
             return FfiConverterOptionalTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55694,7 +55928,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskeyAuthenticator`(): PasskeyAuthenticator {
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */override fun `asPasskeyAuthenticator`(): PasskeyAuthenticator {
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55706,7 +55944,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator? {
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */override fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator? {
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55718,7 +55960,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asSimple`(): SimpleSignature {
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */override fun `asSimple`(): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55730,7 +55976,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asSimpleOpt`(): SimpleSignature? {
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */override fun `asSimpleOpt`(): SimpleSignature? {
             return FfiConverterOptionalTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55742,7 +55992,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isMoveAuthenticator`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a move authenticator
+     */override fun `isMoveAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55754,7 +56007,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isMultisig`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */override fun `isMultisig`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55766,7 +56022,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isPasskeyAuthenticator`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a passkey authenticator
+     */override fun `isPasskeyAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -55778,7 +56037,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isSimple`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a simple signature
+     */override fun `isSimple`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
