@@ -121,6 +121,18 @@ impl StructTag {
             && self.type_params.is_empty()
     }
 
+    /// Creates a new IOTA-Names [`Name`](crate::iota_names::Name) struct tag
+    /// with the given package address.
+    ///
+    /// ```
+    /// # use iota_sdk_types::{StructTag, iota_names::config::IotaNamesConfig};
+    /// let iota_names_config = IotaNamesConfig::mainnet();
+    /// let package_address = iota_names_config.package_address;
+    /// assert_eq!(
+    ///     StructTag::new_name(package_address).to_canonical_string(true),
+    ///     format!("{package_address}::name::Name")
+    /// );
+    /// ```
     pub fn new_name(address: Address) -> Self {
         Self {
             address,
@@ -130,6 +142,10 @@ impl StructTag {
         }
     }
 
+    /// Checks if this is an IOTA-Names [`Name`](crate::iota_names::Name) type.
+    /// Note that this does not check the package address, so it will return
+    /// true for any struct with the correct module and type name with no
+    /// type params.
     pub fn is_name(&self) -> bool {
         self.module == Identifier::NAME_MODULE
             && self.name == Identifier::NAME
