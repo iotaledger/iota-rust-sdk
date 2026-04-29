@@ -132,7 +132,6 @@ fn parse_generics(
     }
 }
 
-// TODO add proptests
 #[cfg(test)]
 mod tests {
     #[cfg(target_arch = "wasm32")]
