@@ -22712,6 +22712,12 @@ public protocol StructTagProtocol: AnyObject, Sendable {
     
     func isIotaTreasuryCap()  -> Bool
     
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
     func isName()  -> Bool
     
     func isObjectBag()  -> Bool
@@ -23018,6 +23024,10 @@ public static func newIotaTreasuryCap() -> StructTag  {
 })
 }
     
+    /**
+     * Creates a new IOTA-Names `Name` struct tag
+     * with the given package address.
+     */
 public static func newName(address: Address) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
@@ -23339,6 +23349,12 @@ open func isIotaTreasuryCap() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
 open func isName() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_structtag_is_name(self.uniffiClonePointer(),$0
@@ -48499,7 +48515,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722) {
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 56216) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625) {
@@ -49990,7 +50006,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 1519) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890) {

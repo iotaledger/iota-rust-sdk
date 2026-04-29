@@ -22389,8 +22389,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name();
-            if (checksum != 5722) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_structtag_is_name` checksum `5722`, library returned `{checksum}`");
+            if (checksum != 56216) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_structtag_is_name` checksum `56216`, library returned `{checksum}`");
             }
         }
         {
@@ -25371,8 +25371,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name();
-            if (checksum != 26361) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name` checksum `26361`, library returned `{checksum}`");
+            if (checksum != 1519) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name` checksum `1519`, library returned `{checksum}`");
             }
         }
         {
@@ -48459,6 +48459,12 @@ public interface IStructTag: IEquatable<StructTag> {
     bool IsIotaSystemAdminCap();
     bool IsIotaSystemState();
     bool IsIotaTreasuryCap();
+    /// <summary>
+    /// Checks if this is an IOTA-Names `Name` type.
+    /// Note that this does not check the package address, so it will return
+    /// true for any struct with the correct module and type name with no
+    /// type params.
+    /// </summary>
     bool IsName();
     bool IsObjectBag();
     bool IsOption();
@@ -48824,6 +48830,12 @@ public class StructTag : IStructTag, IDisposable {
     }
     
     
+    /// <summary>
+    /// Checks if this is an IOTA-Names `Name` type.
+    /// Note that this does not check the package address, so it will return
+    /// true for any struct with the correct module and type name with no
+    /// type params.
+    /// </summary>
     public bool IsName() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -49197,6 +49209,10 @@ public class StructTag : IStructTag, IDisposable {
 ));
     }
     
+    /// <summary>
+    /// Creates a new IOTA-Names `Name` struct tag
+    /// with the given package address.
+    /// </summary>
     public static StructTag NewName(Address @address) {
         return new StructTag(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>

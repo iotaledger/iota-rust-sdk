@@ -7956,7 +7956,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name()
 	})
-	if checksum != 5722 {
+	if checksum != 56216 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_name: UniFFI API checksum mismatch")
 	}
@@ -12429,7 +12429,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name()
 	})
-	if checksum != 26361 {
+	if checksum != 1519 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name: UniFFI API checksum mismatch")
 	}
@@ -32495,6 +32495,10 @@ type StructTagInterface interface {
 	IsIotaSystemAdminCap() bool
 	IsIotaSystemState() bool
 	IsIotaTreasuryCap() bool
+	// Checks if this is an IOTA-Names `Name` type.
+	// Note that this does not check the package address, so it will return
+	// true for any struct with the correct module and type name with no
+	// type params.
 	IsName() bool
 	IsObjectBag() bool
 	IsOption() bool
@@ -32684,6 +32688,8 @@ func StructTagNewIotaTreasuryCap() *StructTag {
 	}))
 }
 
+// Creates a new IOTA-Names `Name` struct tag
+// with the given package address.
 func StructTagNewName(address *Address) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(FfiConverterAddressINSTANCE.Lower(address),_uniffiStatus)
@@ -33030,6 +33036,10 @@ func (_self *StructTag) IsIotaTreasuryCap() bool {
 	}))
 }
 
+// Checks if this is an IOTA-Names `Name` type.
+// Note that this does not check the package address, so it will return
+// true for any struct with the correct module and type name with no
+// type params.
 func (_self *StructTag) IsName() bool {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()

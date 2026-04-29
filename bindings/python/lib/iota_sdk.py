@@ -2143,7 +2143,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 56216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3137,7 +3137,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 1519:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -51041,6 +51041,13 @@ class StructTagProtocol(typing.Protocol):
     def is_iota_treasury_cap(self, ):
         raise NotImplementedError
     def is_name(self, ):
+        """
+        Checks if this is an IOTA-Names `Name` type.
+        Note that this does not check the package address, so it will return
+        true for any struct with the correct module and type name with no
+        type params.
+        """
+
         raise NotImplementedError
     def is_object_bag(self, ):
         raise NotImplementedError
@@ -51326,6 +51333,11 @@ class StructTag():
 
     @classmethod
     def new_name(cls, address: "Address"):
+        """
+        Creates a new IOTA-Names `Name` struct tag
+        with the given package address.
+        """
+
         _UniffiConverterTypeAddress.check_lower(address)
         
         # Call the (fallible) function before creating any half-baked object instances.
@@ -51693,6 +51705,13 @@ class StructTag():
 
 
     def is_name(self, ) -> "bool":
+        """
+        Checks if this is an IOTA-Names `Name` type.
+        Note that this does not check the package address, so it will return
+        true for any struct with the correct module and type name with no
+        type params.
+        """
+
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_name,self._uniffi_clone_pointer(),)
         )

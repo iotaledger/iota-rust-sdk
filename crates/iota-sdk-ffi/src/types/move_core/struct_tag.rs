@@ -44,11 +44,17 @@ impl StructTag {
         ))
     }
 
+    /// Creates a new IOTA-Names `Name` struct tag
+    /// with the given package address.
     #[uniffi::constructor]
     pub fn new_name(address: &Address) -> Self {
         Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
+    /// Checks if this is an IOTA-Names `Name` type.
+    /// Note that this does not check the package address, so it will return
+    /// true for any struct with the correct module and type name with no
+    /// type params.
     pub fn is_name(&self) -> bool {
         self.0.is_name()
     }

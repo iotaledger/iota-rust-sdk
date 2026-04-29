@@ -13265,7 +13265,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 56216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625.toShort()) {
@@ -14756,7 +14756,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 1519.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890.toShort()) {
@@ -49090,6 +49090,12 @@ public interface StructTagInterface {
     
     fun `isIotaTreasuryCap`(): kotlin.Boolean
     
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
     fun `isName`(): kotlin.Boolean
     
     fun `isObjectBag`(): kotlin.Boolean
@@ -49577,7 +49583,13 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-    override fun `isName`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */override fun `isName`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -50115,7 +50127,11 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newName`(`address`: Address): StructTag {
+        
+    /**
+     * Creates a new IOTA-Names `Name` struct tag
+     * with the given package address.
+     */ fun `newName`(`address`: Address): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
