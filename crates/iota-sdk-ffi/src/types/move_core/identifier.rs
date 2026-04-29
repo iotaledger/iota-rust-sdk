@@ -112,7 +112,7 @@ export_identifier_consts!(
     UPGRADE_CAP,
     UPGRADE_RECEIPT,
     UPGRADE_TICKET,
-    URL_TYPE,
+    URL,
     VERSION_UPDATED,
     WRAPPER,
 );

@@ -204,7 +204,7 @@ impl Identifier {
     pub const UPGRADE_CAP: Self = Self::from_static("UpgradeCap");
     pub const UPGRADE_RECEIPT: Self = Self::from_static("UpgradeReceipt");
     pub const UPGRADE_TICKET: Self = Self::from_static("UpgradeTicket");
-    pub const URL_TYPE: Self = Self::from_static("Url");
+    pub const URL: Self = Self::from_static("Url");
     pub const VERSION_UPDATED: Self = Self::from_static("VersionUpdated");
     pub const WRAPPER: Self = Self::from_static("Wrapper");
 }
