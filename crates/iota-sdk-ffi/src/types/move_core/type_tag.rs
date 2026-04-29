@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use crate::types::struct_tag::StructTag;
+use crate::types::move_core::struct_tag::StructTag;
 
 /// Type of a move value
 ///
@@ -12,29 +12,17 @@ use crate::types::struct_tag::StructTag;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// type-tag = type-tag-u8 \
-///            type-tag-u16 \
-///            type-tag-u32 \
-///            type-tag-u64 \
-///            type-tag-u128 \
-///            type-tag-u256 \
-///            type-tag-bool \
-///            type-tag-address \
-///            type-tag-signer \
-///            type-tag-vector \
-///            type-tag-struct
-///
-/// type-tag-u8 = %d01
-/// type-tag-u16 = %d08
-/// type-tag-u32 = %d09
-/// type-tag-u64 = %d02
-/// type-tag-u128 = %d03
-/// type-tag-u256 = %d10
-/// type-tag-bool = %d00
-/// type-tag-address = %d04
-/// type-tag-signer = %d05
-/// type-tag-vector = %d06 type-tag
-/// type-tag-struct = %d07 struct-tag
+/// type-tag = %d00            ; Bool
+///          / %d01            ; U8
+///          / %d02            ; U64
+///          / %d03            ; U128
+///          / %d04            ; Address
+///          / %d05            ; Signer
+///          / %d06 type-tag   ; Vector
+///          / %d07 struct-tag ; Struct
+///          / %d08            ; U16
+///          / %d09            ; U32
+///          / %d10            ; U256
 /// ```
 #[derive(
     Debug,
@@ -53,56 +41,68 @@ pub struct TypeTag(pub iota_sdk::types::TypeTag);
 #[uniffi::export]
 impl TypeTag {
     #[inline]
+    /// Checks if this type tag is a u8.
     pub fn is_u8(&self) -> bool {
         self.0.is_u8()
     }
 
     #[inline]
+    /// Checks if this type tag is a u16.
     pub fn is_u16(&self) -> bool {
         self.0.is_u16()
     }
 
     #[inline]
+    /// Checks if this type tag is a u32.
     pub fn is_u32(&self) -> bool {
         self.0.is_u32()
     }
 
     #[inline]
+    /// Checks if this type tag is a u64.
     pub fn is_u64(&self) -> bool {
         self.0.is_u64()
     }
 
     #[inline]
+    /// Checks if this type tag is a u128.
     pub fn is_u128(&self) -> bool {
         self.0.is_u128()
     }
 
     #[inline]
+    /// Checks if this type tag is a u256.
     pub fn is_u256(&self) -> bool {
         self.0.is_u256()
     }
 
     #[inline]
+    /// Checks if this type tag is a boolean.
     pub fn is_bool(&self) -> bool {
         self.0.is_bool()
     }
 
     #[inline]
+    /// Checks if this type tag is an address.
     pub fn is_address(&self) -> bool {
         self.0.is_address()
     }
 
     #[inline]
+    /// Checks if this type tag is a signer.
     pub fn is_signer(&self) -> bool {
         self.0.is_signer()
     }
 
     #[inline]
+    /// Checks if this type tag is a vector.
     pub fn is_vector(&self) -> bool {
         self.0.is_vector()
     }
 
     #[inline]
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or returns `None` otherwise.
     pub fn as_vector_type_tag_opt(&self) -> Option<Arc<TypeTag>> {
         self.0
             .as_vector_type_tag_opt()
@@ -112,16 +112,21 @@ impl TypeTag {
     }
 
     #[inline]
+    /// Converts this type tag into the inner type tag of a vector, if it is
+    /// one, or panics otherwise.
     pub fn as_vector_type_tag(&self) -> TypeTag {
         self.0.as_vector_type_tag().clone().into()
     }
 
     #[inline]
+    /// Checks if this type tag is a struct.
     pub fn is_struct(&self) -> bool {
         self.0.is_struct()
     }
 
     #[inline]
+    /// Converts this type tag into a struct tag, if it is one, or returns
+    /// `None` otherwise.
     pub fn as_struct_tag_opt(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_struct_tag_opt()
@@ -131,6 +136,8 @@ impl TypeTag {
     }
 
     #[inline]
+    /// Converts this type tag into a struct tag, if it is one, or panics
+    /// otherwise.
     pub fn as_struct_tag(&self) -> StructTag {
         self.0.as_struct_tag().clone().into()
     }

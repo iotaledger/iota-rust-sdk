@@ -8,8 +8,7 @@ use crate::{
     types::{
         address::Address,
         digest::Digest,
-        struct_tag::{Identifier, StructTag},
-        type_tag::TypeTag,
+        move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
 };
@@ -168,7 +167,21 @@ macro_rules! named_object_id {
     }
 }
 
-named_object_id!(ZERO, SYSTEM, CLOCK);
+named_object_id!(
+    ZERO,
+    MAX,
+    STD,
+    FRAMEWORK,
+    SYSTEM,
+    GENESIS_BRIDGE,
+    STARDUST,
+    SYSTEM_STATE,
+    CLOCK,
+    AUTHENTICATOR_STATE,
+    RANDOMNESS_STATE,
+    GENESIS_IOTA_BRIDGE,
+    DENY_LIST
+);
 
 /// Reference to an object
 ///
@@ -611,26 +624,34 @@ impl Owner {
         Self(iota_sdk::types::Owner::Immutable)
     }
 
+    /// Check if this is an address owner
     pub fn is_address(&self) -> bool {
         self.0.is_address()
     }
 
+    /// Check if this is an object owner
     pub fn is_object(&self) -> bool {
         self.0.is_object()
     }
 
+    /// Check if this is a shared owner
     pub fn is_shared(&self) -> bool {
         self.0.is_shared()
     }
 
+    /// Check if this is an immutable owner
     pub fn is_immutable(&self) -> bool {
         self.0.is_immutable()
     }
 
+    /// Convert this owner into an address owner if it is one, or panic
+    /// otherwise
     pub fn as_address(&self) -> Address {
         (*self.0.as_address()).into()
     }
 
+    /// Convert this owner into an address owner if it is one, or return `None`
+    /// otherwise
     pub fn as_address_opt(&self) -> Option<Arc<Address>> {
         self.0
             .as_address_opt()
@@ -639,10 +660,13 @@ impl Owner {
             .map(Arc::new)
     }
 
+    /// Convert this owner into an object owner if it is one, or panic otherwise
     pub fn as_object(&self) -> ObjectId {
         (*self.0.as_object()).into()
     }
 
+    /// Convert this owner into an object owner if it is one, or return `None`
+    /// otherwise
     pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
         self.0
             .as_object_opt()
@@ -651,10 +675,13 @@ impl Owner {
             .map(Arc::new)
     }
 
+    /// Convert this owner into a shared owner if it is one, or panic otherwise
     pub fn as_shared(&self) -> Version {
         (*self.0.as_shared()).into()
     }
 
+    /// Convert this owner into a shared owner if it is one, or return `None`
+    /// otherwise
     pub fn as_shared_opt(&self) -> Option<Arc<Version>> {
         self.0
             .as_shared_opt()

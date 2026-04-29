@@ -825,6 +825,27 @@ open class Address: AddressProtocol, @unchecked Sendable {
     }
 
     
+public static func authenticatorState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state($0
+    )
+})
+}
+    
+public static func clock() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_clock($0
+    )
+})
+}
+    
+public static func denyList() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_deny_list($0
+    )
+})
+}
+    
 public static func framework() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_address_framework($0
@@ -892,9 +913,44 @@ public static func fromShortHex(hex: String)throws  -> Address  {
 })
 }
     
+public static func genesisBridge() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge($0
+    )
+})
+}
+    
+public static func genesisIotaBridge() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge($0
+    )
+})
+}
+    
+public static func max() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_max($0
+    )
+})
+}
+    
 public static func random() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_address_random($0
+    )
+})
+}
+    
+public static func randomnessState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state($0
+    )
+})
+}
+    
+public static func stardust() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_stardust($0
     )
 })
 }
@@ -909,6 +965,13 @@ public static func std() -> Address  {
 public static func system() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_address_system($0
+    )
+})
+}
+    
+public static func systemState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_system_state($0
     )
 })
 }
@@ -10128,6 +10191,482 @@ public convenience init(identifier: String)throws  {
     }
 
     
+public static func addressKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key($0
+    )
+})
+}
+    
+public static func asciiModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module($0
+    )
+})
+}
+    
+public static func authenticatorState() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state($0
+    )
+})
+}
+    
+public static func authenticatorStateModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module($0
+    )
+})
+}
+    
+public static func bag() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_bag($0
+    )
+})
+}
+    
+public static func bagModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module($0
+    )
+})
+}
+    
+public static func balance() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_balance($0
+    )
+})
+}
+    
+public static func balanceModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module($0
+    )
+})
+}
+    
+public static func clock() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_clock($0
+    )
+})
+}
+    
+public static func clockModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module($0
+    )
+})
+}
+    
+public static func coin() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin($0
+    )
+})
+}
+    
+public static func coinManager() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager($0
+    )
+})
+}
+    
+public static func coinManagerModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module($0
+    )
+})
+}
+    
+public static func coinMetadata() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata($0
+    )
+})
+}
+    
+public static func coinModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module($0
+    )
+})
+}
+    
+public static func config() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config($0
+    )
+})
+}
+    
+public static func configKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key($0
+    )
+})
+}
+    
+public static func configModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module($0
+    )
+})
+}
+    
+public static func denyListModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module($0
+    )
+})
+}
+    
+public static func displayCreated() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created($0
+    )
+})
+}
+    
+public static func displayModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module($0
+    )
+})
+}
+    
+public static func dynamicFieldModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module($0
+    )
+})
+}
+    
+public static func dynamicObjectFieldModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module($0
+    )
+})
+}
+    
+public static func field() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_field($0
+    )
+})
+}
+    
+public static func globalPauseKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key($0
+    )
+})
+}
+    
+public static func id() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_id($0
+    )
+})
+}
+    
+public static func iota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota($0
+    )
+})
+}
+    
+public static func iotaModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module($0
+    )
+})
+}
+    
+public static func iotaSystemAdminCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap($0
+    )
+})
+}
+    
+public static func iotaSystemModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module($0
+    )
+})
+}
+    
+public static func iotaSystemState() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state($0
+    )
+})
+}
+    
+public static func iotaSystemStateInnerModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module($0
+    )
+})
+}
+    
+public static func iotaTreasuryCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap($0
+    )
+})
+}
+    
+public static func name() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_name($0
+    )
+})
+}
+    
+public static func nameModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module($0
+    )
+})
+}
+    
+public static func objectBag() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag($0
+    )
+})
+}
+    
+public static func objectBagModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module($0
+    )
+})
+}
+    
+public static func objectModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module($0
+    )
+})
+}
+    
+public static func option() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_option($0
+    )
+})
+}
+    
+public static func optionModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module($0
+    )
+})
+}
+    
+public static func packageModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module($0
+    )
+})
+}
+    
+public static func payModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module($0
+    )
+})
+}
+    
+public static func random() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_random($0
+    )
+})
+}
+    
+public static func randomModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module($0
+    )
+})
+}
+    
+public static func receiving() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving($0
+    )
+})
+}
+    
+public static func setting() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_setting($0
+    )
+})
+}
+    
+public static func stakedIota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota($0
+    )
+})
+}
+    
+public static func stakingPoolModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module($0
+    )
+})
+}
+    
+public static func string() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_string($0
+    )
+})
+}
+    
+public static func stringModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module($0
+    )
+})
+}
+    
+public static func systemAdminCapModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module($0
+    )
+})
+}
+    
+public static func systemEpochInfoEvent() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event($0
+    )
+})
+}
+    
+public static func timeLock() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock($0
+    )
+})
+}
+    
+public static func timelockModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module($0
+    )
+})
+}
+    
+public static func timelockedStakedIota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota($0
+    )
+})
+}
+    
+public static func timelockedStakingModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module($0
+    )
+})
+}
+    
+public static func transferModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module($0
+    )
+})
+}
+    
+public static func treasuryCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap($0
+    )
+})
+}
+    
+public static func txContext() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context($0
+    )
+})
+}
+    
+public static func txContextModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module($0
+    )
+})
+}
+    
+public static func uid() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_uid($0
+    )
+})
+}
+    
+public static func upgradeCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap($0
+    )
+})
+}
+    
+public static func upgradeReceipt() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt($0
+    )
+})
+}
+    
+public static func upgradeTicket() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket($0
+    )
+})
+}
+    
+public static func url() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url($0
+    )
+})
+}
+    
+public static func urlModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module($0
+    )
+})
+}
+    
+public static func versionUpdated() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated($0
+    )
+})
+}
+    
+public static func wrapper() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper($0
+    )
+})
+}
+    
 
     
 open func asStr() -> String  {
@@ -11491,6 +12030,10 @@ public func FfiConverterTypeMoveArg_lower(_ value: MoveArg) -> UnsafeMutableRawP
  */
 public protocol MoveAuthenticatorProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
     func asV1()  -> MoveAuthenticatorV1
     
 }
@@ -11560,6 +12103,10 @@ public static func newV1(moveAuthenticatorV1: MoveAuthenticatorV1) -> MoveAuthen
     
 
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
 open func asV1() -> MoveAuthenticatorV1  {
     return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(self.uniffiClonePointer(),$0
@@ -15985,9 +16532,23 @@ open class ObjectId: ObjectIdProtocol, @unchecked Sendable {
     }
 
     
+public static func authenticatorState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state($0
+    )
+})
+}
+    
 public static func clock() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_clock($0
+    )
+})
+}
+    
+public static func denyList() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list($0
     )
 })
 }
@@ -16001,6 +16562,13 @@ public static func deriveId(digest: Digest, count: UInt64) -> ObjectId  {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(
         FfiConverterTypeDigest_lower(digest),
         FfiConverterUInt64.lower(count),$0
+    )
+})
+}
+    
+public static func framework() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_framework($0
     )
 })
 }
@@ -16065,9 +16633,58 @@ public static func fromShortHex(hex: String)throws  -> ObjectId  {
 })
 }
     
+public static func genesisBridge() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge($0
+    )
+})
+}
+    
+public static func genesisIotaBridge() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge($0
+    )
+})
+}
+    
+public static func max() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_max($0
+    )
+})
+}
+    
+public static func randomnessState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state($0
+    )
+})
+}
+    
+public static func stardust() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust($0
+    )
+})
+}
+    
+public static func std() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_std($0
+    )
+})
+}
+    
 public static func system() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_system($0
+    )
+})
+}
+    
+public static func systemState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state($0
     )
 })
 }
@@ -16498,24 +17115,58 @@ public func FfiConverterTypeObjectType_lower(_ value: ObjectType) -> UnsafeMutab
  */
 public protocol OwnerProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
     func asAddress()  -> Address
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
     func asAddressOpt()  -> Address?
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
     func asObject()  -> ObjectId
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
     func asObjectOpt()  -> ObjectId?
     
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
     func asShared()  -> Version
     
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
     func asSharedOpt()  -> Version?
     
+    /**
+     * Check if this is an address owner
+     */
     func isAddress()  -> Bool
     
+    /**
+     * Check if this is an immutable owner
+     */
     func isImmutable()  -> Bool
     
+    /**
+     * Check if this is an object owner
+     */
     func isObject()  -> Bool
     
+    /**
+     * Check if this is a shared owner
+     */
     func isShared()  -> Bool
     
 }
@@ -16618,6 +17269,10 @@ public static func newShared(version: Version) -> Owner  {
     
 
     
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
 open func asAddress() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_address(self.uniffiClonePointer(),$0
@@ -16625,6 +17280,10 @@ open func asAddress() -> Address  {
 })
 }
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
 open func asAddressOpt() -> Address?  {
     return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(self.uniffiClonePointer(),$0
@@ -16632,6 +17291,9 @@ open func asAddressOpt() -> Address?  {
 })
 }
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
 open func asObject() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_object(self.uniffiClonePointer(),$0
@@ -16639,6 +17301,10 @@ open func asObject() -> ObjectId  {
 })
 }
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
 open func asObjectOpt() -> ObjectId?  {
     return try!  FfiConverterOptionTypeObjectId.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(self.uniffiClonePointer(),$0
@@ -16646,6 +17312,9 @@ open func asObjectOpt() -> ObjectId?  {
 })
 }
     
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
 open func asShared() -> Version  {
     return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared(self.uniffiClonePointer(),$0
@@ -16653,6 +17322,10 @@ open func asShared() -> Version  {
 })
 }
     
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
 open func asSharedOpt() -> Version?  {
     return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(self.uniffiClonePointer(),$0
@@ -16660,6 +17333,9 @@ open func asSharedOpt() -> Version?  {
 })
 }
     
+    /**
+     * Check if this is an address owner
+     */
 open func isAddress() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_address(self.uniffiClonePointer(),$0
@@ -16667,6 +17343,9 @@ open func isAddress() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is an immutable owner
+     */
 open func isImmutable() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(self.uniffiClonePointer(),$0
@@ -16674,6 +17353,9 @@ open func isImmutable() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is an object owner
+     */
 open func isObject() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_object(self.uniffiClonePointer(),$0
@@ -16681,6 +17363,9 @@ open func isObject() -> Bool  {
 })
 }
     
+    /**
+     * Check if this is a shared owner
+     */
 open func isShared() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_is_shared(self.uniffiClonePointer(),$0
@@ -22029,14 +22714,105 @@ public protocol StructTagProtocol: AnyObject, Sendable {
     func address()  -> Address
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
     func coinType()  -> TypeTag
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
     func coinTypeOpt()  -> TypeTag?
+    
+    func isAsciiString()  -> Bool
+    
+    func isAuthenticatorState()  -> Bool
+    
+    func isBag()  -> Bool
+    
+    func isBalance()  -> Bool
+    
+    func isClock()  -> Bool
+    
+    func isCoin()  -> Bool
+    
+    func isCoinManager()  -> Bool
+    
+    func isCoinMetadata()  -> Bool
+    
+    func isConfig()  -> Bool
+    
+    func isConfigSetting()  -> Bool
+    
+    func isDenyListAddressKey()  -> Bool
+    
+    func isDenyListConfigKey()  -> Bool
+    
+    func isDenyListGlobalPauseKey()  -> Bool
+    
+    func isDisplayCreated()  -> Bool
+    
+    func isDisplayVersionUpdated()  -> Bool
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+    func isDynamicField()  -> Bool
+    
+    func isDynamicObjectFieldWrapper()  -> Bool
+    
+    func isGas()  -> Bool
+    
+    func isGasCoin()  -> Bool
+    
+    func isId()  -> Bool
+    
+    func isIotaSystemAdminCap()  -> Bool
+    
+    func isIotaSystemState()  -> Bool
+    
+    func isIotaTreasuryCap()  -> Bool
+    
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
+    func isName()  -> Bool
+    
+    func isObjectBag()  -> Bool
+    
+    func isOption()  -> Bool
+    
+    func isRandom()  -> Bool
+    
+    func isStakedIota()  -> Bool
+    
+    func isString()  -> Bool
+    
+    func isSystemEpochInfoEvent()  -> Bool
+    
+    func isTimeLock()  -> Bool
+    
+    func isTimelockedStakedIota()  -> Bool
+    
+    func isTransferReceiving()  -> Bool
+    
+    func isTreasuryCap()  -> Bool
+    
+    func isTxContext()  -> Bool
+    
+    func isUid()  -> Bool
+    
+    func isUpgradeCap()  -> Bool
+    
+    func isUpgradeReceipt()  -> Bool
+    
+    func isUpgradeTicket()  -> Bool
+    
+    func isUrl()  -> Bool
     
     /**
      * Returns the module part of a `StructTag`
@@ -22142,6 +22918,20 @@ public static func newAsciiString() -> StructTag  {
 })
 }
     
+public static func newAuthenticatorState() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state($0
+    )
+})
+}
+    
+public static func newBag() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag($0
+    )
+})
+}
+    
 public static func newBalance(typeTag: TypeTag) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
@@ -22225,6 +23015,27 @@ public static func newDisplayCreated(structTag: StructTag) -> StructTag  {
 })
 }
     
+public static func newDisplayVersionUpdated(structTag: StructTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(
+        FfiConverterTypeStructTag_lower(structTag),$0
+    )
+})
+}
+    
+    /**
+     * Creates a new dynamic field struct tag
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+public static func newDynamicField(key: TypeTag, value: TypeTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
+        FfiConverterTypeTypeTag_lower(key),
+        FfiConverterTypeTypeTag_lower(value),$0
+    )
+})
+}
+    
 public static func newDynamicObjectFieldWrapper(typeTag: TypeTag) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
@@ -22233,11 +23044,9 @@ public static func newDynamicObjectFieldWrapper(typeTag: TypeTag) -> StructTag  
 })
 }
     
-public static func newField(key: TypeTag, value: TypeTag) -> StructTag  {
+public static func newGas() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
-        FfiConverterTypeTypeTag_lower(key),
-        FfiConverterTypeTypeTag_lower(value),$0
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas($0
     )
 })
 }
@@ -22252,13 +23061,6 @@ public static func newGasCoin() -> StructTag  {
 public static func newId() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id($0
-    )
-})
-}
-    
-public static func newIotaCoinType() -> StructTag  {
-    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type($0
     )
 })
 }
@@ -22284,10 +23086,36 @@ public static func newIotaTreasuryCap() -> StructTag  {
 })
 }
     
+    /**
+     * Creates a new IOTA-Names `Name` struct tag
+     * with the given package address.
+     */
 public static func newName(address: Address) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress_lower(address),$0
+    )
+})
+}
+    
+public static func newObjectBag() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag($0
+    )
+})
+}
+    
+public static func newOption(typeTag: TypeTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(
+        FfiConverterTypeTypeTag_lower(typeTag),$0
+    )
+})
+}
+    
+public static func newRandom() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random($0
     )
 })
 }
@@ -22343,6 +23171,13 @@ public static func newTreasuryCap(structTag: StructTag) -> StructTag  {
 })
 }
     
+public static func newTxContext() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context($0
+    )
+})
+}
+    
 public static func newUid() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid($0
@@ -22371,10 +23206,9 @@ public static func newUpgradeTicket() -> StructTag  {
 })
 }
     
-public static func newVersionUpdated(structTag: StructTag) -> StructTag  {
+public static func newUrl() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
-        FfiConverterTypeStructTag_lower(structTag),$0
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url($0
     )
 })
 }
@@ -22392,7 +23226,8 @@ open func address() -> Address  {
 }
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
 open func coinType() -> TypeTag  {
     return try!  FfiConverterTypeTypeTag_lift(try! rustCall() {
@@ -22402,11 +23237,301 @@ open func coinType() -> TypeTag  {
 }
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
 open func coinTypeOpt() -> TypeTag?  {
     return try!  FfiConverterOptionTypeTypeTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isAsciiString() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isAuthenticatorState() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isBag() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isBalance() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isClock() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoin() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoinManager() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoinMetadata() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isConfig() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_config(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isConfigSetting() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListAddressKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListConfigKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListGlobalPauseKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDisplayCreated() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDisplayVersionUpdated() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+open func isDynamicField() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDynamicObjectFieldWrapper() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isGas() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isGasCoin() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isId() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_id(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaSystemAdminCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaSystemState() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaTreasuryCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
+open func isName() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_name(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isObjectBag() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isOption() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_option(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isRandom() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_random(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isStakedIota() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isString() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_string(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isSystemEpochInfoEvent() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTimeLock() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTimelockedStakedIota() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTransferReceiving() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTreasuryCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTxContext() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUid() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeReceipt() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeTicket() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUrl() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_url(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -25064,61 +26189,98 @@ public func FfiConverterTypeTransferObjects_lower(_ value: TransferObjects) -> U
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %d01
- * type-tag-u16 = %d08
- * type-tag-u32 = %d09
- * type-tag-u64 = %d02
- * type-tag-u128 = %d03
- * type-tag-u256 = %d10
- * type-tag-bool = %d00
- * type-tag-address = %d04
- * type-tag-signer = %d05
- * type-tag-vector = %d06 type-tag
- * type-tag-struct = %d07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 public protocol TypeTagProtocol: AnyObject, Sendable {
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
     func asStructTag()  -> StructTag
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
     func asStructTagOpt()  -> StructTag?
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
     func asVectorTypeTag()  -> TypeTag
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
     func asVectorTypeTagOpt()  -> TypeTag?
     
+    /**
+     * Checks if this type tag is an address.
+     */
     func isAddress()  -> Bool
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
     func isBool()  -> Bool
     
+    /**
+     * Checks if this type tag is a signer.
+     */
     func isSigner()  -> Bool
     
+    /**
+     * Checks if this type tag is a struct.
+     */
     func isStruct()  -> Bool
     
+    /**
+     * Checks if this type tag is a u128.
+     */
     func isU128()  -> Bool
     
+    /**
+     * Checks if this type tag is a u16.
+     */
     func isU16()  -> Bool
     
+    /**
+     * Checks if this type tag is a u256.
+     */
     func isU256()  -> Bool
     
+    /**
+     * Checks if this type tag is a u32.
+     */
     func isU32()  -> Bool
     
+    /**
+     * Checks if this type tag is a u64.
+     */
     func isU64()  -> Bool
     
+    /**
+     * Checks if this type tag is a u8.
+     */
     func isU8()  -> Bool
     
+    /**
+     * Checks if this type tag is a vector.
+     */
     func isVector()  -> Bool
     
     /**
@@ -25136,29 +26298,17 @@ public protocol TypeTagProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %d01
- * type-tag-u16 = %d08
- * type-tag-u32 = %d09
- * type-tag-u64 = %d02
- * type-tag-u128 = %d03
- * type-tag-u256 = %d10
- * type-tag-bool = %d00
- * type-tag-address = %d04
- * type-tag-signer = %d05
- * type-tag-vector = %d06 type-tag
- * type-tag-struct = %d07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 open class TypeTag: TypeTagProtocol, @unchecked Sendable {
@@ -25292,6 +26442,10 @@ public static func newVector(typeTag: TypeTag) -> TypeTag  {
     
 
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
 open func asStructTag() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(self.uniffiClonePointer(),$0
@@ -25299,6 +26453,10 @@ open func asStructTag() -> StructTag  {
 })
 }
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
 open func asStructTagOpt() -> StructTag?  {
     return try!  FfiConverterOptionTypeStructTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(self.uniffiClonePointer(),$0
@@ -25306,6 +26464,10 @@ open func asStructTagOpt() -> StructTag?  {
 })
 }
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
 open func asVectorTypeTag() -> TypeTag  {
     return try!  FfiConverterTypeTypeTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(self.uniffiClonePointer(),$0
@@ -25313,6 +26475,10 @@ open func asVectorTypeTag() -> TypeTag  {
 })
 }
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
 open func asVectorTypeTagOpt() -> TypeTag?  {
     return try!  FfiConverterOptionTypeTypeTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(self.uniffiClonePointer(),$0
@@ -25320,6 +26486,9 @@ open func asVectorTypeTagOpt() -> TypeTag?  {
 })
 }
     
+    /**
+     * Checks if this type tag is an address.
+     */
 open func isAddress() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_address(self.uniffiClonePointer(),$0
@@ -25327,6 +26496,9 @@ open func isAddress() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
 open func isBool() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(self.uniffiClonePointer(),$0
@@ -25334,6 +26506,9 @@ open func isBool() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a signer.
+     */
 open func isSigner() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(self.uniffiClonePointer(),$0
@@ -25341,6 +26516,9 @@ open func isSigner() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a struct.
+     */
 open func isStruct() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(self.uniffiClonePointer(),$0
@@ -25348,6 +26526,9 @@ open func isStruct() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u128.
+     */
 open func isU128() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(self.uniffiClonePointer(),$0
@@ -25355,6 +26536,9 @@ open func isU128() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u16.
+     */
 open func isU16() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(self.uniffiClonePointer(),$0
@@ -25362,6 +26546,9 @@ open func isU16() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u256.
+     */
 open func isU256() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(self.uniffiClonePointer(),$0
@@ -25369,6 +26556,9 @@ open func isU256() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u32.
+     */
 open func isU32() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(self.uniffiClonePointer(),$0
@@ -25376,6 +26566,9 @@ open func isU32() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u64.
+     */
 open func isU64() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(self.uniffiClonePointer(),$0
@@ -25383,6 +26576,9 @@ open func isU64() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a u8.
+     */
 open func isU8() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(self.uniffiClonePointer(),$0
@@ -25390,6 +26586,9 @@ open func isU8() -> Bool  {
 })
 }
     
+    /**
+     * Checks if this type tag is a vector.
+     */
 open func isVector() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(self.uniffiClonePointer(),$0
@@ -25956,28 +27155,72 @@ public func FfiConverterTypeUpgradePolicy_lower(_ value: UpgradePolicy) -> Unsaf
  */
 public protocol UserSignatureProtocol: AnyObject, Sendable {
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
     func asMoveAuthenticator()  -> MoveAuthenticator
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
     func asMoveAuthenticatorOpt()  -> MoveAuthenticator?
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
     func asMultisig()  -> MultisigAggregatedSignature
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
     func asMultisigOpt()  -> MultisigAggregatedSignature?
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
     func asPasskeyAuthenticator()  -> PasskeyAuthenticator
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
     func asPasskeyAuthenticatorOpt()  -> PasskeyAuthenticator?
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
     func asSimple()  -> SimpleSignature
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
     func asSimpleOpt()  -> SimpleSignature?
     
+    /**
+     * Check if this signature is a move authenticator
+     */
     func isMoveAuthenticator()  -> Bool
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
     func isMultisig()  -> Bool
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
     func isPasskeyAuthenticator()  -> Bool
     
+    /**
+     * Check if this signature is a simple signature
+     */
     func isSimple()  -> Bool
     
     /**
@@ -26111,6 +27354,10 @@ public static func newSimple(signature: SimpleSignature) -> UserSignature  {
     
 
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
 open func asMoveAuthenticator() -> MoveAuthenticator  {
     return try!  FfiConverterTypeMoveAuthenticator_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(self.uniffiClonePointer(),$0
@@ -26118,6 +27365,10 @@ open func asMoveAuthenticator() -> MoveAuthenticator  {
 })
 }
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
 open func asMoveAuthenticatorOpt() -> MoveAuthenticator?  {
     return try!  FfiConverterOptionTypeMoveAuthenticator.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(self.uniffiClonePointer(),$0
@@ -26125,6 +27376,10 @@ open func asMoveAuthenticatorOpt() -> MoveAuthenticator?  {
 })
 }
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
 open func asMultisig() -> MultisigAggregatedSignature  {
     return try!  FfiConverterTypeMultisigAggregatedSignature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(self.uniffiClonePointer(),$0
@@ -26132,6 +27387,10 @@ open func asMultisig() -> MultisigAggregatedSignature  {
 })
 }
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
 open func asMultisigOpt() -> MultisigAggregatedSignature?  {
     return try!  FfiConverterOptionTypeMultisigAggregatedSignature.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(self.uniffiClonePointer(),$0
@@ -26139,6 +27398,10 @@ open func asMultisigOpt() -> MultisigAggregatedSignature?  {
 })
 }
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
 open func asPasskeyAuthenticator() -> PasskeyAuthenticator  {
     return try!  FfiConverterTypePasskeyAuthenticator_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(self.uniffiClonePointer(),$0
@@ -26146,6 +27409,10 @@ open func asPasskeyAuthenticator() -> PasskeyAuthenticator  {
 })
 }
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
 open func asPasskeyAuthenticatorOpt() -> PasskeyAuthenticator?  {
     return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(self.uniffiClonePointer(),$0
@@ -26153,6 +27420,10 @@ open func asPasskeyAuthenticatorOpt() -> PasskeyAuthenticator?  {
 })
 }
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
 open func asSimple() -> SimpleSignature  {
     return try!  FfiConverterTypeSimpleSignature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(self.uniffiClonePointer(),$0
@@ -26160,6 +27431,10 @@ open func asSimple() -> SimpleSignature  {
 })
 }
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
 open func asSimpleOpt() -> SimpleSignature?  {
     return try!  FfiConverterOptionTypeSimpleSignature.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(self.uniffiClonePointer(),$0
@@ -26167,6 +27442,9 @@ open func asSimpleOpt() -> SimpleSignature?  {
 })
 }
     
+    /**
+     * Check if this signature is a move authenticator
+     */
 open func isMoveAuthenticator() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(self.uniffiClonePointer(),$0
@@ -26174,6 +27452,9 @@ open func isMoveAuthenticator() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
 open func isMultisig() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(self.uniffiClonePointer(),$0
@@ -26181,6 +27462,9 @@ open func isMultisig() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
 open func isPasskeyAuthenticator() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(self.uniffiClonePointer(),$0
@@ -26188,6 +27472,9 @@ open func isPasskeyAuthenticator() -> Bool  {
 })
 }
     
+    /**
+     * Check if this signature is a simple signature
+     */
 open func isSimple() -> Bool  {
     return try!  FfiConverterBool.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(self.uniffiClonePointer(),$0
@@ -46738,7 +48025,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713) {
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 52452) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948) {
@@ -47065,34 +48352,34 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 40785) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 64545) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 14080) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642) {
@@ -47401,10 +48688,130 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745) {
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306) {
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state() != 10185) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock() != 5225) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin() != 61913) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager() != 52348) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata() != 34817) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_config() != 41259) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting() != 27038) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key() != 64455) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key() != 30183) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key() != 4914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created() != 21370) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas() != 56237) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 56216) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_random() != 4566) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_string() != 21518) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event() != 20500) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock() != 6190) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota() != 14954) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving() != 5695) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context() != 18584) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap() != 64642) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt() != 4130) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket() != 6624) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_url() != 59887) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022) {
@@ -47569,49 +48976,49 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_transferobjects_objects() != 24154) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 51024) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 12717) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 26078) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 559) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 3196) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 8646) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 64789) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 53288) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 16044) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 11071) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 45225) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 18818) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 25432) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 48795) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992) {
+    if (uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 34277) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741) {
@@ -47632,40 +49039,40 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 30648) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 47124) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 8542) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381) {
@@ -47746,6 +49153,15 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47764,13 +49180,31 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge() != 48414) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge() != 43861) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_max() != 5717) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state() != 62353) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_stardust() != 7116) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_system_state() != 26799) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553) {
@@ -47974,7 +49408,211 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state() != 16216) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module() != 64126) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag() != 48457) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module() != 54361) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance() != 45299) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module() != 34758) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock() != 54114) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module() != 45072) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin() != 52194) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager() != 49557) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module() != 55970) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata() != 40674) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module() != 34814) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config() != 4576) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key() != 17555) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module() != 11061) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module() != 25060) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created() != 25565) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module() != 18646) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module() != 44243) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module() != 43439) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_field() != 36751) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key() != 59135) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap() != 27582) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module() != 34279) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state() != 22040) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module() != 21899) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap() != 12741) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_name() != 13462) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module() != 11183) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag() != 36980) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module() != 59882) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module() != 16938) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_option() != 5076) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module() != 36087) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module() != 31781) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module() != 5588) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving() != 44248) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting() != 47313) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota() != 39180) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module() != 45878) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_string() != 22623) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module() != 48728) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module() != 43315) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module() != 25559) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota() != 44822) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module() != 27461) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module() != 617) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap() != 21659) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context() != 53898) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module() != 6086) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid() != 39877) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap() != 16692) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt() != 32459) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url() != 55140) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper() != 61185) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908) {
@@ -48196,10 +49834,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state() != 13697) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list() != 39911) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework() != 24526) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789) {
@@ -48217,7 +49864,28 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge() != 44008) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge() != 39804) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_max() != 27865) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state() != 39736) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust() != 21114) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_std() != 6468) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526) {
@@ -48514,6 +50182,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state() != 59432) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -48547,19 +50221,22 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas() != 58980) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595) {
@@ -48571,7 +50248,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 1519) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random() != 25141) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970) {
@@ -48595,6 +50281,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context() != 39269) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -48607,7 +50296,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url() != 23915) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944) {

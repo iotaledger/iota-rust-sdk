@@ -82,6 +82,12 @@ impl Address {
     pub const SYSTEM: Self = Self::from_u16(3);
     pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
     pub const STARDUST: Self = Self::from_u16(0x107a);
+    pub const SYSTEM_STATE: Self = Self::from_u16(5);
+    pub const CLOCK: Self = Self::from_u16(6);
+    pub const AUTHENTICATOR_STATE: Self = Self::from_u16(7);
+    pub const RANDOMNESS_STATE: Self = Self::from_u16(8);
+    pub const GENESIS_IOTA_BRIDGE: Self = Self::from_u16(9);
+    pub const DENY_LIST: Self = Self::from_u16(0x403);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)

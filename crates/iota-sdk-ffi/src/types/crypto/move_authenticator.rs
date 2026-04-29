@@ -5,9 +5,9 @@ use std::sync::Arc;
 
 use crate::types::{
     address::Address,
+    move_core::TypeTag,
     object::{ObjectId, ObjectReference},
     transaction::Input,
-    type_tag::TypeTag,
     version::Version,
 };
 
@@ -27,15 +27,10 @@ impl MoveAuthenticator {
         ))
     }
 
+    /// Convert this move authenticator into a version 1 move authenticator if
+    /// it is one, or panic otherwise
     pub fn as_v1(&self) -> Arc<MoveAuthenticatorV1> {
-        match &self.0 {
-            iota_sdk::types::MoveAuthenticator::V1(authenticator) => {
-                Arc::new(MoveAuthenticatorV1(authenticator.clone()))
-            }
-            _ => unimplemented!(
-                "a new MoveAuthenticator enum variant was added and needs to be handled"
-            ),
-        }
+        Arc::new(MoveAuthenticatorV1(self.0.as_v1().clone()))
     }
 }
 

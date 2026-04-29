@@ -121,10 +121,13 @@ impl UserSignature {
         Ok(iota_sdk::types::UserSignature::from_base64(&base64).map(Self)?)
     }
 
+    /// Check if this signature is a simple signature
     pub fn is_simple(&self) -> bool {
         self.0.is_simple()
     }
 
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
     pub fn as_simple_opt(&self) -> Option<Arc<SimpleSignature>> {
         self.0
             .as_simple_opt()
@@ -133,14 +136,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a simple signature if it is one, or panic
+    /// otherwise
     pub fn as_simple(&self) -> SimpleSignature {
         self.0.as_simple().clone().into()
     }
 
+    /// Check if this signature is a multisig aggregated signature
     pub fn is_multisig(&self) -> bool {
         self.0.is_multisig()
     }
 
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or return `None` otherwise
     pub fn as_multisig_opt(&self) -> Option<Arc<MultisigAggregatedSignature>> {
         self.0
             .as_multisig_opt()
@@ -149,14 +157,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or panic otherwise
     pub fn as_multisig(&self) -> MultisigAggregatedSignature {
         self.0.as_multisig().clone().into()
     }
 
+    /// Check if this signature is a passkey authenticator
     pub fn is_passkey_authenticator(&self) -> bool {
         self.0.is_passkey_authenticator()
     }
 
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
     pub fn as_passkey_authenticator_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
             .as_passkey_authenticator_opt()
@@ -165,14 +178,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// panic otherwise
     pub fn as_passkey_authenticator(&self) -> PasskeyAuthenticator {
         self.0.as_passkey_authenticator().clone().into()
     }
 
+    /// Check if this signature is a move authenticator
     pub fn is_move_authenticator(&self) -> bool {
         self.0.is_move_authenticator()
     }
 
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
     pub fn as_move_authenticator_opt(&self) -> Option<Arc<MoveAuthenticator>> {
         self.0
             .as_move_authenticator_opt()
@@ -181,6 +199,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a move authenticator if it is one, or panic
+    /// otherwise
     pub fn as_move_authenticator(&self) -> MoveAuthenticator {
         self.0.as_move_authenticator().clone().into()
     }
