@@ -48,6 +48,7 @@ impl RandomnessRound {
     }
 
     /// Returns the message to be signed for a randomness round.
+    #[cfg(feature = "serde")]
     pub fn signature_message(&self) -> Vec<u8> {
         "random_beacon round "
             .as_bytes()
