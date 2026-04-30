@@ -78,7 +78,6 @@ filetime = "0.2"
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
-insta.workspace = true
 num-bigint = "0.4.6"
 paste.workspace = true
 rand.workspace = true
