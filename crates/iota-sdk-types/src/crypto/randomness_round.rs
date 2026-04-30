@@ -2,6 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /// Round number of generated randomness.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// randomness-round = u64
+/// ```
 #[derive(
     Clone,
     Copy,
