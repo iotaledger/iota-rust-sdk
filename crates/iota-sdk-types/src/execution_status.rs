@@ -365,7 +365,6 @@ pub enum ExecutionError {
     /// Certificate is cancelled due to congestion on shared objects
     #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
-
     /// Address is denied for this coin type
     #[error("Address {address:?} is denied for coin {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
