@@ -933,7 +933,7 @@ impl std::fmt::Display for Argument {
             Argument::Gas => write!(f, "Gas"),
             Argument::Input(i) => write!(f, "Input({i})"),
             Argument::Result(i) => write!(f, "Result({i})"),
-            Argument::NestedResult(i, j) => write!(f, "NestedResult({i},{j})"),
+            Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),
         }
     }
 }
