@@ -353,7 +353,7 @@ mod input_argument {
     use crate::{Version, transaction::Input};
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
+    #[serde(rename_all = "snake_case")]
     enum ReadableInput {
         Pure {
             #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
@@ -910,8 +910,9 @@ mod tests {
                     value: vec![1, 2, 3, 4],
                 },
                 serde_json::json!({
-                  "type": "pure",
-                  "value": "AQIDBA=="
+                  "pure": {
+                    "value": "AQIDBA=="
+                  }
                 }),
             ),
             (
@@ -921,10 +922,11 @@ mod tests {
                     Digest::ZERO,
                 )),
                 serde_json::json!({
-                  "type": "immutable_or_owned",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
+                  "immutable_or_owned": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    1,
+                    "11111111111111111111111111111111"
+                  ]
                 }),
             ),
             (
@@ -934,10 +936,11 @@ mod tests {
                     mutable: true,
                 },
                 serde_json::json!({
-                  "type": "shared",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "initial_shared_version": "1",
-                  "mutable": true
+                  "shared": {
+                    "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    "initial_shared_version": "1",
+                    "mutable": true
+                  }
                 }),
             ),
             (
@@ -947,10 +950,11 @@ mod tests {
                     Digest::ZERO,
                 )),
                 serde_json::json!({
-                  "type": "receiving",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
+                  "receiving": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    1,
+                    "11111111111111111111111111111111"
+                  ]
                 }),
             ),
         ];
