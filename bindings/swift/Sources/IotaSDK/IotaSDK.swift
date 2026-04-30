@@ -17130,6 +17130,12 @@ public func FfiConverterTypeObjectType_lower(_ value: ObjectType) -> UnsafeMutab
 public protocol OwnerProtocol: AnyObject, Sendable {
     
     /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+    func addressOrObject()  -> Address?
+    
+    /**
      * Convert this owner into an address owner if it is one, or panic
      * otherwise
      */
@@ -17282,6 +17288,17 @@ public static func newShared(version: Version) -> Owner  {
 }
     
 
+    
+    /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+open func addressOrObject() -> Address?  {
+    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(self.uniffiClonePointer(),$0
+    )
+})
+}
     
     /**
      * Convert this owner into an address owner if it is one, or panic
@@ -48364,6 +48381,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object() != 23748) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454) {

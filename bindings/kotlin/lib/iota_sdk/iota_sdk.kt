@@ -4005,6 +4005,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5427,6 +5429,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address(
 ): Short
@@ -8554,6 +8558,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12852,6 +12858,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object() != 23748.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454.toShort()) {
@@ -40329,6 +40338,12 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
 public interface OwnerInterface {
     
     /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+    fun `addressOrObject`(): Address?
+    
+    /**
      * Convert this owner into an address owner if it is one, or panic
      * otherwise
      */
@@ -40482,6 +40497,22 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_owner(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */override fun `addressOrObject`(): Address? {
+            return FfiConverterOptionalTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
     /**
