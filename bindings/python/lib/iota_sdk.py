@@ -1869,7 +1869,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_address() != 46638:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object() != 23748:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -7719,11 +7719,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15356,9 +15356,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_address.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address.restype = ctypes.c_uint16
@@ -46289,9 +46289,9 @@ class OwnerProtocol(typing.Protocol):
     ```
     """
 
-    def address(self, ):
+    def address_or_object(self, ):
         """
-        Returns an address if this object is owned by an address or
+        Returns an `Address` if this object is owned by an address or
         object, and None if it is shared or immutable.
         """
 
@@ -46436,14 +46436,14 @@ class Owner():
 
 
 
-    def address(self, ) -> "typing.Optional[Address]":
+    def address_or_object(self, ) -> "typing.Optional[Address]":
         """
-        Returns an address if this object is owned by an address or
+        Returns an `Address` if this object is owned by an address or
         object, and None if it is shared or immutable.
         """
 
         return _UniffiConverterOptionalTypeAddress.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object,self._uniffi_clone_pointer(),)
         )
 
 

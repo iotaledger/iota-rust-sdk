@@ -4679,9 +4679,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(void* id, RustCallStat
 void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(void* version, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_ADDRESS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_ADDRESS
-RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_address(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_ADDRESS_OR_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_ADDRESS_OR_OBJECT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS
@@ -14369,9 +14369,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_ADDRESS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_ADDRESS
-uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_address(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_ADDRESS_OR_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_ADDRESS_OR_OBJECT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object(void
     
 );
 #endif

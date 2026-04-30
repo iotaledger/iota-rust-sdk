@@ -7366,7 +7366,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14510,7 +14510,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_address(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -21576,9 +21576,9 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_address();
-            if (checksum != 46638) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_address` checksum `46638`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object();
+            if (checksum != 23748) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object` checksum `23748`, library returned `{checksum}`");
             }
         }
         {
@@ -42862,10 +42862,10 @@ class FfiConverterTypeObjectType: FfiConverter<ObjectType, IntPtr> {
 /// </summary>
 public interface IOwner: IEquatable<Owner> {
     /// <summary>
-    /// Returns an address if this object is owned by an address or
+    /// Returns an `Address` if this object is owned by an address or
     /// object, and None if it is shared or immutable.
     /// </summary>
-    Address? Address();
+    Address? AddressOrObject();
     /// <summary>
     /// Convert this owner into an address owner if it is one, or panic
     /// otherwise
@@ -43017,13 +43017,13 @@ public class Owner : IOwner, IDisposable {
 
     
     /// <summary>
-    /// Returns an address if this object is owned by an address or
+    /// Returns an `Address` if this object is owned by an address or
     /// object, and None if it is shared or immutable.
     /// </summary>
-    public Address? Address() {
+    public Address? AddressOrObject() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeAddress.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_address(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(thisPtr,  ref _status)
 )));
     }
     
