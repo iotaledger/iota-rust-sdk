@@ -10555,6 +10555,20 @@ public static func systemEpochInfoEvent() -> Identifier  {
 })
 }
     
+public static func systemEpochInfoEventV1() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1($0
+    )
+})
+}
+    
+public static func systemEpochInfoEventV2() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2($0
+    )
+})
+}
+    
 public static func timeLock() -> Identifier  {
     return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock($0
@@ -49565,6 +49579,12 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1() != 53365) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2() != 44726) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781) {

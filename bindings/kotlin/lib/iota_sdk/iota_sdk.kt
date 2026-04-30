@@ -4001,6 +4001,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6234,6 +6238,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module(
@@ -7831,6 +7839,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(uniffi_out_err: 
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -14055,6 +14067,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1() != 53365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2() != 44726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781.toShort()) {
@@ -30187,6 +30205,26 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEventV1`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEventV2`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2(
         _status)
 }
     )
