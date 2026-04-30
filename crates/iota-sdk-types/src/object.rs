@@ -108,9 +108,9 @@ impl Owner {
 
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
 
-    /// Returns an address if this object is owned by an address or
+    /// Returns an `Address` if this object is owned by an address or
     /// object, and None if it is shared or immutable.
-    pub fn address(&self) -> Option<&Address> {
+    pub fn address_or_object(&self) -> Option<&Address> {
         Some(match self {
             Self::Address(address) => address,
             Self::Object(object_id) => object_id.as_address(),
