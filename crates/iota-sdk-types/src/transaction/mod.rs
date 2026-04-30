@@ -4,9 +4,8 @@
 
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
-    ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
+    ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
 };
-use crate::crypto::RandomnessRound;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
