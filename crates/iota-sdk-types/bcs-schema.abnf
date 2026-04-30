@@ -320,10 +320,12 @@ programmable-transaction = (size *input)     ; inputs
 publish = (size *bytes)       ; modules
           (size *object-id)   ; dependencies
 
-randomness-state-update = u64       ; epoch
-                          u64       ; randomness-round
-                          bytes     ; random-bytes
-                          version   ; randomness-obj-initial-shared-version
+randomness-round = u64
+
+randomness-state-update = u64                ; epoch
+                          randomness-round   ; randomness-round
+                          bytes              ; random-bytes
+                          version            ; randomness-obj-initial-shared-version
 
 signed-checkpoint-summary = checkpoint-summary               ; checkpoint
                             validator-aggregated-signature   ; signature

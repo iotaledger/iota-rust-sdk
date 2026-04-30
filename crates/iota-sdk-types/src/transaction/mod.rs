@@ -4,7 +4,7 @@
 
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
-    ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
+    ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -143,9 +143,9 @@ pub struct GasPayment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// randomness-state-update = u64 u64 bytes u64
+/// randomness-state-update = u64 randomness-round bytes version
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -154,8 +154,7 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch: u64,
     /// Randomness round of the update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub randomness_round: u64,
+    pub randomness_round: RandomnessRound,
     /// Updated random bytes
     #[cfg_attr(
         feature = "serde",

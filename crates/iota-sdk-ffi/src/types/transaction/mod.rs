@@ -1410,7 +1410,7 @@ impl From<RandomnessStateUpdate> for iota_sdk::types::RandomnessStateUpdate {
     fn from(value: RandomnessStateUpdate) -> Self {
         Self {
             epoch: value.epoch,
-            randomness_round: value.randomness_round,
+            randomness_round: value.randomness_round.into(),
             random_bytes: value.random_bytes,
             randomness_obj_initial_shared_version: **value.randomness_obj_initial_shared_version,
         }
@@ -1421,7 +1421,7 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
     fn from(value: iota_sdk::types::RandomnessStateUpdate) -> Self {
         Self {
             epoch: value.epoch,
-            randomness_round: value.randomness_round,
+            randomness_round: value.randomness_round.value(),
             random_bytes: value.random_bytes,
             randomness_obj_initial_shared_version: Arc::new(
                 value.randomness_obj_initial_shared_version.into(),
