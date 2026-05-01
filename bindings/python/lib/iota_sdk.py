@@ -1215,6 +1215,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168:
@@ -1579,7 +1583,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2401,6 +2405,12 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
@@ -2787,7 +2797,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2827,7 +2837,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 62487:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3171,9 +3181,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 52798:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48667:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6398,7 +6408,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.arg
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.restype = ctypes.c_void_p
@@ -6745,9 +6755,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new.argtypes = (
-    ctypes.c_void_p,
     _UniffiRustBuffer,
     ctypes.c_uint16,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new.restype = ctypes.c_void_p
@@ -14373,6 +14383,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
@@ -16152,6 +16168,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework.restype = ctypes.c_uint16
@@ -17697,6 +17722,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -28144,6 +28171,33 @@ class _UniffiConverterOptionalTypeTypeTag(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeVersion(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeVersion.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeVersion.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeVersion.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeBatchSendStatus(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -30180,6 +30234,31 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeVersion(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeVersion.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeVersion.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeVersion.read(buf) for i in range(count)
         ]
 
 
@@ -38288,7 +38367,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -39501,7 +39580,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
+    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -42158,7 +42237,7 @@ class MoveAuthenticatorV1():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
+    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "Version"):
         """
         Create a new move authenticator from a shared object.
         """
@@ -42169,14 +42248,14 @@ class MoveAuthenticatorV1():
         
         _UniffiConverterTypeObjectId.check_lower(object_to_authenticate)
         
-        _UniffiConverterUInt64.check_lower(initial_shared_version)
+        _UniffiConverterTypeVersion.check_lower(initial_shared_version)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared,
         _UniffiConverterSequenceTypeInput.lower(call_args),
         _UniffiConverterSequenceTypeTypeTag.lower(type_args),
         _UniffiConverterTypeObjectId.lower(object_to_authenticate),
-        _UniffiConverterUInt64.lower(initial_shared_version))
+        _UniffiConverterTypeVersion.lower(initial_shared_version))
         return cls._make_instance_(pointer)
 
 
@@ -43241,7 +43320,7 @@ class MultisigAggregatedSignature():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, committee: "MultisigCommittee",signatures: "typing.List[MultisigMemberSignature]",bitmap: "int"):
+    def __init__(self, signatures: "typing.List[MultisigMemberSignature]",bitmap: "int",committee: "MultisigCommittee"):
         """
         Construct a new aggregated multisig signature.
 
@@ -43252,16 +43331,16 @@ class MultisigAggregatedSignature():
         and that it's position in the provided bitmap is set.
         """
 
-        _UniffiConverterTypeMultisigCommittee.check_lower(committee)
-        
         _UniffiConverterSequenceTypeMultisigMemberSignature.check_lower(signatures)
         
         _UniffiConverterUInt16.check_lower(bitmap)
         
+        _UniffiConverterTypeMultisigCommittee.check_lower(committee)
+        
         self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new,
-        _UniffiConverterTypeMultisigCommittee.lower(committee),
         _UniffiConverterSequenceTypeMultisigMemberSignature.lower(signatures),
-        _UniffiConverterUInt16.lower(bitmap))
+        _UniffiConverterUInt16.lower(bitmap),
+        _UniffiConverterTypeMultisigCommittee.lower(committee))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -53391,7 +53470,7 @@ class TransactionKind():
     @classmethod
     def new_end_of_epoch(cls, tx: "typing.List[EndOfEpochTransactionKind]"):
         """
-        Create a [`TransactionKind`] for an end of epoch transaction.
+        Create a [`TransactionKind`] for an authenticator state update v1.
         """
 
         _UniffiConverterSequenceTypeEndOfEpochTransactionKind.check_lower(tx)
@@ -54039,29 +54118,17 @@ class TypeTagProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    type-tag = type-tag-u8 \
-    type-tag-u16 \
-    type-tag-u32 \
-    type-tag-u64 \
-    type-tag-u128 \
-    type-tag-u256 \
-    type-tag-bool \
-    type-tag-address \
-    type-tag-signer \
-    type-tag-vector \
-    type-tag-struct
-
-    type-tag-u8 = %d01
-    type-tag-u16 = %d08
-    type-tag-u32 = %d09
-    type-tag-u64 = %d02
-    type-tag-u128 = %d03
-    type-tag-u256 = %d10
-    type-tag-bool = %d00
-    type-tag-address = %d04
-    type-tag-signer = %d05
-    type-tag-vector = %d06 type-tag
-    type-tag-struct = %d07 struct-tag
+    type-tag = %d00            ; Bool
+    / %d01            ; U8
+    / %d02            ; U64
+    / %d03            ; U128
+    / %d04            ; Address
+    / %d05            ; Signer
+    / %d06 type-tag   ; Vector
+    / %d07 struct-tag ; Struct
+    / %d08            ; U16
+    / %d09            ; U32
+    / %d10            ; U256
     ```
     """
 
@@ -54112,29 +54179,17 @@ class TypeTag():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    type-tag = type-tag-u8 \
-    type-tag-u16 \
-    type-tag-u32 \
-    type-tag-u64 \
-    type-tag-u128 \
-    type-tag-u256 \
-    type-tag-bool \
-    type-tag-address \
-    type-tag-signer \
-    type-tag-vector \
-    type-tag-struct
-
-    type-tag-u8 = %d01
-    type-tag-u16 = %d08
-    type-tag-u32 = %d09
-    type-tag-u64 = %d02
-    type-tag-u128 = %d03
-    type-tag-u256 = %d10
-    type-tag-bool = %d00
-    type-tag-address = %d04
-    type-tag-signer = %d05
-    type-tag-vector = %d06 type-tag
-    type-tag-struct = %d07 struct-tag
+    type-tag = %d00            ; Bool
+    / %d01            ; U8
+    / %d02            ; U64
+    / %d03            ; U128
+    / %d04            ; Address
+    / %d05            ; Signer
+    / %d06 type-tag   ; Vector
+    / %d07 struct-tag ; Struct
+    / %d08            ; U16
+    / %d09            ; U32
+    / %d10            ; U256
     ```
     """
 

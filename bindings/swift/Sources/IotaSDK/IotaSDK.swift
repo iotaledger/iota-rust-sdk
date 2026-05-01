@@ -12401,13 +12401,13 @@ public static func newImmutable(callArgs: [Input], typeArgs: [TypeTag], objectTo
     /**
      * Create a new move authenticator from a shared object.
      */
-public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: UInt64) -> MoveAuthenticatorV1  {
+public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: Version) -> MoveAuthenticatorV1  {
     return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
         FfiConverterSequenceTypeInput.lower(callArgs),
         FfiConverterSequenceTypeTypeTag.lower(typeArgs),
         FfiConverterTypeObjectId_lower(objectToAuthenticate),
-        FfiConverterUInt64.lower(initialSharedVersion),$0
+        FfiConverterTypeVersion_lower(initialSharedVersion),$0
     )
 })
 }
@@ -13743,13 +13743,13 @@ open class MultisigAggregatedSignature: MultisigAggregatedSignatureProtocol, @un
      * order as it's corresponding member in the provided committee
      * and that it's position in the provided bitmap is set.
      */
-public convenience init(committee: MultisigCommittee, signatures: [MultisigMemberSignature], bitmap: UInt16) {
+public convenience init(signatures: [MultisigMemberSignature], bitmap: UInt16, committee: MultisigCommittee) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(
-        FfiConverterTypeMultisigCommittee_lower(committee),
         FfiConverterSequenceTypeMultisigMemberSignature.lower(signatures),
-        FfiConverterUInt16.lower(bitmap),$0
+        FfiConverterUInt16.lower(bitmap),
+        FfiConverterTypeMultisigCommittee_lower(committee),$0
     )
 }
     self.init(unsafeFromRawPointer: pointer)
@@ -25135,6 +25135,9 @@ open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
     }
 
     
+    /**
+     * Create a [`TransactionKind`] for a consensus commit prologue v1.
+     */
 public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
@@ -25144,7 +25147,7 @@ public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -
 }
     
     /**
-     * Create a [`TransactionKind`] for an end of epoch transaction.
+     * Create a [`TransactionKind`] for an authenticator state update v1.
      */
 public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -26164,29 +26167,17 @@ public func FfiConverterTypeTransferObjects_lower(_ value: TransferObjects) -> U
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %d01
- * type-tag-u16 = %d08
- * type-tag-u32 = %d09
- * type-tag-u64 = %d02
- * type-tag-u128 = %d03
- * type-tag-u256 = %d10
- * type-tag-bool = %d00
- * type-tag-address = %d04
- * type-tag-signer = %d05
- * type-tag-vector = %d06 type-tag
- * type-tag-struct = %d07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 public protocol TypeTagProtocol: AnyObject, Sendable {
@@ -26236,29 +26227,17 @@ public protocol TypeTagProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %d01
- * type-tag-u16 = %d08
- * type-tag-u32 = %d09
- * type-tag-u64 = %d02
- * type-tag-u128 = %d03
- * type-tag-u256 = %d10
- * type-tag-bool = %d00
- * type-tag-address = %d04
- * type-tag-signer = %d05
- * type-tag-vector = %d06 type-tag
- * type-tag-struct = %d07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 open class TypeTag: TypeTagProtocol, @unchecked Sendable {
@@ -39259,6 +39238,30 @@ fileprivate struct FfiConverterOptionTypeTypeTag: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypeVersion: FfiConverterRustBuffer {
+    typealias SwiftType = Version?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeVersion.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeVersion.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeBatchSendStatus: FfiConverterRustBuffer {
     typealias SwiftType = BatchSendStatus?
 
@@ -41156,6 +41159,31 @@ fileprivate struct FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
             seq.append(try FfiConverterTypeUserSignature.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeVersion: FfiConverterRustBuffer {
+    typealias SwiftType = [Version]
+
+    public static func write(_ value: [Version], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeVersion.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Version] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Version]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeVersion.read(from: &buf))
         }
         return seq
     }
@@ -47155,6 +47183,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -48934,6 +48968,15 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -49513,7 +49556,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411) {
@@ -49573,7 +49616,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 62487) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388) {
@@ -50089,10 +50132,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 52798) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48667) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492) {
