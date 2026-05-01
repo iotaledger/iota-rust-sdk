@@ -134,7 +134,8 @@ impl AsRef<[u8]> for MultisigMemberPublicKey {
             Self::Ed25519(pk) => pk.as_ref(),
             Self::Secp256k1(pk) => pk.as_ref(),
             Self::Secp256r1(pk) => pk.as_ref(),
-            Self::ZkLogin(_) => panic!(),
+            Self::ZkLoginDeprecated => panic!(),
+            Self::Passkey(pk) => pk.as_ref(),
         }
     }
 }
@@ -363,7 +364,6 @@ pub struct MultisigAggregatedSignature {
     committee: MultisigCommittee,
     /// A bytes representation of [struct MultiSig]. This helps with
     /// implementing [trait AsRef<[u8]>].
-    #[cfg_attr(feature = "schemars", schemars(skip))]
     #[cfg_attr(
         feature = "proptest",
         strategy(proptest::strategy::Just(OnceCell::new()))
@@ -616,7 +616,8 @@ impl MultisigMemberSignature {
             Self::Ed25519(_) => SignatureScheme::Ed25519,
             Self::Secp256k1(_) => SignatureScheme::Secp256k1,
             Self::Secp256r1(_) => SignatureScheme::Secp256r1,
-            Self::ZkLogin(_) => SignatureScheme::ZkLoginAuthenticator,
+            Self::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
+            Self::Passkey(_) => SignatureScheme::PasskeyAuthenticator,
         }
     }
 
@@ -663,7 +664,8 @@ impl AsRef<[u8]> for MultisigMemberSignature {
             Self::Ed25519(s) => s.as_ref(),
             Self::Secp256k1(s) => s.as_ref(),
             Self::Secp256r1(s) => s.as_ref(),
-            Self::ZkLogin(_) => panic!(),
+            Self::ZkLoginDeprecated => panic!(),
+            Self::Passkey(s) => s.signature.as_ref(),
         }
     }
 }
@@ -1024,13 +1026,14 @@ mod tests {
                 1,
             )],
             1,
-        );
+        )
+        .unwrap();
         assert!(committee.is_valid());
 
         let aggregated = MultisigAggregatedSignature::new(
-            committee,
             vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
             0b1,
+            committee,
         );
 
         let bcs_bytes = bcs::to_bytes(&aggregated).unwrap();

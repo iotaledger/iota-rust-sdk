@@ -34,22 +34,22 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
-    public_key: Secp256r1PublicKey,
+    pub(crate) public_key: Secp256r1PublicKey,
     /// The secp256r1 signature from the passkey.
-    signature: Secp256r1Signature,
+    pub(crate) signature: Secp256r1Signature,
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`.
-    challenge: Vec<u8>,
+    pub(crate) challenge: Vec<u8>,
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
     /// more information on this field.
-    authenticator_data: Vec<u8>,
+    pub(crate) authenticator_data: Vec<u8>,
     /// Structured, unparsed, JSON for this passkey signature.
     ///
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
-    client_data_json: String,
+    pub(crate) client_data_json: String,
 }
 
 impl PasskeyAuthenticator {
@@ -119,6 +119,12 @@ impl PasskeyPublicKey {
     /// The underlying `Secp256r1PublicKey` for this passkey.
     pub fn inner(&self) -> &Secp256r1PublicKey {
         &self.0
+    }
+}
+
+impl AsRef<[u8]> for PasskeyPublicKey {
+    fn as_ref(&self) -> &[u8] {
+        self.0.as_ref()
     }
 }
 

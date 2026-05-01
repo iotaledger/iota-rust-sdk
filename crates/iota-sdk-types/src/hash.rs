@@ -182,7 +182,8 @@ impl crate::MultisigMemberPublicKey {
             Self::Ed25519(pk) => pk.derive_address(),
             Self::Secp256k1(pk) => pk.derive_address(),
             Self::Secp256r1(pk) => pk.derive_address(),
-            Self::ZkLogin(_) => panic!(),
+            Self::ZkLoginDeprecated => panic!(),
+            Self::Passkey(pk) => pk.derive_address(),
         }
     }
 }
