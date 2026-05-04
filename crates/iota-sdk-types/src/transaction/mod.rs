@@ -247,7 +247,7 @@ impl EndOfEpochTransactionKind {
     crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,);
 
     /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new_change_epoch(
         next_epoch: EpochId,
         protocol_version: ProtocolVersion,
@@ -271,7 +271,7 @@ impl EndOfEpochTransactionKind {
     }
 
     /// Creates a [`ChangeEpochV2`] end-of-epoch transaction kind.
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new_change_epoch_v2(
         next_epoch: EpochId,
         protocol_version: ProtocolVersion,
@@ -297,7 +297,7 @@ impl EndOfEpochTransactionKind {
     }
 
     /// Creates a [`ChangeEpochV3`] end-of-epoch transaction kind.
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new_change_epoch_v3(
         next_epoch: EpochId,
         protocol_version: ProtocolVersion,
@@ -325,7 +325,7 @@ impl EndOfEpochTransactionKind {
     }
 
     /// Creates a [`ChangeEpochV4`] end-of-epoch transaction kind.
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new_change_epoch_v4(
         next_epoch: EpochId,
         protocol_version: ProtocolVersion,
