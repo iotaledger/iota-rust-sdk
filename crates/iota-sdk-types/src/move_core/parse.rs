@@ -18,10 +18,10 @@ pub const MAX_TYPE_TAG_NESTING: usize = 16;
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier, TypeParseError> {
     alt((
-        (one_of(|c: char| c.is_alpha()), valid_remainder(0)),
-        ('_', valid_remainder(1)),
+        "<SELF>",
+        (one_of(|c: char| c.is_alpha()), valid_remainder(0)).take(),
+        ('_', valid_remainder(1)).take(),
     ))
-    .take()
     .parse_next(input)
     .and_then(|s| {
         if s.len() > MAX_IDENTIFIER_LENGTH {
@@ -282,6 +282,28 @@ mod tests {
                 parsed.unwrap_err()
             );
         }
+    }
+
+    #[test]
+    fn test_parse_self_identifier() {
+        let parsed = "<SELF>".parse::<Identifier>();
+        assert!(parsed.is_ok(), "Failed to parse <SELF> as identifier");
+        assert_eq!(parsed.unwrap().as_str(), "<SELF>");
+
+        // <SELF> should work in struct tags
+        let parsed = "0x1::<SELF>::Foo".parse::<StructTag>();
+        assert!(
+            parsed.is_ok(),
+            "Failed to parse struct tag with <SELF> module: {}",
+            parsed.unwrap_err()
+        );
+
+        let parsed = "0x1::Foo::<SELF>".parse::<StructTag>();
+        assert!(
+            parsed.is_ok(),
+            "Failed to parse struct tag with <SELF> name: {}",
+            parsed.unwrap_err()
+        );
     }
 
     #[test]

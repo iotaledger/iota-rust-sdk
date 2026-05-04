@@ -7,7 +7,7 @@
 //! This proves the grammar is a sound description of what BCS can decode
 //! (grammar → BCS). Run with:
 //!
-//!   BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema
+//!   BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
 //!   cargo test -p iota-sdk-types --features bcs-schema --test
 //! bcs_schema_fuzzing
 
@@ -390,7 +390,7 @@ impl TestHarness {
         let content = std::fs::read_to_string(schema_path).unwrap_or_else(|_| {
             panic!(
                 "failed to read {schema_path} — regenerate it with:\n  \
-             BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema"
+             BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash"
             )
         });
         let grammar = parse_grammar(&content);

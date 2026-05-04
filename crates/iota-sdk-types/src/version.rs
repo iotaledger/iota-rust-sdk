@@ -106,6 +106,8 @@ impl Version {
     const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
 
+    pub const OBJECT_START: Self = Self(1);
+
     /// Create a new Version from a u64 value
     pub const fn from_u64(value: u64) -> Self {
         Self(value)

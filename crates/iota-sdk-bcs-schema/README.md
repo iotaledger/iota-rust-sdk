@@ -62,7 +62,7 @@ The macro only writes to disk when the `BCS_SCHEMA` env var is set, so normal de
 
 ```sh
 # Regenerate
-BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema
+BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
 
 # Normal build — no regeneration, no recompile overhead
 cargo check --all-features
