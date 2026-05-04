@@ -182,6 +182,30 @@ impl From<[u8; Self::LENGTH]> for Digest {
     }
 }
 
+impl PartialEq<[u8; Self::LENGTH]> for Digest {
+    fn eq(&self, other: &[u8; Self::LENGTH]) -> bool {
+        &self.0 == other
+    }
+}
+
+impl PartialEq<Digest> for [u8; Digest::LENGTH] {
+    fn eq(&self, other: &Digest) -> bool {
+        self == &other.0
+    }
+}
+
+impl PartialEq<Vec<u8>> for Digest {
+    fn eq(&self, other: &Vec<u8>) -> bool {
+        self.0.as_slice() == other.as_slice()
+    }
+}
+
+impl PartialEq<Digest> for Vec<u8> {
+    fn eq(&self, other: &Digest) -> bool {
+        self.as_slice() == other.0.as_slice()
+    }
+}
+
 impl std::fmt::Display for Digest {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // output size is determined via the following formula:
@@ -374,6 +398,33 @@ mod tests {
             result,
             Err(DigestParseError::InvalidByteLength { actual: 33 })
         );
+    }
+
+    #[test]
+    fn partial_eq_array_u8() {
+        let digest = Digest::new([1u8; 32]);
+        let matching = [1u8; 32];
+        let non_matching = [2u8; 32];
+
+        assert_eq!(digest, matching);
+        assert_eq!(matching, digest);
+        assert_ne!(digest, non_matching);
+        assert_ne!(non_matching, digest);
+    }
+
+    #[test]
+    fn partial_eq_vec_u8() {
+        let digest = Digest::new([1u8; 32]);
+        let matching = vec![1u8; 32];
+        let non_matching = vec![2u8; 32];
+        let wrong_length = vec![1u8; 31];
+
+        assert_eq!(digest, matching);
+        assert_eq!(matching, digest);
+        assert_ne!(digest, non_matching);
+        assert_ne!(non_matching, digest);
+        assert_ne!(digest, wrong_length);
+        assert_ne!(wrong_length, digest);
     }
 
     #[test]
