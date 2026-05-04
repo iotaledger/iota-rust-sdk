@@ -34350,7 +34350,9 @@ public func FfiConverterTypeTransactionsFilter_lower(_ value: TransactionsFilter
 
 
 /**
- * Identifies a struct and the module it was defined in
+ * Stores the origin of a data type where it first appeared in the version
+ * chain. A data type is identified by the name of the module and the name of
+ * the struct/enum in combination.
  *
  * # BCS
  *
@@ -34361,15 +34363,33 @@ public func FfiConverterTypeTransactionsFilter_lower(_ value: TransactionsFilter
  * ```
  */
 public struct TypeOrigin {
+    /**
+     * The name of the module the data type resides in.
+     */
     public var moduleName: Identifier
-    public var structName: Identifier
+    /**
+     * identifier.
+     */
+    public var datatypeName: Identifier
+    /**
+     * ID of the package, where the given type first appeared.
+     */
     public var package: ObjectId
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(moduleName: Identifier, structName: Identifier, package: ObjectId) {
+    public init(
+        /**
+         * The name of the module the data type resides in.
+         */moduleName: Identifier, 
+        /**
+         * identifier.
+         */datatypeName: Identifier, 
+        /**
+         * ID of the package, where the given type first appeared.
+         */package: ObjectId) {
         self.moduleName = moduleName
-        self.structName = structName
+        self.datatypeName = datatypeName
         self.package = package
     }
 }
@@ -34388,14 +34408,14 @@ public struct FfiConverterTypeTypeOrigin: FfiConverterRustBuffer {
         return
             try TypeOrigin(
                 moduleName: FfiConverterTypeIdentifier.read(from: &buf), 
-                structName: FfiConverterTypeIdentifier.read(from: &buf), 
+                datatypeName: FfiConverterTypeIdentifier.read(from: &buf), 
                 package: FfiConverterTypeObjectId.read(from: &buf)
         )
     }
 
     public static func write(_ value: TypeOrigin, into buf: inout [UInt8]) {
         FfiConverterTypeIdentifier.write(value.moduleName, into: &buf)
-        FfiConverterTypeIdentifier.write(value.structName, into: &buf)
+        FfiConverterTypeIdentifier.write(value.datatypeName, into: &buf)
         FfiConverterTypeObjectId.write(value.package, into: &buf)
     }
 }
@@ -34492,7 +34512,7 @@ public func FfiConverterTypeUnchangedSharedObject_lower(_ value: UnchangedShared
  */
 public struct UpgradeInfo {
     /**
-     * Id of the upgraded packages
+     * ID of the upgraded package
      */
     public var upgradedId: ObjectId
     /**
@@ -34504,7 +34524,7 @@ public struct UpgradeInfo {
     // declare one manually.
     public init(
         /**
-         * Id of the upgraded packages
+         * ID of the upgraded package
          */upgradedId: ObjectId, 
         /**
          * Version of the upgraded package

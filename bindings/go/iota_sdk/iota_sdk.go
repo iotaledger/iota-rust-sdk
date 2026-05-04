@@ -41241,7 +41241,9 @@ func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 	value.Destroy()
 }
 
-// Identifies a struct and the module it was defined in
+// Stores the origin of a data type where it first appeared in the version
+// chain. A data type is identified by the name of the module and the name of
+// the struct/enum in combination.
 //
 // # BCS
 //

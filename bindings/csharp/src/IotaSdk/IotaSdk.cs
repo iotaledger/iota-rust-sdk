@@ -58633,7 +58633,9 @@ class FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<TransactionsFil
 
 
 /// <summary>
-/// Identifies a struct and the module it was defined in
+/// Stores the origin of a data type where it first appeared in the version
+/// chain. A data type is identified by the name of the module and the name of
+/// the struct/enum in combination.
 ///
 /// # BCS
 ///
@@ -58643,15 +58645,33 @@ class FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<TransactionsFil
 /// type-origin = identifier identifier object-id
 /// ```
 /// </summary>
+/// <param name="module_name">
+/// The name of the module the data type resides in.
+/// </param>
+/// <param name="datatype_name">
+/// identifier.
+/// </param>
+/// <param name="package">
+/// ID of the package, where the given type first appeared.
+/// </param>
 public record TypeOrigin (
+    /// <summary>
+    /// The name of the module the data type resides in.
+    /// </summary>
     Identifier @moduleName, 
-    Identifier @structName, 
+    /// <summary>
+    /// identifier.
+    /// </summary>
+    Identifier @datatypeName, 
+    /// <summary>
+    /// ID of the package, where the given type first appeared.
+    /// </summary>
     ObjectId @package
 ) : IDisposable {
     public void Dispose() {
     FFIObjectUtil.DisposeAll(
             this.@moduleName,
-            this.@structName,
+            this.@datatypeName,
             this.@package);
     }
 }
@@ -58662,7 +58682,7 @@ class FfiConverterTypeTypeOrigin: FfiConverterRustBuffer<TypeOrigin> {
     public override TypeOrigin Read(BigEndianStream stream) {
         return new TypeOrigin(
             @moduleName: FfiConverterTypeIdentifier.INSTANCE.Read(stream),
-            @structName: FfiConverterTypeIdentifier.INSTANCE.Read(stream),
+            @datatypeName: FfiConverterTypeIdentifier.INSTANCE.Read(stream),
             @package: FfiConverterTypeObjectId.INSTANCE.Read(stream)
         );
     }
@@ -58670,13 +58690,13 @@ class FfiConverterTypeTypeOrigin: FfiConverterRustBuffer<TypeOrigin> {
     public override int AllocationSize(TypeOrigin value) {
         return 0
             + FfiConverterTypeIdentifier.INSTANCE.AllocationSize(value.@moduleName)
-            + FfiConverterTypeIdentifier.INSTANCE.AllocationSize(value.@structName)
+            + FfiConverterTypeIdentifier.INSTANCE.AllocationSize(value.@datatypeName)
             + FfiConverterTypeObjectId.INSTANCE.AllocationSize(value.@package);
     }
 
     public override void Write(TypeOrigin value, BigEndianStream stream) {
             FfiConverterTypeIdentifier.INSTANCE.Write(value.@moduleName, stream);
-            FfiConverterTypeIdentifier.INSTANCE.Write(value.@structName, stream);
+            FfiConverterTypeIdentifier.INSTANCE.Write(value.@datatypeName, stream);
             FfiConverterTypeObjectId.INSTANCE.Write(value.@package, stream);
     }
 }
@@ -58741,14 +58761,14 @@ class FfiConverterTypeUnchangedSharedObject: FfiConverterRustBuffer<UnchangedSha
 /// ```
 /// </summary>
 /// <param name="upgraded_id">
-/// Id of the upgraded packages
+/// ID of the upgraded package
 /// </param>
 /// <param name="upgraded_version">
 /// Version of the upgraded package
 /// </param>
 public record UpgradeInfo (
     /// <summary>
-    /// Id of the upgraded packages
+    /// ID of the upgraded package
     /// </summary>
     ObjectId @upgradedId, 
     /// <summary>
