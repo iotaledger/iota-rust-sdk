@@ -234,6 +234,7 @@ impl MovePackage {
     }
 
     /// Calculate the digest of the [MovePackage].
+    #[cfg(feature = "hash")]
     pub fn digest(&self) -> Digest {
         Self::compute_digest_for_modules_and_deps(
             self.modules.values(),
