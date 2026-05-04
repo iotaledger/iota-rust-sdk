@@ -413,3 +413,181 @@ mod tests {
         assert_eq!(json_package.digest, package.digest);
     }
 }
+
+#[cfg(test)]
+mod move_package_tests {
+    use super::*;
+
+    fn module(name: &str, bytes: &[u8]) -> (Identifier, Vec<u8>) {
+        (Identifier::new(name).unwrap(), bytes.to_vec())
+    }
+
+    fn upgrade_info(upgraded_id: ObjectId, version: u64) -> UpgradeInfo {
+        UpgradeInfo {
+            upgraded_id,
+            upgraded_version: Version::from_u64(version),
+        }
+    }
+
+    fn package(
+        modules: impl IntoIterator<Item = (Identifier, Vec<u8>)>,
+        type_origin_table: Vec<TypeOrigin>,
+        linkage_table: impl IntoIterator<Item = (ObjectId, UpgradeInfo)>,
+    ) -> MovePackage {
+        MovePackage {
+            id: ObjectId::ZERO,
+            version: Version::OBJECT_START,
+            modules: modules.into_iter().collect(),
+            type_origin_table,
+            linkage_table: linkage_table.into_iter().collect(),
+        }
+    }
+
+    #[test]
+    fn size_all_components() {
+        let mod_a_name = "m1";
+        let mod_a_bytes: &[u8] = &[0; 10];
+        let mod_b_name = "m2";
+        let mod_b_bytes: &[u8] = &[0; 20];
+        let type_module_name = "t_module";
+        let type_datatype_name = "T";
+
+        let pkg = package(
+            [
+                module(mod_a_name, mod_a_bytes),
+                module(mod_b_name, mod_b_bytes),
+            ],
+            vec![TypeOrigin {
+                module_name: Identifier::new(type_module_name).unwrap(),
+                datatype_name: Identifier::new(type_datatype_name).unwrap(),
+                package: ObjectId::ZERO,
+            }],
+            [(
+                ObjectId::from_u16(1),
+                upgrade_info(ObjectId::from_u16(2), 1),
+            )],
+        );
+        let modules_size =
+            (mod_a_name.len() + mod_a_bytes.len()) + (mod_b_name.len() + mod_b_bytes.len());
+        let type_origin_size = type_module_name.len() + type_datatype_name.len() + ObjectId::LENGTH;
+        let linkage_size = ObjectId::LENGTH + ObjectId::LENGTH + std::mem::size_of::<Version>();
+        let expected =
+            std::mem::size_of::<Version>() + modules_size + type_origin_size + linkage_size;
+        assert_eq!(pkg.size(), expected);
+    }
+
+    #[test]
+    fn new_exceeding_max_size_fails() {
+        let modules = [module("m", &[0; 100])];
+        let max = 10_u64;
+        let err = MovePackage::new(
+            ObjectId::ZERO,
+            Version::OBJECT_START,
+            modules.into_iter().collect(),
+            max,
+            vec![],
+            BTreeMap::new(),
+        )
+        .unwrap_err();
+        match err {
+            ExecutionError::PackageTooBig {
+                object_size,
+                max_object_size,
+            } => {
+                assert!(object_size > max);
+                assert_eq!(max_object_size, max);
+            }
+            other => panic!("expected PackageTooBig, got {other:?}"),
+        }
+    }
+
+    #[cfg(feature = "hash")]
+    mod digest {
+        use super::*;
+
+        #[test]
+        fn digest_matches_pinned_hex() {
+            const EXPECTED_HEX: &str =
+                "087322ae613945320a83dce5d45626eb3a112a0d98ed6885788635194f2d566f";
+
+            let pkg = package(
+                [module("a", b"first"), module("b", b"second")],
+                vec![],
+                [(
+                    ObjectId::from_u16(0x01),
+                    upgrade_info(ObjectId::from_u16(0xdead), 1),
+                )],
+            );
+
+            let expected = Digest::new(hex::decode(EXPECTED_HEX).unwrap().try_into().unwrap());
+            assert_eq!(pkg.digest(), expected);
+        }
+
+        #[test]
+        fn digest_ignores_module_names() {
+            // Same module bytes under different identifier keys must hash the same,
+            // because the digest is computed over module *values* only.
+            let bytes = b"module_bytes".to_vec();
+            let pkg1 = package(
+                [(Identifier::new("foo").unwrap(), bytes.clone())],
+                vec![],
+                [],
+            );
+            let pkg2 = package([(Identifier::new("bar").unwrap(), bytes)], vec![], []);
+            assert_eq!(pkg1.digest(), pkg2.digest());
+        }
+
+        #[test]
+        fn digest_changes_with_module_bytes() {
+            let pkg1 = package([module("m", b"version_one")], vec![], []);
+            let pkg2 = package([module("m", b"version_two")], vec![], []);
+            assert_ne!(pkg1.digest(), pkg2.digest());
+        }
+
+        #[test]
+        fn digest_changes_with_dependencies() {
+            let modules = [module("m", b"same_bytes")];
+            let pkg1 = package(modules.clone(), vec![], []);
+            let pkg2 = package(
+                modules,
+                vec![],
+                [(
+                    ObjectId::from_u16(0x01),
+                    upgrade_info(ObjectId::from_u16(0x99), 1),
+                )],
+            );
+            assert_ne!(pkg1.digest(), pkg2.digest());
+        }
+
+        #[test]
+        fn digest_uses_only_upgraded_id_from_linkage() {
+            let modules = [module("m", b"bytes")];
+            let upgraded = ObjectId::from_u16(0xaa);
+
+            // Different linkage-table keys (original_id) and versions, same upgraded_id
+            // → digest must be unchanged.
+            let pkg1 = package(
+                modules.clone(),
+                vec![],
+                [(ObjectId::from_u16(0x01), upgrade_info(upgraded, 1))],
+            );
+            let pkg2 = package(
+                modules.clone(),
+                vec![],
+                [(ObjectId::from_u16(0x02), upgrade_info(upgraded, 999))],
+            );
+            assert_eq!(pkg1.digest(), pkg2.digest());
+
+            // Same original_id, different upgraded_id → digest must change.
+            let pkg3 = package(
+                modules,
+                vec![],
+                [(
+                    ObjectId::from_u16(0x01),
+                    upgrade_info(ObjectId::from_u16(0xbb), 1),
+                )],
+            );
+            assert_ne!(pkg1.digest(), pkg3.digest());
+        }
+    }
+}
