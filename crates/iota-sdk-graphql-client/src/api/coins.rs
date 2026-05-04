@@ -119,7 +119,6 @@ impl Client {
 mod tests {
     use futures::StreamExt;
     use iota_types::{Address, Ed25519PublicKey};
-    use tokio::time;
 
     use crate::{
         Direction, PaginationFilter,
@@ -154,28 +153,16 @@ mod tests {
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
         let address = key.derive_address();
-        faucet.request_and_wait(address).await.unwrap();
+        faucet
+            .request_and_wait_for_finalized(address, &client)
+            .await
+            .unwrap();
 
-        const MAX_RETRIES: u32 = 10;
-        const RETRY_DELAY: time::Duration = time::Duration::from_secs(1);
-
-        let mut num_coins = 0;
-        for attempt in 0..MAX_RETRIES {
-            let mut stream = client.coins_stream(address, None, Direction::default());
-
-            while let Some(result) = stream.next().await {
-                match result {
-                    Ok(_) => num_coins += 1,
-                    Err(_) => {
-                        if attempt < MAX_RETRIES - 1 {
-                            time::sleep(RETRY_DELAY).await;
-                            num_coins = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        let num_coins = client
+            .coins_stream(address, None, Direction::default())
+            .filter_map(|r| async { r.ok() })
+            .count()
+            .await;
 
         assert!(num_coins >= NUM_COINS_FROM_FAUCET);
     }
