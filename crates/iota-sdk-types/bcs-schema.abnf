@@ -389,7 +389,7 @@ type-argument-error = %d00   ; TypeNotFound
                     / %d01   ; ConstraintNotSatisfied
 
 type-origin = identifier   ; module-name
-              identifier   ; struct-name
+              identifier   ; datatype-name
               object-id    ; package
 
 type-tag = %d00              ; Bool
