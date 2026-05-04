@@ -350,22 +350,35 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::{Version, transaction::Input};
+    use crate::{
+        Version,
+        transaction::{Input, SharedObjectReference},
+    };
+
+    #[derive(serde::Serialize, serde::Deserialize)]
+    struct PureInput {
+        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        value: Vec<u8>,
+    }
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "snake_case")]
     enum ReadableInput {
-        Pure {
-            #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-            value: Vec<u8>,
-        },
+        /// A move value serialized as BCS.
+        ///
+        /// For normal operations this is required to be a move primitive type
+        /// and not contain structs or objects.
+        Pure(PureInput),
+        /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
+        /// A move object whose owner is "Shared"
         Shared {
             object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+            #[serde(with = "crate::_serde::ReadableDisplay")]
             initial_shared_version: Version,
             mutable: bool,
         },
+        /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
     }
 
@@ -395,15 +408,15 @@ mod input_argument {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    Input::Pure { value } => ReadableInput::Pure { value },
+                    Input::Pure(value) => ReadableInput::Pure(PureInput { value }),
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => ReadableInput::Shared {
+                    }) => ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -413,15 +426,15 @@ mod input_argument {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    Input::Pure { value } => CallArg::Pure(value),
+                    Input::Pure(value) => CallArg::Pure(value),
                     Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => CallArg::Object(ObjectArg::Shared {
+                    }) => CallArg::Object(ObjectArg::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -442,7 +455,7 @@ mod input_argument {
         {
             if deserializer.is_human_readable() {
                 ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure { value },
+                    ReadableInput::Pure(PureInput { value }) => Input::Pure(value),
                     ReadableInput::ImmutableOrOwned(object_ref) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -450,16 +463,16 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => Input::Shared {
+                    } => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => Input::Pure { value },
+                    CallArg::Pure(value) => Input::Pure(value),
                     CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -467,11 +480,11 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    }) => Input::Shared {
+                    }) => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
@@ -872,7 +885,7 @@ mod tests {
 
     use crate::{
         Digest, ObjectId, ObjectReference, Version,
-        transaction::{Argument, Input, Transaction},
+        transaction::{Argument, Input, SharedObjectReference, Transaction},
     };
 
     #[test]
@@ -901,9 +914,7 @@ mod tests {
     fn input_argument() {
         let test_cases = [
             (
-                Input::Pure {
-                    value: vec![1, 2, 3, 4],
-                },
+                Input::Pure(vec![1, 2, 3, 4]),
                 serde_json::json!({
                   "pure": {
                     "value": "AQIDBA=="
@@ -925,11 +936,11 @@ mod tests {
                 }),
             ),
             (
-                Input::Shared {
+                Input::Shared(SharedObjectReference {
                     object_id: ObjectId::ZERO,
                     initial_shared_version: Version::from_u64(1),
                     mutable: true,
-                },
+                }),
                 serde_json::json!({
                   "shared": {
                     "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
