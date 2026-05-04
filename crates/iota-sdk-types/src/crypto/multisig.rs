@@ -31,7 +31,10 @@ const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
 #[derive(Debug, thiserror::Error)]
 // TODO reuse another type?
-pub enum MultisigError {}
+pub enum MultisigError {
+    #[error("{0}")]
+    TryFromSliceError(#[from] std::array::TryFromSliceError),
+}
 
 /// Enum of valid public keys for multisig committee members
 ///
@@ -631,13 +634,13 @@ impl MultisigMemberSignature {
         match bytes.first() {
             Some(x) => {
                 if x == &(SignatureScheme::Ed25519 as u8) {
-                    let signature = Ed25519Signature::from_bytes(&bytes[1..]).unwrap();
+                    let signature = Ed25519Signature::from_bytes(&bytes[1..])?;
                     Ok(Self::Ed25519(signature))
                 } else if x == &(SignatureScheme::Secp256k1 as u8) {
-                    let signature = Secp256k1Signature::from_bytes(&bytes[1..]).unwrap();
+                    let signature = Secp256k1Signature::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256k1(signature))
                 } else if x == &(SignatureScheme::Secp256r1 as u8) {
-                    let signature = Secp256r1Signature::from_bytes(&bytes[1..]).unwrap();
+                    let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256r1(signature))
                 } else {
                     panic!()
