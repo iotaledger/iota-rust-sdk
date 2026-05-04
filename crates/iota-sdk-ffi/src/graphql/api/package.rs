@@ -137,7 +137,7 @@ impl GraphQLClient {
     /// Return the normalized Move module data for the provided module.
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     #[uniffi::method(default(
         version = None,
         pagination_filter_enums = None,

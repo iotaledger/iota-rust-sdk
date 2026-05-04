@@ -177,6 +177,7 @@ mod end_of_epoch {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
@@ -185,6 +186,7 @@ mod end_of_epoch {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
