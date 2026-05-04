@@ -8,6 +8,7 @@ mod intent;
 mod move_authenticator;
 mod multisig;
 mod passkey;
+mod public_key;
 mod randomness_round;
 mod secp256k1;
 mod secp256r1;
@@ -22,9 +23,10 @@ pub use intent::{
 pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1};
 pub use multisig::{
     BitmapUnit, MultisigAggregatedSignature, MultisigCommittee, MultisigMember,
-    MultisigMemberPublicKey, MultisigMemberSignature, ThresholdUnit, WeightUnit,
+    MultisigMemberSignature, ThresholdUnit, WeightUnit,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
+pub use public_key::PublicKey;
 pub use randomness_round::RandomnessRound;
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};

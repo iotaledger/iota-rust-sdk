@@ -2,9 +2,11 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::convert::Infallible;
+
 use super::{
     Ed25519PublicKey, Ed25519Signature, MultisigAggregatedSignature, PasskeyAuthenticator,
-    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
+    PublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
 };
 use crate::crypto::move_authenticator::MoveAuthenticator;
 
@@ -327,6 +329,26 @@ impl UserSignature {
             }
             UserSignature::PasskeyAuthenticator(_) => SignatureScheme::PasskeyAuthenticator,
             UserSignature::MoveAuthenticator(_) => SignatureScheme::MoveAuthenticator,
+        }
+    }
+
+    pub fn to_public_key(&self) -> Result<PublicKey, Infallible> {
+        match self {
+            UserSignature::Simple(simple) => match simple {
+                SimpleSignature::Ed25519 { public_key, .. } => Ok(PublicKey::Ed25519(*public_key)),
+                SimpleSignature::Secp256k1 { public_key, .. } => {
+                    Ok(PublicKey::Secp256k1(*public_key))
+                }
+                SimpleSignature::Secp256r1 { public_key, .. } => {
+                    Ok(PublicKey::Secp256r1(*public_key))
+                }
+            },
+            UserSignature::Multisig(_) => panic!(),
+            UserSignature::ZkLoginAuthenticatorDeprecated => panic!(),
+            UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
+                Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
+            }
+            UserSignature::MoveAuthenticator(_) => panic!(),
         }
     }
 }

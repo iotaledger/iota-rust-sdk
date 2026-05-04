@@ -136,10 +136,10 @@ impl MultisigMemberSignature {
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
-pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
+pub struct PublicKey(pub iota_sdk::types::PublicKey);
 
 #[uniffi::export]
-impl MultisigMemberPublicKey {
+impl PublicKey {
     pub fn is_ed25519(&self) -> bool {
         self.0.is_ed25519()
     }
@@ -397,9 +397,9 @@ pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 
 #[uniffi::export]
 impl MultisigMember {
-    /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+    /// Construct a new member from a `PublicKey` and a `weight`.
     #[uniffi::constructor]
-    pub fn new(public_key: &MultisigMemberPublicKey, weight: u8) -> Self {
+    pub fn new(public_key: &PublicKey, weight: u8) -> Self {
         Self(iota_sdk::types::MultisigMember::new(
             public_key.0.clone(),
             weight,
@@ -407,7 +407,7 @@ impl MultisigMember {
     }
 
     /// This member's public key.
-    pub fn public_key(&self) -> MultisigMemberPublicKey {
+    pub fn public_key(&self) -> PublicKey {
         self.0.public_key().clone().into()
     }
 
@@ -419,14 +419,14 @@ impl MultisigMember {
 
 crate::export_iota_types_objects_bcs_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember
 );
 crate::export_iota_types_objects_json_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember
