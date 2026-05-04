@@ -58649,6 +58649,7 @@ class FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<TransactionsFil
 /// The name of the module the data type resides in.
 /// </param>
 /// <param name="datatype_name">
+/// The name of the data type. Either refers to an enum or a struct
 /// identifier.
 /// </param>
 /// <param name="package">
@@ -58660,6 +58661,7 @@ public record TypeOrigin (
     /// </summary>
     Identifier @moduleName, 
     /// <summary>
+    /// The name of the data type. Either refers to an enum or a struct
     /// identifier.
     /// </summary>
     Identifier @datatypeName, 

@@ -62171,6 +62171,7 @@ data class TypeOrigin (
      */
     var `moduleName`: Identifier, 
     /**
+     * The name of the data type. Either refers to an enum or a struct
      * identifier.
      */
     var `datatypeName`: Identifier, 

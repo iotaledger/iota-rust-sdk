@@ -34368,6 +34368,7 @@ public struct TypeOrigin {
      */
     public var moduleName: Identifier
     /**
+     * The name of the data type. Either refers to an enum or a struct
      * identifier.
      */
     public var datatypeName: Identifier
@@ -34383,6 +34384,7 @@ public struct TypeOrigin {
          * The name of the module the data type resides in.
          */moduleName: Identifier, 
         /**
+         * The name of the data type. Either refers to an enum or a struct
          * identifier.
          */datatypeName: Identifier, 
         /**

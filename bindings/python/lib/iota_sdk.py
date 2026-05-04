@@ -22025,6 +22025,7 @@ class TypeOrigin:
 
     datatype_name: "Identifier"
     """
+    The name of the data type. Either refers to an enum or a struct
     identifier.
     """
 
