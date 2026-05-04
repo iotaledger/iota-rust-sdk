@@ -392,7 +392,7 @@ impl ObjectData {
 pub struct TypeOrigin {
     /// The name of the module the data type resides in.
     pub module_name: Arc<Identifier>,
-    // The name of the data type. Either refers to an enum or a struct
+    /// The name of the data type. Either refers to an enum or a struct
     /// identifier.
     pub datatype_name: Arc<Identifier>,
     /// ID of the package, where the given type first appeared.
