@@ -31,7 +31,8 @@ pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
 
 #[cfg(feature = "serde")]
-#[derive(Debug)]
+#[derive(thiserror::Error, Debug)]
+#[error("error deserializing bytes: {0}")]
 pub struct SignatureFromBytesError(String);
 
 #[cfg(feature = "serde")]
@@ -40,16 +41,6 @@ impl SignatureFromBytesError {
         Self(msg.to_string())
     }
 }
-
-#[cfg(feature = "serde")]
-impl core::fmt::Display for SignatureFromBytesError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "error deserializing bytes: {}", self.0)
-    }
-}
-
-#[cfg(feature = "serde")]
-impl std::error::Error for SignatureFromBytesError {}
 
 // Implement various base64 fixed-size array helpers
 //
