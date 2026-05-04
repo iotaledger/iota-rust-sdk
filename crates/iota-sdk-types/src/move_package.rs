@@ -69,29 +69,12 @@ pub struct MovePackageData {
 impl MovePackageData {
     #[cfg(feature = "hash")]
     pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
-        let mut components = dependencies
-            .iter()
-            .map(|o| o.into_bytes())
-            .chain(modules.iter().map(|module| {
-                let mut hasher = Hasher::new();
-                hasher.update(module);
-                hasher.finalize().into_inner()
-            }))
-            .collect::<Vec<_>>();
-
-        // Sort so the order of the modules and the order of the dependencies
-        // does not matter.
-        components.sort();
-
-        let mut hasher = Hasher::new();
-        for c in components {
-            hasher.update(c);
-        }
+        let digest = MovePackage::compute_digest_for_modules_and_deps(&modules, &dependencies);
 
         Self {
             modules,
             dependencies,
-            digest: Digest::from(hasher.finalize().into_inner()),
+            digest,
         }
     }
 }
