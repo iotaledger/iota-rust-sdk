@@ -3,9 +3,10 @@
 
 use std::collections::BTreeMap;
 
+#[cfg(feature = "hash")]
+use crate::hash::Hasher;
 use crate::{
     Digest, ExecutionError, Identifier, ObjectId,
-    hash::Hasher,
     version::{Version, VersionError},
 };
 
@@ -68,7 +69,6 @@ pub struct MovePackageData {
 impl MovePackageData {
     #[cfg(feature = "hash")]
     pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
-        use crate::hash::Hasher;
         let mut components = dependencies
             .iter()
             .map(|o| o.into_bytes())
@@ -246,6 +246,7 @@ impl MovePackage {
     /// It is important that this function is shared across both the calculation
     /// of the digest for the package, and the calculation of the digest
     /// on-chain.
+    #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
         object_ids: impl IntoIterator<Item = &'a ObjectId>,
