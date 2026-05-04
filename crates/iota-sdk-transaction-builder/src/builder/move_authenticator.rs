@@ -6,7 +6,8 @@
 //! Account Abstraction.
 
 use iota_types::{
-    MoveAuthenticator, MoveAuthenticatorV1, ObjectId, ObjectReference, Owner, TypeTag,
+    Input, MoveAuthenticator, MoveAuthenticatorV1, ObjectId, ObjectReference, Owner,
+    SharedObjectReference, TypeTag,
 };
 
 use crate::{
@@ -66,9 +67,8 @@ impl MoveAuthenticatorBuilder {
         for input in self.call_args {
             call_args.push(match input {
                 InputKind::ImmutableOrOwned(object_id)
-                | InputKind::Input(iota_types::Input::ImmutableOrOwned(ObjectReference {
-                    object_id,
-                    ..
+                | InputKind::Input(Input::ImmutableOrOwned(ObjectReference {
+                    object_id, ..
                 })) => {
                     let obj = client
                         .object(object_id, None)
@@ -82,14 +82,14 @@ impl MoveAuthenticatorBuilder {
                             "call arguments must not be owned".to_owned(),
                         ));
                     }
-                    iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                    Input::ImmutableOrOwned(obj.object_ref())
                 }
                 InputKind::Shared { object_id, mutable }
-                | InputKind::Input(iota_types::Input::Shared(
-                    iota_types::SharedObjectReference {
-                        object_id, mutable, ..
-                    },
-                )) => {
+                | InputKind::Input(Input::Shared(SharedObjectReference {
+                    object_id,
+                    mutable,
+                    ..
+                })) => {
                     let obj = client
                         .object(object_id, None)
                         .await
@@ -104,13 +104,13 @@ impl MoveAuthenticatorBuilder {
                         )));
                     };
 
-                    iota_types::Input::Shared(iota_types::SharedObjectReference {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version: *version,
                         mutable,
                     })
                 }
-                InputKind::Receiving(_) | InputKind::Input(iota_types::Input::Receiving(_)) => {
+                InputKind::Receiving(_) | InputKind::Input(Input::Receiving(_)) => {
                     return Err(Error::InvalidMoveAuthArg(
                         "call arguments must not be receiving".to_owned(),
                     ));

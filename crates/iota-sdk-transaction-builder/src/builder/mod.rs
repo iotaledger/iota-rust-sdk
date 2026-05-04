@@ -12,8 +12,8 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
-    TransactionV1, TypeTag,
+    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
+    TransactionExpiration, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -1035,13 +1035,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                     obj.digest(),
                                 ))
                             }
-                            Owner::Shared(v) => {
-                                iota_types::Input::Shared(iota_types::SharedObjectReference {
-                                    object_id,
-                                    initial_shared_version: *v,
-                                    mutable: false,
-                                })
-                            }
+                            Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
+                                object_id,
+                                initial_shared_version: *v,
+                                mutable: false,
+                            }),
                             _ => unimplemented!(
                                 "a new enum variant was added and needs to be handled"
                             ),
@@ -1061,7 +1059,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
 
                     let input = match obj.owner() {
                         Owner::Shared(version) => {
-                            iota_types::Input::Shared(iota_types::SharedObjectReference {
+                            iota_types::Input::Shared(SharedObjectReference {
                                 object_id,
                                 initial_shared_version: *version,
                                 mutable,

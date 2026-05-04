@@ -5,7 +5,7 @@
 
 use std::collections::HashMap;
 
-use iota_types::{Identifier, ObjectId, ObjectReference, TypeTag};
+use iota_types::{Identifier, ObjectId, ObjectReference, SharedObjectReference, TypeTag};
 
 /// An identifier indicating the unresolved index of an input.
 pub type InputId = usize;
@@ -25,9 +25,7 @@ impl Input {
             InputKind::Input(input) => match input {
                 iota_types::Input::Pure(..) => None,
                 iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-                | iota_types::Input::Shared(iota_types::SharedObjectReference {
-                    object_id, ..
-                })
+                | iota_types::Input::Shared(SharedObjectReference { object_id, .. })
                 | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
                     Some(object_id)
                 }
@@ -54,7 +52,7 @@ impl InputKind {
         | Self::Input(
             iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
             | iota_types::Input::Receiving(ObjectReference { object_id, .. })
-            | iota_types::Input::Shared(iota_types::SharedObjectReference { object_id, .. }),
+            | iota_types::Input::Shared(SharedObjectReference { object_id, .. }),
         ) = self
         {
             Some(*object_id)

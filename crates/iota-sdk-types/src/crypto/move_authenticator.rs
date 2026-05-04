@@ -1,7 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Address, Input, ObjectId, ObjectReference, TypeTag, Version};
+use crate::{
+    Address, Input, ObjectId, ObjectReference, TypeTag, Version, transaction::SharedObjectReference,
+};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
@@ -56,7 +58,7 @@ impl MoveAuthenticatorV1 {
         Self {
             call_args,
             type_args,
-            object_to_authenticate: Input::Shared(crate::transaction::SharedObjectReference {
+            object_to_authenticate: Input::Shared(SharedObjectReference {
                 object_id: object_to_authenticate,
                 initial_shared_version,
                 mutable: false,
@@ -69,9 +71,7 @@ impl MoveAuthenticatorV1 {
     pub fn address(&self) -> Address {
         match self.object_to_authenticate {
             Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-            | Input::Shared(crate::transaction::SharedObjectReference { object_id, .. }) => {
-                object_id.into()
-            }
+            | Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
             _ => unreachable!(),
         }
     }
