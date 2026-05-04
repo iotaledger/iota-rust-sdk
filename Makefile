@@ -378,6 +378,7 @@ release-examples: ## Run all release examples
 	@$(MAKE) csharp-release-example
 	@$(MAKE) swift-release-example
 
+.PHONY: bcs-schema
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
