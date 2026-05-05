@@ -426,7 +426,6 @@ pub struct CancelledTransaction {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
 }
 
