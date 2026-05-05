@@ -3971,6 +3971,42 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3986,15 +4022,7 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
-    fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
+    fun uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_address_from_json(
 ): Short
@@ -4009,22 +4037,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_argument_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_argument_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_argument_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_base64_decode(
 ): Short
@@ -4045,14 +4057,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(
 ): Short
@@ -4125,22 +4129,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs(
 ): Short
@@ -4229,30 +4217,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_execution_status_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs(
 ): Short
@@ -4347,22 +4311,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_input_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_jwk_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs(
 ): Short
@@ -4812,14 +4760,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_json(
@@ -4836,37 +4776,9 @@ fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs(
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
@@ -4874,7 +4786,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
@@ -4895,10 +4811,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes(
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest(
 ): Short
@@ -5088,7 +5000,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_to_base58(
 ): Short
@@ -5143,10 +5063,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request(
 ): Short
@@ -5382,6 +5298,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt(
@@ -5390,23 +5310,23 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1(
 ): Short
@@ -5416,23 +5336,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_name_format(
 ): Short
@@ -5492,6 +5404,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
@@ -5500,7 +5416,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
@@ -5509,6 +5429,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address(
 ): Short
@@ -5738,6 +5660,86 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_url(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
@@ -5904,10 +5906,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig(
@@ -5916,8 +5914,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64(
@@ -5925,10 +5921,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64(
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes(
 ): Short
@@ -5950,61 +5942,35 @@ fun uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_veri
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_as_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_congested(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_valid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_next(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_previous(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_version(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs(
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch(
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_clock(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_framework(
 ): Short
@@ -6012,11 +5978,29 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_address_generate(
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_max(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_stardust(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_zero(
 ): Short
@@ -6046,12 +6030,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new(
@@ -6067,10 +6045,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object(
 ): Short
@@ -6096,7 +6070,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(
+fun uniffi_iota_sdk_ffi_checksum_constructor_digest_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
 ): Short
@@ -6132,10 +6106,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2(
@@ -6143,24 +6113,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_chang
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new(
 ): Short
@@ -6184,7 +6136,147 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned(
 ): Short
@@ -6215,6 +6307,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
 ): Short
@@ -6330,15 +6424,41 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_max(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_std(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero(
 ): Short
@@ -6536,6 +6656,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_clock(
@@ -6558,15 +6682,17 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_paus
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap(
 ): Short
@@ -6575,6 +6701,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota(
 ): Short
@@ -6590,6 +6722,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap(
@@ -6598,7 +6732,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
@@ -6611,8 +6745,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1(
 ): Short
@@ -6684,8 +6816,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authentic
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new(
@@ -6694,23 +6824,25 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregat
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet(
 ): Short
 fun ffi_iota_sdk_ffi_uniffi_contract_version(
 ): Int
@@ -6766,27 +6898,59 @@ internal interface UniffiLib : Library {
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_address_generate(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_random(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_stardust(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_system_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_address_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -6884,26 +7048,6 @@ fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(`ptr`: Pointer,`me
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7102,30 +7246,6 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures(`ptr`: Po
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_clone_circomg1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_circomg1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(`el0`: Pointer,`el1`: Pointer,`el2`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(`el00`: Pointer,`el01`: Pointer,`el10`: Pointer,`el11`: Pointer,`el20`: Pointer,`el21`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7260,10 +7380,18 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(`base58`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_digest_generate(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_digest_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7412,10 +7540,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_endofepochtransactionkind(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_endofepochtransactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7430,64 +7554,6 @@ fun uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq(`
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(`key`: Pointer,`observations`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
-fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
-fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(`executionTimeObservations`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
 fun uniffi_iota_sdk_ffi_fn_clone_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7523,7 +7589,7 @@ fun uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type(`ptr`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7672,7 +7738,147 @@ fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_balance(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_field(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_id(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_name(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_new(`identifier`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_random(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_setting(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_string(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_identifier_as_str(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7696,7 +7902,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_input_new_pure(`value`: RustBuffer.ByValu
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(`objectRef`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Pointer,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7778,6 +7984,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address(`address`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -7846,7 +8054,7 @@ fun uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(`ptr`: Pointer,uniffi_out_er
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7902,7 +8110,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_movepackage(`ptr`: Pointer,uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movepackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(`id`: Pointer,`version`: Long,`modules`: RustBuffer.ByValue,`typeOriginTable`: RustBuffer.ByValue,`linkageTable`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(`id`: Pointer,`version`: Pointer,`modules`: RustBuffer.ByValue,`typeOriginTable`: RustBuffer.ByValue,`linkageTable`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7913,7 +8121,7 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackage_modules(`ptr`: Pointer,uniffi_out_
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8058,6 +8266,10 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(`ptr`: Poin
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8066,17 +8278,13 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8094,6 +8302,10 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519(`ptr`: Poin
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8102,17 +8314,13 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8128,10 +8336,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8215,7 +8419,7 @@ fun uniffi_iota_sdk_ffi_fn_method_object_previous_transaction(`ptr`: Pointer,uni
 fun uniffi_iota_sdk_ffi_fn_method_object_storage_rebate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_object_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8250,20 +8454,50 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectid(`ptr`: Pointer,uniffi_out_err: UniffiR
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(`digest`: Pointer,`count`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_std(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(`ptr`: Pointer,`keyTypeTag`: Pointer,`keyBytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8272,7 +8506,11 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(`ptr`: Pointer,`w
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8318,8 +8556,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8329,7 +8569,7 @@ fun uniffi_iota_sdk_ffi_fn_method_owner_as_object(`ptr`: Pointer,uniffi_out_err:
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8482,6 +8722,19 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes(`ptr`: Pointer,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8932,6 +9185,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new(`address`: Pointer,`module`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(uniffi_out_err: UniffiRustCallStatus, 
@@ -8954,15 +9211,17 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8971,6 +9230,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(uniffi_ou
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8986,6 +9251,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(uniffi_o
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
@@ -8994,7 +9261,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9002,6 +9269,86 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_option(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_random(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_url(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9024,14 +9371,14 @@ fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(`version`: Long,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(`version`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_modules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9152,8 +9499,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionkind(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9366,8 +9711,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9384,10 +9727,6 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(`ptr`: Pointer,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9395,8 +9734,6 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9414,25 +9751,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(`ptr`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9479,24 +9801,6 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_che
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(`validator`: Pointer,`duration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
 fun uniffi_iota_sdk_ffi_fn_clone_validatorsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_validatorsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9515,130 +9819,56 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_clone_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(`inputs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(`suggestedGasPrice`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_version_as_u64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_is_congested(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_is_valid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_next(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_version_previous(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(`objectId`: Pointer,`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(`objectId`: Pointer,`version`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(`inputs`: Pointer,`maxEpoch`: Long,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(`proofPoints`: Pointer,`issBase64Details`: RustBuffer.ByValue,`headerBase64`: RustBuffer.ByValue,`addressSeed`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(`a`: Pointer,`b`: Pointer,`c`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(`iss`: RustBuffer.ByValue,`addressSeed`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_address_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_address_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9654,22 +9884,6 @@ fun uniffi_iota_sdk_ffi_fn_func_argument_from_json(`json`: RustBuffer.ByValue,un
 fun uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_argument_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_base64_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9690,14 +9904,6 @@ fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_json(`json`: RustBuffer.
 fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -9770,22 +9976,6 @@ fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_json(`json`: Ru
 fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9874,30 +10064,6 @@ fun uniffi_iota_sdk_ffi_fn_func_execution_status_from_json(`json`: RustBuffer.By
 fun uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_execution_status_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -9992,22 +10158,6 @@ fun uniffi_iota_sdk_ffi_fn_func_input_from_json(`json`: RustBuffer.ByValue,uniff
 fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_input_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_jwk_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10457,14 +10607,6 @@ fun uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(`data`: RustBuffer.By
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_validator_signature_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -10480,38 +10622,6 @@ fun uniffi_iota_sdk_ffi_fn_func_version_assignment_from_json(`json`: RustBuffer.
 fun uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun ffi_iota_sdk_ffi_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -10638,18 +10748,6 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 }
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs() != 65415.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json() != 5693.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs() != 37978.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json() != 56327.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs() != 8229.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10672,30 +10770,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_argument_to_json() != 34680.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs() != 23378.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json() != 19654.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs() != 26245.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json() != 46170.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs() != 39650.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json() != 30949.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs() != 31251.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json() != 36459.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_base64_decode() != 57367.toShort()) {
@@ -10726,18 +10800,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json() != 30321.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs() != 13721.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json() != 23224.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json() != 7045.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591.toShort()) {
@@ -10846,30 +10908,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json() != 12780.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs() != 60233.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json() != 3835.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs() != 19531.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json() != 15996.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs() != 1042.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json() != 48517.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs() != 8225.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json() != 30332.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() != 5998.toShort()) {
@@ -11002,42 +11040,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json() != 27344.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs() != 19124.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json() != 46087.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs() != 3465.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json() != 23737.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs() != 166.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json() != 63452.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs() != 35779.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json() != 26451.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs() != 954.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json() != 31779.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs() != 38212.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json() != 36369.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs() != 305.toShort()) {
@@ -11179,30 +11181,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_json() != 58430.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_json() != 33813.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs() != 22836.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json() != 1916.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs() != 2155.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json() != 11288.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs() != 29567.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_json() != 53403.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs() != 17479.toShort()) {
@@ -11877,18 +11855,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json() != 40417.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs() != 28604.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json() != 59417.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs() != 35325.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json() != 11778.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs() != 57394.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11913,52 +11879,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json() != 21440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() != 48317.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json() != 19619.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs() != 50917.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json() != 43592.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs() != 47140.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json() != 60759.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs() != 58412.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json() != 9777.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs() != 13910.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json() != 31645.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs() != 22664.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json() != 6200.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() != 35391.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json() != 24841.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() != 39685.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() != 12096.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
@@ -11967,10 +11891,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
@@ -12001,12 +11931,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() != 54718.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() != 44301.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded() != 33350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest() != 52811.toShort()) {
@@ -12291,7 +12215,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt() != 23877.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -12375,12 +12311,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() != 43622.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() != 10295.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() != 58594.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12405,7 +12335,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 26576.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664.toShort()) {
@@ -12489,10 +12419,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742.toShort()) {
@@ -12501,13 +12431,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
@@ -12516,13 +12446,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891.toShort()) {
@@ -12603,7 +12533,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 52452.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948.toShort()) {
@@ -12666,7 +12596,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 7483.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113.toShort()) {
@@ -12705,7 +12635,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 26282.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 10481.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468.toShort()) {
@@ -12732,6 +12662,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12744,22 +12680,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin() != 17714.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt() != 23106.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() != 16265.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() != 37193.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341.toShort()) {
@@ -12769,6 +12699,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085.toShort()) {
@@ -12783,13 +12719,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin() != 39624.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt() != 34526.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey() != 45194.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() != 16841.toShort()) {
@@ -12798,16 +12731,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1() != 51171.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() != 65193.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() != 49901.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() != 20062.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_name_format() != 66.toShort()) {
@@ -12879,7 +12803,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate() != 24969.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334.toShort()) {
@@ -12897,6 +12821,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical() != 15534.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt() != 278.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12906,10 +12836,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
@@ -12924,34 +12860,37 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object() != 23748.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 40785.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 64545.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 14080.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642.toShort()) {
@@ -13260,10 +13199,130 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state() != 10185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock() != 5225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin() != 61913.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager() != 52348.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata() != 34817.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config() != 41259.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting() != 27038.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key() != 64455.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key() != 30183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key() != 4914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created() != 21370.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas() != 56237.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 56216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random() != 4566.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_string() != 21518.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event() != 20500.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock() != 6190.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota() != 14954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving() != 5695.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context() != 18584.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap() != 64642.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt() != 4130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket() != 6624.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_url() != 59887.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022.toShort()) {
@@ -13284,7 +13343,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 53823.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004.toShort()) {
@@ -13428,49 +13487,49 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_objects() != 24154.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 51024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 12717.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 26078.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 3196.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 8646.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 64789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 53288.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 16044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 11071.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 45225.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 18818.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 25432.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 48795.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 34277.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741.toShort()) {
@@ -13491,49 +13550,40 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator() != 64789.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt() != 62080.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 30648.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 47124.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator() != 35546.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 8542.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381.toShort()) {
@@ -13546,12 +13596,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() != 47797.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() != 44658.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() != 9821.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() != 59039.toShort()) {
@@ -13584,12 +13628,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() != 36331.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() != 59803.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() != 10003.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() != 15301.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13599,73 +13637,40 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs() != 1512.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() != 9769.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature() != 18838.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed() != 4892.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64() != 32056.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() != 1099.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() != 20914.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id() != 37580.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points() != 28172.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() != 48158.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a() != 6891.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b() != 36477.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c() != 10897.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed() != 3936.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address() != 14353.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() != 45141.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() != 51424.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() != 62366.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() != 29967.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951.toShort()) {
@@ -13674,16 +13679,43 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge() != 48414.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge() != 43861.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_max() != 5717.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state() != 62353.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_stardust() != 7116.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system_state() != 26799.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553.toShort()) {
@@ -13728,15 +13760,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() != 22402.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() != 3672.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str() != 21214.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() != 17556.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 59199.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13759,12 +13782,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new() != 65327.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new() != 39786.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new() != 50489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object() != 35349.toShort()) {
@@ -13803,7 +13820,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() != 65530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_random() != 18621.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842.toShort()) {
@@ -13857,12 +13874,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() != 23280.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() != 42248.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire() != 58811.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch() != 56235.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13873,33 +13884,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4() != 45170.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() != 22119.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() != 1498.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() != 40848.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() != 6711.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() != 6398.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() != 28564.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() != 29560.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() != 26115.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 15001.toShort()) {
@@ -13935,7 +13919,217 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state() != 16216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module() != 64126.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag() != 48457.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module() != 54361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance() != 45299.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module() != 34758.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock() != 54114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module() != 45072.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin() != 52194.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager() != 49557.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module() != 55970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata() != 40674.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module() != 34814.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config() != 4576.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key() != 17555.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module() != 11061.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module() != 25060.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created() != 25565.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module() != 18646.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module() != 44243.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module() != 43439.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_field() != 36751.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key() != 59135.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap() != 27582.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module() != 34279.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state() != 22040.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module() != 21899.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap() != 12741.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name() != 13462.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module() != 11183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag() != 36980.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module() != 59882.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module() != 16938.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option() != 5076.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module() != 36087.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module() != 31781.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module() != 5588.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving() != 44248.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting() != 47313.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota() != 39180.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module() != 45878.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string() != 22623.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module() != 48728.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module() != 43315.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1() != 53365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2() != 44726.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module() != 25559.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota() != 44822.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module() != 27461.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module() != 617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap() != 21659.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context() != 53898.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module() != 6086.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid() != 39877.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap() != 16692.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt() != 32459.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url() != 55140.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper() != 61185.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908.toShort()) {
@@ -13947,7 +14141,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 48143.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795.toShort()) {
@@ -13981,6 +14175,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097.toShort()) {
@@ -14061,13 +14258,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 45977.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 31500.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420.toShort()) {
@@ -14154,19 +14351,58 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state() != 13697.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list() != 39911.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework() != 24526.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge() != 44008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge() != 39804.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_max() != 27865.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state() != 39736.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust() != 21114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_std() != 6468.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526.toShort()) {
@@ -14187,7 +14423,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 22241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619.toShort()) {
@@ -14463,6 +14699,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state() != 59432.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14496,19 +14738,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas() != 58980.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595.toShort()) {
@@ -14520,7 +14765,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 1519.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random() != 25141.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970.toShort()) {
@@ -14544,6 +14798,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context() != 39269.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14556,10 +14813,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url() != 23915.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255.toShort()) {
@@ -14575,9 +14832,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 29264.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756.toShort()) {
@@ -14685,9 +14939,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() != 31310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() != 30659.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() != 32322.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14700,31 +14951,34 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() != 17424.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() != 47546.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() != 32812.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new() != 48962.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new() != 19950.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 44446.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 50135.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -15495,6 +15749,17 @@ public object FfiConverterDuration: FfiConverterRustBuffer<java.time.Duration> {
  */
 public interface AddressInterface {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    fun `nextLexicographical`(): Address
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): Address?
+    
     fun `toBytes`(): kotlin.ByteArray
     
     /**
@@ -15503,13 +15768,29 @@ public interface AddressInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -15638,6 +15919,37 @@ open class Address: Disposable, AutoCloseable, AddressInterface
         }
     }
 
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): Address? {
+            return FfiConverterOptionalTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `toBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
@@ -15666,7 +15978,11 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -15680,14 +15996,46 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     /**
-     * Returns the shortest possible string representation of the address (i.e.
-     * with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -15733,6 +16081,36 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     companion object {
+         fun `authenticatorState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clock`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(
+        _status)
+}
+    )
+    }
+    
+
          fun `framework`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
@@ -15756,9 +16134,9 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
         
     /**
-     * Parses an Address from a hex string, with or without a `0x` prefix.
-     * The string can be of variable length; if it's shorter than 64 hex
-     * characters, it will be left-padded with `0`s.
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
      */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): Address {
             return FfiConverterTypeAddress.lift(
@@ -15770,10 +16148,108 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
-         fun `generate`(): Address {
+        
+    /**
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `genesisBridge`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_max(
+        _status)
+}
+    )
+    }
+    
+
+         fun `random`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_random(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_stardust(
         _status)
 }
     )
@@ -15794,6 +16270,16 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system_state(
         _status)
 }
     )
@@ -15955,10 +16441,10 @@ public object FfiConverterTypeAddress: FfiConverter<Address, Pointer> {
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 public interface ArgumentInterface {
@@ -15985,10 +16471,10 @@ public interface ArgumentInterface {
  * =/ argument-result
  * =/ argument-nested-result
  *
- * argument-gas            = %x00
- * argument-input          = %x01 u16
- * argument-result         = %x02 u16
- * argument-nested-result  = %x03 u16 u16
+ * argument-gas            = %d00
+ * argument-input          = %d01 u16
+ * argument-result         = %d02 u16
+ * argument-nested-result  = %d03 u16 u16
  * ```
  */
 open class Argument: Disposable, AutoCloseable, ArgumentInterface
@@ -16614,7 +17100,7 @@ public object FfiConverterTypeBls12381PrivateKey: FfiConverter<Bls12381PrivateKe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -16637,7 +17123,7 @@ public interface Bls12381PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-public-key = %d96 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -16932,20 +17418,15 @@ public object FfiConverterTypeBls12381PublicKey: FfiConverter<Bls12381PublicKey,
 
 
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 public interface Bls12381SignatureInterface {
     
@@ -16955,20 +17436,15 @@ public interface Bls12381SignatureInterface {
 }
 
 /**
- * A bls12381 min-sig public key.
+ * A bls12381 min-sig signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTET
+ * bls12381-signature = 48OCTET
  * ```
- *
- * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
- * fixed-length of 96, IOTA's binary representation of a min-sig
- * `Bls12381PublicKey` is prefixed with its length meaning its serialized
- * binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
  */
 open class Bls12381Signature: Disposable, AutoCloseable, Bls12381SignatureInterface
 {
@@ -17408,334 +17884,6 @@ public object FfiConverterTypeBls12381VerifyingKey: FfiConverter<Bls12381Verifyi
     override fun allocationSize(value: Bls12381VerifyingKey) = 8UL
 
     override fun write(value: Bls12381VerifyingKey, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-public interface Bn254FieldElementInterface {
-    
-    fun `padded`(): kotlin.ByteArray
-    
-    fun `unpadded`(): kotlin.ByteArray
-    
-    companion object
-}
-
-/**
- * A point on the BN254 elliptic curve.
- *
- * This is a 32-byte, or 256-bit, value that is generally represented as
- * radix10 when a human-readable display format is needed, and is represented
- * as a 32-byte big-endian value while in memory.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
- * ```
- */
-open class Bn254FieldElement: Disposable, AutoCloseable, Bn254FieldElementInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(pointer!!, status)
-        }
-    }
-
-    override fun `padded`(): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `unpadded`(): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Bn254FieldElement) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(
-        it, FfiConverterTypeBn254FieldElement.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    companion object {
-        
-    @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(
-        FfiConverterByteArray.lower(`bytes`),_status)
-}
-    )
-    }
-    
-
-        
-    @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(
-        FfiConverterString.lower(`s`),_status)
-}
-    )
-    }
-    
-
-        
-    @Throws(SdkFfiException::class) fun `fromStrRadix10`(`s`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(
-        FfiConverterString.lower(`s`),_status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeBn254FieldElement: FfiConverter<Bn254FieldElement, Pointer> {
-
-    override fun lower(value: Bn254FieldElement): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): Bn254FieldElement {
-        return Bn254FieldElement(value)
-    }
-
-    override fun read(buf: ByteBuffer): Bn254FieldElement {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: Bn254FieldElement) = 8UL
-
-    override fun write(value: Bn254FieldElement, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -18583,7 +18731,7 @@ public object FfiConverterTypeChangeEpoch: FfiConverter<ChangeEpoch, Pointer> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -18653,7 +18801,7 @@ public interface ChangeEpochV2Interface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * change-epoch = u64  ; next epoch
+ * change-epoch-v2 = u64  ; next epoch
  * u64  ; protocol version
  * u64  ; storage charge
  * u64  ; computation charge
@@ -19970,7 +20118,7 @@ public object FfiConverterTypeChangeEpochV4: FfiConverter<ChangeEpochV4, Pointer
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 public interface CheckpointCommitmentInterface {
@@ -19992,7 +20140,7 @@ public interface CheckpointCommitmentInterface {
  * ```text
  * ; CheckpointCommitment is an enum and each variant is prefixed with its index
  * checkpoint-commitment = ecmh-live-object-set
- * ecmh-live-object-set = %x00 digest
+ * ecmh-live-object-set = %d00 digest
  * ```
  */
 open class CheckpointCommitment: Disposable, AutoCloseable, CheckpointCommitmentInterface
@@ -20248,12 +20396,14 @@ public object FfiConverterTypeCheckpointCommitment: FfiConverter<CheckpointCommi
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 public interface CheckpointContentsInterface {
@@ -20277,12 +20427,14 @@ public interface CheckpointContentsInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+ * checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
  *
- * checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
- * (vector (vector bcs-user-signature)) ; set of user signatures for each
+ * checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+ * (vector (vector user-signature)) ; set of user signatures for each
  * ; transaction. MUST be the same
  * ; length as the vector of digests
+ *
+ * execution-digests = digest digest   ; transaction, effects
  * ```
  */
 open class CheckpointContents: Disposable, AutoCloseable, CheckpointContentsInterface
@@ -21280,548 +21432,6 @@ public object FfiConverterTypeCheckpointTransactionInfo: FfiConverter<Checkpoint
     override fun allocationSize(value: CheckpointTransactionInfo) = 8UL
 
     override fun write(value: CheckpointTransactionInfo, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-public interface CircomG1Interface {
-    
-    companion object
-}
-
-/**
- * A G1 point
- *
- * This represents the canonical decimal representation of the projective
- * coordinates in Fq.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g1 = %x03 3(bn254-field-element)
- * ```
- */
-open class CircomG1: Disposable, AutoCloseable, CircomG1Interface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`el0`: Bn254FieldElement, `el1`: Bn254FieldElement, `el2`: Bn254FieldElement) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(
-        FfiConverterTypeBn254FieldElement.lower(`el0`),FfiConverterTypeBn254FieldElement.lower(`el1`),FfiConverterTypeBn254FieldElement.lower(`el2`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_circomg1(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_circomg1(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CircomG1) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(
-        it, FfiConverterTypeCircomG1.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCircomG1: FfiConverter<CircomG1, Pointer> {
-
-    override fun lower(value: CircomG1): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): CircomG1 {
-        return CircomG1(value)
-    }
-
-    override fun read(buf: ByteBuffer): CircomG1 {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: CircomG1) = 8UL
-
-    override fun write(value: CircomG1, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-public interface CircomG2Interface {
-    
-    companion object
-}
-
-/**
- * A G2 point
- *
- * This represents the canonical decimal representation of the coefficients of
- * the projective coordinates in Fq2.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * circom-g2 = %x03 3(%x02 2(bn254-field-element))
- * ```
- */
-open class CircomG2: Disposable, AutoCloseable, CircomG2Interface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`el00`: Bn254FieldElement, `el01`: Bn254FieldElement, `el10`: Bn254FieldElement, `el11`: Bn254FieldElement, `el20`: Bn254FieldElement, `el21`: Bn254FieldElement) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(
-        FfiConverterTypeBn254FieldElement.lower(`el00`),FfiConverterTypeBn254FieldElement.lower(`el01`),FfiConverterTypeBn254FieldElement.lower(`el10`),FfiConverterTypeBn254FieldElement.lower(`el11`),FfiConverterTypeBn254FieldElement.lower(`el20`),FfiConverterTypeBn254FieldElement.lower(`el21`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_circomg2(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_circomg2(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CircomG2) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(
-        it, FfiConverterTypeCircomG2.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCircomG2: FfiConverter<CircomG2, Pointer> {
-
-    override fun lower(value: CircomG2): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): CircomG2 {
-        return CircomG2(value)
-    }
-
-    override fun read(buf: ByteBuffer): CircomG2 {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: CircomG2) = 8UL
-
-    override fun write(value: CircomG2, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -23024,13 +22634,13 @@ public object FfiConverterTypeCoin: FfiConverter<Coin, Pointer> {
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 public interface CommandInterface {
@@ -23054,13 +22664,13 @@ public interface CommandInterface {
  * =/ command-make-move-vector
  * =/ command-upgrade
  *
- * command-move-call           = %x00 move-call
- * command-transfer-objects    = %x01 transfer-objects
- * command-split-coins         = %x02 split-coins
- * command-merge-coins         = %x03 merge-coins
- * command-publish             = %x04 publish
- * command-make-move-vector    = %x05 make-move-vector
- * command-upgrade             = %x06 upgrade
+ * command-move-call           = %d00 move-call
+ * command-transfer-objects    = %d01 transfer-objects
+ * command-split-coins         = %d02 split-coins
+ * command-merge-coins         = %d03 merge-coins
+ * command-publish             = %d04 publish
+ * command-make-move-vector    = %d05 make-move-vector
+ * command-upgrade             = %d06 upgrade
  * ```
  */
 open class Command: Disposable, AutoCloseable, CommandInterface
@@ -24069,7 +23679,7 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -24080,9 +23690,32 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
 public interface DigestInterface {
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+    fun `isObjectAlive`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+    fun `isObjectDeleted`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+    fun `isObjectWrapped`(): kotlin.Boolean
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
     fun `nextLexicographical`(): Digest
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): Digest?
     
     fun `toBase58`(): kotlin.String
     
@@ -24099,7 +23732,7 @@ public interface DigestInterface {
  * A `Digest`'s BCS serialized form is defined by the following:
  *
  * ```text
- * digest = %x20 32OCTET
+ * digest = %d32 32OCTET
  * ```
  *
  * Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -24191,12 +23824,75 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
 
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */override fun `isObjectAlive`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */override fun `isObjectDeleted`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */override fun `isObjectWrapped`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */override fun `nextLexicographical`(): Digest {
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): Digest? {
+            return FfiConverterOptionalTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(
         it, _status)
 }
     }
@@ -24289,10 +23985,10 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     }
     
 
-         fun `generate`(): Digest {
+         fun `random`(): Digest {
             return FfiConverterTypeDigest.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_random(
         _status)
 }
     )
@@ -26307,23 +26003,10 @@ public object FfiConverterTypeEd25519VerifyingKey: FfiConverter<Ed25519Verifying
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 public interface EndOfEpochTransactionKindInterface {
@@ -26339,23 +26022,10 @@ public interface EndOfEpochTransactionKindInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * end-of-epoch-transaction-kind   =  eoe-change-epoch
- * =/ eoe-authenticator-state-create
- * =/ eoe-authenticator-state-expire
- * =/ eoe-randomness-state-create
- * =/ eoe-deny-list-state-create
- * =/ eoe-bridge-state-create
- * =/ eoe-bridge-committee-init
- * =/ eoe-store-execution-time-observations
- *
- * eoe-change-epoch                = %x00 change-epoch
- * eoe-authenticator-state-create  = %x01
- * eoe-authenticator-state-expire  = %x02 authenticator-state-expire
- * eoe-randomness-state-create     = %x03
- * eoe-deny-list-state-create      = %x04
- * eoe-bridge-state-create         = %x05 digest
- * eoe-bridge-committee-init       = %x06 u64
- * eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+ * end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+ * =/ %d01 change-epoch-v2  ; ChangeEpochV2
+ * =/ %d02 change-epoch-v3  ; ChangeEpochV3
+ * =/ %d03 change-epoch-v4  ; ChangeEpochV4
  * ```
  */
 open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTransactionKindInterface
@@ -26458,26 +26128,6 @@ open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTrans
 
     
     companion object {
-         fun `newAuthenticatorStateCreate`(): EndOfEpochTransactionKind {
-            return FfiConverterTypeEndOfEpochTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newAuthenticatorStateExpire`(`tx`: AuthenticatorStateExpire): EndOfEpochTransactionKind {
-            return FfiConverterTypeEndOfEpochTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`tx`),_status)
-}
-    )
-    }
-    
-
          fun `newChangeEpoch`(`tx`: ChangeEpoch): EndOfEpochTransactionKind {
             return FfiConverterTypeEndOfEpochTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -26545,931 +26195,6 @@ public object FfiConverterTypeEndOfEpochTransactionKind: FfiConverter<EndOfEpoch
     override fun allocationSize(value: EndOfEpochTransactionKind) = 8UL
 
     override fun write(value: EndOfEpochTransactionKind, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface ExecutionTimeObservationInterface {
-    
-    fun `key`(): ExecutionTimeObservationKey
-    
-    fun `observations`(): List<ValidatorExecutionTimeObservation>
-    
-    companion object
-}
-
-open class ExecutionTimeObservation: Disposable, AutoCloseable, ExecutionTimeObservationInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`key`: ExecutionTimeObservationKey, `observations`: List<ValidatorExecutionTimeObservation>) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(
-        FfiConverterTypeExecutionTimeObservationKey.lower(`key`),FfiConverterSequenceTypeValidatorExecutionTimeObservation.lower(`observations`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(pointer!!, status)
-        }
-    }
-
-    override fun `key`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `observations`(): List<ValidatorExecutionTimeObservation> {
-            return FfiConverterSequenceTypeValidatorExecutionTimeObservation.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ExecutionTimeObservation) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(
-        it, FfiConverterTypeExecutionTimeObservation.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-    override fun hashCode(): Int {
-        return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(
-        it, _status)
-}
-    }
-    ).toInt()
-    }
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeExecutionTimeObservation: FfiConverter<ExecutionTimeObservation, Pointer> {
-
-    override fun lower(value: ExecutionTimeObservation): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ExecutionTimeObservation {
-        return ExecutionTimeObservation(value)
-    }
-
-    override fun read(buf: ByteBuffer): ExecutionTimeObservation {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ExecutionTimeObservation) = 8UL
-
-    override fun write(value: ExecutionTimeObservation, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * Key for an execution time observation
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * execution-time-observation-key  =  %x00 move-entry-point
- * =/ %x01 ; transfer-objects
- * =/ %x02 ; split-coins
- * =/ %x03 ; merge-coins
- * =/ %x04 ; publish
- * =/ %x05 ; make-move-vec
- * =/ %x06 ; upgrade
- *
- * move-entry-point = object-id string string (vec type-tag)
- * ```
- */
-public interface ExecutionTimeObservationKeyInterface {
-    
-    companion object
-}
-
-/**
- * Key for an execution time observation
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * execution-time-observation-key  =  %x00 move-entry-point
- * =/ %x01 ; transfer-objects
- * =/ %x02 ; split-coins
- * =/ %x03 ; merge-coins
- * =/ %x04 ; publish
- * =/ %x05 ; make-move-vec
- * =/ %x06 ; upgrade
- *
- * move-entry-point = object-id string string (vec type-tag)
- * ```
- */
-open class ExecutionTimeObservationKey: Disposable, AutoCloseable, ExecutionTimeObservationKeyInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ExecutionTimeObservationKey) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(
-        it, FfiConverterTypeExecutionTimeObservationKey.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-    override fun hashCode(): Int {
-        return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(
-        it, _status)
-}
-    }
-    ).toInt()
-    }
-
-    
-    companion object {
-         fun `newMakeMoveVec`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newMergeCoins`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newMoveEntryPoint`(`package`: ObjectId, `module`: kotlin.String, `function`: kotlin.String, `typeArguments`: List<TypeTag>): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(
-        FfiConverterTypeObjectId.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),_status)
-}
-    )
-    }
-    
-
-         fun `newPublish`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newSplitCoins`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newTransferObjects`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newUpgrade`(): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(
-        _status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeExecutionTimeObservationKey: FfiConverter<ExecutionTimeObservationKey, Pointer> {
-
-    override fun lower(value: ExecutionTimeObservationKey): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ExecutionTimeObservationKey {
-        return ExecutionTimeObservationKey(value)
-    }
-
-    override fun read(buf: ByteBuffer): ExecutionTimeObservationKey {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ExecutionTimeObservationKey) = 8UL
-
-    override fun write(value: ExecutionTimeObservationKey, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * Set of Execution Time Observations from the committee.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
- *
- * v1-stored-execution-time-observations = (vec
- * execution-time-observation-key
- * (vec execution-time-observation)
- * )
- * ```
- */
-public interface ExecutionTimeObservationsInterface {
-    
-    companion object
-}
-
-/**
- * Set of Execution Time Observations from the committee.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
- *
- * v1-stored-execution-time-observations = (vec
- * execution-time-observation-key
- * (vec execution-time-observation)
- * )
- * ```
- */
-open class ExecutionTimeObservations: Disposable, AutoCloseable, ExecutionTimeObservationsInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(pointer!!, status)
-        }
-    }
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ExecutionTimeObservations) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(
-        it, FfiConverterTypeExecutionTimeObservations.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-    override fun hashCode(): Int {
-        return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(
-        it, _status)
-}
-    }
-    ).toInt()
-    }
-
-    
-    companion object {
-         fun `newV1`(`executionTimeObservations`: List<ExecutionTimeObservation>): ExecutionTimeObservations {
-            return FfiConverterTypeExecutionTimeObservations.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(
-        FfiConverterSequenceTypeExecutionTimeObservation.lower(`executionTimeObservations`),_status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeExecutionTimeObservations: FfiConverter<ExecutionTimeObservations, Pointer> {
-
-    override fun lower(value: ExecutionTimeObservations): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ExecutionTimeObservations {
-        return ExecutionTimeObservations(value)
-    }
-
-    override fun read(buf: ByteBuffer): ExecutionTimeObservations {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ExecutionTimeObservations) = 8UL
-
-    override fun write(value: ExecutionTimeObservations, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -28022,7 +26747,7 @@ public object FfiConverterTypeFaucetClient: FfiConverter<FaucetClient, Pointer> 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 public interface GenesisObjectInterface {
@@ -28035,7 +26760,7 @@ public interface GenesisObjectInterface {
     
     fun `owner`(): Owner
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -28051,7 +26776,7 @@ public interface GenesisObjectInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * genesis-object = object-data owner
+ * genesis-object = %d00 object-data owner   ; RawObject
  * ```
  */
 open class GenesisObject: Disposable, AutoCloseable, GenesisObjectInterface
@@ -28191,8 +26916,8 @@ open class GenesisObject: Disposable, AutoCloseable, GenesisObjectInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(
@@ -28833,7 +27558,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Value?
+    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version? = null): Value?
     
     /**
      * Return the BCS of an object that is a Move object.
@@ -28842,7 +27567,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
+    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version? = null): kotlin.ByteArray?
     
     /**
      * Execute a Move View Function.
@@ -28903,12 +27628,12 @@ public interface GraphQlClientInterface {
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
+    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version? = null): MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
+    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -28917,7 +27642,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Object?
+    suspend fun `object`(`objectId`: ObjectId, `version`: Version? = null): Object?
     
     /**
      * Return the object's bcs content `Vec<u8>` based on the provided
@@ -28946,7 +27671,7 @@ public interface GraphQlClientInterface {
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-    suspend fun `package`(`address`: Address, `version`: kotlin.ULong? = null): MovePackage?
+    suspend fun `package`(`address`: Address, `version`: Version? = null): MovePackage?
     
     /**
      * Fetch the latest version of the package at address.
@@ -28960,7 +27685,7 @@ public interface GraphQlClientInterface {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong? = null, `beforeVersion`: kotlin.ULong? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
+    suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version? = null, `beforeVersion`: Version? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -29824,12 +28549,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Value? {
+    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version?) : Value? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29852,12 +28577,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong?) : kotlin.ByteArray? {
+    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version?) : kotlin.ByteArray? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29970,12 +28695,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
+    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version?) : MoveFunction? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29994,12 +28719,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
+    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalTypeVersion.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30022,12 +28747,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Object? {
+    override suspend fun `object`(`objectId`: ObjectId, `version`: Version?) : Object? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30108,12 +28833,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `package`(`address`: Address, `version`: kotlin.ULong?) : MovePackage? {
+    override suspend fun `package`(`address`: Address, `version`: Version?) : MovePackage? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30160,12 +28885,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong?, `beforeVersion`: kotlin.ULong?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
+    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version?, `beforeVersion`: Version?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`afterVersion`),FfiConverterOptionalTypeVersion.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30806,7 +29531,7 @@ public object FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, Pointer
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -30828,7 +29553,7 @@ public interface IdentifierInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * identifier = %x01-80    ; length of the identifier
+ * identifier = %d1-128    ; length of the identifier
  * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
  * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
  *
@@ -30974,8 +29699,709 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     }
 
     
+    companion object {
+         fun `addressKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(
+        _status)
+}
+    )
+    }
     
-    companion object
+
+         fun `asciiModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `authenticatorState`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `authenticatorStateModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `bag`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `bagModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `balance`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance(
+        _status)
+}
+    )
+    }
+    
+
+         fun `balanceModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clock`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clockModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coin`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinManager`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinManagerModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinMetadata`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `config`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config(
+        _status)
+}
+    )
+    }
+    
+
+         fun `configKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `configModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyListModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `displayCreated`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created(
+        _status)
+}
+    )
+    }
+    
+
+         fun `displayModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `dynamicFieldModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `dynamicObjectFieldModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `field`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_field(
+        _status)
+}
+    )
+    }
+    
+
+         fun `globalPauseKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `id`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_id(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemAdminCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemState`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemStateInnerModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaTreasuryCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `name`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_name(
+        _status)
+}
+    )
+    }
+    
+
+         fun `nameModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectBag`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectBagModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `option`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_option(
+        _status)
+}
+    )
+    }
+    
+
+         fun `optionModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `packageModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `payModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `random`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_random(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `receiving`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving(
+        _status)
+}
+    )
+    }
+    
+
+         fun `setting`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_setting(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stakedIota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stakingPoolModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `string`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_string(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stringModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemAdminCapModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEvent`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEventV1`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEventV2`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timeLock`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockedStakedIota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockedStakingModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `transferModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `treasuryCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `txContext`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(
+        _status)
+}
+    )
+    }
+    
+
+         fun `txContextModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `uid`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeReceipt`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeTicket`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(
+        _status)
+}
+    )
+    }
+    
+
+         fun `url`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url(
+        _status)
+}
+    )
+    }
+    
+
+         fun `urlModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `versionUpdated`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(
+        _status)
+}
+    )
+    }
+    
+
+         fun `wrapper`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -31114,12 +30540,14 @@ public object FfiConverterTypeIdentifier: FfiConverter<Identifier, Pointer> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 public interface InputInterface {
@@ -31135,12 +30563,14 @@ public interface InputInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+ * input = call-arg
  *
- * input-pure                  = %x00 bytes
- * input-immutable-or-owned    = %x01 object-ref
- * input-shared                = %x02 object-id u64 bool
- * input-receiving             = %x04 object-ref
+ * call-arg   =  %d00 bytes        ; Pure
+ * =/ %d01 object-arg   ; Object
+ *
+ * object-arg =  %d00 object-reference     ; ImmutableOrOwned
+ * =/ %d01 object-id u64 bool   ; Shared
+ * =/ %d02 object-reference     ; Receiving
  * ```
  */
 open class Input: Disposable, AutoCloseable, InputInterface
@@ -31283,11 +30713,11 @@ open class Input: Disposable, AutoCloseable, InputInterface
         
     /**
      * A move object whose owner is "Shared"
-     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: kotlin.ULong, `mutable`: kotlin.Boolean): Input {
+     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: Version, `mutable`: kotlin.Boolean): Input {
             return FfiConverterTypeInput.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
+        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
 }
     )
     }
@@ -32616,6 +32046,17 @@ open class MoveArg: Disposable, AutoCloseable, MoveArgInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `addressFromShortHex`(`hex`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
          fun `addressVec`(`addresses`: List<Address>): MoveArg {
             return FfiConverterTypeMoveArg.lift(
     uniffiRustCall() { _status ->
@@ -32993,6 +32434,10 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
  */
 public interface MoveAuthenticatorInterface {
     
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */
     fun `asV1`(): MoveAuthenticatorV1
     
     companion object
@@ -33086,7 +32531,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         }
     }
 
-    override fun `asV1`(): MoveAuthenticatorV1 {
+    
+    /**
+     * Convert this move authenticator into a version 1 move authenticator if
+     * it is one, or panic otherwise
+     */override fun `asV1`(): MoveAuthenticatorV1 {
             return FfiConverterTypeMoveAuthenticatorV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -33677,11 +33126,11 @@ open class MoveAuthenticatorV1: Disposable, AutoCloseable, MoveAuthenticatorV1In
         
     /**
      * Create a new move authenticator from a shared object.
-     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticatorV1 {
+     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: Version): MoveAuthenticatorV1 {
             return FfiConverterTypeMoveAuthenticatorV1.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
-        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterTypeVersion.lower(`initialSharedVersion`),_status)
 }
     )
     }
@@ -34525,11 +33974,11 @@ public object FfiConverterTypeMoveFunction: FfiConverter<MoveFunction, Pointer> 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 public interface MovePackageInterface {
@@ -34542,7 +33991,7 @@ public interface MovePackageInterface {
     
     fun `typeOriginTable`(): List<TypeOrigin>
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -34555,11 +34004,11 @@ public interface MovePackageInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-package = object-id u64 move-modules type-origin-table linkage-table
- *
- * move-modules = map (identifier bytes)
- * type-origin-table = vector type-origin
- * linkage-table = map (object-id upgrade-info)
+ * move-package = object-id                          ; id
+ * u64                                ; version
+ * (vector (identifier bytes))        ; modules
+ * (vector type-origin)               ; type-origin-table
+ * (vector (object-id upgrade-info))  ; linkage-table
  * ```
  */
 open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
@@ -34580,11 +34029,11 @@ open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`id`: ObjectId, `version`: kotlin.ULong, `modules`: Map<Identifier, kotlin.ByteArray>, `typeOriginTable`: List<TypeOrigin>, `linkageTable`: Map<ObjectId, UpgradeInfo>) :
+    constructor(`id`: ObjectId, `version`: Version, `modules`: Map<Identifier, kotlin.ByteArray>, `typeOriginTable`: List<TypeOrigin>, `linkageTable`: Map<ObjectId, UpgradeInfo>) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(
-        FfiConverterTypeObjectId.lower(`id`),FfiConverterULong.lower(`version`),FfiConverterMapTypeIdentifierByteArray.lower(`modules`),FfiConverterSequenceTypeTypeOrigin.lower(`typeOriginTable`),FfiConverterMapTypeObjectIdTypeUpgradeInfo.lower(`linkageTable`),_status)
+        FfiConverterTypeObjectId.lower(`id`),FfiConverterTypeVersion.lower(`version`),FfiConverterMapTypeIdentifierByteArray.lower(`modules`),FfiConverterSequenceTypeTypeOrigin.lower(`typeOriginTable`),FfiConverterMapTypeObjectIdTypeUpgradeInfo.lower(`linkageTable`),_status)
 }
     )
 
@@ -34699,8 +34148,8 @@ open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackage_version(
@@ -36292,11 +35741,6 @@ public interface MultisigCommitteeInterface {
      *
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
-     *
-     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-     * refers to the same input used when deriving the address using the
-     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-     * full 32-byte `address_seed` value).
      */
     fun `deriveAddress`(): Address
     
@@ -36464,11 +35908,6 @@ open class MultisigCommittee: Disposable, AutoCloseable, MultisigCommitteeInterf
      *
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
-     *
-     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-     * refers to the same input used when deriving the address using the
-     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-     * full 32-byte `address_seed` value).
      */override fun `deriveAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
@@ -37035,12 +36474,14 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -37060,6 +36501,10 @@ public interface MultisigMemberPublicKeyInterface {
     
     fun `asEd25519Opt`(): Ed25519PublicKey?
     
+    fun `asPasskey`(): PasskeyPublicKey
+    
+    fun `asPasskeyOpt`(): PasskeyPublicKey?
+    
     fun `asSecp256k1`(): Secp256k1PublicKey
     
     fun `asSecp256k1Opt`(): Secp256k1PublicKey?
@@ -37068,17 +36513,13 @@ public interface MultisigMemberPublicKeyInterface {
     
     fun `asSecp256r1Opt`(): Secp256r1PublicKey?
     
-    fun `asZklogin`(): ZkLoginPublicIdentifier
-    
-    fun `asZkloginOpt`(): ZkLoginPublicIdentifier?
-    
     fun `isEd25519`(): kotlin.Boolean
+    
+    fun `isPasskey`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
     fun `isSecp256r1`(): kotlin.Boolean
-    
-    fun `isZklogin`(): kotlin.Boolean
     
     fun `scheme`(): SignatureScheme
     
@@ -37096,12 +36537,14 @@ public interface MultisigMemberPublicKeyInterface {
  * multisig-member-public-key = ed25519-multisig-member-public-key /
  * secp256k1-multisig-member-public-key /
  * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
  *
- * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
- * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
- * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
- * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
  * ```
  *
  * There is also a legacy encoding for this type defined as:
@@ -37221,6 +36664,30 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     }
     
 
+    override fun `asPasskey`(): PasskeyPublicKey {
+            return FfiConverterTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskeyOpt`(): PasskeyPublicKey? {
+            return FfiConverterOptionalTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asSecp256k1`(): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
@@ -37269,35 +36736,23 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     }
     
 
-    override fun `asZklogin`(): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginOpt`(): ZkLoginPublicIdentifier? {
-            return FfiConverterOptionalTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
     override fun `isEd25519`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPasskey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(
         it, _status)
 }
     }
@@ -37322,18 +36777,6 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isZklogin`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
         it, _status)
 }
     }
@@ -37513,12 +36956,14 @@ public object FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemb
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature   = %x00 ed25519-signature
- * secp256k1-multisig-member-signature = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 public interface MultisigMemberSignatureInterface {
@@ -37526,6 +36971,10 @@ public interface MultisigMemberSignatureInterface {
     fun `asEd25519`(): Ed25519Signature
     
     fun `asEd25519Opt`(): Ed25519Signature?
+    
+    fun `asPasskey`(): PasskeyAuthenticator
+    
+    fun `asPasskeyOpt`(): PasskeyAuthenticator?
     
     fun `asSecp256k1`(): Secp256k1Signature
     
@@ -37535,17 +36984,13 @@ public interface MultisigMemberSignatureInterface {
     
     fun `asSecp256r1Opt`(): Secp256r1Signature?
     
-    fun `asZklogin`(): ZkLoginAuthenticator
-    
-    fun `asZkloginOpt`(): ZkLoginAuthenticator?
-    
     fun `isEd25519`(): kotlin.Boolean
+    
+    fun `isPasskey`(): kotlin.Boolean
     
     fun `isSecp256k1`(): kotlin.Boolean
     
     fun `isSecp256r1`(): kotlin.Boolean
-    
-    fun `isZklogin`(): kotlin.Boolean
     
     companion object
 }
@@ -37561,12 +37006,14 @@ public interface MultisigMemberSignatureInterface {
  * multisig-member-signature = ed25519-multisig-member-signature /
  * secp256k1-multisig-member-signature /
  * secp256r1-multisig-member-signature /
- * zklogin-multisig-member-signature
+ * zklogin-multisig-member-signature-deprecated /
+ * passkey-multisig-member-signature
  *
- * ed25519-multisig-member-signature   = %x00 ed25519-signature
- * secp256k1-multisig-member-signature = %x01 secp256k1-signature
- * secp256r1-multisig-member-signature = %x02 secp256r1-signature
- * zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+ * ed25519-multisig-member-signature               = %d00 ed25519-signature
+ * secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+ * secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+ * zklogin-multisig-member-signature-deprecated    = %d03
+ * passkey-multisig-member-signature               = %d04 passkey-authenticator
  * ```
  */
 open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSignatureInterface
@@ -37675,6 +37122,30 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     }
     
 
+    override fun `asPasskey`(): PasskeyAuthenticator {
+            return FfiConverterTypePasskeyAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskeyOpt`(): PasskeyAuthenticator? {
+            return FfiConverterOptionalTypePasskeyAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asSecp256k1`(): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     callWithPointer {
@@ -37723,35 +37194,23 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     }
     
 
-    override fun `asZklogin`(): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asZkloginOpt`(): ZkLoginAuthenticator? {
-            return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
     override fun `isEd25519`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPasskey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(
         it, _status)
 }
     }
@@ -37776,18 +37235,6 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isZklogin`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(
         it, _status)
 }
     }
@@ -37948,10 +37395,6 @@ public interface MultisigVerifierInterface {
     
     fun `verify`(`message`: kotlin.ByteArray, `signature`: MultisigAggregatedSignature)
     
-    fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): MultisigVerifier
-    
-    fun `zkloginVerifier`(): ZkloginVerifier?
-    
     companion object
 }
 
@@ -38054,30 +37497,6 @@ open class MultisigVerifier: Disposable, AutoCloseable, MultisigVerifierInterfac
 }
     }
     
-    
-
-    override fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): MultisigVerifier {
-            return FfiConverterTypeMultisigVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-        it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
-}
-    }
-    )
-    }
-    
-
-    override fun `zkloginVerifier`(): ZkloginVerifier? {
-            return FfiConverterOptionalTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-        it, _status)
-}
-    }
-    )
-    }
     
 
     
@@ -39014,7 +38433,7 @@ public interface ObjectInterface {
     /**
      * Return this object's version
      */
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -39307,8 +38726,8 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
     
     /**
      * Return this object's version
-     */override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+     */override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_version(
@@ -39478,8 +38897,8 @@ public object FfiConverterTypeObject: FfiConverter<Object, Pointer> {
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 public interface ObjectDataInterface {
@@ -39517,8 +38936,8 @@ public interface ObjectDataInterface {
  * ```text
  * object-data = object-data-struct / object-data-package
  *
- * object-data-struct  = %x00 object-move-struct
- * object-data-package = %x01 object-move-package
+ * object-data-struct  = %d00 object-move-struct
+ * object-data-package = %d01 object-move-package
  * ```
  */
 open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
@@ -39866,7 +39285,7 @@ public object FfiConverterTypeObjectData: FfiConverter<ObjectData, Pointer> {
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 public interface ObjectIdInterface {
@@ -39878,6 +39297,17 @@ public interface ObjectIdInterface {
      */
     fun `deriveDynamicChildId`(`keyTypeTag`: TypeTag, `keyBytes`: kotlin.ByteArray): ObjectId
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    fun `nextLexicographical`(): ObjectId
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): ObjectId?
+    
     fun `toAddress`(): Address
     
     fun `toBytes`(): kotlin.ByteArray
@@ -39888,13 +39318,29 @@ public interface ObjectIdInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -39916,7 +39362,7 @@ public interface ObjectIdInterface {
  * An `ObjectId`'s BCS serialized form is defined by the following:
  *
  * ```text
- * object-id = 32*OCTET
+ * object-id = address
  * ```
  */
 open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
@@ -40018,6 +39464,37 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): ObjectId? {
+            return FfiConverterOptionalTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `toAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
@@ -40058,7 +39535,11 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40072,14 +39553,46 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     /**
-     * Returns the shortest possible string representation of the object ID
-     * (i.e. with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -40125,10 +39638,30 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     companion object {
+         fun `authenticatorState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
          fun `clock`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(
         _status)
 }
     )
@@ -40149,6 +39682,16 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+         fun `framework`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(
+        _status)
+}
+    )
+    }
+    
+
         
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): ObjectId {
             return FfiConverterTypeObjectId.lift(
@@ -40161,6 +39704,11 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     
 
         
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -40171,10 +39719,128 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+        
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `genesisBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_max(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(
+        _status)
+}
+    )
+    }
+    
+
+         fun `std`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_std(
+        _status)
+}
+    )
+    }
+    
+
          fun `system`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(
         _status)
 }
     )
@@ -40663,32 +40329,72 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 public interface OwnerInterface {
     
+    /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+    fun `addressOrObject`(): Address?
+    
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */
     fun `asAddress`(): Address
     
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
     fun `asAddressOpt`(): Address?
     
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */
     fun `asObject`(): ObjectId
     
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */
     fun `asObjectOpt`(): ObjectId?
     
-    fun `asShared`(): kotlin.ULong
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
+    fun `asShared`(): Version
     
-    fun `asSharedOpt`(): kotlin.ULong?
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
+    fun `asSharedOpt`(): Version?
     
+    /**
+     * Check if this is an address owner
+     */
     fun `isAddress`(): kotlin.Boolean
     
+    /**
+     * Check if this is an immutable owner
+     */
     fun `isImmutable`(): kotlin.Boolean
     
+    /**
+     * Check if this is an object owner
+     */
     fun `isObject`(): kotlin.Boolean
     
+    /**
+     * Check if this is a shared owner
+     */
     fun `isShared`(): kotlin.Boolean
     
     companion object
@@ -40704,10 +40410,10 @@ public interface OwnerInterface {
  * ```text
  * owner = owner-address / owner-object / owner-shared / owner-immutable
  *
- * owner-address   = %x00 address
- * owner-object    = %x01 object-id
- * owner-shared    = %x02 u64
- * owner-immutable = %x03
+ * owner-address   = %d00 address
+ * owner-object    = %d01 object-id
+ * owner-shared    = %d02 u64
+ * owner-immutable = %d03
  * ```
  */
 open class Owner: Disposable, AutoCloseable, OwnerInterface
@@ -40792,7 +40498,27 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
         }
     }
 
-    override fun `asAddress`(): Address {
+    
+    /**
+     * Returns an `Address` if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */override fun `addressOrObject`(): Address? {
+            return FfiConverterOptionalTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Convert this owner into an address owner if it is one, or panic
+     * otherwise
+     */override fun `asAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40804,7 +40530,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asAddressOpt`(): Address? {
+    
+    /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */override fun `asAddressOpt`(): Address? {
             return FfiConverterOptionalTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40816,7 +40546,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asObject`(): ObjectId {
+    
+    /**
+     * Convert this owner into an object owner if it is one, or panic otherwise
+     */override fun `asObject`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40828,7 +40561,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asObjectOpt`(): ObjectId? {
+    
+    /**
+     * Convert this owner into an object owner if it is one, or return `None`
+     * otherwise
+     */override fun `asObjectOpt`(): ObjectId? {
             return FfiConverterOptionalTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40840,8 +40577,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asShared`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */override fun `asShared`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
@@ -40852,8 +40592,12 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asSharedOpt`(): kotlin.ULong? {
-            return FfiConverterOptionalULong.lift(
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */override fun `asSharedOpt`(): Version? {
+            return FfiConverterOptionalTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
@@ -40864,7 +40608,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isAddress`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an address owner
+     */override fun `isAddress`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40876,7 +40623,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isImmutable`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an immutable owner
+     */override fun `isImmutable`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40888,7 +40638,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isObject`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is an object owner
+     */override fun `isObject`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40900,7 +40653,10 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `isShared`(): kotlin.Boolean {
+    
+    /**
+     * Check if this is a shared owner
+     */override fun `isShared`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40981,11 +40737,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-         fun `newShared`(`version`: kotlin.ULong): Owner {
+         fun `newShared`(`version`: Version): Owner {
             return FfiConverterTypeOwner.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
-        FfiConverterULong.lower(`version`),_status)
+        FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
     }
@@ -42843,7 +42599,7 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(
         it, _status)
 }
     }
@@ -42859,7 +42615,7 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(
         it, FfiConverterTypePersonalMessage.lower(`other`),_status)
 }
     }
@@ -43065,7 +42821,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
     constructor(`inputs`: List<Input>, `commands`: List<Command>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(
         FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeCommand.lower(`commands`),_status)
 }
     )
@@ -43121,7 +42877,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
                 }
             }
         }
@@ -43129,7 +42885,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
         }
     }
 
@@ -43141,7 +42897,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
             return FfiConverterSequenceTypeCommand.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(
         it, _status)
 }
     }
@@ -43156,7 +42912,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
             return FfiConverterSequenceTypeInput.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(
         it, _status)
 }
     }
@@ -43172,7 +42928,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
         it, FfiConverterTypeProgrammableTransaction.lower(`other`),_status)
 }
     }
@@ -43373,7 +43129,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
     constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_publish_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_publish_new(
         FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
 }
     )
@@ -43429,7 +43185,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_publish(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_publish(ptr, status)
                 }
             }
         }
@@ -43437,7 +43193,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_publish(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_publish(pointer!!, status)
         }
     }
 
@@ -43448,7 +43204,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_dependencies(
         it, _status)
 }
     }
@@ -43463,7 +43219,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_modules(
         it, _status)
 }
     }
@@ -43479,7 +43235,7 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq(
         it, FfiConverterTypePublish.lower(`other`),_status)
 }
     }
@@ -43689,7 +43445,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     constructor(`bytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -43745,7 +43501,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(ptr, status)
                 }
             }
         }
@@ -43753,7 +43509,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(pointer!!, status)
         }
     }
 
@@ -43761,7 +43517,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(
         it, _status)
 }
     }
@@ -43773,7 +43529,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
         it, _status)
 }
     }
@@ -43789,7 +43545,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -43805,7 +43561,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -43822,7 +43578,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
         it, _status)
 }
     }
@@ -43837,7 +43593,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
         it, _status)
 }
     }
@@ -43853,7 +43609,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(
         it, _status)
 }
     }
@@ -43869,7 +43625,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(
         it, _status)
 }
     }
@@ -43882,7 +43638,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeSecp256k1Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -43895,7 +43651,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -43908,7 +43664,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -43920,7 +43676,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
             return FfiConverterTypeSecp256k1VerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(
         it, _status)
 }
     }
@@ -43936,7 +43692,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1PrivateKey.lower(`other`),_status)
 }
     }
@@ -43954,7 +43710,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -43969,7 +43725,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -43983,7 +43739,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
         FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -43998,7 +43754,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
         FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -44012,7 +43768,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -44022,7 +43778,7 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
          fun `generate`(): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
         _status)
 }
     )
@@ -44162,14 +43918,14 @@ public object FfiConverterTypeSecp256k1PrivateKey: FfiConverter<Secp256k1Private
 
 
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 public interface Secp256k1PublicKeyInterface {
@@ -44201,14 +43957,14 @@ public interface Secp256k1PublicKeyInterface {
 }
 
 /**
- * A secp256k1 signature.
+ * A secp256k1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTET
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInterface
@@ -44281,7 +44037,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1publickey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1publickey(ptr, status)
                 }
             }
         }
@@ -44289,7 +44045,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(pointer!!, status)
         }
     }
 
@@ -44306,7 +44062,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(
         it, _status)
 }
     }
@@ -44321,7 +44077,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(
         it, _status)
 }
     }
@@ -44333,7 +44089,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
         it, _status)
 }
     }
@@ -44348,7 +44104,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -44364,7 +44120,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1PublicKey.lower(`other`),_status)
 }
     }
@@ -44375,7 +44131,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -44388,7 +44144,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -44399,7 +44155,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -44409,7 +44165,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
          fun `generate`(): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(
         _status)
 }
     )
@@ -44549,14 +44305,14 @@ public object FfiConverterTypeSecp256k1PublicKey: FfiConverter<Secp256k1PublicKe
 
 
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 public interface Secp256k1SignatureInterface {
@@ -44567,14 +44323,14 @@ public interface Secp256k1SignatureInterface {
 }
 
 /**
- * A secp256k1 public key.
+ * A secp256k1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTET
+ * secp256k1-signature = 64OCTET
  * ```
  */
 open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInterface
@@ -44647,7 +44403,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1signature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1signature(ptr, status)
                 }
             }
         }
@@ -44655,7 +44411,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(pointer!!, status)
         }
     }
 
@@ -44663,7 +44419,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_to_bytes(
         it, _status)
 }
     }
@@ -44679,7 +44435,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1Signature.lower(`other`),_status)
 }
     }
@@ -44690,7 +44446,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -44703,7 +44459,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -44714,7 +44470,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -44724,7 +44480,7 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
          fun `generate`(): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(
         _status)
 }
     )
@@ -44893,7 +44649,7 @@ open class Secp256k1Verifier: Disposable, AutoCloseable, Secp256k1VerifierInterf
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
         _status)
 }
     )
@@ -44949,7 +44705,7 @@ open class Secp256k1Verifier: Disposable, AutoCloseable, Secp256k1VerifierInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(ptr, status)
                 }
             }
         }
@@ -44957,7 +44713,7 @@ open class Secp256k1Verifier: Disposable, AutoCloseable, Secp256k1VerifierInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(pointer!!, status)
         }
     }
 
@@ -44966,7 +44722,7 @@ open class Secp256k1Verifier: Disposable, AutoCloseable, Secp256k1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -44978,7 +44734,7 @@ open class Secp256k1Verifier: Disposable, AutoCloseable, Secp256k1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -45164,7 +44920,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
     constructor(`publicKey`: Secp256k1PublicKey) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
         FfiConverterTypeSecp256k1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -45220,7 +44976,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(ptr, status)
                 }
             }
         }
@@ -45228,7 +44984,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(pointer!!, status)
         }
     }
 
@@ -45236,7 +44992,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(
         it, _status)
 }
     }
@@ -45252,7 +45008,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(
         it, _status)
 }
     }
@@ -45268,7 +45024,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(
         it, _status)
 }
     }
@@ -45281,7 +45037,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSecp256k1Signature.lower(`signature`),_status)
 }
     }
@@ -45293,7 +45049,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -45305,7 +45061,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -45320,7 +45076,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -45337,7 +45093,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256k1VerifyingKey {
             return FfiConverterTypeSecp256k1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -45351,7 +45107,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256k1VerifyingKey {
             return FfiConverterTypeSecp256k1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -45571,7 +45327,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     constructor(`bytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -45627,7 +45383,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
                 }
             }
         }
@@ -45635,7 +45391,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
         }
     }
 
@@ -45646,7 +45402,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
         it, _status)
 }
     }
@@ -45658,7 +45414,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
 }
     }
@@ -45674,7 +45430,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -45690,7 +45446,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -45707,7 +45463,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
         it, _status)
 }
     }
@@ -45722,7 +45478,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
         it, _status)
 }
     }
@@ -45738,7 +45494,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
         it, _status)
 }
     }
@@ -45754,7 +45510,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
         it, _status)
 }
     }
@@ -45770,7 +45526,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45786,7 +45542,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45802,7 +45558,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45814,7 +45570,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
         it, _status)
 }
     }
@@ -45830,7 +45586,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PrivateKey.lower(`other`),_status)
 }
     }
@@ -45848,7 +45604,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -45863,7 +45619,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -45877,7 +45633,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
         FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -45892,7 +45648,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
         FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -45906,7 +45662,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -45919,7 +45675,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
      */ fun `generate`(): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
         _status)
 }
     )
@@ -46059,14 +45815,14 @@ public object FfiConverterTypeSecp256r1PrivateKey: FfiConverter<Secp256r1Private
 
 
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 public interface Secp256r1PublicKeyInterface {
@@ -46098,14 +45854,14 @@ public interface Secp256r1PublicKeyInterface {
 }
 
 /**
- * A secp256r1 signature.
+ * A secp256r1 public key.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTET
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInterface
@@ -46178,7 +45934,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
                 }
             }
         }
@@ -46186,7 +45942,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
         }
     }
 
@@ -46203,7 +45959,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
         it, _status)
 }
     }
@@ -46218,7 +45974,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
         it, _status)
 }
     }
@@ -46230,7 +45986,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
         it, _status)
 }
     }
@@ -46245,7 +46001,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -46261,7 +46017,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PublicKey.lower(`other`),_status)
 }
     }
@@ -46272,7 +46028,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -46285,7 +46041,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46296,7 +46052,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46306,7 +46062,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
          fun `generate`(): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
         _status)
 }
     )
@@ -46446,14 +46202,14 @@ public object FfiConverterTypeSecp256r1PublicKey: FfiConverter<Secp256r1PublicKe
 
 
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 public interface Secp256r1SignatureInterface {
@@ -46464,14 +46220,14 @@ public interface Secp256r1SignatureInterface {
 }
 
 /**
- * A secp256r1 public key.
+ * A secp256r1 signature.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTET
+ * secp256r1-signature = 64OCTET
  * ```
  */
 open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInterface
@@ -46544,7 +46300,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
                 }
             }
         }
@@ -46552,7 +46308,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
         }
     }
 
@@ -46560,7 +46316,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
         it, _status)
 }
     }
@@ -46576,7 +46332,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1Signature.lower(`other`),_status)
 }
     }
@@ -46587,7 +46343,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -46600,7 +46356,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46611,7 +46367,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46621,7 +46377,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
          fun `generate`(): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
         _status)
 }
     )
@@ -46790,7 +46546,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
         _status)
 }
     )
@@ -46846,7 +46602,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
                 }
             }
         }
@@ -46854,7 +46610,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
         }
     }
 
@@ -46863,7 +46619,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -46875,7 +46631,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -47061,7 +46817,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     constructor(`publicKey`: Secp256r1PublicKey) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
         FfiConverterTypeSecp256r1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -47117,7 +46873,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(ptr, status)
                 }
             }
         }
@@ -47125,7 +46881,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer!!, status)
         }
     }
 
@@ -47133,7 +46889,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
         it, _status)
 }
     }
@@ -47149,7 +46905,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
         it, _status)
 }
     }
@@ -47165,7 +46921,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
         it, _status)
 }
     }
@@ -47178,7 +46934,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSecp256r1Signature.lower(`signature`),_status)
 }
     }
@@ -47190,7 +46946,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -47202,7 +46958,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -47217,7 +46973,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -47234,7 +46990,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1VerifyingKey {
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47248,7 +47004,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1VerifyingKey {
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -47503,7 +47259,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplekeypair(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplekeypair(ptr, status)
                 }
             }
         }
@@ -47511,7 +47267,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplekeypair(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplekeypair(pointer!!, status)
         }
     }
 
@@ -47519,7 +47275,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeMultisigMemberPublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
         it, _status)
 }
     }
@@ -47531,7 +47287,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
         it, _status)
 }
     }
@@ -47547,7 +47303,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -47563,7 +47319,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -47580,7 +47336,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
         it, _status)
 }
     }
@@ -47595,7 +47351,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
         it, _status)
 }
     }
@@ -47611,7 +47367,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
         it, _status)
 }
     }
@@ -47627,7 +47383,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
         it, _status)
 }
     }
@@ -47640,7 +47396,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -47653,7 +47409,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -47665,7 +47421,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSimpleVerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
         it, _status)
 }
     }
@@ -47686,7 +47442,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -47700,7 +47456,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47715,7 +47471,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47725,7 +47481,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromEd25519`(`keypair`: Ed25519PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
         FfiConverterTypeEd25519PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -47739,7 +47495,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -47749,7 +47505,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromSecp256k1`(`keypair`: Secp256k1PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -47759,7 +47515,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromSecp256r1`(`keypair`: Secp256r1PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -48055,7 +47811,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplesignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplesignature(ptr, status)
                 }
             }
         }
@@ -48063,7 +47819,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplesignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplesignature(pointer!!, status)
         }
     }
 
@@ -48071,7 +47827,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeEd25519PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key(
         it, _status)
 }
     }
@@ -48083,7 +47839,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeEd25519PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key_opt(
         it, _status)
 }
     }
@@ -48095,7 +47851,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeEd25519Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig(
         it, _status)
 }
     }
@@ -48107,7 +47863,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeEd25519Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig_opt(
         it, _status)
 }
     }
@@ -48119,7 +47875,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_ed25519(
         it, _status)
 }
     }
@@ -48131,7 +47887,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256k1(
         it, _status)
 }
     }
@@ -48143,7 +47899,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256r1(
         it, _status)
 }
     }
@@ -48155,7 +47911,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_scheme(
         it, _status)
 }
     }
@@ -48167,7 +47923,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key(
         it, _status)
 }
     }
@@ -48179,7 +47935,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key_opt(
         it, _status)
 }
     }
@@ -48191,7 +47947,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256k1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig(
         it, _status)
 }
     }
@@ -48203,7 +47959,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256k1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig_opt(
         it, _status)
 }
     }
@@ -48215,7 +47971,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key(
         it, _status)
 }
     }
@@ -48227,7 +47983,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key_opt(
         it, _status)
 }
     }
@@ -48239,7 +47995,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig(
         it, _status)
 }
     }
@@ -48251,7 +48007,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig_opt(
         it, _status)
 }
     }
@@ -48263,7 +48019,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes(
         it, _status)
 }
     }
@@ -48279,7 +48035,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSimpleSignature.lower(`other`),_status)
 }
     }
@@ -48290,7 +48046,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -48302,7 +48058,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newEd25519`(`signature`: Ed25519Signature, `publicKey`: Ed25519PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_ed25519(
         FfiConverterTypeEd25519Signature.lower(`signature`),FfiConverterTypeEd25519PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48312,7 +48068,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newSecp256k1`(`signature`: Secp256k1Signature, `publicKey`: Secp256k1PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256k1(
         FfiConverterTypeSecp256k1Signature.lower(`signature`),FfiConverterTypeSecp256k1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48322,7 +48078,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newSecp256r1`(`signature`: Secp256r1Signature, `publicKey`: Secp256r1PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256r1(
         FfiConverterTypeSecp256r1Signature.lower(`signature`),FfiConverterTypeSecp256r1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48489,7 +48245,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
         _status)
 }
     )
@@ -48545,7 +48301,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifier(ptr, status)
                 }
             }
         }
@@ -48553,7 +48309,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifier(pointer!!, status)
         }
     }
 
@@ -48562,7 +48318,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -48795,7 +48551,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(ptr, status)
                 }
             }
         }
@@ -48803,7 +48559,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(pointer!!, status)
         }
     }
 
@@ -48811,7 +48567,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterTypeMultisigMemberPublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
         it, _status)
 }
     }
@@ -48823,7 +48579,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
         it, _status)
 }
     }
@@ -48839,7 +48595,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
         it, _status)
 }
     }
@@ -48855,7 +48611,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
         it, _status)
 }
     }
@@ -48868,7 +48624,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -48883,7 +48639,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSimpleVerifyingKey.lower(`other`),_status)
 }
     }
@@ -48901,7 +48657,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): SimpleVerifyingKey {
             return FfiConverterTypeSimpleVerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -48915,7 +48671,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): SimpleVerifyingKey {
             return FfiConverterTypeSimpleVerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -49112,7 +48868,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
     constructor(`coin`: Argument, `amounts`: List<Argument>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_splitcoins_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_splitcoins_new(
         FfiConverterTypeArgument.lower(`coin`),FfiConverterSequenceTypeArgument.lower(`amounts`),_status)
 }
     )
@@ -49168,7 +48924,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_splitcoins(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_splitcoins(ptr, status)
                 }
             }
         }
@@ -49176,7 +48932,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_splitcoins(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_splitcoins(pointer!!, status)
         }
     }
 
@@ -49187,7 +48943,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_amounts(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_amounts(
         it, _status)
 }
     }
@@ -49202,7 +48958,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin(
         it, _status)
 }
     }
@@ -49218,7 +48974,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
         it, FfiConverterTypeSplitCoins.lower(`other`),_status)
 }
     }
@@ -49381,14 +49137,105 @@ public interface StructTagInterface {
     fun `address`(): Address
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
     fun `coinType`(): TypeTag
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
     fun `coinTypeOpt`(): TypeTag?
+    
+    fun `isAsciiString`(): kotlin.Boolean
+    
+    fun `isAuthenticatorState`(): kotlin.Boolean
+    
+    fun `isBag`(): kotlin.Boolean
+    
+    fun `isBalance`(): kotlin.Boolean
+    
+    fun `isClock`(): kotlin.Boolean
+    
+    fun `isCoin`(): kotlin.Boolean
+    
+    fun `isCoinManager`(): kotlin.Boolean
+    
+    fun `isCoinMetadata`(): kotlin.Boolean
+    
+    fun `isConfig`(): kotlin.Boolean
+    
+    fun `isConfigSetting`(): kotlin.Boolean
+    
+    fun `isDenyListAddressKey`(): kotlin.Boolean
+    
+    fun `isDenyListConfigKey`(): kotlin.Boolean
+    
+    fun `isDenyListGlobalPauseKey`(): kotlin.Boolean
+    
+    fun `isDisplayCreated`(): kotlin.Boolean
+    
+    fun `isDisplayVersionUpdated`(): kotlin.Boolean
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+    fun `isDynamicField`(): kotlin.Boolean
+    
+    fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean
+    
+    fun `isGas`(): kotlin.Boolean
+    
+    fun `isGasCoin`(): kotlin.Boolean
+    
+    fun `isId`(): kotlin.Boolean
+    
+    fun `isIotaSystemAdminCap`(): kotlin.Boolean
+    
+    fun `isIotaSystemState`(): kotlin.Boolean
+    
+    fun `isIotaTreasuryCap`(): kotlin.Boolean
+    
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */
+    fun `isName`(): kotlin.Boolean
+    
+    fun `isObjectBag`(): kotlin.Boolean
+    
+    fun `isOption`(): kotlin.Boolean
+    
+    fun `isRandom`(): kotlin.Boolean
+    
+    fun `isStakedIota`(): kotlin.Boolean
+    
+    fun `isString`(): kotlin.Boolean
+    
+    fun `isSystemEpochInfoEvent`(): kotlin.Boolean
+    
+    fun `isTimeLock`(): kotlin.Boolean
+    
+    fun `isTimelockedStakedIota`(): kotlin.Boolean
+    
+    fun `isTransferReceiving`(): kotlin.Boolean
+    
+    fun `isTreasuryCap`(): kotlin.Boolean
+    
+    fun `isTxContext`(): kotlin.Boolean
+    
+    fun `isUid`(): kotlin.Boolean
+    
+    fun `isUpgradeCap`(): kotlin.Boolean
+    
+    fun `isUpgradeReceipt`(): kotlin.Boolean
+    
+    fun `isUpgradeTicket`(): kotlin.Boolean
+    
+    fun `isUrl`(): kotlin.Boolean
     
     /**
      * Returns the module part of a `StructTag`
@@ -49449,7 +49296,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag> = listOf()) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
         FfiConverterTypeAddress.lower(`address`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`name`),FfiConverterSequenceTypeTypeTag.lower(`typeParams`),_status)
 }
     )
@@ -49505,7 +49352,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_structtag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_structtag(ptr, status)
                 }
             }
         }
@@ -49513,7 +49360,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_structtag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_structtag(pointer!!, status)
         }
     }
 
@@ -49524,7 +49371,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_address(
         it, _status)
 }
     }
@@ -49534,12 +49381,13 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */override fun `coinType`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(
         it, _status)
 }
     }
@@ -49549,12 +49397,502 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */override fun `coinTypeOpt`(): TypeTag? {
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAsciiString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAuthenticatorState`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBalance`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isClock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinManager`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinMetadata`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfig`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfigSetting`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListAddressKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListConfigKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListGlobalPauseKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayCreated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayVersionUpdated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */override fun `isDynamicField`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isGas`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isGasCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isId`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemAdminCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemState`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this is an IOTA-Names `Name` type.
+     * Note that this does not check the package address, so it will return
+     * true for any struct with the correct module and type name with no
+     * type params.
+     */override fun `isName`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_name(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isObjectBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isOption`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_option(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isRandom`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_random(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSystemEpochInfoEvent`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimeLock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimelockedStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTransferReceiving`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTxContext`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUid`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeReceipt`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeTicket`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUrl`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_url(
         it, _status)
 }
     }
@@ -49569,7 +49907,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
         it, _status)
 }
     }
@@ -49584,7 +49922,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
         it, _status)
 }
     }
@@ -49600,7 +49938,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
         it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
@@ -49615,7 +49953,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterSequenceTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
         it, _status)
 }
     }
@@ -49628,7 +49966,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -49642,7 +49980,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
         it, FfiConverterTypeStructTag.lower(`other`),_status)
 }
     }
@@ -49653,7 +49991,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -49665,7 +50003,27 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newAsciiString`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newAuthenticatorState`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(
         _status)
 }
     )
@@ -49675,7 +50033,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newBalance`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49685,7 +50043,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newClock`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
         _status)
 }
     )
@@ -49695,7 +50053,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoin`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49705,7 +50063,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoinManager`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49715,7 +50073,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoinMetadata`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49725,7 +50083,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newConfig`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
         _status)
 }
     )
@@ -49735,7 +50093,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newConfigSetting`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49745,7 +50103,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListAddressKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
         _status)
 }
     )
@@ -49755,7 +50113,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListConfigKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
         _status)
 }
     )
@@ -49765,7 +50123,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListGlobalPauseKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
         _status)
 }
     )
@@ -49775,8 +50133,32 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDisplayCreated`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newDisplayVersionUpdated`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Creates a new dynamic field struct tag
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */ fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
+        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
 }
     )
     }
@@ -49785,18 +50167,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
     }
     
 
-         fun `newField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+         fun `newGas`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
-        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(
+        _status)
 }
     )
     }
@@ -49805,7 +50187,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newGasCoin`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
         _status)
 }
     )
@@ -49815,17 +50197,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newId`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newIotaCoinType`(): StructTag {
-            return FfiConverterTypeStructTag.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
         _status)
 }
     )
@@ -49835,7 +50207,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaSystemAdminCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
         _status)
 }
     )
@@ -49845,7 +50217,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaSystemState`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
         _status)
 }
     )
@@ -49855,18 +50227,52 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaTreasuryCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
         _status)
 }
     )
     }
     
 
-         fun `newName`(`address`: Address): StructTag {
+        
+    /**
+     * Creates a new IOTA-Names `Name` struct tag
+     * with the given package address.
+     */ fun `newName`(`address`: Address): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newObjectBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newOption`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newRandom`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(
+        _status)
 }
     )
     }
@@ -49875,7 +50281,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newStakedIota`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
         _status)
 }
     )
@@ -49885,7 +50291,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newString`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
         _status)
 }
     )
@@ -49895,7 +50301,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newSystemEpochInfoEvent`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
         _status)
 }
     )
@@ -49905,7 +50311,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTimeLock`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49915,7 +50321,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTimelockedStakedIota`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
         _status)
 }
     )
@@ -49925,7 +50331,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTransferReceiving`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
         _status)
 }
     )
@@ -49935,8 +50341,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTreasuryCap`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newTxContext`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(
+        _status)
 }
     )
     }
@@ -49945,7 +50361,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUid`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
         _status)
 }
     )
@@ -49955,7 +50371,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
         _status)
 }
     )
@@ -49965,7 +50381,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeReceipt`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
         _status)
 }
     )
@@ -49975,18 +50391,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeTicket`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
         _status)
 }
     )
     }
     
 
-         fun `newVersionUpdated`(`structTag`: StructTag): StructTag {
+         fun `newUrl`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
-        FfiConverterTypeStructTag.lower(`structTag`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(
+        _status)
 }
     )
     }
@@ -50143,7 +50559,7 @@ public interface SystemPackageInterface {
     
     fun `modules`(): List<kotlin.ByteArray>
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -50179,11 +50595,11 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`version`: kotlin.ULong, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
+    constructor(`version`: Version, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
-        FfiConverterULong.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
+        FfiConverterTypeVersion.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
 }
     )
 
@@ -50238,7 +50654,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_systempackage(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_systempackage(ptr, status)
                 }
             }
         }
@@ -50246,7 +50662,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer!!, status)
         }
     }
 
@@ -50254,7 +50670,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
         it, _status)
 }
     }
@@ -50266,7 +50682,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
         it, _status)
 }
     }
@@ -50274,11 +50690,11 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
         it, _status)
 }
     }
@@ -50294,7 +50710,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
         it, FfiConverterTypeSystemPackage.lower(`other`),_status)
 }
     }
@@ -50443,7 +50859,7 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -50488,7 +50904,7 @@ public interface TransactionInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -50563,7 +50979,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transaction(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transaction(ptr, status)
                 }
             }
         }
@@ -50571,7 +50987,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transaction(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transaction(pointer!!, status)
         }
     }
 
@@ -50579,7 +50995,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
         it, _status)
 }
     }
@@ -50591,7 +51007,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
         it, _status)
 }
     }
@@ -50603,7 +51019,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_expiration(
         it, _status)
 }
     }
@@ -50615,7 +51031,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(
         it, _status)
 }
     }
@@ -50627,7 +51043,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_kind(
         it, _status)
 }
     }
@@ -50639,7 +51055,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
         it, _status)
 }
     }
@@ -50654,7 +51070,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
         it, _status)
 }
     }
@@ -50669,7 +51085,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
         it, _status)
 }
     }
@@ -50684,7 +51100,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
         it, _status)
 }
     }
@@ -50700,7 +51116,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransaction.lower(`other`),_status)
 }
     }
@@ -50717,7 +51133,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): Transaction {
             return FfiConverterTypeTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -50727,7 +51143,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
          fun `newV1`(`transactionV1`: TransactionV1): Transaction {
             return FfiConverterTypeTransaction.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(
         FfiConverterTypeTransactionV1.lower(`transactionV1`),_status)
 }
     )
@@ -51060,7 +51476,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     constructor(`sender`: Address) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
         FfiConverterTypeAddress.lower(`sender`),_status)
 }
     )
@@ -51116,7 +51532,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionbuilder(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionbuilder(ptr, status)
                 }
             }
         }
@@ -51124,7 +51540,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(pointer!!, status)
         }
     }
 
@@ -51142,7 +51558,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     override suspend fun `executeWithGasStation`(`signer`: TransactionSigner) : Value {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
                 thisPtr,
                 FfiConverterTypeTransactionSigner.lower(`signer`),
             )
@@ -51164,7 +51580,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
         it, FfiConverterULong.lower(`epoch`),_status)
 }
     }
@@ -51180,7 +51596,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransaction.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
         it, _status)
 }
     }
@@ -51195,7 +51611,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
         it, FfiConverterSequenceTypeObjectReference.lower(`objectRefs`),_status)
 }
     }
@@ -51210,7 +51626,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
         it, FfiConverterULong.lower(`budget`),_status)
 }
     }
@@ -51225,7 +51641,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
         it, FfiConverterULong.lower(`price`),_status)
 }
     }
@@ -51240,7 +51656,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
         it, FfiConverterString.lower(`url`),FfiConverterOptionalDuration.lower(`duration`),FfiConverterOptionalMapStringSequenceString.lower(`headers`),_status)
 }
     }
@@ -51256,7 +51672,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
         it, FfiConverterSequenceTypeMoveArg.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
 }
     }
@@ -51276,7 +51692,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
         it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
 }
     }
@@ -51291,7 +51707,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
         it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
@@ -51318,7 +51734,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
         it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterString.lower(`upgradeCapName`),_status)
 }
     }
@@ -51347,7 +51763,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
         it, FfiConverterSequenceTypePTBArgument.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
@@ -51366,7 +51782,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterTypePTBArgument.lower(`amount`),_status)
 }
     }
@@ -51381,7 +51797,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         = 
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
         it, FfiConverterTypeAddress.lower(`sender`),_status)
 }
     }
@@ -51395,7 +51811,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
         it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
@@ -51410,7 +51826,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
         it, FfiConverterTypeAddress.lower(`sponsor`),_status)
 }
     }
@@ -51428,7 +51844,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
         it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
 }
     }
@@ -51444,7 +51860,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
 }
     }
@@ -51459,7 +51875,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
         it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
 }
     }
@@ -51484,7 +51900,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
         it, FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
 }
     }
@@ -51496,7 +51912,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeClientTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
         it, FfiConverterTypeGraphQLClient.lower(`client`),_status)
 }
     }
@@ -51647,8 +52063,8 @@ public object FfiConverterTypeTransactionBuilder: FfiConverter<TransactionBuilde
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 public interface TransactionEffectsInterface {
@@ -51670,8 +52086,8 @@ public interface TransactionEffectsInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-effects =  %x00 effects-v1
- * =/ %x01 effects-v2
+ * transaction-effects =  %d00 effects-v1
+ * =/ %d01 effects-v2
  * ```
  */
 open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInterface
@@ -51744,7 +52160,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactioneffects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactioneffects(ptr, status)
                 }
             }
         }
@@ -51752,7 +52168,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactioneffects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactioneffects(pointer!!, status)
         }
     }
 
@@ -51760,7 +52176,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterTypeTransactionEffectsV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
         it, _status)
 }
     }
@@ -51772,7 +52188,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
         it, _status)
 }
     }
@@ -51784,7 +52200,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(
         it, _status)
 }
     }
@@ -51800,7 +52216,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionEffects.lower(`other`),_status)
 }
     }
@@ -51813,7 +52229,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
          fun `newV1`(`effects`: TransactionEffectsV1): TransactionEffects {
             return FfiConverterTypeTransactionEffects.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(
         FfiConverterTypeTransactionEffectsV1.lower(`effects`),_status)
 }
     )
@@ -52004,7 +52420,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
     constructor(`events`: List<Event>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
         FfiConverterSequenceTypeEvent.lower(`events`),_status)
 }
     )
@@ -52060,7 +52476,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
                 }
             }
         }
@@ -52068,7 +52484,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionevents(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionevents(pointer!!, status)
         }
     }
 
@@ -52076,7 +52492,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
         it, _status)
 }
     }
@@ -52088,7 +52504,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterSequenceTypeEvent.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
         it, _status)
 }
     }
@@ -52239,15 +52655,12 @@ public object FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents,
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 public interface TransactionKindInterface {
@@ -52263,15 +52676,12 @@ public interface TransactionKindInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * =/ %d01 genesis-transaction                    ; Genesis
+ * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+ * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+ * =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+ * =/ %d05 randomness-state-update                ; RandomnessStateUpdate
  * ```
  */
 open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
@@ -52344,7 +52754,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
                 }
             }
         }
@@ -52352,7 +52762,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
         }
     }
 
@@ -52364,7 +52774,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionKind.lower(`other`),_status)
 }
     }
@@ -52374,20 +52784,10 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
     
     companion object {
-         fun `newAuthenticatorStateUpdateV1`(`tx`: AuthenticatorStateUpdateV1): TransactionKind {
-            return FfiConverterTypeTransactionKind.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`tx`),_status)
-}
-    )
-    }
-    
-
          fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
         FfiConverterTypeConsensusCommitPrologueV1.lower(`tx`),_status)
 }
     )
@@ -52397,7 +52797,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
         FfiConverterSequenceTypeEndOfEpochTransactionKind.lower(`tx`),_status)
 }
     )
@@ -52407,7 +52807,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newGenesis`(`tx`: GenesisTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
         FfiConverterTypeGenesisTransaction.lower(`tx`),_status)
 }
     )
@@ -52417,7 +52817,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newProgrammableTransaction`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
         FfiConverterTypeProgrammableTransaction.lower(`tx`),_status)
 }
     )
@@ -52427,7 +52827,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
         FfiConverterTypeRandomnessStateUpdate.lower(`tx`),_status)
 }
     )
@@ -52602,7 +53002,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     constructor(`signerFn`: TransactionSignerFn) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
         FfiConverterTypeTransactionSignerFn.lower(`signerFn`),_status)
 }
     )
@@ -52658,7 +53058,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
                 }
             }
         }
@@ -52666,7 +53066,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
         }
     }
 
@@ -52676,7 +53076,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     override suspend fun `sign`(`txn`: Transaction) : UserSignature {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
                 thisPtr,
                 FfiConverterTypeTransaction.lower(`txn`),
             )
@@ -52698,7 +53098,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromEd25519`(`key`: Ed25519PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
         FfiConverterTypeEd25519PrivateKey.lower(`key`),_status)
 }
     )
@@ -52708,7 +53108,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromKeypair`(`key`: SimpleKeypair): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
         FfiConverterTypeSimpleKeypair.lower(`key`),_status)
 }
     )
@@ -52718,7 +53118,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromMoveAuthenticator`(`auth`: MoveAuthenticator): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`auth`),_status)
 }
     )
@@ -52728,7 +53128,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256k1`(`key`: Secp256k1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`key`),_status)
 }
     )
@@ -52738,7 +53138,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256r1`(`key`: Secp256r1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`key`),_status)
 }
     )
@@ -52969,7 +53369,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(ptr, status)
                 }
             }
         }
@@ -52977,7 +53377,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
         }
     }
 
@@ -52990,7 +53390,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
     override suspend fun `sign`(`transaction`: Transaction) : TransactionSignerFnOutput {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
                 thisPtr,
                 FfiConverterTypeTransaction.lower(`transaction`),
             )
@@ -53207,7 +53607,7 @@ public object FfiConverterTypeTransactionSignerFn: FfiConverter<TransactionSigne
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -53250,7 +53650,7 @@ public interface TransactionV1Interface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction = %x00 transaction-v1
+ * transaction = %d00 transaction-v1
  *
  * transaction-v1 = transaction-kind address gas-payment transaction-expiration
  * ```
@@ -53276,7 +53676,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
         FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
 }
     )
@@ -53332,7 +53732,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
                 }
             }
         }
@@ -53340,7 +53740,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
         }
     }
 
@@ -53348,7 +53748,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
         it, _status)
 }
     }
@@ -53360,7 +53760,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
         it, _status)
 }
     }
@@ -53372,7 +53772,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
         it, _status)
 }
     }
@@ -53384,7 +53784,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
         it, _status)
 }
     }
@@ -53396,7 +53796,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
         it, _status)
 }
     }
@@ -53411,7 +53811,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
         it, _status)
 }
     }
@@ -53426,7 +53826,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
         it, _status)
 }
     }
@@ -53441,7 +53841,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
         it, _status)
 }
     }
@@ -53457,7 +53857,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionV1.lower(`other`),_status)
 }
     }
@@ -53474,7 +53874,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     @Throws(SdkFfiException::class) fun `fromBase64`(`bytes`: kotlin.String): TransactionV1 {
             return FfiConverterTypeTransactionV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
         FfiConverterString.lower(`bytes`),_status)
 }
     )
@@ -53671,7 +54071,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
     constructor(`objects`: List<Argument>, `address`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
         FfiConverterSequenceTypeArgument.lower(`objects`),FfiConverterTypeArgument.lower(`address`),_status)
 }
     )
@@ -53727,7 +54127,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
                 }
             }
         }
@@ -53735,7 +54135,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
         }
     }
 
@@ -53746,7 +54146,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
         it, _status)
 }
     }
@@ -53761,7 +54161,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
         it, _status)
 }
     }
@@ -53777,7 +54177,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransferObjects.lower(`other`),_status)
 }
     }
@@ -53926,61 +54326,98 @@ public object FfiConverterTypeTransferObjects: FfiConverter<TransferObjects, Poi
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 public interface TypeTagInterface {
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */
     fun `asStructTag`(): StructTag
     
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */
     fun `asStructTagOpt`(): StructTag?
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */
     fun `asVectorTypeTag`(): TypeTag
     
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */
     fun `asVectorTypeTagOpt`(): TypeTag?
     
+    /**
+     * Checks if this type tag is an address.
+     */
     fun `isAddress`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a boolean.
+     */
     fun `isBool`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a signer.
+     */
     fun `isSigner`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a struct.
+     */
     fun `isStruct`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u128.
+     */
     fun `isU128`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u16.
+     */
     fun `isU16`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u256.
+     */
     fun `isU256`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u32.
+     */
     fun `isU32`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u64.
+     */
     fun `isU64`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a u8.
+     */
     fun `isU8`(): kotlin.Boolean
     
+    /**
+     * Checks if this type tag is a vector.
+     */
     fun `isVector`(): kotlin.Boolean
     
     /**
@@ -54000,29 +54437,17 @@ public interface TypeTagInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * type-tag = type-tag-u8 \
- * type-tag-u16 \
- * type-tag-u32 \
- * type-tag-u64 \
- * type-tag-u128 \
- * type-tag-u256 \
- * type-tag-bool \
- * type-tag-address \
- * type-tag-signer \
- * type-tag-vector \
- * type-tag-struct
- *
- * type-tag-u8 = %x01
- * type-tag-u16 = %x08
- * type-tag-u32 = %x09
- * type-tag-u64 = %x02
- * type-tag-u128 = %x03
- * type-tag-u256 = %x0a
- * type-tag-bool = %x00
- * type-tag-address = %x04
- * type-tag-signer = %x05
- * type-tag-vector = %x06 type-tag
- * type-tag-struct = %x07 struct-tag
+ * type-tag = %d00            ; Bool
+ * / %d01            ; U8
+ * / %d02            ; U64
+ * / %d03            ; U128
+ * / %d04            ; Address
+ * / %d05            ; Signer
+ * / %d06 type-tag   ; Vector
+ * / %d07 struct-tag ; Struct
+ * / %d08            ; U16
+ * / %d09            ; U32
+ * / %d10            ; U256
  * ```
  */
 open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
@@ -54095,7 +54520,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
                 }
             }
         }
@@ -54103,15 +54528,19 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
         }
     }
 
-    override fun `asStructTag`(): StructTag {
+    
+    /**
+     * Converts this type tag into a struct tag, if it is one, or panics
+     * otherwise.
+     */override fun `asStructTag`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
         it, _status)
 }
     }
@@ -54119,11 +54548,15 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asStructTagOpt`(): StructTag? {
+    
+    /**
+     * Converts this type tag into a struct tag, if it is one, or returns
+     * `None` otherwise.
+     */override fun `asStructTagOpt`(): StructTag? {
             return FfiConverterOptionalTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
         it, _status)
 }
     }
@@ -54131,11 +54564,15 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asVectorTypeTag`(): TypeTag {
+    
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or panics otherwise.
+     */override fun `asVectorTypeTag`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
         it, _status)
 }
     }
@@ -54143,11 +54580,15 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `asVectorTypeTagOpt`(): TypeTag? {
+    
+    /**
+     * Converts this type tag into the inner type tag of a vector, if it is
+     * one, or returns `None` otherwise.
+     */override fun `asVectorTypeTagOpt`(): TypeTag? {
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
         it, _status)
 }
     }
@@ -54155,11 +54596,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isAddress`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is an address.
+     */override fun `isAddress`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
         it, _status)
 }
     }
@@ -54167,11 +54611,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isBool`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a boolean.
+     */override fun `isBool`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
         it, _status)
 }
     }
@@ -54179,11 +54626,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isSigner`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a signer.
+     */override fun `isSigner`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
         it, _status)
 }
     }
@@ -54191,11 +54641,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isStruct`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a struct.
+     */override fun `isStruct`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
         it, _status)
 }
     }
@@ -54203,11 +54656,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU128`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u128.
+     */override fun `isU128`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
         it, _status)
 }
     }
@@ -54215,11 +54671,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU16`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u16.
+     */override fun `isU16`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
         it, _status)
 }
     }
@@ -54227,11 +54686,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU256`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u256.
+     */override fun `isU256`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
         it, _status)
 }
     }
@@ -54239,11 +54701,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU32`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u32.
+     */override fun `isU32`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
         it, _status)
 }
     }
@@ -54251,11 +54716,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU64`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u64.
+     */override fun `isU64`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
         it, _status)
 }
     }
@@ -54263,11 +54731,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isU8`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a u8.
+     */override fun `isU8`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
         it, _status)
 }
     }
@@ -54275,11 +54746,14 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     }
     
 
-    override fun `isVector`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this type tag is a vector.
+     */override fun `isVector`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
         it, _status)
 }
     }
@@ -54295,7 +54769,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
         it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
@@ -54308,7 +54782,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -54322,7 +54796,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
         it, FfiConverterTypeTypeTag.lower(`other`),_status)
 }
     }
@@ -54333,7 +54807,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -54345,7 +54819,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newAddress`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
         _status)
 }
     )
@@ -54355,7 +54829,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newBool`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
         _status)
 }
     )
@@ -54365,7 +54839,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newSigner`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
         _status)
 }
     )
@@ -54375,7 +54849,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newStruct`(`structTag`: StructTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -54385,7 +54859,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU128`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
         _status)
 }
     )
@@ -54395,7 +54869,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU16`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
         _status)
 }
     )
@@ -54405,7 +54879,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU256`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
         _status)
 }
     )
@@ -54415,7 +54889,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU32`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
         _status)
 }
     )
@@ -54425,7 +54899,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU64`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
         _status)
 }
     )
@@ -54435,7 +54909,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU8`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
         _status)
 }
     )
@@ -54445,7 +54919,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newVector`(`typeTag`: TypeTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -54658,7 +55132,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
     constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
         FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypeArgument.lower(`ticket`),_status)
 }
     )
@@ -54714,7 +55188,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
                 }
             }
         }
@@ -54722,7 +55196,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
         }
     }
 
@@ -54733,7 +55207,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
         it, _status)
 }
     }
@@ -54748,7 +55222,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
         it, _status)
 }
     }
@@ -54763,7 +55237,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
         it, _status)
 }
     }
@@ -54778,7 +55252,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
         it, _status)
 }
     }
@@ -54794,7 +55268,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgrade.lower(`other`),_status)
 }
     }
@@ -55021,7 +55495,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
                 }
             }
         }
@@ -55029,7 +55503,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
         }
     }
 
@@ -55040,7 +55514,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
             return FfiConverterUByte.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
         it, _status)
 }
     }
@@ -55053,7 +55527,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
         it, _status)
 }
     }
@@ -55067,7 +55541,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgradePolicy.lower(`other`),_status)
 }
     }
@@ -55084,7 +55558,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `additive`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
         _status)
 }
     )
@@ -55101,7 +55575,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `compatible`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
         _status)
 }
     )
@@ -55114,7 +55588,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `depOnly`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
         _status)
 }
     )
@@ -55265,7 +55739,7 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -55276,35 +55750,73 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  */
 public interface UserSignatureInterface {
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */
     fun `asMoveAuthenticator`(): MoveAuthenticator
     
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
     fun `asMoveAuthenticatorOpt`(): MoveAuthenticator?
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */
     fun `asMultisig`(): MultisigAggregatedSignature
     
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */
     fun `asMultisigOpt`(): MultisigAggregatedSignature?
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */
     fun `asPasskeyAuthenticator`(): PasskeyAuthenticator
     
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
     fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator?
     
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */
     fun `asSimple`(): SimpleSignature
     
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
     fun `asSimpleOpt`(): SimpleSignature?
     
-    fun `asZkloginAuthenticator`(): ZkLoginAuthenticator
-    
-    fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator?
-    
+    /**
+     * Check if this signature is a move authenticator
+     */
     fun `isMoveAuthenticator`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */
     fun `isMultisig`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a passkey authenticator
+     */
     fun `isPasskeyAuthenticator`(): kotlin.Boolean
     
+    /**
+     * Check if this signature is a simple signature
+     */
     fun `isSimple`(): kotlin.Boolean
-    
-    fun `isZkloginAuthenticator`(): kotlin.Boolean
     
     /**
      * Return the flag for this signature scheme
@@ -55330,7 +55842,7 @@ public interface UserSignatureInterface {
  *
  * ```text
  * user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
- * user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+ * user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
  * ```
  *
  * Note: Due to historical reasons, signatures are serialized slightly
@@ -55409,7 +55921,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
                 }
             }
         }
@@ -55417,15 +55929,19 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
         }
     }
 
-    override fun `asMoveAuthenticator`(): MoveAuthenticator {
+    
+    /**
+     * Convert this signature into a move authenticator if it is one, or panic
+     * otherwise
+     */override fun `asMoveAuthenticator`(): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
         it, _status)
 }
     }
@@ -55433,11 +55949,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMoveAuthenticatorOpt`(): MoveAuthenticator? {
+    
+    /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */override fun `asMoveAuthenticatorOpt`(): MoveAuthenticator? {
             return FfiConverterOptionalTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
         it, _status)
 }
     }
@@ -55445,11 +55965,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMultisig`(): MultisigAggregatedSignature {
+    
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or panic otherwise
+     */override fun `asMultisig`(): MultisigAggregatedSignature {
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
         it, _status)
 }
     }
@@ -55457,11 +55981,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMultisigOpt`(): MultisigAggregatedSignature? {
+    
+    /**
+     * Convert this signature into a multisig aggregated signature if it is
+     * one, or return `None` otherwise
+     */override fun `asMultisigOpt`(): MultisigAggregatedSignature? {
             return FfiConverterOptionalTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
         it, _status)
 }
     }
@@ -55469,11 +55997,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskeyAuthenticator`(): PasskeyAuthenticator {
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * panic otherwise
+     */override fun `asPasskeyAuthenticator`(): PasskeyAuthenticator {
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
         it, _status)
 }
     }
@@ -55481,11 +56013,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator? {
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */override fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator? {
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
         it, _status)
 }
     }
@@ -55493,11 +56029,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asSimple`(): SimpleSignature {
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or panic
+     * otherwise
+     */override fun `asSimple`(): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
         it, _status)
 }
     }
@@ -55505,11 +56045,15 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asSimpleOpt`(): SimpleSignature? {
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */override fun `asSimpleOpt`(): SimpleSignature? {
             return FfiConverterOptionalTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
         it, _status)
 }
     }
@@ -55517,35 +56061,14 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asZkloginAuthenticator`(): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
-        it, _status)
-}
-    }
-    )
-    }
     
-
-    override fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator? {
-            return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isMoveAuthenticator`(): kotlin.Boolean {
+    /**
+     * Check if this signature is a move authenticator
+     */override fun `isMoveAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
         it, _status)
 }
     }
@@ -55553,11 +56076,14 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isMultisig`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a multisig aggregated signature
+     */override fun `isMultisig`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
         it, _status)
 }
     }
@@ -55565,11 +56091,14 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isPasskeyAuthenticator`(): kotlin.Boolean {
+    
+    /**
+     * Check if this signature is a passkey authenticator
+     */override fun `isPasskeyAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
         it, _status)
 }
     }
@@ -55577,23 +56106,14 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isSimple`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
-        it, _status)
-}
-    }
-    )
-    }
     
-
-    override fun `isZkloginAuthenticator`(): kotlin.Boolean {
+    /**
+     * Check if this signature is a simple signature
+     */override fun `isSimple`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
         it, _status)
 }
     }
@@ -55608,7 +56128,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
         it, _status)
 }
     }
@@ -55620,7 +56140,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
         it, _status)
 }
     }
@@ -55632,7 +56152,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
         it, _status)
 }
     }
@@ -55648,7 +56168,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeUserSignature.lower(`other`),_status)
 }
     }
@@ -55662,7 +56182,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -55673,7 +56193,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -55683,7 +56203,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMoveAuthenticator`(`authenticator`: MoveAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55693,7 +56213,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMultisig`(`signature`: MultisigAggregatedSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
         FfiConverterTypeMultisigAggregatedSignature.lower(`signature`),_status)
 }
     )
@@ -55703,7 +56223,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newPasskeyAuthenticator`(`authenticator`: PasskeyAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
         FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55713,18 +56233,8 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newSimple`(`signature`: SimpleSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
         FfiConverterTypeSimpleSignature.lower(`signature`),_status)
-}
-    )
-    }
-    
-
-         fun `newZkloginAuthenticator`(`authenticator`: ZkLoginAuthenticator): UserSignature {
-            return FfiConverterTypeUserSignature.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
-        FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     )
     }
@@ -55869,10 +56379,6 @@ public interface UserSignatureVerifierInterface {
     
     fun `verify`(`message`: kotlin.ByteArray, `signature`: UserSignature)
     
-    fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): UserSignatureVerifier
-    
-    fun `zkloginVerifier`(): ZkloginVerifier?
-    
     companion object
 }
 
@@ -55956,7 +56462,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
                 }
             }
         }
@@ -55964,7 +56470,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
         }
     }
 
@@ -55978,30 +56484,6 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 }
     }
     
-    
-
-    override fun `withZkloginVerifier`(`zkloginVerifier`: ZkloginVerifier): UserSignatureVerifier {
-            return FfiConverterTypeUserSignatureVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-        it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
-}
-    }
-    )
-    }
-    
-
-    override fun `zkloginVerifier`(): ZkloginVerifier? {
-            return FfiConverterOptionalTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-        it, _status)
-}
-    }
-    )
-    }
     
 
     
@@ -56147,12 +56629,11 @@ public object FfiConverterTypeUserSignatureVerifier: FfiConverter<UserSignatureV
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -56177,12 +56658,11 @@ public interface ValidatorAggregatedSignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-aggregated-signature = u64               ; epoch
- * bls-signature
- * roaring-bitmap
- * roaring-bitmap = bytes  ; where the contents of the bytes are valid
- * ; according to the serialized spec for
- * ; roaring bitmaps
+ * validator-aggregated-signature = u64                  ; epoch
+ * bls12381-signature   ; signature
+ * bytes                ; bitmap — contents of the bytes are
+ * ; valid according to the serialized
+ * ; spec for roaring bitmaps
  * ```
  *
  * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -57012,313 +57492,6 @@ public object FfiConverterTypeValidatorCommitteeSignatureVerifier: FfiConverter<
 
 
 /**
- * An execution time observation from a particular validator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * execution-time-observation = bls-public-key duration
- * duration =  u64 ; seconds
- * u32 ; subsecond nanoseconds
- * ```
- */
-public interface ValidatorExecutionTimeObservationInterface {
-    
-    fun `duration`(): java.time.Duration
-    
-    fun `validator`(): Bls12381PublicKey
-    
-    companion object
-}
-
-/**
- * An execution time observation from a particular validator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * execution-time-observation = bls-public-key duration
- * duration =  u64 ; seconds
- * u32 ; subsecond nanoseconds
- * ```
- */
-open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, ValidatorExecutionTimeObservationInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`validator`: Bls12381PublicKey, `duration`: java.time.Duration) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
-        FfiConverterTypeBls12381PublicKey.lower(`validator`),FfiConverterDuration.lower(`duration`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
-        }
-    }
-
-    override fun `duration`(): java.time.Duration {
-            return FfiConverterDuration.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `validator`(): Bls12381PublicKey {
-            return FfiConverterTypeBls12381PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ValidatorExecutionTimeObservation) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
-        it, FfiConverterTypeValidatorExecutionTimeObservation.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-    override fun hashCode(): Int {
-        return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
-        it, _status)
-}
-    }
-    ).toInt()
-    }
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeValidatorExecutionTimeObservation: FfiConverter<ValidatorExecutionTimeObservation, Pointer> {
-
-    override fun lower(value: ValidatorExecutionTimeObservation): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ValidatorExecutionTimeObservation {
-        return ValidatorExecutionTimeObservation(value)
-    }
-
-    override fun read(buf: ByteBuffer): ValidatorExecutionTimeObservation {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ValidatorExecutionTimeObservation) = 8UL
-
-    override fun write(value: ValidatorExecutionTimeObservation, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
  * A signature from a Validator
  *
  * # BCS
@@ -57326,9 +57499,9 @@ public object FfiConverterTypeValidatorExecutionTimeObservation: FfiConverter<Va
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 public interface ValidatorSignatureInterface {
@@ -57350,9 +57523,9 @@ public interface ValidatorSignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-signature = u64               ; epoch
- * bls-public-key
- * bls-signature
+ * validator-signature = u64                  ; epoch
+ * bls12381-public-key
+ * bls12381-signature
  * ```
  */
 open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInterface
@@ -57629,6 +57802,505 @@ public object FfiConverterTypeValidatorSignature: FfiConverter<ValidatorSignatur
 //
 
 
+public interface VersionInterface {
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+    fun `asU64`(): kotlin.ULong
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    fun `getCongestedVersionSuggestedGasPrice`(): kotlin.ULong
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+    fun `isCancelled`(): kotlin.Boolean
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+    fun `isCongested`(): kotlin.Boolean
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+    fun `isValid`(): kotlin.Boolean
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    fun `next`(): Version
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    fun `previous`(): Version
+    
+    companion object
+}
+
+open class Version: Disposable, AutoCloseable, VersionInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Get the underlying u64 value of this version
+     */override fun `asU64`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    @Throws(SdkFfiException::class)override fun `getCongestedVersionSuggestedGasPrice`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */override fun `isCancelled`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */override fun `isCongested`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */override fun `isValid`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    @Throws(SdkFfiException::class)override fun `next`(): Version {
+            return FfiConverterTypeVersion.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    @Throws(SdkFfiException::class)override fun `previous`(): Version {
+            return FfiConverterTypeVersion.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Special version that is assigned to objects which are accessed
+     * immutably in a cancelled transaction.
+     */ fun `cancelledRead`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Special version that was assigned to congested objects which
+     * cause transaction cancellations. Note that this special version
+     * was only used prior to the introduction of a gas price feedback
+     * mechanism, but it is kept for backward compatibility.
+     */ fun `congestedPriorToGasPriceFeedback`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new Version from a u64 value
+     */ fun `fromU64`(`value`: kotlin.ULong): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+        FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Returns a new version that is greater than all versions
+     * in `inputs`, assuming this operation will not overflow.
+     */
+    @Throws(SdkFfiException::class) fun `lamportIncrement`(`inputs`: List<Version>): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+        FfiConverterSequenceTypeVersion.lower(`inputs`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * An exclusive upper limit on a valid version: versions
+     * strictly smaller than this limit are valid versions.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     * Versions larger than this value are "special" and
+     * assigned to objects that appear in cancelled transactions.
+     */ fun `maxValidExcl`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * An inclusive lower limit on a valid version.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     */ fun `minValidIncl`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Returns a special version used for congested shared objects:
+     * `Version::MIN_CONGESTED + suggested_gas_price`,
+     * where `suggested_gas_price` is embedded into a congested version
+     * to facilitate a gas price feedback mechanism for transactions
+     * cancelled due to shared object congestion.
+     */
+    @Throws(SdkFfiException::class) fun `newCongestedWithSuggestedGasPrice`(`suggestedGasPrice`: kotlin.ULong): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+        FfiConverterULong.lower(`suggestedGasPrice`),_status)
+}
+    )
+    }
+    
+
+         fun `randomnessUnavailable`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeVersion: FfiConverter<Version, Pointer> {
+
+    override fun lower(value: Version): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): Version {
+        return Version(value)
+    }
+
+    override fun read(buf: ByteBuffer): Version {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: Version) = 8UL
+
+    override fun write(value: Version, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * Object version assignment from consensus
  *
@@ -57644,7 +58316,7 @@ public interface VersionAssignmentInterface {
     
     fun `objectId`(): ObjectId
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -57678,11 +58350,11 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`objectId`: ObjectId, `version`: kotlin.ULong) :
+    constructor(`objectId`: ObjectId, `version`: Version) :
         this(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),_status)
+        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
 
@@ -57761,8 +58433,8 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
@@ -57820,1937 +58492,6 @@ public object FfiConverterTypeVersionAssignment: FfiConverter<VersionAssignment,
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-public interface ZkLoginAuthenticatorInterface {
-    
-    fun `inputs`(): ZkLoginInputs
-    
-    fun `maxEpoch`(): kotlin.ULong
-    
-    fun `signature`(): SimpleSignature
-    
-    companion object
-}
-
-/**
- * A zklogin authenticator
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
- * zklogin     = zklogin-flag
- * zklogin-inputs
- * u64               ; max epoch
- * simple-signature
- * ```
- *
- * Note: Due to historical reasons, signatures are serialized slightly
- * different from the majority of the types in IOTA. In particular if a
- * signature is ever embedded in another structure it generally is serialized
- * as `bytes` meaning it has a length prefix that defines the length of
- * the completely serialized signature.
- */
-open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticatorInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`inputs`: ZkLoginInputs, `maxEpoch`: kotlin.ULong, `signature`: SimpleSignature) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
-        FfiConverterTypeZkLoginInputs.lower(`inputs`),FfiConverterULong.lower(`maxEpoch`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
-        }
-    }
-
-    override fun `inputs`(): ZkLoginInputs {
-            return FfiConverterTypeZkLoginInputs.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `maxEpoch`(): kotlin.ULong {
-            return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `signature`(): SimpleSignature {
-            return FfiConverterTypeSimpleSignature.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginAuthenticator) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginAuthenticator: FfiConverter<ZkLoginAuthenticator, Pointer> {
-
-    override fun lower(value: ZkLoginAuthenticator): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginAuthenticator {
-        return ZkLoginAuthenticator(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginAuthenticator {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginAuthenticator) = 8UL
-
-    override fun write(value: ZkLoginAuthenticator, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-public interface ZkLoginInputsInterface {
-    
-    fun `addressSeed`(): Bn254FieldElement
-    
-    fun `headerBase64`(): kotlin.String
-    
-    fun `iss`(): kotlin.String
-    
-    fun `issBase64Details`(): ZkLoginClaim
-    
-    fun `jwkId`(): JwkId
-    
-    fun `proofPoints`(): ZkLoginProof
-    
-    fun `publicIdentifier`(): ZkLoginPublicIdentifier
-    
-    companion object
-}
-
-/**
- * A zklogin groth16 proof and the required inputs to perform proof
- * verification.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-inputs = zklogin-proof
- * zklogin-claim
- * string              ; base64url-unpadded encoded JwtHeader
- * bn254-field-element ; address_seed
- * ```
- */
-open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`proofPoints`: ZkLoginProof, `issBase64Details`: ZkLoginClaim, `headerBase64`: kotlin.String, `addressSeed`: Bn254FieldElement) :
-        this(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
-        FfiConverterTypeZkLoginProof.lower(`proofPoints`),FfiConverterTypeZkLoginClaim.lower(`issBase64Details`),FfiConverterString.lower(`headerBase64`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
-        }
-    }
-
-    override fun `addressSeed`(): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `headerBase64`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `iss`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `issBase64Details`(): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `jwkId`(): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `proofPoints`(): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `publicIdentifier`(): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginInputs) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginInputs: FfiConverter<ZkLoginInputs, Pointer> {
-
-    override fun lower(value: ZkLoginInputs): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginInputs {
-        return ZkLoginInputs(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginInputs {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginInputs) = 8UL
-
-    override fun write(value: ZkLoginInputs, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-public interface ZkLoginProofInterface {
-    
-    fun `a`(): CircomG1
-    
-    fun `b`(): CircomG2
-    
-    fun `c`(): CircomG1
-    
-    companion object
-}
-
-/**
- * A zklogin groth16 proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-proof = circom-g1 circom-g2 circom-g1
- * ```
- */
-open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`a`: CircomG1, `b`: CircomG2, `c`: CircomG1) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
-        FfiConverterTypeCircomG1.lower(`a`),FfiConverterTypeCircomG2.lower(`b`),FfiConverterTypeCircomG1.lower(`c`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
-        }
-    }
-
-    override fun `a`(): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `b`(): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `c`(): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginProof) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> {
-
-    override fun lower(value: ZkLoginProof): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginProof {
-        return ZkLoginProof(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginProof {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginProof) = 8UL
-
-    override fun write(value: ZkLoginProof, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-public interface ZkLoginPublicIdentifierInterface {
-    
-    fun `addressSeed`(): Bn254FieldElement
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */
-    fun `deriveAddress`(): List<Address>
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */
-    fun `deriveAddressPadded`(): Address
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */
-    fun `deriveAddressUnpadded`(): Address
-    
-    fun `iss`(): kotlin.String
-    
-    companion object
-}
-
-/**
- * Public Key equivalent for Zklogin authenticators
- *
- * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
- * account authenticators, and contains the information required to derive the
- * onchain account `Address` for a Zklogin authenticator.
- *
- * ## Note
- *
- * Due to a historical bug that was introduced in the IOTA Typescript SDK when
- * the zklogin authenticator was first introduced, there are now possibly two
- * "valid" addresses for each zklogin authenticator depending on the
- * bit-pattern of the `address_seed` value.
- *
- * The original bug incorrectly derived a zklogin's address by stripping any
- * leading zero-bytes that could have been present in the 32-byte length
- * `address_seed` value prior to hashing, leading to a different derived
- * address. This incorrectly derived address was presented to users of various
- * wallets, leading them to sending funds to these addresses that they couldn't
- * access. Instead of letting these users lose any assets that were sent to
- * these addresses, the IOTA network decided to change the protocol to allow
- * for a zklogin authenticator who's `address_seed` value had leading
- * zero-bytes be authorized to sign for both the addresses derived from both
- * the unpadded and padded `address_seed` value.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-public-identifier-bcs = bytes ; where the contents are defined by
- * ; <zklogin-public-identifier>
- *
- * zklogin-public-identifier = zklogin-public-identifier-iss
- * address-seed
- *
- * zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
- * address-seed-unpadded
- *
- * ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
- * ; and is serialized with the iss's length in bytes as a u8 followed by
- * ; the bytes of the iss
- * zklogin-public-identifier-iss = u8 *255(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * address-seed = 32(OCTET)
- *
- * ; A Bn254FieldElement serialized as a 32-byte big-endian value
- * ; with any leading zero bytes stripped
- * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
- * ```
- */
-open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIdentifierInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`iss`: kotlin.String, `addressSeed`: Bn254FieldElement) :
-        this(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
-        FfiConverterString.lower(`iss`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
-        }
-    }
-
-    override fun `addressSeed`(): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Provides an iterator over the addresses that correspond to this zklogin
-     * authenticator.
-     *
-     * In the majority of instances this will only yield a single address,
-     * except for the instances where the `address_seed` value has a
-     * leading zero-byte, in such cases the returned iterator will yield
-     * two addresses.
-     */override fun `deriveAddress`(): List<Address> {
-            return FfiConverterSequenceTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the full 32 byte `address_seed` value, all prefixed with the zklogin
-     * `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-     */override fun `deriveAddressPadded`(): Address {
-            return FfiConverterTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-     * byte length of the `iss` followed by the `iss` bytes themselves and
-     * the `address_seed` bytes with any leading zero-bytes stripped, all
-     * prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-     *
-     * `hash( 0x05 || iss_bytes_len || iss_bytes ||
-     * unpadded_32_byte_address_seed )`
-     */override fun `deriveAddressUnpadded`(): Address {
-            return FfiConverterTypeAddress.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `iss`(): kotlin.String {
-            return FfiConverterString.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ZkLoginPublicIdentifier) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
-        it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginPublicIdentifier: FfiConverter<ZkLoginPublicIdentifier, Pointer> {
-
-    override fun lower(value: ZkLoginPublicIdentifier): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkLoginPublicIdentifier {
-        return ZkLoginPublicIdentifier(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkLoginPublicIdentifier {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkLoginPublicIdentifier) = 8UL
-
-    override fun write(value: ZkLoginPublicIdentifier, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface ZkloginVerifierInterface {
-    
-    fun `jwks`(): Map<JwkId, Jwk>
-    
-    fun `verify`(`message`: kotlin.ByteArray, `authenticator`: ZkLoginAuthenticator)
-    
-    fun `withJwks`(`jwks`: Map<JwkId, Jwk>): ZkloginVerifier
-    
-    companion object
-}
-
-open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
-        }
-    }
-
-    override fun `jwks`(): Map<JwkId, Jwk> {
-            return FfiConverterMapTypeJwkIdTypeJwk.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    @Throws(SdkFfiException::class)override fun `verify`(`message`: kotlin.ByteArray, `authenticator`: ZkLoginAuthenticator)
-        = 
-    callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-        it, FfiConverterByteArray.lower(`message`),FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
-}
-    }
-    
-    
-
-    override fun `withJwks`(`jwks`: Map<JwkId, Jwk>): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-        it, FfiConverterMapTypeJwkIdTypeJwk.lower(`jwks`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-
-    
-    companion object {
-        
-    /**
-     * Load a fixed verifying key from zkLogin.vkey output. This is based on a
-     * local setup and should not be used in production.
-     */ fun `newDev`(): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newMainnet`(): ZkloginVerifier {
-            return FfiConverterTypeZkloginVerifier.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
-        _status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkloginVerifier: FfiConverter<ZkloginVerifier, Pointer> {
-
-    override fun lower(value: ZkloginVerifier): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ZkloginVerifier {
-        return ZkloginVerifier(value)
-    }
-
-    override fun read(buf: ByteBuffer): ZkloginVerifier {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ZkloginVerifier) = 8UL
-
-    override fun write(value: ZkloginVerifier, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-
-/**
- * A new Jwk
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * active-jwk = jwk-id jwk u64
- * ```
- */
-data class ActiveJwk (
-    /**
-     * Identifier used to uniquely identify a Jwk
-     */
-    var `jwkId`: JwkId, 
-    /**
-     * The Jwk
-     */
-    var `jwk`: Jwk, 
-    /**
-     * Most recent epoch in which the jwk was validated
-     */
-    var `epoch`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeActiveJwk: FfiConverterRustBuffer<ActiveJwk> {
-    override fun read(buf: ByteBuffer): ActiveJwk {
-        return ActiveJwk(
-            FfiConverterTypeJwkId.read(buf),
-            FfiConverterTypeJwk.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ActiveJwk) = (
-            FfiConverterTypeJwkId.allocationSize(value.`jwkId`) +
-            FfiConverterTypeJwk.allocationSize(value.`jwk`) +
-            FfiConverterULong.allocationSize(value.`epoch`)
-    )
-
-    override fun write(value: ActiveJwk, buf: ByteBuffer) {
-            FfiConverterTypeJwkId.write(value.`jwkId`, buf)
-            FfiConverterTypeJwk.write(value.`jwk`, buf)
-            FfiConverterULong.write(value.`epoch`, buf)
-    }
-}
-
-
-
-/**
- * Expire old JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-expire = u64 u64
- * ```
- */
-data class AuthenticatorStateExpire (
-    /**
-     * Expire JWKs that have a lower epoch than this
-     */
-    var `minEpoch`: kotlin.ULong, 
-    /**
-     * The initial version of the authenticator object that it was shared at.
-     */
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeAuthenticatorStateExpire: FfiConverterRustBuffer<AuthenticatorStateExpire> {
-    override fun read(buf: ByteBuffer): AuthenticatorStateExpire {
-        return AuthenticatorStateExpire(
-            FfiConverterULong.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: AuthenticatorStateExpire) = (
-            FfiConverterULong.allocationSize(value.`minEpoch`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
-    )
-
-    override fun write(value: AuthenticatorStateExpire, buf: ByteBuffer) {
-            FfiConverterULong.write(value.`minEpoch`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
-    }
-}
-
-
-
-/**
- * Update the set of valid JWKs
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * authenticator-state-update = u64 ; epoch
- * u64 ; round
- * (vector active-jwk)
- * u64 ; initial version of the authenticator object
- * ```
- */
-data class AuthenticatorStateUpdateV1 (
-    /**
-     * Epoch of the authenticator state update transaction
-     */
-    var `epoch`: kotlin.ULong, 
-    /**
-     * Consensus round of the authenticator state update
-     */
-    var `round`: kotlin.ULong, 
-    /**
-     * newly active jwks
-     */
-    var `newActiveJwks`: List<ActiveJwk>, 
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer<AuthenticatorStateUpdateV1> {
-    override fun read(buf: ByteBuffer): AuthenticatorStateUpdateV1 {
-        return AuthenticatorStateUpdateV1(
-            FfiConverterULong.read(buf),
-            FfiConverterULong.read(buf),
-            FfiConverterSequenceTypeActiveJwk.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: AuthenticatorStateUpdateV1) = (
-            FfiConverterULong.allocationSize(value.`epoch`) +
-            FfiConverterULong.allocationSize(value.`round`) +
-            FfiConverterSequenceTypeActiveJwk.allocationSize(value.`newActiveJwks`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
-    )
-
-    override fun write(value: AuthenticatorStateUpdateV1, buf: ByteBuffer) {
-            FfiConverterULong.write(value.`epoch`, buf)
-            FfiConverterULong.write(value.`round`, buf)
-            FfiConverterSequenceTypeActiveJwk.write(value.`newActiveJwks`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
     }
 }
 
@@ -60572,6 +59313,7 @@ public object FfiConverterTypeDynamicFieldValue: FfiConverterRustBuffer<DynamicF
  * end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
  * u64                                 ; next_epoch_protocol_version
  * (vector checkpoint-commitment)      ; epoch_commitments
+ * i64                                 ; epoch_supply_change
  * ```
  */
 data class EndOfEpochData (
@@ -60668,14 +59410,15 @@ data class Epoch (
      */
     var `referenceGasPrice`: kotlin.String? = null, 
     /**
-     * The epoch's starting timestamp.
+     * The epoch's starting timestamp. RFC3339 in UTC with format:
+     * YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    var `startTimestamp`: kotlin.ULong, 
+    var `startTimestamp`: kotlin.String, 
     /**
      * The epoch's ending timestamp. Note that this is available only on epochs
-     * that have ended.
+     * that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
      */
-    var `endTimestamp`: kotlin.ULong? = null, 
+    var `endTimestamp`: kotlin.String? = null, 
     /**
      * The value of the `version` field of `0x5`, the
      * `0x3::iota::IotaSystemState` object.  This version changes whenever
@@ -60748,8 +59491,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.read(buf),
             FfiConverterOptionalTypeProtocolConfigs.read(buf),
             FfiConverterOptionalString.read(buf),
-            FfiConverterULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
             FfiConverterOptionalULong.read(buf),
             FfiConverterOptionalULong.read(buf),
             FfiConverterOptionalString.read(buf),
@@ -60768,8 +59511,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.allocationSize(value.`netInflow`) +
             FfiConverterOptionalTypeProtocolConfigs.allocationSize(value.`protocolConfigs`) +
             FfiConverterOptionalString.allocationSize(value.`referenceGasPrice`) +
-            FfiConverterULong.allocationSize(value.`startTimestamp`) +
-            FfiConverterOptionalULong.allocationSize(value.`endTimestamp`) +
+            FfiConverterString.allocationSize(value.`startTimestamp`) +
+            FfiConverterOptionalString.allocationSize(value.`endTimestamp`) +
             FfiConverterOptionalULong.allocationSize(value.`systemStateVersion`) +
             FfiConverterOptionalULong.allocationSize(value.`totalCheckpoints`) +
             FfiConverterOptionalString.allocationSize(value.`totalGasFees`) +
@@ -60787,8 +59530,8 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.write(value.`netInflow`, buf)
             FfiConverterOptionalTypeProtocolConfigs.write(value.`protocolConfigs`, buf)
             FfiConverterOptionalString.write(value.`referenceGasPrice`, buf)
-            FfiConverterULong.write(value.`startTimestamp`, buf)
-            FfiConverterOptionalULong.write(value.`endTimestamp`, buf)
+            FfiConverterString.write(value.`startTimestamp`, buf)
+            FfiConverterOptionalString.write(value.`endTimestamp`, buf)
             FfiConverterOptionalULong.write(value.`systemStateVersion`, buf)
             FfiConverterOptionalULong.write(value.`totalCheckpoints`, buf)
             FfiConverterOptionalString.write(value.`totalGasFees`, buf)
@@ -61139,15 +59882,15 @@ public object FfiConverterTypeGQLAddress: FfiConverterRustBuffer<GqlAddress> {
  *
  * Storage is charged independently of computation.
  * There are 3 parts to the storage charges:
- * `storage_cost`: it is the charge of storage at the time the transaction is
- * executed.                 The cost of storage is the number of bytes of the
- * objects being mutated                 multiplied by a variable storage cost
- * per byte `storage_rebate`: this is the amount a user gets back when
- * manipulating an object.                   The `storage_rebate` is the
- * `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
- * all the value of the object storage cost is
- * given back to user and there is a small fraction that
- * is kept by the system. This value tracks that charge.
+ * - `storage_cost`: it is the charge of storage at the time the transaction is
+ * executed. The cost of storage is the number of bytes of the objects being
+ * mutated multiplied by a variable storage cost per byte
+ * - `storage_rebate`: this is the amount a user gets back when manipulating an
+ * object. The `storage_rebate` is the `storage_cost` for an object minus
+ * fees.
+ * - `non_refundable_storage_fee`: not all the value of the object storage cost
+ * is given back to user and there is a small fraction that is kept by the
+ * system. This value tracks that charge.
  *
  * When looking at a gas cost summary the amount charged to the user is
  * `computation_cost + storage_cost - storage_rebate`
@@ -61242,10 +59985,10 @@ public object FfiConverterTypeGasCostSummary: FfiConverterRustBuffer<GasCostSumm
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * gas-payment = (vector object-ref) ; gas coin objects
- * address             ; owner
- * u64                 ; price
- * u64                 ; budget
+ * gas-payment = (vector object-reference) ; gas coin objects
+ * address                   ; owner
+ * u64                       ; price
+ * u64                       ; budget
  * ```
  */
 data class GasPayment (
@@ -61306,122 +60049,6 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.write(value.`owner`, buf)
             FfiConverterULong.write(value.`price`, buf)
             FfiConverterULong.write(value.`budget`, buf)
-    }
-}
-
-
-
-/**
- * A JSON Web Key
- *
- * Struct that contains info for a JWK. A list of them for different kids can
- * be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
- * The JWK is used to verify the JWT token.
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk = string string string string
- * ```
- */
-data class Jwk (
-    /**
-     * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-     */
-    var `kty`: kotlin.String, 
-    /**
-     * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    var `e`: kotlin.String, 
-    /**
-     * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-     */
-    var `n`: kotlin.String, 
-    /**
-     * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-     */
-    var `alg`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeJwk: FfiConverterRustBuffer<Jwk> {
-    override fun read(buf: ByteBuffer): Jwk {
-        return Jwk(
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: Jwk) = (
-            FfiConverterString.allocationSize(value.`kty`) +
-            FfiConverterString.allocationSize(value.`e`) +
-            FfiConverterString.allocationSize(value.`n`) +
-            FfiConverterString.allocationSize(value.`alg`)
-    )
-
-    override fun write(value: Jwk, buf: ByteBuffer) {
-            FfiConverterString.write(value.`kty`, buf)
-            FfiConverterString.write(value.`e`, buf)
-            FfiConverterString.write(value.`n`, buf)
-            FfiConverterString.write(value.`alg`, buf)
-    }
-}
-
-
-
-/**
- * Key to uniquely identify a JWK
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * jwk-id = string string
- * ```
- */
-data class JwkId (
-    /**
-     * The issuer or identity of the OIDC provider.
-     */
-    var `iss`: kotlin.String, 
-    /**
-     * A key id use to uniquely identify a key from an OIDC provider.
-     */
-    var `kid`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeJwkId: FfiConverterRustBuffer<JwkId> {
-    override fun read(buf: ByteBuffer): JwkId {
-        return JwkId(
-            FfiConverterString.read(buf),
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: JwkId) = (
-            FfiConverterString.allocationSize(value.`iss`) +
-            FfiConverterString.allocationSize(value.`kid`)
-    )
-
-    override fun write(value: JwkId, buf: ByteBuffer) {
-            FfiConverterString.write(value.`iss`, buf)
-            FfiConverterString.write(value.`kid`, buf)
     }
 }
 
@@ -61981,16 +60608,15 @@ public object FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePacka
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-move-struct = compressed-struct-tag bool u64 object-contents
+ * move-struct = compressed-struct-tag u64 bytes
  *
  * compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
- * other-struct-type     = %x00 struct-tag
- * gas-coin-type         = %x01
- * staked-iota-type      = %x02
- * coin-type             = %x03 type-tag
+ * other-struct-type     = %d00 struct-tag
+ * gas-coin-type         = %d01
+ * staked-iota-type      = %d02
+ * coin-type             = %d03 type-tag
  *
- * ; first 32 bytes of the contents are the object's object-id
- * object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+ * ; The first 32 bytes of the `bytes` contents are the object's object-id.
  * ```
  */
 data class MoveStruct (
@@ -62003,7 +60629,7 @@ data class MoveStruct (
      * input This is a lamport timestamp, not a sequentially increasing
      * version
      */
-    var `version`: kotlin.ULong, 
+    var `version`: Version, 
     /**
      * BCS bytes of a Move struct value
      */
@@ -62030,20 +60656,20 @@ public object FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
     override fun read(buf: ByteBuffer): MoveStruct {
         return MoveStruct(
             FfiConverterTypeStructTag.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterByteArray.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveStruct) = (
             FfiConverterTypeStructTag.allocationSize(value.`structType`) +
-            FfiConverterULong.allocationSize(value.`version`) +
+            FfiConverterTypeVersion.allocationSize(value.`version`) +
             FfiConverterByteArray.allocationSize(value.`contents`)
     )
 
     override fun write(value: MoveStruct, buf: ByteBuffer) {
             FfiConverterTypeStructTag.write(value.`structType`, buf)
-            FfiConverterULong.write(value.`version`, buf)
+            FfiConverterTypeVersion.write(value.`version`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
     }
 }
@@ -62405,12 +61031,12 @@ public object FfiConverterTypeObjectRef: FfiConverterRustBuffer<ObjectRef> {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-ref = object-id u64 digest
+ * object-reference = object-id u64 digest
  * ```
  */
 data class ObjectReference (
     var `objectId`: ObjectId, 
-    var `version`: kotlin.ULong, 
+    var `version`: Version, 
     var `digest`: Digest
 ) : Disposable {
     
@@ -62434,20 +61060,20 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
     override fun read(buf: ByteBuffer): ObjectReference {
         return ObjectReference(
             FfiConverterTypeObjectId.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterTypeDigest.read(buf),
         )
     }
 
     override fun allocationSize(value: ObjectReference) = (
             FfiConverterTypeObjectId.allocationSize(value.`objectId`) +
-            FfiConverterULong.allocationSize(value.`version`) +
+            FfiConverterTypeVersion.allocationSize(value.`version`) +
             FfiConverterTypeDigest.allocationSize(value.`digest`)
     )
 
     override fun write(value: ObjectReference, buf: ByteBuffer) {
             FfiConverterTypeObjectId.write(value.`objectId`, buf)
-            FfiConverterULong.write(value.`version`, buf)
+            FfiConverterTypeVersion.write(value.`version`, buf)
             FfiConverterTypeDigest.write(value.`digest`, buf)
     }
 }
@@ -62776,8 +61402,19 @@ data class RandomnessStateUpdate (
     /**
      * The initial version of the randomness object that it was shared at
      */
-    var `randomnessObjInitialSharedVersion`: kotlin.ULong
-) {
+    var `randomnessObjInitialSharedVersion`: Version
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`epoch`,
+        this.`randomnessRound`,
+        this.`randomBytes`,
+        this.`randomnessObjInitialSharedVersion`
+    )
+    }
     
     companion object
 }
@@ -62791,7 +61428,7 @@ public object FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<Rand
             FfiConverterULong.read(buf),
             FfiConverterULong.read(buf),
             FfiConverterByteArray.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
@@ -62799,14 +61436,14 @@ public object FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<Rand
             FfiConverterULong.allocationSize(value.`epoch`) +
             FfiConverterULong.allocationSize(value.`randomnessRound`) +
             FfiConverterByteArray.allocationSize(value.`randomBytes`) +
-            FfiConverterULong.allocationSize(value.`randomnessObjInitialSharedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`randomnessObjInitialSharedVersion`)
     )
 
     override fun write(value: RandomnessStateUpdate, buf: ByteBuffer) {
             FfiConverterULong.write(value.`epoch`, buf)
             FfiConverterULong.write(value.`randomnessRound`, buf)
             FfiConverterByteArray.write(value.`randomBytes`, buf)
-            FfiConverterULong.write(value.`randomnessObjInitialSharedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`randomnessObjInitialSharedVersion`, buf)
     }
 }
 
@@ -63240,7 +61877,7 @@ data class TransactionEffectsV1 (
     /**
      * The version number of all the written Move objects by this transaction.
      */
-    var `lamportVersion`: kotlin.ULong, 
+    var `lamportVersion`: Version, 
     /**
      * Objects whose state are changed in the object store.
      */
@@ -63296,7 +61933,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.read(buf),
             FfiConverterOptionalTypeDigest.read(buf),
             FfiConverterSequenceTypeDigest.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterSequenceTypeChangedObject.read(buf),
             FfiConverterSequenceTypeUnchangedSharedObject.read(buf),
             FfiConverterOptionalTypeDigest.read(buf),
@@ -63311,7 +61948,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.allocationSize(value.`gasObjectIndex`) +
             FfiConverterOptionalTypeDigest.allocationSize(value.`eventsDigest`) +
             FfiConverterSequenceTypeDigest.allocationSize(value.`dependencies`) +
-            FfiConverterULong.allocationSize(value.`lamportVersion`) +
+            FfiConverterTypeVersion.allocationSize(value.`lamportVersion`) +
             FfiConverterSequenceTypeChangedObject.allocationSize(value.`changedObjects`) +
             FfiConverterSequenceTypeUnchangedSharedObject.allocationSize(value.`unchangedSharedObjects`) +
             FfiConverterOptionalTypeDigest.allocationSize(value.`auxiliaryDataDigest`)
@@ -63325,7 +61962,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.write(value.`gasObjectIndex`, buf)
             FfiConverterOptionalTypeDigest.write(value.`eventsDigest`, buf)
             FfiConverterSequenceTypeDigest.write(value.`dependencies`, buf)
-            FfiConverterULong.write(value.`lamportVersion`, buf)
+            FfiConverterTypeVersion.write(value.`lamportVersion`, buf)
             FfiConverterSequenceTypeChangedObject.write(value.`changedObjects`, buf)
             FfiConverterSequenceTypeUnchangedSharedObject.write(value.`unchangedSharedObjects`, buf)
             FfiConverterOptionalTypeDigest.write(value.`auxiliaryDataDigest`, buf)
@@ -63516,7 +62153,9 @@ public object FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<Transac
 
 
 /**
- * Identifies a struct and the module it was defined in
+ * Stores the origin of a data type where it first appeared in the version
+ * chain. A data type is identified by the name of the module and the name of
+ * the struct/enum in combination.
  *
  * # BCS
  *
@@ -63527,8 +62166,18 @@ public object FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<Transac
  * ```
  */
 data class TypeOrigin (
+    /**
+     * The name of the module the data type resides in.
+     */
     var `moduleName`: Identifier, 
-    var `structName`: Identifier, 
+    /**
+     * The name of the data type. Either refers to an enum or a struct
+     * identifier.
+     */
+    var `datatypeName`: Identifier, 
+    /**
+     * ID of the package, where the given type first appeared.
+     */
     var `package`: ObjectId
 ) : Disposable {
     
@@ -63537,7 +62186,7 @@ data class TypeOrigin (
         
     Disposable.destroy(
         this.`moduleName`,
-        this.`structName`,
+        this.`datatypeName`,
         this.`package`
     )
     }
@@ -63559,13 +62208,13 @@ public object FfiConverterTypeTypeOrigin: FfiConverterRustBuffer<TypeOrigin> {
 
     override fun allocationSize(value: TypeOrigin) = (
             FfiConverterTypeIdentifier.allocationSize(value.`moduleName`) +
-            FfiConverterTypeIdentifier.allocationSize(value.`structName`) +
+            FfiConverterTypeIdentifier.allocationSize(value.`datatypeName`) +
             FfiConverterTypeObjectId.allocationSize(value.`package`)
     )
 
     override fun write(value: TypeOrigin, buf: ByteBuffer) {
             FfiConverterTypeIdentifier.write(value.`moduleName`, buf)
-            FfiConverterTypeIdentifier.write(value.`structName`, buf)
+            FfiConverterTypeIdentifier.write(value.`datatypeName`, buf)
             FfiConverterTypeObjectId.write(value.`package`, buf)
     }
 }
@@ -63637,13 +62286,13 @@ public object FfiConverterTypeUnchangedSharedObject: FfiConverterRustBuffer<Unch
  */
 data class UpgradeInfo (
     /**
-     * Id of the upgraded packages
+     * ID of the upgraded package
      */
     var `upgradedId`: ObjectId, 
     /**
      * Version of the upgraded package
      */
-    var `upgradedVersion`: kotlin.ULong
+    var `upgradedVersion`: Version
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -63665,18 +62314,18 @@ public object FfiConverterTypeUpgradeInfo: FfiConverterRustBuffer<UpgradeInfo> {
     override fun read(buf: ByteBuffer): UpgradeInfo {
         return UpgradeInfo(
             FfiConverterTypeObjectId.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
     override fun allocationSize(value: UpgradeInfo) = (
             FfiConverterTypeObjectId.allocationSize(value.`upgradedId`) +
-            FfiConverterULong.allocationSize(value.`upgradedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`upgradedVersion`)
     )
 
     override fun write(value: UpgradeInfo, buf: ByteBuffer) {
             FfiConverterTypeObjectId.write(value.`upgradedId`, buf)
-            FfiConverterULong.write(value.`upgradedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`upgradedVersion`, buf)
     }
 }
 
@@ -63978,7 +62627,7 @@ public object FfiConverterTypeValidatorCommittee: FfiConverterRustBuffer<Validat
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * validator-committee-member = bls-public-key
+ * validator-committee-member = bls12381-public-key
  * u64 ; stake
  * ```
  */
@@ -64287,49 +62936,6 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
 
 
 
-/**
- * A claim of the iss in a zklogin proof
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * zklogin-claim = string u8
- * ```
- */
-data class ZkLoginClaim (
-    var `value`: kotlin.String, 
-    var `indexMod4`: kotlin.UByte
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim> {
-    override fun read(buf: ByteBuffer): ZkLoginClaim {
-        return ZkLoginClaim(
-            FfiConverterString.read(buf),
-            FfiConverterUByte.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ZkLoginClaim) = (
-            FfiConverterString.allocationSize(value.`value`) +
-            FfiConverterUByte.allocationSize(value.`indexMod4`)
-    )
-
-    override fun write(value: ZkLoginClaim, buf: ByteBuffer) {
-            FfiConverterString.write(value.`value`, buf)
-            FfiConverterUByte.write(value.`indexMod4`, buf)
-    }
-}
-
-
-
 
 enum class BatchSendStatusType {
     
@@ -64382,18 +62988,18 @@ public object FfiConverterTypeBatchSendStatusType: FfiConverterRustBuffer<BatchS
  * =/ invalid-object-by-mut-ref
  * =/ shared-object-operation-not-allowed
  *
- * type-mismatch                               = %x00
- * invalid-bcs-bytes                           = %x01
- * invalid-usage-of-pure-argument              = %x02
- * invalid-argument-to-private-entry-function  = %x03
- * index-out-of-bounds                         = %x04 u16
- * secondary-index-out-of-bound                = %x05 u16 u16
- * invalid-result-arity                        = %x06 u16
- * invalid-gas-coin-usage                      = %x07
- * invalid-value-usage                         = %x08
- * invalid-object-by-value                     = %x09
- * invalid-object-by-mut-ref                   = %x0a
- * shared-object-operation-not-allowed         = %x0b
+ * type-mismatch                               = %d00
+ * invalid-bcs-bytes                           = %d01
+ * invalid-usage-of-pure-argument              = %d02
+ * invalid-argument-to-private-entry-function  = %d03
+ * index-out-of-bounds                         = %d04 u16
+ * secondary-index-out-of-bound                = %d05 u16 u16
+ * invalid-result-arity                        = %d06 u16
+ * invalid-gas-coin-usage                      = %d07
+ * invalid-value-usage                         = %d08
+ * invalid-object-by-value                     = %d09
+ * invalid-object-by-mut-ref                   = %d10
+ * shared-object-operation-not-allowed         = %d11
  * ```
  */
 sealed class CommandArgumentError {
@@ -64753,44 +63359,48 @@ public object FfiConverterTypeDirection: FfiConverterRustBuffer<Direction> {
  * =/ address-denied-for-coin
  * =/ coin-type-global-pause
  * =/ execution-cancelled-due-to-randomness-unavailable
+ * =/ execution-cancelled-due-to-shared-object-congestion-v2
+ * =/ invalid-linkage
  *
- * insufficient-gas                                    = %x00
- * invalid-gas-object                                  = %x01
- * invariant-violation                                 = %x02
- * feature-not-yet-supported                           = %x03
- * object-too-big                                      = %x04 u64 u64
- * package-too-big                                     = %x05 u64 u64
- * circular-object-ownership                           = %x06 object-id
- * insufficient-coin-balance                           = %x07
- * coin-balance-overflow                               = %x08
- * publish-error-non-zero-address                      = %x09
- * iota-move-verification-error                        = %x0a
- * move-primitive-runtime-error                        = %x0b (option move-location)
- * move-abort                                          = %x0c move-location u64
- * vm-verification-or-deserialization-error            = %x0d
- * vm-invariant-violation                              = %x0e
- * function-not-found                                  = %x0f
- * arity-mismatch                                      = %x10
- * type-arity-mismatch                                 = %x11
- * non-entry-function-invoked                          = %x12
- * command-argument-error                              = %x13 u16 command-argument-error
- * type-argument-error                                 = %x14 u16 type-argument-error
- * unused-value-without-drop                           = %x15 u16 u16
- * invalid-public-function-return-type                 = %x16 u16
- * invalid-transfer-object                             = %x17
- * effects-too-large                                   = %x18 u64 u64
- * publish-upgrade-missing-dependency                  = %x19
- * publish-upgrade-dependency-downgrade                = %x1a
- * package-upgrade-error                               = %x1b package-upgrade-error
- * written-objects-too-large                           = %x1c u64 u64
- * certificate-denied                                  = %x1d
- * iota-move-verification-timeout                      = %x1e
- * shared-object-operation-not-allowed                 = %x1f
- * input-object-deleted                                = %x20
- * execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
- * address-denied-for-coin                             = %x22 address string
- * coin-type-global-pause                              = %x23 string
- * execution-cancelled-due-to-randomness-unavailable   = %x24
+ * insufficient-gas                                       = %d00
+ * invalid-gas-object                                     = %d01
+ * invariant-violation                                    = %d02
+ * feature-not-yet-supported                              = %d03
+ * object-too-big                                         = %d04 u64 u64
+ * package-too-big                                        = %d05 u64 u64
+ * circular-object-ownership                              = %d06 object-id
+ * insufficient-coin-balance                              = %d07
+ * coin-balance-overflow                                  = %d08
+ * publish-error-non-zero-address                         = %d09
+ * iota-move-verification-error                           = %d10
+ * move-primitive-runtime-error                           = %d11 (option move-location)
+ * move-abort                                             = %d12 move-location u64
+ * vm-verification-or-deserialization-error               = %d13
+ * vm-invariant-violation                                 = %d14
+ * function-not-found                                     = %d15
+ * arity-mismatch                                         = %d16
+ * type-arity-mismatch                                    = %d17
+ * non-entry-function-invoked                             = %d18
+ * command-argument-error                                 = %d19 u16 command-argument-error
+ * type-argument-error                                    = %d20 u16 type-argument-error
+ * unused-value-without-drop                              = %d21 u16 u16
+ * invalid-public-function-return-type                    = %d22 u16
+ * invalid-transfer-object                                = %d23
+ * effects-too-large                                      = %d24 u64 u64
+ * publish-upgrade-missing-dependency                     = %d25
+ * publish-upgrade-dependency-downgrade                   = %d26
+ * package-upgrade-error                                  = %d27 package-upgrade-error
+ * written-objects-too-large                              = %d28 u64 u64
+ * certificate-denied                                     = %d29
+ * iota-move-verification-timeout                         = %d30
+ * shared-object-operation-not-allowed                    = %d31
+ * input-object-deleted                                   = %d32
+ * execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+ * address-denied-for-coin                                = %d34 address string
+ * coin-type-global-pause                                 = %d35 string
+ * execution-cancelled-due-to-randomness-unavailable      = %d36
+ * execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+ * invalid-linkage                                        = %d38
  * ```
  */
 sealed class ExecutionError: Disposable  {
@@ -65821,8 +64431,8 @@ public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionE
  *
  * ```text
  * execution-status = success / failure
- * success = %x00
- * failure = %x01 execution-error (option u64)
+ * success = %d00
+ * failure = %d01 execution-error (option u64)
  * ```
  */
 sealed class ExecutionStatus: Disposable  {
@@ -66006,9 +64616,9 @@ public object FfiConverterTypeHashingIntentScope: FfiConverterRustBuffer<Hashing
  * =/ id-operation-created
  * =/ id-operation-deleted
  *
- * id-operation-none       = %x00
- * id-operation-created    = %x01
- * id-operation-deleted    = %x02
+ * id-operation-none       = %d00
+ * id-operation-created    = %d01
+ * id-operation-deleted    = %d02
  * ```
  */
 
@@ -66447,8 +65057,8 @@ public object FfiConverterTypeNameFormat: FfiConverterRustBuffer<NameFormat> {
  * ```text
  * object-in = object-in-missing / object-in-data
  *
- * object-in-missing = %x00
- * object-in-data    = %x01 u64 digest owner
+ * object-in-missing = %d00
+ * object-in-data    = %d01 u64 digest owner
  * ```
  */
 sealed class ObjectIn: Disposable  {
@@ -66460,7 +65070,7 @@ sealed class ObjectIn: Disposable  {
      * The old version, digest and owner.
      */
     data class Data(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest, 
         val `owner`: Owner) : ObjectIn() {
         companion object
@@ -66496,7 +65106,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
         return when(buf.getInt()) {
             1 -> ObjectIn.Missing
             2 -> ObjectIn.Data(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 FfiConverterTypeOwner.read(buf),
                 )
@@ -66515,7 +65125,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
                 + FfiConverterTypeOwner.allocationSize(value.`owner`)
             )
@@ -66530,7 +65140,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
             }
             is ObjectIn.Data -> {
                 buf.putInt(2)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 FfiConverterTypeOwner.write(value.`owner`, buf)
                 Unit
@@ -66556,9 +65166,9 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
  * =/ object-out-package-write
  *
  *
- * object-out-missing        = %x00
- * object-out-object-write   = %x01 digest owner
- * object-out-package-write  = %x02 version digest
+ * object-out-missing        = %d00
+ * object-out-object-write   = %d01 digest owner
+ * object-out-package-write  = %d02 version digest
  * ```
  */
 sealed class ObjectOut: Disposable  {
@@ -66583,7 +65193,7 @@ sealed class ObjectOut: Disposable  {
      * we don't use lamport version for package publish and upgrades.
      */
     data class PackageWrite(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest) : ObjectOut() {
         companion object
     }
@@ -66629,7 +65239,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
                 FfiConverterTypeOwner.read(buf),
                 )
             3 -> ObjectOut.PackageWrite(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 )
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
@@ -66655,7 +65265,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
             )
         }
@@ -66675,7 +65285,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
             }
             is ObjectOut.PackageWrite -> {
                 buf.putInt(3)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 Unit
             }
@@ -66702,12 +65312,12 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
  * unknown-upgrade-policy  /
  * package-id-does-not-match
  *
- * unable-to-fetch-package     = %x00 object-id
- * not-a-package               = %x01 object-id
- * incompatible-upgrade        = %x02
- * digest-does-not-match       = %x03 digest
- * unknown-upgrade-policy      = %x04 u8
- * package-id-does-not-match   = %x05 object-id object-id
+ * unable-to-fetch-package     = %d00 object-id
+ * not-a-package               = %d01 object-id
+ * incompatible-upgrade        = %d02
+ * digest-does-not-match       = %d03 digest
+ * unknown-upgrade-policy      = %d04 u8
+ * package-id-does-not-match   = %d05 object-id object-id
  * ```
  */
 sealed class PackageUpgradeError: Disposable  {
@@ -66971,16 +65581,16 @@ public object FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiExcepti
  *
  * ```text
  * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
- * multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+ * multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
  * move-auth-flag
- * ed25519-flag        = %x00
- * secp256k1-flag      = %x01
- * secp256r1-flag      = %x02
- * multisig-flag       = %x03
- * bls-flag            = %x04
- * zklogin-auth-flag   = %x05
- * passkey-auth-flag   = %x06
- * move-auth-flag      = %x07
+ * ed25519-flag                    = %d00
+ * secp256k1-flag                  = %d01
+ * secp256r1-flag                  = %d02
+ * multisig-flag                   = %d03
+ * bls-flag                        = %d04
+ * zklogin-auth-flag-deprecated    = %d05
+ * passkey-auth-flag               = %d06
+ * move-auth-flag                  = %d07
  * ```
  */
 
@@ -66991,7 +65601,7 @@ enum class SignatureScheme(val value: kotlin.UByte) {
     SECP256R1(2u),
     MULTISIG(3u),
     BLS12381(4u),
-    ZK_LOGIN_AUTHENTICATOR(5u),
+    ZK_LOGIN_AUTHENTICATOR_DEPRECATED(5u),
     PASSKEY_AUTHENTICATOR(6u),
     MOVE_AUTHENTICATOR(7u);
     companion object
@@ -67138,7 +65748,6 @@ enum class TransactionBlockKindInput {
     PROGRAMMABLE_TX,
     GENESIS,
     CONSENSUS_COMMIT_PROLOGUE_V1,
-    AUTHENTICATOR_STATE_UPDATE_V1,
     RANDOMNESS_STATE_UPDATE,
     END_OF_EPOCH_TX;
     companion object
@@ -67174,8 +65783,8 @@ public object FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer<
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-expiration =  %x00      ; none
- * =/ %x01 u64  ; epoch
+ * transaction-expiration =  %d00      ; none
+ * =/ %d01 u64  ; epoch
  * ```
  */
 sealed class TransactionExpiration {
@@ -67258,8 +65867,8 @@ public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<Tra
  *
  * ```text
  * type-argument-error = type-not-found / constraint-not-satisfied
- * type-not-found = %x00
- * constraint-not-satisfied = %x01
+ * type-not-found = %d00
+ * constraint-not-satisfied = %d01
  * ```
  */
 
@@ -67312,11 +65921,11 @@ public object FfiConverterTypeTypeArgumentError: FfiConverterRustBuffer<TypeArgu
  * =/ cancelled
  * =/ per-epoch-config
  *
- * read-only-root      = %x00 u64 digest
- * mutate-deleted      = %x01 u64
- * read-deleted        = %x02 u64
- * cancelled           = %x03 u64
- * per-epoch-config    = %x04
+ * read-only-root      = %d00 u64 digest
+ * mutate-deleted      = %d01 u64
+ * read-deleted        = %d02 u64
+ * cancelled           = %d03 u64
+ * per-epoch-config    = %d04
  * ```
  */
 sealed class UnchangedSharedKind: Disposable  {
@@ -67327,7 +65936,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * verify untrusted read.
      */
     data class ReadOnlyRoot(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest) : UnchangedSharedKind() {
         companion object
     }
@@ -67336,7 +65945,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * Deleted shared objects that appear mutably/owned in the input.
      */
     data class MutateDeleted(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67344,7 +65953,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * Deleted shared objects that appear as read-only in the input.
      */
     data class ReadDeleted(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67353,7 +65962,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * cancellation reason.
      */
     data class Cancelled(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67413,17 +66022,17 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
     override fun read(buf: ByteBuffer): UnchangedSharedKind {
         return when(buf.getInt()) {
             1 -> UnchangedSharedKind.ReadOnlyRoot(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 )
             2 -> UnchangedSharedKind.MutateDeleted(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             3 -> UnchangedSharedKind.ReadDeleted(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             4 -> UnchangedSharedKind.Cancelled(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             5 -> UnchangedSharedKind.PerEpochConfig
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
@@ -67435,7 +66044,7 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
             )
         }
@@ -67443,21 +66052,21 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.ReadDeleted -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.Cancelled -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.PerEpochConfig -> {
@@ -67472,23 +66081,23 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
         when(value) {
             is UnchangedSharedKind.ReadOnlyRoot -> {
                 buf.putInt(1)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 Unit
             }
             is UnchangedSharedKind.MutateDeleted -> {
                 buf.putInt(2)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.ReadDeleted -> {
                 buf.putInt(3)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.Cancelled -> {
                 buf.putInt(4)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.PerEpochConfig -> {
@@ -68298,6 +66907,38 @@ public object FfiConverterOptionalTypePasskeyAuthenticator: FfiConverterRustBuff
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypePasskeyPublicKey: FfiConverterRustBuffer<PasskeyPublicKey?> {
+    override fun read(buf: ByteBuffer): PasskeyPublicKey? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypePasskeyPublicKey.read(buf)
+    }
+
+    override fun allocationSize(value: PasskeyPublicKey?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypePasskeyPublicKey.allocationSize(value)
+        }
+    }
+
+    override fun write(value: PasskeyPublicKey?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypePasskeyPublicKey.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeSecp256k1PublicKey: FfiConverterRustBuffer<Secp256k1PublicKey?> {
     override fun read(buf: ByteBuffer): Secp256k1PublicKey? {
         if (buf.get().toInt() == 0) {
@@ -68554,92 +67195,28 @@ public object FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> 
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeZkLoginAuthenticator: FfiConverterRustBuffer<ZkLoginAuthenticator?> {
-    override fun read(buf: ByteBuffer): ZkLoginAuthenticator? {
+public object FfiConverterOptionalTypeVersion: FfiConverterRustBuffer<Version?> {
+    override fun read(buf: ByteBuffer): Version? {
         if (buf.get().toInt() == 0) {
             return null
         }
-        return FfiConverterTypeZkLoginAuthenticator.read(buf)
+        return FfiConverterTypeVersion.read(buf)
     }
 
-    override fun allocationSize(value: ZkLoginAuthenticator?): ULong {
+    override fun allocationSize(value: Version?): ULong {
         if (value == null) {
             return 1UL
         } else {
-            return 1UL + FfiConverterTypeZkLoginAuthenticator.allocationSize(value)
+            return 1UL + FfiConverterTypeVersion.allocationSize(value)
         }
     }
 
-    override fun write(value: ZkLoginAuthenticator?, buf: ByteBuffer) {
+    override fun write(value: Version?, buf: ByteBuffer) {
         if (value == null) {
             buf.put(0)
         } else {
             buf.put(1)
-            FfiConverterTypeZkLoginAuthenticator.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeZkLoginPublicIdentifier: FfiConverterRustBuffer<ZkLoginPublicIdentifier?> {
-    override fun read(buf: ByteBuffer): ZkLoginPublicIdentifier? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeZkLoginPublicIdentifier.read(buf)
-    }
-
-    override fun allocationSize(value: ZkLoginPublicIdentifier?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeZkLoginPublicIdentifier.allocationSize(value)
-        }
-    }
-
-    override fun write(value: ZkLoginPublicIdentifier?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeZkLoginPublicIdentifier.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeZkloginVerifier: FfiConverterRustBuffer<ZkloginVerifier?> {
-    override fun read(buf: ByteBuffer): ZkloginVerifier? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeZkloginVerifier.read(buf)
-    }
-
-    override fun allocationSize(value: ZkloginVerifier?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeZkloginVerifier.allocationSize(value)
-        }
-    }
-
-    override fun write(value: ZkloginVerifier?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeZkloginVerifier.write(value, buf)
+            FfiConverterTypeVersion.write(value, buf)
         }
     }
 }
@@ -70566,34 +69143,6 @@ public object FfiConverterSequenceTypeEndOfEpochTransactionKind: FfiConverterRus
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeExecutionTimeObservation: FfiConverterRustBuffer<List<ExecutionTimeObservation>> {
-    override fun read(buf: ByteBuffer): List<ExecutionTimeObservation> {
-        val len = buf.getInt()
-        return List<ExecutionTimeObservation>(len) {
-            FfiConverterTypeExecutionTimeObservation.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<ExecutionTimeObservation>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeExecutionTimeObservation.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<ExecutionTimeObservation>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeExecutionTimeObservation.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterSequenceTypeGenesisObject: FfiConverterRustBuffer<List<GenesisObject>> {
     override fun read(buf: ByteBuffer): List<GenesisObject> {
         val len = buf.getInt()
@@ -71042,24 +69591,24 @@ public object FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<List
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeValidatorExecutionTimeObservation: FfiConverterRustBuffer<List<ValidatorExecutionTimeObservation>> {
-    override fun read(buf: ByteBuffer): List<ValidatorExecutionTimeObservation> {
+public object FfiConverterSequenceTypeVersion: FfiConverterRustBuffer<List<Version>> {
+    override fun read(buf: ByteBuffer): List<Version> {
         val len = buf.getInt()
-        return List<ValidatorExecutionTimeObservation>(len) {
-            FfiConverterTypeValidatorExecutionTimeObservation.read(buf)
+        return List<Version>(len) {
+            FfiConverterTypeVersion.read(buf)
         }
     }
 
-    override fun allocationSize(value: List<ValidatorExecutionTimeObservation>): ULong {
+    override fun allocationSize(value: List<Version>): ULong {
         val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeValidatorExecutionTimeObservation.allocationSize(it) }.sum()
+        val sizeForItems = value.map { FfiConverterTypeVersion.allocationSize(it) }.sum()
         return sizeForLength + sizeForItems
     }
 
-    override fun write(value: List<ValidatorExecutionTimeObservation>, buf: ByteBuffer) {
+    override fun write(value: List<Version>, buf: ByteBuffer) {
         buf.putInt(value.size)
         value.iterator().forEach {
-            FfiConverterTypeValidatorExecutionTimeObservation.write(it, buf)
+            FfiConverterTypeVersion.write(it, buf)
         }
     }
 }
@@ -71088,34 +69637,6 @@ public object FfiConverterSequenceTypeVersionAssignment: FfiConverterRustBuffer<
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeVersionAssignment.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeActiveJwk: FfiConverterRustBuffer<List<ActiveJwk>> {
-    override fun read(buf: ByteBuffer): List<ActiveJwk> {
-        val len = buf.getInt()
-        return List<ActiveJwk>(len) {
-            FfiConverterTypeActiveJwk.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<ActiveJwk>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeActiveJwk.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<ActiveJwk>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeActiveJwk.write(it, buf)
         }
     }
 }
@@ -72051,45 +70572,6 @@ public object FfiConverterMapTypeObjectIdTypeUpgradeInfo: FfiConverterRustBuffer
 
 
 
-
-/**
- * @suppress
- */
-public object FfiConverterMapTypeJwkIdTypeJwk: FfiConverterRustBuffer<Map<JwkId, Jwk>> {
-    override fun read(buf: ByteBuffer): Map<JwkId, Jwk> {
-        val len = buf.getInt()
-        return buildMap<JwkId, Jwk>(len) {
-            repeat(len) {
-                val k = FfiConverterTypeJwkId.read(buf)
-                val v = FfiConverterTypeJwk.read(buf)
-                this[k] = v
-            }
-        }
-    }
-
-    override fun allocationSize(value: Map<JwkId, Jwk>): ULong {
-        val spaceForMapSize = 4UL
-        val spaceForChildren = value.map { (k, v) ->
-            FfiConverterTypeJwkId.allocationSize(k) +
-            FfiConverterTypeJwk.allocationSize(v)
-        }.sum()
-        return spaceForMapSize + spaceForChildren
-    }
-
-    override fun write(value: Map<JwkId, Jwk>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        // The parens on `(k, v)` here ensure we're calling the right method,
-        // which is important for compatibility with older android devices.
-        // Ref https://blog.danlew.net/2017/03/16/kotlin-puzzler-whose-line-is-it-anyways/
-        value.forEach { (k, v) ->
-            FfiConverterTypeJwkId.write(k, buf)
-            FfiConverterTypeJwk.write(v, buf)
-        }
-    }
-}
-
-
-
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -72124,58 +70606,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
 
 
 
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkFromBcs`(`bcs`: kotlin.ByteArray): ActiveJwk {
-            return FfiConverterTypeActiveJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkFromJson`(`json`: kotlin.String): ActiveJwk {
-            return FfiConverterTypeActiveJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkToBcs`(`data`: ActiveJwk): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
-        FfiConverterTypeActiveJwk.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `activeJwkToJson`(`data`: ActiveJwk): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(
-        FfiConverterTypeActiveJwk.lower(`data`),_status)
-}
-    )
-    }
-    
 
         /**
          * Create this type from BCS encoded bytes.
@@ -72276,110 +70706,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_to_json(
         FfiConverterTypeArgument.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateExpire {
-            return FfiConverterTypeAuthenticatorStateExpire.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromJson`(`json`: kotlin.String): AuthenticatorStateExpire {
-            return FfiConverterTypeAuthenticatorStateExpire.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireToBcs`(`data`: AuthenticatorStateExpire): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateExpireToJson`(`data`: AuthenticatorStateExpire): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(
-        FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateUpdateV1 {
-            return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromJson`(`json`: kotlin.String): AuthenticatorStateUpdateV1 {
-            return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToBcs`(`data`: AuthenticatorStateUpdateV1): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToJson`(`data`: AuthenticatorStateUpdateV1): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(
-        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
 }
     )
     }
@@ -72503,58 +70829,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(
         FfiConverterTypeBls12381Signature.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementFromBcs`(`bcs`: kotlin.ByteArray): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementFromJson`(`json`: kotlin.String): Bn254FieldElement {
-            return FfiConverterTypeBn254FieldElement.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementToBcs`(`data`: Bn254FieldElement): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
-        FfiConverterTypeBn254FieldElement.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `bn254FieldElementToJson`(`data`: Bn254FieldElement): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(
-        FfiConverterTypeBn254FieldElement.lower(`data`),_status)
 }
     )
     }
@@ -73023,110 +71297,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(
         FfiConverterTypeCheckpointTransactionInfo.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1FromBcs`(`bcs`: kotlin.ByteArray): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1FromJson`(`json`: kotlin.String): CircomG1 {
-            return FfiConverterTypeCircomG1.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1ToBcs`(`data`: CircomG1): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
-        FfiConverterTypeCircomG1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG1ToJson`(`data`: CircomG1): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(
-        FfiConverterTypeCircomG1.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2FromBcs`(`bcs`: kotlin.ByteArray): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2FromJson`(`json`: kotlin.String): CircomG2 {
-            return FfiConverterTypeCircomG2.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2ToBcs`(`data`: CircomG2): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
-        FfiConverterTypeCircomG2.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `circomG2ToJson`(`data`: CircomG2): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(
-        FfiConverterTypeCircomG2.lower(`data`),_status)
 }
     )
     }
@@ -73699,162 +71869,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json(
         FfiConverterTypeExecutionStatus.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservation {
-            return FfiConverterTypeExecutionTimeObservation.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationFromJson`(`json`: kotlin.String): ExecutionTimeObservation {
-            return FfiConverterTypeExecutionTimeObservation.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyFromJson`(`json`: kotlin.String): ExecutionTimeObservationKey {
-            return FfiConverterTypeExecutionTimeObservationKey.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyToBcs`(`data`: ExecutionTimeObservationKey): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(
-        FfiConverterTypeExecutionTimeObservationKey.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyToJson`(`data`: ExecutionTimeObservationKey): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json(
-        FfiConverterTypeExecutionTimeObservationKey.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationToBcs`(`data`: ExecutionTimeObservation): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(
-        FfiConverterTypeExecutionTimeObservation.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationToJson`(`data`: ExecutionTimeObservation): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json(
-        FfiConverterTypeExecutionTimeObservation.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationsFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservations {
-            return FfiConverterTypeExecutionTimeObservations.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationsFromJson`(`json`: kotlin.String): ExecutionTimeObservations {
-            return FfiConverterTypeExecutionTimeObservations.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationsToBcs`(`data`: ExecutionTimeObservations): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(
-        FfiConverterTypeExecutionTimeObservations.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `executionTimeObservationsToJson`(`data`: ExecutionTimeObservations): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json(
-        FfiConverterTypeExecutionTimeObservations.lower(`data`),_status)
 }
     )
     }
@@ -74459,110 +72473,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_json(
         FfiConverterTypeInput.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkFromBcs`(`bcs`: kotlin.ByteArray): Jwk {
-            return FfiConverterTypeJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkFromJson`(`json`: kotlin.String): Jwk {
-            return FfiConverterTypeJwk.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdFromBcs`(`bcs`: kotlin.ByteArray): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdFromJson`(`json`: kotlin.String): JwkId {
-            return FfiConverterTypeJwkId.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdToBcs`(`data`: JwkId): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
-        FfiConverterTypeJwkId.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkIdToJson`(`data`: JwkId): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(
-        FfiConverterTypeJwkId.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `jwkToBcs`(`data`: Jwk): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
-        FfiConverterTypeJwk.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `jwkToJson`(`data`: Jwk): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_json(
-        FfiConverterTypeJwk.lower(`data`),_status)
 }
     )
     }
@@ -77483,58 +75393,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
         /**
          * Create this type from BCS encoded bytes.
          */
-    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ValidatorExecutionTimeObservation {
-            return FfiConverterTypeValidatorExecutionTimeObservation.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationFromJson`(`json`: kotlin.String): ValidatorExecutionTimeObservation {
-            return FfiConverterTypeValidatorExecutionTimeObservation.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationToBcs`(`data`: ValidatorExecutionTimeObservation): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(
-        FfiConverterTypeValidatorExecutionTimeObservation.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationToJson`(`data`: ValidatorExecutionTimeObservation): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json(
-        FfiConverterTypeValidatorExecutionTimeObservation.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
     @Throws(SdkFfiException::class) fun `validatorSignatureFromBcs`(`bcs`: kotlin.ByteArray): ValidatorSignature {
             return FfiConverterTypeValidatorSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -77631,214 +75489,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(
         FfiConverterTypeVersionAssignment.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromJson`(`json`: kotlin.String): ZkLoginAuthenticator {
-            return FfiConverterTypeZkLoginAuthenticator.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToBcs`(`data`: ZkLoginAuthenticator): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
-        FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToJson`(`data`: ZkLoginAuthenticator): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(
-        FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimFromJson`(`json`: kotlin.String): ZkLoginClaim {
-            return FfiConverterTypeZkLoginClaim.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimToBcs`(`data`: ZkLoginClaim): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
-        FfiConverterTypeZkLoginClaim.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginClaimToJson`(`data`: ZkLoginClaim): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(
-        FfiConverterTypeZkLoginClaim.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofFromJson`(`json`: kotlin.String): ZkLoginProof {
-            return FfiConverterTypeZkLoginProof.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofToBcs`(`data`: ZkLoginProof): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
-        FfiConverterTypeZkLoginProof.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginProofToJson`(`data`: ZkLoginProof): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(
-        FfiConverterTypeZkLoginProof.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromJson`(`json`: kotlin.String): ZkLoginPublicIdentifier {
-            return FfiConverterTypeZkLoginPublicIdentifier.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToBcs`(`data`: ZkLoginPublicIdentifier): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
-        FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToJson`(`data`: ZkLoginPublicIdentifier): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(
-        FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
 }
     )
     }

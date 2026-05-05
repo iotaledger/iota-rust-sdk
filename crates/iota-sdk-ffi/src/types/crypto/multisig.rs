@@ -10,7 +10,7 @@ use crate::types::{
     crypto::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature,
-        zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+        passkey::{PasskeyAuthenticator, PasskeyPublicKey},
     },
 };
 
@@ -24,12 +24,14 @@ use crate::types::{
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature
+///                             zklogin-multisig-member-signature-deprecated /
+///                             passkey-multisig-member-signature
 ///
-/// ed25519-multisig-member-signature   = %x00 ed25519-signature
-/// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-/// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-/// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+/// ed25519-multisig-member-signature               = %d00 ed25519-signature
+/// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+/// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+/// zklogin-multisig-member-signature-deprecated    = %d03
+/// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -85,20 +87,20 @@ impl MultisigMemberSignature {
         (*self.0.as_secp256r1()).into()
     }
 
-    pub fn is_zklogin(&self) -> bool {
-        self.0.is_zklogin()
+    pub fn is_passkey(&self) -> bool {
+        self.0.is_passkey()
     }
 
-    pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
+    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
-            .as_zklogin_opt()
+            .as_passkey_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> ZkLoginAuthenticator {
-        self.0.as_zklogin().clone().into()
+    pub fn as_passkey(&self) -> PasskeyAuthenticator {
+        self.0.as_passkey().clone().into()
     }
 }
 
@@ -112,12 +114,14 @@ impl MultisigMemberSignature {
 /// multisig-member-public-key = ed25519-multisig-member-public-key /
 ///                              secp256k1-multisig-member-public-key /
 ///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key
+///                              zklogin-multisig-member-public-key-deprecated /
+///                              passkey-multisig-member-public-key
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-/// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %d03
+/// passkey-multisig-member-public-key              = %d04 passkey-public-key
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
@@ -184,20 +188,20 @@ impl MultisigMemberPublicKey {
         (*self.0.as_secp256r1()).into()
     }
 
-    pub fn is_zklogin(&self) -> bool {
-        self.0.is_zklogin()
+    pub fn is_passkey(&self) -> bool {
+        self.0.is_passkey()
     }
 
-    pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginPublicIdentifier>> {
+    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyPublicKey>> {
         self.0
-            .as_zklogin_opt()
+            .as_passkey_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> ZkLoginPublicIdentifier {
-        self.0.as_zklogin().clone().into()
+    pub fn as_passkey(&self) -> PasskeyPublicKey {
+        self.0.as_passkey().clone().into()
     }
 
     pub fn scheme(&self) -> SignatureScheme {
@@ -364,11 +368,6 @@ impl MultisigCommittee {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-    /// refers to the same input used when deriving the address using the
-    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-    /// full 32-byte `address_seed` value).
     pub fn derive_address(&self) -> Address {
         self.0.derive_address().into()
     }

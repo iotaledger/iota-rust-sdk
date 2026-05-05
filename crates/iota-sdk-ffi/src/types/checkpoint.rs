@@ -58,7 +58,7 @@ pub struct CheckpointSummary(pub iota_sdk::types::CheckpointSummary);
 #[uniffi::export]
 impl CheckpointSummary {
     #[uniffi::constructor]
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new(
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
@@ -179,12 +179,14 @@ impl CheckpointSummary {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+/// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 ///
-/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
-///                                                               ; transaction. MUST be the same
-///                                                               ; length as the vector of digests
+/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+///                          (vector (vector user-signature)) ; set of user signatures for each
+///                                                           ; transaction. MUST be the same
+///                                                           ; length as the vector of digests
+///
+/// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
@@ -260,7 +262,7 @@ impl CheckpointTransactionInfo {
 /// ```text
 /// ; CheckpointCommitment is an enum and each variant is prefixed with its index
 /// checkpoint-commitment = ecmh-live-object-set
-/// ecmh-live-object-set = %x00 digest
+/// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointCommitment(pub iota_sdk::types::CheckpointCommitment);
@@ -287,6 +289,7 @@ impl CheckpointCommitment {
 /// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
 ///                     u64                                 ; next_epoch_protocol_version
 ///                     (vector checkpoint-commitment)      ; epoch_commitments
+///                     i64                                 ; epoch_supply_change
 /// ```
 #[derive(uniffi::Record)]
 pub struct EndOfEpochData {

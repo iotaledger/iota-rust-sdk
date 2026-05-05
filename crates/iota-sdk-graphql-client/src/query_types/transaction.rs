@@ -176,7 +176,6 @@ pub enum TransactionBlockKindInput {
     ProgrammableTx,
     Genesis,
     ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
 }

@@ -6,6 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Visitor};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::*;
+use crate::Address;
 
 impl Serialize for Identifier {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -25,7 +26,17 @@ impl<'de> Deserialize<'de> for Identifier {
     }
 }
 
+/// BCS wire-format variant indices for [`TypeTag`].
+///
+/// The variant order here matches the on-chain BCS encoding, which differs from
+/// the Rust [`TypeTag`] enum declaration order. This type is also used to
+/// generate the ABNF schema via [`BcsSchema`](iota_bcs_schema::BcsSchema).
 #[repr(u32)]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(name = "type-tag")
+)]
 enum SerializedTypeTagVariant {
     Bool = 0,
     U8 = 1,
@@ -33,7 +44,9 @@ enum SerializedTypeTagVariant {
     U128 = 3,
     Address = 4,
     Signer = 5,
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "type-tag"))]
     Vector = 6,
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "struct-tag"))]
     Struct = 7,
     U16 = 8,
     U32 = 9,
@@ -186,6 +199,7 @@ impl<'de> Visitor<'de> for TypeTagVisitor {
 }
 
 #[derive(serde::Serialize)]
+#[serde(rename = "StructTag")]
 struct BinaryStructTagRef<'a> {
     address: &'a Address,
     module: &'a Identifier,
@@ -213,6 +227,7 @@ impl Serialize for StructTag {
 }
 
 #[derive(serde::Deserialize)]
+#[serde(rename = "StructTag")]
 struct BinaryStructTag {
     address: Address,
     module: Identifier,
@@ -244,83 +259,6 @@ impl<'de> Deserialize<'de> for StructTag {
     }
 }
 
-#[cfg(feature = "schemars")]
-mod json_schema {
-    use schemars::{
-        JsonSchema,
-        schema::{InstanceType, Metadata, SchemaObject, StringValidation},
-    };
-
-    use super::*;
-
-    pub(crate) static ALLOWED_IDENTIFIERS: &str =
-        r"(?:[a-zA-Z][a-zA-Z0-9_]{0,127})|(?:_[a-zA-Z0-9_]{0,127})";
-
-    impl JsonSchema for Identifier {
-        fn schema_name() -> String {
-            "Identifier".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    title: Some(Self::schema_name()),
-                    description: Some("A Move Identifier".to_owned()),
-                    examples: vec![serde_json::json!("iota")],
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                string: Some(Box::new(StringValidation {
-                    pattern: Some(ALLOWED_IDENTIFIERS.to_owned()),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            }
-            .into()
-        }
-    }
-
-    impl JsonSchema for TypeTag {
-        fn schema_name() -> String {
-            "TypeTag".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    title: Some(Self::schema_name()),
-                    description: Some("A Move TypeTag".to_owned()),
-                    examples: vec![serde_json::json!("vector<u8>")],
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                ..Default::default()
-            }
-            .into()
-        }
-    }
-
-    impl JsonSchema for StructTag {
-        fn schema_name() -> String {
-            "StructTag".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    title: Some(Self::schema_name()),
-                    description: Some("A Move StructTag".to_owned()),
-                    examples: vec![serde_json::json!("0x2::coin::Coin<0x2::iota::IOTA>")],
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                ..Default::default()
-            }
-            .into()
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use std::str::FromStr;
@@ -334,8 +272,8 @@ mod tests {
     fn type_tag_fixture() {
         let expected = TypeTag::Struct(Box::new(StructTag {
             address: Address::from_str("0x1").unwrap(),
-            module: Identifier("Foo".into()),
-            name: Identifier("Bar".into()),
+            module: Identifier::from_static("Foo"),
+            name: Identifier::from_static("Bar"),
             type_params: vec![
                 TypeTag::Bool,
                 TypeTag::U8,
@@ -350,7 +288,7 @@ mod tests {
             ],
         }));
 
-        let display = "0x0000000000000000000000000000000000000000000000000000000000000001::Foo::Bar<bool,u8,u64,u128,address,signer,u16,u32,u256,vector<address>>";
+        let display = "0x1::Foo::Bar<bool,u8,u64,u128,address,signer,u16,u32,u256,vector<address>>";
         let bcs_fixture: &[u8] = &[
             7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 1, 3, 70, 111, 111, 3, 66, 97, 114, 10, 0, 1, 2, 3, 4, 5, 8, 9, 10, 6, 4,

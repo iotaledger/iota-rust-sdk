@@ -18,11 +18,10 @@ use crate::{
     },
     types::{
         address::Address,
+        move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::ObjectId,
-        struct_tag::Identifier,
         transaction::{Transaction, TransactionEffects},
-        type_tag::TypeTag,
     },
 };
 

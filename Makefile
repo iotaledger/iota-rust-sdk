@@ -64,6 +64,10 @@ ci: check-features check-fmt test wasm ## Run the full CI process
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
 
+.PHONY: cargo-sort
+cargo-sort: ## Sort, consolidate, and format Cargo.toml dependencies
+	cd scripts/cargo_sort && ./run_consolidate.sh
+
 .PHONY: clean
 clean: ## Clean build artifacts
 	cargo clean
@@ -142,7 +146,7 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 600 || exit $$?
+	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 1000 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -373,6 +377,11 @@ release-examples: ## Run all release examples
 	@$(MAKE) python-release-example
 	@$(MAKE) csharp-release-example
 	@$(MAKE) swift-release-example
+
+.PHONY: bcs-schema
+bcs-schema: ## Regenerate bcs-schema.abnf
+	@printf "Regenerating bcs-schema.abnf...\n"
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
 
 .PHONY: help
 help: ## Show this help

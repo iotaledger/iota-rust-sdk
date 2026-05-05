@@ -20,7 +20,7 @@ class Program
                 Console.WriteLine($"Coin = {coin.Id().ToHex()}, Coin Type = {coin.CoinType().AsStructTag()}, Balance = {coin.Balance()}");
             }
 
-            var balance = await client.Balance(address, null);
+            var balance = await client.Balance(address, null) ?? 0;
             Console.WriteLine($"Total Balance = {balance}");
         }
         catch (SdkFfiException ex)

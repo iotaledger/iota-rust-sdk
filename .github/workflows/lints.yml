@@ -40,7 +40,31 @@ jobs:
         if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
         run: make doc
 
+      - name: BCS schema
+        if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+        run: make bcs-schema
+
       - run: make is-dirty
+
+  cargo-sort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install dprint
+        run: curl -fsSL https://dprint.dev/install.sh | sh && echo "$HOME/.dprint/bin" >> $GITHUB_PATH
+
+      - name: Sort, consolidate, and format Cargo.toml dependencies
+        run: make cargo-sort
+
+      - name: Check for uncommitted Cargo.toml changes
+        run: |
+          if ! git diff --quiet -- '*.toml'; then
+            echo "Cargo.toml files not properly sorted, consolidated, or formatted! Please run 'make cargo-sort'."
+            git diff -- '*.toml'
+            exit 1
+          fi
 
   cargo-deny:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))

@@ -6,13 +6,13 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
-use crate::{ObjectId, ObjectReference};
+use crate::{Identifier, ObjectId, ObjectReference};
 
 mod transaction_kind {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
-        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+        ConsensusCommitPrologueV1, EndOfEpochTransactionKind, GenesisTransaction,
+        ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
     #[derive(serde::Serialize)]
@@ -21,7 +21,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
@@ -31,29 +31,15 @@ mod transaction_kind {
     #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(RandomnessStateUpdate),
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for TransactionKind {
-        fn schema_name() -> String {
-            ReadableTransactionKind::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            ReadableTransactionKind::json_schema(generator)
-        }
     }
 
     #[derive(serde::Serialize)]
@@ -61,7 +47,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
@@ -70,7 +56,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+        AuthenticatorStateUpdateV1Deprecated,
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
     }
@@ -89,8 +75,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1(k)
+                    Self::AuthenticatorStateUpdateV1Deprecated => {
+                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1Deprecated
                     }
                     Self::EndOfEpoch(commands) => {
                         ReadableTransactionKindRef::EndOfEpoch { commands }
@@ -109,8 +95,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1(k)
+                    Self::AuthenticatorStateUpdateV1Deprecated => {
+                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1Deprecated
                     }
                     Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
                     Self::RandomnessStateUpdate(k) => {
@@ -136,8 +122,8 @@ mod transaction_kind {
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    ReadableTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
+                    ReadableTransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                        Self::AuthenticatorStateUpdateV1Deprecated
                     }
                     ReadableTransactionKind::EndOfEpoch { commands } => Self::EndOfEpoch(commands),
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
@@ -153,8 +139,8 @@ mod transaction_kind {
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    BinaryTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
+                    BinaryTransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                        Self::AuthenticatorStateUpdateV1Deprecated
                     }
                     BinaryTransactionKind::EndOfEpoch(k) => Self::EndOfEpoch(k),
                     BinaryTransactionKind::RandomnessStateUpdate(k) => {
@@ -169,8 +155,7 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-        EndOfEpochTransactionKind,
+        ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4, EndOfEpochTransactionKind,
     };
 
     #[derive(serde::Serialize)]
@@ -180,8 +165,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
     #[derive(serde::Deserialize)]
@@ -191,28 +174,24 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
 
     impl Serialize for EndOfEpochTransactionKind {
@@ -232,12 +211,6 @@ mod end_of_epoch {
                     Self::ChangeEpochV4(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
                     }
-                    Self::AuthenticatorStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
-                    }
-                    Self::AuthenticatorStateExpire(k) => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -246,13 +219,6 @@ mod end_of_epoch {
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
                     Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
                     Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
-
-                    Self::AuthenticatorStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
-                    }
-                    Self::AuthenticatorStateExpire(k) => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
                 };
                 binary.serialize(serializer)
             }
@@ -277,12 +243,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
                             Self::ChangeEpochV4(k)
                         }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
-                        }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
-                        }
                     }
                 })
             } else {
@@ -292,13 +252,6 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
-
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
-                        }
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
-                        }
                     },
                 )
             }
@@ -399,37 +352,52 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::transaction::Input;
+    use crate::{
+        Version,
+        transaction::{Input, SharedObjectReference},
+    };
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
+    struct PureInput {
+        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        value: Vec<u8>,
+    }
+
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename_all = "snake_case")]
     enum ReadableInput {
-        Pure {
-            #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-            value: Vec<u8>,
-        },
+        /// A move value serialized as BCS.
+        ///
+        /// For normal operations this is required to be a move primitive type
+        /// and not contain structs or objects.
+        Pure(PureInput),
+        /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
+        /// A move object whose owner is "Shared"
         Shared {
             object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            initial_shared_version: u64,
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            initial_shared_version: Version,
             mutable: bool,
         },
+        /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
         Shared {
             object_id: ObjectId,
-            initial_shared_version: u64,
+            initial_shared_version: Version,
             mutable: bool,
         },
         Receiving(ObjectReference),
@@ -442,15 +410,15 @@ mod input_argument {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    Input::Pure { value } => ReadableInput::Pure { value },
+                    Input::Pure(value) => ReadableInput::Pure(PureInput { value }),
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => ReadableInput::Shared {
+                    }) => ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -460,15 +428,15 @@ mod input_argument {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    Input::Pure { value } => CallArg::Pure(value),
+                    Input::Pure(value) => CallArg::Pure(value),
                     Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => CallArg::Object(ObjectArg::Shared {
+                    }) => CallArg::Object(ObjectArg::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -489,7 +457,7 @@ mod input_argument {
         {
             if deserializer.is_human_readable() {
                 ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure { value },
+                    ReadableInput::Pure(PureInput { value }) => Input::Pure(value),
                     ReadableInput::ImmutableOrOwned(object_ref) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -497,16 +465,16 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => Input::Shared {
+                    } => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => Input::Pure { value },
+                    CallArg::Pure(value) => Input::Pure(value),
                     CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -514,11 +482,11 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    }) => Input::Shared {
+                    }) => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
@@ -532,58 +500,20 @@ mod argument {
     use super::*;
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    #[serde(rename = "Argument")]
     enum ReadableArgument {
         /// # Gas
-        Gas(Gas),
-        /// # Input
-        Input { input: u16 },
-        /// # Result
-        Result { result: u16 },
-        /// # NestedResult
-        NestedResult { result: (u16, u16) },
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(rename_all = "lowercase")]
-    enum Gas {
         Gas,
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Gas {
-        fn schema_name() -> std::string::String {
-            "GasArgument".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            schemars::schema::Schema::Object(schemars::schema::SchemaObject {
-                instance_type: Some(schemars::schema::InstanceType::String.into()),
-                enum_values: Some(vec!["gas".into()]),
-                ..Default::default()
-            })
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Argument {
-        fn schema_name() -> String {
-            ReadableArgument::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            ReadableArgument::json_schema(generator)
-        }
+        /// # Input
+        Input(u16),
+        /// # Result
+        Result(u16),
+        /// # NestedResult
+        NestedResult(u16, u16),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "Argument")]
     enum BinaryArgument {
         Gas,
         Input(u16),
@@ -598,12 +528,12 @@ mod argument {
         {
             if serializer.is_human_readable() {
                 let readable = match *self {
-                    Argument::Gas => ReadableArgument::Gas(Gas::Gas),
-                    Argument::Input(input) => ReadableArgument::Input { input },
-                    Argument::Result(result) => ReadableArgument::Result { result },
-                    Argument::NestedResult(result, subresult) => ReadableArgument::NestedResult {
-                        result: (result, subresult),
-                    },
+                    Argument::Gas => ReadableArgument::Gas,
+                    Argument::Input(input) => ReadableArgument::Input(input),
+                    Argument::Result(result) => ReadableArgument::Result(result),
+                    Argument::NestedResult(result, subresult) => {
+                        ReadableArgument::NestedResult(result, subresult)
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -627,12 +557,12 @@ mod argument {
         {
             if deserializer.is_human_readable() {
                 ReadableArgument::deserialize(deserializer).map(|readable| match readable {
-                    ReadableArgument::Gas(_) => Argument::Gas,
-                    ReadableArgument::Input { input } => Argument::Input(input),
-                    ReadableArgument::Result { result } => Argument::Result(result),
-                    ReadableArgument::NestedResult {
-                        result: (result, subresult),
-                    } => Argument::NestedResult(result, subresult),
+                    ReadableArgument::Gas => Argument::Gas,
+                    ReadableArgument::Input(input) => Argument::Input(input),
+                    ReadableArgument::Result(result) => Argument::Result(result),
+                    ReadableArgument::NestedResult(result, subresult) => {
+                        Argument::NestedResult(result, subresult)
+                    }
                 })
             } else {
                 BinaryArgument::deserialize(deserializer).map(|binary| match binary {
@@ -769,93 +699,27 @@ mod signed_transaction {
 
     use super::*;
     use crate::{
-        UserSignature,
+        Intent, UserSignature,
         transaction::{SignedTransaction, Transaction},
     };
-
-    /// Intents are defined as:
-    ///
-    /// ```
-    /// struct Intent {
-    ///     scope: IntentScope,
-    ///     version: IntentVersion,
-    ///     app_id: IntendAppId,
-    /// }
-    ///
-    /// enum IntentScope {
-    ///     TransactionData = 0,         // Used for a user signature on a transaction data.
-    ///     TransactionEffects = 1,      // Used for an authority signature on transaction effects.
-    ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
-    ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
-    ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
-    ///     ProofOfPossession = 5,       /* Used as a signature representing an authority's proof of
-    ///                                   * possession of its authority key. */
-    ///     BridgeEventDeprecated = 6, /* Deprecated. Should not be reused. Introduced for bridge
-    ///                                 * purposes but was never included in messages. */
-    ///     ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
-    ///     DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
-    ///     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum IntendAppId {
-    ///     Iota = 0,
-    ///     Consensus = 1,
-    /// }
-    /// ```
-    struct IntentMessageWrappedTransaction;
-
-    impl SerializeAs<Transaction> for IntentMessageWrappedTransaction {
-        fn serialize_as<S>(transaction: &Transaction, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            use serde::ser::SerializeTuple;
-
-            let mut s = serializer.serialize_tuple(4)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(transaction)?;
-            s.end()
-        }
-    }
-
-    impl<'de> DeserializeAs<'de, Transaction> for IntentMessageWrappedTransaction {
-        fn deserialize_as<D>(deserializer: D) -> Result<Transaction, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let (scope, version, app, transaction): (u8, u8, u8, Transaction) =
-                Deserialize::deserialize(deserializer)?;
-            match (scope, version, app) {
-                (0, 0, 0) => {}
-                _ => {
-                    return Err(serde::de::Error::custom(format!(
-                        "invalid intent message ({scope}, {version}, {app})"
-                    )));
-                }
-            }
-
-            Ok(transaction)
-        }
-    }
 
     pub(crate) struct SignedTransactionWithIntentMessage;
 
     #[derive(serde::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
-        #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
+        intent: &'a Intent,
         transaction: &'a Transaction,
         signatures: &'a Vec<UserSignature>,
     }
 
     #[derive(serde::Deserialize)]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "intent-signed-transaction")
+    )]
     struct BinarySignedTransactionWithIntentMessage {
-        #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
+        intent: Intent,
         transaction: Transaction,
         signatures: Vec<UserSignature>,
     }
@@ -875,7 +739,13 @@ mod signed_transaction {
                     transaction,
                     signatures,
                 } = transaction;
+                let intent = Intent {
+                    scope: crate::IntentScope::TransactionData,
+                    version: crate::IntentVersion::V0,
+                    app_id: crate::IntentAppId::Iota,
+                };
                 let binary = BinarySignedTransactionWithIntentMessageRef {
+                    intent: &intent,
                     transaction,
                     signatures,
                 };
@@ -914,11 +784,20 @@ mod signed_transaction {
                         }
 
                         let BinarySignedTransactionWithIntentMessage {
+                            intent:
+                                Intent {
+                                    scope: crate::IntentScope::TransactionData,
+                                    version: crate::IntentVersion::V0,
+                                    app_id: crate::IntentAppId::Iota,
+                                },
                             transaction,
                             signatures,
                         } = seq.next_element()?.ok_or_else(|| {
                             serde::de::Error::custom("expected a sequence with length 1")
-                        })?;
+                        })?
+                        else {
+                            return Err(serde::de::Error::custom("invalid intent"));
+                        };
                         Ok(SignedTransaction {
                             transaction,
                             signatures,
@@ -939,8 +818,8 @@ mod transaction_expiration {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
-    #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
+        None,
         /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(
@@ -949,6 +828,7 @@ mod transaction_expiration {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,
@@ -964,8 +844,8 @@ mod transaction_expiration {
         {
             if serializer.is_human_readable() {
                 match *self {
-                    Self::None => None,
-                    Self::Epoch(epoch) => Some(ReadableTransactionExpiration::Epoch(epoch)),
+                    Self::None => ReadableTransactionExpiration::None,
+                    Self::Epoch(epoch) => ReadableTransactionExpiration::Epoch(epoch),
                 }
                 .serialize(serializer)
             } else {
@@ -984,10 +864,10 @@ mod transaction_expiration {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                Option::<ReadableTransactionExpiration>::deserialize(deserializer).map(|readable| {
+                ReadableTransactionExpiration::deserialize(deserializer).map(|readable| {
                     match readable {
-                        None => Self::None,
-                        Some(ReadableTransactionExpiration::Epoch(epoch)) => Self::Epoch(epoch),
+                        ReadableTransactionExpiration::None => Self::None,
+                        ReadableTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
                     }
                 })
             } else {
@@ -998,65 +878,22 @@ mod transaction_expiration {
             }
         }
     }
+}
 
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for TransactionExpiration {
-        fn schema_name() -> String {
-            "TransactionExpiration".into()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            use schemars::{
-                Map, Set,
-                schema::{
-                    InstanceType, ObjectValidation, Schema, SchemaObject, SubschemaValidation,
-                },
-            };
-            let mut object = SchemaObject {
-                instance_type: Some(InstanceType::Object.into()),
-                object: Some(Box::new(ObjectValidation {
-                    properties: {
-                        let mut props = Map::new();
-                        props.insert(
-                            "epoch".to_owned(),
-                            generator.subschema_for::<crate::_schemars::U64>(),
-                        );
-                        props
-                    },
-                    required: {
-                        let mut required = Set::new();
-                        required.insert("epoch".to_owned());
-                        required
-                    },
-                    // Externally tagged variants must prohibit additional
-                    // properties irrespective of the disposition of
-                    // `deny_unknown_fields`. If additional properties were allowed
-                    // one could easily construct an object that validated against
-                    // multiple variants since here it's the properties rather than
-                    // the values of a property that distinguish between variants.
-                    additional_properties: Some(Box::new(false.into())),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            };
-            object.metadata().description = Some("Validators won't sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
-            let schema = Schema::Object(object);
-            Schema::Object(SchemaObject {
-                subschemas: Some(Box::new(SubschemaValidation {
-                    one_of: Some(vec![
-                        schema,
-                        Schema::Object(SchemaObject {
-                            instance_type: Some(InstanceType::Null.into()),
-                            ..SchemaObject::default()
-                        }),
-                    ]),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            })
-        }
+/// Deserialize an `Identifier` without validating that it is a valid Move
+/// identifier. This is used for deserializing the module in `MoveCall`
+/// commands, where BCS bytes could contain invalid identifiers but we still
+/// want to be able to deserialize them and let the move VM handle the
+/// validation.
+pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    if d.is_human_readable() {
+        serde::Deserialize::deserialize(d)
+    } else {
+        let s: String = serde::Deserialize::deserialize(d)?;
+        Ok(Identifier::new_unchecked(s))
     }
 }
 
@@ -1067,19 +904,19 @@ mod tests {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        Digest, ObjectId, ObjectReference,
-        transaction::{Argument, Input, Transaction},
+        Digest, ObjectId, ObjectReference, Version,
+        transaction::{Argument, Input, SharedObjectReference, Transaction},
     };
 
     #[test]
     fn argument() {
         let test_cases = [
-            (Argument::Gas, serde_json::json!("gas")),
-            (Argument::Input(1), serde_json::json!({"input": 1})),
-            (Argument::Result(2), serde_json::json!({"result": 2})),
+            (Argument::Gas, serde_json::json!("Gas")),
+            (Argument::Input(1), serde_json::json!({"Input": 1})),
+            (Argument::Result(2), serde_json::json!({"Result": 2})),
             (
                 Argument::NestedResult(3, 4),
-                serde_json::json!({"result": [3, 4]}),
+                serde_json::json!({"NestedResult": [3, 4]}),
             ),
         ];
 
@@ -1097,43 +934,53 @@ mod tests {
     fn input_argument() {
         let test_cases = [
             (
-                Input::Pure {
-                    value: vec![1, 2, 3, 4],
-                },
+                Input::Pure(vec![1, 2, 3, 4]),
                 serde_json::json!({
-                  "type": "pure",
-                  "value": "AQIDBA=="
+                  "pure": {
+                    "value": "AQIDBA=="
+                  }
                 }),
             ),
             (
-                Input::ImmutableOrOwned(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
+                Input::ImmutableOrOwned(ObjectReference::new(
+                    ObjectId::ZERO,
+                    Version::from_u64(1),
+                    Digest::ZERO,
+                )),
                 serde_json::json!({
-                  "type": "immutable_or_owned",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
+                  "immutable_or_owned": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    1,
+                    "11111111111111111111111111111111"
+                  ]
                 }),
             ),
             (
-                Input::Shared {
+                Input::Shared(SharedObjectReference {
                     object_id: ObjectId::ZERO,
-                    initial_shared_version: 1,
+                    initial_shared_version: Version::from_u64(1),
                     mutable: true,
-                },
+                }),
                 serde_json::json!({
-                  "type": "shared",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "initial_shared_version": "1",
-                  "mutable": true
+                  "shared": {
+                    "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    "initial_shared_version": "1",
+                    "mutable": true
+                  }
                 }),
             ),
             (
-                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
+                Input::Receiving(ObjectReference::new(
+                    ObjectId::ZERO,
+                    Version::from_u64(1),
+                    Digest::ZERO,
+                )),
                 serde_json::json!({
-                  "type": "receiving",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
+                  "receiving": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    1,
+                    "11111111111111111111111111111111"
+                  ]
                 }),
             ),
         ];

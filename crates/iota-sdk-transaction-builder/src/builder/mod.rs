@@ -12,8 +12,8 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
-    TransactionV1, TypeTag,
+    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
+    TransactionExpiration, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -42,7 +42,6 @@ pub mod move_authenticator;
 pub mod ptb_arguments;
 pub mod signer;
 
-const IOTA_SYSTEM_MODULE: &str = "iota_system";
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
@@ -158,10 +157,7 @@ impl TransactionBuildData {
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.set_input(
-            InputKind::Input(iota_types::Input::Pure { value: bytes }),
-            false,
-        )
+        self.set_input(InputKind::Input(iota_types::Input::Pure(bytes)), false)
     }
 
     /// Add a pure input
@@ -348,7 +344,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -381,7 +377,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///                 "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
     ///             )?,
     ///             digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
-    ///             version: 545110774,
+    ///             version: Version::from_u64(545110774),
     ///         },
     ///         // The result of a previous command can also be used
     ///         assigned("coin"),
@@ -686,9 +682,13 @@ impl<C, L> TransactionBuilder<C, L> {
         validator_address: Address,
     ) -> &mut Self {
         let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
-        self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
-            .arguments((SharedMut(ObjectId::SYSTEM), coin, validator_address))
-            .state_change()
+        self.move_call(
+            Address::SYSTEM,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
+            REQUEST_ADD_STAKE_FN,
+        )
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), coin, validator_address))
+        .state_change()
     }
 
     /// Withdraw stake from a validator's staking pool.
@@ -718,10 +718,10 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn unstake<S: PTBArgument>(&mut self, staked_iota: S) -> &mut Self {
         self.move_call(
             Address::SYSTEM,
-            IOTA_SYSTEM_MODULE,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
             REQUEST_WITHDRAW_STAKE_FN,
         )
-        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota))
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), staked_iota))
         .state_change()
     }
 
@@ -786,7 +786,7 @@ impl<L> TransactionBuilder<(), L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
@@ -798,14 +798,14 @@ impl<L> TransactionBuilder<(), L> {
     ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
     ///     )?,
     ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
-    ///     version: 473053811,
+    ///     version: Version::from_u64(473053811),
     /// };
     /// let gas_coin2 = ObjectReference {
     ///     object_id: ObjectId::from_str(
     ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
     ///     )?,
     ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-    ///     version: 473053810,
+    ///     version: Version::from_u64(473053810),
     /// };
     ///
     /// builder
@@ -1035,11 +1035,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                     obj.digest(),
                                 ))
                             }
-                            Owner::Shared(v) => iota_types::Input::Shared {
+                            Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
                                 object_id,
                                 initial_shared_version: *v,
                                 mutable: false,
-                            },
+                            }),
                             _ => unimplemented!(
                                 "a new enum variant was added and needs to be handled"
                             ),
@@ -1058,11 +1058,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                         .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
                     let input = match obj.owner() {
-                        Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id,
-                            initial_shared_version: *version,
-                            mutable,
-                        },
+                        Owner::Shared(version) => {
+                            iota_types::Input::Shared(SharedObjectReference {
+                                object_id,
+                                initial_shared_version: *version,
+                                mutable,
+                            })
+                        }
                         _ => {
                             return Err(Error::Input(format!(
                                 "object {object_id} was passed as shared, but is not"

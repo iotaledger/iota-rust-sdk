@@ -7,7 +7,7 @@ use signature::Verifier;
 
 use crate::{SignatureError, secp256r1::Secp256r1VerifyingKey};
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, PartialEq, Eq)]
 pub struct PasskeyVerifier {}
 
 impl PasskeyVerifier {

@@ -385,42 +385,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs()
-	})
-	if checksum != 65415 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json()
-	})
-	if checksum != 5693 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs()
-	})
-	if checksum != 37978 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json()
-	})
-	if checksum != 56327 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs()
 	})
 	if checksum != 8229 {
@@ -489,78 +453,6 @@ func uniffiCheckChecksums() {
 	if checksum != 34680 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_argument_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs()
-	})
-	if checksum != 23378 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json()
-	})
-	if checksum != 19654 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs()
-	})
-	if checksum != 26245 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json()
-	})
-	if checksum != 46170 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs()
-	})
-	if checksum != 39650 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json()
-	})
-	if checksum != 30949 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs()
-	})
-	if checksum != 31251 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json()
-	})
-	if checksum != 36459 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -651,42 +543,6 @@ func uniffiCheckChecksums() {
 	if checksum != 30321 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs()
-	})
-	if checksum != 13721 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json()
-	})
-	if checksum != 23224 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs()
-	})
-	if checksum != 3863 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json()
-	})
-	if checksum != 7045 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -1011,78 +867,6 @@ func uniffiCheckChecksums() {
 	if checksum != 12780 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs()
-	})
-	if checksum != 60233 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json()
-	})
-	if checksum != 3835 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs()
-	})
-	if checksum != 19531 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json()
-	})
-	if checksum != 15996 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs()
-	})
-	if checksum != 1042 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json()
-	})
-	if checksum != 48517 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs()
-	})
-	if checksum != 8225 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json()
-	})
-	if checksum != 30332 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -1479,114 +1263,6 @@ func uniffiCheckChecksums() {
 	if checksum != 27344 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs()
-	})
-	if checksum != 19124 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json()
-	})
-	if checksum != 46087 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs()
-	})
-	if checksum != 3465 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json()
-	})
-	if checksum != 23737 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs()
-	})
-	if checksum != 166 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json()
-	})
-	if checksum != 63452 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs()
-	})
-	if checksum != 35779 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json()
-	})
-	if checksum != 26451 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs()
-	})
-	if checksum != 954 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json()
-	})
-	if checksum != 31779 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs()
-	})
-	if checksum != 38212 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json()
-	})
-	if checksum != 36369 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2010,78 +1686,6 @@ func uniffiCheckChecksums() {
 	if checksum != 58430 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_input_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs()
-	})
-	if checksum != 14752 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_from_json()
-	})
-	if checksum != 33813 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs()
-	})
-	if checksum != 22836 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json()
-	})
-	if checksum != 1916 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs()
-	})
-	if checksum != 2155 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json()
-	})
-	if checksum != 11288 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs()
-	})
-	if checksum != 29567 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_to_json()
-	})
-	if checksum != 53403 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_jwk_to_json: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4102,42 +3706,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs()
-	})
-	if checksum != 28604 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json()
-	})
-	if checksum != 59417 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs()
-	})
-	if checksum != 35325 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json()
-	})
-	if checksum != 11778 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs()
 	})
 	if checksum != 57394 {
@@ -4210,146 +3778,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs()
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical()
 	})
-	if checksum != 48317 {
+	if checksum != 10365 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json()
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt()
 	})
-	if checksum != 19619 {
+	if checksum != 51160 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs()
-	})
-	if checksum != 50917 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json()
-	})
-	if checksum != 43592 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs()
-	})
-	if checksum != 47140 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json()
-	})
-	if checksum != 60759 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs()
-	})
-	if checksum != 58412 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json()
-	})
-	if checksum != 9777 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs()
-	})
-	if checksum != 13910 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json()
-	})
-	if checksum != 31645 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs()
-	})
-	if checksum != 22664 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json()
-	})
-	if checksum != 6200 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs()
-	})
-	if checksum != 35391 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json()
-	})
-	if checksum != 24841 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs()
-	})
-	if checksum != 39685 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json()
-	})
-	if checksum != 12096 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4374,18 +3816,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_hex()
 	})
-	if checksum != 22032 {
+	if checksum != 2770 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string()
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex()
 	})
-	if checksum != 56908 {
+	if checksum != 32277 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_string: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex()
+	})
+	if checksum != 57104 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex()
+	})
+	if checksum != 9559 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4476,24 +3936,6 @@ func uniffiCheckChecksums() {
 	if checksum != 54718 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded()
-	})
-	if checksum != 44301 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded()
-	})
-	if checksum != 33350 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5344,11 +4786,47 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive()
+	})
+	if checksum != 57678 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted()
+	})
+	if checksum != 32964 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped()
+	})
+	if checksum != 15502 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
 	})
 	if checksum != 53914 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt()
+	})
+	if checksum != 23877 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5596,24 +5074,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key()
-	})
-	if checksum != 10295 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations()
-	})
-	if checksum != 58594 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request()
 	})
 	if checksum != 13326 {
@@ -5688,7 +5148,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version()
 	})
-	if checksum != 36305 {
+	if checksum != 26576 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_version: UniFFI API checksum mismatch")
 	}
@@ -5940,7 +5400,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents()
 	})
-	if checksum != 40412 {
+	if checksum != 42627 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents: UniFFI API checksum mismatch")
 	}
@@ -5949,7 +5409,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs()
 	})
-	if checksum != 49694 {
+	if checksum != 16500 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs: UniFFI API checksum mismatch")
 	}
@@ -5976,7 +5436,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
-	if checksum != 16965 {
+	if checksum != 13444 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function: UniFFI API checksum mismatch")
 	}
@@ -5985,7 +5445,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module()
 	})
-	if checksum != 51355 {
+	if checksum != 1782 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module: UniFFI API checksum mismatch")
 	}
@@ -5994,7 +5454,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object()
 	})
-	if checksum != 27424 {
+	if checksum != 56456 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object: UniFFI API checksum mismatch")
 	}
@@ -6021,7 +5481,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package()
 	})
-	if checksum != 7913 {
+	if checksum != 2773 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package: UniFFI API checksum mismatch")
 	}
@@ -6039,7 +5499,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions()
 	})
-	if checksum != 34213 {
+	if checksum != 15150 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions: UniFFI API checksum mismatch")
 	}
@@ -6282,7 +5742,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1()
 	})
-	if checksum != 3713 {
+	if checksum != 52452 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1: UniFFI API checksum mismatch")
 	}
@@ -6471,7 +5931,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackage_version()
 	})
-	if checksum != 22970 {
+	if checksum != 7483 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackage_version: UniFFI API checksum mismatch")
 	}
@@ -6588,7 +6048,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
 	})
-	if checksum != 26282 {
+	if checksum != 10481 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address: UniFFI API checksum mismatch")
 	}
@@ -6667,6 +6127,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey()
+	})
+	if checksum != 10099 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt()
+	})
+	if checksum != 25901 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1()
 	})
 	if checksum != 52073 {
@@ -6703,29 +6181,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin()
-	})
-	if checksum != 17714 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt()
-	})
-	if checksum != 23106 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_zklogin_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519()
 	})
 	if checksum != 1939 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey()
+	})
+	if checksum != 22034 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6744,15 +6213,6 @@ func uniffiCheckChecksums() {
 	if checksum != 16265 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin()
-	})
-	if checksum != 37193 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6780,6 +6240,24 @@ func uniffiCheckChecksums() {
 	if checksum != 56690 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey()
+	})
+	if checksum != 7851 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt()
+	})
+	if checksum != 39077 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6820,29 +6298,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin()
-	})
-	if checksum != 39624 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt()
-	})
-	if checksum != 34526 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_zklogin_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519()
 	})
 	if checksum != 18913 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey()
+	})
+	if checksum != 45194 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_passkey: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6865,38 +6334,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin()
-	})
-	if checksum != 65193 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify()
 	})
 	if checksum != 49901 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier()
-	})
-	if checksum != 20062 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier()
-	})
-	if checksum != 5971 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7110,7 +6552,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_version()
 	})
-	if checksum != 18433 {
+	if checksum != 59848 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_version: UniFFI API checksum mismatch")
 	}
@@ -7162,6 +6604,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical()
+	})
+	if checksum != 15534 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt()
+	})
+	if checksum != 278 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address()
 	})
 	if checksum != 21880 {
@@ -7191,18 +6651,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex()
 	})
-	if checksum != 4418 {
+	if checksum != 13326 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string()
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex()
 	})
-	if checksum != 63526 {
+	if checksum != 56907 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex()
+	})
+	if checksum != 17836 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex()
+	})
+	if checksum != 29478 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7243,9 +6721,18 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object()
+	})
+	if checksum != 23748 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address()
 	})
-	if checksum != 19200 {
+	if checksum != 13454 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address: UniFFI API checksum mismatch")
 	}
@@ -7254,7 +6741,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
 	})
-	if checksum != 36265 {
+	if checksum != 12290 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt: UniFFI API checksum mismatch")
 	}
@@ -7263,7 +6750,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object()
 	})
-	if checksum != 42917 {
+	if checksum != 59703 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object: UniFFI API checksum mismatch")
 	}
@@ -7272,7 +6759,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
 	})
-	if checksum != 17159 {
+	if checksum != 36165 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
 	}
@@ -7281,7 +6768,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared()
 	})
-	if checksum != 56096 {
+	if checksum != 29299 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
 	}
@@ -7290,7 +6777,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt()
 	})
-	if checksum != 4209 {
+	if checksum != 50412 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt: UniFFI API checksum mismatch")
 	}
@@ -7299,7 +6786,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_address()
 	})
-	if checksum != 26982 {
+	if checksum != 32708 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_address: UniFFI API checksum mismatch")
 	}
@@ -7308,7 +6795,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable()
 	})
-	if checksum != 23542 {
+	if checksum != 40785 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable: UniFFI API checksum mismatch")
 	}
@@ -7317,7 +6804,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_object()
 	})
-	if checksum != 29892 {
+	if checksum != 64545 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_object: UniFFI API checksum mismatch")
 	}
@@ -7326,7 +6813,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared()
 	})
-	if checksum != 6506 {
+	if checksum != 14080 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_shared: UniFFI API checksum mismatch")
 	}
@@ -8253,7 +7740,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type()
 	})
-	if checksum != 37745 {
+	if checksum != 64023 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type: UniFFI API checksum mismatch")
 	}
@@ -8262,9 +7749,369 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt()
 	})
-	if checksum != 65306 {
+	if checksum != 46821 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string()
+	})
+	if checksum != 768 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state()
+	})
+	if checksum != 10185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag()
+	})
+	if checksum != 46309 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance()
+	})
+	if checksum != 61723 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock()
+	})
+	if checksum != 5225 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin()
+	})
+	if checksum != 61913 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager()
+	})
+	if checksum != 52348 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata()
+	})
+	if checksum != 34817 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config()
+	})
+	if checksum != 41259 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_config: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting()
+	})
+	if checksum != 27038 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key()
+	})
+	if checksum != 64455 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key()
+	})
+	if checksum != 30183 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key()
+	})
+	if checksum != 4914 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created()
+	})
+	if checksum != 21370 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated()
+	})
+	if checksum != 3726 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field()
+	})
+	if checksum != 59690 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper()
+	})
+	if checksum != 8218 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas()
+	})
+	if checksum != 56237 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin()
+	})
+	if checksum != 20314 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id()
+	})
+	if checksum != 41991 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap()
+	})
+	if checksum != 56508 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state()
+	})
+	if checksum != 60130 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap()
+	})
+	if checksum != 32639 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name()
+	})
+	if checksum != 56216 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag()
+	})
+	if checksum != 8625 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option()
+	})
+	if checksum != 10696 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random()
+	})
+	if checksum != 4566 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_random: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota()
+	})
+	if checksum != 19914 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_string()
+	})
+	if checksum != 21518 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event()
+	})
+	if checksum != 20500 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock()
+	})
+	if checksum != 6190 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota()
+	})
+	if checksum != 14954 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving()
+	})
+	if checksum != 5695 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap()
+	})
+	if checksum != 65088 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context()
+	})
+	if checksum != 18584 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid()
+	})
+	if checksum != 1904 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap()
+	})
+	if checksum != 64642 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt()
+	})
+	if checksum != 4130 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket()
+	})
+	if checksum != 6624 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_url()
+	})
+	if checksum != 59887 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_url: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8325,7 +8172,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_systempackage_version()
 	})
-	if checksum != 39738 {
+	if checksum != 53823 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_version: UniFFI API checksum mismatch")
 	}
@@ -8757,7 +8604,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag()
 	})
-	if checksum != 1715 {
+	if checksum != 51024 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag: UniFFI API checksum mismatch")
 	}
@@ -8766,7 +8613,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt()
 	})
-	if checksum != 15734 {
+	if checksum != 12717 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt: UniFFI API checksum mismatch")
 	}
@@ -8775,7 +8622,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag()
 	})
-	if checksum != 20180 {
+	if checksum != 26078 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag: UniFFI API checksum mismatch")
 	}
@@ -8784,7 +8631,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt()
 	})
-	if checksum != 55130 {
+	if checksum != 559 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt: UniFFI API checksum mismatch")
 	}
@@ -8793,7 +8640,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address()
 	})
-	if checksum != 38219 {
+	if checksum != 3196 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_address: UniFFI API checksum mismatch")
 	}
@@ -8802,7 +8649,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool()
 	})
-	if checksum != 30264 {
+	if checksum != 8646 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool: UniFFI API checksum mismatch")
 	}
@@ -8811,7 +8658,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer()
 	})
-	if checksum != 57678 {
+	if checksum != 64789 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer: UniFFI API checksum mismatch")
 	}
@@ -8820,7 +8667,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct()
 	})
-	if checksum != 39029 {
+	if checksum != 53288 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct: UniFFI API checksum mismatch")
 	}
@@ -8829,7 +8676,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128()
 	})
-	if checksum != 65460 {
+	if checksum != 16044 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128: UniFFI API checksum mismatch")
 	}
@@ -8838,7 +8685,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16()
 	})
-	if checksum != 34540 {
+	if checksum != 11071 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16: UniFFI API checksum mismatch")
 	}
@@ -8847,7 +8694,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256()
 	})
-	if checksum != 65130 {
+	if checksum != 45225 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256: UniFFI API checksum mismatch")
 	}
@@ -8856,7 +8703,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32()
 	})
-	if checksum != 40795 {
+	if checksum != 18818 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32: UniFFI API checksum mismatch")
 	}
@@ -8865,7 +8712,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64()
 	})
-	if checksum != 28705 {
+	if checksum != 25432 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64: UniFFI API checksum mismatch")
 	}
@@ -8874,7 +8721,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8()
 	})
-	if checksum != 18761 {
+	if checksum != 48795 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8: UniFFI API checksum mismatch")
 	}
@@ -8883,7 +8730,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector()
 	})
-	if checksum != 49992 {
+	if checksum != 34277 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector: UniFFI API checksum mismatch")
 	}
@@ -8946,7 +8793,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator()
 	})
-	if checksum != 62044 {
+	if checksum != 15704 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8955,7 +8802,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
 	})
-	if checksum != 31940 {
+	if checksum != 59885 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt: UniFFI API checksum mismatch")
 	}
@@ -8964,7 +8811,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig()
 	})
-	if checksum != 36332 {
+	if checksum != 28431 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig: UniFFI API checksum mismatch")
 	}
@@ -8973,7 +8820,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt()
 	})
-	if checksum != 21895 {
+	if checksum != 59107 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt: UniFFI API checksum mismatch")
 	}
@@ -8982,7 +8829,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator()
 	})
-	if checksum != 38663 {
+	if checksum != 45173 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator: UniFFI API checksum mismatch")
 	}
@@ -8991,7 +8838,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
 	})
-	if checksum != 5213 {
+	if checksum != 48689 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt: UniFFI API checksum mismatch")
 	}
@@ -9000,7 +8847,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple()
 	})
-	if checksum != 57455 {
+	if checksum != 46116 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple: UniFFI API checksum mismatch")
 	}
@@ -9009,34 +8856,16 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt()
 	})
-	if checksum != 47248 {
+	if checksum != 31595 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator()
-	})
-	if checksum != 64789 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt()
-	})
-	if checksum != 62080 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator()
 	})
-	if checksum != 59771 {
+	if checksum != 60222 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator: UniFFI API checksum mismatch")
 	}
@@ -9045,7 +8874,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig()
 	})
-	if checksum != 61839 {
+	if checksum != 30648 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig: UniFFI API checksum mismatch")
 	}
@@ -9054,7 +8883,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator()
 	})
-	if checksum != 7851 {
+	if checksum != 47124 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator: UniFFI API checksum mismatch")
 	}
@@ -9063,18 +8892,9 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple()
 	})
-	if checksum != 58211 {
+	if checksum != 8542 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator()
-	})
-	if checksum != 35546 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9111,24 +8931,6 @@ func uniffiCheckChecksums() {
 	if checksum != 47797 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier()
-	})
-	if checksum != 44658 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier()
-	})
-	if checksum != 9821 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9223,24 +9025,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
-	})
-	if checksum != 59803 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator()
-	})
-	if checksum != 10003 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch()
 	})
 	if checksum != 15301 {
@@ -9268,6 +9052,69 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_as_u64()
+	})
+	if checksum != 37415 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_as_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price()
+	})
+	if checksum != 50172 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled()
+	})
+	if checksum != 7823 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_congested()
+	})
+	if checksum != 54746 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_congested: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_valid()
+	})
+	if checksum != 4593 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_valid: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_next()
+	})
+	if checksum != 46748 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_next: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_previous()
+	})
+	if checksum != 59091 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_previous: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id()
 	})
 	if checksum != 50440 {
@@ -9279,198 +9126,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version()
 	})
-	if checksum != 51219 {
+	if checksum != 9820 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_versionassignment_version: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state()
 	})
-	if checksum != 1512 {
+	if checksum != 23906 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_clock()
 	})
-	if checksum != 9769 {
+	if checksum != 41996 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_clock: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list()
 	})
-	if checksum != 18838 {
+	if checksum != 26355 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_signature: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed()
-	})
-	if checksum != 4892 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64()
-	})
-	if checksum != 32056 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss()
-	})
-	if checksum != 1099 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details()
-	})
-	if checksum != 20914 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id()
-	})
-	if checksum != 37580 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points()
-	})
-	if checksum != 28172 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier()
-	})
-	if checksum != 48158 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a()
-	})
-	if checksum != 6891 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b()
-	})
-	if checksum != 36477 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginproof_b: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c()
-	})
-	if checksum != 10897 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed()
-	})
-	if checksum != 3936 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address()
-	})
-	if checksum != 14353 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded()
-	})
-	if checksum != 45141 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded()
-	})
-	if checksum != 51424 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss()
-	})
-	if checksum != 58864 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks()
-	})
-	if checksum != 62366 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify()
-	})
-	if checksum != 29967 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks()
-	})
-	if checksum != 49665 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9495,18 +9180,90 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex()
 	})
-	if checksum != 38044 {
+	if checksum != 59948 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_generate()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex()
 	})
-	if checksum != 48865 {
+	if checksum != 61183 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_generate: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex()
+	})
+	if checksum != 62018 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex()
+	})
+	if checksum != 60759 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge()
+	})
+	if checksum != 48414 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge()
+	})
+	if checksum != 43861 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_max()
+	})
+	if checksum != 5717 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_max: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_random()
+	})
+	if checksum != 55074 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_random: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state()
+	})
+	if checksum != 62353 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_stardust()
+	})
+	if checksum != 7116 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_stardust: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9525,6 +9282,15 @@ func uniffiCheckChecksums() {
 	if checksum != 4297 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_system: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_system_state()
+	})
+	if checksum != 26799 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_system_state: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9655,33 +9421,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes()
-	})
-	if checksum != 3672 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str()
-	})
-	if checksum != 21214 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10()
-	})
-	if checksum != 17556 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new()
 	})
 	if checksum != 59199 {
@@ -9750,24 +9489,6 @@ func uniffiCheckChecksums() {
 	if checksum != 65327 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new()
-	})
-	if checksum != 39786 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new()
-	})
-	if checksum != 50489 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9880,11 +9601,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_digest_random()
 	})
-	if checksum != 8094 {
+	if checksum != 18621 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_digest_generate: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_digest_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10042,24 +9763,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
-	})
-	if checksum != 42248 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
-	})
-	if checksum != 58811 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch()
 	})
 	if checksum != 56235 {
@@ -10092,87 +9795,6 @@ func uniffiCheckChecksums() {
 	if checksum != 45170 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new()
-	})
-	if checksum != 22119 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
-	})
-	if checksum != 1498 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins()
-	})
-	if checksum != 40848 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
-	})
-	if checksum != 6711 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish()
-	})
-	if checksum != 6398 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins()
-	})
-	if checksum != 28564 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
-	})
-	if checksum != 29560 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade()
-	})
-	if checksum != 26115 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1()
-	})
-	if checksum != 19098 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10276,11 +9898,641 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key()
+	})
+	if checksum != 24161 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module()
+	})
+	if checksum != 21861 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state()
+	})
+	if checksum != 16216 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module()
+	})
+	if checksum != 64126 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag()
+	})
+	if checksum != 48457 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module()
+	})
+	if checksum != 54361 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance()
+	})
+	if checksum != 45299 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module()
+	})
+	if checksum != 34758 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock()
+	})
+	if checksum != 54114 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module()
+	})
+	if checksum != 45072 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin()
+	})
+	if checksum != 52194 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager()
+	})
+	if checksum != 49557 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module()
+	})
+	if checksum != 55970 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata()
+	})
+	if checksum != 40674 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module()
+	})
+	if checksum != 34814 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config()
+	})
+	if checksum != 4576 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_config: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key()
+	})
+	if checksum != 17555 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module()
+	})
+	if checksum != 11061 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module()
+	})
+	if checksum != 25060 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created()
+	})
+	if checksum != 25565 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module()
+	})
+	if checksum != 18646 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module()
+	})
+	if checksum != 44243 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module()
+	})
+	if checksum != 43439 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_field()
+	})
+	if checksum != 36751 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_field: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key()
+	})
+	if checksum != 59135 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id()
+	})
+	if checksum != 9401 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota()
+	})
+	if checksum != 34383 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module()
+	})
+	if checksum != 20466 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap()
+	})
+	if checksum != 27582 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module()
+	})
+	if checksum != 34279 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state()
+	})
+	if checksum != 22040 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module()
+	})
+	if checksum != 21899 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap()
+	})
+	if checksum != 12741 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name()
+	})
+	if checksum != 13462 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module()
+	})
+	if checksum != 11183 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new()
 	})
 	if checksum != 9398 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag()
+	})
+	if checksum != 36980 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module()
+	})
+	if checksum != 59882 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module()
+	})
+	if checksum != 16938 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option()
+	})
+	if checksum != 5076 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module()
+	})
+	if checksum != 36087 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module()
+	})
+	if checksum != 762 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module()
+	})
+	if checksum != 31781 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random()
+	})
+	if checksum != 50490 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_random: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module()
+	})
+	if checksum != 5588 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving()
+	})
+	if checksum != 44248 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting()
+	})
+	if checksum != 47313 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota()
+	})
+	if checksum != 39180 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module()
+	})
+	if checksum != 45878 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string()
+	})
+	if checksum != 22623 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module()
+	})
+	if checksum != 48728 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module()
+	})
+	if checksum != 43315 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event()
+	})
+	if checksum != 17381 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1()
+	})
+	if checksum != 53365 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2()
+	})
+	if checksum != 44726 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event_v2: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock()
+	})
+	if checksum != 63781 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module()
+	})
+	if checksum != 25559 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota()
+	})
+	if checksum != 44822 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module()
+	})
+	if checksum != 27461 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module()
+	})
+	if checksum != 617 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap()
+	})
+	if checksum != 21659 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context()
+	})
+	if checksum != 53898 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module()
+	})
+	if checksum != 6086 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid()
+	})
+	if checksum != 39877 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap()
+	})
+	if checksum != 16692 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt()
+	})
+	if checksum != 32459 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket()
+	})
+	if checksum != 3228 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url()
+	})
+	if checksum != 55140 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_url: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module()
+	})
+	if checksum != 18366 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated()
+	})
+	if checksum != 55018 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper()
+	})
+	if checksum != 61185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10314,7 +10566,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared()
 	})
-	if checksum != 61970 {
+	if checksum != 48143 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared: UniFFI API checksum mismatch")
 	}
@@ -10416,6 +10668,15 @@ func uniffiCheckChecksums() {
 	if checksum != 44452 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex()
+	})
+	if checksum != 35587 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10656,7 +10917,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared()
 	})
-	if checksum != 22895 {
+	if checksum != 45977 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared: UniFFI API checksum mismatch")
 	}
@@ -10674,7 +10935,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new()
 	})
-	if checksum != 17506 {
+	if checksum != 31500 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new: UniFFI API checksum mismatch")
 	}
@@ -10933,6 +11194,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state()
+	})
+	if checksum != 13697 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock()
 	})
 	if checksum != 14732 {
@@ -10942,11 +11212,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list()
+	})
+	if checksum != 39911 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id()
 	})
 	if checksum != 16970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework()
+	})
+	if checksum != 24526 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10962,9 +11250,90 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex()
 	})
-	if checksum != 30954 {
+	if checksum != 39262 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex()
+	})
+	if checksum != 58728 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex()
+	})
+	if checksum != 12289 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex()
+	})
+	if checksum != 24855 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge()
+	})
+	if checksum != 44008 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge()
+	})
+	if checksum != 39804 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_max()
+	})
+	if checksum != 27865 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_max: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state()
+	})
+	if checksum != 39736 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust()
+	})
+	if checksum != 21114 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_std()
+	})
+	if checksum != 6468 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_std: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10974,6 +11343,15 @@ func uniffiCheckChecksums() {
 	if checksum != 9600 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_system: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state()
+	})
+	if checksum != 17627 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11034,7 +11412,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared()
 	})
-	if checksum != 36753 {
+	if checksum != 22241 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared: UniFFI API checksum mismatch")
 	}
@@ -11860,6 +12238,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state()
+	})
+	if checksum != 59432 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag()
+	})
+	if checksum != 17783 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance()
 	})
 	if checksum != 10874 {
@@ -11959,6 +12355,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated()
+	})
+	if checksum != 52216 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field()
+	})
+	if checksum != 51044 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper()
 	})
 	if checksum != 48905 {
@@ -11968,11 +12382,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas()
 	})
-	if checksum != 4196 {
+	if checksum != 58980 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11991,15 +12405,6 @@ func uniffiCheckChecksums() {
 	if checksum != 62017 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type()
-	})
-	if checksum != 44499 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12033,9 +12438,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name()
 	})
-	if checksum != 26361 {
+	if checksum != 1519 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag()
+	})
+	if checksum != 12890 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option()
+	})
+	if checksum != 36037 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random()
+	})
+	if checksum != 25141 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12103,6 +12535,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context()
+	})
+	if checksum != 39269 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid()
 	})
 	if checksum != 54533 {
@@ -12139,18 +12580,18 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url()
 	})
-	if checksum != 40840 {
+	if checksum != 23915 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new()
 	})
-	if checksum != 25070 {
+	if checksum != 23944 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new: UniFFI API checksum mismatch")
 	}
@@ -12198,15 +12639,6 @@ func uniffiCheckChecksums() {
 	if checksum != 1310 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1()
-	})
-	if checksum != 29264 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12526,15 +12958,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator()
-	})
-	if checksum != 30659 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new()
 	})
 	if checksum != 32322 {
@@ -12571,15 +12994,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
-	})
-	if checksum != 47546 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new()
 	})
 	if checksum != 2599 {
@@ -12589,65 +13003,83 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read()
+	})
+	if checksum != 19561 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback()
+	})
+	if checksum != 34609 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64()
+	})
+	if checksum != 29677 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment()
+	})
+	if checksum != 45842 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl()
+	})
+	if checksum != 16135 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl()
+	})
+	if checksum != 30140 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price()
+	})
+	if checksum != 14 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable()
+	})
+	if checksum != 14185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new()
 	})
-	if checksum != 14186 {
+	if checksum != 50135 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new()
-	})
-	if checksum != 32812 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new()
-	})
-	if checksum != 48962 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new()
-	})
-	if checksum != 19950 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new()
-	})
-	if checksum != 53294 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev()
-	})
-	if checksum != 44446 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet()
-	})
-	if checksum != 12123 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet: UniFFI API checksum mismatch")
 	}
 	}
 }
@@ -13127,14 +13559,27 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // address = 32OCTET
 // ```
 type AddressInterface interface {
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *Address
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **Address
 	ToBytes() []byte
 	// Returns the string representation of this address using the
 	// canonical display, with or without a `0x` prefix.
 	ToCanonicalString(withPrefix bool) string
+	// Returns the string representation of this address in hex format with
+	// `0x` prefix.
 	ToHex() string
+	// Returns the string representation of this address in hex format without
+	// `0x` prefix.
+	ToRawHex() string
+	// Returns the shortest possible string representation of the address (i.e.
+	// with leading zeroes trimmed), without `0x` prefix.
+	ToRawShortHex() string
 	// Returns the shortest possible string representation of the address (i.e.
 	// with leading zeroes trimmed).
-	ToShortString(withPrefix bool) string
+	ToShortHex() string
 }
 // Unique identifier for an Account on the IOTA blockchain.
 //
@@ -13181,6 +13626,24 @@ type Address struct {
 }
 
 
+func AddressAuthenticatorState() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(_uniffiStatus)
+	}))
+}
+
+func AddressClock() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_clock(_uniffiStatus)
+	}))
+}
+
+func AddressDenyList() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(_uniffiStatus)
+	}))
+}
+
 func AddressFramework() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_framework(_uniffiStatus)
@@ -13199,9 +13662,9 @@ func AddressFromBytes(bytes []byte) (*Address, error) {
 		}
 }
 
-// Parses an Address from a hex string, with or without a `0x` prefix.
-// The string can be of variable length; if it's shorter than 64 hex
-// characters, it will be left-padded with `0`s.
+// Parses an Address from a full-length hex string (64 hex characters),
+// with or without a `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
 func AddressFromHex(hex string) (*Address, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
@@ -13214,9 +13677,84 @@ func AddressFromHex(hex string) (*Address, error) {
 		}
 }
 
-func AddressGenerate() *Address {
+// Parses an Address from a full-length hex string (64 hex characters),
+// with a mandatory `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
+func AddressFromPrefixedHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an Address from a hex string with a mandatory `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func AddressFromPrefixedShortHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an Address from a hex string, with or without a `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func AddressFromShortHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func AddressGenesisBridge() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_address_generate(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(_uniffiStatus)
+	}))
+}
+
+func AddressGenesisIotaBridge() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(_uniffiStatus)
+	}))
+}
+
+func AddressMax() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_max(_uniffiStatus)
+	}))
+}
+
+func AddressRandom() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_random(_uniffiStatus)
+	}))
+}
+
+func AddressRandomnessState() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(_uniffiStatus)
+	}))
+}
+
+func AddressStardust() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_stardust(_uniffiStatus)
 	}))
 }
 
@@ -13232,6 +13770,12 @@ func AddressSystem() *Address {
 	}))
 }
 
+func AddressSystemState() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_system_state(_uniffiStatus)
+	}))
+}
+
 func AddressZero() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_zero(_uniffiStatus)
@@ -13239,6 +13783,29 @@ func AddressZero() *Address {
 }
 
 
+
+// Returns the next digest in byte-increasing order.
+func (_self *Address) NextLexicographical() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *Address) NextLexicographicalOpt() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Address) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
@@ -13264,6 +13831,8 @@ func (_self *Address) ToCanonicalString(withPrefix bool) string {
 	}))
 }
 
+// Returns the string representation of this address in hex format with
+// `0x` prefix.
 func (_self *Address) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
@@ -13275,15 +13844,41 @@ func (_self *Address) ToHex() string {
 	}))
 }
 
-// Returns the shortest possible string representation of the address (i.e.
-// with leading zeroes trimmed).
-func (_self *Address) ToShortString(withPrefix bool) string {
+// Returns the string representation of this address in hex format without
+// `0x` prefix.
+func (_self *Address) ToRawHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
-		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed), without `0x` prefix.
+func (_self *Address) ToRawShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed).
+func (_self *Address) ToShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(
+		_pointer,_uniffiStatus),
 	}
 	}))
 }
@@ -13409,10 +14004,10 @@ func (_ FfiDestroyerAddress) Destroy(value *Address) {
 // =/ argument-result
 // =/ argument-nested-result
 //
-// argument-gas            = %x00
-// argument-input          = %x01 u16
-// argument-result         = %x02 u16
-// argument-nested-result  = %x03 u16 u16
+// argument-gas            = %d00
+// argument-input          = %d01 u16
+// argument-result         = %d02 u16
+// argument-nested-result  = %d03 u16 u16
 // ```
 type ArgumentInterface interface {
 	// Get the nested result for this result at the given index. Returns None
@@ -13431,10 +14026,10 @@ type ArgumentInterface interface {
 // =/ argument-result
 // =/ argument-nested-result
 //
-// argument-gas            = %x00
-// argument-input          = %x01 u16
-// argument-result         = %x02 u16
-// argument-nested-result  = %x03 u16 u16
+// argument-gas            = %d00
+// argument-input          = %d01 u16
+// argument-result         = %d02 u16
+// argument-nested-result  = %d03 u16 u16
 // ```
 type Argument struct {
 	ffiObject FfiObject
@@ -13716,7 +14311,7 @@ func (_ FfiDestroyerBls12381PrivateKey) Destroy(value *Bls12381PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-public-key = %d96 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13733,7 +14328,7 @@ type Bls12381PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-public-key = %d96 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13871,37 +14466,27 @@ func (_ FfiDestroyerBls12381PublicKey) Destroy(value *Bls12381PublicKey) {
 
 
 
-// A bls12381 min-sig public key.
+// A bls12381 min-sig signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-signature = 48OCTET
 // ```
-//
-// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-// fixed-length of 96, IOTA's binary representation of a min-sig
-// `Bls12381PublicKey` is prefixed with its length meaning its serialized
-// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
 type Bls12381SignatureInterface interface {
 	ToBytes() []byte
 }
-// A bls12381 min-sig public key.
+// A bls12381 min-sig signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTET
+// bls12381-signature = 48OCTET
 // ```
-//
-// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-// fixed-length of 96, IOTA's binary representation of a min-sig
-// `Bls12381PublicKey` is prefixed with its length meaning its serialized
-// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
 type Bls12381Signature struct {
 	ffiObject FfiObject
 }
@@ -14134,186 +14719,6 @@ func (c FfiConverterBls12381VerifyingKey) Write(writer io.Writer, value *Bls1238
 type FfiDestroyerBls12381VerifyingKey struct {}
 
 func (_ FfiDestroyerBls12381VerifyingKey) Destroy(value *Bls12381VerifyingKey) {
-		value.Destroy()
-}
-
-
-
-
-// A point on the BN254 elliptic curve.
-//
-// This is a 32-byte, or 256-bit, value that is generally represented as
-// radix10 when a human-readable display format is needed, and is represented
-// as a 32-byte big-endian value while in memory.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
-// ```
-type Bn254FieldElementInterface interface {
-	Padded() []byte
-	Unpadded() []byte
-}
-// A point on the BN254 elliptic curve.
-//
-// This is a 32-byte, or 256-bit, value that is generally represented as
-// radix10 when a human-readable display format is needed, and is represented
-// as a 32-byte big-endian value while in memory.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
-// ```
-type Bn254FieldElement struct {
-	ffiObject FfiObject
-}
-
-
-func Bn254FieldElementFromBytes(bytes []byte) (*Bn254FieldElement, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Bn254FieldElement
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBn254FieldElementINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func Bn254FieldElementFromStr(s string) (*Bn254FieldElement, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Bn254FieldElement
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBn254FieldElementINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func Bn254FieldElementFromStrRadix10(s string) (*Bn254FieldElement, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_bn254fieldelement_from_str_radix_10(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Bn254FieldElement
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBn254FieldElementINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-
-
-func (_self *Bn254FieldElement) Padded() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *Bn254FieldElement) Unpadded() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *Bn254FieldElement) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *Bn254FieldElement) Eq(other *Bn254FieldElement) bool {
-	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(
-		_pointer,FfiConverterBn254FieldElementINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *Bn254FieldElement) Ne(other *Bn254FieldElement) bool {
-	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(
-		_pointer,FfiConverterBn254FieldElementINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *Bn254FieldElement) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterBn254FieldElement struct {}
-
-var FfiConverterBn254FieldElementINSTANCE = FfiConverterBn254FieldElement{}
-
-
-func (c FfiConverterBn254FieldElement) Lift(pointer unsafe.Pointer) *Bn254FieldElement {
-	result := &Bn254FieldElement {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*Bn254FieldElement).Destroy)
-	return result
-}
-
-func (c FfiConverterBn254FieldElement) Read(reader io.Reader) *Bn254FieldElement {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterBn254FieldElement) Lower(value *Bn254FieldElement) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*Bn254FieldElement")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterBn254FieldElement) Write(writer io.Writer, value *Bn254FieldElement) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerBn254FieldElement struct {}
-
-func (_ FfiDestroyerBn254FieldElement) Destroy(value *Bn254FieldElement) {
 		value.Destroy()
 }
 
@@ -14697,7 +15102,7 @@ func (_ FfiDestroyerChangeEpoch) Destroy(value *ChangeEpoch) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// change-epoch = u64  ; next epoch
+// change-epoch-v2 = u64  ; next epoch
 // u64  ; protocol version
 // u64  ; storage charge
 // u64  ; computation charge
@@ -14735,7 +15140,7 @@ type ChangeEpochV2Interface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// change-epoch = u64  ; next epoch
+// change-epoch-v2 = u64  ; next epoch
 // u64  ; protocol version
 // u64  ; storage charge
 // u64  ; computation charge
@@ -15393,7 +15798,7 @@ func (_ FfiDestroyerChangeEpochV4) Destroy(value *ChangeEpochV4) {
 // ```text
 // ; CheckpointCommitment is an enum and each variant is prefixed with its index
 // checkpoint-commitment = ecmh-live-object-set
-// ecmh-live-object-set = %x00 digest
+// ecmh-live-object-set = %d00 digest
 // ```
 type CheckpointCommitmentInterface interface {
 	AsEcmhLiveObjectSetDigest() *Digest
@@ -15408,7 +15813,7 @@ type CheckpointCommitmentInterface interface {
 // ```text
 // ; CheckpointCommitment is an enum and each variant is prefixed with its index
 // checkpoint-commitment = ecmh-live-object-set
-// ecmh-live-object-set = %x00 digest
+// ecmh-live-object-set = %d00 digest
 // ```
 type CheckpointCommitment struct {
 	ffiObject FfiObject
@@ -15498,12 +15903,14 @@ func (_ FfiDestroyerCheckpointCommitment) Destroy(value *CheckpointCommitment) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 //
-// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+// (vector (vector user-signature)) ; set of user signatures for each
 // ; transaction. MUST be the same
 // ; length as the vector of digests
+//
+// execution-digests = digest digest   ; transaction, effects
 // ```
 type CheckpointContentsInterface interface {
 	Digest() *Digest
@@ -15520,12 +15927,14 @@ type CheckpointContentsInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 //
-// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+// (vector (vector user-signature)) ; set of user signatures for each
 // ; transaction. MUST be the same
 // ; length as the vector of digests
+//
+// execution-digests = digest digest   ; transaction, effects
 // ```
 type CheckpointContents struct {
 	ffiObject FfiObject
@@ -16035,252 +16444,6 @@ func (c FfiConverterCheckpointTransactionInfo) Write(writer io.Writer, value *Ch
 type FfiDestroyerCheckpointTransactionInfo struct {}
 
 func (_ FfiDestroyerCheckpointTransactionInfo) Destroy(value *CheckpointTransactionInfo) {
-		value.Destroy()
-}
-
-
-
-
-// A G1 point
-//
-// This represents the canonical decimal representation of the projective
-// coordinates in Fq.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// circom-g1 = %x03 3(bn254-field-element)
-// ```
-type CircomG1Interface interface {
-}
-// A G1 point
-//
-// This represents the canonical decimal representation of the projective
-// coordinates in Fq.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// circom-g1 = %x03 3(bn254-field-element)
-// ```
-type CircomG1 struct {
-	ffiObject FfiObject
-}
-func NewCircomG1(el0 *Bn254FieldElement, el1 *Bn254FieldElement, el2 *Bn254FieldElement) *CircomG1 {
-	return FfiConverterCircomG1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(FfiConverterBn254FieldElementINSTANCE.Lower(el0), FfiConverterBn254FieldElementINSTANCE.Lower(el1), FfiConverterBn254FieldElementINSTANCE.Lower(el2),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *CircomG1) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *CircomG1) Eq(other *CircomG1) bool {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(
-		_pointer,FfiConverterCircomG1INSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *CircomG1) Ne(other *CircomG1) bool {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(
-		_pointer,FfiConverterCircomG1INSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *CircomG1) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCircomG1 struct {}
-
-var FfiConverterCircomG1INSTANCE = FfiConverterCircomG1{}
-
-
-func (c FfiConverterCircomG1) Lift(pointer unsafe.Pointer) *CircomG1 {
-	result := &CircomG1 {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_circomg1(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_circomg1(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CircomG1).Destroy)
-	return result
-}
-
-func (c FfiConverterCircomG1) Read(reader io.Reader) *CircomG1 {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCircomG1) Lower(value *CircomG1) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CircomG1")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterCircomG1) Write(writer io.Writer, value *CircomG1) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCircomG1 struct {}
-
-func (_ FfiDestroyerCircomG1) Destroy(value *CircomG1) {
-		value.Destroy()
-}
-
-
-
-
-// A G2 point
-//
-// This represents the canonical decimal representation of the coefficients of
-// the projective coordinates in Fq2.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// circom-g2 = %x03 3(%x02 2(bn254-field-element))
-// ```
-type CircomG2Interface interface {
-}
-// A G2 point
-//
-// This represents the canonical decimal representation of the coefficients of
-// the projective coordinates in Fq2.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// circom-g2 = %x03 3(%x02 2(bn254-field-element))
-// ```
-type CircomG2 struct {
-	ffiObject FfiObject
-}
-func NewCircomG2(el00 *Bn254FieldElement, el01 *Bn254FieldElement, el10 *Bn254FieldElement, el11 *Bn254FieldElement, el20 *Bn254FieldElement, el21 *Bn254FieldElement) *CircomG2 {
-	return FfiConverterCircomG2INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(FfiConverterBn254FieldElementINSTANCE.Lower(el00), FfiConverterBn254FieldElementINSTANCE.Lower(el01), FfiConverterBn254FieldElementINSTANCE.Lower(el10), FfiConverterBn254FieldElementINSTANCE.Lower(el11), FfiConverterBn254FieldElementINSTANCE.Lower(el20), FfiConverterBn254FieldElementINSTANCE.Lower(el21),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *CircomG2) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *CircomG2) Eq(other *CircomG2) bool {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(
-		_pointer,FfiConverterCircomG2INSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *CircomG2) Ne(other *CircomG2) bool {
-	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(
-		_pointer,FfiConverterCircomG2INSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *CircomG2) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCircomG2 struct {}
-
-var FfiConverterCircomG2INSTANCE = FfiConverterCircomG2{}
-
-
-func (c FfiConverterCircomG2) Lift(pointer unsafe.Pointer) *CircomG2 {
-	result := &CircomG2 {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_circomg2(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_circomg2(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CircomG2).Destroy)
-	return result
-}
-
-func (c FfiConverterCircomG2) Read(reader io.Reader) *CircomG2 {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCircomG2) Lower(value *CircomG2) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CircomG2")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterCircomG2) Write(writer io.Writer, value *CircomG2) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCircomG2 struct {}
-
-func (_ FfiDestroyerCircomG2) Destroy(value *CircomG2) {
 		value.Destroy()
 }
 
@@ -16946,13 +17109,13 @@ func (_ FfiDestroyerCoin) Destroy(value *Coin) {
 // =/ command-make-move-vector
 // =/ command-upgrade
 //
-// command-move-call           = %x00 move-call
-// command-transfer-objects    = %x01 transfer-objects
-// command-split-coins         = %x02 split-coins
-// command-merge-coins         = %x03 merge-coins
-// command-publish             = %x04 publish
-// command-make-move-vector    = %x05 make-move-vector
-// command-upgrade             = %x06 upgrade
+// command-move-call           = %d00 move-call
+// command-transfer-objects    = %d01 transfer-objects
+// command-split-coins         = %d02 split-coins
+// command-merge-coins         = %d03 merge-coins
+// command-publish             = %d04 publish
+// command-make-move-vector    = %d05 make-move-vector
+// command-upgrade             = %d06 upgrade
 // ```
 type CommandInterface interface {
 }
@@ -16971,13 +17134,13 @@ type CommandInterface interface {
 // =/ command-make-move-vector
 // =/ command-upgrade
 //
-// command-move-call           = %x00 move-call
-// command-transfer-objects    = %x01 transfer-objects
-// command-split-coins         = %x02 split-coins
-// command-merge-coins         = %x03 merge-coins
-// command-publish             = %x04 publish
-// command-make-move-vector    = %x05 make-move-vector
-// command-upgrade             = %x06 upgrade
+// command-move-call           = %d00 move-call
+// command-transfer-objects    = %d01 transfer-objects
+// command-split-coins         = %d02 split-coins
+// command-merge-coins         = %d03 merge-coins
+// command-publish             = %d04 publish
+// command-make-move-vector    = %d05 make-move-vector
+// command-upgrade             = %d06 upgrade
 // ```
 type Command struct {
 	ffiObject FfiObject
@@ -17455,7 +17618,7 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // A `Digest`'s BCS serialized form is defined by the following:
 //
 // ```text
-// digest = %x20 32OCTET
+// digest = %d32 32OCTET
 // ```
 //
 // Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -17463,8 +17626,19 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
+	// Returns whether the digest represents an object that is neither deleted
+	// nor wrapped
+	IsObjectAlive() bool
+	// Returns whether the digest represents a deleted object
+	IsObjectDeleted() bool
+	// Returns whether the digest represents an object wrapped in another
+	// object.
+	IsObjectWrapped() bool
 	// Returns the next digest in byte-increasing order.
 	NextLexicographical() *Digest
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **Digest
 	ToBase58() string
 	ToBytes() []byte
 }
@@ -17475,7 +17649,7 @@ type DigestInterface interface {
 // A `Digest`'s BCS serialized form is defined by the following:
 //
 // ```text
-// digest = %x20 32OCTET
+// digest = %d32 32OCTET
 // ```
 //
 // Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -17511,13 +17685,45 @@ func DigestFromBytes(bytes []byte) (*Digest, error) {
 		}
 }
 
-func DigestGenerate() *Digest {
+func DigestRandom() *Digest {
 	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_digest_generate(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_digest_random(_uniffiStatus)
 	}))
 }
 
 
+
+// Returns whether the digest represents an object that is neither deleted
+// nor wrapped
+func (_self *Digest) IsObjectAlive() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns whether the digest represents a deleted object
+func (_self *Digest) IsObjectDeleted() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns whether the digest represents an object wrapped in another
+// object.
+func (_self *Digest) IsObjectWrapped() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 // Returns the next digest in byte-increasing order.
 func (_self *Digest) NextLexicographical() *Digest {
@@ -17526,6 +17732,19 @@ func (_self *Digest) NextLexicographical() *Digest {
 	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *Digest) NextLexicographicalOpt() **Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -18712,23 +18931,10 @@ func (_ FfiDestroyerEd25519VerifyingKey) Destroy(value *Ed25519VerifyingKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// end-of-epoch-transaction-kind   =  eoe-change-epoch
-// =/ eoe-authenticator-state-create
-// =/ eoe-authenticator-state-expire
-// =/ eoe-randomness-state-create
-// =/ eoe-deny-list-state-create
-// =/ eoe-bridge-state-create
-// =/ eoe-bridge-committee-init
-// =/ eoe-store-execution-time-observations
-//
-// eoe-change-epoch                = %x00 change-epoch
-// eoe-authenticator-state-create  = %x01
-// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-// eoe-randomness-state-create     = %x03
-// eoe-deny-list-state-create      = %x04
-// eoe-bridge-state-create         = %x05 digest
-// eoe-bridge-committee-init       = %x06 u64
-// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+// =/ %d01 change-epoch-v2  ; ChangeEpochV2
+// =/ %d02 change-epoch-v3  ; ChangeEpochV3
+// =/ %d03 change-epoch-v4  ; ChangeEpochV4
 // ```
 type EndOfEpochTransactionKindInterface interface {
 }
@@ -18739,40 +18945,15 @@ type EndOfEpochTransactionKindInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// end-of-epoch-transaction-kind   =  eoe-change-epoch
-// =/ eoe-authenticator-state-create
-// =/ eoe-authenticator-state-expire
-// =/ eoe-randomness-state-create
-// =/ eoe-deny-list-state-create
-// =/ eoe-bridge-state-create
-// =/ eoe-bridge-committee-init
-// =/ eoe-store-execution-time-observations
-//
-// eoe-change-epoch                = %x00 change-epoch
-// eoe-authenticator-state-create  = %x01
-// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-// eoe-randomness-state-create     = %x03
-// eoe-deny-list-state-create      = %x04
-// eoe-bridge-state-create         = %x05 digest
-// eoe-bridge-committee-init       = %x06 u64
-// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+// =/ %d01 change-epoch-v2  ; ChangeEpochV2
+// =/ %d02 change-epoch-v3  ; ChangeEpochV3
+// =/ %d03 change-epoch-v4  ; ChangeEpochV4
 // ```
 type EndOfEpochTransactionKind struct {
 	ffiObject FfiObject
 }
 
-
-func EndOfEpochTransactionKindNewAuthenticatorStateCreate() *EndOfEpochTransactionKind {
-	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(_uniffiStatus)
-	}))
-}
-
-func EndOfEpochTransactionKindNewAuthenticatorStateExpire(tx AuthenticatorStateExpire) *EndOfEpochTransactionKind {
-	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(tx),_uniffiStatus)
-	}))
-}
 
 func EndOfEpochTransactionKindNewChangeEpoch(tx *ChangeEpoch) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -18879,458 +19060,6 @@ func (c FfiConverterEndOfEpochTransactionKind) Write(writer io.Writer, value *En
 type FfiDestroyerEndOfEpochTransactionKind struct {}
 
 func (_ FfiDestroyerEndOfEpochTransactionKind) Destroy(value *EndOfEpochTransactionKind) {
-		value.Destroy()
-}
-
-
-
-
-type ExecutionTimeObservationInterface interface {
-	Key() *ExecutionTimeObservationKey
-	Observations() []*ValidatorExecutionTimeObservation
-}
-type ExecutionTimeObservation struct {
-	ffiObject FfiObject
-}
-func NewExecutionTimeObservation(key *ExecutionTimeObservationKey, observations []*ValidatorExecutionTimeObservation) *ExecutionTimeObservation {
-	return FfiConverterExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(key), FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lower(observations),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ExecutionTimeObservation) Key() *ExecutionTimeObservationKey {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservation) Observations() []*ValidatorExecutionTimeObservation {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ExecutionTimeObservation) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservation) Eq(other *ExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservation) Ne(other *ExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservation) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservation) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservation struct {}
-
-var FfiConverterExecutionTimeObservationINSTANCE = FfiConverterExecutionTimeObservation{}
-
-
-func (c FfiConverterExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ExecutionTimeObservation {
-	result := &ExecutionTimeObservation {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservation).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservation) Read(reader io.Reader) *ExecutionTimeObservation {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservation) Lower(value *ExecutionTimeObservation) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservation")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservation) Write(writer io.Writer, value *ExecutionTimeObservation) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservation struct {}
-
-func (_ FfiDestroyerExecutionTimeObservation) Destroy(value *ExecutionTimeObservation) {
-		value.Destroy()
-}
-
-
-
-
-// Key for an execution time observation
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation-key  =  %x00 move-entry-point
-// =/ %x01 ; transfer-objects
-// =/ %x02 ; split-coins
-// =/ %x03 ; merge-coins
-// =/ %x04 ; publish
-// =/ %x05 ; make-move-vec
-// =/ %x06 ; upgrade
-//
-// move-entry-point = object-id string string (vec type-tag)
-// ```
-type ExecutionTimeObservationKeyInterface interface {
-}
-// Key for an execution time observation
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation-key  =  %x00 move-entry-point
-// =/ %x01 ; transfer-objects
-// =/ %x02 ; split-coins
-// =/ %x03 ; merge-coins
-// =/ %x04 ; publish
-// =/ %x05 ; make-move-vec
-// =/ %x06 ; upgrade
-//
-// move-entry-point = object-id string string (vec type-tag)
-// ```
-type ExecutionTimeObservationKey struct {
-	ffiObject FfiObject
-}
-
-
-func ExecutionTimeObservationKeyNewMakeMoveVec() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewMergeCoins() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewMoveEntryPoint(varPackage *ObjectId, module string, function string, typeArguments []*TypeTag) *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArguments),_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewPublish() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewSplitCoins() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewTransferObjects() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(_uniffiStatus)
-	}))
-}
-
-func ExecutionTimeObservationKeyNewUpgrade() *ExecutionTimeObservationKey {
-	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) Eq(other *ExecutionTimeObservationKey) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservationKey) Ne(other *ExecutionTimeObservationKey) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservationKey) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservationKey) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservationKey struct {}
-
-var FfiConverterExecutionTimeObservationKeyINSTANCE = FfiConverterExecutionTimeObservationKey{}
-
-
-func (c FfiConverterExecutionTimeObservationKey) Lift(pointer unsafe.Pointer) *ExecutionTimeObservationKey {
-	result := &ExecutionTimeObservationKey {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservationKey).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Read(reader io.Reader) *ExecutionTimeObservationKey {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Lower(value *ExecutionTimeObservationKey) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservationKey) Write(writer io.Writer, value *ExecutionTimeObservationKey) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservationKey struct {}
-
-func (_ FfiDestroyerExecutionTimeObservationKey) Destroy(value *ExecutionTimeObservationKey) {
-		value.Destroy()
-}
-
-
-
-
-// Set of Execution Time Observations from the committee.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-//
-// v1-stored-execution-time-observations = (vec
-// execution-time-observation-key
-// (vec execution-time-observation)
-// )
-// ```
-type ExecutionTimeObservationsInterface interface {
-}
-// Set of Execution Time Observations from the committee.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-//
-// v1-stored-execution-time-observations = (vec
-// execution-time-observation-key
-// (vec execution-time-observation)
-// )
-// ```
-type ExecutionTimeObservations struct {
-	ffiObject FfiObject
-}
-
-
-func ExecutionTimeObservationsNewV1(executionTimeObservations []*ExecutionTimeObservation) *ExecutionTimeObservations {
-	return FfiConverterExecutionTimeObservationsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(FfiConverterSequenceExecutionTimeObservationINSTANCE.Lower(executionTimeObservations),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) Eq(other *ExecutionTimeObservations) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(
-		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ExecutionTimeObservations) Ne(other *ExecutionTimeObservations) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne(
-		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ExecutionTimeObservations) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ExecutionTimeObservations) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterExecutionTimeObservations struct {}
-
-var FfiConverterExecutionTimeObservationsINSTANCE = FfiConverterExecutionTimeObservations{}
-
-
-func (c FfiConverterExecutionTimeObservations) Lift(pointer unsafe.Pointer) *ExecutionTimeObservations {
-	result := &ExecutionTimeObservations {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ExecutionTimeObservations).Destroy)
-	return result
-}
-
-func (c FfiConverterExecutionTimeObservations) Read(reader io.Reader) *ExecutionTimeObservations {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterExecutionTimeObservations) Lower(value *ExecutionTimeObservations) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservations")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterExecutionTimeObservations) Write(writer io.Writer, value *ExecutionTimeObservations) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerExecutionTimeObservations struct {}
-
-func (_ FfiDestroyerExecutionTimeObservations) Destroy(value *ExecutionTimeObservations) {
 		value.Destroy()
 }
 
@@ -19635,14 +19364,14 @@ func (_ FfiDestroyerFaucetClient) Destroy(value *FaucetClient) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// genesis-object = object-data owner
+// genesis-object = %d00 object-data owner   ; RawObject
 // ```
 type GenesisObjectInterface interface {
 	Data() *ObjectData
 	ObjectId() *ObjectId
 	ObjectType() *ObjectType
 	Owner() *Owner
-	Version() uint64
+	Version() *Version
 }
 // An object part of the initial chain state
 //
@@ -19654,7 +19383,7 @@ type GenesisObjectInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// genesis-object = object-data owner
+// genesis-object = %d00 object-data owner   ; RawObject
 // ```
 type GenesisObject struct {
 	ffiObject FfiObject
@@ -19704,10 +19433,10 @@ func (_self *GenesisObject) Owner() *Owner {
 	}))
 }
 
-func (_self *GenesisObject) Version() uint64 {
+func (_self *GenesisObject) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -20047,13 +19776,13 @@ type GraphQlClientInterface interface {
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error)
+	MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error)
 	// Return the BCS of an object that is a Move object.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error)
 	// Execute a Move View Function.
 	//
 	// A View Function is a function in a Move module with a return type that
@@ -20105,15 +19834,15 @@ type GraphQlClientInterface interface {
 	MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
-	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
+	NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error)
 	// Return the normalized Move module data for the provided module.
-	NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
+	NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
 	// Return an object based on the provided `Address`.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	Object(objectId *ObjectId, version *uint64) (**Object, error)
+	Object(objectId *ObjectId, version **Version) (**Object, error)
 	// Return the object's bcs content `Vec<u8>` based on the provided
 	// `Address`.
 	ObjectBcs(objectId *ObjectId) (*[]byte, error)
@@ -20133,7 +19862,7 @@ type GraphQlClientInterface interface {
 	//
 	// Note that this interpretation of version is different from a historical
 	// object read (the interpretation of version for the object query).
-	Package(address *Address, version *uint64) (**MovePackage, error)
+	Package(address *Address, version **Version) (**MovePackage, error)
 	// Fetch the latest version of the package at address.
 	// This corresponds to the package with the highest version that shares its
 	// original ID with the package at address.
@@ -20141,7 +19870,7 @@ type GraphQlClientInterface interface {
 	// Fetch all versions of package at address (packages that share this
 	// package's original ID), optionally bounding the versions exclusively
 	// from below with afterVersion, or from above with beforeVersion.
-	PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
+	PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// The Move packages that exist in the network, optionally filtered to be
 	// strictly before beforeCheckpoint and/or strictly after
 	// afterCheckpoint.
@@ -21195,7 +20924,7 @@ func (_self *GraphQlClient) MaxPageSize() (int32, error) {
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error) {
+func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21212,7 +20941,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 			return FfiConverterOptionalTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21235,7 +20964,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error) {
+func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21252,7 +20981,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 			return FfiConverterOptionalBytesINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21389,7 +21118,7 @@ func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArguments 
 
 // Return the normalized Move function data for the provided package,
 // module, and function.
-func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error) {
+func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21406,7 +21135,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 			return FfiConverterOptionalMoveFunctionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21425,7 +21154,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 }
 
 // Return the normalized Move module data for the provided module.
-func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
+func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21442,7 +21171,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 			return FfiConverterOptionalMoveModuleINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalUint64INSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalVersionINSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21465,7 +21194,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Object, error) {
+func (_self *GraphQlClient) Object(objectId *ObjectId, version **Version) (**Object, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21482,7 +21211,7 @@ func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Objec
 			return FfiConverterOptionalObjectINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21587,7 +21316,7 @@ func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *Pagi
 //
 // Note that this interpretation of version is different from a historical
 // object read (the interpretation of version for the object query).
-func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePackage, error) {
+func (_self *GraphQlClient) Package(address *Address, version **Version) (**MovePackage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21604,7 +21333,7 @@ func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePa
 			return FfiConverterOptionalMovePackageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21663,7 +21392,7 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 // Fetch all versions of package at address (packages that share this
 // package's original ID), optionally bounding the versions exclusively
 // from below with afterVersion, or from above with beforeVersion.
-func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error) {
+func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21680,7 +21409,7 @@ func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(afterVersion), FfiConverterOptionalVersionINSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -22379,7 +22108,7 @@ func (_ FfiDestroyerGraphQlClient) Destroy(value *GraphQlClient) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %x01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //
@@ -22395,7 +22124,7 @@ type IdentifierInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// identifier = %x01-80    ; length of the identifier
+// identifier = %d1-128    ; length of the identifier
 // (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 // (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 //
@@ -22416,6 +22145,426 @@ func NewIdentifier(identifier string) (*Identifier, error) {
 		}
 }
 
+
+func IdentifierAddressKey() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(_uniffiStatus)
+	}))
+}
+
+func IdentifierAsciiModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierAuthenticatorState() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(_uniffiStatus)
+	}))
+}
+
+func IdentifierAuthenticatorStateModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierBag() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(_uniffiStatus)
+	}))
+}
+
+func IdentifierBagModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierBalance() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance(_uniffiStatus)
+	}))
+}
+
+func IdentifierBalanceModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierClock() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock(_uniffiStatus)
+	}))
+}
+
+func IdentifierClockModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierCoin() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin(_uniffiStatus)
+	}))
+}
+
+func IdentifierCoinManager() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager(_uniffiStatus)
+	}))
+}
+
+func IdentifierCoinManagerModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierCoinMetadata() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata(_uniffiStatus)
+	}))
+}
+
+func IdentifierCoinModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierConfig() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_config(_uniffiStatus)
+	}))
+}
+
+func IdentifierConfigKey() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key(_uniffiStatus)
+	}))
+}
+
+func IdentifierConfigModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierDenyListModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierDisplayCreated() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created(_uniffiStatus)
+	}))
+}
+
+func IdentifierDisplayModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierDynamicFieldModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierDynamicObjectFieldModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierField() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_field(_uniffiStatus)
+	}))
+}
+
+func IdentifierGlobalPauseKey() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(_uniffiStatus)
+	}))
+}
+
+func IdentifierId() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_id(_uniffiStatus)
+	}))
+}
+
+func IdentifierIota() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaSystemAdminCap() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaSystemModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaSystemState() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaSystemStateInnerModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierIotaTreasuryCap() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap(_uniffiStatus)
+	}))
+}
+
+func IdentifierName() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_name(_uniffiStatus)
+	}))
+}
+
+func IdentifierNameModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierObjectBag() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag(_uniffiStatus)
+	}))
+}
+
+func IdentifierObjectBagModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierObjectModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierOption() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_option(_uniffiStatus)
+	}))
+}
+
+func IdentifierOptionModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierPackageModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierPayModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierRandom() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_random(_uniffiStatus)
+	}))
+}
+
+func IdentifierRandomModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierReceiving() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving(_uniffiStatus)
+	}))
+}
+
+func IdentifierSetting() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_setting(_uniffiStatus)
+	}))
+}
+
+func IdentifierStakedIota() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota(_uniffiStatus)
+	}))
+}
+
+func IdentifierStakingPoolModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierString() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_string(_uniffiStatus)
+	}))
+}
+
+func IdentifierStringModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierSystemAdminCapModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierSystemEpochInfoEvent() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(_uniffiStatus)
+	}))
+}
+
+func IdentifierSystemEpochInfoEventV1() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v1(_uniffiStatus)
+	}))
+}
+
+func IdentifierSystemEpochInfoEventV2() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event_v2(_uniffiStatus)
+	}))
+}
+
+func IdentifierTimeLock() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(_uniffiStatus)
+	}))
+}
+
+func IdentifierTimelockModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierTimelockedStakedIota() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota(_uniffiStatus)
+	}))
+}
+
+func IdentifierTimelockedStakingModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierTransferModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierTreasuryCap() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(_uniffiStatus)
+	}))
+}
+
+func IdentifierTxContext() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(_uniffiStatus)
+	}))
+}
+
+func IdentifierTxContextModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierUid() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(_uniffiStatus)
+	}))
+}
+
+func IdentifierUpgradeCap() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(_uniffiStatus)
+	}))
+}
+
+func IdentifierUpgradeReceipt() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(_uniffiStatus)
+	}))
+}
+
+func IdentifierUpgradeTicket() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(_uniffiStatus)
+	}))
+}
+
+func IdentifierUrl() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url(_uniffiStatus)
+	}))
+}
+
+func IdentifierUrlModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierVersionUpdated() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(_uniffiStatus)
+	}))
+}
+
+func IdentifierWrapper() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper(_uniffiStatus)
+	}))
+}
 
 
 
@@ -22546,12 +22695,14 @@ func (_ FfiDestroyerIdentifier) Destroy(value *Identifier) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+// input = call-arg
 //
-// input-pure                  = %x00 bytes
-// input-immutable-or-owned    = %x01 object-ref
-// input-shared                = %x02 object-id u64 bool
-// input-receiving             = %x04 object-ref
+// call-arg   =  %d00 bytes        ; Pure
+// =/ %d01 object-arg   ; Object
+//
+// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+// =/ %d01 object-id u64 bool   ; Shared
+// =/ %d02 object-reference     ; Receiving
 // ```
 type InputInterface interface {
 }
@@ -22562,12 +22713,14 @@ type InputInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+// input = call-arg
 //
-// input-pure                  = %x00 bytes
-// input-immutable-or-owned    = %x01 object-ref
-// input-shared                = %x02 object-id u64 bool
-// input-receiving             = %x04 object-ref
+// call-arg   =  %d00 bytes        ; Pure
+// =/ %d01 object-arg   ; Object
+//
+// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+// =/ %d01 object-id u64 bool   ; Shared
+// =/ %d02 object-reference     ; Receiving
 // ```
 type Input struct {
 	ffiObject FfiObject
@@ -22596,9 +22749,9 @@ func InputNewReceiving(objectRef ObjectReference) *Input {
 }
 
 // A move object whose owner is "Shared"
-func InputNewShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *Input {
+func InputNewShared(objectId *ObjectId, initialSharedVersion *Version, mutable bool) *Input {
 	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterVersionINSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
 	}))
 }
 
@@ -23271,6 +23424,18 @@ func MoveArgAddressFromHex(hex string) (*MoveArg, error) {
 		}
 }
 
+func MoveArgAddressFromShortHex(hex string) (*MoveArg, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MoveArg
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMoveArgINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 func MoveArgAddressVec(addresses []*Address) *MoveArg {
 	return FfiConverterMoveArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(FfiConverterSequenceAddressINSTANCE.Lower(addresses),_uniffiStatus)
@@ -23510,6 +23675,8 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 // by the Move authenticate function during the Account Abstraction
 // authentication flow.
 type MoveAuthenticatorInterface interface {
+	// Convert this move authenticator into a version 1 move authenticator if
+	// it is one, or panic otherwise
 	AsV1() *MoveAuthenticatorV1
 }
 // MoveAuthenticator is a signature variant that enables a method of
@@ -23529,6 +23696,8 @@ func MoveAuthenticatorNewV1(moveAuthenticatorV1 *MoveAuthenticatorV1) *MoveAuthe
 
 
 
+// Convert this move authenticator into a version 1 move authenticator if
+// it is one, or panic otherwise
 func (_self *MoveAuthenticator) AsV1() *MoveAuthenticatorV1 {
 	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
 	defer _self.ffiObject.decrementPointer()
@@ -23717,9 +23886,9 @@ func MoveAuthenticatorV1NewImmutable(callArgs []*Input, typeArgs []*TypeTag, obj
 }
 
 // Create a new move authenticator from a shared object.
-func MoveAuthenticatorV1NewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticatorV1 {
+func MoveAuthenticatorV1NewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion *Version) *MoveAuthenticatorV1 {
 	return FfiConverterMoveAuthenticatorV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterVersionINSTANCE.Lower(initialSharedVersion),_uniffiStatus)
 	}))
 }
 
@@ -24178,18 +24347,18 @@ func (_ FfiDestroyerMoveFunction) Destroy(value *MoveFunction) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-//
-// move-modules = map (identifier bytes)
-// type-origin-table = vector type-origin
-// linkage-table = map (object-id upgrade-info)
+// move-package = object-id                          ; id
+// u64                                ; version
+// (vector (identifier bytes))        ; modules
+// (vector type-origin)               ; type-origin-table
+// (vector (object-id upgrade-info))  ; linkage-table
 // ```
 type MovePackageInterface interface {
 	Id() *ObjectId
 	LinkageTable() map[*ObjectId]UpgradeInfo
 	Modules() map[*Identifier][]byte
 	TypeOriginTable() []TypeOrigin
-	Version() uint64
+	Version() *Version
 }
 // A move package
 //
@@ -24198,18 +24367,18 @@ type MovePackageInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-package = object-id u64 move-modules type-origin-table linkage-table
-//
-// move-modules = map (identifier bytes)
-// type-origin-table = vector type-origin
-// linkage-table = map (object-id upgrade-info)
+// move-package = object-id                          ; id
+// u64                                ; version
+// (vector (identifier bytes))        ; modules
+// (vector type-origin)               ; type-origin-table
+// (vector (object-id upgrade-info))  ; linkage-table
 // ```
 type MovePackage struct {
 	ffiObject FfiObject
 }
-func NewMovePackage(id *ObjectId, version uint64, modules map[*Identifier][]byte, typeOriginTable []TypeOrigin, linkageTable map[*ObjectId]UpgradeInfo) (*MovePackage, error) {
+func NewMovePackage(id *ObjectId, version *Version, modules map[*Identifier][]byte, typeOriginTable []TypeOrigin, linkageTable map[*ObjectId]UpgradeInfo) (*MovePackage, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterObjectIdINSTANCE.Lower(id), FfiConverterUint64INSTANCE.Lower(version), FfiConverterMapIdentifierBytesINSTANCE.Lower(modules), FfiConverterSequenceTypeOriginINSTANCE.Lower(typeOriginTable), FfiConverterMapObjectIdUpgradeInfoINSTANCE.Lower(linkageTable),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterObjectIdINSTANCE.Lower(id), FfiConverterVersionINSTANCE.Lower(version), FfiConverterMapIdentifierBytesINSTANCE.Lower(modules), FfiConverterSequenceTypeOriginINSTANCE.Lower(typeOriginTable), FfiConverterMapObjectIdUpgradeInfoINSTANCE.Lower(linkageTable),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *MovePackage
@@ -24264,10 +24433,10 @@ func (_self *MovePackage) TypeOriginTable() []TypeOrigin {
 	}))
 }
 
-func (_self *MovePackage) Version() uint64 {
+func (_self *MovePackage) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_movepackage_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -25057,11 +25226,6 @@ type MultisigCommitteeInterface interface {
 	//
 	// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 	// || ... || flag_n || pk_n || weight_n)`.
-	//
-	// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-	// refers to the same input used when deriving the address using the
-	// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-	// full 32-byte `address_seed` value).
 	DeriveAddress() *Address
 	// Checks if the Committee is valid.
 	//
@@ -25130,11 +25294,6 @@ func NewMultisigCommittee(members []*MultisigMember, threshold uint16) *Multisig
 //
 // `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 // || ... || flag_n || pk_n || weight_n)`.
-//
-// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
-// refers to the same input used when deriving the address using the
-// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
-// full 32-byte `address_seed` value).
 func (_self *MultisigCommittee) DeriveAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
 	defer _self.ffiObject.decrementPointer()
@@ -25451,12 +25610,14 @@ func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 // multisig-member-public-key = ed25519-multisig-member-public-key /
 // secp256k1-multisig-member-public-key /
 // secp256r1-multisig-member-public-key /
-// zklogin-multisig-member-public-key
+// zklogin-multisig-member-public-key-deprecated /
+// passkey-multisig-member-public-key
 //
-// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+// zklogin-multisig-member-public-key-deprecated   = %d03
+// passkey-multisig-member-public-key              = %d04 passkey-public-key
 // ```
 //
 // There is also a legacy encoding for this type defined as:
@@ -25472,16 +25633,16 @@ func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 type MultisigMemberPublicKeyInterface interface {
 	AsEd25519() *Ed25519PublicKey
 	AsEd25519Opt() **Ed25519PublicKey
+	AsPasskey() *PasskeyPublicKey
+	AsPasskeyOpt() **PasskeyPublicKey
 	AsSecp256k1() *Secp256k1PublicKey
 	AsSecp256k1Opt() **Secp256k1PublicKey
 	AsSecp256r1() *Secp256r1PublicKey
 	AsSecp256r1Opt() **Secp256r1PublicKey
-	AsZklogin() *ZkLoginPublicIdentifier
-	AsZkloginOpt() **ZkLoginPublicIdentifier
 	IsEd25519() bool
+	IsPasskey() bool
 	IsSecp256k1() bool
 	IsSecp256r1() bool
-	IsZklogin() bool
 	Scheme() SignatureScheme
 }
 // Enum of valid public keys for multisig committee members
@@ -25494,12 +25655,14 @@ type MultisigMemberPublicKeyInterface interface {
 // multisig-member-public-key = ed25519-multisig-member-public-key /
 // secp256k1-multisig-member-public-key /
 // secp256r1-multisig-member-public-key /
-// zklogin-multisig-member-public-key
+// zklogin-multisig-member-public-key-deprecated /
+// passkey-multisig-member-public-key
 //
-// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+// zklogin-multisig-member-public-key-deprecated   = %d03
+// passkey-multisig-member-public-key              = %d04 passkey-public-key
 // ```
 //
 // There is also a legacy encoding for this type defined as:
@@ -25534,6 +25697,26 @@ func (_self *MultisigMemberPublicKey) AsEd25519Opt() **Ed25519PublicKey {
 	return FfiConverterOptionalEd25519PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) AsPasskey() *PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) AsPasskeyOpt() **PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -25579,31 +25762,20 @@ func (_self *MultisigMemberPublicKey) AsSecp256r1Opt() **Secp256r1PublicKey {
 	}))
 }
 
-func (_self *MultisigMemberPublicKey) AsZklogin() *ZkLoginPublicIdentifier {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberPublicKey) AsZkloginOpt() **ZkLoginPublicIdentifier {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalZkLoginPublicIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_zklogin_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberPublicKey) IsEd25519() bool {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) IsPasskey() bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -25622,15 +25794,6 @@ func (_self *MultisigMemberPublicKey) IsSecp256r1() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberPublicKey) IsZklogin() bool {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -25741,26 +25904,28 @@ func (_ FfiDestroyerMultisigMemberPublicKey) Destroy(value *MultisigMemberPublic
 // multisig-member-signature = ed25519-multisig-member-signature /
 // secp256k1-multisig-member-signature /
 // secp256r1-multisig-member-signature /
-// zklogin-multisig-member-signature
+// zklogin-multisig-member-signature-deprecated /
+// passkey-multisig-member-signature
 //
-// ed25519-multisig-member-signature   = %x00 ed25519-signature
-// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+// ed25519-multisig-member-signature               = %d00 ed25519-signature
+// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+// zklogin-multisig-member-signature-deprecated    = %d03
+// passkey-multisig-member-signature               = %d04 passkey-authenticator
 // ```
 type MultisigMemberSignatureInterface interface {
 	AsEd25519() *Ed25519Signature
 	AsEd25519Opt() **Ed25519Signature
+	AsPasskey() *PasskeyAuthenticator
+	AsPasskeyOpt() **PasskeyAuthenticator
 	AsSecp256k1() *Secp256k1Signature
 	AsSecp256k1Opt() **Secp256k1Signature
 	AsSecp256r1() *Secp256r1Signature
 	AsSecp256r1Opt() **Secp256r1Signature
-	AsZklogin() *ZkLoginAuthenticator
-	AsZkloginOpt() **ZkLoginAuthenticator
 	IsEd25519() bool
+	IsPasskey() bool
 	IsSecp256k1() bool
 	IsSecp256r1() bool
-	IsZklogin() bool
 }
 // A signature from a member of a multisig committee.
 //
@@ -25772,12 +25937,14 @@ type MultisigMemberSignatureInterface interface {
 // multisig-member-signature = ed25519-multisig-member-signature /
 // secp256k1-multisig-member-signature /
 // secp256r1-multisig-member-signature /
-// zklogin-multisig-member-signature
+// zklogin-multisig-member-signature-deprecated /
+// passkey-multisig-member-signature
 //
-// ed25519-multisig-member-signature   = %x00 ed25519-signature
-// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+// ed25519-multisig-member-signature               = %d00 ed25519-signature
+// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
+// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
+// zklogin-multisig-member-signature-deprecated    = %d03
+// passkey-multisig-member-signature               = %d04 passkey-authenticator
 // ```
 type MultisigMemberSignature struct {
 	ffiObject FfiObject
@@ -25801,6 +25968,26 @@ func (_self *MultisigMemberSignature) AsEd25519Opt() **Ed25519Signature {
 	return FfiConverterOptionalEd25519SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberSignature) AsPasskey() *PasskeyAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberSignature) AsPasskeyOpt() **PasskeyAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -25846,31 +26033,20 @@ func (_self *MultisigMemberSignature) AsSecp256r1Opt() **Secp256r1Signature {
 	}))
 }
 
-func (_self *MultisigMemberSignature) AsZklogin() *ZkLoginAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberSignature) AsZkloginOpt() **ZkLoginAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_zklogin_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberSignature) IsEd25519() bool {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberSignature) IsPasskey() bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_passkey(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -25889,15 +26065,6 @@ func (_self *MultisigMemberSignature) IsSecp256r1() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberSignature) IsZklogin() bool {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -25989,8 +26156,6 @@ func (_ FfiDestroyerMultisigMemberSignature) Destroy(value *MultisigMemberSignat
 
 type MultisigVerifierInterface interface {
 	Verify(message []byte, signature *MultisigAggregatedSignature) error
-	WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *MultisigVerifier
-	ZkloginVerifier() **ZkloginVerifier
 }
 type MultisigVerifier struct {
 	ffiObject FfiObject
@@ -26013,26 +26178,6 @@ func (_self *MultisigVerifier) Verify(message []byte, signature *MultisigAggrega
 		return false
 	})
 		return _uniffiErr.AsError()
-}
-
-func (_self *MultisigVerifier) WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *MultisigVerifier {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterMultisigVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-		_pointer,FfiConverterZkloginVerifierINSTANCE.Lower(zkloginVerifier),_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigVerifier) ZkloginVerifier() **ZkloginVerifier {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-		_pointer,_uniffiStatus),
-	}
-	}))
 }
 
 func (_self *MultisigVerifier) DebugString() string {
@@ -26509,7 +26654,7 @@ type ObjectInterface interface {
 	// deletes this object.
 	StorageRebate() uint64
 	// Return this object's version
-	Version() uint64
+	Version() *Version
 }
 // An object on the IOTA blockchain
 //
@@ -26666,10 +26811,10 @@ func (_self *Object) StorageRebate() uint64 {
 }
 
 // Return this object's version
-func (_self *Object) Version() uint64 {
+func (_self *Object) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -26769,8 +26914,8 @@ func (_ FfiDestroyerObject) Destroy(value *Object) {
 // ```text
 // object-data = object-data-struct / object-data-package
 //
-// object-data-struct  = %x00 object-move-struct
-// object-data-package = %x01 object-move-package
+// object-data-struct  = %d00 object-move-struct
+// object-data-package = %d01 object-move-package
 // ```
 type ObjectDataInterface interface {
 	// Try to interpret this object as a `MovePackage`
@@ -26791,8 +26936,8 @@ type ObjectDataInterface interface {
 // ```text
 // object-data = object-data-struct / object-data-package
 //
-// object-data-struct  = %x00 object-move-struct
-// object-data-package = %x01 object-move-package
+// object-data-struct  = %d00 object-move-struct
+// object-data-package = %d01 object-move-package
 // ```
 type ObjectData struct {
 	ffiObject FfiObject
@@ -26971,22 +27116,35 @@ func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 // An `ObjectId`'s BCS serialized form is defined by the following:
 //
 // ```text
-// object-id = 32*OCTET
+// object-id = address
 // ```
 type ObjectIdInterface interface {
 	// Derive an ObjectId for a Dynamic Child Object.
 	//
 	// hash(parent || len(key) || key || key_type_tag)
 	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *ObjectId
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
 	// Returns the string representation of this object ID using the
 	// canonical display, with or without a `0x` prefix.
 	ToCanonicalString(withPrefix bool) string
+	// Returns the string representation of this object id in hex format with
+	// `0x` prefix.
 	ToHex() string
+	// Returns the string representation of this object id in hex format
+	// without `0x` prefix.
+	ToRawHex() string
+	// Returns the shortest possible string representation of the object id
+	// (i.e. with leading zeroes trimmed), without `0x` prefix.
+	ToRawShortHex() string
 	// Returns the shortest possible string representation of the object ID
 	// (i.e. with leading zeroes trimmed).
-	ToShortString(withPrefix bool) string
+	ToShortHex() string
 }
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
@@ -27004,16 +27162,28 @@ type ObjectIdInterface interface {
 // An `ObjectId`'s BCS serialized form is defined by the following:
 //
 // ```text
-// object-id = 32*OCTET
+// object-id = address
 // ```
 type ObjectId struct {
 	ffiObject FfiObject
 }
 
 
+func ObjectIdAuthenticatorState() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(_uniffiStatus)
+	}))
+}
+
 func ObjectIdClock() *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(_uniffiStatus)
+	}))
+}
+
+func ObjectIdDenyList() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(_uniffiStatus)
 	}))
 }
 
@@ -27022,6 +27192,12 @@ func ObjectIdClock() *ObjectId {
 func ObjectIdDeriveId(digest *Digest, count uint64) *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(FfiConverterDigestINSTANCE.Lower(digest), FfiConverterUint64INSTANCE.Lower(count),_uniffiStatus)
+	}))
+}
+
+func ObjectIdFramework() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(_uniffiStatus)
 	}))
 }
 
@@ -27037,6 +27213,9 @@ func ObjectIdFromBytes(bytes []byte) (*ObjectId, error) {
 		}
 }
 
+// Parses an ObjectId from a full-length hex string (64 hex characters),
+// with or without a `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
 func ObjectIdFromHex(hex string) (*ObjectId, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
@@ -27049,9 +27228,96 @@ func ObjectIdFromHex(hex string) (*ObjectId, error) {
 		}
 }
 
+// Parses an ObjectId from a full-length hex string (64 hex characters),
+// with a mandatory `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
+func ObjectIdFromPrefixedHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func ObjectIdFromPrefixedShortHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an ObjectId from a hex string, with or without a `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func ObjectIdFromShortHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func ObjectIdGenesisBridge() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(_uniffiStatus)
+	}))
+}
+
+func ObjectIdGenesisIotaBridge() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(_uniffiStatus)
+	}))
+}
+
+func ObjectIdMax() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_max(_uniffiStatus)
+	}))
+}
+
+func ObjectIdRandomnessState() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(_uniffiStatus)
+	}))
+}
+
+func ObjectIdStardust() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(_uniffiStatus)
+	}))
+}
+
+func ObjectIdStd() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_std(_uniffiStatus)
+	}))
+}
+
 func ObjectIdSystem() *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(_uniffiStatus)
+	}))
+}
+
+func ObjectIdSystemState() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(_uniffiStatus)
 	}))
 }
 
@@ -27072,6 +27338,29 @@ func (_self *ObjectId) DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(
 		_pointer,FfiConverterTypeTagINSTANCE.Lower(keyTypeTag), FfiConverterBytesINSTANCE.Lower(keyBytes),_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order.
+func (_self *ObjectId) NextLexicographical() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *ObjectId) NextLexicographicalOpt() **ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -27108,6 +27397,8 @@ func (_self *ObjectId) ToCanonicalString(withPrefix bool) string {
 	}))
 }
 
+// Returns the string representation of this object id in hex format with
+// `0x` prefix.
 func (_self *ObjectId) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -27119,15 +27410,41 @@ func (_self *ObjectId) ToHex() string {
 	}))
 }
 
-// Returns the shortest possible string representation of the object ID
-// (i.e. with leading zeroes trimmed).
-func (_self *ObjectId) ToShortString(withPrefix bool) string {
+// Returns the string representation of this object id in hex format
+// without `0x` prefix.
+func (_self *ObjectId) ToRawHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
-		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object id
+// (i.e. with leading zeroes trimmed), without `0x` prefix.
+func (_self *ObjectId) ToRawShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object ID
+// (i.e. with leading zeroes trimmed).
+func (_self *ObjectId) ToShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(
+		_pointer,_uniffiStatus),
 	}
 	}))
 }
@@ -27413,21 +27730,38 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // ```text
 // owner = owner-address / owner-object / owner-shared / owner-immutable
 //
-// owner-address   = %x00 address
-// owner-object    = %x01 object-id
-// owner-shared    = %x02 u64
-// owner-immutable = %x03
+// owner-address   = %d00 address
+// owner-object    = %d01 object-id
+// owner-shared    = %d02 u64
+// owner-immutable = %d03
 // ```
 type OwnerInterface interface {
+	// Returns an `Address` if this object is owned by an address or
+	// object, and None if it is shared or immutable.
+	AddressOrObject() **Address
+	// Convert this owner into an address owner if it is one, or panic
+	// otherwise
 	AsAddress() *Address
+	// Convert this owner into an address owner if it is one, or return `None`
+	// otherwise
 	AsAddressOpt() **Address
+	// Convert this owner into an object owner if it is one, or panic otherwise
 	AsObject() *ObjectId
+	// Convert this owner into an object owner if it is one, or return `None`
+	// otherwise
 	AsObjectOpt() **ObjectId
-	AsShared() uint64
-	AsSharedOpt() *uint64
+	// Convert this owner into a shared owner if it is one, or panic otherwise
+	AsShared() *Version
+	// Convert this owner into a shared owner if it is one, or return `None`
+	// otherwise
+	AsSharedOpt() **Version
+	// Check if this is an address owner
 	IsAddress() bool
+	// Check if this is an immutable owner
 	IsImmutable() bool
+	// Check if this is an object owner
 	IsObject() bool
+	// Check if this is a shared owner
 	IsShared() bool
 }
 // Enum of different types of ownership for an object.
@@ -27439,10 +27773,10 @@ type OwnerInterface interface {
 // ```text
 // owner = owner-address / owner-object / owner-shared / owner-immutable
 //
-// owner-address   = %x00 address
-// owner-object    = %x01 object-id
-// owner-shared    = %x02 u64
-// owner-immutable = %x03
+// owner-address   = %d00 address
+// owner-object    = %d01 object-id
+// owner-shared    = %d02 u64
+// owner-immutable = %d03
 // ```
 type Owner struct {
 	ffiObject FfiObject
@@ -27467,14 +27801,29 @@ func OwnerNewObject(id *ObjectId) *Owner {
 	}))
 }
 
-func OwnerNewShared(version uint64) *Owner {
+func OwnerNewShared(version *Version) *Owner {
 	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterVersionINSTANCE.Lower(version),_uniffiStatus)
 	}))
 }
 
 
 
+// Returns an `Address` if this object is owned by an address or
+// object, and None if it is shared or immutable.
+func (_self *Owner) AddressOrObject() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_address_or_object(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Convert this owner into an address owner if it is one, or panic
+// otherwise
 func (_self *Owner) AsAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27484,6 +27833,8 @@ func (_self *Owner) AsAddress() *Address {
 	}))
 }
 
+// Convert this owner into an address owner if it is one, or return `None`
+// otherwise
 func (_self *Owner) AsAddressOpt() **Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27495,6 +27846,7 @@ func (_self *Owner) AsAddressOpt() **Address {
 	}))
 }
 
+// Convert this owner into an object owner if it is one, or panic otherwise
 func (_self *Owner) AsObject() *ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27504,6 +27856,8 @@ func (_self *Owner) AsObject() *ObjectId {
 	}))
 }
 
+// Convert this owner into an object owner if it is one, or return `None`
+// otherwise
 func (_self *Owner) AsObjectOpt() **ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27515,19 +27869,22 @@ func (_self *Owner) AsObjectOpt() **ObjectId {
 	}))
 }
 
-func (_self *Owner) AsShared() uint64 {
+// Convert this owner into a shared owner if it is one, or panic otherwise
+func (_self *Owner) AsShared() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
 		_pointer,_uniffiStatus)
 	}))
 }
 
-func (_self *Owner) AsSharedOpt() *uint64 {
+// Convert this owner into a shared owner if it is one, or return `None`
+// otherwise
+func (_self *Owner) AsSharedOpt() **Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+	return FfiConverterOptionalVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
 		_pointer,_uniffiStatus),
@@ -27535,6 +27892,7 @@ func (_self *Owner) AsSharedOpt() *uint64 {
 	}))
 }
 
+// Check if this is an address owner
 func (_self *Owner) IsAddress() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27544,6 +27902,7 @@ func (_self *Owner) IsAddress() bool {
 	}))
 }
 
+// Check if this is an immutable owner
 func (_self *Owner) IsImmutable() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27553,6 +27912,7 @@ func (_self *Owner) IsImmutable() bool {
 	}))
 }
 
+// Check if this is an object owner
 func (_self *Owner) IsObject() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -27562,6 +27922,7 @@ func (_self *Owner) IsObject() bool {
 	}))
 }
 
+// Check if this is a shared owner
 func (_self *Owner) IsShared() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -29322,14 +29683,14 @@ func (_ FfiDestroyerSecp256k1PrivateKey) Destroy(value *Secp256k1PrivateKey) {
 
 
 
-// A secp256k1 signature.
+// A secp256k1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTET
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -29346,14 +29707,14 @@ type Secp256k1PublicKeyInterface interface {
 	// Returns the bytes with signature scheme flag prepended.
 	ToFlaggedBytes() []byte
 }
-// A secp256k1 signature.
+// A secp256k1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTET
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1PublicKey struct {
 	ffiObject FfiObject
@@ -29526,26 +29887,26 @@ func (_ FfiDestroyerSecp256k1PublicKey) Destroy(value *Secp256k1PublicKey) {
 
 
 
-// A secp256k1 public key.
+// A secp256k1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTET
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1SignatureInterface interface {
 	ToBytes() []byte
 }
-// A secp256k1 public key.
+// A secp256k1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTET
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1Signature struct {
 	ffiObject FfiObject
@@ -30378,14 +30739,14 @@ func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
 
 
 
-// A secp256r1 signature.
+// A secp256r1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTET
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -30402,14 +30763,14 @@ type Secp256r1PublicKeyInterface interface {
 	// Returns the bytes with signature scheme flag prepended
 	ToFlaggedBytes() []byte
 }
-// A secp256r1 signature.
+// A secp256r1 public key.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTET
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1PublicKey struct {
 	ffiObject FfiObject
@@ -30582,26 +30943,26 @@ func (_ FfiDestroyerSecp256r1PublicKey) Destroy(value *Secp256r1PublicKey) {
 
 
 
-// A secp256r1 public key.
+// A secp256r1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTET
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1SignatureInterface interface {
 	ToBytes() []byte
 }
-// A secp256r1 public key.
+// A secp256r1 signature.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTET
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1Signature struct {
 	ffiObject FfiObject
@@ -32161,10 +32522,57 @@ func (_ FfiDestroyerSplitCoins) Destroy(value *SplitCoins) {
 type StructTagInterface interface {
 	// Returns the address part of a `StructTag`
 	Address() *Address
-	// Checks if this is a Coin type
+	// Returns the coin type part of a `StructTag`, panics if this is not a
+	// Coin type
 	CoinType() *TypeTag
-	// Checks if this is a Coin type
+	// Returns the coin type part of a `StructTag`, if this is a Coin type
 	CoinTypeOpt() **TypeTag
+	IsAsciiString() bool
+	IsAuthenticatorState() bool
+	IsBag() bool
+	IsBalance() bool
+	IsClock() bool
+	IsCoin() bool
+	IsCoinManager() bool
+	IsCoinMetadata() bool
+	IsConfig() bool
+	IsConfigSetting() bool
+	IsDenyListAddressKey() bool
+	IsDenyListConfigKey() bool
+	IsDenyListGlobalPauseKey() bool
+	IsDisplayCreated() bool
+	IsDisplayVersionUpdated() bool
+	// Checks if this is a Dynamic Field type
+	// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+	IsDynamicField() bool
+	IsDynamicObjectFieldWrapper() bool
+	IsGas() bool
+	IsGasCoin() bool
+	IsId() bool
+	IsIotaSystemAdminCap() bool
+	IsIotaSystemState() bool
+	IsIotaTreasuryCap() bool
+	// Checks if this is an IOTA-Names `Name` type.
+	// Note that this does not check the package address, so it will return
+	// true for any struct with the correct module and type name with no
+	// type params.
+	IsName() bool
+	IsObjectBag() bool
+	IsOption() bool
+	IsRandom() bool
+	IsStakedIota() bool
+	IsString() bool
+	IsSystemEpochInfoEvent() bool
+	IsTimeLock() bool
+	IsTimelockedStakedIota() bool
+	IsTransferReceiving() bool
+	IsTreasuryCap() bool
+	IsTxContext() bool
+	IsUid() bool
+	IsUpgradeCap() bool
+	IsUpgradeReceipt() bool
+	IsUpgradeTicket() bool
+	IsUrl() bool
 	// Returns the module part of a `StructTag`
 	Module() *Identifier
 	// Returns the name part of a `StructTag`
@@ -32200,6 +32608,18 @@ func NewStructTag(address *Address, module *Identifier, name *Identifier, typePa
 func StructTagNewAsciiString() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(_uniffiStatus)
+	}))
+}
+
+func StructTagNewAuthenticatorState() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(_uniffiStatus)
+	}))
+}
+
+func StructTagNewBag() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(_uniffiStatus)
 	}))
 }
 
@@ -32269,15 +32689,29 @@ func StructTagNewDisplayCreated(structTag *StructTag) *StructTag {
 	}))
 }
 
+func StructTagNewDisplayVersionUpdated(structTag *StructTag) *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
+	}))
+}
+
+// Creates a new dynamic field struct tag
+// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+func StructTagNewDynamicField(key *TypeTag, value *TypeTag) *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(FfiConverterTypeTagINSTANCE.Lower(key), FfiConverterTypeTagINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
 func StructTagNewDynamicObjectFieldWrapper(typeTag *TypeTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
 	}))
 }
 
-func StructTagNewField(key *TypeTag, value *TypeTag) *StructTag {
+func StructTagNewGas() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(FfiConverterTypeTagINSTANCE.Lower(key), FfiConverterTypeTagINSTANCE.Lower(value),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(_uniffiStatus)
 	}))
 }
 
@@ -32290,12 +32724,6 @@ func StructTagNewGasCoin() *StructTag {
 func StructTagNewId() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(_uniffiStatus)
-	}))
-}
-
-func StructTagNewIotaCoinType() *StructTag {
-	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(_uniffiStatus)
 	}))
 }
 
@@ -32317,9 +32745,29 @@ func StructTagNewIotaTreasuryCap() *StructTag {
 	}))
 }
 
+// Creates a new IOTA-Names `Name` struct tag
+// with the given package address.
 func StructTagNewName(address *Address) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(FfiConverterAddressINSTANCE.Lower(address),_uniffiStatus)
+	}))
+}
+
+func StructTagNewObjectBag() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(_uniffiStatus)
+	}))
+}
+
+func StructTagNewOption(typeTag *TypeTag) *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
+	}))
+}
+
+func StructTagNewRandom() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(_uniffiStatus)
 	}))
 }
 
@@ -32365,6 +32813,12 @@ func StructTagNewTreasuryCap(structTag *StructTag) *StructTag {
 	}))
 }
 
+func StructTagNewTxContext() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(_uniffiStatus)
+	}))
+}
+
 func StructTagNewUid() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(_uniffiStatus)
@@ -32389,9 +32843,9 @@ func StructTagNewUpgradeTicket() *StructTag {
 	}))
 }
 
-func StructTagNewVersionUpdated(structTag *StructTag) *StructTag {
+func StructTagNewUrl() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(_uniffiStatus)
 	}))
 }
 
@@ -32407,7 +32861,8 @@ func (_self *StructTag) Address() *Address {
 	}))
 }
 
-// Checks if this is a Coin type
+// Returns the coin type part of a `StructTag`, panics if this is not a
+// Coin type
 func (_self *StructTag) CoinType() *TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -32417,7 +32872,7 @@ func (_self *StructTag) CoinType() *TypeTag {
 	}))
 }
 
-// Checks if this is a Coin type
+// Returns the coin type part of a `StructTag`, if this is a Coin type
 func (_self *StructTag) CoinTypeOpt() **TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -32426,6 +32881,372 @@ func (_self *StructTag) CoinTypeOpt() **TypeTag {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+func (_self *StructTag) IsAsciiString() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsAuthenticatorState() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsBag() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsBalance() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsClock() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsCoin() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsCoinManager() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsCoinMetadata() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsConfig() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_config(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsConfigSetting() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDenyListAddressKey() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDenyListConfigKey() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDenyListGlobalPauseKey() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDisplayCreated() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDisplayVersionUpdated() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Checks if this is a Dynamic Field type
+// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+func (_self *StructTag) IsDynamicField() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsDynamicObjectFieldWrapper() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsGas() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsGasCoin() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsId() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_id(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsIotaSystemAdminCap() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsIotaSystemState() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsIotaTreasuryCap() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Checks if this is an IOTA-Names `Name` type.
+// Note that this does not check the package address, so it will return
+// true for any struct with the correct module and type name with no
+// type params.
+func (_self *StructTag) IsName() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_name(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsObjectBag() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsOption() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_option(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsRandom() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_random(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsStakedIota() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsString() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_string(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsSystemEpochInfoEvent() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTimeLock() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTimelockedStakedIota() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTransferReceiving() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTreasuryCap() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTxContext() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUid() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUpgradeCap() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUpgradeReceipt() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUpgradeTicket() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUrl() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_url(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -32597,7 +33418,7 @@ func (_ FfiDestroyerStructTag) Destroy(value *StructTag) {
 type SystemPackageInterface interface {
 	Dependencies() []*ObjectId
 	Modules() [][]byte
-	Version() uint64
+	Version() *Version
 }
 // System package
 //
@@ -32613,9 +33434,9 @@ type SystemPackageInterface interface {
 type SystemPackage struct {
 	ffiObject FfiObject
 }
-func NewSystemPackage(version uint64, modules [][]byte, dependencies []*ObjectId) *SystemPackage {
+func NewSystemPackage(version *Version, modules [][]byte, dependencies []*ObjectId) *SystemPackage {
 	return FfiConverterSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterUint64INSTANCE.Lower(version), FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterVersionINSTANCE.Lower(version), FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
 	}))
 }
 
@@ -32644,10 +33465,10 @@ func (_self *SystemPackage) Modules() [][]byte {
 	}))
 }
 
-func (_self *SystemPackage) Version() uint64 {
+func (_self *SystemPackage) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -32745,7 +33566,7 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -32770,7 +33591,7 @@ type TransactionInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -33463,8 +34284,8 @@ func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-effects =  %x00 effects-v1
-// =/ %x01 effects-v2
+// transaction-effects =  %d00 effects-v1
+// =/ %d01 effects-v2
 // ```
 type TransactionEffectsInterface interface {
 	AsV1() TransactionEffectsV1
@@ -33478,8 +34299,8 @@ type TransactionEffectsInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-effects =  %x00 effects-v1
-// =/ %x01 effects-v2
+// transaction-effects =  %d00 effects-v1
+// =/ %d01 effects-v2
 // ```
 type TransactionEffects struct {
 	ffiObject FfiObject
@@ -33721,15 +34542,12 @@ func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// =/ %d01 genesis-transaction                    ; Genesis
+// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+// =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+// =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 // ```
 type TransactionKindInterface interface {
 }
@@ -33740,26 +34558,17 @@ type TransactionKindInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// =/ %d01 genesis-transaction                    ; Genesis
+// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+// =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+// =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 // ```
 type TransactionKind struct {
 	ffiObject FfiObject
 }
 
-
-func TransactionKindNewAuthenticatorStateUpdateV1(tx AuthenticatorStateUpdateV1) *TransactionKind {
-	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(tx),_uniffiStatus)
-	}))
-}
 
 func TransactionKindNewConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -34256,7 +35065,7 @@ func (c FfiConverterTransactionSignerFn) register() {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -34280,7 +35089,7 @@ type TransactionV1Interface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction = %x00 transaction-v1
+// transaction = %d00 transaction-v1
 //
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
@@ -34629,45 +35438,52 @@ func (_ FfiDestroyerTransferObjects) Destroy(value *TransferObjects) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// type-tag = type-tag-u8 \
-// type-tag-u16 \
-// type-tag-u32 \
-// type-tag-u64 \
-// type-tag-u128 \
-// type-tag-u256 \
-// type-tag-bool \
-// type-tag-address \
-// type-tag-signer \
-// type-tag-vector \
-// type-tag-struct
-//
-// type-tag-u8 = %x01
-// type-tag-u16 = %x08
-// type-tag-u32 = %x09
-// type-tag-u64 = %x02
-// type-tag-u128 = %x03
-// type-tag-u256 = %x0a
-// type-tag-bool = %x00
-// type-tag-address = %x04
-// type-tag-signer = %x05
-// type-tag-vector = %x06 type-tag
-// type-tag-struct = %x07 struct-tag
+// type-tag = %d00            ; Bool
+// / %d01            ; U8
+// / %d02            ; U64
+// / %d03            ; U128
+// / %d04            ; Address
+// / %d05            ; Signer
+// / %d06 type-tag   ; Vector
+// / %d07 struct-tag ; Struct
+// / %d08            ; U16
+// / %d09            ; U32
+// / %d10            ; U256
 // ```
 type TypeTagInterface interface {
+	// Converts this type tag into a struct tag, if it is one, or panics
+	// otherwise.
 	AsStructTag() *StructTag
+	// Converts this type tag into a struct tag, if it is one, or returns
+	// `None` otherwise.
 	AsStructTagOpt() **StructTag
+	// Converts this type tag into the inner type tag of a vector, if it is
+	// one, or panics otherwise.
 	AsVectorTypeTag() *TypeTag
+	// Converts this type tag into the inner type tag of a vector, if it is
+	// one, or returns `None` otherwise.
 	AsVectorTypeTagOpt() **TypeTag
+	// Checks if this type tag is an address.
 	IsAddress() bool
+	// Checks if this type tag is a boolean.
 	IsBool() bool
+	// Checks if this type tag is a signer.
 	IsSigner() bool
+	// Checks if this type tag is a struct.
 	IsStruct() bool
+	// Checks if this type tag is a u128.
 	IsU128() bool
+	// Checks if this type tag is a u16.
 	IsU16() bool
+	// Checks if this type tag is a u256.
 	IsU256() bool
+	// Checks if this type tag is a u32.
 	IsU32() bool
+	// Checks if this type tag is a u64.
 	IsU64() bool
+	// Checks if this type tag is a u8.
 	IsU8() bool
+	// Checks if this type tag is a vector.
 	IsVector() bool
 	// Returns the string representation of this type tag using the
 	// canonical display, with or without a `0x` prefix.
@@ -34680,29 +35496,17 @@ type TypeTagInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// type-tag = type-tag-u8 \
-// type-tag-u16 \
-// type-tag-u32 \
-// type-tag-u64 \
-// type-tag-u128 \
-// type-tag-u256 \
-// type-tag-bool \
-// type-tag-address \
-// type-tag-signer \
-// type-tag-vector \
-// type-tag-struct
-//
-// type-tag-u8 = %x01
-// type-tag-u16 = %x08
-// type-tag-u32 = %x09
-// type-tag-u64 = %x02
-// type-tag-u128 = %x03
-// type-tag-u256 = %x0a
-// type-tag-bool = %x00
-// type-tag-address = %x04
-// type-tag-signer = %x05
-// type-tag-vector = %x06 type-tag
-// type-tag-struct = %x07 struct-tag
+// type-tag = %d00            ; Bool
+// / %d01            ; U8
+// / %d02            ; U64
+// / %d03            ; U128
+// / %d04            ; Address
+// / %d05            ; Signer
+// / %d06 type-tag   ; Vector
+// / %d07 struct-tag ; Struct
+// / %d08            ; U16
+// / %d09            ; U32
+// / %d10            ; U256
 // ```
 type TypeTag struct {
 	ffiObject FfiObject
@@ -34777,6 +35581,8 @@ func TypeTagNewVector(typeTag *TypeTag) *TypeTag {
 
 
 
+// Converts this type tag into a struct tag, if it is one, or panics
+// otherwise.
 func (_self *TypeTag) AsStructTag() *StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34786,6 +35592,8 @@ func (_self *TypeTag) AsStructTag() *StructTag {
 	}))
 }
 
+// Converts this type tag into a struct tag, if it is one, or returns
+// `None` otherwise.
 func (_self *TypeTag) AsStructTagOpt() **StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34797,6 +35605,8 @@ func (_self *TypeTag) AsStructTagOpt() **StructTag {
 	}))
 }
 
+// Converts this type tag into the inner type tag of a vector, if it is
+// one, or panics otherwise.
 func (_self *TypeTag) AsVectorTypeTag() *TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34806,6 +35616,8 @@ func (_self *TypeTag) AsVectorTypeTag() *TypeTag {
 	}))
 }
 
+// Converts this type tag into the inner type tag of a vector, if it is
+// one, or returns `None` otherwise.
 func (_self *TypeTag) AsVectorTypeTagOpt() **TypeTag {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34817,6 +35629,7 @@ func (_self *TypeTag) AsVectorTypeTagOpt() **TypeTag {
 	}))
 }
 
+// Checks if this type tag is an address.
 func (_self *TypeTag) IsAddress() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34826,6 +35639,7 @@ func (_self *TypeTag) IsAddress() bool {
 	}))
 }
 
+// Checks if this type tag is a boolean.
 func (_self *TypeTag) IsBool() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34835,6 +35649,7 @@ func (_self *TypeTag) IsBool() bool {
 	}))
 }
 
+// Checks if this type tag is a signer.
 func (_self *TypeTag) IsSigner() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34844,6 +35659,7 @@ func (_self *TypeTag) IsSigner() bool {
 	}))
 }
 
+// Checks if this type tag is a struct.
 func (_self *TypeTag) IsStruct() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34853,6 +35669,7 @@ func (_self *TypeTag) IsStruct() bool {
 	}))
 }
 
+// Checks if this type tag is a u128.
 func (_self *TypeTag) IsU128() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34862,6 +35679,7 @@ func (_self *TypeTag) IsU128() bool {
 	}))
 }
 
+// Checks if this type tag is a u16.
 func (_self *TypeTag) IsU16() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34871,6 +35689,7 @@ func (_self *TypeTag) IsU16() bool {
 	}))
 }
 
+// Checks if this type tag is a u256.
 func (_self *TypeTag) IsU256() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34880,6 +35699,7 @@ func (_self *TypeTag) IsU256() bool {
 	}))
 }
 
+// Checks if this type tag is a u32.
 func (_self *TypeTag) IsU32() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34889,6 +35709,7 @@ func (_self *TypeTag) IsU32() bool {
 	}))
 }
 
+// Checks if this type tag is a u64.
 func (_self *TypeTag) IsU64() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34898,6 +35719,7 @@ func (_self *TypeTag) IsU64() bool {
 	}))
 }
 
+// Checks if this type tag is a u8.
 func (_self *TypeTag) IsU8() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34907,6 +35729,7 @@ func (_self *TypeTag) IsU8() bool {
 	}))
 }
 
+// Checks if this type tag is a vector.
 func (_self *TypeTag) IsVector() bool {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -35371,7 +36194,7 @@ func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 //
 // ```text
 // user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 // ```
 //
 // Note: Due to historical reasons, signatures are serialized slightly
@@ -35380,21 +36203,38 @@ func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 // as `bytes` meaning it has a length prefix that defines the length of
 // the completely serialized signature.
 type UserSignatureInterface interface {
+	// Convert this signature into a move authenticator if it is one, or panic
+	// otherwise
 	AsMoveAuthenticator() *MoveAuthenticator
+	// Convert this signature into a move authenticator if it is one, or return
+	// `None` otherwise
 	AsMoveAuthenticatorOpt() **MoveAuthenticator
+	// Convert this signature into a multisig aggregated signature if it is
+	// one, or panic otherwise
 	AsMultisig() *MultisigAggregatedSignature
+	// Convert this signature into a multisig aggregated signature if it is
+	// one, or return `None` otherwise
 	AsMultisigOpt() **MultisigAggregatedSignature
+	// Convert this signature into a passkey authenticator if it is one, or
+	// panic otherwise
 	AsPasskeyAuthenticator() *PasskeyAuthenticator
+	// Convert this signature into a passkey authenticator if it is one, or
+	// return `None` otherwise
 	AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator
+	// Convert this signature into a simple signature if it is one, or panic
+	// otherwise
 	AsSimple() *SimpleSignature
+	// Convert this signature into a simple signature if it is one, or return
+	// `None` otherwise
 	AsSimpleOpt() **SimpleSignature
-	AsZkloginAuthenticator() *ZkLoginAuthenticator
-	AsZkloginAuthenticatorOpt() **ZkLoginAuthenticator
+	// Check if this signature is a move authenticator
 	IsMoveAuthenticator() bool
+	// Check if this signature is a multisig aggregated signature
 	IsMultisig() bool
+	// Check if this signature is a passkey authenticator
 	IsPasskeyAuthenticator() bool
+	// Check if this signature is a simple signature
 	IsSimple() bool
-	IsZkloginAuthenticator() bool
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
 	ToBase64() string
@@ -35411,7 +36251,7 @@ type UserSignatureInterface interface {
 //
 // ```text
 // user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 // ```
 //
 // Note: Due to historical reasons, signatures are serialized slightly
@@ -35472,14 +36312,10 @@ func UserSignatureNewSimple(signature *SimpleSignature) *UserSignature {
 	}))
 }
 
-func UserSignatureNewZkloginAuthenticator(authenticator *ZkLoginAuthenticator) *UserSignature {
-	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
-	}))
-}
 
 
-
+// Convert this signature into a move authenticator if it is one, or panic
+// otherwise
 func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35489,6 +36325,8 @@ func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
 	}))
 }
 
+// Convert this signature into a move authenticator if it is one, or return
+// `None` otherwise
 func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35500,6 +36338,8 @@ func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
 	}))
 }
 
+// Convert this signature into a multisig aggregated signature if it is
+// one, or panic otherwise
 func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35509,6 +36349,8 @@ func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	}))
 }
 
+// Convert this signature into a multisig aggregated signature if it is
+// one, or return `None` otherwise
 func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35520,6 +36362,8 @@ func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
 	}))
 }
 
+// Convert this signature into a passkey authenticator if it is one, or
+// panic otherwise
 func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35529,6 +36373,8 @@ func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	}))
 }
 
+// Convert this signature into a passkey authenticator if it is one, or
+// return `None` otherwise
 func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35540,6 +36386,8 @@ func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
 	}))
 }
 
+// Convert this signature into a simple signature if it is one, or panic
+// otherwise
 func (_self *UserSignature) AsSimple() *SimpleSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35549,6 +36397,8 @@ func (_self *UserSignature) AsSimple() *SimpleSignature {
 	}))
 }
 
+// Convert this signature into a simple signature if it is one, or return
+// `None` otherwise
 func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35560,26 +36410,7 @@ func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
 	}))
 }
 
-func (_self *UserSignature) AsZkloginAuthenticator() *ZkLoginAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *UserSignature) AsZkloginAuthenticatorOpt() **ZkLoginAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
+// Check if this signature is a move authenticator
 func (_self *UserSignature) IsMoveAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35589,6 +36420,7 @@ func (_self *UserSignature) IsMoveAuthenticator() bool {
 	}))
 }
 
+// Check if this signature is a multisig aggregated signature
 func (_self *UserSignature) IsMultisig() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35598,6 +36430,7 @@ func (_self *UserSignature) IsMultisig() bool {
 	}))
 }
 
+// Check if this signature is a passkey authenticator
 func (_self *UserSignature) IsPasskeyAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -35607,20 +36440,12 @@ func (_self *UserSignature) IsPasskeyAuthenticator() bool {
 	}))
 }
 
+// Check if this signature is a simple signature
 func (_self *UserSignature) IsSimple() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *UserSignature) IsZkloginAuthenticator() bool {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -35747,8 +36572,6 @@ func (_ FfiDestroyerUserSignature) Destroy(value *UserSignature) {
 // Verifier that will verify all UserSignature variants
 type UserSignatureVerifierInterface interface {
 	Verify(message []byte, signature *UserSignature) error
-	WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *UserSignatureVerifier
-	ZkloginVerifier() **ZkloginVerifier
 }
 // Verifier that will verify all UserSignature variants
 type UserSignatureVerifier struct {
@@ -35772,26 +36595,6 @@ func (_self *UserSignatureVerifier) Verify(message []byte, signature *UserSignat
 		return false
 	})
 		return _uniffiErr.AsError()
-}
-
-func (_self *UserSignatureVerifier) WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *UserSignatureVerifier {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUserSignatureVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-		_pointer,FfiConverterZkloginVerifierINSTANCE.Lower(zkloginVerifier),_uniffiStatus)
-	}))
-}
-
-func (_self *UserSignatureVerifier) ZkloginVerifier() **ZkloginVerifier {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-		_pointer,_uniffiStatus),
-	}
-	}))
 }
 
 func (_self *UserSignatureVerifier) DebugString() string {
@@ -35866,12 +36669,11 @@ func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier)
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-aggregated-signature = u64               ; epoch
-// bls-signature
-// roaring-bitmap
-// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-// ; according to the serialized spec for
-// ; roaring bitmaps
+// validator-aggregated-signature = u64                  ; epoch
+// bls12381-signature   ; signature
+// bytes                ; bitmap — contents of the bytes are
+// ; valid according to the serialized
+// ; spec for roaring bitmaps
 // ```
 //
 // See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -35888,12 +36690,11 @@ type ValidatorAggregatedSignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-aggregated-signature = u64               ; epoch
-// bls-signature
-// roaring-bitmap
-// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-// ; according to the serialized spec for
-// ; roaring bitmaps
+// validator-aggregated-signature = u64                  ; epoch
+// bls12381-signature   ; signature
+// bytes                ; bitmap — contents of the bytes are
+// ; valid according to the serialized
+// ; spec for roaring bitmaps
 // ```
 //
 // See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
@@ -36275,160 +37076,6 @@ func (_ FfiDestroyerValidatorCommitteeSignatureVerifier) Destroy(value *Validato
 
 
 
-// An execution time observation from a particular validator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation = bls-public-key duration
-// duration =  u64 ; seconds
-// u32 ; subsecond nanoseconds
-// ```
-type ValidatorExecutionTimeObservationInterface interface {
-	Duration() time.Duration
-	Validator() *Bls12381PublicKey
-}
-// An execution time observation from a particular validator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// execution-time-observation = bls-public-key duration
-// duration =  u64 ; seconds
-// u32 ; subsecond nanoseconds
-// ```
-type ValidatorExecutionTimeObservation struct {
-	ffiObject FfiObject
-}
-func NewValidatorExecutionTimeObservation(validator *Bls12381PublicKey, duration time.Duration) *ValidatorExecutionTimeObservation {
-	return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(FfiConverterBls12381PublicKeyINSTANCE.Lower(validator), FfiConverterDurationINSTANCE.Lower(duration),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Duration() time.Duration {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterDurationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) Validator() *Bls12381PublicKey {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Eq(other *ValidatorExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
-		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ValidatorExecutionTimeObservation) Ne(other *ValidatorExecutionTimeObservation) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne(
-		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ValidatorExecutionTimeObservation) Hash() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-
-func (object *ValidatorExecutionTimeObservation) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterValidatorExecutionTimeObservation struct {}
-
-var FfiConverterValidatorExecutionTimeObservationINSTANCE = FfiConverterValidatorExecutionTimeObservation{}
-
-
-func (c FfiConverterValidatorExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ValidatorExecutionTimeObservation {
-	result := &ValidatorExecutionTimeObservation {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ValidatorExecutionTimeObservation).Destroy)
-	return result
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Read(reader io.Reader) *ValidatorExecutionTimeObservation {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Lower(value *ValidatorExecutionTimeObservation) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterValidatorExecutionTimeObservation) Write(writer io.Writer, value *ValidatorExecutionTimeObservation) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerValidatorExecutionTimeObservation struct {}
-
-func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorExecutionTimeObservation) {
-		value.Destroy()
-}
-
-
-
-
 // A signature from a Validator
 //
 // # BCS
@@ -36436,9 +37083,9 @@ func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorE
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-signature = u64               ; epoch
-// bls-public-key
-// bls-signature
+// validator-signature = u64                  ; epoch
+// bls12381-public-key
+// bls12381-signature
 // ```
 type ValidatorSignatureInterface interface {
 	Epoch() uint64
@@ -36452,9 +37099,9 @@ type ValidatorSignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-signature = u64               ; epoch
-// bls-public-key
-// bls-signature
+// validator-signature = u64                  ; epoch
+// bls12381-public-key
+// bls12381-signature
 // ```
 type ValidatorSignature struct {
 	ffiObject FfiObject
@@ -36580,6 +37227,266 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 
 
 
+type VersionInterface interface {
+	// Get the underlying u64 value of this version
+	AsU64() uint64
+	// Returns the `suggested_gas_price` embedded in this congested shared
+	// object version. The `suggested_gas_price` here is used for a
+	// gas price feedback mechanism for transactions cancelled due to
+	// shared object congestion.
+	GetCongestedVersionSuggestedGasPrice() (uint64, error)
+	// Checks if this version is cancelled, i.e., the corresponding
+	// object appears in a cancelled transaction.
+	IsCancelled() bool
+	// Check if this version is congested, i.e., the corresponding
+	// object is the reason for transaction cancellation.
+	IsCongested() bool
+	// Checks if this version is valid, i.e., the corresponding
+	// object does not appear in a cancelled transaction.
+	IsValid() bool
+	// Returns the next version, or an error if overflow occurs.
+	Next() (*Version, error)
+	// Returns the previous version, or an error if underflow occurs.
+	Previous() (*Version, error)
+}
+type Version struct {
+	ffiObject FfiObject
+}
+
+
+// Special version that is assigned to objects which are accessed
+// immutably in a cancelled transaction.
+func VersionCancelledRead() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(_uniffiStatus)
+	}))
+}
+
+// Special version that was assigned to congested objects which
+// cause transaction cancellations. Note that this special version
+// was only used prior to the introduction of a gas price feedback
+// mechanism, but it is kept for backward compatibility.
+func VersionCongestedPriorToGasPriceFeedback() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(_uniffiStatus)
+	}))
+}
+
+// Create a new Version from a u64 value
+func VersionFromU64(value uint64) *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(FfiConverterUint64INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+// Returns a new version that is greater than all versions
+// in `inputs`, assuming this operation will not overflow.
+func VersionLamportIncrement(inputs []*Version) (*Version, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(FfiConverterSequenceVersionINSTANCE.Lower(inputs),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// An exclusive upper limit on a valid version: versions
+// strictly smaller than this limit are valid versions.
+//
+// A valid version means an object, which this version
+// is assigned to, does not appear in a cancelled transaction.
+// Versions larger than this value are "special" and
+// assigned to objects that appear in cancelled transactions.
+func VersionMaxValidExcl() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(_uniffiStatus)
+	}))
+}
+
+// An inclusive lower limit on a valid version.
+//
+// A valid version means an object, which this version
+// is assigned to, does not appear in a cancelled transaction.
+func VersionMinValidIncl() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(_uniffiStatus)
+	}))
+}
+
+// Returns a special version used for congested shared objects:
+// `Version::MIN_CONGESTED + suggested_gas_price`,
+// where `suggested_gas_price` is embedded into a congested version
+// to facilitate a gas price feedback mechanism for transactions
+// cancelled due to shared object congestion.
+func VersionNewCongestedWithSuggestedGasPrice(suggestedGasPrice uint64) (*Version, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(FfiConverterUint64INSTANCE.Lower(suggestedGasPrice),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func VersionRandomnessUnavailable() *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(_uniffiStatus)
+	}))
+}
+
+
+
+// Get the underlying u64 value of this version
+func (_self *Version) AsU64() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the `suggested_gas_price` embedded in this congested shared
+// object version. The `suggested_gas_price` here is used for a
+// gas price feedback mechanism for transactions cancelled due to
+// shared object congestion.
+func (_self *Version) GetCongestedVersionSuggestedGasPrice() (uint64, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue uint64
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUint64INSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Checks if this version is cancelled, i.e., the corresponding
+// object appears in a cancelled transaction.
+func (_self *Version) IsCancelled() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Check if this version is congested, i.e., the corresponding
+// object is the reason for transaction cancellation.
+func (_self *Version) IsCongested() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Checks if this version is valid, i.e., the corresponding
+// object does not appear in a cancelled transaction.
+func (_self *Version) IsValid() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next version, or an error if overflow occurs.
+func (_self *Version) Next() (*Version, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_next(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Returns the previous version, or an error if underflow occurs.
+func (_self *Version) Previous() (*Version, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_previous(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Version
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+func (object *Version) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterVersion struct {}
+
+var FfiConverterVersionINSTANCE = FfiConverterVersion{}
+
+
+func (c FfiConverterVersion) Lift(pointer unsafe.Pointer) *Version {
+	result := &Version {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_version(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_version(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Version).Destroy)
+	return result
+}
+
+func (c FfiConverterVersion) Read(reader io.Reader) *Version {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterVersion) Lower(value *Version) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Version")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+	
+}
+
+func (c FfiConverterVersion) Write(writer io.Writer, value *Version) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerVersion struct {}
+
+func (_ FfiDestroyerVersion) Destroy(value *Version) {
+		value.Destroy()
+}
+
+
+
+
 // Object version assignment from consensus
 //
 // # BCS
@@ -36591,7 +37498,7 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 // ```
 type VersionAssignmentInterface interface {
 	ObjectId() *ObjectId
-	Version() uint64
+	Version() *Version
 }
 // Object version assignment from consensus
 //
@@ -36605,9 +37512,9 @@ type VersionAssignmentInterface interface {
 type VersionAssignment struct {
 	ffiObject FfiObject
 }
-func NewVersionAssignment(objectId *ObjectId, version uint64) *VersionAssignment {
+func NewVersionAssignment(objectId *ObjectId, version *Version) *VersionAssignment {
 	return FfiConverterVersionAssignmentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterVersionINSTANCE.Lower(version),_uniffiStatus)
 	}))
 }
 
@@ -36623,10 +37530,10 @@ func (_self *VersionAssignment) ObjectId() *ObjectId {
 	}))
 }
 
-func (_self *VersionAssignment) Version() uint64 {
+func (_self *VersionAssignment) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*VersionAssignment")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -36716,1132 +37623,6 @@ func (_ FfiDestroyerVersionAssignment) Destroy(value *VersionAssignment) {
 
 
 
-
-// A zklogin authenticator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
-// zklogin     = zklogin-flag
-// zklogin-inputs
-// u64               ; max epoch
-// simple-signature
-// ```
-//
-// Note: Due to historical reasons, signatures are serialized slightly
-// different from the majority of the types in IOTA. In particular if a
-// signature is ever embedded in another structure it generally is serialized
-// as `bytes` meaning it has a length prefix that defines the length of
-// the completely serialized signature.
-type ZkLoginAuthenticatorInterface interface {
-	Inputs() *ZkLoginInputs
-	MaxEpoch() uint64
-	Signature() *SimpleSignature
-}
-// A zklogin authenticator
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-bcs = bytes             ; contents are defined by <zklogin-authenticator>
-// zklogin     = zklogin-flag
-// zklogin-inputs
-// u64               ; max epoch
-// simple-signature
-// ```
-//
-// Note: Due to historical reasons, signatures are serialized slightly
-// different from the majority of the types in IOTA. In particular if a
-// signature is ever embedded in another structure it generally is serialized
-// as `bytes` meaning it has a length prefix that defines the length of
-// the completely serialized signature.
-type ZkLoginAuthenticator struct {
-	ffiObject FfiObject
-}
-func NewZkLoginAuthenticator(inputs *ZkLoginInputs, maxEpoch uint64, signature *SimpleSignature) *ZkLoginAuthenticator {
-	return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(FfiConverterZkLoginInputsINSTANCE.Lower(inputs), FfiConverterUint64INSTANCE.Lower(maxEpoch), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ZkLoginAuthenticator) Inputs() *ZkLoginInputs {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginInputsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginAuthenticator) MaxEpoch() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginAuthenticator) Signature() *SimpleSignature {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginAuthenticator) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ZkLoginAuthenticator) Eq(other *ZkLoginAuthenticator) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
-		_pointer,FfiConverterZkLoginAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginAuthenticator) Ne(other *ZkLoginAuthenticator) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(
-		_pointer,FfiConverterZkLoginAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *ZkLoginAuthenticator) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterZkLoginAuthenticator struct {}
-
-var FfiConverterZkLoginAuthenticatorINSTANCE = FfiConverterZkLoginAuthenticator{}
-
-
-func (c FfiConverterZkLoginAuthenticator) Lift(pointer unsafe.Pointer) *ZkLoginAuthenticator {
-	result := &ZkLoginAuthenticator {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ZkLoginAuthenticator).Destroy)
-	return result
-}
-
-func (c FfiConverterZkLoginAuthenticator) Read(reader io.Reader) *ZkLoginAuthenticator {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterZkLoginAuthenticator) Lower(value *ZkLoginAuthenticator) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ZkLoginAuthenticator")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterZkLoginAuthenticator) Write(writer io.Writer, value *ZkLoginAuthenticator) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerZkLoginAuthenticator struct {}
-
-func (_ FfiDestroyerZkLoginAuthenticator) Destroy(value *ZkLoginAuthenticator) {
-		value.Destroy()
-}
-
-
-
-
-// A zklogin groth16 proof and the required inputs to perform proof
-// verification.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-inputs = zklogin-proof
-// zklogin-claim
-// string              ; base64url-unpadded encoded JwtHeader
-// bn254-field-element ; address_seed
-// ```
-type ZkLoginInputsInterface interface {
-	AddressSeed() *Bn254FieldElement
-	HeaderBase64() string
-	Iss() string
-	IssBase64Details() ZkLoginClaim
-	JwkId() JwkId
-	ProofPoints() *ZkLoginProof
-	PublicIdentifier() *ZkLoginPublicIdentifier
-}
-// A zklogin groth16 proof and the required inputs to perform proof
-// verification.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-inputs = zklogin-proof
-// zklogin-claim
-// string              ; base64url-unpadded encoded JwtHeader
-// bn254-field-element ; address_seed
-// ```
-type ZkLoginInputs struct {
-	ffiObject FfiObject
-}
-func NewZkLoginInputs(proofPoints *ZkLoginProof, issBase64Details ZkLoginClaim, headerBase64 string, addressSeed *Bn254FieldElement) (*ZkLoginInputs, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(FfiConverterZkLoginProofINSTANCE.Lower(proofPoints), FfiConverterZkLoginClaimINSTANCE.Lower(issBase64Details), FfiConverterStringINSTANCE.Lower(headerBase64), FfiConverterBn254FieldElementINSTANCE.Lower(addressSeed),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginInputs
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginInputsINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-
-
-
-func (_self *ZkLoginInputs) AddressSeed() *Bn254FieldElement {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBn254FieldElementINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginInputs) HeaderBase64() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkLoginInputs) Iss() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkLoginInputs) IssBase64Details() ZkLoginClaim {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginClaimINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkLoginInputs) JwkId() JwkId {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterJwkIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkLoginInputs) ProofPoints() *ZkLoginProof {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginProofINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginInputs) PublicIdentifier() *ZkLoginPublicIdentifier {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginInputs) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ZkLoginInputs) Eq(other *ZkLoginInputs) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
-		_pointer,FfiConverterZkLoginInputsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginInputs) Ne(other *ZkLoginInputs) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(
-		_pointer,FfiConverterZkLoginInputsINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *ZkLoginInputs) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterZkLoginInputs struct {}
-
-var FfiConverterZkLoginInputsINSTANCE = FfiConverterZkLoginInputs{}
-
-
-func (c FfiConverterZkLoginInputs) Lift(pointer unsafe.Pointer) *ZkLoginInputs {
-	result := &ZkLoginInputs {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_zklogininputs(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ZkLoginInputs).Destroy)
-	return result
-}
-
-func (c FfiConverterZkLoginInputs) Read(reader io.Reader) *ZkLoginInputs {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterZkLoginInputs) Lower(value *ZkLoginInputs) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ZkLoginInputs")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterZkLoginInputs) Write(writer io.Writer, value *ZkLoginInputs) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerZkLoginInputs struct {}
-
-func (_ FfiDestroyerZkLoginInputs) Destroy(value *ZkLoginInputs) {
-		value.Destroy()
-}
-
-
-
-
-// A zklogin groth16 proof
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-proof = circom-g1 circom-g2 circom-g1
-// ```
-type ZkLoginProofInterface interface {
-	A() *CircomG1
-	B() *CircomG2
-	C() *CircomG1
-}
-// A zklogin groth16 proof
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-proof = circom-g1 circom-g2 circom-g1
-// ```
-type ZkLoginProof struct {
-	ffiObject FfiObject
-}
-func NewZkLoginProof(a *CircomG1, b *CircomG2, c *CircomG1) *ZkLoginProof {
-	return FfiConverterZkLoginProofINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(FfiConverterCircomG1INSTANCE.Lower(a), FfiConverterCircomG2INSTANCE.Lower(b), FfiConverterCircomG1INSTANCE.Lower(c),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *ZkLoginProof) A() *CircomG1 {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCircomG1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginProof) B() *CircomG2 {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCircomG2INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginProof) C() *CircomG1 {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCircomG1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginProof) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ZkLoginProof) Eq(other *ZkLoginProof) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
-		_pointer,FfiConverterZkLoginProofINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginProof) Ne(other *ZkLoginProof) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(
-		_pointer,FfiConverterZkLoginProofINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *ZkLoginProof) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterZkLoginProof struct {}
-
-var FfiConverterZkLoginProofINSTANCE = FfiConverterZkLoginProof{}
-
-
-func (c FfiConverterZkLoginProof) Lift(pointer unsafe.Pointer) *ZkLoginProof {
-	result := &ZkLoginProof {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_zkloginproof(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ZkLoginProof).Destroy)
-	return result
-}
-
-func (c FfiConverterZkLoginProof) Read(reader io.Reader) *ZkLoginProof {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterZkLoginProof) Lower(value *ZkLoginProof) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ZkLoginProof")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterZkLoginProof) Write(writer io.Writer, value *ZkLoginProof) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerZkLoginProof struct {}
-
-func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
-		value.Destroy()
-}
-
-
-
-
-// Public Key equivalent for Zklogin authenticators
-//
-// A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
-// account authenticators, and contains the information required to derive the
-// onchain account `Address` for a Zklogin authenticator.
-//
-// ## Note
-//
-// Due to a historical bug that was introduced in the IOTA Typescript SDK when
-// the zklogin authenticator was first introduced, there are now possibly two
-// "valid" addresses for each zklogin authenticator depending on the
-// bit-pattern of the `address_seed` value.
-//
-// The original bug incorrectly derived a zklogin's address by stripping any
-// leading zero-bytes that could have been present in the 32-byte length
-// `address_seed` value prior to hashing, leading to a different derived
-// address. This incorrectly derived address was presented to users of various
-// wallets, leading them to sending funds to these addresses that they couldn't
-// access. Instead of letting these users lose any assets that were sent to
-// these addresses, the IOTA network decided to change the protocol to allow
-// for a zklogin authenticator who's `address_seed` value had leading
-// zero-bytes be authorized to sign for both the addresses derived from both
-// the unpadded and padded `address_seed` value.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-public-identifier-bcs = bytes ; where the contents are defined by
-// ; <zklogin-public-identifier>
-//
-// zklogin-public-identifier = zklogin-public-identifier-iss
-// address-seed
-//
-// zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
-// address-seed-unpadded
-//
-// ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
-// ; and is serialized with the iss's length in bytes as a u8 followed by
-// ; the bytes of the iss
-// zklogin-public-identifier-iss = u8 *255(OCTET)
-//
-// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-// address-seed = 32(OCTET)
-//
-// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-// ; with any leading zero bytes stripped
-// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
-// ```
-type ZkLoginPublicIdentifierInterface interface {
-	AddressSeed() *Bn254FieldElement
-	// Provides an iterator over the addresses that correspond to this zklogin
-	// authenticator.
-	//
-	// In the majority of instances this will only yield a single address,
-	// except for the instances where the `address_seed` value has a
-	// leading zero-byte, in such cases the returned iterator will yield
-	// two addresses.
-	DeriveAddress() []*Address
-	// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-	// byte length of the `iss` followed by the `iss` bytes themselves and
-	// the full 32 byte `address_seed` value, all prefixed with the zklogin
-	// `SignatureScheme` flag (`0x05`).
-	//
-	// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-	DeriveAddressPadded() *Address
-	// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-	// byte length of the `iss` followed by the `iss` bytes themselves and
-	// the `address_seed` bytes with any leading zero-bytes stripped, all
-	// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-	//
-	// `hash( 0x05 || iss_bytes_len || iss_bytes ||
-	// unpadded_32_byte_address_seed )`
-	DeriveAddressUnpadded() *Address
-	Iss() string
-}
-// Public Key equivalent for Zklogin authenticators
-//
-// A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
-// account authenticators, and contains the information required to derive the
-// onchain account `Address` for a Zklogin authenticator.
-//
-// ## Note
-//
-// Due to a historical bug that was introduced in the IOTA Typescript SDK when
-// the zklogin authenticator was first introduced, there are now possibly two
-// "valid" addresses for each zklogin authenticator depending on the
-// bit-pattern of the `address_seed` value.
-//
-// The original bug incorrectly derived a zklogin's address by stripping any
-// leading zero-bytes that could have been present in the 32-byte length
-// `address_seed` value prior to hashing, leading to a different derived
-// address. This incorrectly derived address was presented to users of various
-// wallets, leading them to sending funds to these addresses that they couldn't
-// access. Instead of letting these users lose any assets that were sent to
-// these addresses, the IOTA network decided to change the protocol to allow
-// for a zklogin authenticator who's `address_seed` value had leading
-// zero-bytes be authorized to sign for both the addresses derived from both
-// the unpadded and padded `address_seed` value.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-public-identifier-bcs = bytes ; where the contents are defined by
-// ; <zklogin-public-identifier>
-//
-// zklogin-public-identifier = zklogin-public-identifier-iss
-// address-seed
-//
-// zklogin-public-identifier-unpadded = zklogin-public-identifier-iss
-// address-seed-unpadded
-//
-// ; The iss, or issuer, is a utf8 string that is less than 255 bytes long
-// ; and is serialized with the iss's length in bytes as a u8 followed by
-// ; the bytes of the iss
-// zklogin-public-identifier-iss = u8 *255(OCTET)
-//
-// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-// address-seed = 32(OCTET)
-//
-// ; A Bn254FieldElement serialized as a 32-byte big-endian value
-// ; with any leading zero bytes stripped
-// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
-// ```
-type ZkLoginPublicIdentifier struct {
-	ffiObject FfiObject
-}
-func NewZkLoginPublicIdentifier(iss string, addressSeed *Bn254FieldElement) (*ZkLoginPublicIdentifier, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(FfiConverterStringINSTANCE.Lower(iss), FfiConverterBn254FieldElementINSTANCE.Lower(addressSeed),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginPublicIdentifier
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-
-
-
-func (_self *ZkLoginPublicIdentifier) AddressSeed() *Bn254FieldElement {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBn254FieldElementINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Provides an iterator over the addresses that correspond to this zklogin
-// authenticator.
-//
-// In the majority of instances this will only yield a single address,
-// except for the instances where the `address_seed` value has a
-// leading zero-byte, in such cases the returned iterator will yield
-// two addresses.
-func (_self *ZkLoginPublicIdentifier) DeriveAddress() []*Address {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-// byte length of the `iss` followed by the `iss` bytes themselves and
-// the full 32 byte `address_seed` value, all prefixed with the zklogin
-// `SignatureScheme` flag (`0x05`).
-//
-// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-func (_self *ZkLoginPublicIdentifier) DeriveAddressPadded() *Address {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-// byte length of the `iss` followed by the `iss` bytes themselves and
-// the `address_seed` bytes with any leading zero-bytes stripped, all
-// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-//
-// `hash( 0x05 || iss_bytes_len || iss_bytes ||
-// unpadded_32_byte_address_seed )`
-func (_self *ZkLoginPublicIdentifier) DeriveAddressUnpadded() *Address {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginPublicIdentifier) Iss() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkLoginPublicIdentifier) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-
-func (_self *ZkLoginPublicIdentifier) Eq(other *ZkLoginPublicIdentifier) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
-		_pointer,FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-func (_self *ZkLoginPublicIdentifier) Ne(other *ZkLoginPublicIdentifier) bool {
-	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(
-		_pointer,FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(other),_uniffiStatus)
-	}))
-}
-
-
-func (object *ZkLoginPublicIdentifier) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterZkLoginPublicIdentifier struct {}
-
-var FfiConverterZkLoginPublicIdentifierINSTANCE = FfiConverterZkLoginPublicIdentifier{}
-
-
-func (c FfiConverterZkLoginPublicIdentifier) Lift(pointer unsafe.Pointer) *ZkLoginPublicIdentifier {
-	result := &ZkLoginPublicIdentifier {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ZkLoginPublicIdentifier).Destroy)
-	return result
-}
-
-func (c FfiConverterZkLoginPublicIdentifier) Read(reader io.Reader) *ZkLoginPublicIdentifier {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterZkLoginPublicIdentifier) Lower(value *ZkLoginPublicIdentifier) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterZkLoginPublicIdentifier) Write(writer io.Writer, value *ZkLoginPublicIdentifier) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerZkLoginPublicIdentifier struct {}
-
-func (_ FfiDestroyerZkLoginPublicIdentifier) Destroy(value *ZkLoginPublicIdentifier) {
-		value.Destroy()
-}
-
-
-
-
-type ZkloginVerifierInterface interface {
-	Jwks() map[JwkId]Jwk
-	Verify(message []byte, authenticator *ZkLoginAuthenticator) error
-	WithJwks(jwks map[JwkId]Jwk) *ZkloginVerifier
-}
-type ZkloginVerifier struct {
-	ffiObject FfiObject
-}
-
-
-// Load a fixed verifying key from zkLogin.vkey output. This is based on a
-// local setup and should not be used in production.
-func ZkloginVerifierNewDev() *ZkloginVerifier {
-	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(_uniffiStatus)
-	}))
-}
-
-func ZkloginVerifierNewMainnet() *ZkloginVerifier {
-	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ZkloginVerifier) Jwks() map[JwkId]Jwk {
-	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterMapJwkIdJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ZkloginVerifier) Verify(message []byte, authenticator *ZkLoginAuthenticator) error {
-	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
-	defer _self.ffiObject.decrementPointer()
-	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
-		C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
-		return false
-	})
-		return _uniffiErr.AsError()
-}
-
-func (_self *ZkloginVerifier) WithJwks(jwks map[JwkId]Jwk) *ZkloginVerifier {
-	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-		_pointer,FfiConverterMapJwkIdJwkINSTANCE.Lower(jwks),_uniffiStatus)
-	}))
-}
-
-func (_self *ZkloginVerifier) DebugString() string {
-	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-
-func (object *ZkloginVerifier) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterZkloginVerifier struct {}
-
-var FfiConverterZkloginVerifierINSTANCE = FfiConverterZkloginVerifier{}
-
-
-func (c FfiConverterZkloginVerifier) Lift(pointer unsafe.Pointer) *ZkloginVerifier {
-	result := &ZkloginVerifier {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ZkloginVerifier).Destroy)
-	return result
-}
-
-func (c FfiConverterZkloginVerifier) Read(reader io.Reader) *ZkloginVerifier {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterZkloginVerifier) Lower(value *ZkloginVerifier) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ZkloginVerifier")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-	
-}
-
-func (c FfiConverterZkloginVerifier) Write(writer io.Writer, value *ZkloginVerifier) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerZkloginVerifier struct {}
-
-func (_ FfiDestroyerZkloginVerifier) Destroy(value *ZkloginVerifier) {
-		value.Destroy()
-}
-
-
-
-
-// A new Jwk
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// active-jwk = jwk-id jwk u64
-// ```
-type ActiveJwk struct {
-	// Identifier used to uniquely identify a Jwk
-	JwkId JwkId
-	// The Jwk
-	Jwk Jwk
-	// Most recent epoch in which the jwk was validated
-	Epoch uint64
-}
-
-func (r *ActiveJwk) Destroy() {
-		FfiDestroyerJwkId{}.Destroy(r.JwkId);
-		FfiDestroyerJwk{}.Destroy(r.Jwk);
-		FfiDestroyerUint64{}.Destroy(r.Epoch);
-}
-
-type FfiConverterActiveJwk struct {}
-
-var FfiConverterActiveJwkINSTANCE = FfiConverterActiveJwk{}
-
-func (c FfiConverterActiveJwk) Lift(rb RustBufferI) ActiveJwk {
-	return LiftFromRustBuffer[ActiveJwk](c, rb)
-}
-
-func (c FfiConverterActiveJwk) Read(reader io.Reader) ActiveJwk {
-	return ActiveJwk {
-			FfiConverterJwkIdINSTANCE.Read(reader),
-			FfiConverterJwkINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterActiveJwk) Lower(value ActiveJwk) C.RustBuffer {
-	return LowerIntoRustBuffer[ActiveJwk](c, value)
-}
-
-func (c FfiConverterActiveJwk) LowerExternal(value ActiveJwk) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[ActiveJwk](c, value))
-}
-
-func (c FfiConverterActiveJwk) Write(writer io.Writer, value ActiveJwk) {
-		FfiConverterJwkIdINSTANCE.Write(writer, value.JwkId);
-		FfiConverterJwkINSTANCE.Write(writer, value.Jwk);
-		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
-}
-
-type FfiDestroyerActiveJwk struct {}
-
-func (_ FfiDestroyerActiveJwk) Destroy(value ActiveJwk) {
-	value.Destroy()
-}
-
-// Expire old JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-expire = u64 u64
-// ```
-type AuthenticatorStateExpire struct {
-	// Expire JWKs that have a lower epoch than this
-	MinEpoch uint64
-	// The initial version of the authenticator object that it was shared at.
-	AuthenticatorObjInitialSharedVersion uint64
-}
-
-func (r *AuthenticatorStateExpire) Destroy() {
-		FfiDestroyerUint64{}.Destroy(r.MinEpoch);
-		FfiDestroyerUint64{}.Destroy(r.AuthenticatorObjInitialSharedVersion);
-}
-
-type FfiConverterAuthenticatorStateExpire struct {}
-
-var FfiConverterAuthenticatorStateExpireINSTANCE = FfiConverterAuthenticatorStateExpire{}
-
-func (c FfiConverterAuthenticatorStateExpire) Lift(rb RustBufferI) AuthenticatorStateExpire {
-	return LiftFromRustBuffer[AuthenticatorStateExpire](c, rb)
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Read(reader io.Reader) AuthenticatorStateExpire {
-	return AuthenticatorStateExpire {
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Lower(value AuthenticatorStateExpire) C.RustBuffer {
-	return LowerIntoRustBuffer[AuthenticatorStateExpire](c, value)
-}
-
-func (c FfiConverterAuthenticatorStateExpire) LowerExternal(value AuthenticatorStateExpire) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[AuthenticatorStateExpire](c, value))
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Write(writer io.Writer, value AuthenticatorStateExpire) {
-		FfiConverterUint64INSTANCE.Write(writer, value.MinEpoch);
-		FfiConverterUint64INSTANCE.Write(writer, value.AuthenticatorObjInitialSharedVersion);
-}
-
-type FfiDestroyerAuthenticatorStateExpire struct {}
-
-func (_ FfiDestroyerAuthenticatorStateExpire) Destroy(value AuthenticatorStateExpire) {
-	value.Destroy()
-}
-
-// Update the set of valid JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-update = u64 ; epoch
-// u64 ; round
-// (vector active-jwk)
-// u64 ; initial version of the authenticator object
-// ```
-type AuthenticatorStateUpdateV1 struct {
-	// Epoch of the authenticator state update transaction
-	Epoch uint64
-	// Consensus round of the authenticator state update
-	Round uint64
-	// newly active jwks
-	NewActiveJwks []ActiveJwk
-	AuthenticatorObjInitialSharedVersion uint64
-}
-
-func (r *AuthenticatorStateUpdateV1) Destroy() {
-		FfiDestroyerUint64{}.Destroy(r.Epoch);
-		FfiDestroyerUint64{}.Destroy(r.Round);
-		FfiDestroyerSequenceActiveJwk{}.Destroy(r.NewActiveJwks);
-		FfiDestroyerUint64{}.Destroy(r.AuthenticatorObjInitialSharedVersion);
-}
-
-type FfiConverterAuthenticatorStateUpdateV1 struct {}
-
-var FfiConverterAuthenticatorStateUpdateV1INSTANCE = FfiConverterAuthenticatorStateUpdateV1{}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Lift(rb RustBufferI) AuthenticatorStateUpdateV1 {
-	return LiftFromRustBuffer[AuthenticatorStateUpdateV1](c, rb)
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Read(reader io.Reader) AuthenticatorStateUpdateV1 {
-	return AuthenticatorStateUpdateV1 {
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterSequenceActiveJwkINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Lower(value AuthenticatorStateUpdateV1) C.RustBuffer {
-	return LowerIntoRustBuffer[AuthenticatorStateUpdateV1](c, value)
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) LowerExternal(value AuthenticatorStateUpdateV1) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[AuthenticatorStateUpdateV1](c, value))
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Write(writer io.Writer, value AuthenticatorStateUpdateV1) {
-		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
-		FfiConverterUint64INSTANCE.Write(writer, value.Round);
-		FfiConverterSequenceActiveJwkINSTANCE.Write(writer, value.NewActiveJwks);
-		FfiConverterUint64INSTANCE.Write(writer, value.AuthenticatorObjInitialSharedVersion);
-}
-
-type FfiDestroyerAuthenticatorStateUpdateV1 struct {}
-
-func (_ FfiDestroyerAuthenticatorStateUpdateV1) Destroy(value AuthenticatorStateUpdateV1) {
-	value.Destroy()
-}
 
 type BatchSendStatus struct {
 	Status BatchSendStatusType
@@ -38592,6 +38373,7 @@ func (_ FfiDestroyerDynamicFieldValue) Destroy(value DynamicFieldValue) {
 // end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
 // u64                                 ; next_epoch_protocol_version
 // (vector checkpoint-commitment)      ; epoch_commitments
+// i64                                 ; epoch_supply_change
 // ```
 type EndOfEpochData struct {
 	NextEpochCommittee []ValidatorCommitteeMember
@@ -38671,11 +38453,12 @@ type Epoch struct {
 	// The minimum gas price that a quorum of validators are guaranteed to sign
 	// a transaction for.
 	ReferenceGasPrice *string
-	// The epoch's starting timestamp.
-	StartTimestamp uint64
+	// The epoch's starting timestamp. RFC3339 in UTC with format:
+	// YYYY-MM-DDTHH:MM:SS.mmmZ
+	StartTimestamp string
 	// The epoch's ending timestamp. Note that this is available only on epochs
-	// that have ended.
-	EndTimestamp *uint64
+	// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
+	EndTimestamp *string
 	// The value of the `version` field of `0x5`, the
 	// `0x3::iota::IotaSystemState` object.  This version changes whenever
 	// the fields contained in the system state object (held in a dynamic
@@ -38705,8 +38488,8 @@ func (r *Epoch) Destroy() {
 		FfiDestroyerOptionalString{}.Destroy(r.NetInflow);
 		FfiDestroyerOptionalProtocolConfigs{}.Destroy(r.ProtocolConfigs);
 		FfiDestroyerOptionalString{}.Destroy(r.ReferenceGasPrice);
-		FfiDestroyerUint64{}.Destroy(r.StartTimestamp);
-		FfiDestroyerOptionalUint64{}.Destroy(r.EndTimestamp);
+		FfiDestroyerString{}.Destroy(r.StartTimestamp);
+		FfiDestroyerOptionalString{}.Destroy(r.EndTimestamp);
 		FfiDestroyerOptionalUint64{}.Destroy(r.SystemStateVersion);
 		FfiDestroyerOptionalUint64{}.Destroy(r.TotalCheckpoints);
 		FfiDestroyerOptionalString{}.Destroy(r.TotalGasFees);
@@ -38733,8 +38516,8 @@ func (c FfiConverterEpoch) Read(reader io.Reader) Epoch {
 			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalProtocolConfigsINSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalUint64INSTANCE.Read(reader),
 			FfiConverterOptionalUint64INSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
@@ -38761,8 +38544,8 @@ func (c FfiConverterEpoch) Write(writer io.Writer, value Epoch) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.NetInflow);
 		FfiConverterOptionalProtocolConfigsINSTANCE.Write(writer, value.ProtocolConfigs);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.ReferenceGasPrice);
-		FfiConverterUint64INSTANCE.Write(writer, value.StartTimestamp);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.EndTimestamp);
+		FfiConverterStringINSTANCE.Write(writer, value.StartTimestamp);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.EndTimestamp);
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.SystemStateVersion);
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.TotalCheckpoints);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalGasFees);
@@ -39097,15 +38880,15 @@ func (_ FfiDestroyerGqlAddress) Destroy(value GqlAddress) {
 //
 // Storage is charged independently of computation.
 // There are 3 parts to the storage charges:
-// `storage_cost`: it is the charge of storage at the time the transaction is
-// executed.                 The cost of storage is the number of bytes of the
-// objects being mutated                 multiplied by a variable storage cost
-// per byte `storage_rebate`: this is the amount a user gets back when
-// manipulating an object.                   The `storage_rebate` is the
-// `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
-// all the value of the object storage cost is
-// given back to user and there is a small fraction that
-// is kept by the system. This value tracks that charge.
+// - `storage_cost`: it is the charge of storage at the time the transaction is
+// executed. The cost of storage is the number of bytes of the objects being
+// mutated multiplied by a variable storage cost per byte
+// - `storage_rebate`: this is the amount a user gets back when manipulating an
+// object. The `storage_rebate` is the `storage_cost` for an object minus
+// fees.
+// - `non_refundable_storage_fee`: not all the value of the object storage cost
+// is given back to user and there is a small fraction that is kept by the
+// system. This value tracks that charge.
 //
 // When looking at a gas cost summary the amount charged to the user is
 // `computation_cost + storage_cost - storage_rebate`
@@ -39200,10 +38983,10 @@ func (_ FfiDestroyerGasCostSummary) Destroy(value GasCostSummary) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// gas-payment = (vector object-ref) ; gas coin objects
-// address             ; owner
-// u64                 ; price
-// u64                 ; budget
+// gas-payment = (vector object-reference) ; gas coin objects
+// address                   ; owner
+// u64                       ; price
+// u64                       ; budget
 // ```
 type GasPayment struct {
 	Objects []ObjectReference
@@ -39260,130 +39043,6 @@ func (c FfiConverterGasPayment) Write(writer io.Writer, value GasPayment) {
 type FfiDestroyerGasPayment struct {}
 
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
-	value.Destroy()
-}
-
-// A JSON Web Key
-//
-// Struct that contains info for a JWK. A list of them for different kids can
-// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
-// The JWK is used to verify the JWT token.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk = string string string string
-// ```
-type Jwk struct {
-	// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-	Kty string
-	// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-	E string
-	// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-	N string
-	// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-	Alg string
-}
-
-func (r *Jwk) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Kty);
-		FfiDestroyerString{}.Destroy(r.E);
-		FfiDestroyerString{}.Destroy(r.N);
-		FfiDestroyerString{}.Destroy(r.Alg);
-}
-
-type FfiConverterJwk struct {}
-
-var FfiConverterJwkINSTANCE = FfiConverterJwk{}
-
-func (c FfiConverterJwk) Lift(rb RustBufferI) Jwk {
-	return LiftFromRustBuffer[Jwk](c, rb)
-}
-
-func (c FfiConverterJwk) Read(reader io.Reader) Jwk {
-	return Jwk {
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterJwk) Lower(value Jwk) C.RustBuffer {
-	return LowerIntoRustBuffer[Jwk](c, value)
-}
-
-func (c FfiConverterJwk) LowerExternal(value Jwk) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[Jwk](c, value))
-}
-
-func (c FfiConverterJwk) Write(writer io.Writer, value Jwk) {
-		FfiConverterStringINSTANCE.Write(writer, value.Kty);
-		FfiConverterStringINSTANCE.Write(writer, value.E);
-		FfiConverterStringINSTANCE.Write(writer, value.N);
-		FfiConverterStringINSTANCE.Write(writer, value.Alg);
-}
-
-type FfiDestroyerJwk struct {}
-
-func (_ FfiDestroyerJwk) Destroy(value Jwk) {
-	value.Destroy()
-}
-
-// Key to uniquely identify a JWK
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk-id = string string
-// ```
-type JwkId struct {
-	// The issuer or identity of the OIDC provider.
-	Iss string
-	// A key id use to uniquely identify a key from an OIDC provider.
-	Kid string
-}
-
-func (r *JwkId) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Iss);
-		FfiDestroyerString{}.Destroy(r.Kid);
-}
-
-type FfiConverterJwkId struct {}
-
-var FfiConverterJwkIdINSTANCE = FfiConverterJwkId{}
-
-func (c FfiConverterJwkId) Lift(rb RustBufferI) JwkId {
-	return LiftFromRustBuffer[JwkId](c, rb)
-}
-
-func (c FfiConverterJwkId) Read(reader io.Reader) JwkId {
-	return JwkId {
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterJwkId) Lower(value JwkId) C.RustBuffer {
-	return LowerIntoRustBuffer[JwkId](c, value)
-}
-
-func (c FfiConverterJwkId) LowerExternal(value JwkId) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[JwkId](c, value))
-}
-
-func (c FfiConverterJwkId) Write(writer io.Writer, value JwkId) {
-		FfiConverterStringINSTANCE.Write(writer, value.Iss);
-		FfiConverterStringINSTANCE.Write(writer, value.Kid);
-}
-
-type FfiDestroyerJwkId struct {}
-
-func (_ FfiDestroyerJwkId) Destroy(value JwkId) {
 	value.Destroy()
 }
 
@@ -40009,16 +39668,15 @@ func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-move-struct = compressed-struct-tag bool u64 object-contents
+// move-struct = compressed-struct-tag u64 bytes
 //
 // compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-// other-struct-type     = %x00 struct-tag
-// gas-coin-type         = %x01
-// staked-iota-type      = %x02
-// coin-type             = %x03 type-tag
+// other-struct-type     = %d00 struct-tag
+// gas-coin-type         = %d01
+// staked-iota-type      = %d02
+// coin-type             = %d03 type-tag
 //
-// ; first 32 bytes of the contents are the object's object-id
-// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 // ```
 type MoveStruct struct {
 	// The type of this object
@@ -40026,14 +39684,14 @@ type MoveStruct struct {
 	// Number that increases each time a tx takes this object as a mutable
 	// input This is a lamport timestamp, not a sequentially increasing
 	// version
-	Version uint64
+	Version *Version
 	// BCS bytes of a Move struct value
 	Contents []byte
 }
 
 func (r *MoveStruct) Destroy() {
 		FfiDestroyerStructTag{}.Destroy(r.StructType);
-		FfiDestroyerUint64{}.Destroy(r.Version);
+		FfiDestroyerVersion{}.Destroy(r.Version);
 		FfiDestroyerBytes{}.Destroy(r.Contents);
 }
 
@@ -40048,7 +39706,7 @@ func (c FfiConverterMoveStruct) Lift(rb RustBufferI) MoveStruct {
 func (c FfiConverterMoveStruct) Read(reader io.Reader) MoveStruct {
 	return MoveStruct {
 			FfiConverterStructTagINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
 	}
 }
@@ -40063,7 +39721,7 @@ func (c FfiConverterMoveStruct) LowerExternal(value MoveStruct) ExternalCRustBuf
 
 func (c FfiConverterMoveStruct) Write(writer io.Writer, value MoveStruct) {
 		FfiConverterStructTagINSTANCE.Write(writer, value.StructType);
-		FfiConverterUint64INSTANCE.Write(writer, value.Version);
+		FfiConverterVersionINSTANCE.Write(writer, value.Version);
 		FfiConverterBytesINSTANCE.Write(writer, value.Contents);
 }
 
@@ -40467,17 +40125,17 @@ func (_ FfiDestroyerObjectRef) Destroy(value ObjectRef) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-ref = object-id u64 digest
+// object-reference = object-id u64 digest
 // ```
 type ObjectReference struct {
 	ObjectId *ObjectId
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (r *ObjectReference) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.ObjectId);
-		FfiDestroyerUint64{}.Destroy(r.Version);
+		FfiDestroyerVersion{}.Destroy(r.Version);
 		FfiDestroyerDigest{}.Destroy(r.Digest);
 }
 
@@ -40492,7 +40150,7 @@ func (c FfiConverterObjectReference) Lift(rb RustBufferI) ObjectReference {
 func (c FfiConverterObjectReference) Read(reader io.Reader) ObjectReference {
 	return ObjectReference {
 			FfiConverterObjectIdINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterDigestINSTANCE.Read(reader),
 	}
 }
@@ -40507,7 +40165,7 @@ func (c FfiConverterObjectReference) LowerExternal(value ObjectReference) Extern
 
 func (c FfiConverterObjectReference) Write(writer io.Writer, value ObjectReference) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
-		FfiConverterUint64INSTANCE.Write(writer, value.Version);
+		FfiConverterVersionINSTANCE.Write(writer, value.Version);
 		FfiConverterDigestINSTANCE.Write(writer, value.Digest);
 }
 
@@ -40883,14 +40541,14 @@ type RandomnessStateUpdate struct {
 	// Updated random bytes
 	RandomBytes []byte
 	// The initial version of the randomness object that it was shared at
-	RandomnessObjInitialSharedVersion uint64
+	RandomnessObjInitialSharedVersion *Version
 }
 
 func (r *RandomnessStateUpdate) Destroy() {
 		FfiDestroyerUint64{}.Destroy(r.Epoch);
 		FfiDestroyerUint64{}.Destroy(r.RandomnessRound);
 		FfiDestroyerBytes{}.Destroy(r.RandomBytes);
-		FfiDestroyerUint64{}.Destroy(r.RandomnessObjInitialSharedVersion);
+		FfiDestroyerVersion{}.Destroy(r.RandomnessObjInitialSharedVersion);
 }
 
 type FfiConverterRandomnessStateUpdate struct {}
@@ -40906,7 +40564,7 @@ func (c FfiConverterRandomnessStateUpdate) Read(reader io.Reader) RandomnessStat
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 	}
 }
 
@@ -40922,7 +40580,7 @@ func (c FfiConverterRandomnessStateUpdate) Write(writer io.Writer, value Randomn
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessRound);
 		FfiConverterBytesINSTANCE.Write(writer, value.RandomBytes);
-		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessObjInitialSharedVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.RandomnessObjInitialSharedVersion);
 }
 
 type FfiDestroyerRandomnessStateUpdate struct {}
@@ -41324,7 +40982,7 @@ type TransactionEffectsV1 struct {
 	// The set of transaction digests this transaction depends on.
 	Dependencies []*Digest
 	// The version number of all the written Move objects by this transaction.
-	LamportVersion uint64
+	LamportVersion *Version
 	// Objects whose state are changed in the object store.
 	ChangedObjects []ChangedObject
 	// Shared objects that are not mutated in this transaction. Unlike owned
@@ -41348,7 +41006,7 @@ func (r *TransactionEffectsV1) Destroy() {
 		FfiDestroyerOptionalUint32{}.Destroy(r.GasObjectIndex);
 		FfiDestroyerOptionalDigest{}.Destroy(r.EventsDigest);
 		FfiDestroyerSequenceDigest{}.Destroy(r.Dependencies);
-		FfiDestroyerUint64{}.Destroy(r.LamportVersion);
+		FfiDestroyerVersion{}.Destroy(r.LamportVersion);
 		FfiDestroyerSequenceChangedObject{}.Destroy(r.ChangedObjects);
 		FfiDestroyerSequenceUnchangedSharedObject{}.Destroy(r.UnchangedSharedObjects);
 		FfiDestroyerOptionalDigest{}.Destroy(r.AuxiliaryDataDigest);
@@ -41371,7 +41029,7 @@ func (c FfiConverterTransactionEffectsV1) Read(reader io.Reader) TransactionEffe
 			FfiConverterOptionalUint32INSTANCE.Read(reader),
 			FfiConverterOptionalDigestINSTANCE.Read(reader),
 			FfiConverterSequenceDigestINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterSequenceChangedObjectINSTANCE.Read(reader),
 			FfiConverterSequenceUnchangedSharedObjectINSTANCE.Read(reader),
 			FfiConverterOptionalDigestINSTANCE.Read(reader),
@@ -41394,7 +41052,7 @@ func (c FfiConverterTransactionEffectsV1) Write(writer io.Writer, value Transact
 		FfiConverterOptionalUint32INSTANCE.Write(writer, value.GasObjectIndex);
 		FfiConverterOptionalDigestINSTANCE.Write(writer, value.EventsDigest);
 		FfiConverterSequenceDigestINSTANCE.Write(writer, value.Dependencies);
-		FfiConverterUint64INSTANCE.Write(writer, value.LamportVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.LamportVersion);
 		FfiConverterSequenceChangedObjectINSTANCE.Write(writer, value.ChangedObjects);
 		FfiConverterSequenceUnchangedSharedObjectINSTANCE.Write(writer, value.UnchangedSharedObjects);
 		FfiConverterOptionalDigestINSTANCE.Write(writer, value.AuxiliaryDataDigest);
@@ -41583,7 +41241,9 @@ func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 	value.Destroy()
 }
 
-// Identifies a struct and the module it was defined in
+// Stores the origin of a data type where it first appeared in the version
+// chain. A data type is identified by the name of the module and the name of
+// the struct/enum in combination.
 //
 // # BCS
 //
@@ -41593,14 +41253,18 @@ func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 // type-origin = identifier identifier object-id
 // ```
 type TypeOrigin struct {
+	// The name of the module the data type resides in.
 	ModuleName *Identifier
-	StructName *Identifier
+	// The name of the data type. Either refers to an enum or a struct
+	// identifier.
+	DatatypeName *Identifier
+	// ID of the package, where the given type first appeared.
 	Package *ObjectId
 }
 
 func (r *TypeOrigin) Destroy() {
 		FfiDestroyerIdentifier{}.Destroy(r.ModuleName);
-		FfiDestroyerIdentifier{}.Destroy(r.StructName);
+		FfiDestroyerIdentifier{}.Destroy(r.DatatypeName);
 		FfiDestroyerObjectId{}.Destroy(r.Package);
 }
 
@@ -41630,7 +41294,7 @@ func (c FfiConverterTypeOrigin) LowerExternal(value TypeOrigin) ExternalCRustBuf
 
 func (c FfiConverterTypeOrigin) Write(writer io.Writer, value TypeOrigin) {
 		FfiConverterIdentifierINSTANCE.Write(writer, value.ModuleName);
-		FfiConverterIdentifierINSTANCE.Write(writer, value.StructName);
+		FfiConverterIdentifierINSTANCE.Write(writer, value.DatatypeName);
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Package);
 }
 
@@ -41703,15 +41367,15 @@ func (_ FfiDestroyerUnchangedSharedObject) Destroy(value UnchangedSharedObject) 
 // upgrade-info = object-id u64
 // ```
 type UpgradeInfo struct {
-	// Id of the upgraded packages
+	// ID of the upgraded package
 	UpgradedId *ObjectId
 	// Version of the upgraded package
-	UpgradedVersion uint64
+	UpgradedVersion *Version
 }
 
 func (r *UpgradeInfo) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.UpgradedId);
-		FfiDestroyerUint64{}.Destroy(r.UpgradedVersion);
+		FfiDestroyerVersion{}.Destroy(r.UpgradedVersion);
 }
 
 type FfiConverterUpgradeInfo struct {}
@@ -41725,7 +41389,7 @@ func (c FfiConverterUpgradeInfo) Lift(rb RustBufferI) UpgradeInfo {
 func (c FfiConverterUpgradeInfo) Read(reader io.Reader) UpgradeInfo {
 	return UpgradeInfo {
 			FfiConverterObjectIdINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 	}
 }
 
@@ -41739,7 +41403,7 @@ func (c FfiConverterUpgradeInfo) LowerExternal(value UpgradeInfo) ExternalCRustB
 
 func (c FfiConverterUpgradeInfo) Write(writer io.Writer, value UpgradeInfo) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.UpgradedId);
-		FfiConverterUint64INSTANCE.Write(writer, value.UpgradedVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.UpgradedVersion);
 }
 
 type FfiDestroyerUpgradeInfo struct {}
@@ -41975,7 +41639,7 @@ func (_ FfiDestroyerValidatorCommittee) Destroy(value ValidatorCommittee) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// validator-committee-member = bls-public-key
+// validator-committee-member = bls12381-public-key
 // u64 ; stake
 // ```
 type ValidatorCommitteeMember struct {
@@ -42271,59 +41935,6 @@ func (_ FfiDestroyerValidatorSet) Destroy(value ValidatorSet) {
 	value.Destroy()
 }
 
-// A claim of the iss in a zklogin proof
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// zklogin-claim = string u8
-// ```
-type ZkLoginClaim struct {
-	Value string
-	IndexMod4 uint8
-}
-
-func (r *ZkLoginClaim) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Value);
-		FfiDestroyerUint8{}.Destroy(r.IndexMod4);
-}
-
-type FfiConverterZkLoginClaim struct {}
-
-var FfiConverterZkLoginClaimINSTANCE = FfiConverterZkLoginClaim{}
-
-func (c FfiConverterZkLoginClaim) Lift(rb RustBufferI) ZkLoginClaim {
-	return LiftFromRustBuffer[ZkLoginClaim](c, rb)
-}
-
-func (c FfiConverterZkLoginClaim) Read(reader io.Reader) ZkLoginClaim {
-	return ZkLoginClaim {
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterUint8INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterZkLoginClaim) Lower(value ZkLoginClaim) C.RustBuffer {
-	return LowerIntoRustBuffer[ZkLoginClaim](c, value)
-}
-
-func (c FfiConverterZkLoginClaim) LowerExternal(value ZkLoginClaim) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[ZkLoginClaim](c, value))
-}
-
-func (c FfiConverterZkLoginClaim) Write(writer io.Writer, value ZkLoginClaim) {
-		FfiConverterStringINSTANCE.Write(writer, value.Value);
-		FfiConverterUint8INSTANCE.Write(writer, value.IndexMod4);
-}
-
-type FfiDestroyerZkLoginClaim struct {}
-
-func (_ FfiDestroyerZkLoginClaim) Destroy(value ZkLoginClaim) {
-	value.Destroy()
-}
-
 
 type BatchSendStatusType uint
 
@@ -42384,18 +41995,18 @@ func (_ FfiDestroyerBatchSendStatusType) Destroy(value BatchSendStatusType) {
 // =/ invalid-object-by-mut-ref
 // =/ shared-object-operation-not-allowed
 //
-// type-mismatch                               = %x00
-// invalid-bcs-bytes                           = %x01
-// invalid-usage-of-pure-argument              = %x02
-// invalid-argument-to-private-entry-function  = %x03
-// index-out-of-bounds                         = %x04 u16
-// secondary-index-out-of-bound                = %x05 u16 u16
-// invalid-result-arity                        = %x06 u16
-// invalid-gas-coin-usage                      = %x07
-// invalid-value-usage                         = %x08
-// invalid-object-by-value                     = %x09
-// invalid-object-by-mut-ref                   = %x0a
-// shared-object-operation-not-allowed         = %x0b
+// type-mismatch                               = %d00
+// invalid-bcs-bytes                           = %d01
+// invalid-usage-of-pure-argument              = %d02
+// invalid-argument-to-private-entry-function  = %d03
+// index-out-of-bounds                         = %d04 u16
+// secondary-index-out-of-bound                = %d05 u16 u16
+// invalid-result-arity                        = %d06 u16
+// invalid-gas-coin-usage                      = %d07
+// invalid-value-usage                         = %d08
+// invalid-object-by-value                     = %d09
+// invalid-object-by-mut-ref                   = %d10
+// shared-object-operation-not-allowed         = %d11
 // ```
 type CommandArgumentError interface {
 	Destroy()
@@ -42688,44 +42299,48 @@ func (_ FfiDestroyerDirection) Destroy(value Direction) {
 // =/ address-denied-for-coin
 // =/ coin-type-global-pause
 // =/ execution-cancelled-due-to-randomness-unavailable
+// =/ execution-cancelled-due-to-shared-object-congestion-v2
+// =/ invalid-linkage
 //
-// insufficient-gas                                    = %x00
-// invalid-gas-object                                  = %x01
-// invariant-violation                                 = %x02
-// feature-not-yet-supported                           = %x03
-// object-too-big                                      = %x04 u64 u64
-// package-too-big                                     = %x05 u64 u64
-// circular-object-ownership                           = %x06 object-id
-// insufficient-coin-balance                           = %x07
-// coin-balance-overflow                               = %x08
-// publish-error-non-zero-address                      = %x09
-// iota-move-verification-error                        = %x0a
-// move-primitive-runtime-error                        = %x0b (option move-location)
-// move-abort                                          = %x0c move-location u64
-// vm-verification-or-deserialization-error            = %x0d
-// vm-invariant-violation                              = %x0e
-// function-not-found                                  = %x0f
-// arity-mismatch                                      = %x10
-// type-arity-mismatch                                 = %x11
-// non-entry-function-invoked                          = %x12
-// command-argument-error                              = %x13 u16 command-argument-error
-// type-argument-error                                 = %x14 u16 type-argument-error
-// unused-value-without-drop                           = %x15 u16 u16
-// invalid-public-function-return-type                 = %x16 u16
-// invalid-transfer-object                             = %x17
-// effects-too-large                                   = %x18 u64 u64
-// publish-upgrade-missing-dependency                  = %x19
-// publish-upgrade-dependency-downgrade                = %x1a
-// package-upgrade-error                               = %x1b package-upgrade-error
-// written-objects-too-large                           = %x1c u64 u64
-// certificate-denied                                  = %x1d
-// iota-move-verification-timeout                      = %x1e
-// shared-object-operation-not-allowed                 = %x1f
-// input-object-deleted                                = %x20
-// execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
-// address-denied-for-coin                             = %x22 address string
-// coin-type-global-pause                              = %x23 string
-// execution-cancelled-due-to-randomness-unavailable   = %x24
+// insufficient-gas                                       = %d00
+// invalid-gas-object                                     = %d01
+// invariant-violation                                    = %d02
+// feature-not-yet-supported                              = %d03
+// object-too-big                                         = %d04 u64 u64
+// package-too-big                                        = %d05 u64 u64
+// circular-object-ownership                              = %d06 object-id
+// insufficient-coin-balance                              = %d07
+// coin-balance-overflow                                  = %d08
+// publish-error-non-zero-address                         = %d09
+// iota-move-verification-error                           = %d10
+// move-primitive-runtime-error                           = %d11 (option move-location)
+// move-abort                                             = %d12 move-location u64
+// vm-verification-or-deserialization-error               = %d13
+// vm-invariant-violation                                 = %d14
+// function-not-found                                     = %d15
+// arity-mismatch                                         = %d16
+// type-arity-mismatch                                    = %d17
+// non-entry-function-invoked                             = %d18
+// command-argument-error                                 = %d19 u16 command-argument-error
+// type-argument-error                                    = %d20 u16 type-argument-error
+// unused-value-without-drop                              = %d21 u16 u16
+// invalid-public-function-return-type                    = %d22 u16
+// invalid-transfer-object                                = %d23
+// effects-too-large                                      = %d24 u64 u64
+// publish-upgrade-missing-dependency                     = %d25
+// publish-upgrade-dependency-downgrade                   = %d26
+// package-upgrade-error                                  = %d27 package-upgrade-error
+// written-objects-too-large                              = %d28 u64 u64
+// certificate-denied                                     = %d29
+// iota-move-verification-timeout                         = %d30
+// shared-object-operation-not-allowed                    = %d31
+// input-object-deleted                                   = %d32
+// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+// address-denied-for-coin                                = %d34 address string
+// coin-type-global-pause                                 = %d35 string
+// execution-cancelled-due-to-randomness-unavailable      = %d36
+// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+// invalid-linkage                                        = %d38
 // ```
 type ExecutionError interface {
 	Destroy()
@@ -43324,8 +42939,8 @@ func (_ FfiDestroyerExecutionError) Destroy(value ExecutionError) {
 //
 // ```text
 // execution-status = success / failure
-// success = %x00
-// failure = %x01 execution-error (option u64)
+// success = %d00
+// failure = %d01 execution-error (option u64)
 // ```
 type ExecutionStatus interface {
 	Destroy()
@@ -43498,9 +43113,9 @@ func (_ FfiDestroyerHashingIntentScope) Destroy(value HashingIntentScope) {
 // =/ id-operation-created
 // =/ id-operation-deleted
 //
-// id-operation-none       = %x00
-// id-operation-created    = %x01
-// id-operation-deleted    = %x02
+// id-operation-none       = %d00
+// id-operation-created    = %d01
+// id-operation-deleted    = %d02
 // ```
 type IdOperation uint8
 
@@ -44098,8 +43713,8 @@ func (_ FfiDestroyerNameFormat) Destroy(value NameFormat) {
 // ```text
 // object-in = object-in-missing / object-in-data
 //
-// object-in-missing = %x00
-// object-in-data    = %x01 u64 digest owner
+// object-in-missing = %d00
+// object-in-data    = %d01 u64 digest owner
 // ```
 type ObjectIn interface {
 	Destroy()
@@ -44111,13 +43726,13 @@ func (e ObjectInMissing) Destroy() {
 }
 // The old version, digest and owner.
 type ObjectInData struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 	Owner *Owner
 }
 
 func (e ObjectInData) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 		FfiDestroyerOwner{}.Destroy(e.Owner);
 }
@@ -44145,7 +43760,7 @@ func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 			};
 		case 2:
 			return ObjectInData{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 				FfiConverterOwnerINSTANCE.Read(reader),
 			};
@@ -44160,7 +43775,7 @@ func (FfiConverterObjectIn) Write(writer io.Writer, value ObjectIn) {
 			writeInt32(writer, 1)
 		case ObjectInData:
 			writeInt32(writer, 2)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		default:
@@ -44189,9 +43804,9 @@ func (_ FfiDestroyerObjectIn) Destroy(value ObjectIn) {
 // =/ object-out-package-write
 //
 //
-// object-out-missing        = %x00
-// object-out-object-write   = %x01 digest owner
-// object-out-package-write  = %x02 version digest
+// object-out-missing        = %d00
+// object-out-object-write   = %d01 digest owner
+// object-out-package-write  = %d02 version digest
 // ```
 type ObjectOut interface {
 	Destroy()
@@ -44215,12 +43830,12 @@ func (e ObjectOutObjectWrite) Destroy() {
 // Packages writes need to be tracked separately with version because
 // we don't use lamport version for package publish and upgrades.
 type ObjectOutPackageWrite struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (e ObjectOutPackageWrite) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 
@@ -44252,7 +43867,7 @@ func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 			};
 		case 3:
 			return ObjectOutPackageWrite{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		default:
@@ -44270,7 +43885,7 @@ func (FfiConverterObjectOut) Write(writer io.Writer, value ObjectOut) {
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		case ObjectOutPackageWrite:
 			writeInt32(writer, 3)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		default:
 			_ = variant_value
@@ -44300,12 +43915,12 @@ func (_ FfiDestroyerObjectOut) Destroy(value ObjectOut) {
 // unknown-upgrade-policy  /
 // package-id-does-not-match
 //
-// unable-to-fetch-package     = %x00 object-id
-// not-a-package               = %x01 object-id
-// incompatible-upgrade        = %x02
-// digest-does-not-match       = %x03 digest
-// unknown-upgrade-policy      = %x04 u8
-// package-id-does-not-match   = %x05 object-id object-id
+// unable-to-fetch-package     = %d00 object-id
+// not-a-package               = %d01 object-id
+// incompatible-upgrade        = %d02
+// digest-does-not-match       = %d03 digest
+// unknown-upgrade-policy      = %d04 u8
+// package-id-does-not-match   = %d05 object-id object-id
 // ```
 type PackageUpgradeError interface {
 	Destroy()
@@ -44546,16 +44161,16 @@ func (_ FfiDestroyerSdkFfiError) Destroy(value *SdkFfiError) {
 //
 // ```text
 // signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-// multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+// multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 // move-auth-flag
-// ed25519-flag        = %x00
-// secp256k1-flag      = %x01
-// secp256r1-flag      = %x02
-// multisig-flag       = %x03
-// bls-flag            = %x04
-// zklogin-auth-flag   = %x05
-// passkey-auth-flag   = %x06
-// move-auth-flag      = %x07
+// ed25519-flag                    = %d00
+// secp256k1-flag                  = %d01
+// secp256r1-flag                  = %d02
+// multisig-flag                   = %d03
+// bls-flag                        = %d04
+// zklogin-auth-flag-deprecated    = %d05
+// passkey-auth-flag               = %d06
+// move-auth-flag                  = %d07
 // ```
 type SignatureScheme uint8
 
@@ -44565,7 +44180,7 @@ const (
 	SignatureSchemeSecp256r1 SignatureScheme = 2
 	SignatureSchemeMultisig SignatureScheme = 3
 	SignatureSchemeBls12381 SignatureScheme = 4
-	SignatureSchemeZkLoginAuthenticator SignatureScheme = 5
+	SignatureSchemeZkLoginAuthenticatorDeprecated SignatureScheme = 5
 	SignatureSchemePasskeyAuthenticator SignatureScheme = 6
 	SignatureSchemeMoveAuthenticator SignatureScheme = 7
 )
@@ -44697,9 +44312,8 @@ const (
 	TransactionBlockKindInputProgrammableTx TransactionBlockKindInput = 2
 	TransactionBlockKindInputGenesis TransactionBlockKindInput = 3
 	TransactionBlockKindInputConsensusCommitPrologueV1 TransactionBlockKindInput = 4
-	TransactionBlockKindInputAuthenticatorStateUpdateV1 TransactionBlockKindInput = 5
-	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 6
-	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 7
+	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 5
+	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 6
 )
 
 type FfiConverterTransactionBlockKindInput struct {}
@@ -44740,8 +44354,8 @@ func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKin
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-expiration =  %x00      ; none
-// =/ %x01 u64  ; epoch
+// transaction-expiration =  %d00      ; none
+// =/ %d01 u64  ; epoch
 // ```
 type TransactionExpiration interface {
 	Destroy()
@@ -44821,8 +44435,8 @@ func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) 
 //
 // ```text
 // type-argument-error = type-not-found / constraint-not-satisfied
-// type-not-found = %x00
-// constraint-not-satisfied = %x01
+// type-not-found = %d00
+// constraint-not-satisfied = %d01
 // ```
 type TypeArgumentError uint8
 
@@ -44877,11 +44491,11 @@ func (_ FfiDestroyerTypeArgumentError) Destroy(value TypeArgumentError) {
 // =/ cancelled
 // =/ per-epoch-config
 //
-// read-only-root      = %x00 u64 digest
-// mutate-deleted      = %x01 u64
-// read-deleted        = %x02 u64
-// cancelled           = %x03 u64
-// per-epoch-config    = %x04
+// read-only-root      = %d00 u64 digest
+// mutate-deleted      = %d01 u64
+// read-deleted        = %d02 u64
+// cancelled           = %d03 u64
+// per-epoch-config    = %d04
 // ```
 type UnchangedSharedKind interface {
 	Destroy()
@@ -44890,38 +44504,38 @@ type UnchangedSharedKind interface {
 // ObjectDigest for protocol correctness, but it will make it easier to
 // verify untrusted read.
 type UnchangedSharedKindReadOnlyRoot struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (e UnchangedSharedKindReadOnlyRoot) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 // Deleted shared objects that appear mutably/owned in the input.
 type UnchangedSharedKindMutateDeleted struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindMutateDeleted) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Deleted shared objects that appear as read-only in the input.
 type UnchangedSharedKindReadDeleted struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindReadDeleted) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Shared objects in cancelled transaction. The sequence number embed
 // cancellation reason.
 type UnchangedSharedKindCancelled struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindCancelled) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Read of a per-epoch config object that should remain the same during an
 // epoch.
@@ -44951,20 +44565,20 @@ func (FfiConverterUnchangedSharedKind) Read(reader io.Reader) UnchangedSharedKin
 	switch (id) {
 		case 1:
 			return UnchangedSharedKindReadOnlyRoot{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		case 2:
 			return UnchangedSharedKindMutateDeleted{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 3:
 			return UnchangedSharedKindReadDeleted{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 4:
 			return UnchangedSharedKindCancelled{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 5:
 			return UnchangedSharedKindPerEpochConfig{
@@ -44978,17 +44592,17 @@ func (FfiConverterUnchangedSharedKind) Write(writer io.Writer, value UnchangedSh
 	switch variant_value := value.(type) {
 		case UnchangedSharedKindReadOnlyRoot:
 			writeInt32(writer, 1)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		case UnchangedSharedKindMutateDeleted:
 			writeInt32(writer, 2)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindReadDeleted:
 			writeInt32(writer, 3)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindCancelled:
 			writeInt32(writer, 4)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindPerEpochConfig:
 			writeInt32(writer, 5)
 		default:
@@ -46028,6 +45642,48 @@ func (_ FfiDestroyerOptionalPasskeyAuthenticator) Destroy(value **PasskeyAuthent
 }
 
 
+type FfiConverterOptionalPasskeyPublicKey struct{}
+
+var FfiConverterOptionalPasskeyPublicKeyINSTANCE = FfiConverterOptionalPasskeyPublicKey{}
+
+func (c FfiConverterOptionalPasskeyPublicKey) Lift(rb RustBufferI) **PasskeyPublicKey {
+	return LiftFromRustBuffer[**PasskeyPublicKey](c, rb)
+}
+
+func (_ FfiConverterOptionalPasskeyPublicKey) Read(reader io.Reader) **PasskeyPublicKey {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterPasskeyPublicKeyINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalPasskeyPublicKey) Lower(value **PasskeyPublicKey) C.RustBuffer {
+	return LowerIntoRustBuffer[**PasskeyPublicKey](c, value)
+}
+
+func (c FfiConverterOptionalPasskeyPublicKey) LowerExternal(value **PasskeyPublicKey) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**PasskeyPublicKey](c, value))
+}
+
+func (_ FfiConverterOptionalPasskeyPublicKey) Write(writer io.Writer, value **PasskeyPublicKey) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterPasskeyPublicKeyINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalPasskeyPublicKey struct {}
+
+func (_ FfiDestroyerOptionalPasskeyPublicKey) Destroy(value **PasskeyPublicKey) {
+	if value != nil {
+		FfiDestroyerPasskeyPublicKey{}.Destroy(*value)
+	}
+}
+
+
 type FfiConverterOptionalSecp256k1PublicKey struct{}
 
 var FfiConverterOptionalSecp256k1PublicKeyINSTANCE = FfiConverterOptionalSecp256k1PublicKey{}
@@ -46364,128 +46020,44 @@ func (_ FfiDestroyerOptionalTypeTag) Destroy(value **TypeTag) {
 }
 
 
-type FfiConverterOptionalZkLoginAuthenticator struct{}
+type FfiConverterOptionalVersion struct{}
 
-var FfiConverterOptionalZkLoginAuthenticatorINSTANCE = FfiConverterOptionalZkLoginAuthenticator{}
+var FfiConverterOptionalVersionINSTANCE = FfiConverterOptionalVersion{}
 
-func (c FfiConverterOptionalZkLoginAuthenticator) Lift(rb RustBufferI) **ZkLoginAuthenticator {
-	return LiftFromRustBuffer[**ZkLoginAuthenticator](c, rb)
+func (c FfiConverterOptionalVersion) Lift(rb RustBufferI) **Version {
+	return LiftFromRustBuffer[**Version](c, rb)
 }
 
-func (_ FfiConverterOptionalZkLoginAuthenticator) Read(reader io.Reader) **ZkLoginAuthenticator {
+func (_ FfiConverterOptionalVersion) Read(reader io.Reader) **Version {
 	if readInt8(reader) == 0 {
 		return nil
 	}
-	temp := FfiConverterZkLoginAuthenticatorINSTANCE.Read(reader)
+	temp := FfiConverterVersionINSTANCE.Read(reader)
 	return &temp
 }
 
-func (c FfiConverterOptionalZkLoginAuthenticator) Lower(value **ZkLoginAuthenticator) C.RustBuffer {
-	return LowerIntoRustBuffer[**ZkLoginAuthenticator](c, value)
+func (c FfiConverterOptionalVersion) Lower(value **Version) C.RustBuffer {
+	return LowerIntoRustBuffer[**Version](c, value)
 }
 
-func (c FfiConverterOptionalZkLoginAuthenticator) LowerExternal(value **ZkLoginAuthenticator) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[**ZkLoginAuthenticator](c, value))
+func (c FfiConverterOptionalVersion) LowerExternal(value **Version) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Version](c, value))
 }
 
-func (_ FfiConverterOptionalZkLoginAuthenticator) Write(writer io.Writer, value **ZkLoginAuthenticator) {
+func (_ FfiConverterOptionalVersion) Write(writer io.Writer, value **Version) {
 	if value == nil {
 		writeInt8(writer, 0)
 	} else {
 		writeInt8(writer, 1)
-		FfiConverterZkLoginAuthenticatorINSTANCE.Write(writer, *value)
+		FfiConverterVersionINSTANCE.Write(writer, *value)
 	}
 }
 
-type FfiDestroyerOptionalZkLoginAuthenticator struct {}
+type FfiDestroyerOptionalVersion struct {}
 
-func (_ FfiDestroyerOptionalZkLoginAuthenticator) Destroy(value **ZkLoginAuthenticator) {
+func (_ FfiDestroyerOptionalVersion) Destroy(value **Version) {
 	if value != nil {
-		FfiDestroyerZkLoginAuthenticator{}.Destroy(*value)
-	}
-}
-
-
-type FfiConverterOptionalZkLoginPublicIdentifier struct{}
-
-var FfiConverterOptionalZkLoginPublicIdentifierINSTANCE = FfiConverterOptionalZkLoginPublicIdentifier{}
-
-func (c FfiConverterOptionalZkLoginPublicIdentifier) Lift(rb RustBufferI) **ZkLoginPublicIdentifier {
-	return LiftFromRustBuffer[**ZkLoginPublicIdentifier](c, rb)
-}
-
-func (_ FfiConverterOptionalZkLoginPublicIdentifier) Read(reader io.Reader) **ZkLoginPublicIdentifier {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterZkLoginPublicIdentifierINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalZkLoginPublicIdentifier) Lower(value **ZkLoginPublicIdentifier) C.RustBuffer {
-	return LowerIntoRustBuffer[**ZkLoginPublicIdentifier](c, value)
-}
-
-func (c FfiConverterOptionalZkLoginPublicIdentifier) LowerExternal(value **ZkLoginPublicIdentifier) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[**ZkLoginPublicIdentifier](c, value))
-}
-
-func (_ FfiConverterOptionalZkLoginPublicIdentifier) Write(writer io.Writer, value **ZkLoginPublicIdentifier) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterZkLoginPublicIdentifierINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalZkLoginPublicIdentifier struct {}
-
-func (_ FfiDestroyerOptionalZkLoginPublicIdentifier) Destroy(value **ZkLoginPublicIdentifier) {
-	if value != nil {
-		FfiDestroyerZkLoginPublicIdentifier{}.Destroy(*value)
-	}
-}
-
-
-type FfiConverterOptionalZkloginVerifier struct{}
-
-var FfiConverterOptionalZkloginVerifierINSTANCE = FfiConverterOptionalZkloginVerifier{}
-
-func (c FfiConverterOptionalZkloginVerifier) Lift(rb RustBufferI) **ZkloginVerifier {
-	return LiftFromRustBuffer[**ZkloginVerifier](c, rb)
-}
-
-func (_ FfiConverterOptionalZkloginVerifier) Read(reader io.Reader) **ZkloginVerifier {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterZkloginVerifierINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalZkloginVerifier) Lower(value **ZkloginVerifier) C.RustBuffer {
-	return LowerIntoRustBuffer[**ZkloginVerifier](c, value)
-}
-
-func (c FfiConverterOptionalZkloginVerifier) LowerExternal(value **ZkloginVerifier) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[**ZkloginVerifier](c, value))
-}
-
-func (_ FfiConverterOptionalZkloginVerifier) Write(writer io.Writer, value **ZkloginVerifier) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterZkloginVerifierINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalZkloginVerifier struct {}
-
-func (_ FfiDestroyerOptionalZkloginVerifier) Destroy(value **ZkloginVerifier) {
-	if value != nil {
-		FfiDestroyerZkloginVerifier{}.Destroy(*value)
+		FfiDestroyerVersion{}.Destroy(*value)
 	}
 }
 
@@ -49196,54 +48768,6 @@ func (FfiDestroyerSequenceEndOfEpochTransactionKind) Destroy(sequence []*EndOfEp
 }
 
 
-type FfiConverterSequenceExecutionTimeObservation struct{}
-
-var FfiConverterSequenceExecutionTimeObservationINSTANCE = FfiConverterSequenceExecutionTimeObservation{}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Lift(rb RustBufferI) []*ExecutionTimeObservation {
-	return LiftFromRustBuffer[[]*ExecutionTimeObservation](c, rb)
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Read(reader io.Reader) []*ExecutionTimeObservation {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*ExecutionTimeObservation, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterExecutionTimeObservationINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Lower(value []*ExecutionTimeObservation) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value)
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) LowerExternal(value []*ExecutionTimeObservation) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value))
-}
-
-func (c FfiConverterSequenceExecutionTimeObservation) Write(writer io.Writer, value []*ExecutionTimeObservation) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*ExecutionTimeObservation is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterExecutionTimeObservationINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceExecutionTimeObservation struct {}
-
-func (FfiDestroyerSequenceExecutionTimeObservation) Destroy(sequence []*ExecutionTimeObservation) {
-	for _, value := range sequence {
-		FfiDestroyerExecutionTimeObservation{}.Destroy(value)	
-	}
-}
-
-
 type FfiConverterSequenceGenesisObject struct{}
 
 var FfiConverterSequenceGenesisObjectINSTANCE = FfiConverterSequenceGenesisObject{}
@@ -50012,50 +49536,50 @@ func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 }
 
 
-type FfiConverterSequenceValidatorExecutionTimeObservation struct{}
+type FfiConverterSequenceVersion struct{}
 
-var FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE = FfiConverterSequenceValidatorExecutionTimeObservation{}
+var FfiConverterSequenceVersionINSTANCE = FfiConverterSequenceVersion{}
 
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lift(rb RustBufferI) []*ValidatorExecutionTimeObservation {
-	return LiftFromRustBuffer[[]*ValidatorExecutionTimeObservation](c, rb)
+func (c FfiConverterSequenceVersion) Lift(rb RustBufferI) []*Version {
+	return LiftFromRustBuffer[[]*Version](c, rb)
 }
 
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Read(reader io.Reader) []*ValidatorExecutionTimeObservation {
+func (c FfiConverterSequenceVersion) Read(reader io.Reader) []*Version {
 	length := readInt32(reader)
 	if length == 0 {
 		return nil
 	}
-	result := make([]*ValidatorExecutionTimeObservation, 0, length)
+	result := make([]*Version, 0, length)
 	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterValidatorExecutionTimeObservationINSTANCE.Read(reader))
+		result = append(result, FfiConverterVersionINSTANCE.Read(reader))
 	}
 	return result
 }
 
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lower(value []*ValidatorExecutionTimeObservation) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value)
+func (c FfiConverterSequenceVersion) Lower(value []*Version) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*Version](c, value)
 }
 
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) LowerExternal(value []*ValidatorExecutionTimeObservation) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value))
+func (c FfiConverterSequenceVersion) LowerExternal(value []*Version) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Version](c, value))
 }
 
-func (c FfiConverterSequenceValidatorExecutionTimeObservation) Write(writer io.Writer, value []*ValidatorExecutionTimeObservation) {
+func (c FfiConverterSequenceVersion) Write(writer io.Writer, value []*Version) {
 	if len(value) > math.MaxInt32 {
-		panic("[]*ValidatorExecutionTimeObservation is too large to fit into Int32")
+		panic("[]*Version is too large to fit into Int32")
 	}
 
 	writeInt32(writer, int32(len(value)))
 	for _, item := range value {
-		FfiConverterValidatorExecutionTimeObservationINSTANCE.Write(writer, item)
+		FfiConverterVersionINSTANCE.Write(writer, item)
 	}
 }
 
-type FfiDestroyerSequenceValidatorExecutionTimeObservation struct {}
+type FfiDestroyerSequenceVersion struct {}
 
-func (FfiDestroyerSequenceValidatorExecutionTimeObservation) Destroy(sequence []*ValidatorExecutionTimeObservation) {
+func (FfiDestroyerSequenceVersion) Destroy(sequence []*Version) {
 	for _, value := range sequence {
-		FfiDestroyerValidatorExecutionTimeObservation{}.Destroy(value)	
+		FfiDestroyerVersion{}.Destroy(value)	
 	}
 }
 
@@ -50104,54 +49628,6 @@ type FfiDestroyerSequenceVersionAssignment struct {}
 func (FfiDestroyerSequenceVersionAssignment) Destroy(sequence []*VersionAssignment) {
 	for _, value := range sequence {
 		FfiDestroyerVersionAssignment{}.Destroy(value)	
-	}
-}
-
-
-type FfiConverterSequenceActiveJwk struct{}
-
-var FfiConverterSequenceActiveJwkINSTANCE = FfiConverterSequenceActiveJwk{}
-
-func (c FfiConverterSequenceActiveJwk) Lift(rb RustBufferI) []ActiveJwk {
-	return LiftFromRustBuffer[[]ActiveJwk](c, rb)
-}
-
-func (c FfiConverterSequenceActiveJwk) Read(reader io.Reader) []ActiveJwk {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]ActiveJwk, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterActiveJwkINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceActiveJwk) Lower(value []ActiveJwk) C.RustBuffer {
-	return LowerIntoRustBuffer[[]ActiveJwk](c, value)
-}
-
-func (c FfiConverterSequenceActiveJwk) LowerExternal(value []ActiveJwk) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[[]ActiveJwk](c, value))
-}
-
-func (c FfiConverterSequenceActiveJwk) Write(writer io.Writer, value []ActiveJwk) {
-	if len(value) > math.MaxInt32 {
-		panic("[]ActiveJwk is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterActiveJwkINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceActiveJwk struct {}
-
-func (FfiDestroyerSequenceActiveJwk) Destroy(sequence []ActiveJwk) {
-	for _, value := range sequence {
-		FfiDestroyerActiveJwk{}.Destroy(value)	
 	}
 }
 
@@ -51694,55 +51170,6 @@ func (_ FfiDestroyerMapObjectIdUpgradeInfo) Destroy(mapValue map[*ObjectId]Upgra
 	}
 }
 
-
-type FfiConverterMapJwkIdJwk struct {}
-
-var FfiConverterMapJwkIdJwkINSTANCE = FfiConverterMapJwkIdJwk{}
-
-func (c FfiConverterMapJwkIdJwk) Lift(rb RustBufferI) map[JwkId]Jwk {
-	return LiftFromRustBuffer[map[JwkId]Jwk](c, rb)
-}
-
-func (_ FfiConverterMapJwkIdJwk) Read(reader io.Reader) map[JwkId]Jwk {
-	result := make(map[JwkId]Jwk)
-	length := readInt32(reader)
-	for i := int32(0); i < length; i++ {
-		key := FfiConverterJwkIdINSTANCE.Read(reader)
-		value := FfiConverterJwkINSTANCE.Read(reader)
-		result[key] = value
-	}
-	return result
-}
-
-func (c FfiConverterMapJwkIdJwk) Lower(value map[JwkId]Jwk) C.RustBuffer {
-	return LowerIntoRustBuffer[map[JwkId]Jwk](c, value)
-}
-
-func (c FfiConverterMapJwkIdJwk) LowerExternal(value map[JwkId]Jwk) ExternalCRustBuffer {
-	return RustBufferFromC(LowerIntoRustBuffer[map[JwkId]Jwk](c, value))
-}
-
-func (_ FfiConverterMapJwkIdJwk) Write(writer io.Writer, mapValue map[JwkId]Jwk) {
-	if len(mapValue) > math.MaxInt32 {
-		panic("map[JwkId]Jwk is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(mapValue)))
-	for key, value := range mapValue {
-		FfiConverterJwkIdINSTANCE.Write(writer, key)
-		FfiConverterJwkINSTANCE.Write(writer, value)
-	}
-}
-
-type FfiDestroyerMapJwkIdJwk struct {}
-
-func (_ FfiDestroyerMapJwkIdJwk) Destroy(mapValue map[JwkId]Jwk) {
-	for key, value := range mapValue {
-		FfiDestroyerJwkId{}.Destroy(key)
-		FfiDestroyerJwk{}.Destroy(value)	
-	}
-}
-
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -51835,66 +51262,6 @@ func iota_sdk_uniffiFreeGorutine(data C.uint64_t) {
 
 	guard := handle.Value().(chan struct{})
 	guard <- struct{}{}
-}
-
-// Create this type from BCS encoded bytes.
-func ActiveJwkFromBcs(bcs []byte) (ActiveJwk, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue ActiveJwk
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterActiveJwkINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ActiveJwkFromJson(json string) (ActiveJwk, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue ActiveJwk
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterActiveJwkINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ActiveJwkToBcs(data ActiveJwk) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(FfiConverterActiveJwkINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ActiveJwkToJson(data ActiveJwk) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(FfiConverterActiveJwkINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
 }
 
 // Create this type from BCS encoded bytes.
@@ -51999,126 +51366,6 @@ func ArgumentToJson(data *Argument) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_argument_to_json(FfiConverterArgumentINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func AuthenticatorStateExpireFromBcs(bcs []byte) (AuthenticatorStateExpire, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue AuthenticatorStateExpire
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterAuthenticatorStateExpireINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func AuthenticatorStateExpireFromJson(json string) (AuthenticatorStateExpire, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue AuthenticatorStateExpire
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterAuthenticatorStateExpireINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func AuthenticatorStateExpireToBcs(data AuthenticatorStateExpire) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func AuthenticatorStateExpireToJson(data AuthenticatorStateExpire) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func AuthenticatorStateUpdateV1FromBcs(bcs []byte) (AuthenticatorStateUpdateV1, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue AuthenticatorStateUpdateV1
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func AuthenticatorStateUpdateV1FromJson(json string) (AuthenticatorStateUpdateV1, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue AuthenticatorStateUpdateV1
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func AuthenticatorStateUpdateV1ToBcs(data AuthenticatorStateUpdateV1) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func AuthenticatorStateUpdateV1ToJson(data AuthenticatorStateUpdateV1) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -52253,62 +51500,6 @@ func Bls12381SignatureToJson(data *Bls12381Signature) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(FfiConverterBls12381SignatureINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func Bn254FieldElementFromBcs(bcs []byte) (*Bn254FieldElement, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Bn254FieldElement
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBn254FieldElementINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func Bn254FieldElementFromJson(json string) (*Bn254FieldElement, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Bn254FieldElement
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBn254FieldElementINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func Bn254FieldElementToBcs(data *Bn254FieldElement) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(FfiConverterBn254FieldElementINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func Bn254FieldElementToJson(data *Bn254FieldElement) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(FfiConverterBn254FieldElementINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -52817,118 +52008,6 @@ func CheckpointTransactionInfoToJson(data *CheckpointTransactionInfo) (string, e
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(FfiConverterCheckpointTransactionInfoINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func CircomG1FromBcs(bcs []byte) (*CircomG1, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CircomG1
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCircomG1INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func CircomG1FromJson(json string) (*CircomG1, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CircomG1
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCircomG1INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func CircomG1ToBcs(data *CircomG1) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(FfiConverterCircomG1INSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func CircomG1ToJson(data *CircomG1) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(FfiConverterCircomG1INSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func CircomG2FromBcs(bcs []byte) (*CircomG2, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CircomG2
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCircomG2INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func CircomG2FromJson(json string) (*CircomG2, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CircomG2
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCircomG2INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func CircomG2ToBcs(data *CircomG2) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(FfiConverterCircomG2INSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func CircomG2ToJson(data *CircomG2) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(FfiConverterCircomG2INSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -53565,174 +52644,6 @@ func ExecutionStatusToJson(data ExecutionStatus) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_status_to_json(FfiConverterExecutionStatusINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationFromBcs(bcs []byte) (*ExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationFromJson(json string) (*ExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationKeyFromBcs(bcs []byte) (*ExecutionTimeObservationKey, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservationKey
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationKeyFromJson(json string) (*ExecutionTimeObservationKey, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservationKey
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationKeyToBcs(data *ExecutionTimeObservationKey) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationKeyToJson(data *ExecutionTimeObservationKey) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationToBcs(data *ExecutionTimeObservation) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(FfiConverterExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationToJson(data *ExecutionTimeObservation) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json(FfiConverterExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ExecutionTimeObservationsFromBcs(bcs []byte) (*ExecutionTimeObservations, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservations
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationsINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ExecutionTimeObservationsFromJson(json string) (*ExecutionTimeObservations, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ExecutionTimeObservations
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterExecutionTimeObservationsINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ExecutionTimeObservationsToBcs(data *ExecutionTimeObservations) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(FfiConverterExecutionTimeObservationsINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ExecutionTimeObservationsToJson(data *ExecutionTimeObservations) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json(FfiConverterExecutionTimeObservationsINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -54393,126 +53304,6 @@ func InputToJson(data *Input) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_input_to_json(FfiConverterInputINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func JwkFromBcs(bcs []byte) (Jwk, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue Jwk
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterJwkINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func JwkFromJson(json string) (Jwk, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue Jwk
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterJwkINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func JwkIdFromBcs(bcs []byte) (JwkId, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue JwkId
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterJwkIdINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func JwkIdFromJson(json string) (JwkId, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue JwkId
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterJwkIdINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func JwkIdToBcs(data JwkId) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(FfiConverterJwkIdINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func JwkIdToJson(data JwkId) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(FfiConverterJwkIdINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func JwkToBcs(data Jwk) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(FfiConverterJwkINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func JwkToJson(data Jwk) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_jwk_to_json(FfiConverterJwkINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
@@ -57732,62 +56523,6 @@ func ValidatorCommitteeToJson(data ValidatorCommittee) (string, error) {
 }
 
 // Create this type from BCS encoded bytes.
-func ValidatorExecutionTimeObservationFromBcs(bcs []byte) (*ValidatorExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ValidatorExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ValidatorExecutionTimeObservationFromJson(json string) (*ValidatorExecutionTimeObservation, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ValidatorExecutionTimeObservation
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ValidatorExecutionTimeObservationToBcs(data *ValidatorExecutionTimeObservation) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ValidatorExecutionTimeObservationToJson(data *ValidatorExecutionTimeObservation) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json(FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
 func ValidatorSignatureFromBcs(bcs []byte) (*ValidatorSignature, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
@@ -57889,234 +56624,6 @@ func VersionAssignmentToJson(data *VersionAssignment) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(FfiConverterVersionAssignmentINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ZkLoginAuthenticatorFromBcs(bcs []byte) (*ZkLoginAuthenticator, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginAuthenticator
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ZkLoginAuthenticatorFromJson(json string) (*ZkLoginAuthenticator, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginAuthenticator
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ZkLoginAuthenticatorToBcs(data *ZkLoginAuthenticator) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ZkLoginAuthenticatorToJson(data *ZkLoginAuthenticator) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ZkLoginClaimFromBcs(bcs []byte) (ZkLoginClaim, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue ZkLoginClaim
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginClaimINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ZkLoginClaimFromJson(json string) (ZkLoginClaim, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue ZkLoginClaim
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginClaimINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ZkLoginClaimToBcs(data ZkLoginClaim) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(FfiConverterZkLoginClaimINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ZkLoginClaimToJson(data ZkLoginClaim) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(FfiConverterZkLoginClaimINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ZkLoginProofFromBcs(bcs []byte) (*ZkLoginProof, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginProof
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginProofINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ZkLoginProofFromJson(json string) (*ZkLoginProof, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginProof
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginProofINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ZkLoginProofToBcs(data *ZkLoginProof) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(FfiConverterZkLoginProofINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ZkLoginProofToJson(data *ZkLoginProof) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(FfiConverterZkLoginProofINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue string
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from BCS encoded bytes.
-func ZkLoginPublicIdentifierFromBcs(bcs []byte) (*ZkLoginPublicIdentifier, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginPublicIdentifier
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create this type from JSON encoded string.
-func ZkLoginPublicIdentifierFromJson(json string) (*ZkLoginPublicIdentifier, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ZkLoginPublicIdentifier
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to BCS encoded bytes.
-func ZkLoginPublicIdentifierToBcs(data *ZkLoginPublicIdentifier) ([]byte, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(data),_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Convert this type to JSON encoded string.
-func ZkLoginPublicIdentifierToJson(data *ZkLoginPublicIdentifier) (string, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {

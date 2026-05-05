@@ -6,7 +6,7 @@
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
-use iota_types::{Address, MovePackage, Object};
+use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
     Client, Page,
@@ -35,11 +35,11 @@ impl Client {
     pub async fn package(
         &self,
         address: Address,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<MovePackage>> {
         let operation = PackageQuery::build(PackageArgs {
             address,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -61,8 +61,8 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-        after_version: impl Into<Option<u64>>,
-        before_version: impl Into<Option<u64>>,
+        after_version: impl Into<Option<Version>>,
+        before_version: impl Into<Option<Version>>,
     ) -> Result<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = PackageVersionsQuery::build(PackageVersionsArgs {
@@ -72,8 +72,8 @@ impl Client {
             first: pagination.first,
             last: pagination.last,
             filter: Some(MovePackageVersionFilter {
-                after_version: after_version.into(),
-                before_version: before_version.into(),
+                after_version: after_version.into().map(|v| v.as_u64()),
+                before_version: before_version.into().map(|v| v.as_u64()),
             }),
         });
 
@@ -173,13 +173,13 @@ impl Client {
         package: Address,
         module: &str,
         function: &str,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
             address: package,
             module,
             function,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
         let response = self.run_query(&operation).await?;
 
@@ -192,12 +192,12 @@ impl Client {
     /// Return the normalized Move module data for the provided module.
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub async fn normalized_move_module(
         &self,
         package: Address,
         module: &str,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
         pagination_filter_enums: PaginationFilter,
         pagination_filter_friends: PaginationFilter,
         pagination_filter_functions: PaginationFilter,
@@ -210,7 +210,7 @@ impl Client {
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
             package,
             module,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
             after_enums: enums.after.as_deref(),
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),

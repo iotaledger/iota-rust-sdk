@@ -1,7 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Address, Input, ObjectId, ObjectReference, TypeTag};
+use crate::{
+    Address, Input, ObjectId, ObjectReference, TypeTag, Version, transaction::SharedObjectReference,
+};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
@@ -22,7 +24,6 @@ impl MoveAuthenticator {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 pub struct MoveAuthenticatorV1 {
     /// Input objects or primitive values
     call_args: Vec<Input>,
@@ -52,16 +53,16 @@ impl MoveAuthenticatorV1 {
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
         object_to_authenticate: ObjectId,
-        initial_shared_version: u64,
+        initial_shared_version: Version,
     ) -> Self {
         Self {
             call_args,
             type_args,
-            object_to_authenticate: Input::Shared {
+            object_to_authenticate: Input::Shared(SharedObjectReference {
                 object_id: object_to_authenticate,
                 initial_shared_version,
                 mutable: false,
-            },
+            }),
         }
     }
 
@@ -70,7 +71,7 @@ impl MoveAuthenticatorV1 {
     pub fn address(&self) -> Address {
         match self.object_to_authenticate {
             Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-            | Input::Shared { object_id, .. } => object_id.into(),
+            | Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
             _ => unreachable!(),
         }
     }
@@ -111,14 +112,6 @@ mod serialization {
     #[derive(serde::Deserialize)]
     enum MoveAuthenticatorOwned {
         V1(MoveAuthenticatorV1),
-    }
-
-    #[cfg(feature = "schemars")]
-    #[derive(schemars::JsonSchema)]
-    #[schemars(rename = "MoveAuthenticator", deny_unknown_fields)]
-    #[allow(dead_code, non_snake_case)]
-    struct MoveAuthenticatorSchema {
-        V1: MoveAuthenticatorV1,
     }
 
     impl From<MoveAuthenticatorOwned> for MoveAuthenticator {
@@ -162,19 +155,6 @@ mod serialization {
             bytes.push(SignatureScheme::MoveAuthenticator as u8);
             bytes.extend(as_bytes);
             bytes
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for MoveAuthenticator {
-        fn schema_name() -> String {
-            MoveAuthenticatorSchema::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            MoveAuthenticatorSchema::json_schema(generator)
         }
     }
 
