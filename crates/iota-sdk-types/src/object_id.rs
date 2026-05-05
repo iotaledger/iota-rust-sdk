@@ -62,14 +62,7 @@ impl ObjectId {
     /// - GENESIS_BRIDGE
     /// - STARDUST
     pub fn is_system_package(&self) -> bool {
-        [
-            Self::STD,
-            Self::FRAMEWORK,
-            Self::SYSTEM,
-            Self::GENESIS_BRIDGE,
-            Self::STARDUST,
-        ]
-        .contains(self)
+        self.0.is_system_package()
     }
 
     /// Returns the string representation of this object id in hex format with
