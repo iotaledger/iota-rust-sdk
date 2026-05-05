@@ -1,6 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * This example inspects a published Move package on testnet and prints its upgrade policy, version
+ * history, dependencies, functions, types, and sample objects.
+ */
 import iota_sdk.Address
 import iota_sdk.Direction
 import iota_sdk.GraphQlClient
@@ -29,6 +33,116 @@ private fun forwardPage(cursor: String? = null): PaginationFilter =
 
 private val frameworkPackageId = Address.framework().toHex()
 private val jsonParser = Json { ignoreUnknownKeys = true }
+
+fun main() = runBlocking {
+    try {
+        val packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
+
+        val packageAddress = Address.fromHex(packageId)
+        val client = GraphQlClient.newTestnet()
+
+        // Fetch package metadata and version history.
+        val pkg = client.`package`(packageAddress, null) ?: error("missing package")
+        val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
+        val versions = fetchPackageVersions(client, packageAddress)
+        val packagePrefix = pkg.id().toHex()
+        println(
+            "Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})"
+        )
+        // Resolve the current upgrade policy.
+        println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
+        println()
+
+        // Print the package version history.
+        println("Versions:")
+        for (version in versions) {
+            val labels = mutableListOf<String>()
+            if (version.id() == pkg.id()) {
+                labels.add("requested")
+            }
+            if (version.id() == latestPackage.id()) {
+                labels.add("latest")
+            }
+
+            val suffix = if (labels.isEmpty()) "" else " [${labels.joinToString(", ")}]"
+            println("- v${version.version().asU64()} -> ${version.id().toHex()}$suffix")
+        }
+        println()
+
+        // Print package dependencies and their linked versions.
+        println("Dependencies:")
+        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
+        if (linkageTable.isEmpty()) {
+            println("- none")
+        } else {
+            for (upgrade in linkageTable) {
+                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}")
+            }
+        }
+        println()
+
+        // Inspect normalized modules, functions, types, and sample key objects.
+        println("Package contents:")
+        val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
+        for (moduleName in moduleNames) {
+            println("Module: $moduleName")
+
+            val module =
+                client.normalizedMoveModule(
+                    packageAddress,
+                    moduleName,
+                    null,
+                    forwardPage(),
+                    forwardPage(),
+                    forwardPage(),
+                    forwardPage(),
+                )
+
+            if (module == null) {
+                println("  metadata: missing")
+                println()
+                continue
+            }
+
+            val functions = module.functions
+            if (functions == null || functions.nodes.isEmpty()) {
+                println("  functions: none")
+            } else {
+                println("  functions:")
+                for (function in functions.nodes) {
+                    println("    - ${formatFunctionSignature(function.toString(), packagePrefix)}")
+                }
+                if (functions.pageInfo.hasNextPage) {
+                    println("    - ...")
+                }
+            }
+
+            val structs = module.structs
+            if (structs == null || structs.nodes.isEmpty()) {
+                println("  types: none")
+            } else {
+                println("  types:")
+                for (structType in structs.nodes) {
+                    val typeTag = "$packagePrefix::$moduleName::${structType.name}"
+                    println("    - $typeTag")
+                    val hasKeyAbility = structType.abilities?.contains(MoveAbility.KEY) == true
+                    val isGeneric =
+                        structType.typeParameters != null &&
+                            structType.typeParameters!!.isNotEmpty()
+                    printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
+                }
+                if (structs.pageInfo.hasNextPage) {
+                    println("    - ...")
+                }
+            }
+
+            println()
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
+    }
+}
 
 private fun shortenPackageIds(signature: String): String {
     val shortened = StringBuilder(signature.length)
@@ -314,109 +428,4 @@ private suspend fun currentPackagePolicy(client: GraphQlClient, packageId: Objec
 
     val policy = extractPolicy(contents) ?: return "Unavailable"
     return formatPolicyName(policy)
-}
-
-fun main() = runBlocking {
-    try {
-        val packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-
-        val packageAddress = Address.fromHex(packageId)
-        val client = GraphQlClient.newTestnet()
-
-        val pkg = client.`package`(packageAddress, null) ?: error("missing package")
-        val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
-        val versions = fetchPackageVersions(client, packageAddress)
-        val packagePrefix = pkg.id().toHex()
-        println(
-            "Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})"
-        )
-        println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
-        println()
-
-        println("Versions:")
-        for (version in versions) {
-            val labels = mutableListOf<String>()
-            if (version.id() == pkg.id()) {
-                labels.add("requested")
-            }
-            if (version.id() == latestPackage.id()) {
-                labels.add("latest")
-            }
-
-            val suffix = if (labels.isEmpty()) "" else " [${labels.joinToString(", ")}]"
-            println("- v${version.version().asU64()} -> ${version.id().toHex()}$suffix")
-        }
-        println()
-
-        println("Dependencies:")
-        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
-        if (linkageTable.isEmpty()) {
-            println("- none")
-        } else {
-            for (upgrade in linkageTable) {
-                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}")
-            }
-        }
-        println()
-
-        println("Package contents:")
-        val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
-        for (moduleName in moduleNames) {
-            println("Module: $moduleName")
-
-            val module =
-                client.normalizedMoveModule(
-                    packageAddress,
-                    moduleName,
-                    null,
-                    forwardPage(),
-                    forwardPage(),
-                    forwardPage(),
-                    forwardPage(),
-                )
-
-            if (module == null) {
-                println("  metadata: missing")
-                println()
-                continue
-            }
-
-            val functions = module.functions
-            if (functions == null || functions.nodes.isEmpty()) {
-                println("  functions: none")
-            } else {
-                println("  functions:")
-                for (function in functions.nodes) {
-                    println("    - ${formatFunctionSignature(function.toString(), packagePrefix)}")
-                }
-                if (functions.pageInfo.hasNextPage) {
-                    println("    - ...")
-                }
-            }
-
-            val structs = module.structs
-            if (structs == null || structs.nodes.isEmpty()) {
-                println("  types: none")
-            } else {
-                println("  types:")
-                for (structType in structs.nodes) {
-                    val typeTag = "$packagePrefix::$moduleName::${structType.name}"
-                    println("    - $typeTag")
-                    val hasKeyAbility = structType.abilities?.contains(MoveAbility.KEY) == true
-                    val isGeneric =
-                        structType.typeParameters != null &&
-                            structType.typeParameters!!.isNotEmpty()
-                    printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
-                }
-                if (structs.pageInfo.hasNextPage) {
-                    println("    - ...")
-                }
-            }
-
-            println()
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        kotlin.system.exitProcess(1)
-    }
 }

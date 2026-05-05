@@ -1,6 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// This example inspects a published Move package on testnet and prints its
+// upgrade policy, version history, dependencies, functions, types, and sample
+// objects.
+
 package main
 
 import (
@@ -17,6 +21,168 @@ import (
 var frameworkPackageID = func() string {
 	return iota_sdk.AddressFramework().ToHex()
 }()
+
+func main() {
+	packageID := "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
+
+	packageAddress, err := iota_sdk.AddressFromHex(packageID)
+	if err != nil {
+		log.Fatalf("Failed to parse package id: %v", err)
+	}
+
+	client := iota_sdk.GraphQlClientNewTestnet()
+
+	// Fetch package metadata and version history.
+	packageOpt, err := client.Package(packageAddress, nil)
+	if err != nil {
+		log.Fatalf("Failed to get package: %v", err)
+	}
+	if packageOpt == nil {
+		log.Fatal("Missing package")
+	}
+	pkg := *packageOpt
+
+	latestOpt, err := client.PackageLatest(packageAddress)
+	if err != nil {
+		log.Fatalf("Failed to get latest package: %v", err)
+	}
+	if latestOpt == nil {
+		log.Fatal("missing latest package")
+	}
+	latest := *latestOpt
+
+	versions, err := fetchPackageVersions(client, packageAddress)
+	if err != nil {
+		log.Fatalf("Failed to get package versions: %v", err)
+	}
+
+	packagePrefix := pkg.Id().ToHex()
+
+	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id().ToHex())
+	// Resolve the current upgrade policy.
+	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
+	if err != nil {
+		log.Fatalf("Failed to get current package policy: %v", err)
+	}
+	fmt.Println("Current package policy:", currentPolicy)
+	fmt.Println()
+
+	// Print the package version history.
+	fmt.Println("Versions:")
+	for _, version := range versions {
+		labels := []string{}
+		if version.Id().Eq(pkg.Id()) {
+			labels = append(labels, "requested")
+		}
+		if version.Id().Eq(latest.Id()) {
+			labels = append(labels, "latest")
+		}
+
+		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id().ToHex())
+		if len(labels) > 0 {
+			line += fmt.Sprintf(" [%s]", joinLabels(labels))
+		}
+		fmt.Println(line)
+	}
+	fmt.Println()
+
+	// Print package dependencies and their linked versions.
+	fmt.Println("Dependencies:")
+	linkageTable := pkg.LinkageTable()
+	if len(linkageTable) == 0 {
+		fmt.Println("- none")
+	} else {
+		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
+		for _, upgrade := range linkageTable {
+			upgrades = append(upgrades, upgrade)
+		}
+		sort.Slice(upgrades, func(i, j int) bool {
+			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
+		})
+
+		for _, upgrade := range upgrades {
+			fmt.Printf(
+				"- %s @ v%d\n",
+				upgrade.UpgradedId.ToHex(),
+				upgrade.UpgradedVersion.AsU64(),
+			)
+		}
+	}
+	fmt.Println()
+
+	// Inspect normalized modules, functions, types, and sample key objects.
+	fmt.Println("Package contents:")
+	moduleNames := make([]string, 0, len(pkg.Modules()))
+	for moduleID := range pkg.Modules() {
+		moduleNames = append(moduleNames, moduleID.AsStr())
+	}
+	sort.Strings(moduleNames)
+
+	for _, moduleName := range moduleNames {
+		fmt.Println("Module:", moduleName)
+
+		module, err := client.NormalizedMoveModule(
+			packageAddress,
+			moduleName,
+			nil,
+			forwardPage(nil),
+			forwardPage(nil),
+			forwardPage(nil),
+			forwardPage(nil),
+		)
+		if err != nil {
+			log.Fatalf("Failed to get module metadata for %s: %v", moduleName, err)
+		}
+		if module == nil {
+			fmt.Println("  metadata: missing")
+			fmt.Println()
+			continue
+		}
+
+		if module.Functions == nil || len(module.Functions.Nodes) == 0 {
+			fmt.Println("  functions: none")
+		} else {
+			fmt.Println("  functions:")
+			for _, function := range module.Functions.Nodes {
+				fmt.Printf("    - %s\n", formatFunctionSignature(function.String(), packagePrefix))
+			}
+			if module.Functions.PageInfo.HasNextPage {
+				fmt.Println("    - ...")
+			}
+		}
+
+		if module.Structs == nil || len(module.Structs.Nodes) == 0 {
+			fmt.Println("  types: none")
+		} else {
+			fmt.Println("  types:")
+			for _, structType := range module.Structs.Nodes {
+				typeTag := fmt.Sprintf("%s::%s::%s", packagePrefix, moduleName, structType.Name)
+				fmt.Println("    -", typeTag)
+
+				hasKeyAbility := false
+				if structType.Abilities != nil {
+					for _, ability := range *structType.Abilities {
+						if ability == iota_sdk.MoveAbilityKey {
+							hasKeyAbility = true
+							break
+						}
+					}
+				}
+				isGeneric := structType.TypeParameters != nil && len(*structType.TypeParameters) > 0
+				printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
+			}
+			if module.Structs.PageInfo.HasNextPage {
+				fmt.Println("    - ...")
+			}
+		}
+
+		fmt.Println()
+	}
+}
+
+func joinLabels(labels []string) string {
+	return strings.Join(labels, ", ")
+}
 
 type transactionEnvelopeJSON struct {
 	V1 *transactionV1JSON `json:"1"`
@@ -466,161 +632,4 @@ func currentPackagePolicy(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Ob
 	}
 
 	return "Unavailable", nil
-}
-
-func main() {
-	packageID := "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-
-	packageAddress, err := iota_sdk.AddressFromHex(packageID)
-	if err != nil {
-		log.Fatalf("Failed to parse package id: %v", err)
-	}
-
-	client := iota_sdk.GraphQlClientNewTestnet()
-
-	packageOpt, err := client.Package(packageAddress, nil)
-	if err != nil {
-		log.Fatalf("Failed to get package: %v", err)
-	}
-	if packageOpt == nil {
-		log.Fatal("Missing package")
-	}
-	pkg := *packageOpt
-
-	latestOpt, err := client.PackageLatest(packageAddress)
-	if err != nil {
-		log.Fatalf("Failed to get latest package: %v", err)
-	}
-	if latestOpt == nil {
-		log.Fatal("missing latest package")
-	}
-	latest := *latestOpt
-
-	versions, err := fetchPackageVersions(client, packageAddress)
-	if err != nil {
-		log.Fatalf("Failed to get package versions: %v", err)
-	}
-
-	packagePrefix := pkg.Id().ToHex()
-
-	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id().ToHex())
-	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
-	if err != nil {
-		log.Fatalf("Failed to get current package policy: %v", err)
-	}
-	fmt.Println("Current package policy:", currentPolicy)
-	fmt.Println()
-
-	fmt.Println("Versions:")
-	for _, version := range versions {
-		labels := []string{}
-		if version.Id().Eq(pkg.Id()) {
-			labels = append(labels, "requested")
-		}
-		if version.Id().Eq(latest.Id()) {
-			labels = append(labels, "latest")
-		}
-
-		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id().ToHex())
-		if len(labels) > 0 {
-			line += fmt.Sprintf(" [%s]", joinLabels(labels))
-		}
-		fmt.Println(line)
-	}
-	fmt.Println()
-
-	fmt.Println("Dependencies:")
-	linkageTable := pkg.LinkageTable()
-	if len(linkageTable) == 0 {
-		fmt.Println("- none")
-	} else {
-		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
-		for _, upgrade := range linkageTable {
-			upgrades = append(upgrades, upgrade)
-		}
-		sort.Slice(upgrades, func(i, j int) bool {
-			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
-		})
-
-		for _, upgrade := range upgrades {
-			fmt.Printf(
-				"- %s @ v%d\n",
-				upgrade.UpgradedId.ToHex(),
-				upgrade.UpgradedVersion.AsU64(),
-			)
-		}
-	}
-	fmt.Println()
-
-	fmt.Println("Package contents:")
-	moduleNames := make([]string, 0, len(pkg.Modules()))
-	for moduleID := range pkg.Modules() {
-		moduleNames = append(moduleNames, moduleID.AsStr())
-	}
-	sort.Strings(moduleNames)
-
-	for _, moduleName := range moduleNames {
-		fmt.Println("Module:", moduleName)
-
-		module, err := client.NormalizedMoveModule(
-			packageAddress,
-			moduleName,
-			nil,
-			forwardPage(nil),
-			forwardPage(nil),
-			forwardPage(nil),
-			forwardPage(nil),
-		)
-		if err != nil {
-			log.Fatalf("Failed to get module metadata for %s: %v", moduleName, err)
-		}
-		if module == nil {
-			fmt.Println("  metadata: missing")
-			fmt.Println()
-			continue
-		}
-
-		if module.Functions == nil || len(module.Functions.Nodes) == 0 {
-			fmt.Println("  functions: none")
-		} else {
-			fmt.Println("  functions:")
-			for _, function := range module.Functions.Nodes {
-				fmt.Printf("    - %s\n", formatFunctionSignature(function.String(), packagePrefix))
-			}
-			if module.Functions.PageInfo.HasNextPage {
-				fmt.Println("    - ...")
-			}
-		}
-
-		if module.Structs == nil || len(module.Structs.Nodes) == 0 {
-			fmt.Println("  types: none")
-		} else {
-			fmt.Println("  types:")
-			for _, structType := range module.Structs.Nodes {
-				typeTag := fmt.Sprintf("%s::%s::%s", packagePrefix, moduleName, structType.Name)
-				fmt.Println("    -", typeTag)
-
-				hasKeyAbility := false
-				if structType.Abilities != nil {
-					for _, ability := range *structType.Abilities {
-						if ability == iota_sdk.MoveAbilityKey {
-							hasKeyAbility = true
-							break
-						}
-					}
-				}
-				isGeneric := structType.TypeParameters != nil && len(*structType.TypeParameters) > 0
-				printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
-			}
-			if module.Structs.PageInfo.HasNextPage {
-				fmt.Println("    - ...")
-			}
-		}
-
-		fmt.Println()
-	}
-}
-
-func joinLabels(labels []string) string {
-	return strings.Join(labels, ", ")
 }

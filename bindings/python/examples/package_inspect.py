@@ -1,6 +1,10 @@
 # Copyright (c) 2026 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
+# This example inspects a published Move package on testnet and prints its
+# upgrade policy, version history, dependencies, functions, types, and sample
+# objects.
+
 from lib.iota_sdk import *
 
 import asyncio
@@ -8,6 +12,111 @@ import json
 
 FRAMEWORK_PACKAGE_ID = Address.framework().to_hex()
 HEX_DIGITS = set("0123456789abcdefABCDEF")
+
+
+async def main():
+    package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
+    package_address = Address.from_hex(package_id)
+    client = GraphQlClient.new_testnet()
+
+    # Fetch package metadata and version history.
+    package = await client.package(package_address)
+    if package is None:
+        raise Exception("missing package")
+
+    latest_package = await client.package_latest(package_address)
+    if latest_package is None:
+        raise Exception("missing latest package")
+
+    versions = await fetch_package_versions(client, package_address)
+    package_prefix = package.id().to_hex()
+    print(
+        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id().to_hex()})"
+    )
+    # Resolve the current upgrade policy.
+    print(
+        f"Current package policy: {await current_package_policy(client, package.id())}"
+    )
+    print()
+
+    # Print the package version history.
+    print("Versions:")
+    for version in versions:
+        labels = []
+        if version.id() == package.id():
+            labels.append("requested")
+        if version.id() == latest_package.id():
+            labels.append("latest")
+
+        line = f"- v{version.version().as_u64()} -> {version.id().to_hex()}"
+        if len(labels) > 0:
+            line += f" [{', '.join(labels)}]"
+        print(line)
+    print()
+
+    # Print package dependencies and their linked versions.
+    print("Dependencies:")
+    linkage_table = package.linkage_table()
+    if len(linkage_table) == 0:
+        print("- none")
+    else:
+        for upgrade in sorted(linkage_table.values(),
+                              key=lambda item: item.upgraded_id.to_hex()):
+            print(
+                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version.as_u64()}"
+            )
+    print()
+
+    # Inspect normalized modules, functions, types, and sample key objects.
+    print("Package contents:")
+    module_names = sorted(
+        module_id.as_str() for module_id in package.modules().keys())
+
+    for module_name in module_names:
+        print(f"Module: {module_name}")
+
+        module = await client.normalized_move_module(
+            package_address,
+            module_name,
+            None,
+            forward_page(),
+            forward_page(),
+            forward_page(),
+            forward_page(),
+        )
+        if module is None:
+            print("  metadata: missing")
+            print()
+            continue
+
+        if module.functions is None or len(module.functions.nodes) == 0:
+            print("  functions: none")
+        else:
+            print("  functions:")
+            for function in module.functions.nodes:
+                print(
+                    f"    - {format_function_signature(str(function), package_prefix)}"
+                )
+            if module.functions.page_info.has_next_page:
+                print("    - ...")
+
+        if module.structs is None or len(module.structs.nodes) == 0:
+            print("  types: none")
+        else:
+            print("  types:")
+            for struct_ in module.structs.nodes:
+                type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
+                print(f"    - {type_tag}")
+                has_key_ability = (struct_.abilities is not None and
+                                   MoveAbility.KEY in struct_.abilities)
+                is_generic = (struct_.type_parameters is not None and
+                              len(struct_.type_parameters) > 0)
+                await print_object_samples(client, type_tag, has_key_ability,
+                                           is_generic)
+            if module.structs.page_info.has_next_page:
+                print("    - ...")
+
+        print()
 
 
 def forward_page(cursor=None):
@@ -286,106 +395,6 @@ async def current_package_policy(client, package_id):
 
     policy = extract_policy(contents)
     return format_policy_name(policy) if policy is not None else "Unavailable"
-
-
-async def main():
-    package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-    package_address = Address.from_hex(package_id)
-    client = GraphQlClient.new_testnet()
-
-    package = await client.package(package_address)
-    if package is None:
-        raise Exception("missing package")
-
-    latest_package = await client.package_latest(package_address)
-    if latest_package is None:
-        raise Exception("missing latest package")
-
-    versions = await fetch_package_versions(client, package_address)
-    package_prefix = package.id().to_hex()
-    print(
-        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id().to_hex()})"
-    )
-    print(
-        f"Current package policy: {await current_package_policy(client, package.id())}"
-    )
-    print()
-
-    print("Versions:")
-    for version in versions:
-        labels = []
-        if version.id() == package.id():
-            labels.append("requested")
-        if version.id() == latest_package.id():
-            labels.append("latest")
-
-        line = f"- v{version.version().as_u64()} -> {version.id().to_hex()}"
-        if len(labels) > 0:
-            line += f" [{', '.join(labels)}]"
-        print(line)
-    print()
-
-    print("Dependencies:")
-    linkage_table = package.linkage_table()
-    if len(linkage_table) == 0:
-        print("- none")
-    else:
-        for upgrade in sorted(linkage_table.values(),
-                              key=lambda item: item.upgraded_id.to_hex()):
-            print(
-                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version.as_u64()}"
-            )
-    print()
-
-    print("Package contents:")
-    module_names = sorted(
-        module_id.as_str() for module_id in package.modules().keys())
-
-    for module_name in module_names:
-        print(f"Module: {module_name}")
-
-        module = await client.normalized_move_module(
-            package_address,
-            module_name,
-            None,
-            forward_page(),
-            forward_page(),
-            forward_page(),
-            forward_page(),
-        )
-        if module is None:
-            print("  metadata: missing")
-            print()
-            continue
-
-        if module.functions is None or len(module.functions.nodes) == 0:
-            print("  functions: none")
-        else:
-            print("  functions:")
-            for function in module.functions.nodes:
-                print(
-                    f"    - {format_function_signature(str(function), package_prefix)}"
-                )
-            if module.functions.page_info.has_next_page:
-                print("    - ...")
-
-        if module.structs is None or len(module.structs.nodes) == 0:
-            print("  types: none")
-        else:
-            print("  types:")
-            for struct_ in module.structs.nodes:
-                type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
-                print(f"    - {type_tag}")
-                has_key_ability = (struct_.abilities is not None and
-                                   MoveAbility.KEY in struct_.abilities)
-                is_generic = (struct_.type_parameters is not None and
-                              len(struct_.type_parameters) > 0)
-                await print_object_samples(client, type_tag, has_key_ability,
-                                           is_generic)
-            if module.structs.page_info.has_next_page:
-                print("    - ...")
-
-        print()
 
 
 if __name__ == "__main__":

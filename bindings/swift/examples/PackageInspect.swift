@@ -1,10 +1,136 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// This example inspects a published Move package on testnet and prints its
+// upgrade policy, version history, dependencies, functions, types, and sample
+// objects.
+
 import Foundation
 import IotaSDK
 
 private let frameworkPackageId = Address.framework().toHex()
+
+@main
+struct PackageInspectExample {
+  static func main() async throws {
+    let packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
+
+    let packageAddress = try Address.fromHex(hex: packageId)
+    let client = GraphQlClient.newTestnet()
+
+    // Fetch package metadata and version history.
+    guard let package = try await client.package(address: packageAddress) else {
+      throw NSError(
+        domain: "PackageInspect", code: 2,
+        userInfo: [NSLocalizedDescriptionKey: "missing package"])
+    }
+    guard let latestPackage = try await client.packageLatest(address: packageAddress) else {
+      throw NSError(
+        domain: "PackageInspect", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "missing latest package"])
+    }
+
+    let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
+    let packagePrefix = package.id().toHex()
+    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
+    // Resolve the current upgrade policy.
+    let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
+    print("Current package policy: \(currentPolicy)")
+    print()
+
+    // Print the package version history.
+    print("Versions:")
+    for version in versions {
+      var labels: [String] = []
+      if version.id() == package.id() {
+        labels.append("requested")
+      }
+      if version.id() == latestPackage.id() {
+        labels.append("latest")
+      }
+
+      let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
+      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
+    }
+    print()
+
+    // Print package dependencies and their linked versions.
+    print("Dependencies:")
+    let dependencies = package.linkageTable().values.sorted {
+      $0.upgradedId.toHex() < $1.upgradedId.toHex()
+    }
+    if dependencies.isEmpty {
+      print("- none")
+    } else {
+      for upgrade in dependencies {
+        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
+      }
+    }
+    print()
+
+    // Inspect normalized modules, functions, types, and sample key objects.
+    print("Package contents:")
+    let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
+    for moduleName in moduleNames {
+      print("Module: \(moduleName)")
+
+      let module = try await client.normalizedMoveModule(
+        package: packageAddress,
+        module: moduleName,
+        version: nil,
+        paginationFilterEnums: forwardPage(),
+        paginationFilterFriends: forwardPage(),
+        paginationFilterFunctions: forwardPage(),
+        paginationFilterStructs: forwardPage()
+      )
+
+      guard let module else {
+        print("  metadata: missing")
+        print()
+        continue
+      }
+
+      if let functions = module.functions, !functions.nodes.isEmpty {
+        print("  functions:")
+        for function in functions.nodes {
+          let signature = formatFunctionSignature(
+            String(describing: function),
+            packagePrefix: packagePrefix
+          )
+          print("    - \(signature)")
+        }
+        if functions.pageInfo.hasNextPage {
+          print("    - ...")
+        }
+      } else {
+        print("  functions: none")
+      }
+
+      if let structs = module.structs, !structs.nodes.isEmpty {
+        print("  types:")
+        for structType in structs.nodes {
+          let typeTag = "\(packagePrefix)::\(moduleName)::\(structType.name)"
+          print("    - \(typeTag)")
+          let hasKeyAbility = (structType.abilities ?? []).contains(.key)
+          let isGeneric = !(structType.typeParameters ?? []).isEmpty
+          try await printObjectSamples(
+            client: client,
+            typeTag: typeTag,
+            hasKeyAbility: hasKeyAbility,
+            isGeneric: isGeneric
+          )
+        }
+        if structs.pageInfo.hasNextPage {
+          print("    - ...")
+        }
+      } else {
+        print("  types: none")
+      }
+
+      print()
+    }
+  }
+}
 
 private func forwardPage(cursor: String? = nil) -> PaginationFilter {
   PaginationFilter(direction: .forward, cursor: cursor)
@@ -362,121 +488,4 @@ private func currentPackagePolicy(
   }
 
   return extractPolicy(contents: contents).map(formatPolicyName) ?? "Unavailable"
-}
-
-@main
-struct PackageInspectExample {
-  static func main() async throws {
-    let packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-
-    let packageAddress = try Address.fromHex(hex: packageId)
-    let client = GraphQlClient.newTestnet()
-
-    guard let package = try await client.package(address: packageAddress) else {
-      throw NSError(
-        domain: "PackageInspect", code: 2,
-        userInfo: [NSLocalizedDescriptionKey: "missing package"])
-    }
-    guard let latestPackage = try await client.packageLatest(address: packageAddress) else {
-      throw NSError(
-        domain: "PackageInspect", code: 3,
-        userInfo: [NSLocalizedDescriptionKey: "missing latest package"])
-    }
-
-    let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
-    let packagePrefix = package.id().toHex()
-    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
-    let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
-    print("Current package policy: \(currentPolicy)")
-    print()
-
-    print("Versions:")
-    for version in versions {
-      var labels: [String] = []
-      if version.id() == package.id() {
-        labels.append("requested")
-      }
-      if version.id() == latestPackage.id() {
-        labels.append("latest")
-      }
-
-      let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
-      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
-    }
-    print()
-
-    print("Dependencies:")
-    let dependencies = package.linkageTable().values.sorted {
-      $0.upgradedId.toHex() < $1.upgradedId.toHex()
-    }
-    if dependencies.isEmpty {
-      print("- none")
-    } else {
-      for upgrade in dependencies {
-        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
-      }
-    }
-    print()
-
-    print("Package contents:")
-    let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
-    for moduleName in moduleNames {
-      print("Module: \(moduleName)")
-
-      let module = try await client.normalizedMoveModule(
-        package: packageAddress,
-        module: moduleName,
-        version: nil,
-        paginationFilterEnums: forwardPage(),
-        paginationFilterFriends: forwardPage(),
-        paginationFilterFunctions: forwardPage(),
-        paginationFilterStructs: forwardPage()
-      )
-
-      guard let module else {
-        print("  metadata: missing")
-        print()
-        continue
-      }
-
-      if let functions = module.functions, !functions.nodes.isEmpty {
-        print("  functions:")
-        for function in functions.nodes {
-          let signature = formatFunctionSignature(
-            String(describing: function),
-            packagePrefix: packagePrefix
-          )
-          print("    - \(signature)")
-        }
-        if functions.pageInfo.hasNextPage {
-          print("    - ...")
-        }
-      } else {
-        print("  functions: none")
-      }
-
-      if let structs = module.structs, !structs.nodes.isEmpty {
-        print("  types:")
-        for structType in structs.nodes {
-          let typeTag = "\(packagePrefix)::\(moduleName)::\(structType.name)"
-          print("    - \(typeTag)")
-          let hasKeyAbility = (structType.abilities ?? []).contains(.key)
-          let isGeneric = !(structType.typeParameters ?? []).isEmpty
-          try await printObjectSamples(
-            client: client,
-            typeTag: typeTag,
-            hasKeyAbility: hasKeyAbility,
-            isGeneric: isGeneric
-          )
-        }
-        if structs.pageInfo.hasNextPage {
-          print("    - ...")
-        }
-      } else {
-        print("  types: none")
-      }
-
-      print()
-    }
-  }
 }

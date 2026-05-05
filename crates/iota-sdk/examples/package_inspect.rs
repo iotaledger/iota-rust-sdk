@@ -1,6 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! This example inspects a published Move package on testnet and prints its
+//! upgrade policy, version history, dependencies, functions, types, and sample
+//! objects.
+
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
@@ -12,6 +16,157 @@ use iota_sdk::{
         Address, Input, MoveCall, MovePackage, ObjectId, StructTag, Transaction, UpgradePolicy,
     },
 };
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
+    let package_address = Address::from_hex(package_id)?;
+    let client = Client::new_testnet();
+
+    // Fetch package metadata and version history.
+    let package = client
+        .package(package_address, None)
+        .await?
+        .ok_or_eyre("missing package")?;
+    let latest_package = client
+        .package_latest(package_address)
+        .await?
+        .ok_or_eyre("missing latest package")?;
+    let versions = fetch_package_versions(&client, package_address).await?;
+
+    println!(
+        "Latest version: {} ({})",
+        latest_package.version, latest_package.id
+    );
+    // Resolve the current upgrade policy.
+    println!(
+        "Current package policy: {}",
+        current_package_policy(&client, package.id).await?
+    );
+    println!();
+
+    // Print the package version history.
+    println!("Versions:");
+    for version in &versions {
+        let mut labels = Vec::new();
+        if version.id == package.id {
+            labels.push("requested");
+        }
+        if version.id == latest_package.id {
+            labels.push("latest");
+        }
+
+        if labels.is_empty() {
+            println!("- v{} -> {}", version.version, version.id);
+        } else {
+            println!(
+                "- v{} -> {} [{}]",
+                version.version,
+                version.id,
+                labels.join(", ")
+            );
+        }
+    }
+    println!();
+
+    // Print package dependencies and their linked versions.
+    println!("Dependencies:");
+    let mut dependencies = package.linkage_table.values().collect::<Vec<_>>();
+    dependencies.sort_by_key(|upgrade| upgrade.upgraded_id.to_hex());
+
+    if dependencies.is_empty() {
+        println!("- none");
+    } else {
+        for upgrade in dependencies {
+            println!("- {} @ v{}", upgrade.upgraded_id, upgrade.upgraded_version);
+        }
+    }
+    println!();
+
+    // Inspect normalized modules, functions, types, and sample key objects.
+    println!("Package contents:");
+    let module_page = forward_page(None);
+    let package_type_prefix = package.id.to_hex();
+
+    let mut module_names = package
+        .modules
+        .keys()
+        .map(|module_id| module_id.as_str())
+        .collect::<Vec<_>>();
+    module_names.sort_unstable();
+
+    for module_name in module_names {
+        println!("Module: {module_name}");
+
+        let Some(module) = client
+            .normalized_move_module(
+                package_address,
+                module_name,
+                None,
+                module_page.clone(),
+                module_page.clone(),
+                module_page.clone(),
+                module_page.clone(),
+            )
+            .await?
+        else {
+            println!("  metadata: missing");
+            println!();
+            continue;
+        };
+
+        if let Some(functions) = &module.functions {
+            if functions.nodes.is_empty() {
+                println!("  functions: none");
+            } else {
+                println!("  functions:");
+                for function in &functions.nodes {
+                    println!(
+                        "    - {}",
+                        format_function_signature(&function.to_string(), &package_type_prefix)
+                    );
+                }
+                if functions.page_info.has_next_page {
+                    println!("    - ...");
+                }
+            }
+        } else {
+            println!("  functions: none");
+        }
+
+        if let Some(structs) = &module.structs {
+            if structs.nodes.is_empty() {
+                println!("  types: none");
+            } else {
+                println!("  types:");
+                for struct_ in &structs.nodes {
+                    let type_tag =
+                        format!("{package_type_prefix}::{module_name}::{}", struct_.name);
+                    println!("    - {type_tag}");
+                    let has_key_ability = struct_.abilities.as_ref().is_some_and(|abilities| {
+                        abilities
+                            .iter()
+                            .any(|ability| matches!(ability, MoveAbility::Key))
+                    });
+                    let is_generic = struct_
+                        .type_parameters
+                        .as_ref()
+                        .is_some_and(|parameters| !parameters.is_empty());
+                    print_object_samples(&client, &type_tag, has_key_ability, is_generic).await?;
+                }
+                if structs.page_info.has_next_page {
+                    println!("    - ...");
+                }
+            }
+        } else {
+            println!("  types: none");
+        }
+
+        println!();
+    }
+
+    Ok(())
+}
 
 fn forward_page(cursor: Option<String>) -> PaginationFilter {
     PaginationFilter {
@@ -369,150 +524,4 @@ async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result
     Ok(extract_policy_value(&contents)
         .map(format_policy_name)
         .unwrap_or_else(|| "Unavailable".to_owned()))
-}
-
-#[tokio::main]
-async fn main() -> Result<()> {
-    let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
-    let package_address = Address::from_hex(package_id)?;
-    let client = Client::new_testnet();
-
-    let package = client
-        .package(package_address, None)
-        .await?
-        .ok_or_eyre("missing package")?;
-    let latest_package = client
-        .package_latest(package_address)
-        .await?
-        .ok_or_eyre("missing latest package")?;
-    let versions = fetch_package_versions(&client, package_address).await?;
-
-    println!(
-        "Latest version: {} ({})",
-        latest_package.version, latest_package.id
-    );
-    println!(
-        "Current package policy: {}",
-        current_package_policy(&client, package.id).await?
-    );
-    println!();
-
-    println!("Versions:");
-    for version in &versions {
-        let mut labels = Vec::new();
-        if version.id == package.id {
-            labels.push("requested");
-        }
-        if version.id == latest_package.id {
-            labels.push("latest");
-        }
-
-        if labels.is_empty() {
-            println!("- v{} -> {}", version.version, version.id);
-        } else {
-            println!(
-                "- v{} -> {} [{}]",
-                version.version,
-                version.id,
-                labels.join(", ")
-            );
-        }
-    }
-    println!();
-
-    println!("Dependencies:");
-    let mut dependencies = package.linkage_table.values().collect::<Vec<_>>();
-    dependencies.sort_by_key(|upgrade| upgrade.upgraded_id.to_hex());
-
-    if dependencies.is_empty() {
-        println!("- none");
-    } else {
-        for upgrade in dependencies {
-            println!("- {} @ v{}", upgrade.upgraded_id, upgrade.upgraded_version);
-        }
-    }
-    println!();
-
-    println!("Package contents:");
-    let module_page = forward_page(None);
-    let package_type_prefix = package.id.to_hex();
-
-    let mut module_names = package
-        .modules
-        .keys()
-        .map(|module_id| module_id.as_str())
-        .collect::<Vec<_>>();
-    module_names.sort_unstable();
-
-    for module_name in module_names {
-        println!("Module: {module_name}");
-
-        let Some(module) = client
-            .normalized_move_module(
-                package_address,
-                module_name,
-                None,
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-            )
-            .await?
-        else {
-            println!("  metadata: missing");
-            println!();
-            continue;
-        };
-
-        if let Some(functions) = &module.functions {
-            if functions.nodes.is_empty() {
-                println!("  functions: none");
-            } else {
-                println!("  functions:");
-                for function in &functions.nodes {
-                    println!(
-                        "    - {}",
-                        format_function_signature(&function.to_string(), &package_type_prefix)
-                    );
-                }
-                if functions.page_info.has_next_page {
-                    println!("    - ...");
-                }
-            }
-        } else {
-            println!("  functions: none");
-        }
-
-        if let Some(structs) = &module.structs {
-            if structs.nodes.is_empty() {
-                println!("  types: none");
-            } else {
-                println!("  types:");
-                for struct_ in &structs.nodes {
-                    let type_tag =
-                        format!("{package_type_prefix}::{module_name}::{}", struct_.name);
-                    println!("    - {type_tag}");
-                    let has_key_ability = struct_.abilities.as_ref().is_some_and(|abilities| {
-                        abilities
-                            .iter()
-                            .any(|ability| matches!(ability, MoveAbility::Key))
-                    });
-                    let is_generic = struct_
-                        .type_parameters
-                        .as_ref()
-                        .is_some_and(|parameters| !parameters.is_empty());
-                    print_object_samples(&client, &type_tag, has_key_ability, is_generic).await?;
-                }
-                if structs.page_info.has_next_page {
-                    println!("    - ...");
-                }
-            }
-        } else {
-            println!("  types: none");
-        }
-
-        println!();
-    }
-
-    Ok(())
 }

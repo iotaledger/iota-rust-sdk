@@ -1,6 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// This example inspects a published Move package on testnet and prints its
+// upgrade policy, version history, dependencies, functions, types, and sample
+// objects.
+
 using System.Text;
 using System.Text.Json;
 using IotaSdk;
@@ -8,6 +12,154 @@ using IotaSdk;
 class Program
 {
     static readonly string FrameworkPackageId = CreateFrameworkPackageId();
+
+    static async Task Main()
+    {
+        var packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
+
+        var packageAddress = Address.FromHex(packageId);
+        var client = GraphQlClient.NewTestnet();
+
+        // Fetch package metadata and version history.
+        var package = await client.Package(packageAddress);
+        if (package == null)
+        {
+            throw new Exception("missing package");
+        }
+
+        var latestPackage = await client.PackageLatest(packageAddress);
+        if (latestPackage == null)
+        {
+            throw new Exception("missing latest package");
+        }
+
+        var versions = await FetchPackageVersions(client, packageAddress);
+        var packagePrefix = package.Id().ToHex();
+        Console.WriteLine(
+            $"Latest version: {latestPackage.Version().AsU64()} ({latestPackage.Id().ToHex()})"
+        );
+        // Resolve the current upgrade policy.
+        Console.WriteLine(
+            $"Current package policy: {await CurrentPackagePolicy(client, package.Id())}"
+        );
+        Console.WriteLine();
+
+        // Print the package version history.
+        Console.WriteLine("Versions:");
+        foreach (var version in versions)
+        {
+            var labels = new List<string>();
+            if (version.Id().Equals(package.Id()))
+            {
+                labels.Add("requested");
+            }
+            if (version.Id().Equals(latestPackage.Id()))
+            {
+                labels.Add("latest");
+            }
+
+            var suffix = labels.Count == 0 ? string.Empty : $" [{string.Join(", ", labels)}]";
+            Console.WriteLine($"- v{version.Version().AsU64()} -> {version.Id().ToHex()}{suffix}");
+        }
+        Console.WriteLine();
+
+        // Print package dependencies and their linked versions.
+        Console.WriteLine("Dependencies:");
+        var dependencies = package
+            .LinkageTable()
+            .Select(entry => entry.Value)
+            .OrderBy(upgrade => upgrade.upgradedId.ToHex())
+            .ToArray();
+        if (dependencies.Length == 0)
+        {
+            Console.WriteLine("- none");
+        }
+        else
+        {
+            foreach (var dependency in dependencies)
+            {
+                Console.WriteLine(
+                    $"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion.AsU64()}"
+                );
+            }
+        }
+        Console.WriteLine();
+
+        // Inspect normalized modules, functions, types, and sample key objects.
+        Console.WriteLine("Package contents:");
+        var moduleNames = package
+            .Modules()
+            .Keys
+            .Select(moduleId => moduleId.AsStr())
+            .OrderBy(moduleName => moduleName);
+
+        foreach (var moduleName in moduleNames)
+        {
+            Console.WriteLine($"Module: {moduleName}");
+
+            var module = await client.NormalizedMoveModule(
+                packageAddress,
+                moduleName,
+                paginationFilterEnums: ForwardPage(),
+                paginationFilterFriends: ForwardPage(),
+                paginationFilterFunctions: ForwardPage(),
+                paginationFilterStructs: ForwardPage()
+            );
+            if (module == null)
+            {
+                Console.WriteLine("  metadata: missing");
+                Console.WriteLine();
+                continue;
+            }
+
+            if (module.functions == null || module.functions.nodes.Length == 0)
+            {
+                Console.WriteLine("  functions: none");
+            }
+            else
+            {
+                Console.WriteLine("  functions:");
+                foreach (var function in module.functions.nodes)
+                {
+                    Console.WriteLine(
+                        $"    - {FormatFunctionSignature(function.ToString(), packagePrefix)}"
+                    );
+                }
+                if (module.functions.pageInfo.hasNextPage)
+                {
+                    Console.WriteLine("    - ...");
+                }
+            }
+
+            if (module.structs == null || module.structs.nodes.Length == 0)
+            {
+                Console.WriteLine("  types: none");
+            }
+            else
+            {
+                Console.WriteLine("  types:");
+                foreach (var structType in module.structs.nodes)
+                {
+                    var typeTag = $"{packagePrefix}::{moduleName}::{structType.name}";
+                    Console.WriteLine($"    - {typeTag}");
+
+                    var hasKeyAbility =
+                        structType.abilities != null
+                        && structType.abilities.Contains(MoveAbility.Key);
+                    var isGeneric =
+                        structType.typeParameters != null
+                        && structType.typeParameters.Length > 0;
+                    await PrintObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
+                }
+                if (module.structs.pageInfo.hasNextPage)
+                {
+                    Console.WriteLine("    - ...");
+                }
+            }
+
+            Console.WriteLine();
+        }
+    }
 
     static PaginationFilter ForwardPage(string? cursor = null) =>
         new(Direction.Forward, cursor: cursor);
@@ -457,146 +609,4 @@ class Program
             : "Unavailable";
     }
 
-    static async Task Main()
-    {
-        var packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
-
-        var packageAddress = Address.FromHex(packageId);
-        var client = GraphQlClient.NewTestnet();
-
-        var package = await client.Package(packageAddress);
-        if (package == null)
-        {
-            throw new Exception("missing package");
-        }
-
-        var latestPackage = await client.PackageLatest(packageAddress);
-        if (latestPackage == null)
-        {
-            throw new Exception("missing latest package");
-        }
-
-        var versions = await FetchPackageVersions(client, packageAddress);
-        var packagePrefix = package.Id().ToHex();
-        Console.WriteLine(
-            $"Latest version: {latestPackage.Version().AsU64()} ({latestPackage.Id().ToHex()})"
-        );
-        Console.WriteLine(
-            $"Current package policy: {await CurrentPackagePolicy(client, package.Id())}"
-        );
-        Console.WriteLine();
-
-        Console.WriteLine("Versions:");
-        foreach (var version in versions)
-        {
-            var labels = new List<string>();
-            if (version.Id().Equals(package.Id()))
-            {
-                labels.Add("requested");
-            }
-            if (version.Id().Equals(latestPackage.Id()))
-            {
-                labels.Add("latest");
-            }
-
-            var suffix = labels.Count == 0 ? string.Empty : $" [{string.Join(", ", labels)}]";
-            Console.WriteLine($"- v{version.Version().AsU64()} -> {version.Id().ToHex()}{suffix}");
-        }
-        Console.WriteLine();
-
-        Console.WriteLine("Dependencies:");
-        var dependencies = package
-            .LinkageTable()
-            .Select(entry => entry.Value)
-            .OrderBy(upgrade => upgrade.upgradedId.ToHex())
-            .ToArray();
-        if (dependencies.Length == 0)
-        {
-            Console.WriteLine("- none");
-        }
-        else
-        {
-            foreach (var dependency in dependencies)
-            {
-                Console.WriteLine(
-                    $"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion.AsU64()}"
-                );
-            }
-        }
-        Console.WriteLine();
-
-        Console.WriteLine("Package contents:");
-        var moduleNames = package
-            .Modules()
-            .Keys
-            .Select(moduleId => moduleId.AsStr())
-            .OrderBy(moduleName => moduleName);
-
-        foreach (var moduleName in moduleNames)
-        {
-            Console.WriteLine($"Module: {moduleName}");
-
-            var module = await client.NormalizedMoveModule(
-                packageAddress,
-                moduleName,
-                paginationFilterEnums: ForwardPage(),
-                paginationFilterFriends: ForwardPage(),
-                paginationFilterFunctions: ForwardPage(),
-                paginationFilterStructs: ForwardPage()
-            );
-            if (module == null)
-            {
-                Console.WriteLine("  metadata: missing");
-                Console.WriteLine();
-                continue;
-            }
-
-            if (module.functions == null || module.functions.nodes.Length == 0)
-            {
-                Console.WriteLine("  functions: none");
-            }
-            else
-            {
-                Console.WriteLine("  functions:");
-                foreach (var function in module.functions.nodes)
-                {
-                    Console.WriteLine(
-                        $"    - {FormatFunctionSignature(function.ToString(), packagePrefix)}"
-                    );
-                }
-                if (module.functions.pageInfo.hasNextPage)
-                {
-                    Console.WriteLine("    - ...");
-                }
-            }
-
-            if (module.structs == null || module.structs.nodes.Length == 0)
-            {
-                Console.WriteLine("  types: none");
-            }
-            else
-            {
-                Console.WriteLine("  types:");
-                foreach (var structType in module.structs.nodes)
-                {
-                    var typeTag = $"{packagePrefix}::{moduleName}::{structType.name}";
-                    Console.WriteLine($"    - {typeTag}");
-
-                    var hasKeyAbility =
-                        structType.abilities != null
-                        && structType.abilities.Contains(MoveAbility.Key);
-                    var isGeneric =
-                        structType.typeParameters != null
-                        && structType.typeParameters.Length > 0;
-                    await PrintObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
-                }
-                if (module.structs.pageInfo.hasNextPage)
-                {
-                    Console.WriteLine("    - ...");
-                }
-            }
-
-            Console.WriteLine();
-        }
-    }
 }
