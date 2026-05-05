@@ -799,13 +799,6 @@ impl Input {
         mutable: true,
     });
 
-    /// Shared `Input` for the authenticator state object.
-    pub const AUTHENTICATOR_STATE_MUTABLE: Self = Self::Shared(SharedObjectReference {
-        object_id: ObjectId::AUTHENTICATOR_STATE,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
-        mutable: true,
-    });
-
     crate::def_is_as_into_opt!(
         Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
@@ -1235,6 +1228,10 @@ pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
     /// The specific module in the package containing the function.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
+    )]
     pub module: Identifier,
     /// The function to be called.
     pub function: Identifier,
