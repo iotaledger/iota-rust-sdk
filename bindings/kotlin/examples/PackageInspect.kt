@@ -46,7 +46,7 @@ private fun shortenPackageIds(signature: String): String {
             if (end > index + 2) {
                 val candidate = signature.substring(index, end)
                 val shortAddress =
-                    runCatching { Address.fromHex(candidate).toShortString(true) }.getOrNull()
+                    runCatching { Address.fromHex(candidate).toShortHex() }.getOrNull()
                 shortened.append(shortAddress ?: candidate)
                 index = end
                 continue
@@ -80,7 +80,7 @@ private suspend fun fetchPackageVersions(
         }
     }
 
-    return versions.sortedBy { it.version().toLong() }
+    return versions.sortedBy { it.version().asU64() }
 }
 
 private suspend fun printObjectSamples(
@@ -111,7 +111,7 @@ private suspend fun printObjectSamples(
 
     println("    sample objects:")
     for (obj in objects.data) {
-        println("      - ${obj.objectId().toHex()} (version ${obj.version()})")
+        println("      - ${obj.objectId().toHex()} (version ${obj.version().asU64()})")
     }
     if (objects.pageInfo.hasNextPage) {
         println("      - ...")
@@ -329,7 +329,7 @@ fun main() = runBlocking {
         val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
         val versions = fetchPackageVersions(client, packageAddress)
         val packagePrefix = pkg.id().toHex()
-        println("Latest version: ${latestPackage.version()} (${latestPackage.id().toHex()})")
+        println("Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})")
         println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
         println()
 
@@ -344,7 +344,7 @@ fun main() = runBlocking {
             }
 
             val suffix = if (labels.isEmpty()) "" else " [${labels.joinToString(", ")}]"
-            println("- v${version.version()} -> ${version.id().toHex()}$suffix")
+            println("- v${version.version().asU64()} -> ${version.id().toHex()}$suffix")
         }
         println()
 
@@ -354,7 +354,7 @@ fun main() = runBlocking {
             println("- none")
         } else {
             for (upgrade in linkageTable) {
-                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion}")
+                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}")
             }
         }
         println()

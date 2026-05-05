@@ -81,7 +81,7 @@ func shortenPackageIDs(signature string) string {
 			if end > index+2 {
 				candidate := signature[index:end]
 				if address, err := iota_sdk.AddressFromHex(candidate); err == nil {
-					shortened.WriteString(address.ToShortString(true))
+					shortened.WriteString(address.ToShortHex())
 				} else {
 					shortened.WriteString(candidate)
 				}
@@ -119,7 +119,7 @@ func fetchPackageVersions(client *iota_sdk.GraphQlClient, packageAddress *iota_s
 	}
 
 	sort.Slice(versions, func(i, j int) bool {
-		return versions[i].Version() < versions[j].Version()
+		return versions[i].Version().AsU64() < versions[j].Version().AsU64()
 	})
 
 	return versions, nil
@@ -154,7 +154,7 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAb
 
 	fmt.Println("    sample objects:")
 	for _, object := range objects.Data {
-		fmt.Printf("      - %s (version %d)\n", object.ObjectId().ToHex(), object.Version())
+		fmt.Printf("      - %s (version %d)\n", object.ObjectId().ToHex(), object.Version().AsU64())
 	}
 	if objects.PageInfo.HasNextPage {
 		fmt.Println("      - ...")
@@ -503,7 +503,7 @@ func main() {
 
 	packagePrefix := pkg.Id().ToHex()
 
-	fmt.Printf("Latest version: %d (%s)\n", latest.Version(), latest.Id().ToHex())
+	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id().ToHex())
 	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
 	if err != nil {
 		log.Fatalf("Failed to get current package policy: %v", err)
@@ -521,7 +521,7 @@ func main() {
 			labels = append(labels, "latest")
 		}
 
-		line := fmt.Sprintf("- v%d -> %s", version.Version(), version.Id().ToHex())
+		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id().ToHex())
 		if len(labels) > 0 {
 			line += fmt.Sprintf(" [%s]", joinLabels(labels))
 		}
@@ -546,7 +546,7 @@ func main() {
 			fmt.Printf(
 				"- %s @ v%d\n",
 				upgrade.UpgradedId.ToHex(),
-				upgrade.UpgradedVersion,
+				upgrade.UpgradedVersion.AsU64(),
 			)
 		}
 	}

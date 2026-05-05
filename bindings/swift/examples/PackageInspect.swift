@@ -37,7 +37,7 @@ private func shortenPackageIds(_ signature: String) -> String {
       if end > signature.index(after: nextIndex) {
         let candidate = String(signature[index..<end])
         if let address = try? Address.fromHex(hex: candidate) {
-          shortened += address.toShortString(withPrefix: true)
+          shortened += address.toShortHex()
         } else {
           shortened += candidate
         }
@@ -76,7 +76,7 @@ private func fetchPackageVersions(client: GraphQlClient, packageAddress: Address
     }
   }
 
-  return versions.sorted { $0.version() < $1.version() }
+  return versions.sorted { $0.version().asU64() < $1.version().asU64() }
 }
 
 private func printObjectSamples(
@@ -106,7 +106,7 @@ private func printObjectSamples(
 
   print("    sample objects:")
   for object in objects.data {
-    print("      - \(object.objectId().toHex()) (version \(object.version()))")
+    print("      - \(object.objectId().toHex()) (version \(object.version().asU64()))")
   }
   if objects.pageInfo.hasNextPage {
     print("      - ...")
@@ -385,7 +385,7 @@ struct PackageInspectExample {
 
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
-    print("Latest version: \(latestPackage.version()) (\(latestPackage.id().toHex()))")
+    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
     let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
     print("Current package policy: \(currentPolicy)")
     print()
@@ -401,7 +401,7 @@ struct PackageInspectExample {
       }
 
       let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
-      print("- v\(version.version()) -> \(version.id().toHex())\(suffix)")
+      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
     }
     print()
 
@@ -413,7 +413,7 @@ struct PackageInspectExample {
       print("- none")
     } else {
       for upgrade in dependencies {
-        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion)")
+        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
       }
     }
     print()

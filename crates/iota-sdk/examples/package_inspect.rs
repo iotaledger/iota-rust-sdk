@@ -36,7 +36,7 @@ fn shorten_package_ids(signature: &str) -> String {
             if end > index + 2 {
                 let candidate = &signature[index..end];
                 match Address::from_hex(candidate) {
-                    Ok(address) => shortened.push_str(&address.to_short_string(true)),
+                    Ok(address) => shortened.push_str(&address.to_short_hex()),
                     Err(_) => shortened.push_str(candidate),
                 }
                 index = end;
@@ -248,7 +248,7 @@ fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<
                 Input::ImmutableOrOwned(object_ref) | Input::Receiving(object_ref) => {
                     object_ref.object_id == upgrade_cap_id
                 }
-                Input::Shared { object_id, .. } => *object_id == upgrade_cap_id,
+                Input::Shared(shared_object_ref) => shared_object_ref.object_id == upgrade_cap_id,
                 Input::Pure { .. } => false,
                 _ => false,
             };

@@ -43,7 +43,7 @@ class Program
                     try
                     {
                         using var address = Address.FromHex(candidate);
-                        shortened.Append(address.ToShortString(true));
+                        shortened.Append(address.ToShortHex());
                     }
                     catch (SdkFfiException)
                     {
@@ -91,7 +91,7 @@ class Program
             }
         }
 
-        versions.Sort((left, right) => left.Version().CompareTo(right.Version()));
+        versions.Sort((left, right) => left.Version().AsU64().CompareTo(right.Version().AsU64()));
         return versions;
     }
 
@@ -127,7 +127,7 @@ class Program
         Console.WriteLine("    sample objects:");
         foreach (var obj in objects.data)
         {
-            Console.WriteLine($"      - {obj.ObjectId().ToHex()} (version {obj.Version()})");
+            Console.WriteLine($"      - {obj.ObjectId().ToHex()} (version {obj.Version().AsU64()})");
         }
         if (objects.pageInfo.hasNextPage)
         {
@@ -479,7 +479,7 @@ class Program
         var versions = await FetchPackageVersions(client, packageAddress);
         var packagePrefix = package.Id().ToHex();
         Console.WriteLine(
-            $"Latest version: {latestPackage.Version()} ({latestPackage.Id().ToHex()})"
+            $"Latest version: {latestPackage.Version().AsU64()} ({latestPackage.Id().ToHex()})"
         );
         Console.WriteLine(
             $"Current package policy: {await CurrentPackagePolicy(client, package.Id())}"
@@ -500,7 +500,7 @@ class Program
             }
 
             var suffix = labels.Count == 0 ? string.Empty : $" [{string.Join(", ", labels)}]";
-            Console.WriteLine($"- v{version.Version()} -> {version.Id().ToHex()}{suffix}");
+            Console.WriteLine($"- v{version.Version().AsU64()} -> {version.Id().ToHex()}{suffix}");
         }
         Console.WriteLine();
 
@@ -518,7 +518,9 @@ class Program
         {
             foreach (var dependency in dependencies)
             {
-                Console.WriteLine($"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion}");
+                Console.WriteLine(
+                    $"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion.AsU64()}"
+                );
             }
         }
         Console.WriteLine();
