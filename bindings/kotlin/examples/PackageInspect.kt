@@ -329,7 +329,9 @@ fun main() = runBlocking {
         val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
         val versions = fetchPackageVersions(client, packageAddress)
         val packagePrefix = pkg.id().toHex()
-        println("Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})")
+        println(
+            "Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})"
+        )
         println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
         println()
 
