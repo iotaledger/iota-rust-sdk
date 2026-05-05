@@ -127,12 +127,10 @@ private fun formatPolicyName(policy: Int): String =
     }
 
 private fun extractPolicy(contents: Value): Int? =
-    Regex("\"policy\"\\s*:\\s*(?:\"(\\d+)\"|(\\d+))")
-        .find(contents)
-        ?.groupValues
-        ?.drop(1)
-        ?.firstOrNull { it.isNotEmpty() }
-        ?.toIntOrNull()
+    runCatching {
+            jsonParser.parseToJsonElement(contents).jsonObject["policy"]?.jsonPrimitive?.intOrNull
+        }
+        .getOrNull()
 
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =

@@ -30,8 +30,7 @@ def shorten_package_ids(signature):
             if end > index + 2:
                 candidate = signature[index:end]
                 try:
-                    parts.append(
-                        Address.from_hex(candidate).to_short_string(True))
+                    parts.append(Address.from_hex(candidate).to_short_hex())
                     index = end
                     continue
                 except Exception:
@@ -64,7 +63,7 @@ async def fetch_package_versions(client, package_address):
         else:
             break
 
-    versions.sort(key=lambda package: package.version())
+    versions.sort(key=lambda package: package.version().as_u64())
     return versions
 
 
@@ -87,7 +86,9 @@ async def print_object_samples(client, type_tag, has_key_ability, is_generic):
 
     print("    sample objects:")
     for obj in objects.data:
-        print(f"      - {obj.object_id().to_hex()} (version {obj.version()})")
+        print(
+            f"      - {obj.object_id().to_hex()} (version {obj.version().as_u64()})"
+        )
     if objects.page_info.has_next_page:
         print("      - ...")
 
@@ -303,7 +304,7 @@ async def main():
     versions = await fetch_package_versions(client, package_address)
     package_prefix = package.id().to_hex()
     print(
-        f"Latest version: {latest_package.version()} ({latest_package.id().to_hex()})"
+        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id().to_hex()})"
     )
     print(
         f"Current package policy: {await current_package_policy(client, package.id())}"
@@ -318,7 +319,7 @@ async def main():
         if version.id() == latest_package.id():
             labels.append("latest")
 
-        line = f"- v{version.version()} -> {version.id().to_hex()}"
+        line = f"- v{version.version().as_u64()} -> {version.id().to_hex()}"
         if len(labels) > 0:
             line += f" [{', '.join(labels)}]"
         print(line)
@@ -332,7 +333,7 @@ async def main():
         for upgrade in sorted(linkage_table.values(),
                               key=lambda item: item.upgraded_id.to_hex()):
             print(
-                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}"
+                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version.as_u64()}"
             )
     print()
 
