@@ -555,6 +555,16 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
     }
 }
 
+impl From<SimpleSignature> for MultisigMemberSignature {
+    fn from(signature: SimpleSignature) -> Self {
+        match signature {
+            SimpleSignature::Ed25519 { signature, .. } => Self::Ed25519(signature),
+            SimpleSignature::Secp256k1 { signature, .. } => Self::Secp256k1(signature),
+            SimpleSignature::Secp256r1 { signature, .. } => Self::Secp256r1(signature),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
