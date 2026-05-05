@@ -261,36 +261,34 @@ mod end_of_epoch {
 
 mod version_assignments {
     use super::*;
-    use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+    use crate::transaction::{
+        CancelledTransaction, ConsensusDeterminedVersionAssignments, VersionAssignment,
+    };
 
     #[derive(serde::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
+    /// Uses an enum to allow for future expansion of the
+    /// ConsensusDeterminedVersionAssignments.
     #[derive(serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     impl Serialize for ConsensusDeterminedVersionAssignments {
@@ -302,18 +300,18 @@ mod version_assignments {
                 let readable = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 binary.serialize(serializer)
             }
@@ -328,9 +326,9 @@ mod version_assignments {
             if deserializer.is_human_readable() {
                 ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
@@ -338,13 +336,108 @@ mod version_assignments {
             } else {
                 BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
                 )
+            }
+        }
+    }
+
+    #[derive(serde::Serialize)]
+    #[serde(rename = "VersionAssignment")]
+    struct BinaryVersionAssignmentRef<'a>(&'a ObjectId, &'a crate::Version);
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "VersionAssignment")]
+    struct BinaryVersionAssignment(ObjectId, crate::Version);
+
+    impl Serialize for VersionAssignment {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.object_id)?;
+                tuple.serialize_element(&self.version)?;
+                tuple.end()
+            } else {
+                let binary = BinaryVersionAssignmentRef(&self.object_id, &self.version);
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for VersionAssignment {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (object_id, version): (ObjectId, u64) = Deserialize::deserialize(deserializer)?;
+                Ok(VersionAssignment {
+                    object_id,
+                    version: version.into(),
+                })
+            } else {
+                BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
+                    object_id: b.0,
+                    version: b.1,
+                })
+            }
+        }
+    }
+
+    #[derive(serde::Serialize)]
+    #[serde(rename = "CancelledTransaction")]
+    struct BinaryCancelledTransactionRef<'a>(&'a crate::Digest, &'a Vec<VersionAssignment>);
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "CancelledTransaction")]
+    struct BinaryCancelledTransaction(crate::Digest, Vec<VersionAssignment>);
+
+    impl Serialize for CancelledTransaction {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.digest)?;
+                tuple.serialize_element(&self.version_assignments)?;
+                tuple.end()
+            } else {
+                let binary = BinaryCancelledTransactionRef(&self.digest, &self.version_assignments);
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for CancelledTransaction {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (digest, version_assignments): (crate::Digest, Vec<VersionAssignment>) =
+                    Deserialize::deserialize(deserializer)?;
+                Ok(CancelledTransaction {
+                    digest,
+                    version_assignments,
+                })
+            } else {
+                BinaryCancelledTransaction::deserialize(deserializer).map(|b| {
+                    CancelledTransaction {
+                        digest: b.0,
+                        version_assignments: b.1,
+                    }
+                })
             }
         }
     }
