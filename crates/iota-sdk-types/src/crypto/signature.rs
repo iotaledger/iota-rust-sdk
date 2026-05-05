@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::convert::Infallible;
+use std::{convert::Infallible, str::FromStr};
 
 use super::{
     Ed25519PublicKey, Ed25519Signature, MultisigAggregatedSignature, PasskeyAuthenticator,
@@ -350,6 +350,14 @@ impl UserSignature {
             }
             UserSignature::MoveAuthenticator(_) => panic!(),
         }
+    }
+}
+
+impl FromStr for UserSignature {
+    type Err = bcs::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_base64(s)
     }
 }
 
