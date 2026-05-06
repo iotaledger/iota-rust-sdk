@@ -30,7 +30,6 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
 #[derive(Debug, thiserror::Error)]
-// TODO reuse another type?
 pub enum MultisigError {
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),
@@ -44,6 +43,12 @@ pub enum MultisigError {
     UnallowedSignatureType,
     #[error("Invalid input")]
     InvalidInput,
+    #[error("Duplicate public key")]
+    DuplicatePublicKey,
+    #[error("No public key found for signature: {0:?}")]
+    NoPublicKeyForSignature(UserSignature),
+    #[error("Invalid number of signatures")]
+    InvalidSignatureNumber,
 }
 
 /// A member in a multisig committee
@@ -295,37 +300,29 @@ impl MultisigAggregatedSignature {
     ) -> Result<Self, MultisigError> {
         // TODO call is_valid?
         if !committee.is_valid() {
-            //     .map_err(|_| MultisigError::InvalidSignature {
-            //     error: "Invalid multisig public key".to_string(),
-            // })?;
+            return Err(MultisigError::InvalidCommittee);
         }
 
         if signatures.len() > committee.members.len() || signatures.is_empty() {
-            // return Err(MultisigError::InvalidSignature {
-            //     error: "Invalid number of signatures".to_string(),
-            // });
+            return Err(MultisigError::InvalidSignatureNumber);
         }
 
         let mut bitmap = 0;
-        // TODO do we actually need this vec?
-        let mut sigs = Vec::with_capacity(signatures.len());
+        let mut member_signatures = Vec::with_capacity(signatures.len());
         for signature in signatures {
             let pk = signature.to_public_key().unwrap();
-            let index = committee.get_public_key_index(&pk).unwrap();
-            // .ok_or(MultisigError::IncorrectSigner {
-            //     error: format!("pk does not exist: {pk:?}"),
-            // })?;
+            let index = committee
+                .get_public_key_index(&pk)
+                .ok_or(MultisigError::NoPublicKeyForSignature(signature.clone()))?;
             if bitmap & (1 << index) != 0 {
-                // return Err(MultisigError::InvalidSignature {
-                //     error: "Duplicate public key".to_string(),
-                // });
+                return Err(MultisigError::DuplicatePublicKey);
             }
             bitmap |= 1 << index;
-            sigs.push(signature.try_into()?);
+            member_signatures.push(signature.try_into()?);
         }
 
         Ok(MultisigAggregatedSignature {
-            signatures: sigs,
+            signatures: member_signatures,
             bitmap,
             committee,
             bytes: OnceCell::new(),
