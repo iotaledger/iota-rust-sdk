@@ -273,7 +273,7 @@ move-package = object-id                          ; id
                (size *type-origin)                ; type-origin-table
                (size *(object-id upgrade-info))   ; linkage-table
 
-move-struct = compressed-struct-tag   ; type-
+move-struct = compressed-struct-tag   ; object-type
               version                 ; version
               bytes                   ; contents
 
