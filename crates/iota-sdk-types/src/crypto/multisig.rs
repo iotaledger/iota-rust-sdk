@@ -6,7 +6,6 @@
 // TODO Harmonise serde primitives (from/to bytes/base64) with regular PK
 
 use std::{
-    convert::Infallible,
     hash::{Hash, Hasher},
     str::FromStr,
 };
@@ -405,16 +404,7 @@ impl Eq for MultisigAggregatedSignature {}
 /// bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
 impl AsRef<[u8]> for MultisigAggregatedSignature {
     fn as_ref(&self) -> &[u8] {
-        self.bytes
-            // TODO Infallible?
-            .get_or_try_init::<_, Infallible>(|| {
-                let as_bytes = bcs::to_bytes(self).expect("BCS serialization should not fail");
-                let mut bytes = Vec::with_capacity(1 + as_bytes.len());
-                bytes.push(SignatureScheme::Multisig as u8);
-                bytes.extend_from_slice(as_bytes.as_slice());
-                Ok(bytes)
-            })
-            .expect("OnceCell invariant violated")
+        self.bytes.get_or_init(|| self.to_bytes())
     }
 }
 
