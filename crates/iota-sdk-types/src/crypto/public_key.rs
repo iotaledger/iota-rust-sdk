@@ -72,7 +72,10 @@ impl PublicKey {
     }
 
     pub fn to_base64(&self) -> String {
-        base64ct::Base64::encode_string(self.as_ref())
+        let mut bytes: Vec<u8> = Vec::new();
+        bytes.extend_from_slice(&[self.scheme() as u8]);
+        bytes.extend_from_slice(self.as_ref());
+        base64ct::Base64::encode_string(&bytes)
     }
 
     // TODO infallible
@@ -90,6 +93,10 @@ impl PublicKey {
                 } else if x == &(SignatureScheme::Secp256r1 as u8) {
                     let pk = Secp256r1PublicKey::from_bytes(&bytes[1..]).unwrap();
                     Ok(Self::Secp256r1(pk))
+                } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
+                    let pk =
+                        PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..]).unwrap());
+                    Ok(Self::Passkey(pk))
                 } else {
                     panic!()
                     // Err(FastCryptoError::InvalidInput)
@@ -107,7 +114,7 @@ impl AsRef<[u8]> for PublicKey {
             Self::Ed25519(pk) => pk.as_ref(),
             Self::Secp256k1(pk) => pk.as_ref(),
             Self::Secp256r1(pk) => pk.as_ref(),
-            Self::ZkLoginDeprecated => panic!(),
+            Self::ZkLoginDeprecated => &[],
             Self::Passkey(pk) => pk.as_ref(),
         }
     }
