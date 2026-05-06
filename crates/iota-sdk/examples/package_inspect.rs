@@ -333,7 +333,7 @@ async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result
 
             if object
                 .as_struct_opt()
-                .is_some_and(|move_struct| move_struct.type_ == StructTag::new_upgrade_cap())
+                .is_some_and(|move_struct| move_struct.object_type == StructTag::new_upgrade_cap())
             {
                 return Ok(Some(changed_object.object_id));
             }
