@@ -28,7 +28,7 @@ use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
     graphql_client::{Client, WaitForTx, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
-    types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy},
+    types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
 use rand::rngs::OsRng;
 
@@ -101,7 +101,7 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().object_type == StructTag::new_upgrade_cap() {
+                if obj.as_struct().object_type.is_upgrade_cap() {
                     println!("UpgradeCap: {object_id}");
                     println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);
