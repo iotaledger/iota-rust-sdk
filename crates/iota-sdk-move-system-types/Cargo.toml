@@ -1,0 +1,33 @@
+[package]
+name = "iota-sdk-move-system-types"
+version = "0.0.1-alpha.1"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2024"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "Rust representations of Move system types used by the IOTA blockchain"
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+  "--cfg=doc_cfg",
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
+[features]
+default = []
+serde = ["dep:serde", "iota-types/serde"]
+
+[dependencies]
+serde = { workspace = true, features = ["derive"], optional = true }
+
+# internal dependencies
+iota-types = { workspace = true }
+
+[dev-dependencies]
+bcs.workspace = true
