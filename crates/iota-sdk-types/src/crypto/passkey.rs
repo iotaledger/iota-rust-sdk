@@ -267,7 +267,7 @@ mod serialization {
             Self::try_from_raw(authenticator)
         }
 
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let authenticator_ref = AuthenticatorRef {
                 authenticator_data: &self.authenticator_data,
                 client_data_json: &self.client_data_json,

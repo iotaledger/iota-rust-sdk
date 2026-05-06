@@ -48,6 +48,8 @@ pub enum MultisigError {
     NoPublicKeyForSignature(UserSignature),
     #[error("Invalid number of signatures")]
     InvalidSignatureNumber,
+    #[error("Invalid bitmap value: {0}")]
+    InvalidBitmap(u16),
 }
 
 /// A member in a multisig committee
@@ -375,10 +377,7 @@ impl MultisigAggregatedSignature {
 /// e.g. 22 = 0b10110, then the result is [1, 2, 4].
 fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
     if bitmap > MAX_BITMAP_VALUE {
-        panic!()
-        // return Err(IotaError::InvalidSignature {
-        //     error: "Invalid bitmap".to_string(),
-        // });
+        return Err(MultisigError::InvalidBitmap(bitmap));
     }
     let mut res = Vec::new();
     for i in 0..10 {
