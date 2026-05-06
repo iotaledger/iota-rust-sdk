@@ -225,6 +225,16 @@ impl StructTag {
             )
     }
 
+    /// Checks if this is an IOTA balance type
+    /// (`0x2::balance::Balance<0x2::iota::IOTA>`)
+    pub fn is_gas_balance(&self) -> bool {
+        self.is_balance()
+            && matches!(
+                self.type_params.as_slice(),
+                [TypeTag::Struct(inner)] if inner.is_gas()
+            )
+    }
+
     /// Creates a new timelocked IOTA balance struct tag
     /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
     pub fn new_timelocked_gas_balance() -> Self {
@@ -234,7 +244,11 @@ impl StructTag {
     /// Checks if this is a timelocked IOTA balance type
     /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
     pub fn is_timelocked_gas_balance(&self) -> bool {
-        *self == Self::new_timelocked_gas_balance()
+        self.is_time_lock()
+            && matches!(
+                self.type_params.as_slice(),
+                [TypeTag::Struct(inner)] if inner.is_gas_balance()
+            )
     }
 
     /// Returns the string representation of this struct tag using the

@@ -176,7 +176,8 @@ impl ObjectData {
 /// A [`StructTag`] with optimized BCS serialization for object types.
 ///
 /// GasCoin, StakedIota, and Coin variants use compact enum encoding
-/// instead of the full StructTag representation.
+/// instead of the full StructTag representation. The Other variant
+/// carries the full StructTag inline.
 ///
 /// # BCS
 ///
