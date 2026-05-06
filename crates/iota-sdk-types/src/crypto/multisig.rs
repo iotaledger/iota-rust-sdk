@@ -38,6 +38,12 @@ pub enum MultisigError {
     Base64(#[from] base64ct::Error),
     #[error("{0}")]
     SignatureFromBytes(#[from] SignatureFromBytesError),
+    #[error("Invalid multisig committee")]
+    InvalidCommittee,
+    #[error("UnallowedSignatureType")]
+    UnallowedSignatureType,
+    #[error("Invalid input")]
+    InvalidInput,
 }
 
 /// A member in a multisig committee
@@ -134,18 +140,16 @@ impl MultisigCommittee {
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
-    pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Result<Self, Infallible> {
+    pub fn new(
+        members: Vec<MultisigMember>,
+        threshold: ThresholdUnit,
+    ) -> Result<Self, MultisigError> {
         let committee = Self::insecure_new(members, threshold);
 
         if committee.is_valid() {
             Ok(committee)
         } else {
-            panic!("Invalid multisig committee construction")
-
-            // TODO
-            //         return Err(IotaError::InvalidSignature {
-            //     error: "Invalid multisig public key
-            // construction".to_string(), });
+            Err(MultisigError::InvalidCommittee)
         }
     }
 
@@ -502,13 +506,16 @@ impl MultisigMemberSignature {
                 } else if x == &(SignatureScheme::Secp256r1 as u8) {
                     let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256r1(signature))
+                } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
+                    Ok(Self::ZkLoginDeprecated)
+                } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
+                    let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
+                    Ok(Self::Passkey(signature))
                 } else {
-                    panic!()
-                    // Err(FastCryptoError::InvalidInput)
+                    Err(MultisigError::UnallowedSignatureType)
                 }
             }
-            _ => panic!(),
-            // _ => Err(FastCryptoError::InvalidInput),
+            _ => Err(MultisigError::InvalidInput),
         }
     }
 }
