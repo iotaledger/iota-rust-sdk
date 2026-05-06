@@ -1024,6 +1024,9 @@ impl Command {
     }
 }
 
+/// Writes `items` to `f`, separated by `sep` and optionally wrapped in
+/// `delimiters` (e.g. `("[", "]")`). If the iterator is empty, nothing is
+/// written — not even the delimiters.
 pub fn write_sep<T: core::fmt::Display>(
     f: &mut core::fmt::Formatter<'_>,
     items: impl IntoIterator<Item = T>,
