@@ -246,6 +246,12 @@ impl PartialEq<Identifier> for str {
     }
 }
 
+impl PartialEq<Identifier> for String {
+    fn eq(&self, other: &Identifier) -> bool {
+        self == other.as_str()
+    }
+}
+
 impl PartialEq<String> for Identifier {
     fn eq(&self, other: &String) -> bool {
         self.as_str() == other
