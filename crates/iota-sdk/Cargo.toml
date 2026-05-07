@@ -71,6 +71,7 @@ bcs.workspace = true
 cynic.workspace = true
 eyre.workspace = true
 hex.workspace = true
+iota-move-system-types = { workspace = true, features = ["serde"] }
 rand.workspace = true
 reqwest = { workspace = true, features = ["rustls-tls", "json"] }
 serde_json.workspace = true

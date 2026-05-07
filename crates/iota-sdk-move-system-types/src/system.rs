@@ -13,7 +13,7 @@ use iota_types::ObjectId;
 use crate::framework::{Balance, ID, UID};
 
 // ------------------------------------------------------------------
-// staking_pool
+// iota_system::staking_pool
 // ------------------------------------------------------------------
 
 /// Rust version of the Move `iota_system::staking_pool::StakedIota` type.
@@ -59,7 +59,7 @@ impl StakedIota {
 }
 
 // ------------------------------------------------------------------
-// timelocked_staking
+// iota_system::timelocked_staking
 // ------------------------------------------------------------------
 
 /// Rust version of the Move

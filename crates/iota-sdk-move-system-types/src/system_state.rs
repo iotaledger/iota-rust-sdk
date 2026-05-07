@@ -16,7 +16,7 @@ use crate::framework::{
 };
 
 // ------------------------------------------------------------------
-// iota_system
+// iota_system::iota_system
 // ------------------------------------------------------------------
 
 /// Rust version of the Move `iota_system::iota_system::IotaSystemState` type.
@@ -34,7 +34,8 @@ pub struct IotaSystemStateWrapper {
     pub version: u64,
 }
 
-/// Rust version of the Move `iota_system::iota_system::SystemParametersV1` type.
+/// Rust version of the Move `iota_system::iota_system::SystemParametersV1`
+/// type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct SystemParametersV1 {
@@ -113,7 +114,7 @@ pub struct IotaSystemStateV2 {
 }
 
 // ------------------------------------------------------------------
-// iota_system_state_inner
+// iota_system::iota_system_state_inner
 // ------------------------------------------------------------------
 
 /// Rust version of the Move
@@ -159,7 +160,7 @@ pub struct SystemEpochInfoEventV2 {
 }
 
 // ------------------------------------------------------------------
-// staking_pool
+// iota_system::staking_pool
 // ------------------------------------------------------------------
 
 /// Rust version of the Move
@@ -189,7 +190,7 @@ pub struct StakingPoolV1 {
 }
 
 // ------------------------------------------------------------------
-// storage_fund
+// iota_system::iota_system::storage_fund
 // ------------------------------------------------------------------
 
 /// Rust version of the Move `iota_system::storage_fund::StorageFundV1` type.
@@ -201,7 +202,7 @@ pub struct StorageFundV1 {
 }
 
 // ------------------------------------------------------------------
-// validator
+// iota_system::iota_system::validator
 // ------------------------------------------------------------------
 
 /// Rust version of the Move `iota_system::validator::ValidatorMetadataV1` type.
@@ -252,7 +253,7 @@ pub struct ValidatorV1 {
 }
 
 // ------------------------------------------------------------------
-// validator_cap
+// iota_system::validator_cap
 // ------------------------------------------------------------------
 
 /// Rust version of the Move
@@ -265,7 +266,7 @@ pub struct UnverifiedValidatorOperationCap {
 }
 
 // ------------------------------------------------------------------
-// validator_set
+// iota_system::iota_system::validator_set
 // ------------------------------------------------------------------
 
 /// Rust version of the Move `iota_system::validator_set::ValidatorSetV1` type.
@@ -304,7 +305,7 @@ pub struct ValidatorSetV2 {
 }
 
 // ------------------------------------------------------------------
-// validator_wrapper
+// iota_system::iota_system::validator_wrapper
 // ------------------------------------------------------------------
 
 /// Rust version of the Move
