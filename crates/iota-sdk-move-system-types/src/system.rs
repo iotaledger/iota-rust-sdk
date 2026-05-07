@@ -19,6 +19,7 @@ use crate::framework::{Balance, ID, UID};
 /// Rust version of the Move `iota_system::staking_pool::StakedIota` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StakedIota {
     pub id: UID,
     pub pool_id: ID,
@@ -122,6 +123,7 @@ impl core::error::Error for StakedIotaFromObjectError {
 /// `iota_system::timelocked_staking::TimelockedStakedIota` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TimelockedStakedIota {
     pub id: UID,
     /// A self-custodial object holding the staked IOTA tokens.

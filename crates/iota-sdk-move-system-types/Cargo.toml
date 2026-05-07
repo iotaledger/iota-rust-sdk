@@ -21,6 +21,7 @@ rustdoc-args = [
 
 [features]
 default = []
+bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "iota-types/serde"]
 
 [dependencies]
@@ -28,4 +29,8 @@ bcs = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 
 # internal dependencies
+iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
+
+[build-dependencies]
+filetime = "0.2"

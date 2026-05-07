@@ -6,6 +6,7 @@
 /// Rust version of the Move `std::fixed_point32::FixedPoint32` type.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct FixedPoint32 {
     pub value: u64,
 }

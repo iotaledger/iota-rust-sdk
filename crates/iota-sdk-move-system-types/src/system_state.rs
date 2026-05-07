@@ -29,6 +29,7 @@ use crate::framework::{
 /// `IotaSystemState`.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct IotaSystemStateWrapper {
     pub id: UID,
     pub version: u64,
@@ -38,6 +39,7 @@ pub struct IotaSystemStateWrapper {
 /// type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemParametersV1 {
     /// The duration of an epoch, in milliseconds.
     pub epoch_duration_ms: u64,
@@ -61,6 +63,7 @@ pub struct SystemParametersV1 {
 /// Rust version of the Move `iota_system::iota_system::IotaSystemStateV1` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct IotaSystemStateV1 {
     pub epoch: u64,
     pub protocol_version: u64,
@@ -92,6 +95,7 @@ pub struct IotaSystemStateV1 {
 ///   fees burned in safe mode under `protocol_defined_base_fee`.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct IotaSystemStateV2 {
     pub epoch: u64,
     pub protocol_version: u64,
@@ -123,6 +127,7 @@ pub struct IotaSystemStateV2 {
 /// Emitted by `advance_epoch` for protocol versions 1–3.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemEpochInfoEventV1 {
     pub epoch: u64,
     pub protocol_version: u64,
@@ -145,6 +150,7 @@ pub struct SystemEpochInfoEventV1 {
 /// [`Self::tips_amount`].
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemEpochInfoEventV2 {
     pub epoch: u64,
     pub protocol_version: u64,
@@ -167,6 +173,7 @@ pub struct SystemEpochInfoEventV2 {
 /// `iota_system::staking_pool::PoolTokenExchangeRate` type.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct PoolTokenExchangeRate {
     pub iota_amount: u64,
     pub pool_token_amount: u64,
@@ -175,6 +182,7 @@ pub struct PoolTokenExchangeRate {
 /// Rust version of the Move `iota_system::staking_pool::StakingPoolV1` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StakingPoolV1 {
     pub id: UID,
     pub activation_epoch: Option<u64>,
@@ -196,6 +204,7 @@ pub struct StakingPoolV1 {
 /// Rust version of the Move `iota_system::storage_fund::StorageFundV1` type.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StorageFundV1 {
     pub total_object_storage_rebates: Balance,
     pub non_refundable_balance: Balance,
@@ -208,6 +217,7 @@ pub struct StorageFundV1 {
 /// Rust version of the Move `iota_system::validator::ValidatorMetadataV1` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorMetadataV1 {
     pub iota_address: Address,
     pub authority_pubkey_bytes: Vec<u8>,
@@ -239,6 +249,7 @@ pub struct ValidatorMetadataV1 {
 /// the BCS wire shape.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorV1 {
     pub metadata: ValidatorMetadataV1,
     pub voting_power: u64,
@@ -260,6 +271,7 @@ pub struct ValidatorV1 {
 /// `iota_system::validator_cap::UnverifiedValidatorOperationCap` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnverifiedValidatorOperationCap {
     pub id: UID,
     pub authorizer_validator_address: Address,
@@ -272,6 +284,7 @@ pub struct UnverifiedValidatorOperationCap {
 /// Rust version of the Move `iota_system::validator_set::ValidatorSetV1` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorSetV1 {
     pub total_stake: u64,
     pub active_validators: Vec<ValidatorV1>,
@@ -291,6 +304,7 @@ pub struct ValidatorSetV1 {
 /// participate in consensus during the current epoch.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorSetV2 {
     pub total_stake: u64,
     pub active_validators: Vec<ValidatorV1>,
@@ -316,6 +330,7 @@ pub struct ValidatorSetV2 {
 /// dynamic field.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorWrapper {
     pub inner: Versioned,
 }

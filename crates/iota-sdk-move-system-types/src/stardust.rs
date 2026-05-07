@@ -17,6 +17,7 @@ use crate::{
 /// Rust version of the Move `stardust::basic_output::BasicOutput<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct BasicOutput {
     /// Hash of the stardust `OutputId` that was migrated.
     pub id: UID,
@@ -43,6 +44,7 @@ pub struct BasicOutput {
 /// `stardust::expiration_unlock_condition::ExpirationUnlockCondition` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ExpirationUnlockCondition {
     /// Address that owns the output before `unix_time` has passed.
     pub owner: Address,
@@ -60,6 +62,7 @@ pub struct ExpirationUnlockCondition {
 /// Rust version of the Move `stardust::irc27::Irc27Metadata` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Irc27Metadata {
     /// Version of the metadata standard.
     pub version: String,
@@ -92,6 +95,7 @@ pub struct Irc27Metadata {
 /// Rust version of the Move `stardust::nft::Nft` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Nft {
     /// The NFT ID — the hash of the stardust `OutputId` that produced the
     /// migrated NFT output. Equivalent to the stardust `NftID`.
@@ -111,6 +115,7 @@ pub struct Nft {
 /// Rust version of the Move `stardust::nft_output::NftOutput<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct NftOutput {
     /// A fresh UID — distinct from the stardust `NftID` that lives on
     /// the wrapped [`Nft`].
@@ -131,6 +136,7 @@ pub struct NftOutput {
 /// type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StorageDepositReturnUnlockCondition {
     /// Address that the consuming transaction must pay `return_amount` to.
     pub return_address: Address,
@@ -147,6 +153,7 @@ pub struct StorageDepositReturnUnlockCondition {
 /// `stardust::timelock_unlock_condition::TimelockUnlockCondition` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TimelockUnlockCondition {
     /// Unix timestamp (seconds) starting from which the output can be
     /// consumed.

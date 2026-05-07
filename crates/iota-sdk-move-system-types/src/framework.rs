@@ -14,6 +14,7 @@ use iota_types::ObjectId;
 /// Rust version of the Move iota::bag::Bag type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Bag {
     pub id: UID,
     pub size: u64,
@@ -38,6 +39,7 @@ impl Default for Bag {
 /// single `u64`, so this Rust type does not carry the type parameter.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Balance {
     value: u64,
 }
@@ -55,6 +57,7 @@ impl Balance {
 /// Rust version of the Move `iota::balance::Supply<T>` type.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Supply {
     pub value: u64,
 }
@@ -92,6 +95,7 @@ mod iota_balance_tests {
 /// `id` and `balance` fields are encoded, so the Rust mirror is non-generic.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Coin {
     pub id: UID,
     pub balance: Balance,
@@ -117,6 +121,7 @@ impl Coin {
 /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TreasuryCap {
     pub id: UID,
     pub total_supply: Supply,
@@ -125,6 +130,7 @@ pub struct TreasuryCap {
 /// Rust version of the Move `iota::coin::CoinMetadata<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CoinMetadata {
     pub id: UID,
     /// Number of decimal places the coin uses.
@@ -189,6 +195,7 @@ mod iota_coin_tests {
 /// Rust version of the Move `iota::display::Display<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Display {
     pub id: UID,
     pub fields: VecMap<String, String>,
@@ -283,6 +290,7 @@ mod iota_dynamic_object_field_tests {
 /// canonical IOTA coin marker `T = 0x2::iota::IOTA`.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct IotaTreasuryCap {
     pub inner: TreasuryCap,
 }
@@ -371,6 +379,7 @@ mod iota_linked_table_tests {
 /// Rust version of the Move `iota::object::UID` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UID {
     pub id: ID,
 }
@@ -403,6 +412,7 @@ impl fmt::Display for UID {
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(transparent))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ID {
     pub bytes: ObjectId,
 }
@@ -471,6 +481,7 @@ mod iota_object_tests {
 /// struct contains a 1-byte dummy bool that is always `false`.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct IotaSystemAdminCap {
     dummy_field: bool,
 }
@@ -500,6 +511,7 @@ mod iota_system_admin_cap_tests {
 /// are encoded on the wire, so this Rust type drops them.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Table {
     pub id: UID,
     pub size: u64,
@@ -517,6 +529,7 @@ impl Default for Table {
 /// Rust version of the Move `iota::table_vec::TableVec<T>` type.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TableVec {
     pub contents: Table,
 }
@@ -608,6 +621,7 @@ mod iota_timelock_tests {
 /// Rust version of the Move `iota::transfer::Receiving<T>` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Receiving {
     pub id: ID,
     pub version: u64,
@@ -648,6 +662,8 @@ mod iota_transfer_tests {
 /// ASCII so the on-the-wire BCS bytes match.
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "string"))]
 pub struct Url {
     url: String,
 }
@@ -795,6 +811,7 @@ mod iota_vec_set_tests {
 /// Rust version of the Move `iota::versioned::Versioned` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Versioned {
     pub id: UID,
     pub version: u64,
