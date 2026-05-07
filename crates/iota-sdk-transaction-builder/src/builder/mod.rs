@@ -13,7 +13,7 @@ use iota_graphql_client::Client;
 use iota_types::{
     Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag,
+    TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -213,6 +213,83 @@ impl TransactionBuilder {
             client,
             last_command: self.last_command,
         }
+    }
+}
+
+impl TryFrom<Transaction> for TransactionBuilder {
+    type Error = Error;
+
+    /// Reconstruct a [`TransactionBuilder`] from a finalized [`Transaction`].
+    ///
+    /// Calling [`finish`](TransactionBuilder::finish) on the returned builder
+    /// produces a [`Transaction`] equal to the input.
+    ///
+    /// Only [`TransactionKind::ProgrammableTransaction`]s are supported; any
+    /// other variant returns an error.
+    fn try_from(tx: Transaction) -> Result<Self, Self::Error> {
+        let Transaction::V1(TransactionV1 {
+            kind,
+            sender,
+            gas_payment,
+            expiration,
+        }) = tx
+        else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            inputs: tx_inputs,
+            commands: tx_commands,
+        }) = kind
+        else {
+            return Err(Error::Input(
+                "only programmable transactions can be converted into a TransactionBuilder".into(),
+            ));
+        };
+
+        // Non-gas inputs are inserted with keys 0..n preserving their original
+        // index, so that `Argument::Input(i)` remains valid without remapping.
+        // Gas inputs follow with subsequent keys; BTreeMap ordering ensures
+        // `finish` re-emits the inputs and gas vectors in the original order.
+        let mut inputs = BTreeMap::new();
+        for (i, inp) in tx_inputs.into_iter().enumerate() {
+            inputs.insert(
+                i,
+                Input {
+                    kind: InputKind::Input(inp),
+                    is_gas: false,
+                },
+            );
+        }
+        let gas_offset = inputs.len();
+        for (i, obj_ref) in gas_payment.objects.into_iter().enumerate() {
+            inputs.insert(
+                gas_offset + i,
+                Input {
+                    kind: InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    is_gas: true,
+                },
+            );
+        }
+
+        let commands = tx_commands.into_iter().map(Command::from).collect();
+
+        let sponsor = (gas_payment.owner != sender).then_some(gas_payment.owner);
+
+        Ok(TransactionBuilder {
+            data: TransactionBuildData {
+                inputs,
+                commands,
+                gas_budget: Some(gas_payment.budget),
+                gas_price: Some(gas_payment.price),
+                sender,
+                sponsor,
+                expiration,
+                assigned_results: Default::default(),
+                gas_station_data: Default::default(),
+            },
+            client: (),
+            last_command: PhantomData,
+        })
     }
 }
 
@@ -1325,5 +1402,101 @@ impl<C> TransactionBuilder<C, GasStationData> {
             data.add_header(name, value);
         }
         self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_types::{Digest, Version};
+
+    use super::*;
+
+    /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
+    /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,
+    /// gas inputs follow with keys `n..n+m`, and `Argument::Input(i)` indices
+    /// in commands continue to point at the same input.
+    #[test]
+    fn try_from_preserves_input_indices() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let object_ref = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectReference::new(
+                ObjectId::new(id_bytes),
+                Version::from_u64(seed as u64 + 1),
+                Digest::new([seed; 32]),
+            )
+        };
+
+        // Three distinct inputs; commands deliberately reference them out of
+        // order so a re-numbering bug would surface.
+        let original_inputs = vec![
+            iota_types::Input::Pure(bcs::to_bytes(&42u64).unwrap()),
+            iota_types::Input::ImmutableOrOwned(object_ref(1)),
+            iota_types::Input::Pure(bcs::to_bytes(&7u64).unwrap()),
+        ];
+        let original_commands = vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+            coin: iota_types::Argument::Input(1),
+            amounts: vec![
+                iota_types::Argument::Input(2),
+                iota_types::Argument::Input(0),
+            ],
+        })];
+        let gas_coins = vec![object_ref(98), object_ref(99)];
+
+        let txn = Transaction::V1(TransactionV1 {
+            kind: TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+                inputs: original_inputs.clone(),
+                commands: original_commands,
+            }),
+            sender,
+            gas_payment: GasPayment {
+                objects: gas_coins.clone(),
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: TransactionExpiration::None,
+        });
+
+        let rebuilt = TransactionBuilder::try_from(txn).unwrap();
+
+        // Keys are 0..n+m in order; non-gas first, gas appended.
+        let keys: Vec<_> = rebuilt.data.inputs.keys().copied().collect();
+        let n = original_inputs.len();
+        let m = gas_coins.len();
+        assert_eq!(keys, (0..n + m).collect::<Vec<_>>());
+
+        // Non-gas inputs at keys 0..n match the originals byte-for-byte.
+        for (i, expected) in original_inputs.iter().enumerate() {
+            let stored = &rebuilt.data.inputs[&i];
+            assert!(!stored.is_gas, "input {i} should not be flagged as gas");
+            let InputKind::Input(actual) = &stored.kind else {
+                panic!("input {i}: expected InputKind::Input");
+            };
+            assert_eq!(actual, expected);
+        }
+
+        // Gas inputs at keys n..n+m are flagged is_gas and round-trip through
+        // InputKind::Input(ImmutableOrOwned).
+        for (offset, expected) in gas_coins.iter().enumerate() {
+            let key = n + offset;
+            let stored = &rebuilt.data.inputs[&key];
+            assert!(stored.is_gas, "input {key} should be flagged as gas");
+            let InputKind::Input(iota_types::Input::ImmutableOrOwned(actual)) = &stored.kind else {
+                panic!("gas input {key}: expected ImmutableOrOwned");
+            };
+            assert_eq!(actual, expected);
+        }
+
+        // Argument::Input indices in commands are untouched.
+        let Command::SplitCoins(split) = &rebuilt.data.commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Input(1)));
+        assert!(matches!(split.amounts[0], Argument::Input(2)));
+        assert!(matches!(split.amounts[1], Argument::Input(0)));
     }
 }
