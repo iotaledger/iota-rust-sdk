@@ -4011,6 +4011,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6744,6 +6746,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
@@ -8734,6 +8738,8 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(`ptr`: Poin
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -8747,8 +8753,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(`inputs`: RustBuffer.ByValue,`commands`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9429,6 +9433,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(`ptr`: Pointer,`signer`: Pointer,
@@ -14835,6 +14841,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction() != 19800.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 35216.toShort()) {
@@ -42897,7 +42906,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
         }
     }
 
@@ -51956,8 +51965,28 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
 
     
+    companion object {
+        
+    /**
+     * Reconstruct a transaction builder from a finalized transaction.
+     * Calling `finish` on the returned builder produces a transaction equal
+     * to the input.
+     *
+     * Only programmable transactions are supported; other transaction kinds
+     * will return an error.
+     */
+    @Throws(SdkFfiException::class) fun `fromTransaction`(`transaction`: Transaction): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(
+        FfiConverterTypeTransaction.lower(`transaction`),_status)
+}
+    )
+    }
     
-    companion object
+
+        
+    }
     
 }
 

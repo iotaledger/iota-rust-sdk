@@ -12616,6 +12616,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction()
+	})
+	if checksum != 19800 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new()
 	})
 	if checksum != 35216 {
@@ -33936,6 +33945,24 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 	}))
 }
 
+
+// Reconstruct a transaction builder from a finalized transaction.
+// Calling `finish` on the returned builder produces a transaction equal
+// to the input.
+//
+// Only programmable transactions are supported; other transaction kinds
+// will return an error.
+func TransactionBuilderFromTransaction(transaction *Transaction) (*TransactionBuilder, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *TransactionBuilder
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterTransactionBuilderINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 
 

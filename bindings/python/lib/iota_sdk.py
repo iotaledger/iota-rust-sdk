@@ -3179,6 +3179,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction() != 19800:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 35216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561:
@@ -9917,6 +9919,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -17341,6 +17348,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.restype = ctypes.c_uint16
@@ -52784,6 +52794,24 @@ class TransactionBuilder():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+    @classmethod
+    def from_transaction(cls, transaction: "Transaction"):
+        """
+        Reconstruct a transaction builder from a finalized transaction.
+        Calling `finish` on the returned builder produces a transaction equal
+        to the input.
+
+        Only programmable transactions are supported; other transaction kinds
+        will return an error.
+        """
+
+        _UniffiConverterTypeTransaction.check_lower(transaction)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction,
+        _UniffiConverterTypeTransaction.lower(transaction))
+        return cls._make_instance_(pointer)
+
 
     async def execute_with_gas_station(self, signer: "TransactionSigner") -> "Value":
         """

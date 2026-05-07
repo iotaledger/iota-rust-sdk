@@ -4033,6 +4033,8 @@ static class _UniFFILib {
     
     
     
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -9075,6 +9077,10 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern void uniffi_iota_sdk_ffi_fn_free_transactionbuilder(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(IntPtr @transaction,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -17147,6 +17153,10 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -25523,6 +25533,12 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1();
             if (checksum != 58632) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1` checksum `58632`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction();
+            if (checksum != 19800) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction` checksum `19800`, library returned `{checksum}`");
             }
         }
         {
@@ -50517,6 +50533,23 @@ public class TransactionBuilder : ITransactionBuilder, IDisposable {
     
     
 
+    
+    /// <summary>
+    /// Reconstruct a transaction builder from a finalized transaction.
+    /// Calling `finish` on the returned builder produces a transaction equal
+    /// to the input.
+    ///
+    /// Only programmable transactions are supported; other transaction kinds
+    /// will return an error.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static TransactionBuilder FromTransaction(Transaction @transaction) {
+        return new TransactionBuilder(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(FfiConverterTypeTransaction.INSTANCE.Lower(@transaction), ref _status)
+));
+    }
+    
     
 }
 class FfiConverterTypeTransactionBuilder: FfiConverter<TransactionBuilder, IntPtr> {

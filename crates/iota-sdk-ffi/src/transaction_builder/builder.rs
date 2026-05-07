@@ -56,6 +56,20 @@ impl TransactionBuilder {
         Self(iota_sdk::transaction_builder::TransactionBuilder::new(**sender).into())
     }
 
+    /// Reconstruct a transaction builder from a finalized transaction.
+    /// Calling `finish` on the returned builder produces a transaction equal
+    /// to the input.
+    ///
+    /// Only programmable transactions are supported; other transaction kinds
+    /// will return an error.
+    #[uniffi::constructor]
+    pub fn from_transaction(transaction: &Transaction) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::transaction_builder::TransactionBuilder::try_from(transaction.0.clone())?
+                .into(),
+        ))
+    }
+
     pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
         ClientTransactionBuilder(
             self.read(|builder| builder.clone().with_client(client))

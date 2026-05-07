@@ -224,7 +224,7 @@ impl TryFrom<Transaction> for TransactionBuilder {
     /// Calling [`finish`](TransactionBuilder::finish) on the returned builder
     /// produces a [`Transaction`] equal to the input.
     ///
-    /// Only [`TransactionKind::ProgrammableTransaction`]s are supported; any
+    /// Only [`TransactionKind::Programmable`]s are supported; any
     /// other variant returns an error.
     fn try_from(tx: Transaction) -> Result<Self, Self::Error> {
         let Transaction::V1(TransactionV1 {
@@ -236,7 +236,7 @@ impl TryFrom<Transaction> for TransactionBuilder {
         else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
-        let TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+        let TransactionKind::Programmable(ProgrammableTransaction {
             inputs: tx_inputs,
             commands: tx_commands,
         }) = kind
@@ -1447,7 +1447,7 @@ mod tests {
         let gas_coins = vec![object_ref(98), object_ref(99)];
 
         let txn = Transaction::V1(TransactionV1 {
-            kind: TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            kind: TransactionKind::Programmable(ProgrammableTransaction {
                 inputs: original_inputs.clone(),
                 commands: original_commands,
             }),
