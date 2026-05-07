@@ -12,6 +12,7 @@ pub mod gas;
 pub mod iota_names;
 pub mod move_core;
 pub mod move_package;
+pub mod move_system_types;
 pub mod object;
 pub mod signature;
 pub mod transaction;

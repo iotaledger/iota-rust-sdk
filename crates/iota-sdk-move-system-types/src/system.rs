@@ -58,6 +58,64 @@ impl StakedIota {
     }
 }
 
+#[cfg(feature = "serde")]
+impl StakedIota {
+    /// Decode a [`StakedIota`] from BCS bytes (e.g. the `contents` of an
+    /// on-chain Move struct) without verifying the on-chain type tag.
+    pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        bcs::from_bytes(bytes)
+    }
+
+    /// Decode a [`StakedIota`] from an on-chain object, validating that the
+    /// object's type tag matches `0x3::staking_pool::StakedIota`.
+    pub fn try_from_object(
+        object: &iota_types::Object,
+    ) -> Result<Self, StakedIotaFromObjectError> {
+        let move_struct = object
+            .as_struct_opt()
+            .ok_or(StakedIotaFromObjectError::NotAMoveStruct)?;
+        if !move_struct.type_.is_staked_iota() {
+            return Err(StakedIotaFromObjectError::WrongType);
+        }
+        bcs::from_bytes(&move_struct.contents).map_err(StakedIotaFromObjectError::Bcs)
+    }
+}
+
+/// Error returned by [`StakedIota::try_from_object`].
+#[cfg(feature = "serde")]
+#[derive(Debug)]
+pub enum StakedIotaFromObjectError {
+    /// The object is a package, not a Move struct.
+    NotAMoveStruct,
+    /// The Move struct's type tag is not `0x3::staking_pool::StakedIota`.
+    WrongType,
+    /// BCS decoding of the struct contents failed.
+    Bcs(bcs::Error),
+}
+
+#[cfg(feature = "serde")]
+impl core::fmt::Display for StakedIotaFromObjectError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::NotAMoveStruct => f.write_str("object is not a Move struct"),
+            Self::WrongType => {
+                f.write_str("object's type tag is not 0x3::staking_pool::StakedIota")
+            }
+            Self::Bcs(e) => write!(f, "bcs decoding failed: {e}"),
+        }
+    }
+}
+
+#[cfg(feature = "serde")]
+impl core::error::Error for StakedIotaFromObjectError {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+        match self {
+            Self::Bcs(e) => Some(e),
+            _ => None,
+        }
+    }
+}
+
 // ------------------------------------------------------------------
 // iota_system::timelocked_staking
 // ------------------------------------------------------------------

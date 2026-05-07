@@ -48,4 +48,5 @@ tokio = { workspace = true, features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
 # internal dependencies
+iota-move-system-types = { workspace = true, features = ["serde"] }
 iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "serde", "rand", "hash"] }
