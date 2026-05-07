@@ -307,12 +307,12 @@ macro_rules! def_is_as_into_opt {
             self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
-        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< as_ $rename _mut >](&mut self) -> &mut $inner {
             self.[< as_ $rename _mut_opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
