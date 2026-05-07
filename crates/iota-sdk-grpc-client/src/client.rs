@@ -193,19 +193,15 @@ impl_grpc_client_config!(
 
 #[cfg(test)]
 mod tests {
-    // `iota-grpc-client` e2e tests connect via `test_cluster.grpc_url()`,
-    // which always returns an `http://` URL, so the HTTPS-without-TLS branch
-    // in `Client::connect` is only reachable from a unit test compiled with
-    // `tls-ring` disabled.
     #[cfg(not(feature = "tls-ring"))]
     #[tokio::test]
     async fn https_without_tls_ring_returns_failed_precondition() {
         use super::Client;
 
-        let status = match Client::connect("https://example.com").await {
+        let status = match Client::new("https://example.com").await {
             Err(crate::api::Error::Grpc(status)) => status,
             Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
-            Ok(_) => panic!("connect should fail without tls-ring"),
+            Ok(_) => panic!("new should fail without tls-ring"),
         };
 
         assert_eq!(

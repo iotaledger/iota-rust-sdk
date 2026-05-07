@@ -144,7 +144,7 @@ mod tests {
     #[test]
     fn bearer_auth_sets_authorization_header() {
         let mut interceptor = HeadersInterceptor::new();
-        interceptor.bearer_auth("my-token");
+        interceptor.bearer_auth("my-token").expect("bearer_auth should succeed");
 
         let header = intercepted_authorization(interceptor);
         assert_eq!(header, "Bearer my-token");
