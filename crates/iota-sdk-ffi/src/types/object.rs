@@ -561,7 +561,7 @@ pub struct MoveStruct {
 
 impl From<iota_sdk::types::MoveStruct> for MoveStruct {
     fn from(value: iota_sdk::types::MoveStruct) -> Self {
-        let struct_tag: iota_sdk::types::StructTag = value.type_.into();
+        let struct_tag: iota_sdk::types::StructTag = value.object_type.into();
         Self {
             struct_type: Arc::new(struct_tag.into()),
             version: Arc::new(value.version.into()),
@@ -573,7 +573,7 @@ impl From<iota_sdk::types::MoveStruct> for MoveStruct {
 impl From<MoveStruct> for iota_sdk::types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
         Self {
-            type_: value.struct_type.0.clone().into(),
+            object_type: value.struct_type.0.clone().into(),
             version: **value.version,
             contents: value.contents,
         }
