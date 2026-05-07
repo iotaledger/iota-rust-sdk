@@ -68,9 +68,7 @@ impl StakedIota {
 
     /// Decode a [`StakedIota`] from an on-chain object, validating that the
     /// object's type tag matches `0x3::staking_pool::StakedIota`.
-    pub fn try_from_object(
-        object: &iota_types::Object,
-    ) -> Result<Self, StakedIotaFromObjectError> {
+    pub fn try_from_object(object: &iota_types::Object) -> Result<Self, StakedIotaFromObjectError> {
         let move_struct = object
             .as_struct_opt()
             .ok_or(StakedIotaFromObjectError::NotAMoveStruct)?;
