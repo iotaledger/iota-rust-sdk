@@ -218,7 +218,7 @@ pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 
 #[uniffi::export]
 impl TransactionKind {
-    /// Create a [`TransactionKind`] for a programmable transaction.
+    /// Create a `TransactionKind` for a programmable transaction.
     #[uniffi::constructor]
     pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
         Self(iota_sdk::types::TransactionKind::new_programmable(
@@ -226,19 +226,19 @@ impl TransactionKind {
         ))
     }
 
-    /// Create a [`TransactionKind`] for a genesis transaction.
+    /// Create a `TransactionKind` for a genesis transaction.
     #[uniffi::constructor]
     pub fn new_genesis(tx: &GenesisTransaction) -> Self {
         Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
     }
 
-    /// Create a [`TransactionKind`] for a consensus commit prologue v1.
+    /// Create a `TransactionKind` for a consensus commit prologue v1.
     #[uniffi::constructor]
     pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
         Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
     }
 
-    /// Create a [`TransactionKind`] for an authenticator state update v1.
+    /// Create a `TransactionKind` for an authenticator state update v1.
     #[uniffi::constructor]
     pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
         Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
@@ -246,7 +246,7 @@ impl TransactionKind {
         ))
     }
 
-    /// Create a [`TransactionKind`] for a randomness state update.
+    /// Create a `TransactionKind` for a randomness state update.
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))

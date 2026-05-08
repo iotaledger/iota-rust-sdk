@@ -494,7 +494,7 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
     match &tx.transaction {
         Transaction::V1(v1) => match &v1.kind {
             iota_sdk::types::transaction::TransactionKind::Programmable(_) => {
-                "programmable_transaction".to_owned()
+                "programmable".to_owned()
             }
             iota_sdk::types::transaction::TransactionKind::Genesis(_) => "genesis".to_owned(),
             iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {

@@ -25242,7 +25242,7 @@ open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
 
     
     /**
-     * Create a [`TransactionKind`] for a consensus commit prologue v1.
+     * Create a `TransactionKind` for a consensus commit prologue v1.
      */
 public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -25253,7 +25253,7 @@ public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -
 }
     
     /**
-     * Create a [`TransactionKind`] for an authenticator state update v1.
+     * Create a `TransactionKind` for an authenticator state update v1.
      */
 public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -25264,7 +25264,7 @@ public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> Transaction
 }
     
     /**
-     * Create a [`TransactionKind`] for a genesis transaction.
+     * Create a `TransactionKind` for a genesis transaction.
      */
 public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -25275,7 +25275,7 @@ public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
 }
     
     /**
-     * Create a [`TransactionKind`] for a programmable transaction.
+     * Create a `TransactionKind` for a programmable transaction.
      */
 public static func newProgrammable(tx: ProgrammableTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -25286,7 +25286,7 @@ public static func newProgrammable(tx: ProgrammableTransaction) -> TransactionKi
 }
     
     /**
-     * Create a [`TransactionKind`] for a randomness state update.
+     * Create a `TransactionKind` for a randomness state update.
      */
 public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
@@ -50432,19 +50432,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 47726) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48667) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48950) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 1331) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863) {

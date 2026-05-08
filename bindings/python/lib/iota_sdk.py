@@ -3185,15 +3185,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 47726:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48667:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48950:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 1331:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -53605,7 +53605,7 @@ class TransactionKind():
     @classmethod
     def new_consensus_commit_prologue_v1(cls, tx: "ConsensusCommitPrologueV1"):
         """
-        Create a [`TransactionKind`] for a consensus commit prologue v1.
+        Create a `TransactionKind` for a consensus commit prologue v1.
         """
 
         _UniffiConverterTypeConsensusCommitPrologueV1.check_lower(tx)
@@ -53618,7 +53618,7 @@ class TransactionKind():
     @classmethod
     def new_end_of_epoch(cls, tx: "typing.List[EndOfEpochTransactionKind]"):
         """
-        Create a [`TransactionKind`] for an authenticator state update v1.
+        Create a `TransactionKind` for an authenticator state update v1.
         """
 
         _UniffiConverterSequenceTypeEndOfEpochTransactionKind.check_lower(tx)
@@ -53631,7 +53631,7 @@ class TransactionKind():
     @classmethod
     def new_genesis(cls, tx: "GenesisTransaction"):
         """
-        Create a [`TransactionKind`] for a genesis transaction.
+        Create a `TransactionKind` for a genesis transaction.
         """
 
         _UniffiConverterTypeGenesisTransaction.check_lower(tx)
@@ -53644,7 +53644,7 @@ class TransactionKind():
     @classmethod
     def new_programmable(cls, tx: "ProgrammableTransaction"):
         """
-        Create a [`TransactionKind`] for a programmable transaction.
+        Create a `TransactionKind` for a programmable transaction.
         """
 
         _UniffiConverterTypeProgrammableTransaction.check_lower(tx)
@@ -53657,7 +53657,7 @@ class TransactionKind():
     @classmethod
     def new_randomness_state_update(cls, tx: "RandomnessStateUpdate"):
         """
-        Create a [`TransactionKind`] for a randomness state update.
+        Create a `TransactionKind` for a randomness state update.
         """
 
         _UniffiConverterTypeRandomnessStateUpdate.check_lower(tx)

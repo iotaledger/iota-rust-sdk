@@ -14846,19 +14846,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 47726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48667.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48950.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 1331.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863.toShort()) {
@@ -52840,7 +52840,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     companion object {
         
     /**
-     * Create a [`TransactionKind`] for a consensus commit prologue v1.
+     * Create a `TransactionKind` for a consensus commit prologue v1.
      */ fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52853,7 +52853,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a [`TransactionKind`] for an authenticator state update v1.
+     * Create a `TransactionKind` for an authenticator state update v1.
      */ fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52866,7 +52866,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a [`TransactionKind`] for a genesis transaction.
+     * Create a `TransactionKind` for a genesis transaction.
      */ fun `newGenesis`(`tx`: GenesisTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52879,7 +52879,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a [`TransactionKind`] for a programmable transaction.
+     * Create a `TransactionKind` for a programmable transaction.
      */ fun `newProgrammable`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52892,7 +52892,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a [`TransactionKind`] for a randomness state update.
+     * Create a `TransactionKind` for a randomness state update.
      */ fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
