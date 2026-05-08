@@ -3185,15 +3185,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 47726:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 57433:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48950:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 29805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 1331:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 32279:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -53551,7 +53551,7 @@ class TransactionKindProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+    transaction-kind    =  %d00 programmable-transaction               ; Programmable
     =/ %d01 genesis-transaction                    ; Genesis
     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -53571,7 +53571,7 @@ class TransactionKind():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+    transaction-kind    =  %d00 programmable-transaction               ; Programmable
     =/ %d01 genesis-transaction                    ; Genesis
     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -53605,7 +53605,8 @@ class TransactionKind():
     @classmethod
     def new_consensus_commit_prologue_v1(cls, tx: "ConsensusCommitPrologueV1"):
         """
-        Create a `TransactionKind` for a consensus commit prologue v1.
+        Create a `TransactionKind` for a consensus-commit-prologue-v1
+        transaction.
         """
 
         _UniffiConverterTypeConsensusCommitPrologueV1.check_lower(tx)
@@ -53618,7 +53619,7 @@ class TransactionKind():
     @classmethod
     def new_end_of_epoch(cls, tx: "typing.List[EndOfEpochTransactionKind]"):
         """
-        Create a `TransactionKind` for an authenticator state update v1.
+        Create a `TransactionKind` for an end-of-epoch transaction.
         """
 
         _UniffiConverterSequenceTypeEndOfEpochTransactionKind.check_lower(tx)
@@ -53657,7 +53658,7 @@ class TransactionKind():
     @classmethod
     def new_randomness_state_update(cls, tx: "RandomnessStateUpdate"):
         """
-        Create a `TransactionKind` for a randomness state update.
+        Create a `TransactionKind` for a randomness-state-update transaction.
         """
 
         _UniffiConverterTypeRandomnessStateUpdate.check_lower(tx)

@@ -25545,14 +25545,14 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1();
-            if (checksum != 47726) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1` checksum `47726`, library returned `{checksum}`");
+            if (checksum != 57433) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1` checksum `57433`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch();
-            if (checksum != 48950) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch` checksum `48950`, library returned `{checksum}`");
+            if (checksum != 29805) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch` checksum `29805`, library returned `{checksum}`");
             }
         }
         {
@@ -25569,8 +25569,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update();
-            if (checksum != 1331) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update` checksum `1331`, library returned `{checksum}`");
+            if (checksum != 32279) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update` checksum `32279`, library returned `{checksum}`");
             }
         }
         {
@@ -50913,7 +50913,7 @@ class FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents, IntPtr>
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 /// =/ %d01 genesis-transaction                    ; Genesis
 /// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 /// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -50931,7 +50931,7 @@ public interface ITransactionKind: IEquatable<TransactionKind> {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 /// =/ %d01 genesis-transaction                    ; Genesis
 /// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 /// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -51056,7 +51056,8 @@ public class TransactionKind : ITransactionKind, IDisposable {
 
     
     /// <summary>
-    /// Create a `TransactionKind` for a consensus commit prologue v1.
+    /// Create a `TransactionKind` for a consensus-commit-prologue-v1
+    /// transaction.
     /// </summary>
     public static TransactionKind NewConsensusCommitPrologueV1(ConsensusCommitPrologueV1 @tx) {
         return new TransactionKind(
@@ -51066,7 +51067,7 @@ public class TransactionKind : ITransactionKind, IDisposable {
     }
     
     /// <summary>
-    /// Create a `TransactionKind` for an authenticator state update v1.
+    /// Create a `TransactionKind` for an end-of-epoch transaction.
     /// </summary>
     public static TransactionKind NewEndOfEpoch(EndOfEpochTransactionKind[] @tx) {
         return new TransactionKind(
@@ -51096,7 +51097,7 @@ public class TransactionKind : ITransactionKind, IDisposable {
     }
     
     /// <summary>
-    /// Create a `TransactionKind` for a randomness state update.
+    /// Create a `TransactionKind` for a randomness-state-update transaction.
     /// </summary>
     public static TransactionKind NewRandomnessStateUpdate(RandomnessStateUpdate @tx) {
         return new TransactionKind(

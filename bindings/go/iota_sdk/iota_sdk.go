@@ -12645,7 +12645,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
 	})
-	if checksum != 47726 {
+	if checksum != 57433 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1: UniFFI API checksum mismatch")
 	}
@@ -12654,7 +12654,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch()
 	})
-	if checksum != 48950 {
+	if checksum != 29805 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch: UniFFI API checksum mismatch")
 	}
@@ -12681,7 +12681,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update()
 	})
-	if checksum != 1331 {
+	if checksum != 32279 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update: UniFFI API checksum mismatch")
 	}
@@ -34566,7 +34566,7 @@ func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 // =/ %d01 genesis-transaction                    ; Genesis
 // =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 // =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -34582,7 +34582,7 @@ type TransactionKindInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 // =/ %d01 genesis-transaction                    ; Genesis
 // =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 // =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -34594,14 +34594,15 @@ type TransactionKind struct {
 }
 
 
-// Create a `TransactionKind` for a consensus commit prologue v1.
+// Create a `TransactionKind` for a consensus-commit-prologue-v1
+// transaction.
 func TransactionKindNewConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-// Create a `TransactionKind` for an authenticator state update v1.
+// Create a `TransactionKind` for an end-of-epoch transaction.
 func TransactionKindNewEndOfEpoch(tx []*EndOfEpochTransactionKind) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(FfiConverterSequenceEndOfEpochTransactionKindINSTANCE.Lower(tx),_uniffiStatus)
@@ -34622,7 +34623,7 @@ func TransactionKindNewProgrammable(tx *ProgrammableTransaction) *TransactionKin
 	}))
 }
 
-// Create a `TransactionKind` for a randomness state update.
+// Create a `TransactionKind` for a randomness-state-update transaction.
 func TransactionKindNewRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)

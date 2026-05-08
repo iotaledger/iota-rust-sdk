@@ -14846,10 +14846,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 47726.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 57433.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 48950.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 29805.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384.toShort()) {
@@ -14858,7 +14858,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 1331.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 32279.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863.toShort()) {
@@ -52688,7 +52688,7 @@ public object FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents,
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * transaction-kind    =  %d00 programmable-transaction               ; Programmable
  * =/ %d01 genesis-transaction                    ; Genesis
  * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
  * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -52709,7 +52709,7 @@ public interface TransactionKindInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * transaction-kind    =  %d00 programmable-transaction               ; Programmable
  * =/ %d01 genesis-transaction                    ; Genesis
  * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
  * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -52840,7 +52840,8 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     companion object {
         
     /**
-     * Create a `TransactionKind` for a consensus commit prologue v1.
+     * Create a `TransactionKind` for a consensus-commit-prologue-v1
+     * transaction.
      */ fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52853,7 +52854,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a `TransactionKind` for an authenticator state update v1.
+     * Create a `TransactionKind` for an end-of-epoch transaction.
      */ fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
@@ -52892,7 +52893,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
         
     /**
-     * Create a `TransactionKind` for a randomness state update.
+     * Create a `TransactionKind` for a randomness-state-update transaction.
      */ fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
