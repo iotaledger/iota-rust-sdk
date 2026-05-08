@@ -205,7 +205,7 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 ///                     =/ %d01 genesis-transaction                    ; Genesis
 ///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -232,13 +232,14 @@ impl TransactionKind {
         Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
     }
 
-    /// Create a `TransactionKind` for a consensus commit prologue v1.
+    /// Create a `TransactionKind` for a consensus-commit-prologue-v1
+    /// transaction.
     #[uniffi::constructor]
     pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
         Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
     }
 
-    /// Create a `TransactionKind` for an authenticator state update v1.
+    /// Create a `TransactionKind` for an end-of-epoch transaction.
     #[uniffi::constructor]
     pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
         Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
@@ -246,7 +247,7 @@ impl TransactionKind {
         ))
     }
 
-    /// Create a `TransactionKind` for a randomness state update.
+    /// Create a `TransactionKind` for a randomness-state-update transaction.
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))

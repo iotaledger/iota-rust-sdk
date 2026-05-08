@@ -174,7 +174,7 @@ pub struct RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 ///                     =/ %d01 genesis-transaction                    ; Genesis
 ///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
