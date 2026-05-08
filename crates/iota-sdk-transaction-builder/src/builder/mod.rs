@@ -241,9 +241,7 @@ impl TryFrom<Transaction> for TransactionBuilder {
             commands: tx_commands,
         }) = kind
         else {
-            return Err(Error::Input(
-                "only programmable transactions can be converted into a TransactionBuilder".into(),
-            ));
+            return Err(Error::UnsupportedTransactionKind);
         };
 
         // Non-gas inputs are inserted with keys 0..n preserving their original
