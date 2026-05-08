@@ -126,6 +126,7 @@ pub mod object;
 pub mod object_id;
 pub mod transaction;
 pub mod u256;
+pub mod utils;
 pub mod validator;
 pub mod version;
 
