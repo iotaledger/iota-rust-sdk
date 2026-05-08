@@ -815,7 +815,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
-    #[serde(rename = "MoveStruct", rename_all = "camelCase")]
+    #[serde(rename = "MoveStruct")]
     struct ReadableMoveStructRef<'a> {
         object_type: &'a MoveObjectType,
         #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -825,7 +825,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
-    #[serde(rename = "MoveStruct", rename_all = "camelCase")]
+    #[serde(rename = "MoveStruct")]
     struct ReadableMoveStructOwned {
         object_type: MoveObjectType,
         #[serde(with = "crate::_serde::ReadableDisplay")]
