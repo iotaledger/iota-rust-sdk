@@ -291,7 +291,6 @@ pub struct MoveStruct {
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     version: Version,
     /// BCS bytes of a Move struct value.
     ///
