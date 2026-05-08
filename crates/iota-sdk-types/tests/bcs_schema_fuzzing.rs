@@ -410,6 +410,7 @@ impl TestHarness {
             "checkpoint-transaction",
             Self::generate_checkpoint_transaction,
         );
+        overrides.insert("move-struct", Self::gen_move_struct);
 
         Self {
             grammar,
@@ -503,6 +504,25 @@ impl TestHarness {
         let mut out = encode_uleb128(PAYLOAD_LEN as u64);
         out.push(0x00); // Ed25519 scheme flag
         let mut buf = vec![0u8; 64 + 32];
+        self.rng.fill_bytes(&mut buf);
+        out.extend(buf);
+        out
+    }
+
+    /// Generate a valid `move-struct` in BCS wire form.
+    ///
+    /// Layout: compressed-struct-tag + u64 version + length-prefixed bytes.
+    /// `MoveStruct::new` rejects `contents` shorter than `ObjectId::LENGTH`
+    /// (32 bytes), since the leading bytes are the object's id; the grammar's
+    /// generic `bytes` rule cannot express that lower bound, so generate it
+    /// here directly.
+    fn gen_move_struct(&mut self) -> Vec<u8> {
+        let mut out = self.generate("compressed-struct-tag");
+        out.extend(self.rng.next_u64().to_le_bytes());
+        const MIN_LEN: usize = 32; // ObjectId::LENGTH
+        let len = MIN_LEN + (self.rng.next_u32() as usize) % 33; // 32..=64
+        out.extend(encode_uleb128(len as u64));
+        let mut buf = vec![0u8; len];
         self.rng.fill_bytes(&mut buf);
         out.extend(buf);
         out
