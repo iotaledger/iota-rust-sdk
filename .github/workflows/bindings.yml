@@ -43,8 +43,6 @@ jobs:
           dotnet-version: "8.0.x"
       - name: Build the bindings
         run: make csharp
-      - name: Checks for uncommitted changes
-        run: git diff --exit-code
       - name: Verify Examples.sln is up-to-date
         run: |
           cd bindings/csharp/examples
@@ -77,8 +75,6 @@ jobs:
         run: make install-uniffi-bindgen-go
       - name: Build the bindings
         run: make go
-      - name: Checks for uncommitted changes
-        run: git diff --exit-code
       - name: Check format of the examples
         run: make go-examples-format-check
       - uses: ./.github/actions/start-local-network
@@ -96,8 +92,6 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Build the bindings
         run: make kotlin
-      - name: Checks for uncommitted changes
-        run: git diff --exit-code
       - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           distribution: "oracle"
@@ -119,8 +113,6 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Build the bindings
         run: make python
-      - name: Checks for uncommitted changes
-        run: git diff --exit-code
       - name: Check format of the examples
         run: |
           pip install yapf
@@ -140,8 +132,6 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Build the bindings
         run: make swift
-      - name: Checks for uncommitted changes
-        run: git diff --exit-code
       - name: Install Swift
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
@@ -151,6 +141,5 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
-      # Release example requires iota-sdk-swift package to be published first
-      # - name: Run the release example
-      #   run: make swift-release-example
+      - name: Run the release example
+        run: make swift-release-example

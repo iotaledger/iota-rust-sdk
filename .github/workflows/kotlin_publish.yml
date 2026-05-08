@@ -125,6 +125,9 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Generate Kotlin bindings
+        run: make kotlin
+
       - name: Download native libraries
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
