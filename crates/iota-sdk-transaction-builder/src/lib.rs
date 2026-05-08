@@ -491,7 +491,7 @@ mod tests {
         });
         assert!(matches!(
             TransactionBuilder::try_from(txn),
-            Err(Error::Input(_))
+            Err(Error::UnsupportedTransactionKind)
         ));
     }
 
