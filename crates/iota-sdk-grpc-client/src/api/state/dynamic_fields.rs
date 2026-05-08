@@ -6,8 +6,8 @@
 //! # Read Mask
 //!
 //! Use [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
-//! with [`ReadMask::from_fields`](crate::ReadMask::from_fields) for type-safe
-//! field selection.
+//! constants with [`ReadMask::from`](crate::ReadMask::from) for field
+//! selection.
 
 use iota_grpc_types::v1::{
     dynamic_field::DynamicField,

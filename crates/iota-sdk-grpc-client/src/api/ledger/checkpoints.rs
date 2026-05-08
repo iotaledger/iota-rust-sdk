@@ -9,8 +9,8 @@
 //! which data is included in the response.
 //!
 //! Use [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-//! with [`ReadMask::from_fields`](crate::ReadMask::from_fields) for type-safe
-//! field selection.
+//! constants with [`ReadMask::from`](crate::ReadMask::from) for field
+//! selection.
 
 use std::pin::Pin;
 

@@ -38,7 +38,7 @@ impl Client {
     /// includes effects, events, and input/output objects.
     ///
     /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection.
+    /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Checkpoint Inclusion
     ///
@@ -107,7 +107,7 @@ impl Client {
     /// input/output objects.
     ///
     /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection.
+    /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Checkpoint Inclusion
     ///

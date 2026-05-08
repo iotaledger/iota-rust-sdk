@@ -37,13 +37,13 @@ impl Client {
     /// returns. If `None`, uses [`GET_OBJECTS_READ_MASK`].
     ///
     /// Use [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection.
+    /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReferenceField};
+    /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -52,13 +52,11 @@ impl Client {
     /// // Get objects with default mask
     /// let objs = client.get_objects(&[(object_id, None)], None).await?;
     ///
-    /// // Get objects with typed field mask (only reference, no BCS)
+    /// // Get objects with field mask (only reference object ID, no BCS)
     /// let objs = client
     ///     .get_objects(
     ///         &[(object_id, None)],
-    ///         Some(ReadMask::from_fields(&[ObjectField::Reference(
-    ///             ObjectReferenceField::All,
-    ///         )])),
+    ///         Some(ReadMask::from(ObjectField::REFERENCE_OBJECT_ID)),
     ///     )
     ///     .await?;
     ///

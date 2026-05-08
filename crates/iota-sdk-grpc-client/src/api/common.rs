@@ -10,7 +10,6 @@ pub use iota_grpc_types::{
     field_mask_normalize,
     google::rpc::Status as RpcStatus,
     proto::TryFromProtoError,
-    read_mask_fields::ReadMaskField,
 };
 use iota_grpc_types::{
     proto::GrpcConversionError,
@@ -149,47 +148,24 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// A read mask that can be passed to client methods.
 ///
-/// Construct from a raw string or from typed field selectors:
+/// Construct from field path constants defined in
+/// [`read_mask_fields`](crate::read_mask_fields):
 ///
 /// ```
-/// use iota_sdk_grpc_client::{
-///     ReadMask,
-///     read_mask_fields::{EffectsSubField, TransactionField},
-/// };
+/// use iota_sdk_grpc_client::{ReadMask, read_mask_fields::TransactionField};
 ///
-/// // From typed fields
-/// let mask = ReadMask::from_fields(&[
-///     TransactionField::Effects(EffectsSubField::All),
-///     TransactionField::Checkpoint,
-/// ]);
-/// assert_eq!(mask.as_str(), "effects,checkpoint");
+/// // Single field
+/// let mask = ReadMask::from(TransactionField::EFFECTS);
+/// assert_eq!(mask.as_str(), "effects");
 ///
-/// // From a raw string
-/// let mask = ReadMask::from("effects,checkpoint");
+/// // Multiple fields
+/// let mask = ReadMask::from(&[TransactionField::EFFECTS, TransactionField::CHECKPOINT]);
 /// assert_eq!(mask.as_str(), "effects,checkpoint");
 /// ```
 #[derive(Debug, Clone)]
 pub struct ReadMask<'a>(Cow<'a, str>);
 
 impl<'a> ReadMask<'a> {
-    /// Build a read mask from a slice of typed field selectors.
-    ///
-    /// Overlapping paths are normalized: a broader path subsumes all of its
-    /// sub-paths (e.g. `Effects(All)` + `Effects(Bcs)` → `"effects"`).
-    pub fn from_fields<F: ReadMaskField>(fields: &[F]) -> Self {
-        let joined = fields
-            .iter()
-            .map(|f| f.as_str())
-            .collect::<Vec<_>>()
-            .join(",");
-        Self(Cow::Owned(field_mask_normalize(&joined)))
-    }
-
-    /// Build a read mask from a single typed field selector.
-    pub fn from_field(field: &dyn ReadMaskField) -> Self {
-        Self(Cow::Owned(field.as_str().to_owned()))
-    }
-
     /// Returns the comma-separated field mask string.
     pub fn as_str(&self) -> &str {
         &self.0
@@ -212,6 +188,13 @@ impl From<&[&str]> for ReadMask<'_> {
     /// Paths are normalized: broader paths subsume their sub-paths.
     fn from(paths: &[&str]) -> Self {
         Self(Cow::Owned(field_mask_normalize(&paths.join(","))))
+    }
+}
+
+impl<const N: usize> From<&[&str; N]> for ReadMask<'_> {
+    /// Paths are normalized: broader paths subsume their sub-paths.
+    fn from(paths: &[&str; N]) -> Self {
+        Self::from(paths.as_slice())
     }
 }
 

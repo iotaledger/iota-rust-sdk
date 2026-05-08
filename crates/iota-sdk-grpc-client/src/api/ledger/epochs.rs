@@ -31,8 +31,8 @@ impl Client {
     /// # Read Mask
     ///
     /// Use [`EpochField`](iota_grpc_types::read_mask_fields::EpochField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection. For
-    /// individual protocol config map entries, use
+    /// constants with [`ReadMask::from`] for field selection. For individual
+    /// protocol config map entries, use
     /// [`EpochField::feature_flag`](iota_grpc_types::read_mask_fields::EpochField::feature_flag)
     /// and
     /// [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
@@ -41,9 +41,7 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::{
-    /// #     EpochField, ProtocolConfigField,
-    /// # };
+    /// # use iota_sdk_grpc_client::read_mask_fields::EpochField;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     ///
@@ -55,10 +53,10 @@ impl Client {
     /// let epoch = client
     ///     .get_epoch(
     ///         Some(0),
-    ///         Some(ReadMask::from_fields(&[
-    ///             EpochField::Epoch,
-    ///             EpochField::ReferenceGasPrice,
-    ///             EpochField::FirstCheckpoint,
+    ///         Some(ReadMask::from(&[
+    ///             EpochField::EPOCH,
+    ///             EpochField::REFERENCE_GAS_PRICE,
+    ///             EpochField::FIRST_CHECKPOINT,
     ///         ])),
     ///     )
     ///     .await?;
@@ -67,31 +65,23 @@ impl Client {
     /// let epoch = client
     ///     .get_epoch(
     ///         None,
-    ///         Some(ReadMask::from_fields(&[EpochField::ProtocolConfig(
-    ///             ProtocolConfigField::FeatureFlags,
-    ///         )])),
+    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS)),
     ///     )
     ///     .await?
     ///     .into_inner();
     /// let flags = epoch.protocol_config.unwrap().feature_flags.unwrap().flags;
     ///
     /// // Get a single named feature flag
+    /// let flag_field = EpochField::feature_flag("enable_vdf");
     /// let epoch = client
-    ///     .get_epoch(
-    ///         None,
-    ///         Some(ReadMask::from_fields(&[EpochField::feature_flag(
-    ///             "enable_vdf",
-    ///         )])),
-    ///     )
+    ///     .get_epoch(None, Some(ReadMask::from(flag_field.as_str())))
     ///     .await?;
     ///
     /// // Get all protocol attributes for the current epoch
     /// let epoch = client
     ///     .get_epoch(
     ///         None,
-    ///         Some(ReadMask::from_fields(&[EpochField::ProtocolConfig(
-    ///             ProtocolConfigField::Attributes,
-    ///         )])),
+    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
     ///     )
     ///     .await?
     ///     .into_inner();
@@ -103,13 +93,9 @@ impl Client {
     ///     .attributes;
     ///
     /// // Get a single named attribute
+    /// let attr_field = EpochField::attribute("max_tx_gas");
     /// let epoch = client
-    ///     .get_epoch(
-    ///         None,
-    ///         Some(ReadMask::from_fields(&[EpochField::attribute(
-    ///             "max_tx_gas",
-    ///         )])),
-    ///     )
+    ///     .get_epoch(None, Some(ReadMask::from(attr_field.as_str())))
     ///     .await?;
     /// # Ok(())
     /// # }

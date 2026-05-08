@@ -24,7 +24,7 @@ impl Client {
     /// returns. If `None`, uses [`GET_SERVICE_INFO_READ_MASK`].
     ///
     /// Use [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection.
+    /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Example
     ///
@@ -41,10 +41,9 @@ impl Client {
     ///
     /// // Get service info with specific fields
     /// let info = client
-    ///     .get_service_info(Some(ReadMask::from_fields(&[
-    ///         ServiceInfoField::ChainId,
-    ///         ServiceInfoField::Epoch,
-    ///         ServiceInfoField::ExecutedCheckpointHeight,
+    ///     .get_service_info(Some(ReadMask::from(&[
+    ///         ServiceInfoField::CHAIN_ID,
+    ///         ServiceInfoField::EPOCH,
     ///     ])))
     ///     .await?;
     /// # Ok(())

@@ -43,13 +43,13 @@ impl Client {
     /// returns. If `None`, uses [`GET_TRANSACTIONS_READ_MASK`].
     ///
     /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// with [`ReadMask::from_fields`] for type-safe field selection.
+    /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::{TransactionField, EffectsSubField};
+    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
@@ -58,13 +58,13 @@ impl Client {
     /// // Get transactions with default mask
     /// let txs = client.get_transactions(&[digest], None).await?;
     ///
-    /// // Get transactions with typed field mask
+    /// // Get transactions with field mask
     /// let txs = client
     ///     .get_transactions(
     ///         &[digest],
-    ///         Some(ReadMask::from_fields(&[
-    ///             TransactionField::Effects(EffectsSubField::All),
-    ///             TransactionField::Checkpoint,
+    ///         Some(ReadMask::from(&[
+    ///             TransactionField::EFFECTS,
+    ///             TransactionField::CHECKPOINT,
     ///         ])),
     ///     )
     ///     .await?;

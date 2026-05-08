@@ -6,8 +6,8 @@
 //! # Read Mask
 //!
 //! Use [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
-//! with [`ReadMask::from_fields`](crate::ReadMask::from_fields) for type-safe
-//! field selection.
+//! constants with [`ReadMask::from`](crate::ReadMask::from) for field
+//! selection.
 
 use iota_grpc_types::v1::{
     object::Object,
