@@ -18850,6 +18850,14 @@ open func inputs() -> [Input]  {
 }
         )
     }
+    open var description: String {
+        return try!  FfiConverterString.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(self.uniffiClonePointer(),$0
+    )
+}
+        )
+    }
     public static func == (self: ProgrammableTransaction, other: ProgrammableTransaction) -> Bool {
         return try!  FfiConverterBool.lift(
             try! rustCall() {
@@ -18859,10 +18867,21 @@ open func inputs() -> [Input]  {
 }
         )
     }
+    open func hash(into hasher: inout Hasher) {
+        let val = try!  FfiConverterUInt64.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(self.uniffiClonePointer(),$0
+    )
+}
+        )
+        hasher.combine(val)
+    }
 
 }
 extension ProgrammableTransaction: CustomDebugStringConvertible {}
+extension ProgrammableTransaction: CustomStringConvertible {}
 extension ProgrammableTransaction: Equatable {}
+extension ProgrammableTransaction: Hashable {}
 
 
 #if swift(>=5.8)
@@ -25145,7 +25164,7 @@ public func FfiConverterTypeTransactionEvents_lower(_ value: TransactionEvents) 
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * transaction-kind    =  %d00 programmable-transaction               ; Programmable
  * =/ %d01 genesis-transaction                    ; Genesis
  * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
  * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -25164,7 +25183,7 @@ public protocol TransactionKindProtocol: AnyObject, Sendable {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+ * transaction-kind    =  %d00 programmable-transaction               ; Programmable
  * =/ %d01 genesis-transaction                    ; Genesis
  * =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
  * =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -25222,6 +25241,10 @@ open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
     }
 
     
+    /**
+     * Create a `TransactionKind` for a consensus-commit-prologue-v1
+     * transaction.
+     */
 public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
@@ -25230,6 +25253,9 @@ public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -
 })
 }
     
+    /**
+     * Create a `TransactionKind` for an end-of-epoch transaction.
+     */
 public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
@@ -25238,6 +25264,9 @@ public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> Transaction
 })
 }
     
+    /**
+     * Create a `TransactionKind` for a genesis transaction.
+     */
 public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
@@ -25246,14 +25275,20 @@ public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
 })
 }
     
-public static func newProgrammableTransaction(tx: ProgrammableTransaction) -> TransactionKind  {
+    /**
+     * Create a `TransactionKind` for a programmable transaction.
+     */
+public static func newProgrammable(tx: ProgrammableTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(
         FfiConverterTypeProgrammableTransaction_lower(tx),$0
     )
 })
 }
     
+    /**
+     * Create a `TransactionKind` for a randomness-state-update transaction.
+     */
 public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
@@ -25272,6 +25307,14 @@ public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> Transa
 }
         )
     }
+    open var description: String {
+        return try!  FfiConverterString.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(self.uniffiClonePointer(),$0
+    )
+}
+        )
+    }
     public static func == (self: TransactionKind, other: TransactionKind) -> Bool {
         return try!  FfiConverterBool.lift(
             try! rustCall() {
@@ -25281,10 +25324,21 @@ public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> Transa
 }
         )
     }
+    open func hash(into hasher: inout Hasher) {
+        let val = try!  FfiConverterUInt64.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(self.uniffiClonePointer(),$0
+    )
+}
+        )
+        hasher.combine(val)
+    }
 
 }
 extension TransactionKind: CustomDebugStringConvertible {}
+extension TransactionKind: CustomStringConvertible {}
 extension TransactionKind: Equatable {}
+extension TransactionKind: Hashable {}
 
 
 #if swift(>=5.8)
@@ -50379,19 +50433,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 57433) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 44556) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 29805) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 45541) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 39384) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 9153) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 28701) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 32279) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863) {

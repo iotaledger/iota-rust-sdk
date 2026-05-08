@@ -4029,6 +4029,10 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -7734,11 +7738,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ulong uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9234,7 +9246,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(IntPtr @tx,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(IntPtr @tx,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9246,11 +9258,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ulong uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -17154,7 +17174,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -25525,32 +25545,32 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1();
-            if (checksum != 27756) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1` checksum `27756`, library returned `{checksum}`");
+            if (checksum != 57433) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1` checksum `57433`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch();
-            if (checksum != 44556) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch` checksum `44556`, library returned `{checksum}`");
+            if (checksum != 29805) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch` checksum `29805`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis();
-            if (checksum != 45541) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis` checksum `45541`, library returned `{checksum}`");
+            if (checksum != 39384) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis` checksum `39384`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction();
-            if (checksum != 9153) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction` checksum `9153`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable();
+            if (checksum != 28701) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable` checksum `28701`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update();
-            if (checksum != 37051) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update` checksum `37051`, library returned `{checksum}`");
+            if (checksum != 32279) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update` checksum `32279`, library returned `{checksum}`");
             }
         }
         {
@@ -44585,6 +44605,12 @@ public class ProgrammableTransaction : IProgrammableTransaction, IDisposable {
     }
     
     
+    public override string ToString() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(thisPtr,  ref _status)
+)));
+    }
     public bool Equals(ProgrammableTransaction? other)
     {
         if (other is null) return false;
@@ -44597,6 +44623,12 @@ public class ProgrammableTransaction : IProgrammableTransaction, IDisposable {
     {
         if (obj is null || !(obj is ProgrammableTransaction)) return false;
         return Equals(obj as ProgrammableTransaction);
+    }
+    public override int GetHashCode() { 
+        return (int)CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(thisPtr,  ref _status)
+)));
     }
 
     
@@ -50881,7 +50913,7 @@ class FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents, IntPtr>
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 /// =/ %d01 genesis-transaction                    ; Genesis
 /// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 /// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -50899,7 +50931,7 @@ public interface ITransactionKind: IEquatable<TransactionKind> {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 /// =/ %d01 genesis-transaction                    ; Genesis
 /// =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 /// =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
@@ -50996,6 +51028,12 @@ public class TransactionKind : ITransactionKind, IDisposable {
     }
 
     
+    public override string ToString() {
+        return CallWithPointer(thisPtr => FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(thisPtr,  ref _status)
+)));
+    }
     public bool Equals(TransactionKind? other)
     {
         if (other is null) return false;
@@ -51009,8 +51047,18 @@ public class TransactionKind : ITransactionKind, IDisposable {
         if (obj is null || !(obj is TransactionKind)) return false;
         return Equals(obj as TransactionKind);
     }
+    public override int GetHashCode() { 
+        return (int)CallWithPointer(thisPtr => FfiConverterUInt64.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(thisPtr,  ref _status)
+)));
+    }
 
     
+    /// <summary>
+    /// Create a `TransactionKind` for a consensus-commit-prologue-v1
+    /// transaction.
+    /// </summary>
     public static TransactionKind NewConsensusCommitPrologueV1(ConsensusCommitPrologueV1 @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -51018,6 +51066,9 @@ public class TransactionKind : ITransactionKind, IDisposable {
 ));
     }
     
+    /// <summary>
+    /// Create a `TransactionKind` for an end-of-epoch transaction.
+    /// </summary>
     public static TransactionKind NewEndOfEpoch(EndOfEpochTransactionKind[] @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -51025,6 +51076,9 @@ public class TransactionKind : ITransactionKind, IDisposable {
 ));
     }
     
+    /// <summary>
+    /// Create a `TransactionKind` for a genesis transaction.
+    /// </summary>
     public static TransactionKind NewGenesis(GenesisTransaction @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -51032,13 +51086,19 @@ public class TransactionKind : ITransactionKind, IDisposable {
 ));
     }
     
-    public static TransactionKind NewProgrammableTransaction(ProgrammableTransaction @tx) {
+    /// <summary>
+    /// Create a `TransactionKind` for a programmable transaction.
+    /// </summary>
+    public static TransactionKind NewProgrammable(ProgrammableTransaction @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(FfiConverterTypeProgrammableTransaction.INSTANCE.Lower(@tx), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(FfiConverterTypeProgrammableTransaction.INSTANCE.Lower(@tx), ref _status)
 ));
     }
     
+    /// <summary>
+    /// Create a `TransactionKind` for a randomness-state-update transaction.
+    /// </summary>
     public static TransactionKind NewRandomnessStateUpdate(RandomnessStateUpdate @tx) {
         return new TransactionKind(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
