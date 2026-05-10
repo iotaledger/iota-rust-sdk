@@ -136,10 +136,10 @@ impl MultisigMemberSignature {
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
-pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
+pub struct PublicKey(pub iota_sdk::types::PublicKey);
 
 #[uniffi::export]
-impl MultisigMemberPublicKey {
+impl PublicKey {
     pub fn is_ed25519(&self) -> bool {
         self.0.is_ed25519()
     }
@@ -249,14 +249,14 @@ impl MultisigAggregatedSignature {
     /// and that it's position in the provided bitmap is set.
     #[uniffi::constructor]
     pub fn new(
-        committee: &MultisigCommittee,
         signatures: Vec<Arc<MultisigMemberSignature>>,
         bitmap: u16,
+        committee: &MultisigCommittee,
     ) -> Self {
         Self(iota_sdk::types::MultisigAggregatedSignature::new(
-            committee.0.clone(),
             signatures.into_iter().map(|s| s.0.clone()).collect(),
             bitmap,
+            committee.0.clone(),
         ))
     }
 
@@ -317,7 +317,8 @@ impl MultisigCommittee {
     /// `Address` governed by this committee.
     #[uniffi::constructor]
     pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
-        Self(iota_sdk::types::MultisigCommittee::new(
+        // TODO
+        Self(iota_sdk::types::MultisigCommittee::insecure_new(
             members.into_iter().map(|m| m.0.clone()).collect(),
             threshold,
         ))
@@ -396,9 +397,9 @@ pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 
 #[uniffi::export]
 impl MultisigMember {
-    /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+    /// Construct a new member from a `PublicKey` and a `weight`.
     #[uniffi::constructor]
-    pub fn new(public_key: &MultisigMemberPublicKey, weight: u8) -> Self {
+    pub fn new(public_key: &PublicKey, weight: u8) -> Self {
         Self(iota_sdk::types::MultisigMember::new(
             public_key.0.clone(),
             weight,
@@ -406,7 +407,7 @@ impl MultisigMember {
     }
 
     /// This member's public key.
-    pub fn public_key(&self) -> MultisigMemberPublicKey {
+    pub fn public_key(&self) -> PublicKey {
         self.0.public_key().clone().into()
     }
 
@@ -418,14 +419,14 @@ impl MultisigMember {
 
 crate::export_iota_types_objects_bcs_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember
 );
 crate::export_iota_types_objects_json_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember

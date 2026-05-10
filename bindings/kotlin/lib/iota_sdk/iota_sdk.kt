@@ -4384,14 +4384,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_json(
@@ -4483,6 +4475,14 @@ fun uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_json(
 fun uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_public_key_from_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_public_key_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs(
 ): Short
@@ -5298,32 +5298,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt(
@@ -5481,6 +5455,32 @@ fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex(
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_publish_dependencies(
 ): Short
@@ -8192,7 +8192,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature(`ptr`: Pointer,unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(`committee`: Pointer,`signatures`: RustBuffer.ByValue,`bitmap`: Short,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(`signatures`: RustBuffer.ByValue,`bitmap`: Short,`committee`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_bitmap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Short
@@ -8261,42 +8261,6 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug(`ptr`: Point
 fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_multisigmemberpublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8734,19 +8698,6 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(`ptr`: Poin
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
-): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8767,6 +8718,55 @@ fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(`pt
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publickey_is_ed25519(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publickey_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256k1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256r1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -10239,14 +10239,6 @@ fun uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(`bcs`: RustBuffer.ByVal
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_multisig_member_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -10338,6 +10330,14 @@ fun uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_json(`json`: RustB
 fun uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_public_key_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_public_key_to_json(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -11297,18 +11297,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json() != 8986.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs() != 55389.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json() != 11231.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs() != 8657.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json() != 44891.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs() != 26016.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11445,6 +11433,18 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json() != 18529.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs() != 33829.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_public_key_from_json() != 40059.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs() != 65426.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_public_key_to_json() != 31754.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs() != 59778.toShort()) {
@@ -12662,49 +12662,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_threshold() != 21653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key() != 7804.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key() != 48859.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight() != 57194.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519() != 8241.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() != 40194.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1() != 38170.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() != 16265.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855.toShort()) {
@@ -12944,6 +12905,45 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs() != 25458.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519() != 16496.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt() != 8963.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey() != 49604.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt() != 40198.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1() != 49490.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt() != 43724.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1() != 138.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt() != 12305.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519() != 3704.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey() != 42183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1() != 6008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1() != 22991.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_publickey_scheme() != 62044.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_publish_dependencies() != 57311.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13100,7 +13100,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() != 46052.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 11009.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 60932.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826.toShort()) {
@@ -13187,7 +13187,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() != 8441.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() != 58667.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() != 64393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme() != 7296.toShort()) {
@@ -14330,7 +14330,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 62487.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388.toShort()) {
@@ -14342,7 +14342,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() != 40069.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() != 63622.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() != 58553.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new() != 53197.toShort()) {
@@ -35153,11 +35153,11 @@ open class MultisigAggregatedSignature: Disposable, AutoCloseable, MultisigAggre
      * order as it's corresponding member in the provided committee
      * and that it's position in the provided bitmap is set.
      */
-    constructor(`committee`: MultisigCommittee, `signatures`: List<MultisigMemberSignature>, `bitmap`: kotlin.UShort) :
+    constructor(`signatures`: List<MultisigMemberSignature>, `bitmap`: kotlin.UShort, `committee`: MultisigCommittee) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(
-        FfiConverterTypeMultisigCommittee.lower(`committee`),FfiConverterSequenceTypeMultisigMemberSignature.lower(`signatures`),FfiConverterUShort.lower(`bitmap`),_status)
+        FfiConverterSequenceTypeMultisigMemberSignature.lower(`signatures`),FfiConverterUShort.lower(`bitmap`),FfiConverterTypeMultisigCommittee.lower(`committee`),_status)
 }
     )
 
@@ -36175,7 +36175,7 @@ public interface MultisigMemberInterface {
     /**
      * This member's public key.
      */
-    fun `publicKey`(): MultisigMemberPublicKey
+    fun `publicKey`(): PublicKey
     
     /**
      * Weight of this member's signature.
@@ -36223,13 +36223,13 @@ open class MultisigMember: Disposable, AutoCloseable, MultisigMemberInterface
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
     /**
-     * Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+     * Construct a new member from a `PublicKey` and a `weight`.
      */
-    constructor(`publicKey`: MultisigMemberPublicKey, `weight`: kotlin.UByte) :
+    constructor(`publicKey`: PublicKey, `weight`: kotlin.UByte) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_multisigmember_new(
-        FfiConverterTypeMultisigMemberPublicKey.lower(`publicKey`),FfiConverterUByte.lower(`weight`),_status)
+        FfiConverterTypePublicKey.lower(`publicKey`),FfiConverterUByte.lower(`weight`),_status)
 }
     )
 
@@ -36299,8 +36299,8 @@ open class MultisigMember: Disposable, AutoCloseable, MultisigMemberInterface
     
     /**
      * This member's public key.
-     */override fun `publicKey`(): MultisigMemberPublicKey {
-            return FfiConverterTypeMultisigMemberPublicKey.lift(
+     */override fun `publicKey`(): PublicKey {
+            return FfiConverterTypePublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmember_public_key(
@@ -36370,488 +36370,6 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
     override fun allocationSize(value: MultisigMember) = 8UL
 
     override fun write(value: MultisigMember, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * Enum of valid public keys for multisig committee members
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * multisig-member-public-key = ed25519-multisig-member-public-key /
- * secp256k1-multisig-member-public-key /
- * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated /
- * passkey-multisig-member-public-key
- *
- * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %d03
- * passkey-multisig-member-public-key              = %d04 passkey-public-key
- * ```
- *
- * There is also a legacy encoding for this type defined as:
- *
- * ```text
- * legacy-multisig-member-public-key = string ; which is valid base64 encoded
- * ; and the decoded bytes are defined
- * ; by legacy-public-key
- * legacy-public-key = (ed25519-flag ed25519-public-key) /
- * (secp256k1-flag secp256k1-public-key) /
- * (secp256r1-flag secp256r1-public-key)
- * ```
- */
-public interface MultisigMemberPublicKeyInterface {
-    
-    fun `asEd25519`(): Ed25519PublicKey
-    
-    fun `asEd25519Opt`(): Ed25519PublicKey?
-    
-    fun `asPasskey`(): PasskeyPublicKey
-    
-    fun `asPasskeyOpt`(): PasskeyPublicKey?
-    
-    fun `asSecp256k1`(): Secp256k1PublicKey
-    
-    fun `asSecp256k1Opt`(): Secp256k1PublicKey?
-    
-    fun `asSecp256r1`(): Secp256r1PublicKey
-    
-    fun `asSecp256r1Opt`(): Secp256r1PublicKey?
-    
-    fun `isEd25519`(): kotlin.Boolean
-    
-    fun `isPasskey`(): kotlin.Boolean
-    
-    fun `isSecp256k1`(): kotlin.Boolean
-    
-    fun `isSecp256r1`(): kotlin.Boolean
-    
-    fun `scheme`(): SignatureScheme
-    
-    companion object
-}
-
-/**
- * Enum of valid public keys for multisig committee members
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * multisig-member-public-key = ed25519-multisig-member-public-key /
- * secp256k1-multisig-member-public-key /
- * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated /
- * passkey-multisig-member-public-key
- *
- * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %d03
- * passkey-multisig-member-public-key              = %d04 passkey-public-key
- * ```
- *
- * There is also a legacy encoding for this type defined as:
- *
- * ```text
- * legacy-multisig-member-public-key = string ; which is valid base64 encoded
- * ; and the decoded bytes are defined
- * ; by legacy-public-key
- * legacy-public-key = (ed25519-flag ed25519-public-key) /
- * (secp256k1-flag secp256k1-public-key) /
- * (secp256r1-flag secp256r1-public-key)
- * ```
- */
-open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPublicKeyInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_multisigmemberpublickey(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(pointer!!, status)
-        }
-    }
-
-    override fun `asEd25519`(): Ed25519PublicKey {
-            return FfiConverterTypeEd25519PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asEd25519Opt`(): Ed25519PublicKey? {
-            return FfiConverterOptionalTypeEd25519PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asPasskey`(): PasskeyPublicKey {
-            return FfiConverterTypePasskeyPublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asPasskeyOpt`(): PasskeyPublicKey? {
-            return FfiConverterOptionalTypePasskeyPublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asSecp256k1`(): Secp256k1PublicKey {
-            return FfiConverterTypeSecp256k1PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asSecp256k1Opt`(): Secp256k1PublicKey? {
-            return FfiConverterOptionalTypeSecp256k1PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asSecp256r1`(): Secp256r1PublicKey {
-            return FfiConverterTypeSecp256r1PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asSecp256r1Opt`(): Secp256r1PublicKey? {
-            return FfiConverterOptionalTypeSecp256r1PublicKey.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isEd25519`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isPasskey`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isSecp256k1`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `isSecp256r1`(): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `scheme`(): SignatureScheme {
-            return FfiConverterTypeSignatureScheme.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is MultisigMemberPublicKey) return false
-        return FfiConverterBoolean.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(
-        it, FfiConverterTypeMultisigMemberPublicKey.lower(`other`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemberPublicKey, Pointer> {
-
-    override fun lower(value: MultisigMemberPublicKey): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): MultisigMemberPublicKey {
-        return MultisigMemberPublicKey(value)
-    }
-
-    override fun read(buf: ByteBuffer): MultisigMemberPublicKey {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: MultisigMemberPublicKey) = 8UL
-
-    override fun write(value: MultisigMemberPublicKey, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -42833,7 +42351,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
     constructor(`inputs`: List<Input>, `commands`: List<Command>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(
         FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeCommand.lower(`commands`),_status)
 }
     )
@@ -42889,7 +42407,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
                 }
             }
         }
@@ -42897,7 +42415,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(pointer!!, status)
         }
     }
 
@@ -42909,7 +42427,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
             return FfiConverterSequenceTypeCommand.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(
         it, _status)
 }
     }
@@ -42924,7 +42442,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
             return FfiConverterSequenceTypeInput.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(
         it, _status)
 }
     }
@@ -42937,7 +42455,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(
         it, _status)
 }
     }
@@ -42951,7 +42469,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
         it, FfiConverterTypeProgrammableTransaction.lower(`other`),_status)
 }
     }
@@ -42962,7 +42480,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -42997,6 +42515,488 @@ public object FfiConverterTypeProgrammableTransaction: FfiConverter<Programmable
     override fun allocationSize(value: ProgrammableTransaction) = 8UL
 
     override fun write(value: ProgrammableTransaction, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
+public interface PublicKeyInterface {
+    
+    fun `asEd25519`(): Ed25519PublicKey
+    
+    fun `asEd25519Opt`(): Ed25519PublicKey?
+    
+    fun `asPasskey`(): PasskeyPublicKey
+    
+    fun `asPasskeyOpt`(): PasskeyPublicKey?
+    
+    fun `asSecp256k1`(): Secp256k1PublicKey
+    
+    fun `asSecp256k1Opt`(): Secp256k1PublicKey?
+    
+    fun `asSecp256r1`(): Secp256r1PublicKey
+    
+    fun `asSecp256r1Opt`(): Secp256r1PublicKey?
+    
+    fun `isEd25519`(): kotlin.Boolean
+    
+    fun `isPasskey`(): kotlin.Boolean
+    
+    fun `isSecp256k1`(): kotlin.Boolean
+    
+    fun `isSecp256r1`(): kotlin.Boolean
+    
+    fun `scheme`(): SignatureScheme
+    
+    companion object
+}
+
+/**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
+open class PublicKey: Disposable, AutoCloseable, PublicKeyInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_publickey(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_publickey(pointer!!, status)
+        }
+    }
+
+    override fun `asEd25519`(): Ed25519PublicKey {
+            return FfiConverterTypeEd25519PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asEd25519Opt`(): Ed25519PublicKey? {
+            return FfiConverterOptionalTypeEd25519PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskey`(): PasskeyPublicKey {
+            return FfiConverterTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asPasskeyOpt`(): PasskeyPublicKey? {
+            return FfiConverterOptionalTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asSecp256k1`(): Secp256k1PublicKey {
+            return FfiConverterTypeSecp256k1PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asSecp256k1Opt`(): Secp256k1PublicKey? {
+            return FfiConverterOptionalTypeSecp256k1PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asSecp256r1`(): Secp256r1PublicKey {
+            return FfiConverterTypeSecp256r1PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asSecp256r1Opt`(): Secp256r1PublicKey? {
+            return FfiConverterOptionalTypeSecp256r1PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isEd25519`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_is_ed25519(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPasskey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_is_passkey(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSecp256k1`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256k1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSecp256r1`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256r1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `scheme`(): SignatureScheme {
+            return FfiConverterTypeSignatureScheme.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_scheme(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypePublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypePublicKey: FfiConverter<PublicKey, Pointer> {
+
+    override fun lower(value: PublicKey): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): PublicKey {
+        return PublicKey(value)
+    }
+
+    override fun read(buf: ByteBuffer): PublicKey {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: PublicKey) = 8UL
+
+    override fun write(value: PublicKey, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -47178,7 +47178,7 @@ public object FfiConverterTypeSecp256r1VerifyingKey: FfiConverter<Secp256r1Verif
 
 public interface SimpleKeypairInterface {
     
-    fun `publicKey`(): MultisigMemberPublicKey
+    fun `publicKey`(): PublicKey
     
     fun `scheme`(): SignatureScheme
     
@@ -47304,8 +47304,8 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
         }
     }
 
-    override fun `publicKey`(): MultisigMemberPublicKey {
-            return FfiConverterTypeMultisigMemberPublicKey.lift(
+    override fun `publicKey`(): PublicKey {
+            return FfiConverterTypePublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
@@ -48495,7 +48495,7 @@ public object FfiConverterTypeSimpleVerifier: FfiConverter<SimpleVerifier, Point
 
 public interface SimpleVerifyingKeyInterface {
     
-    fun `publicKey`(): MultisigMemberPublicKey
+    fun `publicKey`(): PublicKey
     
     fun `scheme`(): SignatureScheme
     
@@ -48596,8 +48596,8 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         }
     }
 
-    override fun `publicKey`(): MultisigMemberPublicKey {
-            return FfiConverterTypeMultisigMemberPublicKey.lift(
+    override fun `publicKey`(): PublicKey {
+            return FfiConverterTypePublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
@@ -72993,58 +72993,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
         /**
          * Create this type from BCS encoded bytes.
          */
-    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberPublicKey {
-            return FfiConverterTypeMultisigMemberPublicKey.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(
-        FfiConverterByteArray.lower(`bcs`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyFromJson`(`json`: kotlin.String): MultisigMemberPublicKey {
-            return FfiConverterTypeMultisigMemberPublicKey.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(
-        FfiConverterString.lower(`json`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to BCS encoded bytes.
-         */
-    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyToBcs`(`data`: MultisigMemberPublicKey): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(
-        FfiConverterTypeMultisigMemberPublicKey.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Convert this type to JSON encoded string.
-         */
-    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyToJson`(`data`: MultisigMemberPublicKey): kotlin.String {
-            return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(
-        FfiConverterTypeMultisigMemberPublicKey.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create this type from BCS encoded bytes.
-         */
     @Throws(SdkFfiException::class) fun `multisigMemberSignatureFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberSignature {
             return FfiConverterTypeMultisigMemberSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -73635,6 +73583,58 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(
         FfiConverterTypeProgrammableTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `publicKeyFromBcs`(`bcs`: kotlin.ByteArray): PublicKey {
+            return FfiConverterTypePublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from JSON encoded string.
+         */
+    @Throws(SdkFfiException::class) fun `publicKeyFromJson`(`json`: kotlin.String): PublicKey {
+            return FfiConverterTypePublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_public_key_from_json(
+        FfiConverterString.lower(`json`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `publicKeyToBcs`(`data`: PublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_public_key_to_bcs(
+        FfiConverterTypePublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to JSON encoded string.
+         */
+    @Throws(SdkFfiException::class) fun `publicKeyToJson`(`data`: PublicKey): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_public_key_to_json(
+        FfiConverterTypePublicKey.lower(`data`),_status)
 }
     )
     }

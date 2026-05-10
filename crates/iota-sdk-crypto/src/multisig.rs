@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMemberPublicKey,
-    MultisigMemberSignature, UserSignature,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
+    UserSignature,
 };
 
 use crate::{SignatureError, Verifier};
@@ -20,54 +20,53 @@ impl MultisigVerifier {
         Default::default()
     }
 
-    fn verify_member_signature(
+    pub fn verify_member_signature(
         &self,
         message: &[u8],
-        member_public_key: &MultisigMemberPublicKey,
+        member_public_key: &PublicKey,
         signature: &MultisigMemberSignature,
     ) -> Result<(), SignatureError> {
         match (member_public_key, signature) {
             #[cfg(not(feature = "ed25519"))]
-            (MultisigMemberPublicKey::Ed25519(_), MultisigMemberSignature::Ed25519(_)) => Err(
+            (PublicKey::Ed25519(_), MultisigMemberSignature::Ed25519(_)) => Err(
                 SignatureError::from_source("support for ed25519 is not enabled"),
             ),
             #[cfg(feature = "ed25519")]
             (
-                MultisigMemberPublicKey::Ed25519(ed25519_public_key),
+                PublicKey::Ed25519(ed25519_public_key),
                 MultisigMemberSignature::Ed25519(ed25519_signature),
             ) => crate::ed25519::Ed25519VerifyingKey::new(ed25519_public_key)?
                 .verify(message, ed25519_signature),
             #[cfg(not(feature = "secp256k1"))]
-            (MultisigMemberPublicKey::Secp256k1(_), MultisigMemberSignature::Secp256k1(_)) => Err(
+            (PublicKey::Secp256k1(_), MultisigMemberSignature::Secp256k1(_)) => Err(
                 SignatureError::from_source("support for secp256k1 is not enabled"),
             ),
             #[cfg(feature = "secp256k1")]
             (
-                MultisigMemberPublicKey::Secp256k1(k1_public_key),
+                PublicKey::Secp256k1(k1_public_key),
                 MultisigMemberSignature::Secp256k1(k1_signature),
             ) => crate::secp256k1::Secp256k1VerifyingKey::new(k1_public_key)?
                 .verify(message, k1_signature),
             #[cfg(not(feature = "secp256r1"))]
-            (MultisigMemberPublicKey::Secp256r1(_), MultisigMemberSignature::Secp256r1(_)) => Err(
+            (PublicKey::Secp256r1(_), MultisigMemberSignature::Secp256r1(_)) => Err(
                 SignatureError::from_source("support for secp256r1 is not enabled"),
             ),
             #[cfg(feature = "secp256r1")]
             (
-                MultisigMemberPublicKey::Secp256r1(r1_public_key),
+                PublicKey::Secp256r1(r1_public_key),
                 MultisigMemberSignature::Secp256r1(r1_signature),
             ) => crate::secp256r1::Secp256r1VerifyingKey::new(r1_public_key)?
                 .verify(message, r1_signature),
-            (
-                MultisigMemberPublicKey::ZkLoginDeprecated,
-                MultisigMemberSignature::ZkLoginDeprecated,
-            ) => Err(SignatureError::from_source("zklogin is not supported")),
+            (PublicKey::ZkLoginDeprecated, MultisigMemberSignature::ZkLoginDeprecated) => {
+                Err(SignatureError::from_source("zklogin is not supported"))
+            }
             #[cfg(not(feature = "passkey"))]
-            (MultisigMemberPublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
+            (PublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
                 SignatureError::from_source("support for passkey is not enabled"),
             ),
             #[cfg(feature = "passkey")]
             (
-                MultisigMemberPublicKey::Passkey(passkey_public_key),
+                PublicKey::Passkey(passkey_public_key),
                 MultisigMemberSignature::Passkey(passkey_authenticator),
             ) => {
                 let passkey_verifier = self.passkey_verifier().cloned().unwrap_or_default();
@@ -342,44 +341,44 @@ impl MultisigAggregator {
         );
 
         Ok(MultisigAggregatedSignature::new(
-            self.committee.clone(),
             signatures,
             bitmap,
+            self.committee.clone(),
         ))
     }
 }
 
 fn multisig_pubkey_and_signature_from_user_signature(
     signature: UserSignature,
-) -> Result<(MultisigMemberPublicKey, MultisigMemberSignature), SignatureError> {
+) -> Result<(PublicKey, MultisigMemberSignature), SignatureError> {
     use iota_types::SimpleSignature;
     match signature {
         UserSignature::Simple(SimpleSignature::Ed25519 {
             signature,
             public_key,
         }) => Ok((
-            MultisigMemberPublicKey::Ed25519(public_key),
+            PublicKey::Ed25519(public_key),
             MultisigMemberSignature::Ed25519(signature),
         )),
         UserSignature::Simple(SimpleSignature::Secp256k1 {
             signature,
             public_key,
         }) => Ok((
-            MultisigMemberPublicKey::Secp256k1(public_key),
+            PublicKey::Secp256k1(public_key),
             MultisigMemberSignature::Secp256k1(signature),
         )),
         UserSignature::Simple(SimpleSignature::Secp256r1 {
             signature,
             public_key,
         }) => Ok((
-            MultisigMemberPublicKey::Secp256r1(public_key),
+            PublicKey::Secp256r1(public_key),
             MultisigMemberSignature::Secp256r1(signature),
         )),
         UserSignature::ZkLoginAuthenticatorDeprecated => {
             Err(SignatureError::from_source("zklogin is not supported"))
         }
         UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
-            MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key()),
+            PublicKey::Passkey(passkey_authenticator.public_key()),
             MultisigMemberSignature::Passkey(passkey_authenticator),
         )),
         UserSignature::Multisig(_) | UserSignature::MoveAuthenticator(_) => {

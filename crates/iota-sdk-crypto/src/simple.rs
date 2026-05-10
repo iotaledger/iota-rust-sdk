@@ -78,9 +78,7 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
     doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 mod keypair {
-    use iota_types::{
-        MultisigMemberPublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature,
-    };
+    use iota_types::{PublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature};
     use signature::{Signer, Verifier};
 
     use crate::SignatureError;
@@ -133,7 +131,7 @@ mod keypair {
             }
         }
 
-        pub fn public_key(&self) -> MultisigMemberPublicKey {
+        pub fn public_key(&self) -> PublicKey {
             self.verifying_key().public_key()
         }
 
@@ -352,6 +350,7 @@ mod keypair {
 
     #[derive(Debug, Clone, Eq, PartialEq)]
     pub struct SimpleVerifyingKey {
+        // TODO why an inner?
         inner: InnerVerifyingKey,
     }
 
@@ -377,19 +376,19 @@ mod keypair {
             }
         }
 
-        pub fn public_key(&self) -> MultisigMemberPublicKey {
+        pub fn public_key(&self) -> PublicKey {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
                 InnerVerifyingKey::Ed25519(verifying_key) => {
-                    MultisigMemberPublicKey::Ed25519(verifying_key.public_key())
+                    PublicKey::Ed25519(verifying_key.public_key())
                 }
                 #[cfg(feature = "secp256k1")]
                 InnerVerifyingKey::Secp256k1(verifying_key) => {
-                    MultisigMemberPublicKey::Secp256k1(verifying_key.public_key())
+                    PublicKey::Secp256k1(verifying_key.public_key())
                 }
                 #[cfg(feature = "secp256r1")]
                 InnerVerifyingKey::Secp256r1(verifying_key) => {
-                    MultisigMemberPublicKey::Secp256r1(verifying_key.public_key())
+                    PublicKey::Secp256r1(verifying_key.public_key())
                 }
             }
         }

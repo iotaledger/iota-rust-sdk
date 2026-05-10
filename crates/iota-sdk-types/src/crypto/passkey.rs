@@ -34,22 +34,22 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
-    public_key: Secp256r1PublicKey,
+    pub(crate) public_key: Secp256r1PublicKey,
     /// The secp256r1 signature from the passkey.
-    signature: Secp256r1Signature,
+    pub(crate) signature: Secp256r1Signature,
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`.
-    challenge: Vec<u8>,
+    pub(crate) challenge: Vec<u8>,
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
     /// more information on this field.
-    authenticator_data: Vec<u8>,
+    pub(crate) authenticator_data: Vec<u8>,
     /// Structured, unparsed, JSON for this passkey signature.
     ///
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
-    client_data_json: String,
+    pub(crate) client_data_json: String,
 }
 
 impl PasskeyAuthenticator {
@@ -122,6 +122,12 @@ impl PasskeyPublicKey {
     }
 }
 
+impl AsRef<[u8]> for PasskeyPublicKey {
+    fn as_ref(&self) -> &[u8] {
+        self.0.as_ref()
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
@@ -181,7 +187,7 @@ mod serialization {
                 Self::try_from_raw(authenticator)
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_bytes(bytes)
             }
             .map_err(serde::de::Error::custom)
         }
@@ -244,9 +250,7 @@ mod serialization {
             })
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
@@ -263,7 +267,7 @@ mod serialization {
             Self::try_from_raw(authenticator)
         }
 
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let authenticator_ref = AuthenticatorRef {
                 authenticator_data: &self.authenticator_data,
                 client_data_json: &self.client_data_json,

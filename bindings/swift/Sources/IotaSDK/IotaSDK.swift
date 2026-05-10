@@ -13765,13 +13765,13 @@ open class MultisigAggregatedSignature: MultisigAggregatedSignatureProtocol, @un
      * order as it's corresponding member in the provided committee
      * and that it's position in the provided bitmap is set.
      */
-public convenience init(committee: MultisigCommittee, signatures: [MultisigMemberSignature], bitmap: UInt16) {
+public convenience init(signatures: [MultisigMemberSignature], bitmap: UInt16, committee: MultisigCommittee) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(
-        FfiConverterTypeMultisigCommittee_lower(committee),
         FfiConverterSequenceTypeMultisigMemberSignature.lower(signatures),
-        FfiConverterUInt16.lower(bitmap),$0
+        FfiConverterUInt16.lower(bitmap),
+        FfiConverterTypeMultisigCommittee_lower(committee),$0
     )
 }
     self.init(unsafeFromRawPointer: pointer)
@@ -14402,7 +14402,7 @@ public protocol MultisigMemberProtocol: AnyObject, Sendable {
     /**
      * This member's public key.
      */
-    func publicKey()  -> MultisigMemberPublicKey
+    func publicKey()  -> PublicKey
     
     /**
      * Weight of this member's signature.
@@ -14469,13 +14469,13 @@ open class MultisigMember: MultisigMemberProtocol, @unchecked Sendable {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_multisigmember(self.pointer, $0) }
     }
     /**
-     * Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+     * Construct a new member from a `PublicKey` and a `weight`.
      */
-public convenience init(publicKey: MultisigMemberPublicKey, weight: UInt8) {
+public convenience init(publicKey: PublicKey, weight: UInt8) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_multisigmember_new(
-        FfiConverterTypeMultisigMemberPublicKey_lower(publicKey),
+        FfiConverterTypePublicKey_lower(publicKey),
         FfiConverterUInt8.lower(weight),$0
     )
 }
@@ -14496,8 +14496,8 @@ public convenience init(publicKey: MultisigMemberPublicKey, weight: UInt8) {
     /**
      * This member's public key.
      */
-open func publicKey() -> MultisigMemberPublicKey  {
-    return try!  FfiConverterTypeMultisigMemberPublicKey_lift(try! rustCall() {
+open func publicKey() -> PublicKey  {
+    return try!  FfiConverterTypePublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmember_public_key(self.uniffiClonePointer(),$0
     )
 })
@@ -14583,319 +14583,6 @@ public func FfiConverterTypeMultisigMember_lift(_ pointer: UnsafeMutableRawPoint
 #endif
 public func FfiConverterTypeMultisigMember_lower(_ value: MultisigMember) -> UnsafeMutableRawPointer {
     return FfiConverterTypeMultisigMember.lower(value)
-}
-
-
-
-
-
-
-/**
- * Enum of valid public keys for multisig committee members
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * multisig-member-public-key = ed25519-multisig-member-public-key /
- * secp256k1-multisig-member-public-key /
- * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated /
- * passkey-multisig-member-public-key
- *
- * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %d03
- * passkey-multisig-member-public-key              = %d04 passkey-public-key
- * ```
- *
- * There is also a legacy encoding for this type defined as:
- *
- * ```text
- * legacy-multisig-member-public-key = string ; which is valid base64 encoded
- * ; and the decoded bytes are defined
- * ; by legacy-public-key
- * legacy-public-key = (ed25519-flag ed25519-public-key) /
- * (secp256k1-flag secp256k1-public-key) /
- * (secp256r1-flag secp256r1-public-key)
- * ```
- */
-public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
-    
-    func asEd25519()  -> Ed25519PublicKey
-    
-    func asEd25519Opt()  -> Ed25519PublicKey?
-    
-    func asPasskey()  -> PasskeyPublicKey
-    
-    func asPasskeyOpt()  -> PasskeyPublicKey?
-    
-    func asSecp256k1()  -> Secp256k1PublicKey
-    
-    func asSecp256k1Opt()  -> Secp256k1PublicKey?
-    
-    func asSecp256r1()  -> Secp256r1PublicKey
-    
-    func asSecp256r1Opt()  -> Secp256r1PublicKey?
-    
-    func isEd25519()  -> Bool
-    
-    func isPasskey()  -> Bool
-    
-    func isSecp256k1()  -> Bool
-    
-    func isSecp256r1()  -> Bool
-    
-    func scheme()  -> SignatureScheme
-    
-}
-/**
- * Enum of valid public keys for multisig committee members
- *
- * # BCS
- *
- * The BCS serialized form for this type is defined by the following ABNF:
- *
- * ```text
- * multisig-member-public-key = ed25519-multisig-member-public-key /
- * secp256k1-multisig-member-public-key /
- * secp256r1-multisig-member-public-key /
- * zklogin-multisig-member-public-key-deprecated /
- * passkey-multisig-member-public-key
- *
- * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
- * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
- * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
- * zklogin-multisig-member-public-key-deprecated   = %d03
- * passkey-multisig-member-public-key              = %d04 passkey-public-key
- * ```
- *
- * There is also a legacy encoding for this type defined as:
- *
- * ```text
- * legacy-multisig-member-public-key = string ; which is valid base64 encoded
- * ; and the decoded bytes are defined
- * ; by legacy-public-key
- * legacy-public-key = (ed25519-flag ed25519-public-key) /
- * (secp256k1-flag secp256k1-public-key) /
- * (secp256r1-flag secp256r1-public-key)
- * ```
- */
-open class MultisigMemberPublicKey: MultisigMemberPublicKeyProtocol, @unchecked Sendable {
-    fileprivate let pointer: UnsafeMutableRawPointer!
-
-    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public struct NoPointer {
-        public init() {}
-    }
-
-    // TODO: We'd like this to be `private` but for Swifty reasons,
-    // we can't implement `FfiConverter` without making this `required` and we can't
-    // make it `required` without making it `public`.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
-    }
-
-    // This constructor can be used to instantiate a fake object.
-    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
-    //
-    // - Warning:
-    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public init(noPointer: NoPointer) {
-        self.pointer = nil
-    }
-
-#if swift(>=5.8)
-    @_documentation(visibility: private)
-#endif
-    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
-        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(self.pointer, $0) }
-    }
-    // No primary constructor declared for this class.
-
-    deinit {
-        guard let pointer = pointer else {
-            return
-        }
-
-        try! rustCall { uniffi_iota_sdk_ffi_fn_free_multisigmemberpublickey(pointer, $0) }
-    }
-
-    
-
-    
-open func asEd25519() -> Ed25519PublicKey  {
-    return try!  FfiConverterTypeEd25519PublicKey_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asEd25519Opt() -> Ed25519PublicKey?  {
-    return try!  FfiConverterOptionTypeEd25519PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asPasskey() -> PasskeyPublicKey  {
-    return try!  FfiConverterTypePasskeyPublicKey_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asPasskeyOpt() -> PasskeyPublicKey?  {
-    return try!  FfiConverterOptionTypePasskeyPublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256k1() -> Secp256k1PublicKey  {
-    return try!  FfiConverterTypeSecp256k1PublicKey_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256k1Opt() -> Secp256k1PublicKey?  {
-    return try!  FfiConverterOptionTypeSecp256k1PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256r1() -> Secp256r1PublicKey  {
-    return try!  FfiConverterTypeSecp256r1PublicKey_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256r1Opt() -> Secp256r1PublicKey?  {
-    return try!  FfiConverterOptionTypeSecp256r1PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isEd25519() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isPasskey() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isSecp256k1() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func isSecp256r1() -> Bool  {
-    return try!  FfiConverterBool.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func scheme() -> SignatureScheme  {
-    return try!  FfiConverterTypeSignatureScheme_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    open var debugDescription: String {
-        return try!  FfiConverterString.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug(self.uniffiClonePointer(),$0
-    )
-}
-        )
-    }
-    public static func == (self: MultisigMemberPublicKey, other: MultisigMemberPublicKey) -> Bool {
-        return try!  FfiConverterBool.lift(
-            try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(self.uniffiClonePointer(),
-        FfiConverterTypeMultisigMemberPublicKey_lower(other),$0
-    )
-}
-        )
-    }
-
-}
-extension MultisigMemberPublicKey: CustomDebugStringConvertible {}
-extension MultisigMemberPublicKey: Equatable {}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeMultisigMemberPublicKey: FfiConverter {
-
-    typealias FfiType = UnsafeMutableRawPointer
-    typealias SwiftType = MultisigMemberPublicKey
-
-    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> MultisigMemberPublicKey {
-        return MultisigMemberPublicKey(unsafeFromRawPointer: pointer)
-    }
-
-    public static func lower(_ value: MultisigMemberPublicKey) -> UnsafeMutableRawPointer {
-        return value.uniffiClonePointer()
-    }
-
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MultisigMemberPublicKey {
-        let v: UInt64 = try readInt(&buf)
-        // The Rust code won't compile if a pointer won't fit in a UInt64.
-        // We have to go via `UInt` because that's the thing that's the size of a pointer.
-        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
-        if (ptr == nil) {
-            throw UniffiInternalError.unexpectedNullPointer
-        }
-        return try lift(ptr!)
-    }
-
-    public static func write(_ value: MultisigMemberPublicKey, into buf: inout [UInt8]) {
-        // This fiddling is because `Int` is the thing that's the same size as a pointer.
-        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
-        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeMultisigMemberPublicKey_lift(_ pointer: UnsafeMutableRawPointer) throws -> MultisigMemberPublicKey {
-    return try FfiConverterTypeMultisigMemberPublicKey.lift(pointer)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeMultisigMemberPublicKey_lower(_ value: MultisigMemberPublicKey) -> UnsafeMutableRawPointer {
-    return FfiConverterTypeMultisigMemberPublicKey.lower(value)
 }
 
 
@@ -18939,6 +18626,319 @@ public func FfiConverterTypeProgrammableTransaction_lower(_ value: ProgrammableT
 
 
 /**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
+public protocol PublicKeyProtocol: AnyObject, Sendable {
+    
+    func asEd25519()  -> Ed25519PublicKey
+    
+    func asEd25519Opt()  -> Ed25519PublicKey?
+    
+    func asPasskey()  -> PasskeyPublicKey
+    
+    func asPasskeyOpt()  -> PasskeyPublicKey?
+    
+    func asSecp256k1()  -> Secp256k1PublicKey
+    
+    func asSecp256k1Opt()  -> Secp256k1PublicKey?
+    
+    func asSecp256r1()  -> Secp256r1PublicKey
+    
+    func asSecp256r1Opt()  -> Secp256r1PublicKey?
+    
+    func isEd25519()  -> Bool
+    
+    func isPasskey()  -> Bool
+    
+    func isSecp256k1()  -> Bool
+    
+    func isSecp256r1()  -> Bool
+    
+    func scheme()  -> SignatureScheme
+    
+}
+/**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key-deprecated /
+ * passkey-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+ * secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+ * zklogin-multisig-member-public-key-deprecated   = %d03
+ * passkey-multisig-member-public-key              = %d04 passkey-public-key
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
+open class PublicKey: PublicKeyProtocol, @unchecked Sendable {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_publickey(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_iota_sdk_ffi_fn_free_publickey(pointer, $0) }
+    }
+
+    
+
+    
+open func asEd25519() -> Ed25519PublicKey  {
+    return try!  FfiConverterTypeEd25519PublicKey_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asEd25519Opt() -> Ed25519PublicKey?  {
+    return try!  FfiConverterOptionTypeEd25519PublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asPasskey() -> PasskeyPublicKey  {
+    return try!  FfiConverterTypePasskeyPublicKey_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asPasskeyOpt() -> PasskeyPublicKey?  {
+    return try!  FfiConverterOptionTypePasskeyPublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asSecp256k1() -> Secp256k1PublicKey  {
+    return try!  FfiConverterTypeSecp256k1PublicKey_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asSecp256k1Opt() -> Secp256k1PublicKey?  {
+    return try!  FfiConverterOptionTypeSecp256k1PublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asSecp256r1() -> Secp256r1PublicKey  {
+    return try!  FfiConverterTypeSecp256r1PublicKey_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asSecp256r1Opt() -> Secp256r1PublicKey?  {
+    return try!  FfiConverterOptionTypeSecp256r1PublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isEd25519() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_is_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isPasskey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_is_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isSecp256k1() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256k1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isSecp256r1() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256r1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func scheme() -> SignatureScheme  {
+    return try!  FfiConverterTypeSignatureScheme_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_scheme(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    open var debugDescription: String {
+        return try!  FfiConverterString.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_debug(self.uniffiClonePointer(),$0
+    )
+}
+        )
+    }
+    public static func == (self: PublicKey, other: PublicKey) -> Bool {
+        return try!  FfiConverterBool.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_eq(self.uniffiClonePointer(),
+        FfiConverterTypePublicKey_lower(other),$0
+    )
+}
+        )
+    }
+
+}
+extension PublicKey: CustomDebugStringConvertible {}
+extension PublicKey: Equatable {}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypePublicKey: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = PublicKey
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> PublicKey {
+        return PublicKey(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: PublicKey) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> PublicKey {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: PublicKey, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypePublicKey_lift(_ pointer: UnsafeMutableRawPointer) throws -> PublicKey {
+    return try FfiConverterTypePublicKey.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypePublicKey_lower(_ value: PublicKey) -> UnsafeMutableRawPointer {
+    return FfiConverterTypePublicKey.lower(value)
+}
+
+
+
+
+
+
+/**
  * Command to publish a new move package
  *
  * # BCS
@@ -21504,7 +21504,7 @@ public func FfiConverterTypeSecp256r1VerifyingKey_lower(_ value: Secp256r1Verify
 
 public protocol SimpleKeypairProtocol: AnyObject, Sendable {
     
-    func publicKey()  -> MultisigMemberPublicKey
+    func publicKey()  -> PublicKey
     
     func scheme()  -> SignatureScheme
     
@@ -21669,8 +21669,8 @@ public static func fromSecp256r1(keypair: Secp256r1PrivateKey) -> SimpleKeypair 
     
 
     
-open func publicKey() -> MultisigMemberPublicKey  {
-    return try!  FfiConverterTypeMultisigMemberPublicKey_lift(try! rustCall() {
+open func publicKey() -> PublicKey  {
+    return try!  FfiConverterTypePublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(self.uniffiClonePointer(),$0
     )
 })
@@ -22338,7 +22338,7 @@ public func FfiConverterTypeSimpleVerifier_lower(_ value: SimpleVerifier) -> Uns
 
 public protocol SimpleVerifyingKeyProtocol: AnyObject, Sendable {
     
-    func publicKey()  -> MultisigMemberPublicKey
+    func publicKey()  -> PublicKey
     
     func scheme()  -> SignatureScheme
     
@@ -22430,8 +22430,8 @@ public static func fromPem(s: String)throws  -> SimpleVerifyingKey  {
     
 
     
-open func publicKey() -> MultisigMemberPublicKey  {
-    return try!  FfiConverterTypeMultisigMemberPublicKey_lift(try! rustCall() {
+open func publicKey() -> PublicKey  {
+    return try!  FfiConverterTypePublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(self.uniffiClonePointer(),$0
     )
 })
@@ -44354,46 +44354,6 @@ public func multisigMemberFromJson(json: String)throws  -> MultisigMember  {
 /**
  * Create this type from BCS encoded bytes.
  */
-public func multisigMemberPublicKeyFromBcs(bcs: Data)throws  -> MultisigMemberPublicKey  {
-    return try  FfiConverterTypeMultisigMemberPublicKey_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(
-        FfiConverterData.lower(bcs),$0
-    )
-})
-}
-/**
- * Create this type from JSON encoded string.
- */
-public func multisigMemberPublicKeyFromJson(json: String)throws  -> MultisigMemberPublicKey  {
-    return try  FfiConverterTypeMultisigMemberPublicKey_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(
-        FfiConverterString.lower(json),$0
-    )
-})
-}
-/**
- * Convert this type to BCS encoded bytes.
- */
-public func multisigMemberPublicKeyToBcs(data: MultisigMemberPublicKey)throws  -> Data  {
-    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(
-        FfiConverterTypeMultisigMemberPublicKey_lower(data),$0
-    )
-})
-}
-/**
- * Convert this type to JSON encoded string.
- */
-public func multisigMemberPublicKeyToJson(data: MultisigMemberPublicKey)throws  -> String  {
-    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
-    uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(
-        FfiConverterTypeMultisigMemberPublicKey_lower(data),$0
-    )
-})
-}
-/**
- * Create this type from BCS encoded bytes.
- */
 public func multisigMemberSignatureFromBcs(bcs: Data)throws  -> MultisigMemberSignature  {
     return try  FfiConverterTypeMultisigMemberSignature_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(
@@ -44848,6 +44808,46 @@ public func programmableTransactionToJson(data: ProgrammableTransaction)throws  
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(
         FfiConverterTypeProgrammableTransaction_lower(data),$0
+    )
+})
+}
+/**
+ * Create this type from BCS encoded bytes.
+ */
+public func publicKeyFromBcs(bcs: Data)throws  -> PublicKey  {
+    return try  FfiConverterTypePublicKey_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_func_public_key_from_bcs(
+        FfiConverterData.lower(bcs),$0
+    )
+})
+}
+/**
+ * Create this type from JSON encoded string.
+ */
+public func publicKeyFromJson(json: String)throws  -> PublicKey  {
+    return try  FfiConverterTypePublicKey_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_func_public_key_from_json(
+        FfiConverterString.lower(json),$0
+    )
+})
+}
+/**
+ * Convert this type to BCS encoded bytes.
+ */
+public func publicKeyToBcs(data: PublicKey)throws  -> Data  {
+    return try  FfiConverterData.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_func_public_key_to_bcs(
+        FfiConverterTypePublicKey_lower(data),$0
+    )
+})
+}
+/**
+ * Convert this type to JSON encoded string.
+ */
+public func publicKeyToJson(data: PublicKey)throws  -> String  {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_func_public_key_to_json(
+        FfiConverterTypePublicKey_lower(data),$0
     )
 })
 }
@@ -46884,18 +46884,6 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json() != 8986) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs() != 55389) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json() != 11231) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs() != 8657) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json() != 44891) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs() != 26016) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47032,6 +47020,18 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json() != 18529) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs() != 33829) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_func_public_key_from_json() != 40059) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs() != 65426) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_func_public_key_to_json() != 31754) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs() != 59778) {
@@ -48249,49 +48249,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_threshold() != 21653) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key() != 7804) {
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key() != 48859) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight() != 57194) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519() != 8241) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() != 40194) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1() != 38170) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey() != 22034) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1() != 49521) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1() != 16265) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855) {
@@ -48531,6 +48492,45 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs() != 25458) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519() != 16496) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt() != 8963) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey() != 49604) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt() != 40198) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1() != 49490) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt() != 43724) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1() != 138) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt() != 12305) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519() != 3704) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey() != 42183) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1() != 6008) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1() != 22991) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_publickey_scheme() != 62044) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_publish_dependencies() != 57311) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -48687,7 +48687,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() != 46052) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 11009) {
+    if (uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 60932) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826) {
@@ -48774,7 +48774,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() != 8441) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() != 58667) {
+    if (uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() != 64393) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme() != 7296) {
@@ -49917,7 +49917,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 62487) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388) {
@@ -49929,7 +49929,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() != 40069) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() != 63622) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() != 58553) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new() != 53197) {

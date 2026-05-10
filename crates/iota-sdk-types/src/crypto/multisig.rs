@@ -2,12 +2,23 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO sort out overlap with iota-sdk-crypto's multisig module
+// TODO Harmonise serde primitives (from/to bytes/base64) with regular PK
+
+use std::{
+    hash::{Hash, Hasher},
+    str::FromStr,
+};
+
+use base64ct::{Base64, Encoding};
+use once_cell::sync::OnceCell;
+
 use super::{
-    Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature, SignatureScheme,
+    Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureFromBytesError,
+    SignatureScheme, SimpleSignature,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
-use crate::PublicKeyExt;
+use crate::{Address, UserSignature};
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -15,72 +26,30 @@ pub type BitmapUnit = u16;
 
 const MAX_COMMITTEE_SIZE: usize = 10;
 // TODO validate sigs
-// const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
+const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
-/// Enum of valid public keys for multisig committee members
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member-public-key = ed25519-multisig-member-public-key /
-///                              secp256k1-multisig-member-public-key /
-///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key-deprecated /
-///                              passkey-multisig-member-public-key
-///
-/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated   = %d03
-/// passkey-multisig-member-public-key              = %d04 passkey-public-key
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
-///                                            ; and the decoded bytes are defined
-///                                            ; by legacy-public-key
-/// legacy-public-key = (ed25519-flag ed25519-public-key) /
-///                     (secp256k1-flag secp256k1-public-key) /
-///                     (secp256r1-flag secp256r1-public-key)
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[non_exhaustive]
-pub enum MultisigMemberPublicKey {
-    Ed25519(Ed25519PublicKey),
-    Secp256k1(Secp256k1PublicKey),
-    Secp256r1(Secp256r1PublicKey),
-    ZkLoginDeprecated,
-    Passkey(PasskeyPublicKey),
-}
-
-impl MultisigMemberPublicKey {
-    crate::def_is_as_into_opt!(
-        Ed25519(Ed25519PublicKey),
-        Secp256k1(Secp256k1PublicKey),
-        Secp256r1(Secp256r1PublicKey),
-        Passkey(PasskeyPublicKey),
-    );
-
-    pub fn scheme(&self) -> SignatureScheme {
-        match self {
-            MultisigMemberPublicKey::Ed25519(ed25519_public_key) => ed25519_public_key.scheme(),
-            MultisigMemberPublicKey::Secp256k1(secp256k1_public_key) => {
-                secp256k1_public_key.scheme()
-            }
-            MultisigMemberPublicKey::Secp256r1(secp256r1_public_key) => {
-                secp256r1_public_key.scheme()
-            }
-            MultisigMemberPublicKey::ZkLoginDeprecated => {
-                SignatureScheme::ZkLoginAuthenticatorDeprecated
-            }
-            MultisigMemberPublicKey::Passkey(passkey_public_key) => passkey_public_key.scheme(),
-        }
-    }
+#[derive(Debug, thiserror::Error)]
+pub enum MultisigError {
+    #[error("{0}")]
+    TryFromSlice(#[from] std::array::TryFromSliceError),
+    #[error("{0}")]
+    Base64(#[from] base64ct::Error),
+    #[error("{0}")]
+    SignatureFromBytes(#[from] SignatureFromBytesError),
+    #[error("Invalid multisig committee")]
+    InvalidCommittee,
+    #[error("UnallowedSignatureType")]
+    UnallowedSignatureType,
+    #[error("Invalid input")]
+    InvalidInput,
+    #[error("Duplicate public key")]
+    DuplicatePublicKey,
+    #[error("No public key found for signature: {0:?}")]
+    NoPublicKeyForSignature(UserSignature),
+    #[error("Invalid number of signatures")]
+    InvalidSignatureNumber,
+    #[error("Invalid bitmap value: {0}")]
+    InvalidBitmap(u16),
 }
 
 /// A member in a multisig committee
@@ -104,18 +73,21 @@ impl MultisigMemberPublicKey {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigMember {
-    public_key: MultisigMemberPublicKey,
+    public_key: PublicKey,
     weight: WeightUnit,
 }
 
 impl MultisigMember {
-    /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
-    pub fn new(public_key: MultisigMemberPublicKey, weight: WeightUnit) -> Self {
-        Self { public_key, weight }
+    /// Construct a new member from a `PublicKey` and a `weight`.
+    pub fn new(public_key: impl Into<PublicKey>, weight: WeightUnit) -> Self {
+        Self {
+            public_key: public_key.into(),
+            weight,
+        }
     }
 
     /// This member's public key.
-    pub fn public_key(&self) -> &MultisigMemberPublicKey {
+    pub fn public_key(&self) -> &PublicKey {
         &self.public_key
     }
 
@@ -161,12 +133,30 @@ pub struct MultisigCommittee {
 
 impl MultisigCommittee {
     /// Construct a new committee from a list of `MultisigMember`s and a
+    /// `threshold` without validating the result.
+    ///
+    /// Note that the order of the members is significant towards deriving the
+    /// `Address` governed by this committee.
+    pub fn insecure_new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
+        Self { members, threshold }
+    }
+
+    /// Construct a new committee from a list of `MultisigMember`s and a
     /// `threshold`.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
-    pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
-        Self { members, threshold }
+    pub fn new(
+        members: Vec<MultisigMember>,
+        threshold: ThresholdUnit,
+    ) -> Result<Self, MultisigError> {
+        let committee = Self::insecure_new(members, threshold);
+
+        if committee.is_valid() {
+            Ok(committee)
+        } else {
+            Err(MultisigError::InvalidCommittee)
+        }
     }
 
     /// The members of the committee
@@ -185,6 +175,14 @@ impl MultisigCommittee {
         SignatureScheme::Multisig
     }
 
+    /// Get the index of a public key in the committee, if it is a member.
+    pub fn get_public_key_index(&self, pk: &PublicKey) -> Option<u8> {
+        self.members
+            .iter()
+            .position(|member| &member.public_key == pk)
+            .map(|x| x as u8)
+    }
+
     /// Checks if the Committee is valid.
     ///
     /// A valid committee is one that:
@@ -192,8 +190,7 @@ impl MultisigCommittee {
     ///  - Has at least one member
     ///  - Has at most ten members
     ///  - No member has weight 0
-    ///  - the sum of the weights of all members must be larger than the
-    ///    threshold
+    ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
     pub fn is_valid(&self) -> bool {
         self.threshold != 0
@@ -212,6 +209,12 @@ impl MultisigCommittee {
                     .skip(i + 1)
                     .any(|m| member.public_key == m.public_key)
             })
+    }
+}
+
+impl From<&MultisigCommittee> for Address {
+    fn from(committee: &MultisigCommittee) -> Self {
+        committee.derive_address()
     }
 }
 
@@ -255,6 +258,13 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
+    /// A bytes representation of [struct MultiSig]. This helps with
+    /// implementing [trait AsRef<[u8]>].
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(proptest::strategy::Just(OnceCell::new()))
+    )]
+    bytes: OnceCell<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -265,16 +275,69 @@ impl MultisigAggregatedSignature {
     /// the caller to ensure that the provided signature list is in the same
     /// order as it's corresponding member in the provided committee
     /// and that it's position in the provided bitmap is set.
+    // TODO rename to insecure?
     pub fn new(
-        committee: MultisigCommittee,
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
+        committee: MultisigCommittee,
     ) -> Self {
         Self {
             signatures,
             bitmap,
             committee,
+            bytes: OnceCell::new(),
         }
+    }
+
+    /// This combines a list of [enum Signature] `flag || signature || pk` to a
+    /// MultiSig. The order of full_sigs must be the same as the order of
+    /// public keys in [enum MultiSigPublicKey]. e.g. for [pk1, pk2, pk3,
+    /// pk4, pk5], [sig1, sig2, sig5] is valid, but [sig2, sig1, sig5] is
+    /// invalid.
+    // TODO keep this name or rename to new?
+    pub fn combine(
+        signatures: Vec<UserSignature>,
+        committee: MultisigCommittee,
+    ) -> Result<Self, MultisigError> {
+        // TODO call is_valid?
+        if !committee.is_valid() {
+            return Err(MultisigError::InvalidCommittee);
+        }
+
+        if signatures.len() > committee.members.len() || signatures.is_empty() {
+            return Err(MultisigError::InvalidSignatureNumber);
+        }
+
+        let mut bitmap = 0;
+        let mut member_signatures = Vec::with_capacity(signatures.len());
+        for signature in signatures {
+            let pk = signature.to_public_key().unwrap();
+            let index = committee
+                .get_public_key_index(&pk)
+                .ok_or(MultisigError::NoPublicKeyForSignature(signature.clone()))?;
+            if bitmap & (1 << index) != 0 {
+                return Err(MultisigError::DuplicatePublicKey);
+            }
+            bitmap |= 1 << index;
+            member_signatures.push(signature.try_into()?);
+        }
+
+        Ok(MultisigAggregatedSignature {
+            signatures: member_signatures,
+            bitmap,
+            committee,
+            bytes: OnceCell::new(),
+        })
+    }
+
+    pub fn is_valid(&self) -> bool {
+        if self.signatures.len() > self.committee.members.len()
+            || self.signatures.is_empty()
+            || self.bitmap > MAX_BITMAP_VALUE
+        {
+            return false;
+        }
+        self.committee.is_valid()
     }
 
     /// The list of signatures from committee members
@@ -288,20 +351,78 @@ impl MultisigAggregatedSignature {
         self.bitmap
     }
 
+    pub fn get_indices(&self) -> Result<Vec<u8>, MultisigError> {
+        as_indices(self.bitmap)
+    }
+
     pub fn committee(&self) -> &MultisigCommittee {
         &self.committee
     }
+
+    pub fn has_scheme_signatures(&self, scheme: SignatureScheme) -> bool {
+        self.signatures.iter().any(|s| s.scheme() == scheme)
+    }
+
+    // TODO meh, returns a generic thing
+    pub fn get_scheme_signatures(&self, scheme: SignatureScheme) -> Vec<MultisigMemberSignature> {
+        self.signatures
+            .iter()
+            .filter(|s| s.scheme() == scheme)
+            .cloned()
+            .collect()
+    }
+}
+
+/// Interpret a bitmap of 01s as a list of indices that is set to 1s.
+/// e.g. 22 = 0b10110, then the result is [1, 2, 4].
+fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
+    if bitmap > MAX_BITMAP_VALUE {
+        return Err(MultisigError::InvalidBitmap(bitmap));
+    }
+    let mut res = Vec::new();
+    for i in 0..10 {
+        if bitmap & (1 << i) != 0 {
+            res.push(i as u8);
+        }
+    }
+    Ok(res)
 }
 
 impl PartialEq for MultisigAggregatedSignature {
     fn eq(&self, other: &Self) -> bool {
         self.bitmap == other.bitmap
-            && self.signatures == other.signatures
             && self.committee == other.committee
+            && self.signatures == other.signatures
     }
 }
 
 impl Eq for MultisigAggregatedSignature {}
+
+/// This initialize the underlying bytes representation of MultiSig.
+/// It encodes [struct MultiSig] as the MultiSig flag (0x03) concat with the bcs
+/// bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
+impl AsRef<[u8]> for MultisigAggregatedSignature {
+    fn as_ref(&self) -> &[u8] {
+        self.bytes.get_or_init(|| self.to_bytes())
+    }
+}
+
+impl Hash for MultisigAggregatedSignature {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.as_ref().hash(state);
+    }
+}
+
+impl FromStr for MultisigAggregatedSignature {
+    type Err = MultisigError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let bytes = Base64::decode_vec(s)?;
+        let sig = MultisigAggregatedSignature::from_bytes(&bytes)?;
+
+        Ok(sig)
+    }
+}
 
 /// A signature from a member of a multisig committee.
 ///
@@ -322,15 +443,17 @@ impl Eq for MultisigAggregatedSignature {}
 /// zklogin-multisig-member-signature-deprecated    = %d03
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
+// TODO why not a regular signature?
 pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLoginDeprecated,
     Passkey(PasskeyAuthenticator),
+    // TODO Move
 }
 
 impl MultisigMemberSignature {
@@ -340,6 +463,99 @@ impl MultisigMemberSignature {
         Secp256r1(Secp256r1Signature),
         Passkey(PasskeyAuthenticator),
     );
+
+    pub fn scheme(&self) -> SignatureScheme {
+        match self {
+            Self::Ed25519(_) => SignatureScheme::Ed25519,
+            Self::Secp256k1(_) => SignatureScheme::Secp256k1,
+            Self::Secp256r1(_) => SignatureScheme::Secp256r1,
+            Self::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
+            Self::Passkey(_) => SignatureScheme::PasskeyAuthenticator,
+        }
+    }
+
+    pub fn to_base64(&self) -> String {
+        base64ct::Base64::encode_string(self.as_ref())
+    }
+
+    pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
+        let bytes = Base64::decode_vec(s)?;
+
+        match bytes.first() {
+            Some(x) => {
+                if x == &(SignatureScheme::Ed25519 as u8) {
+                    let signature = Ed25519Signature::from_bytes(&bytes[1..])?;
+                    Ok(Self::Ed25519(signature))
+                } else if x == &(SignatureScheme::Secp256k1 as u8) {
+                    let signature = Secp256k1Signature::from_bytes(&bytes[1..])?;
+                    Ok(Self::Secp256k1(signature))
+                } else if x == &(SignatureScheme::Secp256r1 as u8) {
+                    let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
+                    Ok(Self::Secp256r1(signature))
+                } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
+                    Ok(Self::ZkLoginDeprecated)
+                } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
+                    let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
+                    Ok(Self::Passkey(signature))
+                } else {
+                    Err(MultisigError::UnallowedSignatureType)
+                }
+            }
+            _ => Err(MultisigError::InvalidInput),
+        }
+    }
+}
+
+impl FromStr for MultisigMemberSignature {
+    type Err = MultisigError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_base64(s)
+    }
+}
+
+impl AsRef<[u8]> for MultisigMemberSignature {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            Self::Ed25519(s) => s.as_ref(),
+            Self::Secp256k1(s) => s.as_ref(),
+            Self::Secp256r1(s) => s.as_ref(),
+            Self::ZkLoginDeprecated => panic!(),
+            Self::Passkey(s) => s.signature.as_ref(),
+        }
+    }
+}
+
+impl TryFrom<UserSignature> for MultisigMemberSignature {
+    type Error = MultisigError;
+
+    fn try_from(signature: UserSignature) -> Result<Self, Self::Error> {
+        match signature {
+            UserSignature::Simple(SimpleSignature::Ed25519 { signature, .. }) => {
+                Ok(Self::Ed25519(signature))
+            }
+            UserSignature::Simple(SimpleSignature::Secp256k1 { signature, .. }) => {
+                Ok(Self::Secp256k1(signature))
+            }
+            UserSignature::Simple(SimpleSignature::Secp256r1 { signature, .. }) => {
+                Ok(Self::Secp256r1(signature))
+            }
+            UserSignature::Multisig(_) => panic!(),
+            UserSignature::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
+            UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
+            UserSignature::MoveAuthenticator(_) => panic!(),
+        }
+    }
+}
+
+impl From<SimpleSignature> for MultisigMemberSignature {
+    fn from(signature: SimpleSignature) -> Self {
+        match signature {
+            SimpleSignature::Ed25519 { signature, .. } => Self::Ed25519(signature),
+            SimpleSignature::Secp256k1 { signature, .. } => Self::Secp256k1(signature),
+            SimpleSignature::Secp256r1 { signature, .. } => Self::Secp256r1(signature),
+        }
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -357,6 +573,7 @@ mod serialization {
     };
 
     #[derive(serde::Deserialize)]
+    // TODO is this really needed?
     pub struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
@@ -414,10 +631,11 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
+                    bytes: OnceCell::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
@@ -436,26 +654,30 @@ mod serialization {
             buf
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
                     SignatureFromBytesError::new("missing signature scheme flag")
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
+
             if flag != SignatureScheme::Multisig {
                 return Err(SignatureFromBytesError::new("invalid multisig flag"));
             }
-            let bcs_bytes = &bytes[1..];
 
-            if let Ok(multisig) = bcs::from_bytes::<Multisig>(bcs_bytes) {
-                Ok(Self {
+            if let Ok(multisig) = bcs::from_bytes::<Multisig>(&bytes[1..]) {
+                let multisig = Self {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
-                })
+                    bytes: OnceCell::new(),
+                };
+                if multisig.is_valid() {
+                    Ok(multisig)
+                } else {
+                    Err(SignatureFromBytesError::new("invalid multisig"))
+                }
             } else {
                 Err(SignatureFromBytesError::new("invalid multisig"))
             }
@@ -473,7 +695,7 @@ mod serialization {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
-    #[serde(rename = "MultisigMemberPublicKey")]
+    #[serde(rename = "PublicKey")]
     enum ReadableMemberPublicKey {
         Ed25519 { public_key: Ed25519PublicKey },
         Secp256k1 { public_key: Secp256k1PublicKey },
@@ -482,62 +704,42 @@ mod serialization {
         Passkey { public_key: PasskeyPublicKey },
     }
 
-    impl Serialize for MultisigMemberPublicKey {
+    impl Serialize for PublicKey {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
             if serializer.is_human_readable() {
                 let readable = match self {
-                    MultisigMemberPublicKey::Ed25519(public_key) => {
-                        ReadableMemberPublicKey::Ed25519 {
-                            public_key: *public_key,
-                        }
-                    }
-                    MultisigMemberPublicKey::Secp256k1(public_key) => {
-                        ReadableMemberPublicKey::Secp256k1 {
-                            public_key: *public_key,
-                        }
-                    }
-                    MultisigMemberPublicKey::Secp256r1(public_key) => {
-                        ReadableMemberPublicKey::Secp256r1 {
-                            public_key: *public_key,
-                        }
-                    }
-                    MultisigMemberPublicKey::ZkLoginDeprecated => {
-                        ReadableMemberPublicKey::ZkLoginDeprecated
-                    }
-                    MultisigMemberPublicKey::Passkey(public_key) => {
-                        ReadableMemberPublicKey::Passkey {
-                            public_key: public_key.clone(),
-                        }
-                    }
+                    PublicKey::Ed25519(public_key) => ReadableMemberPublicKey::Ed25519 {
+                        public_key: *public_key,
+                    },
+                    PublicKey::Secp256k1(public_key) => ReadableMemberPublicKey::Secp256k1 {
+                        public_key: *public_key,
+                    },
+                    PublicKey::Secp256r1(public_key) => ReadableMemberPublicKey::Secp256r1 {
+                        public_key: *public_key,
+                    },
+                    PublicKey::ZkLoginDeprecated => ReadableMemberPublicKey::ZkLoginDeprecated,
+                    PublicKey::Passkey(public_key) => ReadableMemberPublicKey::Passkey {
+                        public_key: public_key.clone(),
+                    },
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
-                    MultisigMemberPublicKey::Ed25519(public_key) => {
-                        MemberPublicKey::Ed25519(*public_key)
-                    }
-                    MultisigMemberPublicKey::Secp256k1(public_key) => {
-                        MemberPublicKey::Secp256k1(*public_key)
-                    }
-                    MultisigMemberPublicKey::Secp256r1(public_key) => {
-                        MemberPublicKey::Secp256r1(*public_key)
-                    }
-                    MultisigMemberPublicKey::ZkLoginDeprecated => {
-                        MemberPublicKey::ZkLoginDeprecated
-                    }
-                    MultisigMemberPublicKey::Passkey(public_key) => {
-                        MemberPublicKey::Passkey(public_key.clone())
-                    }
+                    PublicKey::Ed25519(public_key) => MemberPublicKey::Ed25519(*public_key),
+                    PublicKey::Secp256k1(public_key) => MemberPublicKey::Secp256k1(*public_key),
+                    PublicKey::Secp256r1(public_key) => MemberPublicKey::Secp256r1(*public_key),
+                    PublicKey::ZkLoginDeprecated => MemberPublicKey::ZkLoginDeprecated,
+                    PublicKey::Passkey(public_key) => MemberPublicKey::Passkey(public_key.clone()),
                 };
                 binary.serialize(serializer)
             }
         }
     }
 
-    impl<'de> Deserialize<'de> for MultisigMemberPublicKey {
+    impl<'de> Deserialize<'de> for PublicKey {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: Deserializer<'de>,
@@ -687,18 +889,16 @@ mod tests {
 
         let passkey_pk = passkey_authenticator.public_key();
         let committee = MultisigCommittee::new(
-            vec![MultisigMember::new(
-                MultisigMemberPublicKey::Passkey(passkey_pk),
-                1,
-            )],
+            vec![MultisigMember::new(PublicKey::Passkey(passkey_pk), 1)],
             1,
-        );
+        )
+        .unwrap();
         assert!(committee.is_valid());
 
         let aggregated = MultisigAggregatedSignature::new(
-            committee,
             vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
             0b1,
+            committee,
         );
 
         let bcs_bytes = bcs::to_bytes(&aggregated).unwrap();
@@ -710,7 +910,7 @@ mod tests {
         assert_eq!(aggregated, from_json);
     }
 
-    /// The passkey tag in the `MultisigMemberPublicKey` BCS enum must be
+    /// The passkey tag in the `PublicKey` BCS enum must be
     /// `0x04`. Locking this in here guards against accidental reordering,
     /// since the tag is part of the on-chain wire format.
     #[test]
@@ -722,10 +922,20 @@ mod tests {
             panic!("expected passkey authenticator");
         };
 
-        let pk = MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key());
+        let pk = PublicKey::Passkey(passkey_authenticator.public_key());
         let bcs_bytes = bcs::to_bytes(&pk).unwrap();
         assert_eq!(bcs_bytes[0], 0x04, "passkey must use BCS tag 0x04");
         // 1 tag byte + 33 bytes for the secp256r1 compressed public key.
         assert_eq!(bcs_bytes.len(), 34);
+    }
+
+    #[test]
+    fn test_to_indices() {
+        assert!(as_indices(0b11111111110).is_err());
+        assert_eq!(as_indices(0b0000010110).unwrap(), vec![1, 2, 4]);
+        assert_eq!(
+            as_indices(0b1111111111).unwrap(),
+            vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        );
     }
 }

@@ -6630,7 +6630,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(IntPtr @committee,RustBuffer @signatures,ushort @bitmap,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(RustBuffer @signatures,ushort @bitmap,IntPtr @committee,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6767,78 +6767,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_multisigmemberpublickey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -7751,6 +7679,78 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ulong uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_publickey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_free_publickey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_is_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_is_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_scheme(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_debug(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_eq(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern sbyte uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_ne(IntPtr @ptr,IntPtr @other,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -10698,22 +10698,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -10895,6 +10879,22 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_public_key_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_public_key_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_public_key_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_public_key_to_json(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -12430,22 +12430,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs(
     );
 
@@ -12627,6 +12611,22 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_public_key_from_json(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_public_key_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14258,58 +14258,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(
     );
 
@@ -14623,6 +14571,58 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_publickey_scheme(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -18446,30 +18446,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs();
-            if (checksum != 55389) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs` checksum `55389`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json();
-            if (checksum != 11231) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json` checksum `11231`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs();
-            if (checksum != 8657) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs` checksum `8657`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json();
-            if (checksum != 44891) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json` checksum `44891`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs();
             if (checksum != 26016) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs` checksum `26016`, library returned `{checksum}`");
@@ -18743,6 +18719,30 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json();
             if (checksum != 18529) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json` checksum `18529`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs();
+            if (checksum != 33829) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_public_key_from_bcs` checksum `33829`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_public_key_from_json();
+            if (checksum != 40059) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_public_key_from_json` checksum `40059`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs();
+            if (checksum != 65426) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_public_key_to_bcs` checksum `65426`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_public_key_to_json();
+            if (checksum != 31754) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_public_key_to_json` checksum `31754`, library returned `{checksum}`");
             }
         }
         {
@@ -21177,92 +21177,14 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key();
-            if (checksum != 7804) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key` checksum `7804`, library returned `{checksum}`");
+            if (checksum != 48859) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmember_public_key` checksum `48859`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight();
             if (checksum != 57194) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight` checksum `57194`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519();
-            if (checksum != 8241) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519` checksum `8241`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt();
-            if (checksum != 28021) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt` checksum `28021`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey();
-            if (checksum != 10099) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey` checksum `10099`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt();
-            if (checksum != 25901) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt` checksum `25901`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1();
-            if (checksum != 52073) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1` checksum `52073`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt();
-            if (checksum != 40194) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt` checksum `40194`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1();
-            if (checksum != 38170) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1` checksum `38170`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt();
-            if (checksum != 28963) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt` checksum `28963`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519();
-            if (checksum != 1939) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519` checksum `1939`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey();
-            if (checksum != 22034) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_passkey` checksum `22034`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1();
-            if (checksum != 49521) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256k1` checksum `49521`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1();
-            if (checksum != 16265) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1` checksum `16265`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme();
-            if (checksum != 44341) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme` checksum `44341`, library returned `{checksum}`");
             }
         }
         {
@@ -21740,6 +21662,84 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519();
+            if (checksum != 16496) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519` checksum `16496`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt();
+            if (checksum != 8963) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_ed25519_opt` checksum `8963`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey();
+            if (checksum != 49604) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey` checksum `49604`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt();
+            if (checksum != 40198) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_passkey_opt` checksum `40198`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1();
+            if (checksum != 49490) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1` checksum `49490`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt();
+            if (checksum != 43724) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256k1_opt` checksum `43724`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1();
+            if (checksum != 138) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1` checksum `138`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt();
+            if (checksum != 12305) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_as_secp256r1_opt` checksum `12305`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519();
+            if (checksum != 3704) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_is_ed25519` checksum `3704`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey();
+            if (checksum != 42183) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_is_passkey` checksum `42183`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1();
+            if (checksum != 6008) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256k1` checksum `6008`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1();
+            if (checksum != 22991) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_is_secp256r1` checksum `22991`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publickey_scheme();
+            if (checksum != 62044) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publickey_scheme` checksum `62044`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_publish_dependencies();
             if (checksum != 57311) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_publish_dependencies` checksum `57311`, library returned `{checksum}`");
@@ -22053,8 +22053,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key();
-            if (checksum != 11009) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key` checksum `11009`, library returned `{checksum}`");
+            if (checksum != 60932) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key` checksum `60932`, library returned `{checksum}`");
             }
         }
         {
@@ -22227,8 +22227,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key();
-            if (checksum != 58667) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key` checksum `58667`, library returned `{checksum}`");
+            if (checksum != 64393) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key` checksum `64393`, library returned `{checksum}`");
             }
         }
         {
@@ -24513,8 +24513,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new();
-            if (checksum != 3396) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new` checksum `3396`, library returned `{checksum}`");
+            if (checksum != 62487) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new` checksum `62487`, library returned `{checksum}`");
             }
         }
         {
@@ -24537,8 +24537,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new();
-            if (checksum != 63622) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new` checksum `63622`, library returned `{checksum}`");
+            if (checksum != 58553) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new` checksum `58553`, library returned `{checksum}`");
             }
         }
         {
@@ -39520,10 +39520,10 @@ public class MultisigAggregatedSignature : IMultisigAggregatedSignature, IDispos
     /// order as it's corresponding member in the provided committee
     /// and that it's position in the provided bitmap is set.
     /// </summary>
-    public MultisigAggregatedSignature(MultisigCommittee @committee, MultisigMemberSignature[] @signatures, ushort @bitmap) :
+    public MultisigAggregatedSignature(MultisigMemberSignature[] @signatures, ushort @bitmap, MultisigCommittee @committee) :
         this(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(FfiConverterTypeMultisigCommittee.INSTANCE.Lower(@committee), FfiConverterSequenceTypeMultisigMemberSignature.INSTANCE.Lower(@signatures), FfiConverterUInt16.INSTANCE.Lower(@bitmap), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregatedsignature_new(FfiConverterSequenceTypeMultisigMemberSignature.INSTANCE.Lower(@signatures), FfiConverterUInt16.INSTANCE.Lower(@bitmap), FfiConverterTypeMultisigCommittee.INSTANCE.Lower(@committee), ref _status)
 )) {}
 
     protected void FreeRustArcPtr() {
@@ -40180,7 +40180,7 @@ public interface IMultisigMember: IEquatable<MultisigMember> {
     /// <summary>
     /// This member's public key.
     /// </summary>
-    MultisigMemberPublicKey PublicKey();
+    PublicKey PublicKey();
     /// <summary>
     /// Weight of this member's signature.
     /// </summary>
@@ -40218,12 +40218,12 @@ public class MultisigMember : IMultisigMember, IDisposable {
         Destroy();
     }
     /// <summary>
-    /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+    /// Construct a new member from a `PublicKey` and a `weight`.
     /// </summary>
-    public MultisigMember(MultisigMemberPublicKey @publicKey, byte @weight) :
+    public MultisigMember(PublicKey @publicKey, byte @weight) :
         this(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_multisigmember_new(FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lower(@publicKey), FfiConverterUInt8.INSTANCE.Lower(@weight), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_multisigmember_new(FfiConverterTypePublicKey.INSTANCE.Lower(@publicKey), FfiConverterUInt8.INSTANCE.Lower(@weight), ref _status)
 )) {}
 
     protected void FreeRustArcPtr() {
@@ -40305,8 +40305,8 @@ public class MultisigMember : IMultisigMember, IDisposable {
     /// <summary>
     /// This member's public key.
     /// </summary>
-    public MultisigMemberPublicKey PublicKey() {
-        return CallWithPointer(thisPtr => FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lift(
+    public PublicKey PublicKey() {
+        return CallWithPointer(thisPtr => FfiConverterTypePublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmember_public_key(thisPtr,  ref _status)
 )));
@@ -40361,321 +40361,6 @@ class FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, IntPtr> {
     }
 
     public override void Write(MultisigMember value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// Enum of valid public keys for multisig committee members
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member-public-key = ed25519-multisig-member-public-key /
-/// secp256k1-multisig-member-public-key /
-/// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key-deprecated /
-/// passkey-multisig-member-public-key
-///
-/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated   = %d03
-/// passkey-multisig-member-public-key              = %d04 passkey-public-key
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
-/// ; and the decoded bytes are defined
-/// ; by legacy-public-key
-/// legacy-public-key = (ed25519-flag ed25519-public-key) /
-/// (secp256k1-flag secp256k1-public-key) /
-/// (secp256r1-flag secp256r1-public-key)
-/// ```
-/// </summary>
-public interface IMultisigMemberPublicKey: IEquatable<MultisigMemberPublicKey> {
-    Ed25519PublicKey AsEd25519();
-    Ed25519PublicKey? AsEd25519Opt();
-    PasskeyPublicKey AsPasskey();
-    PasskeyPublicKey? AsPasskeyOpt();
-    Secp256k1PublicKey AsSecp256k1();
-    Secp256k1PublicKey? AsSecp256k1Opt();
-    Secp256r1PublicKey AsSecp256r1();
-    Secp256r1PublicKey? AsSecp256r1Opt();
-    bool IsEd25519();
-    bool IsPasskey();
-    bool IsSecp256k1();
-    bool IsSecp256r1();
-    SignatureScheme Scheme();
-}
-/// <summary>
-/// Enum of valid public keys for multisig committee members
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member-public-key = ed25519-multisig-member-public-key /
-/// secp256k1-multisig-member-public-key /
-/// secp256r1-multisig-member-public-key /
-/// zklogin-multisig-member-public-key-deprecated /
-/// passkey-multisig-member-public-key
-///
-/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated   = %d03
-/// passkey-multisig-member-public-key              = %d04 passkey-public-key
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
-/// ; and the decoded bytes are defined
-/// ; by legacy-public-key
-/// legacy-public-key = (ed25519-flag ed25519-public-key) /
-/// (secp256k1-flag secp256k1-public-key) /
-/// (secp256r1-flag secp256r1-public-key)
-/// ```
-/// </summary>
-public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public MultisigMemberPublicKey(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~MultisigMemberPublicKey() {
-        Destroy();
-    }
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_multisigmemberpublickey(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public Ed25519PublicKey AsEd25519() {
-        return CallWithPointer(thisPtr => FfiConverterTypeEd25519PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Ed25519PublicKey? AsEd25519Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeEd25519PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public PasskeyPublicKey AsPasskey() {
-        return CallWithPointer(thisPtr => FfiConverterTypePasskeyPublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public PasskeyPublicKey? AsPasskeyOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyPublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256k1PublicKey AsSecp256k1() {
-        return CallWithPointer(thisPtr => FfiConverterTypeSecp256k1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256k1PublicKey? AsSecp256k1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256r1PublicKey AsSecp256r1() {
-        return CallWithPointer(thisPtr => FfiConverterTypeSecp256r1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256r1PublicKey? AsSecp256r1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsEd25519() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsPasskey() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_passkey(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsSecp256k1() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256k1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool IsSecp256r1() {
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public SignatureScheme Scheme() {
-        return CallWithPointer(thisPtr => FfiConverterTypeSignatureScheme.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public bool Equals(MultisigMemberPublicKey? other)
-    {
-        if (other is null) return false;
-        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(thisPtr, FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lower(@other), ref _status)
-)));
-    }
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || !(obj is MultisigMemberPublicKey)) return false;
-        return Equals(obj as MultisigMemberPublicKey);
-    }
-
-    
-}
-class FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemberPublicKey, IntPtr> {
-    public static FfiConverterTypeMultisigMemberPublicKey INSTANCE = new FfiConverterTypeMultisigMemberPublicKey();
-
-
-    public override IntPtr Lower(MultisigMemberPublicKey value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override MultisigMemberPublicKey Lift(IntPtr value) {
-        return new MultisigMemberPublicKey(value);
-    }
-
-    public override MultisigMemberPublicKey Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(MultisigMemberPublicKey value) {
-        return 8;
-    }
-
-    public override void Write(MultisigMemberPublicKey value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }
@@ -44661,6 +44346,321 @@ class FfiConverterTypeProgrammableTransaction: FfiConverter<ProgrammableTransact
 
 
 /// <summary>
+/// Enum of valid public keys for multisig committee members
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// multisig-member-public-key = ed25519-multisig-member-public-key /
+/// secp256k1-multisig-member-public-key /
+/// secp256r1-multisig-member-public-key /
+/// zklogin-multisig-member-public-key-deprecated /
+/// passkey-multisig-member-public-key
+///
+/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %d03
+/// passkey-multisig-member-public-key              = %d04 passkey-public-key
+/// ```
+///
+/// There is also a legacy encoding for this type defined as:
+///
+/// ```text
+/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
+/// ; and the decoded bytes are defined
+/// ; by legacy-public-key
+/// legacy-public-key = (ed25519-flag ed25519-public-key) /
+/// (secp256k1-flag secp256k1-public-key) /
+/// (secp256r1-flag secp256r1-public-key)
+/// ```
+/// </summary>
+public interface IPublicKey: IEquatable<PublicKey> {
+    Ed25519PublicKey AsEd25519();
+    Ed25519PublicKey? AsEd25519Opt();
+    PasskeyPublicKey AsPasskey();
+    PasskeyPublicKey? AsPasskeyOpt();
+    Secp256k1PublicKey AsSecp256k1();
+    Secp256k1PublicKey? AsSecp256k1Opt();
+    Secp256r1PublicKey AsSecp256r1();
+    Secp256r1PublicKey? AsSecp256r1Opt();
+    bool IsEd25519();
+    bool IsPasskey();
+    bool IsSecp256k1();
+    bool IsSecp256r1();
+    SignatureScheme Scheme();
+}
+/// <summary>
+/// Enum of valid public keys for multisig committee members
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// multisig-member-public-key = ed25519-multisig-member-public-key /
+/// secp256k1-multisig-member-public-key /
+/// secp256r1-multisig-member-public-key /
+/// zklogin-multisig-member-public-key-deprecated /
+/// passkey-multisig-member-public-key
+///
+/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
+/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
+/// zklogin-multisig-member-public-key-deprecated   = %d03
+/// passkey-multisig-member-public-key              = %d04 passkey-public-key
+/// ```
+///
+/// There is also a legacy encoding for this type defined as:
+///
+/// ```text
+/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
+/// ; and the decoded bytes are defined
+/// ; by legacy-public-key
+/// legacy-public-key = (ed25519-flag ed25519-public-key) /
+/// (secp256k1-flag secp256k1-public-key) /
+/// (secp256r1-flag secp256r1-public-key)
+/// ```
+/// </summary>
+public class PublicKey : IPublicKey, IDisposable {
+    protected IntPtr pointer;
+    private int _wasDestroyed = 0;
+    private long _callCounter = 1;
+
+    public PublicKey(IntPtr pointer) {
+        this.pointer = pointer;
+    }
+
+    ~PublicKey() {
+        Destroy();
+    }
+
+    protected void FreeRustArcPtr() {
+        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_publickey(this.pointer, ref status);
+        });
+    }
+
+    protected IntPtr CloneRustArcPtr() {
+        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_publickey(this.pointer, ref status);
+        });
+    }
+
+    public void Destroy()
+    {
+        // Only allow a single call to this method.
+        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
+        {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (Interlocked.Decrement(ref _callCounter) == 0)
+            {
+                FreeRustArcPtr();
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        Destroy();
+        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
+    }
+
+    private void IncrementCallCounter() 
+    {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        long count;
+        do
+        {
+            count = Interlocked.Read(ref _callCounter);
+            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
+            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
+
+        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
+    }
+
+    private void DecrementCallCounter() 
+    {
+        // This decrement always matches the increment we performed above.
+        if (Interlocked.Decrement(ref _callCounter) == 0) {
+            FreeRustArcPtr();
+        }
+    }
+
+    internal void CallWithPointer(Action<IntPtr> action)
+    {
+        IncrementCallCounter();
+        try {
+            action(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    internal T CallWithPointer<T>(Func<IntPtr, T> func)
+    {   
+        IncrementCallCounter();
+        try {
+            return func(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    
+    public Ed25519PublicKey AsEd25519() {
+        return CallWithPointer(thisPtr => FfiConverterTypeEd25519PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Ed25519PublicKey? AsEd25519Opt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeEd25519PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_ed25519_opt(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public PasskeyPublicKey AsPasskey() {
+        return CallWithPointer(thisPtr => FfiConverterTypePasskeyPublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public PasskeyPublicKey? AsPasskeyOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyPublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_passkey_opt(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256k1PublicKey AsSecp256k1() {
+        return CallWithPointer(thisPtr => FfiConverterTypeSecp256k1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256k1PublicKey? AsSecp256k1Opt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256k1_opt(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256r1PublicKey AsSecp256r1() {
+        return CallWithPointer(thisPtr => FfiConverterTypeSecp256r1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256r1PublicKey? AsSecp256r1Opt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_as_secp256r1_opt(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public bool IsEd25519() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_is_ed25519(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public bool IsPasskey() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_is_passkey(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public bool IsSecp256k1() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256k1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public bool IsSecp256r1() {
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_is_secp256r1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public SignatureScheme Scheme() {
+        return CallWithPointer(thisPtr => FfiConverterTypeSignatureScheme.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_scheme(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public bool Equals(PublicKey? other)
+    {
+        if (other is null) return false;
+        return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_publickey_uniffi_trait_eq_eq(thisPtr, FfiConverterTypePublicKey.INSTANCE.Lower(@other), ref _status)
+)));
+    }
+    public override bool Equals(object? obj)
+    {
+        if (obj is null || !(obj is PublicKey)) return false;
+        return Equals(obj as PublicKey);
+    }
+
+    
+}
+class FfiConverterTypePublicKey: FfiConverter<PublicKey, IntPtr> {
+    public static FfiConverterTypePublicKey INSTANCE = new FfiConverterTypePublicKey();
+
+
+    public override IntPtr Lower(PublicKey value) {
+        return value.CallWithPointer(thisPtr => thisPtr);
+    }
+
+    public override PublicKey Lift(IntPtr value) {
+        return new PublicKey(value);
+    }
+
+    public override PublicKey Read(BigEndianStream stream) {
+        return Lift(new IntPtr(stream.ReadLong()));
+    }
+
+    public override int AllocationSize(PublicKey value) {
+        return 8;
+    }
+
+    public override void Write(PublicKey value, BigEndianStream stream) {
+        stream.WriteLong(Lower(value).ToInt64());
+    }
+}
+
+
+
+/// <summary>
 /// Command to publish a new move package
 ///
 /// # BCS
@@ -47291,7 +47291,7 @@ class FfiConverterTypeSecp256r1VerifyingKey: FfiConverter<Secp256r1VerifyingKey,
 
 
 public interface ISimpleKeypair {
-    MultisigMemberPublicKey PublicKey();
+    PublicKey PublicKey();
     SignatureScheme Scheme();
     /// <summary>
     /// Sign a personal message and return a UserSignature.
@@ -47418,8 +47418,8 @@ public class SimpleKeypair : ISimpleKeypair, IDisposable {
     }
 
     
-    public MultisigMemberPublicKey PublicKey() {
-        return CallWithPointer(thisPtr => FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lift(
+    public PublicKey PublicKey() {
+        return CallWithPointer(thisPtr => FfiConverterTypePublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(thisPtr,  ref _status)
 )));
@@ -48133,7 +48133,7 @@ class FfiConverterTypeSimpleVerifier: FfiConverter<SimpleVerifier, IntPtr> {
 
 
 public interface ISimpleVerifyingKey: IEquatable<SimpleVerifyingKey> {
-    MultisigMemberPublicKey PublicKey();
+    PublicKey PublicKey();
     SignatureScheme Scheme();
     /// <summary>
     /// Serialize this private key as DER-encoded PKCS#8
@@ -48237,8 +48237,8 @@ public class SimpleVerifyingKey : ISimpleVerifyingKey, IDisposable {
     }
 
     
-    public MultisigMemberPublicKey PublicKey() {
-        return CallWithPointer(thisPtr => FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lift(
+    public PublicKey PublicKey() {
+        return CallWithPointer(thisPtr => FfiConverterTypePublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(thisPtr,  ref _status)
 )));
@@ -70343,54 +70343,6 @@ public static class Iota {
     /// Create this type from BCS encoded bytes.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public static MultisigMemberPublicKey MultisigMemberPublicKeyFromBcs(byte[] @bcs) {
-        return FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static MultisigMemberPublicKey MultisigMemberPublicKeyFromJson(string @json) {
-        return FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] MultisigMemberPublicKeyToBcs(MultisigMemberPublicKey @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string MultisigMemberPublicKeyToJson(MultisigMemberPublicKey @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(FfiConverterTypeMultisigMemberPublicKey.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
     public static MultisigMemberSignature MultisigMemberSignatureFromBcs(byte[] @bcs) {
         return FfiConverterTypeMultisigMemberSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
@@ -70935,6 +70887,54 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(FfiConverterTypeProgrammableTransaction.INSTANCE.Lower(@data), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Create this type from BCS encoded bytes.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static PublicKey PublicKeyFromBcs(byte[] @bcs) {
+        return FfiConverterTypePublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_public_key_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Create this type from JSON encoded string.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static PublicKey PublicKeyFromJson(string @json) {
+        return FfiConverterTypePublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_public_key_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Convert this type to BCS encoded bytes.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static byte[] PublicKeyToBcs(PublicKey @data) {
+        return FfiConverterByteArray.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_public_key_to_bcs(FfiConverterTypePublicKey.INSTANCE.Lower(@data), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Convert this type to JSON encoded string.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static string PublicKeyToJson(PublicKey @data) {
+        return FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_public_key_to_json(FfiConverterTypePublicKey.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
