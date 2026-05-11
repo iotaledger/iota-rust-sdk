@@ -236,11 +236,11 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
         let inputs = tx_inputs
             .into_iter()
             .enumerate()
-            .map(|(i, inp)| {
+            .map(|(i, input)| {
                 (
                     i,
                     Input {
-                        kind: InputKind::Input(inp),
+                        kind: InputKind::Input(input),
                         is_gas: false,
                     },
                 )
