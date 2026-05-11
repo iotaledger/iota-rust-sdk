@@ -363,14 +363,14 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MoveStruct`
-    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
-        self.0.as_struct_opt().cloned().map(Into::into)
+    pub fn as_opt_struct(&self) -> Option<MoveStruct> {
+        self.0.as_opt_struct().cloned().map(Into::into)
     }
 
     /// Try to interpret this object as a `MovePackage`
-    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+    pub fn as_opt_package(&self) -> Option<Arc<MovePackage>> {
         self.0
-            .as_package_opt()
+            .as_opt_package()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -661,9 +661,9 @@ impl Owner {
 
     /// Convert this owner into an address owner if it is one, or return `None`
     /// otherwise
-    pub fn as_address_opt(&self) -> Option<Arc<Address>> {
+    pub fn as_opt_address(&self) -> Option<Arc<Address>> {
         self.0
-            .as_address_opt()
+            .as_opt_address()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -676,9 +676,9 @@ impl Owner {
 
     /// Convert this owner into an object owner if it is one, or return `None`
     /// otherwise
-    pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
+    pub fn as_opt_object(&self) -> Option<Arc<ObjectId>> {
         self.0
-            .as_object_opt()
+            .as_opt_object()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -691,9 +691,9 @@ impl Owner {
 
     /// Convert this owner into a shared owner if it is one, or return `None`
     /// otherwise
-    pub fn as_shared_opt(&self) -> Option<Arc<Version>> {
+    pub fn as_opt_shared(&self) -> Option<Arc<Version>> {
         self.0
-            .as_shared_opt()
+            .as_opt_shared()
             .copied()
             .map(Into::into)
             .map(Arc::new)
@@ -741,9 +741,9 @@ impl ObjectType {
         self.0.as_struct().clone().into()
     }
 
-    pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
+    pub fn as_opt_struct(&self) -> Option<Arc<StructTag>> {
         self.0
-            .as_struct_opt()
+            .as_opt_struct()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
