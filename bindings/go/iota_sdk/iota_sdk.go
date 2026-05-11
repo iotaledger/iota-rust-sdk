@@ -6118,11 +6118,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519()
 	})
-	if checksum != 28021 {
+	if checksum != 6833 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey()
+	})
+	if checksum != 49124 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1()
+	})
+	if checksum != 25680 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1()
+	})
+	if checksum != 28777 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6136,15 +6163,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt()
-	})
-	if checksum != 25901 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1()
 	})
 	if checksum != 52073 {
@@ -6154,29 +6172,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt()
-	})
-	if checksum != 40194 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1()
 	})
 	if checksum != 38170 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt()
-	})
-	if checksum != 28963 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6235,11 +6235,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519()
 	})
-	if checksum != 56690 {
+	if checksum != 49594 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey()
+	})
+	if checksum != 15404 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1()
+	})
+	if checksum != 1768 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1()
+	})
+	if checksum != 43142 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6253,15 +6280,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt()
-	})
-	if checksum != 39077 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1()
 	})
 	if checksum != 49085 {
@@ -6271,29 +6289,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt()
-	})
-	if checksum != 26984 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1()
 	})
 	if checksum != 57510 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt()
-	})
-	if checksum != 12419 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6559,20 +6559,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package()
 	})
-	if checksum != 50334 {
+	if checksum != 53463 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct()
 	})
-	if checksum != 8956 {
+	if checksum != 11967 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6685,20 +6685,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct()
+	})
+	if checksum != 1681 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct()
 	})
 	if checksum != 15094 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt()
-	})
-	if checksum != 14701 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6739,15 +6739,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
-	})
-	if checksum != 12290 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object()
 	})
 	if checksum != 59703 {
@@ -6757,11 +6748,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address()
 	})
-	if checksum != 36165 {
+	if checksum != 10677 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object()
+	})
+	if checksum != 12202 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared()
+	})
+	if checksum != 4868 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6771,15 +6780,6 @@ func uniffiCheckChecksums() {
 	if checksum != 29299 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt()
-	})
-	if checksum != 50412 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8800,15 +8800,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
-	})
-	if checksum != 59885 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig()
 	})
 	if checksum != 28431 {
@@ -8818,11 +8809,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator()
 	})
-	if checksum != 59107 {
+	if checksum != 19529 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig()
+	})
+	if checksum != 42115 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator()
+	})
+	if checksum != 26798 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple()
+	})
+	if checksum != 56965 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8836,29 +8854,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
-	})
-	if checksum != 48689 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple()
 	})
 	if checksum != 46116 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt()
-	})
-	if checksum != 31595 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -25650,13 +25650,13 @@ func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 // ```
 type MultisigMemberPublicKeyInterface interface {
 	AsEd25519() *Ed25519PublicKey
-	AsEd25519Opt() **Ed25519PublicKey
+	AsOptEd25519() **Ed25519PublicKey
+	AsOptPasskey() **PasskeyPublicKey
+	AsOptSecp256k1() **Secp256k1PublicKey
+	AsOptSecp256r1() **Secp256r1PublicKey
 	AsPasskey() *PasskeyPublicKey
-	AsPasskeyOpt() **PasskeyPublicKey
 	AsSecp256k1() *Secp256k1PublicKey
-	AsSecp256k1Opt() **Secp256k1PublicKey
 	AsSecp256r1() *Secp256r1PublicKey
-	AsSecp256r1Opt() **Secp256r1PublicKey
 	IsEd25519() bool
 	IsPasskey() bool
 	IsSecp256k1() bool
@@ -25709,12 +25709,45 @@ func (_self *MultisigMemberPublicKey) AsEd25519() *Ed25519PublicKey {
 	}))
 }
 
-func (_self *MultisigMemberPublicKey) AsEd25519Opt() **Ed25519PublicKey {
+func (_self *MultisigMemberPublicKey) AsOptEd25519() **Ed25519PublicKey {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalEd25519PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) AsOptPasskey() **PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) AsOptSecp256k1() **Secp256k1PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSecp256k1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) AsOptSecp256r1() **Secp256r1PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -25729,17 +25762,6 @@ func (_self *MultisigMemberPublicKey) AsPasskey() *PasskeyPublicKey {
 	}))
 }
 
-func (_self *MultisigMemberPublicKey) AsPasskeyOpt() **PasskeyPublicKey {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberPublicKey) AsSecp256k1() *Secp256k1PublicKey {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
 	defer _self.ffiObject.decrementPointer()
@@ -25749,34 +25771,12 @@ func (_self *MultisigMemberPublicKey) AsSecp256k1() *Secp256k1PublicKey {
 	}))
 }
 
-func (_self *MultisigMemberPublicKey) AsSecp256k1Opt() **Secp256k1PublicKey {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSecp256k1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberPublicKey) AsSecp256r1() *Secp256r1PublicKey {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberPublicKey) AsSecp256r1Opt() **Secp256r1PublicKey {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 
@@ -25933,13 +25933,13 @@ func (_ FfiDestroyerMultisigMemberPublicKey) Destroy(value *MultisigMemberPublic
 // ```
 type MultisigMemberSignatureInterface interface {
 	AsEd25519() *Ed25519Signature
-	AsEd25519Opt() **Ed25519Signature
+	AsOptEd25519() **Ed25519Signature
+	AsOptPasskey() **PasskeyAuthenticator
+	AsOptSecp256k1() **Secp256k1Signature
+	AsOptSecp256r1() **Secp256r1Signature
 	AsPasskey() *PasskeyAuthenticator
-	AsPasskeyOpt() **PasskeyAuthenticator
 	AsSecp256k1() *Secp256k1Signature
-	AsSecp256k1Opt() **Secp256k1Signature
 	AsSecp256r1() *Secp256r1Signature
-	AsSecp256r1Opt() **Secp256r1Signature
 	IsEd25519() bool
 	IsPasskey() bool
 	IsSecp256k1() bool
@@ -25980,12 +25980,45 @@ func (_self *MultisigMemberSignature) AsEd25519() *Ed25519Signature {
 	}))
 }
 
-func (_self *MultisigMemberSignature) AsEd25519Opt() **Ed25519Signature {
+func (_self *MultisigMemberSignature) AsOptEd25519() **Ed25519Signature {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalEd25519SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberSignature) AsOptPasskey() **PasskeyAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberSignature) AsOptSecp256k1() **Secp256k1Signature {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSecp256k1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MultisigMemberSignature) AsOptSecp256r1() **Secp256r1Signature {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSecp256r1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -26000,17 +26033,6 @@ func (_self *MultisigMemberSignature) AsPasskey() *PasskeyAuthenticator {
 	}))
 }
 
-func (_self *MultisigMemberSignature) AsPasskeyOpt() **PasskeyAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberSignature) AsSecp256k1() *Secp256k1Signature {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
 	defer _self.ffiObject.decrementPointer()
@@ -26020,34 +26042,12 @@ func (_self *MultisigMemberSignature) AsSecp256k1() *Secp256k1Signature {
 	}))
 }
 
-func (_self *MultisigMemberSignature) AsSecp256k1Opt() **Secp256k1Signature {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSecp256k1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 func (_self *MultisigMemberSignature) AsSecp256r1() *Secp256r1Signature {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterSecp256r1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MultisigMemberSignature) AsSecp256r1Opt() **Secp256r1Signature {
-	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSecp256r1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 
@@ -26937,9 +26937,9 @@ func (_ FfiDestroyerObject) Destroy(value *Object) {
 // ```
 type ObjectDataInterface interface {
 	// Try to interpret this object as a `MovePackage`
-	AsPackageOpt() **MovePackage
+	AsOptPackage() **MovePackage
 	// Try to interpret this object as a `MoveStruct`
-	AsStructOpt() *MoveStruct
+	AsOptStruct() *MoveStruct
 	// Return whether this object is a `MovePackage`
 	IsPackage() bool
 	// Return whether this object is a `MoveStruct`
@@ -26979,24 +26979,24 @@ func ObjectDataNewMoveStruct(moveStruct MoveStruct) *ObjectData {
 
 
 // Try to interpret this object as a `MovePackage`
-func (_self *ObjectData) AsPackageOpt() **MovePackage {
+func (_self *ObjectData) AsOptPackage() **MovePackage {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package(
 		_pointer,_uniffiStatus),
 	}
 	}))
 }
 
 // Try to interpret this object as a `MoveStruct`
-func (_self *ObjectData) AsStructOpt() *MoveStruct {
+func (_self *ObjectData) AsOptStruct() *MoveStruct {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -27578,8 +27578,8 @@ func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 
 // Type of an IOTA object
 type ObjectTypeInterface interface {
+	AsOptStruct() **StructTag
 	AsStruct() *StructTag
-	AsStructOpt() **StructTag
 	IsPackage() bool
 	IsStruct() bool
 }
@@ -27603,23 +27603,23 @@ func ObjectTypeNewStruct(structTag *StructTag) *ObjectType {
 
 
 
+func (_self *ObjectType) AsOptStruct() **StructTag {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ObjectType) AsStruct() *StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ObjectType) AsStructOpt() **StructTag {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 
@@ -27760,19 +27760,19 @@ type OwnerInterface interface {
 	// Convert this owner into an address owner if it is one, or panic
 	// otherwise
 	AsAddress() *Address
-	// Convert this owner into an address owner if it is one, or return `None`
-	// otherwise
-	AsAddressOpt() **Address
 	// Convert this owner into an object owner if it is one, or panic otherwise
 	AsObject() *ObjectId
+	// Convert this owner into an address owner if it is one, or return `None`
+	// otherwise
+	AsOptAddress() **Address
 	// Convert this owner into an object owner if it is one, or return `None`
 	// otherwise
-	AsObjectOpt() **ObjectId
-	// Convert this owner into a shared owner if it is one, or panic otherwise
-	AsShared() *Version
+	AsOptObject() **ObjectId
 	// Convert this owner into a shared owner if it is one, or return `None`
 	// otherwise
-	AsSharedOpt() **Version
+	AsOptShared() **Version
+	// Convert this owner into a shared owner if it is one, or panic otherwise
+	AsShared() *Version
 	// Check if this is an address owner
 	IsAddress() bool
 	// Check if this is an immutable owner
@@ -27851,19 +27851,6 @@ func (_self *Owner) AsAddress() *Address {
 	}))
 }
 
-// Convert this owner into an address owner if it is one, or return `None`
-// otherwise
-func (_self *Owner) AsAddressOpt() **Address {
-	_pointer := _self.ffiObject.incrementPointer("*Owner")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 // Convert this owner into an object owner if it is one, or panic otherwise
 func (_self *Owner) AsObject() *ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
@@ -27874,14 +27861,40 @@ func (_self *Owner) AsObject() *ObjectId {
 	}))
 }
 
+// Convert this owner into an address owner if it is one, or return `None`
+// otherwise
+func (_self *Owner) AsOptAddress() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 // Convert this owner into an object owner if it is one, or return `None`
 // otherwise
-func (_self *Owner) AsObjectOpt() **ObjectId {
+func (_self *Owner) AsOptObject() **ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Convert this owner into a shared owner if it is one, or return `None`
+// otherwise
+func (_self *Owner) AsOptShared() **Version {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -27894,19 +27907,6 @@ func (_self *Owner) AsShared() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-// Convert this owner into a shared owner if it is one, or return `None`
-// otherwise
-func (_self *Owner) AsSharedOpt() **Version {
-	_pointer := _self.ffiObject.incrementPointer("*Owner")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 
@@ -36308,27 +36308,27 @@ type UserSignatureInterface interface {
 	// Convert this signature into a move authenticator if it is one, or panic
 	// otherwise
 	AsMoveAuthenticator() *MoveAuthenticator
-	// Convert this signature into a move authenticator if it is one, or return
-	// `None` otherwise
-	AsMoveAuthenticatorOpt() **MoveAuthenticator
 	// Convert this signature into a multisig aggregated signature if it is
 	// one, or panic otherwise
 	AsMultisig() *MultisigAggregatedSignature
+	// Convert this signature into a move authenticator if it is one, or return
+	// `None` otherwise
+	AsOptMoveAuthenticator() **MoveAuthenticator
 	// Convert this signature into a multisig aggregated signature if it is
 	// one, or return `None` otherwise
-	AsMultisigOpt() **MultisigAggregatedSignature
+	AsOptMultisig() **MultisigAggregatedSignature
+	// Convert this signature into a passkey authenticator if it is one, or
+	// return `None` otherwise
+	AsOptPasskeyAuthenticator() **PasskeyAuthenticator
+	// Convert this signature into a simple signature if it is one, or return
+	// `None` otherwise
+	AsOptSimple() **SimpleSignature
 	// Convert this signature into a passkey authenticator if it is one, or
 	// panic otherwise
 	AsPasskeyAuthenticator() *PasskeyAuthenticator
-	// Convert this signature into a passkey authenticator if it is one, or
-	// return `None` otherwise
-	AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator
 	// Convert this signature into a simple signature if it is one, or panic
 	// otherwise
 	AsSimple() *SimpleSignature
-	// Convert this signature into a simple signature if it is one, or return
-	// `None` otherwise
-	AsSimpleOpt() **SimpleSignature
 	// Check if this signature is a move authenticator
 	IsMoveAuthenticator() bool
 	// Check if this signature is a multisig aggregated signature
@@ -36427,19 +36427,6 @@ func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
 	}))
 }
 
-// Convert this signature into a move authenticator if it is one, or return
-// `None` otherwise
-func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 // Convert this signature into a multisig aggregated signature if it is
 // one, or panic otherwise
 func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
@@ -36451,14 +36438,53 @@ func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	}))
 }
 
+// Convert this signature into a move authenticator if it is one, or return
+// `None` otherwise
+func (_self *UserSignature) AsOptMoveAuthenticator() **MoveAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 // Convert this signature into a multisig aggregated signature if it is
 // one, or return `None` otherwise
-func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
+func (_self *UserSignature) AsOptMultisig() **MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalMultisigAggregatedSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Convert this signature into a passkey authenticator if it is one, or
+// return `None` otherwise
+func (_self *UserSignature) AsOptPasskeyAuthenticator() **PasskeyAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Convert this signature into a simple signature if it is one, or return
+// `None` otherwise
+func (_self *UserSignature) AsOptSimple() **SimpleSignature {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -36475,19 +36501,6 @@ func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	}))
 }
 
-// Convert this signature into a passkey authenticator if it is one, or
-// return `None` otherwise
-func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
 // Convert this signature into a simple signature if it is one, or panic
 // otherwise
 func (_self *UserSignature) AsSimple() *SimpleSignature {
@@ -36496,19 +36509,6 @@ func (_self *UserSignature) AsSimple() *SimpleSignature {
 	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-// Convert this signature into a simple signature if it is one, or return
-// `None` otherwise
-func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
-	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 

@@ -14626,19 +14626,19 @@ public protocol MultisigMemberPublicKeyProtocol: AnyObject, Sendable {
     
     func asEd25519()  -> Ed25519PublicKey
     
-    func asEd25519Opt()  -> Ed25519PublicKey?
+    func asOptEd25519()  -> Ed25519PublicKey?
+    
+    func asOptPasskey()  -> PasskeyPublicKey?
+    
+    func asOptSecp256k1()  -> Secp256k1PublicKey?
+    
+    func asOptSecp256r1()  -> Secp256r1PublicKey?
     
     func asPasskey()  -> PasskeyPublicKey
     
-    func asPasskeyOpt()  -> PasskeyPublicKey?
-    
     func asSecp256k1()  -> Secp256k1PublicKey
     
-    func asSecp256k1Opt()  -> Secp256k1PublicKey?
-    
     func asSecp256r1()  -> Secp256r1PublicKey
-    
-    func asSecp256r1Opt()  -> Secp256r1PublicKey?
     
     func isEd25519()  -> Bool
     
@@ -14742,9 +14742,30 @@ open func asEd25519() -> Ed25519PublicKey  {
 })
 }
     
-open func asEd25519Opt() -> Ed25519PublicKey?  {
+open func asOptEd25519() -> Ed25519PublicKey?  {
     return try!  FfiConverterOptionTypeEd25519PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptPasskey() -> PasskeyPublicKey?  {
+    return try!  FfiConverterOptionTypePasskeyPublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptSecp256k1() -> Secp256k1PublicKey?  {
+    return try!  FfiConverterOptionTypeSecp256k1PublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptSecp256r1() -> Secp256r1PublicKey?  {
+    return try!  FfiConverterOptionTypeSecp256r1PublicKey.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -14756,13 +14777,6 @@ open func asPasskey() -> PasskeyPublicKey  {
 })
 }
     
-open func asPasskeyOpt() -> PasskeyPublicKey?  {
-    return try!  FfiConverterOptionTypePasskeyPublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func asSecp256k1() -> Secp256k1PublicKey  {
     return try!  FfiConverterTypeSecp256k1PublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(self.uniffiClonePointer(),$0
@@ -14770,23 +14784,9 @@ open func asSecp256k1() -> Secp256k1PublicKey  {
 })
 }
     
-open func asSecp256k1Opt() -> Secp256k1PublicKey?  {
-    return try!  FfiConverterOptionTypeSecp256k1PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func asSecp256r1() -> Secp256r1PublicKey  {
     return try!  FfiConverterTypeSecp256r1PublicKey_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256r1Opt() -> Secp256r1PublicKey?  {
-    return try!  FfiConverterOptionTypeSecp256r1PublicKey.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -14928,19 +14928,19 @@ public protocol MultisigMemberSignatureProtocol: AnyObject, Sendable {
     
     func asEd25519()  -> Ed25519Signature
     
-    func asEd25519Opt()  -> Ed25519Signature?
+    func asOptEd25519()  -> Ed25519Signature?
+    
+    func asOptPasskey()  -> PasskeyAuthenticator?
+    
+    func asOptSecp256k1()  -> Secp256k1Signature?
+    
+    func asOptSecp256r1()  -> Secp256r1Signature?
     
     func asPasskey()  -> PasskeyAuthenticator
     
-    func asPasskeyOpt()  -> PasskeyAuthenticator?
-    
     func asSecp256k1()  -> Secp256k1Signature
     
-    func asSecp256k1Opt()  -> Secp256k1Signature?
-    
     func asSecp256r1()  -> Secp256r1Signature
-    
-    func asSecp256r1Opt()  -> Secp256r1Signature?
     
     func isEd25519()  -> Bool
     
@@ -15031,9 +15031,30 @@ open func asEd25519() -> Ed25519Signature  {
 })
 }
     
-open func asEd25519Opt() -> Ed25519Signature?  {
+open func asOptEd25519() -> Ed25519Signature?  {
     return try!  FfiConverterOptionTypeEd25519Signature.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptPasskey() -> PasskeyAuthenticator?  {
+    return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptSecp256k1() -> Secp256k1Signature?  {
+    return try!  FfiConverterOptionTypeSecp256k1Signature.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func asOptSecp256r1() -> Secp256r1Signature?  {
+    return try!  FfiConverterOptionTypeSecp256r1Signature.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -15045,13 +15066,6 @@ open func asPasskey() -> PasskeyAuthenticator  {
 })
 }
     
-open func asPasskeyOpt() -> PasskeyAuthenticator?  {
-    return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func asSecp256k1() -> Secp256k1Signature  {
     return try!  FfiConverterTypeSecp256k1Signature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1(self.uniffiClonePointer(),$0
@@ -15059,23 +15073,9 @@ open func asSecp256k1() -> Secp256k1Signature  {
 })
 }
     
-open func asSecp256k1Opt() -> Secp256k1Signature?  {
-    return try!  FfiConverterOptionTypeSecp256k1Signature.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
 open func asSecp256r1() -> Secp256r1Signature  {
     return try!  FfiConverterTypeSecp256r1Signature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func asSecp256r1Opt() -> Secp256r1Signature?  {
-    return try!  FfiConverterOptionTypeSecp256r1Signature.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -16168,12 +16168,12 @@ public protocol ObjectDataProtocol: AnyObject, Sendable {
     /**
      * Try to interpret this object as a `MovePackage`
      */
-    func asPackageOpt()  -> MovePackage?
+    func asOptPackage()  -> MovePackage?
     
     /**
      * Try to interpret this object as a `MoveStruct`
      */
-    func asStructOpt()  -> MoveStruct?
+    func asOptStruct()  -> MoveStruct?
     
     /**
      * Return whether this object is a `MovePackage`
@@ -16277,9 +16277,9 @@ public static func newMoveStruct(moveStruct: MoveStruct) -> ObjectData  {
     /**
      * Try to interpret this object as a `MovePackage`
      */
-open func asPackageOpt() -> MovePackage?  {
+open func asOptPackage() -> MovePackage?  {
     return try!  FfiConverterOptionTypeMovePackage.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -16287,9 +16287,9 @@ open func asPackageOpt() -> MovePackage?  {
     /**
      * Try to interpret this object as a `MoveStruct`
      */
-open func asStructOpt() -> MoveStruct?  {
+open func asOptStruct() -> MoveStruct?  {
     return try!  FfiConverterOptionTypeMoveStruct.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -16918,9 +16918,9 @@ public func FfiConverterTypeObjectId_lower(_ value: ObjectId) -> UnsafeMutableRa
  */
 public protocol ObjectTypeProtocol: AnyObject, Sendable {
     
-    func asStruct()  -> StructTag
+    func asOptStruct()  -> StructTag?
     
-    func asStructOpt()  -> StructTag?
+    func asStruct()  -> StructTag
     
     func isPackage()  -> Bool
     
@@ -16997,16 +16997,16 @@ public static func newStruct(structTag: StructTag) -> ObjectType  {
     
 
     
-open func asStruct() -> StructTag  {
-    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(self.uniffiClonePointer(),$0
+open func asOptStruct() -> StructTag?  {
+    return try!  FfiConverterOptionTypeStructTag.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct(self.uniffiClonePointer(),$0
     )
 })
 }
     
-open func asStructOpt() -> StructTag?  {
-    return try!  FfiConverterOptionTypeStructTag.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(self.uniffiClonePointer(),$0
+open func asStruct() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -17142,32 +17142,32 @@ public protocol OwnerProtocol: AnyObject, Sendable {
     func asAddress()  -> Address
     
     /**
-     * Convert this owner into an address owner if it is one, or return `None`
-     * otherwise
-     */
-    func asAddressOpt()  -> Address?
-    
-    /**
      * Convert this owner into an object owner if it is one, or panic otherwise
      */
     func asObject()  -> ObjectId
     
     /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
+    func asOptAddress()  -> Address?
+    
+    /**
      * Convert this owner into an object owner if it is one, or return `None`
      * otherwise
      */
-    func asObjectOpt()  -> ObjectId?
-    
-    /**
-     * Convert this owner into a shared owner if it is one, or panic otherwise
-     */
-    func asShared()  -> Version
+    func asOptObject()  -> ObjectId?
     
     /**
      * Convert this owner into a shared owner if it is one, or return `None`
      * otherwise
      */
-    func asSharedOpt()  -> Version?
+    func asOptShared()  -> Version?
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or panic otherwise
+     */
+    func asShared()  -> Version
     
     /**
      * Check if this is an address owner
@@ -17312,17 +17312,6 @@ open func asAddress() -> Address  {
 }
     
     /**
-     * Convert this owner into an address owner if it is one, or return `None`
-     * otherwise
-     */
-open func asAddressOpt() -> Address?  {
-    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
      * Convert this owner into an object owner if it is one, or panic otherwise
      */
 open func asObject() -> ObjectId  {
@@ -17333,12 +17322,34 @@ open func asObject() -> ObjectId  {
 }
     
     /**
+     * Convert this owner into an address owner if it is one, or return `None`
+     * otherwise
+     */
+open func asOptAddress() -> Address?  {
+    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Convert this owner into an object owner if it is one, or return `None`
      * otherwise
      */
-open func asObjectOpt() -> ObjectId?  {
+open func asOptObject() -> ObjectId?  {
     return try!  FfiConverterOptionTypeObjectId.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Convert this owner into a shared owner if it is one, or return `None`
+     * otherwise
+     */
+open func asOptShared() -> Version?  {
+    return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -17349,17 +17360,6 @@ open func asObjectOpt() -> ObjectId?  {
 open func asShared() -> Version  {
     return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
-     * Convert this owner into a shared owner if it is one, or return `None`
-     * otherwise
-     */
-open func asSharedOpt() -> Version?  {
-    return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -27279,22 +27279,34 @@ public protocol UserSignatureProtocol: AnyObject, Sendable {
     func asMoveAuthenticator()  -> MoveAuthenticator
     
     /**
-     * Convert this signature into a move authenticator if it is one, or return
-     * `None` otherwise
-     */
-    func asMoveAuthenticatorOpt()  -> MoveAuthenticator?
-    
-    /**
      * Convert this signature into a multisig aggregated signature if it is
      * one, or panic otherwise
      */
     func asMultisig()  -> MultisigAggregatedSignature
     
     /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
+    func asOptMoveAuthenticator()  -> MoveAuthenticator?
+    
+    /**
      * Convert this signature into a multisig aggregated signature if it is
      * one, or return `None` otherwise
      */
-    func asMultisigOpt()  -> MultisigAggregatedSignature?
+    func asOptMultisig()  -> MultisigAggregatedSignature?
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
+    func asOptPasskeyAuthenticator()  -> PasskeyAuthenticator?
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
+    func asOptSimple()  -> SimpleSignature?
     
     /**
      * Convert this signature into a passkey authenticator if it is one, or
@@ -27303,22 +27315,10 @@ public protocol UserSignatureProtocol: AnyObject, Sendable {
     func asPasskeyAuthenticator()  -> PasskeyAuthenticator
     
     /**
-     * Convert this signature into a passkey authenticator if it is one, or
-     * return `None` otherwise
-     */
-    func asPasskeyAuthenticatorOpt()  -> PasskeyAuthenticator?
-    
-    /**
      * Convert this signature into a simple signature if it is one, or panic
      * otherwise
      */
     func asSimple()  -> SimpleSignature
-    
-    /**
-     * Convert this signature into a simple signature if it is one, or return
-     * `None` otherwise
-     */
-    func asSimpleOpt()  -> SimpleSignature?
     
     /**
      * Check if this signature is a move authenticator
@@ -27483,17 +27483,6 @@ open func asMoveAuthenticator() -> MoveAuthenticator  {
 }
     
     /**
-     * Convert this signature into a move authenticator if it is one, or return
-     * `None` otherwise
-     */
-open func asMoveAuthenticatorOpt() -> MoveAuthenticator?  {
-    return try!  FfiConverterOptionTypeMoveAuthenticator.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
      * Convert this signature into a multisig aggregated signature if it is
      * one, or panic otherwise
      */
@@ -27505,12 +27494,45 @@ open func asMultisig() -> MultisigAggregatedSignature  {
 }
     
     /**
+     * Convert this signature into a move authenticator if it is one, or return
+     * `None` otherwise
+     */
+open func asOptMoveAuthenticator() -> MoveAuthenticator?  {
+    return try!  FfiConverterOptionTypeMoveAuthenticator.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Convert this signature into a multisig aggregated signature if it is
      * one, or return `None` otherwise
      */
-open func asMultisigOpt() -> MultisigAggregatedSignature?  {
+open func asOptMultisig() -> MultisigAggregatedSignature?  {
     return try!  FfiConverterOptionTypeMultisigAggregatedSignature.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(self.uniffiClonePointer(),$0
+    uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Convert this signature into a passkey authenticator if it is one, or
+     * return `None` otherwise
+     */
+open func asOptPasskeyAuthenticator() -> PasskeyAuthenticator?  {
+    return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Convert this signature into a simple signature if it is one, or return
+     * `None` otherwise
+     */
+open func asOptSimple() -> SimpleSignature?  {
+    return try!  FfiConverterOptionTypeSimpleSignature.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -27527,34 +27549,12 @@ open func asPasskeyAuthenticator() -> PasskeyAuthenticator  {
 }
     
     /**
-     * Convert this signature into a passkey authenticator if it is one, or
-     * return `None` otherwise
-     */
-open func asPasskeyAuthenticatorOpt() -> PasskeyAuthenticator?  {
-    return try!  FfiConverterOptionTypePasskeyAuthenticator.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
      * Convert this signature into a simple signature if it is one, or panic
      * otherwise
      */
 open func asSimple() -> SimpleSignature  {
     return try!  FfiConverterTypeSimpleSignature_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-    /**
-     * Convert this signature into a simple signature if it is one, or return
-     * `None` otherwise
-     */
-open func asSimpleOpt() -> SimpleSignature?  {
-    return try!  FfiConverterOptionTypeSimpleSignature.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -48290,25 +48290,25 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519() != 8241) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021) {
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519() != 6833) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey() != 49124) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1() != 25680) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1() != 28777) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() != 40194) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1() != 38170) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939) {
@@ -48329,25 +48329,25 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690) {
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519() != 49594) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey() != 15404) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1() != 1768) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1() != 43142) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt() != 26984) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1() != 57510) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913) {
@@ -48437,10 +48437,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package() != 53463) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt() != 8956) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct() != 11967) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package() != 11147) {
@@ -48479,10 +48479,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct() != 1681) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package() != 40585) {
@@ -48497,19 +48497,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address() != 10677) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object() != 12202) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared() != 4868) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708) {
@@ -49184,25 +49184,25 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107) {
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator() != 19529) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig() != 42115) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator() != 26798) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple() != 56965) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689) {
-        return InitializationResult.apiChecksumMismatch
-    }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222) {

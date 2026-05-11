@@ -6786,7 +6786,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6794,23 +6806,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6858,7 +6858,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6866,23 +6878,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -7126,11 +7126,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -7318,11 +7318,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -7382,23 +7382,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_owner_as_object(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_owner_as_shared(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9682,15 +9682,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -9698,15 +9706,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14274,7 +14274,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14282,23 +14294,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14326,7 +14326,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14334,23 +14346,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14470,11 +14470,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14526,11 +14526,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14550,23 +14550,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_object(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_shared(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15466,15 +15466,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -15482,15 +15490,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -21214,9 +21214,27 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt();
-            if (checksum != 28021) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt` checksum `28021`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519();
+            if (checksum != 6833) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519` checksum `6833`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey();
+            if (checksum != 49124) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey` checksum `49124`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1();
+            if (checksum != 25680) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1` checksum `25680`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1();
+            if (checksum != 28777) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1` checksum `28777`, library returned `{checksum}`");
             }
         }
         {
@@ -21226,33 +21244,15 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt();
-            if (checksum != 25901) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt` checksum `25901`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1();
             if (checksum != 52073) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1` checksum `52073`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt();
-            if (checksum != 40194) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt` checksum `40194`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1();
             if (checksum != 38170) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1` checksum `38170`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt();
-            if (checksum != 28963) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt` checksum `28963`, library returned `{checksum}`");
             }
         }
         {
@@ -21292,9 +21292,27 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt();
-            if (checksum != 56690) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt` checksum `56690`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519();
+            if (checksum != 49594) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519` checksum `49594`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey();
+            if (checksum != 15404) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey` checksum `15404`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1();
+            if (checksum != 1768) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1` checksum `1768`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1();
+            if (checksum != 43142) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1` checksum `43142`, library returned `{checksum}`");
             }
         }
         {
@@ -21304,33 +21322,15 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt();
-            if (checksum != 39077) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt` checksum `39077`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1();
             if (checksum != 49085) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1` checksum `49085`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt();
-            if (checksum != 26984) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt` checksum `26984`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1();
             if (checksum != 57510) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1` checksum `57510`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt();
-            if (checksum != 12419) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt` checksum `12419`, library returned `{checksum}`");
             }
         }
         {
@@ -21508,15 +21508,15 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt();
-            if (checksum != 50334) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt` checksum `50334`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package();
+            if (checksum != 53463) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package` checksum `53463`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt();
-            if (checksum != 8956) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt` checksum `8956`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct();
+            if (checksum != 11967) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct` checksum `11967`, library returned `{checksum}`");
             }
         }
         {
@@ -21592,15 +21592,15 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct();
-            if (checksum != 15094) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct` checksum `15094`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct();
+            if (checksum != 1681) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct` checksum `1681`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt();
-            if (checksum != 14701) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt` checksum `14701`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct();
+            if (checksum != 15094) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct` checksum `15094`, library returned `{checksum}`");
             }
         }
         {
@@ -21628,33 +21628,33 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt();
-            if (checksum != 12290) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt` checksum `12290`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object();
             if (checksum != 59703) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object` checksum `59703`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt();
-            if (checksum != 36165) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt` checksum `36165`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address();
+            if (checksum != 10677) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address` checksum `10677`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object();
+            if (checksum != 12202) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object` checksum `12202`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared();
+            if (checksum != 4868) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared` checksum `4868`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared();
             if (checksum != 29299) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared` checksum `29299`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt();
-            if (checksum != 50412) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt` checksum `50412`, library returned `{checksum}`");
             }
         }
         {
@@ -23002,21 +23002,33 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt();
-            if (checksum != 59885) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt` checksum `59885`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig();
             if (checksum != 28431) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig` checksum `28431`, library returned `{checksum}`");
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt();
-            if (checksum != 59107) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt` checksum `59107`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator();
+            if (checksum != 19529) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator` checksum `19529`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig();
+            if (checksum != 42115) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig` checksum `42115`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator();
+            if (checksum != 26798) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator` checksum `26798`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple();
+            if (checksum != 56965) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple` checksum `56965`, library returned `{checksum}`");
             }
         }
         {
@@ -23026,21 +23038,9 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt();
-            if (checksum != 48689) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt` checksum `48689`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple();
             if (checksum != 46116) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple` checksum `46116`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt();
-            if (checksum != 31595) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt` checksum `31595`, library returned `{checksum}`");
             }
         }
         {
@@ -40433,13 +40433,13 @@ class FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, IntPtr> {
 /// </summary>
 public interface IMultisigMemberPublicKey: IEquatable<MultisigMemberPublicKey> {
     Ed25519PublicKey AsEd25519();
-    Ed25519PublicKey? AsEd25519Opt();
+    Ed25519PublicKey? AsOptEd25519();
+    PasskeyPublicKey? AsOptPasskey();
+    Secp256k1PublicKey? AsOptSecp256k1();
+    Secp256r1PublicKey? AsOptSecp256r1();
     PasskeyPublicKey AsPasskey();
-    PasskeyPublicKey? AsPasskeyOpt();
     Secp256k1PublicKey AsSecp256k1();
-    Secp256k1PublicKey? AsSecp256k1Opt();
     Secp256r1PublicKey AsSecp256r1();
-    Secp256r1PublicKey? AsSecp256r1Opt();
     bool IsEd25519();
     bool IsPasskey();
     bool IsSecp256k1();
@@ -40575,10 +40575,34 @@ public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
     }
     
     
-    public Ed25519PublicKey? AsEd25519Opt() {
+    public Ed25519PublicKey? AsOptEd25519() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeEd25519PublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public PasskeyPublicKey? AsOptPasskey() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyPublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256k1PublicKey? AsOptSecp256k1() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256r1PublicKey? AsOptSecp256r1() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1PublicKey.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1(thisPtr,  ref _status)
 )));
     }
     
@@ -40591,14 +40615,6 @@ public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
     }
     
     
-    public PasskeyPublicKey? AsPasskeyOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyPublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public Secp256k1PublicKey AsSecp256k1() {
         return CallWithPointer(thisPtr => FfiConverterTypeSecp256k1PublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -40607,26 +40623,10 @@ public class MultisigMemberPublicKey : IMultisigMemberPublicKey, IDisposable {
     }
     
     
-    public Secp256k1PublicKey? AsSecp256k1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public Secp256r1PublicKey AsSecp256r1() {
         return CallWithPointer(thisPtr => FfiConverterTypeSecp256r1PublicKey.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256r1PublicKey? AsSecp256r1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1PublicKey.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt(thisPtr,  ref _status)
 )));
     }
     
@@ -40737,13 +40737,13 @@ class FfiConverterTypeMultisigMemberPublicKey: FfiConverter<MultisigMemberPublic
 /// </summary>
 public interface IMultisigMemberSignature: IEquatable<MultisigMemberSignature> {
     Ed25519Signature AsEd25519();
-    Ed25519Signature? AsEd25519Opt();
+    Ed25519Signature? AsOptEd25519();
+    PasskeyAuthenticator? AsOptPasskey();
+    Secp256k1Signature? AsOptSecp256k1();
+    Secp256r1Signature? AsOptSecp256r1();
     PasskeyAuthenticator AsPasskey();
-    PasskeyAuthenticator? AsPasskeyOpt();
     Secp256k1Signature AsSecp256k1();
-    Secp256k1Signature? AsSecp256k1Opt();
     Secp256r1Signature AsSecp256r1();
-    Secp256r1Signature? AsSecp256r1Opt();
     bool IsEd25519();
     bool IsPasskey();
     bool IsSecp256k1();
@@ -40867,10 +40867,34 @@ public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
     }
     
     
-    public Ed25519Signature? AsEd25519Opt() {
+    public Ed25519Signature? AsOptEd25519() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeEd25519Signature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public PasskeyAuthenticator? AsOptPasskey() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyAuthenticator.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256k1Signature? AsOptSecp256k1() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1Signature.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Secp256r1Signature? AsOptSecp256r1() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1Signature.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1(thisPtr,  ref _status)
 )));
     }
     
@@ -40883,14 +40907,6 @@ public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
     }
     
     
-    public PasskeyAuthenticator? AsPasskeyOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public Secp256k1Signature AsSecp256k1() {
         return CallWithPointer(thisPtr => FfiConverterTypeSecp256k1Signature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
@@ -40899,26 +40915,10 @@ public class MultisigMemberSignature : IMultisigMemberSignature, IDisposable {
     }
     
     
-    public Secp256k1Signature? AsSecp256k1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256k1Signature.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
     public Secp256r1Signature AsSecp256r1() {
         return CallWithPointer(thisPtr => FfiConverterTypeSecp256r1Signature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Secp256r1Signature? AsSecp256r1Opt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSecp256r1Signature.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt(thisPtr,  ref _status)
 )));
     }
     
@@ -41965,11 +41965,11 @@ public interface IObjectData: IEquatable<ObjectData> {
     /// <summary>
     /// Try to interpret this object as a `MovePackage`
     /// </summary>
-    MovePackage? AsPackageOpt();
+    MovePackage? AsOptPackage();
     /// <summary>
     /// Try to interpret this object as a `MoveStruct`
     /// </summary>
-    MoveStruct? AsStructOpt();
+    MoveStruct? AsOptStruct();
     /// <summary>
     /// Return whether this object is a `MovePackage`
     /// </summary>
@@ -42085,10 +42085,10 @@ public class ObjectData : IObjectData, IDisposable {
     /// <summary>
     /// Try to interpret this object as a `MovePackage`
     /// </summary>
-    public MovePackage? AsPackageOpt() {
+    public MovePackage? AsOptPackage() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeMovePackage.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package(thisPtr,  ref _status)
 )));
     }
     
@@ -42096,10 +42096,10 @@ public class ObjectData : IObjectData, IDisposable {
     /// <summary>
     /// Try to interpret this object as a `MoveStruct`
     /// </summary>
-    public MoveStruct? AsStructOpt() {
+    public MoveStruct? AsOptStruct() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveStruct.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct(thisPtr,  ref _status)
 )));
     }
     
@@ -42703,8 +42703,8 @@ class FfiConverterTypeObjectId: FfiConverter<ObjectId, IntPtr> {
 /// Type of an IOTA object
 /// </summary>
 public interface IObjectType: IEquatable<ObjectType> {
+    StructTag? AsOptStruct();
     StructTag AsStruct();
-    StructTag? AsStructOpt();
     bool IsPackage();
     bool IsStruct();
 }
@@ -42800,18 +42800,18 @@ public class ObjectType : IObjectType, IDisposable {
     }
 
     
-    public StructTag AsStruct() {
-        return CallWithPointer(thisPtr => FfiConverterTypeStructTag.INSTANCE.Lift(
+    public StructTag? AsOptStruct() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeStructTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct(thisPtr,  ref _status)
 )));
     }
     
     
-    public StructTag? AsStructOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeStructTag.INSTANCE.Lift(
+    public StructTag AsStruct() {
+        return CallWithPointer(thisPtr => FfiConverterTypeStructTag.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(thisPtr,  ref _status)
 )));
     }
     
@@ -42924,28 +42924,28 @@ public interface IOwner: IEquatable<Owner> {
     /// </summary>
     Address AsAddress();
     /// <summary>
-    /// Convert this owner into an address owner if it is one, or return `None`
-    /// otherwise
-    /// </summary>
-    Address? AsAddressOpt();
-    /// <summary>
     /// Convert this owner into an object owner if it is one, or panic otherwise
     /// </summary>
     ObjectId AsObject();
     /// <summary>
+    /// Convert this owner into an address owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
+    Address? AsOptAddress();
+    /// <summary>
     /// Convert this owner into an object owner if it is one, or return `None`
     /// otherwise
     /// </summary>
-    ObjectId? AsObjectOpt();
-    /// <summary>
-    /// Convert this owner into a shared owner if it is one, or panic otherwise
-    /// </summary>
-    Version AsShared();
+    ObjectId? AsOptObject();
     /// <summary>
     /// Convert this owner into a shared owner if it is one, or return `None`
     /// otherwise
     /// </summary>
-    Version? AsSharedOpt();
+    Version? AsOptShared();
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or panic otherwise
+    /// </summary>
+    Version AsShared();
     /// <summary>
     /// Check if this is an address owner
     /// </summary>
@@ -43093,18 +43093,6 @@ public class Owner : IOwner, IDisposable {
     
     
     /// <summary>
-    /// Convert this owner into an address owner if it is one, or return `None`
-    /// otherwise
-    /// </summary>
-    public Address? AsAddressOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeAddress.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
     /// Convert this owner into an object owner if it is one, or panic otherwise
     /// </summary>
     public ObjectId AsObject() {
@@ -43116,13 +43104,37 @@ public class Owner : IOwner, IDisposable {
     
     
     /// <summary>
+    /// Convert this owner into an address owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
+    public Address? AsOptAddress() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeAddress.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
     /// Convert this owner into an object owner if it is one, or return `None`
     /// otherwise
     /// </summary>
-    public ObjectId? AsObjectOpt() {
+    public ObjectId? AsOptObject() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeObjectId.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Convert this owner into a shared owner if it is one, or return `None`
+    /// otherwise
+    /// </summary>
+    public Version? AsOptShared() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeVersion.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared(thisPtr,  ref _status)
 )));
     }
     
@@ -43134,18 +43146,6 @@ public class Owner : IOwner, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterTypeVersion.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
-    /// Convert this owner into a shared owner if it is one, or return `None`
-    /// otherwise
-    /// </summary>
-    public Version? AsSharedOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeVersion.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(thisPtr,  ref _status)
 )));
     }
     
@@ -53100,40 +53100,40 @@ public interface IUserSignature: IEquatable<UserSignature> {
     /// </summary>
     MoveAuthenticator AsMoveAuthenticator();
     /// <summary>
-    /// Convert this signature into a move authenticator if it is one, or return
-    /// `None` otherwise
-    /// </summary>
-    MoveAuthenticator? AsMoveAuthenticatorOpt();
-    /// <summary>
     /// Convert this signature into a multisig aggregated signature if it is
     /// one, or panic otherwise
     /// </summary>
     MultisigAggregatedSignature AsMultisig();
     /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
+    /// </summary>
+    MoveAuthenticator? AsOptMoveAuthenticator();
+    /// <summary>
     /// Convert this signature into a multisig aggregated signature if it is
     /// one, or return `None` otherwise
     /// </summary>
-    MultisigAggregatedSignature? AsMultisigOpt();
+    MultisigAggregatedSignature? AsOptMultisig();
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
+    /// </summary>
+    PasskeyAuthenticator? AsOptPasskeyAuthenticator();
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
+    /// </summary>
+    SimpleSignature? AsOptSimple();
     /// <summary>
     /// Convert this signature into a passkey authenticator if it is one, or
     /// panic otherwise
     /// </summary>
     PasskeyAuthenticator AsPasskeyAuthenticator();
     /// <summary>
-    /// Convert this signature into a passkey authenticator if it is one, or
-    /// return `None` otherwise
-    /// </summary>
-    PasskeyAuthenticator? AsPasskeyAuthenticatorOpt();
-    /// <summary>
     /// Convert this signature into a simple signature if it is one, or panic
     /// otherwise
     /// </summary>
     SimpleSignature AsSimple();
-    /// <summary>
-    /// Convert this signature into a simple signature if it is one, or return
-    /// `None` otherwise
-    /// </summary>
-    SimpleSignature? AsSimpleOpt();
     /// <summary>
     /// Check if this signature is a move authenticator
     /// </summary>
@@ -53280,18 +53280,6 @@ public class UserSignature : IUserSignature, IDisposable {
     
     
     /// <summary>
-    /// Convert this signature into a move authenticator if it is one, or return
-    /// `None` otherwise
-    /// </summary>
-    public MoveAuthenticator? AsMoveAuthenticatorOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
     /// Convert this signature into a multisig aggregated signature if it is
     /// one, or panic otherwise
     /// </summary>
@@ -53304,13 +53292,49 @@ public class UserSignature : IUserSignature, IDisposable {
     
     
     /// <summary>
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
+    /// </summary>
+    public MoveAuthenticator? AsOptMoveAuthenticator() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveAuthenticator.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
     /// Convert this signature into a multisig aggregated signature if it is
     /// one, or return `None` otherwise
     /// </summary>
-    public MultisigAggregatedSignature? AsMultisigOpt() {
+    public MultisigAggregatedSignature? AsOptMultisig() {
         return CallWithPointer(thisPtr => FfiConverterOptionalTypeMultisigAggregatedSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
+    /// </summary>
+    public PasskeyAuthenticator? AsOptPasskeyAuthenticator() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyAuthenticator.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    /// <summary>
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
+    /// </summary>
+    public SimpleSignature? AsOptSimple() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSimpleSignature.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple(thisPtr,  ref _status)
 )));
     }
     
@@ -53328,18 +53352,6 @@ public class UserSignature : IUserSignature, IDisposable {
     
     
     /// <summary>
-    /// Convert this signature into a passkey authenticator if it is one, or
-    /// return `None` otherwise
-    /// </summary>
-    public PasskeyAuthenticator? AsPasskeyAuthenticatorOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypePasskeyAuthenticator.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
     /// Convert this signature into a simple signature if it is one, or panic
     /// otherwise
     /// </summary>
@@ -53347,18 +53359,6 @@ public class UserSignature : IUserSignature, IDisposable {
         return CallWithPointer(thisPtr => FfiConverterTypeSimpleSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    /// <summary>
-    /// Convert this signature into a simple signature if it is one, or return
-    /// `None` otherwise
-    /// </summary>
-    public SimpleSignature? AsSimpleOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeSimpleSignature.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(thisPtr,  ref _status)
 )));
     }
     

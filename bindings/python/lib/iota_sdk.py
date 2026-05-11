@@ -1735,19 +1735,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519() != 8241:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt() != 28021:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519() != 6833:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey() != 49124:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1() != 25680:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1() != 28777:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey() != 10099:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt() != 25901:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1() != 52073:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt() != 40194:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1() != 38170:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt() != 28963:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519() != 1939:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1761,19 +1761,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519() != 49594:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey() != 15404:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1() != 1768:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1() != 43142:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey() != 7851:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt() != 39077:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1() != 49085:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt() != 26984:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1() != 57510:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt() != 12419:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519() != 18913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1833,9 +1833,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package() != 53463:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt() != 8956:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct() != 11967:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package() != 11147:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1861,9 +1861,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct() != 1681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package() != 40585:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1873,15 +1873,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 13454:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 12290:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 59703:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 36165:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address() != 10677:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object() != 12202:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared() != 4868:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 29299:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 50412:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 32708:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2331,19 +2331,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 15704:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 59885:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 28431:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 59107:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator() != 19529:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig() != 42115:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator() != 26798:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple() != 56965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 45173:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 48689:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 46116:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 31595:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 60222:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6974,41 +6974,41 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_ed25519.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7066,41 +7066,41 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_ed25519.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7418,16 +7418,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7652,16 +7652,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7733,31 +7733,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10720,41 +10720,41 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15189,27 +15189,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmember_weight.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_ed25519_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_ed25519.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_passkey.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256k1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_opt_secp256r1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_passkey_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256k1_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_as_secp256r1_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_ed25519.restype = ctypes.c_uint16
@@ -15228,27 +15228,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_ed25519.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_passkey.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256k1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_opt_secp256r1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_passkey_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256k1_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_secp256r1_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_ed25519.restype = ctypes.c_uint16
@@ -15336,12 +15336,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_version.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_opt_struct.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package.restype = ctypes.c_uint16
@@ -15378,12 +15378,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_opt_struct.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package.restype = ctypes.c_uint16
@@ -15396,21 +15396,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_address_or_object.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_object.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_opt_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address.restype = ctypes.c_uint16
@@ -16083,27 +16083,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_move_authenticator.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_multisig.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_passkey_authenticator.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_opt_simple.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator.restype = ctypes.c_uint16
@@ -44117,19 +44117,19 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
 
     def as_ed25519(self, ):
         raise NotImplementedError
-    def as_ed25519_opt(self, ):
+    def as_opt_ed25519(self, ):
+        raise NotImplementedError
+    def as_opt_passkey(self, ):
+        raise NotImplementedError
+    def as_opt_secp256k1(self, ):
+        raise NotImplementedError
+    def as_opt_secp256r1(self, ):
         raise NotImplementedError
     def as_passkey(self, ):
         raise NotImplementedError
-    def as_passkey_opt(self, ):
-        raise NotImplementedError
     def as_secp256k1(self, ):
         raise NotImplementedError
-    def as_secp256k1_opt(self, ):
-        raise NotImplementedError
     def as_secp256r1(self, ):
-        raise NotImplementedError
-    def as_secp256r1_opt(self, ):
         raise NotImplementedError
     def is_ed25519(self, ):
         raise NotImplementedError
@@ -44209,9 +44209,36 @@ class MultisigMemberPublicKey():
 
 
 
-    def as_ed25519_opt(self, ) -> "typing.Optional[Ed25519PublicKey]":
+    def as_opt_ed25519(self, ) -> "typing.Optional[Ed25519PublicKey]":
         return _UniffiConverterOptionalTypeEd25519PublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_ed25519_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_ed25519,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_passkey(self, ) -> "typing.Optional[PasskeyPublicKey]":
+        return _UniffiConverterOptionalTypePasskeyPublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_passkey,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_secp256k1(self, ) -> "typing.Optional[Secp256k1PublicKey]":
+        return _UniffiConverterOptionalTypeSecp256k1PublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256k1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_secp256r1(self, ) -> "typing.Optional[Secp256r1PublicKey]":
+        return _UniffiConverterOptionalTypeSecp256r1PublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_opt_secp256r1,self._uniffi_clone_pointer(),)
         )
 
 
@@ -44227,15 +44254,6 @@ class MultisigMemberPublicKey():
 
 
 
-    def as_passkey_opt(self, ) -> "typing.Optional[PasskeyPublicKey]":
-        return _UniffiConverterOptionalTypePasskeyPublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_passkey_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_secp256k1(self, ) -> "Secp256k1PublicKey":
         return _UniffiConverterTypeSecp256k1PublicKey.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1,self._uniffi_clone_pointer(),)
@@ -44245,27 +44263,9 @@ class MultisigMemberPublicKey():
 
 
 
-    def as_secp256k1_opt(self, ) -> "typing.Optional[Secp256k1PublicKey]":
-        return _UniffiConverterOptionalTypeSecp256k1PublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256k1_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_secp256r1(self, ) -> "Secp256r1PublicKey":
         return _UniffiConverterTypeSecp256r1PublicKey.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def as_secp256r1_opt(self, ) -> "typing.Optional[Secp256r1PublicKey]":
-        return _UniffiConverterOptionalTypeSecp256r1PublicKey.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_as_secp256r1_opt,self._uniffi_clone_pointer(),)
         )
 
 
@@ -44392,19 +44392,19 @@ class MultisigMemberSignatureProtocol(typing.Protocol):
 
     def as_ed25519(self, ):
         raise NotImplementedError
-    def as_ed25519_opt(self, ):
+    def as_opt_ed25519(self, ):
+        raise NotImplementedError
+    def as_opt_passkey(self, ):
+        raise NotImplementedError
+    def as_opt_secp256k1(self, ):
+        raise NotImplementedError
+    def as_opt_secp256r1(self, ):
         raise NotImplementedError
     def as_passkey(self, ):
         raise NotImplementedError
-    def as_passkey_opt(self, ):
-        raise NotImplementedError
     def as_secp256k1(self, ):
         raise NotImplementedError
-    def as_secp256k1_opt(self, ):
-        raise NotImplementedError
     def as_secp256r1(self, ):
-        raise NotImplementedError
-    def as_secp256r1_opt(self, ):
         raise NotImplementedError
     def is_ed25519(self, ):
         raise NotImplementedError
@@ -44471,9 +44471,36 @@ class MultisigMemberSignature():
 
 
 
-    def as_ed25519_opt(self, ) -> "typing.Optional[Ed25519Signature]":
+    def as_opt_ed25519(self, ) -> "typing.Optional[Ed25519Signature]":
         return _UniffiConverterOptionalTypeEd25519Signature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_ed25519_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_ed25519,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_passkey(self, ) -> "typing.Optional[PasskeyAuthenticator]":
+        return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_passkey,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_secp256k1(self, ) -> "typing.Optional[Secp256k1Signature]":
+        return _UniffiConverterOptionalTypeSecp256k1Signature.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256k1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_secp256r1(self, ) -> "typing.Optional[Secp256r1Signature]":
+        return _UniffiConverterOptionalTypeSecp256r1Signature.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_opt_secp256r1,self._uniffi_clone_pointer(),)
         )
 
 
@@ -44489,15 +44516,6 @@ class MultisigMemberSignature():
 
 
 
-    def as_passkey_opt(self, ) -> "typing.Optional[PasskeyAuthenticator]":
-        return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_passkey_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_secp256k1(self, ) -> "Secp256k1Signature":
         return _UniffiConverterTypeSecp256k1Signature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1,self._uniffi_clone_pointer(),)
@@ -44507,27 +44525,9 @@ class MultisigMemberSignature():
 
 
 
-    def as_secp256k1_opt(self, ) -> "typing.Optional[Secp256k1Signature]":
-        return _UniffiConverterOptionalTypeSecp256k1Signature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256k1_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_secp256r1(self, ) -> "Secp256r1Signature":
         return _UniffiConverterTypeSecp256r1Signature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def as_secp256r1_opt(self, ) -> "typing.Optional[Secp256r1Signature]":
-        return _UniffiConverterOptionalTypeSecp256r1Signature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_as_secp256r1_opt,self._uniffi_clone_pointer(),)
         )
 
 
@@ -45471,13 +45471,13 @@ class ObjectDataProtocol(typing.Protocol):
     ```
     """
 
-    def as_package_opt(self, ):
+    def as_opt_package(self, ):
         """
         Try to interpret this object as a `MovePackage`
         """
 
         raise NotImplementedError
-    def as_struct_opt(self, ):
+    def as_opt_struct(self, ):
         """
         Try to interpret this object as a `MoveStruct`
         """
@@ -45562,26 +45562,26 @@ class ObjectData():
 
 
 
-    def as_package_opt(self, ) -> "typing.Optional[MovePackage]":
+    def as_opt_package(self, ) -> "typing.Optional[MovePackage]":
         """
         Try to interpret this object as a `MovePackage`
         """
 
         return _UniffiConverterOptionalTypeMovePackage.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_package,self._uniffi_clone_pointer(),)
         )
 
 
 
 
 
-    def as_struct_opt(self, ) -> "typing.Optional[MoveStruct]":
+    def as_opt_struct(self, ) -> "typing.Optional[MoveStruct]":
         """
         Try to interpret this object as a `MoveStruct`
         """
 
         return _UniffiConverterOptionalTypeMoveStruct.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_opt_struct,self._uniffi_clone_pointer(),)
         )
 
 
@@ -46178,9 +46178,9 @@ class ObjectTypeProtocol(typing.Protocol):
     Type of an IOTA object
     """
 
-    def as_struct(self, ):
+    def as_opt_struct(self, ):
         raise NotImplementedError
-    def as_struct_opt(self, ):
+    def as_struct(self, ):
         raise NotImplementedError
     def is_package(self, ):
         raise NotImplementedError
@@ -46231,18 +46231,18 @@ class ObjectType():
 
 
 
-    def as_struct(self, ) -> "StructTag":
-        return _UniffiConverterTypeStructTag.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct,self._uniffi_clone_pointer(),)
+    def as_opt_struct(self, ) -> "typing.Optional[StructTag]":
+        return _UniffiConverterOptionalTypeStructTag.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_opt_struct,self._uniffi_clone_pointer(),)
         )
 
 
 
 
 
-    def as_struct_opt(self, ) -> "typing.Optional[StructTag]":
-        return _UniffiConverterOptionalTypeStructTag.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt,self._uniffi_clone_pointer(),)
+    def as_struct(self, ) -> "StructTag":
+        return _UniffiConverterTypeStructTag.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct,self._uniffi_clone_pointer(),)
         )
 
 
@@ -46358,22 +46358,29 @@ class OwnerProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def as_address_opt(self, ):
-        """
-        Convert this owner into an address owner if it is one, or return `None`
-        otherwise
-        """
-
-        raise NotImplementedError
     def as_object(self, ):
         """
         Convert this owner into an object owner if it is one, or panic otherwise
         """
 
         raise NotImplementedError
-    def as_object_opt(self, ):
+    def as_opt_address(self, ):
+        """
+        Convert this owner into an address owner if it is one, or return `None`
+        otherwise
+        """
+
+        raise NotImplementedError
+    def as_opt_object(self, ):
         """
         Convert this owner into an object owner if it is one, or return `None`
+        otherwise
+        """
+
+        raise NotImplementedError
+    def as_opt_shared(self, ):
+        """
+        Convert this owner into a shared owner if it is one, or return `None`
         otherwise
         """
 
@@ -46381,13 +46388,6 @@ class OwnerProtocol(typing.Protocol):
     def as_shared(self, ):
         """
         Convert this owner into a shared owner if it is one, or panic otherwise
-        """
-
-        raise NotImplementedError
-    def as_shared_opt(self, ):
-        """
-        Convert this owner into a shared owner if it is one, or return `None`
-        otherwise
         """
 
         raise NotImplementedError
@@ -46519,20 +46519,6 @@ class Owner():
 
 
 
-    def as_address_opt(self, ) -> "typing.Optional[Address]":
-        """
-        Convert this owner into an address owner if it is one, or return `None`
-        otherwise
-        """
-
-        return _UniffiConverterOptionalTypeAddress.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_object(self, ) -> "ObjectId":
         """
         Convert this owner into an object owner if it is one, or panic otherwise
@@ -46546,14 +46532,42 @@ class Owner():
 
 
 
-    def as_object_opt(self, ) -> "typing.Optional[ObjectId]":
+    def as_opt_address(self, ) -> "typing.Optional[Address]":
+        """
+        Convert this owner into an address owner if it is one, or return `None`
+        otherwise
+        """
+
+        return _UniffiConverterOptionalTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_object(self, ) -> "typing.Optional[ObjectId]":
         """
         Convert this owner into an object owner if it is one, or return `None`
         otherwise
         """
 
         return _UniffiConverterOptionalTypeObjectId.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_object,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_shared(self, ) -> "typing.Optional[Version]":
+        """
+        Convert this owner into a shared owner if it is one, or return `None`
+        otherwise
+        """
+
+        return _UniffiConverterOptionalTypeVersion.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_opt_shared,self._uniffi_clone_pointer(),)
         )
 
 
@@ -46567,20 +46581,6 @@ class Owner():
 
         return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def as_shared_opt(self, ) -> "typing.Optional[Version]":
-        """
-        Convert this owner into a shared owner if it is one, or return `None`
-        otherwise
-        """
-
-        return _UniffiConverterOptionalTypeVersion.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt,self._uniffi_clone_pointer(),)
         )
 
 
@@ -55214,13 +55214,6 @@ class UserSignatureProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def as_move_authenticator_opt(self, ):
-        """
-        Convert this signature into a move authenticator if it is one, or return
-        `None` otherwise
-        """
-
-        raise NotImplementedError
     def as_multisig(self, ):
         """
         Convert this signature into a multisig aggregated signature if it is
@@ -55228,10 +55221,31 @@ class UserSignatureProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def as_multisig_opt(self, ):
+    def as_opt_move_authenticator(self, ):
+        """
+        Convert this signature into a move authenticator if it is one, or return
+        `None` otherwise
+        """
+
+        raise NotImplementedError
+    def as_opt_multisig(self, ):
         """
         Convert this signature into a multisig aggregated signature if it is
         one, or return `None` otherwise
+        """
+
+        raise NotImplementedError
+    def as_opt_passkey_authenticator(self, ):
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        return `None` otherwise
+        """
+
+        raise NotImplementedError
+    def as_opt_simple(self, ):
+        """
+        Convert this signature into a simple signature if it is one, or return
+        `None` otherwise
         """
 
         raise NotImplementedError
@@ -55242,24 +55256,10 @@ class UserSignatureProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def as_passkey_authenticator_opt(self, ):
-        """
-        Convert this signature into a passkey authenticator if it is one, or
-        return `None` otherwise
-        """
-
-        raise NotImplementedError
     def as_simple(self, ):
         """
         Convert this signature into a simple signature if it is one, or panic
         otherwise
-        """
-
-        raise NotImplementedError
-    def as_simple_opt(self, ):
-        """
-        Convert this signature into a simple signature if it is one, or return
-        `None` otherwise
         """
 
         raise NotImplementedError
@@ -55413,20 +55413,6 @@ class UserSignature():
 
 
 
-    def as_move_authenticator_opt(self, ) -> "typing.Optional[MoveAuthenticator]":
-        """
-        Convert this signature into a move authenticator if it is one, or return
-        `None` otherwise
-        """
-
-        return _UniffiConverterOptionalTypeMoveAuthenticator.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_multisig(self, ) -> "MultisigAggregatedSignature":
         """
         Convert this signature into a multisig aggregated signature if it is
@@ -55441,14 +55427,56 @@ class UserSignature():
 
 
 
-    def as_multisig_opt(self, ) -> "typing.Optional[MultisigAggregatedSignature]":
+    def as_opt_move_authenticator(self, ) -> "typing.Optional[MoveAuthenticator]":
+        """
+        Convert this signature into a move authenticator if it is one, or return
+        `None` otherwise
+        """
+
+        return _UniffiConverterOptionalTypeMoveAuthenticator.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_move_authenticator,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_multisig(self, ) -> "typing.Optional[MultisigAggregatedSignature]":
         """
         Convert this signature into a multisig aggregated signature if it is
         one, or return `None` otherwise
         """
 
         return _UniffiConverterOptionalTypeMultisigAggregatedSignature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_multisig,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_passkey_authenticator(self, ) -> "typing.Optional[PasskeyAuthenticator]":
+        """
+        Convert this signature into a passkey authenticator if it is one, or
+        return `None` otherwise
+        """
+
+        return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_passkey_authenticator,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_opt_simple(self, ) -> "typing.Optional[SimpleSignature]":
+        """
+        Convert this signature into a simple signature if it is one, or return
+        `None` otherwise
+        """
+
+        return _UniffiConverterOptionalTypeSimpleSignature.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_opt_simple,self._uniffi_clone_pointer(),)
         )
 
 
@@ -55469,20 +55497,6 @@ class UserSignature():
 
 
 
-    def as_passkey_authenticator_opt(self, ) -> "typing.Optional[PasskeyAuthenticator]":
-        """
-        Convert this signature into a passkey authenticator if it is one, or
-        return `None` otherwise
-        """
-
-        return _UniffiConverterOptionalTypePasskeyAuthenticator.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
     def as_simple(self, ) -> "SimpleSignature":
         """
         Convert this signature into a simple signature if it is one, or panic
@@ -55491,20 +55505,6 @@ class UserSignature():
 
         return _UniffiConverterTypeSimpleSignature.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def as_simple_opt(self, ) -> "typing.Optional[SimpleSignature]":
-        """
-        Convert this signature into a simple signature if it is one, or return
-        `None` otherwise
-        """
-
-        return _UniffiConverterOptionalTypeSimpleSignature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt,self._uniffi_clone_pointer(),)
         )
 
 
