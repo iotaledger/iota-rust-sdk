@@ -173,14 +173,14 @@ pub enum ObjectData {
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 
-    pub fn object_type(&self) -> Option<&MoveObjectType> {
+    pub fn as_opt_object_type(&self) -> Option<&MoveObjectType> {
         match self {
             Self::Struct(m) => Some(m.object_type()),
             Self::Package(_) => None,
         }
     }
 
-    pub fn struct_tag(&self) -> Option<StructTag> {
+    pub fn as_opt_struct_tag(&self) -> Option<StructTag> {
         match self {
             Self::Struct(m) => Some(m.struct_tag().clone()),
             Self::Package(_) => None,
