@@ -24425,6 +24425,22 @@ public convenience init(sender: Address) {
 
     
     /**
+     * Create a transaction builder from a programmable transaction.
+     *
+     * The returned builder has the original inputs and commands but no
+     * sender, gas payment, sponsor, or expiration; the sender defaults to
+     * the zero address and must be set via `set_sender` before `finish`
+     * is called.
+     */
+public static func fromProgrammableTransaction(ptb: ProgrammableTransaction) -> TransactionBuilder  {
+    return try!  FfiConverterTypeTransactionBuilder_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_programmable_transaction(
+        FfiConverterTypeProgrammableTransaction_lower(ptb),$0
+    )
+})
+}
+    
+    /**
      * Reconstruct a transaction builder from a finalized transaction.
      * Calling `finish` on the returned builder produces a transaction equal
      * to the input.
@@ -50438,6 +50454,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_programmable_transaction() != 64314) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction() != 19800) {

@@ -20,7 +20,7 @@ use crate::{
         move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
-        transaction::Transaction,
+        transaction::{ProgrammableTransaction, Transaction},
     },
 };
 
@@ -68,6 +68,17 @@ impl TransactionBuilder {
             iota_sdk::transaction_builder::TransactionBuilder::try_from(transaction.0.clone())?
                 .into(),
         ))
+    }
+
+    /// Create a transaction builder from a programmable transaction.
+    ///
+    /// The returned builder has the original inputs and commands but no
+    /// sender, gas payment, sponsor, or expiration; the sender defaults to
+    /// the zero address and must be set via `set_sender` before `finish`
+    /// is called.
+    #[uniffi::constructor]
+    pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
+        Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
     }
 
     pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {

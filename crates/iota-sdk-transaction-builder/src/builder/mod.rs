@@ -216,6 +216,56 @@ impl TransactionBuilder {
     }
 }
 
+impl From<ProgrammableTransaction> for TransactionBuilder {
+    /// Create a [`TransactionBuilder`] from a [`ProgrammableTransaction`].
+    ///
+    /// The returned builder has the original inputs and commands but no
+    /// sender, gas payment, sponsor, or expiration; the sender defaults to
+    /// [`Address::ZERO`] and must be set with [`set_sender`] before
+    /// [`finish`](TransactionBuilder::finish) is called.
+    fn from(ptb: ProgrammableTransaction) -> Self {
+        let ProgrammableTransaction {
+            inputs: tx_inputs,
+            commands: tx_commands,
+        } = ptb;
+
+        // Inputs are inserted with keys 0..n preserving their original index,
+        // so that `Argument::Input(i)` referenced from the commands remains
+        // valid without remapping.
+        let inputs = tx_inputs
+            .into_iter()
+            .enumerate()
+            .map(|(i, inp)| {
+                (
+                    i,
+                    Input {
+                        kind: InputKind::Input(inp),
+                        is_gas: false,
+                    },
+                )
+            })
+            .collect();
+
+        let commands = tx_commands.into_iter().map(Command::from).collect();
+
+        TransactionBuilder {
+            data: TransactionBuildData {
+                inputs,
+                commands,
+                gas_budget: Default::default(),
+                gas_price: Default::default(),
+                sender: Address::ZERO,
+                sponsor: Default::default(),
+                expiration: Default::default(),
+                assigned_results: Default::default(),
+                gas_station_data: Default::default(),
+            },
+            client: (),
+            last_command: PhantomData,
+        }
+    }
+}
+
 impl TryFrom<Transaction> for TransactionBuilder {
     type Error = Error;
 
@@ -236,31 +286,18 @@ impl TryFrom<Transaction> for TransactionBuilder {
         else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
-        let TransactionKind::Programmable(ProgrammableTransaction {
-            inputs: tx_inputs,
-            commands: tx_commands,
-        }) = kind
-        else {
+        let TransactionKind::Programmable(ptb) = kind else {
             return Err(Error::UnsupportedTransactionKind);
         };
 
-        // Non-gas inputs are inserted with keys 0..n preserving their original
-        // index, so that `Argument::Input(i)` remains valid without remapping.
-        // Gas inputs follow with subsequent keys; BTreeMap ordering ensures
-        // `finish` re-emits the inputs and gas vectors in the original order.
-        let mut inputs = BTreeMap::new();
-        for (i, inp) in tx_inputs.into_iter().enumerate() {
-            inputs.insert(
-                i,
-                Input {
-                    kind: InputKind::Input(inp),
-                    is_gas: false,
-                },
-            );
-        }
-        let gas_offset = inputs.len();
+        let mut builder = TransactionBuilder::from(ptb);
+
+        // Gas inputs follow the programmable inputs with subsequent keys;
+        // BTreeMap ordering ensures `finish` re-emits the inputs and gas
+        // vectors in the original order.
+        let gas_offset = builder.data.inputs.len();
         for (i, obj_ref) in gas_payment.objects.into_iter().enumerate() {
-            inputs.insert(
+            builder.data.inputs.insert(
                 gas_offset + i,
                 Input {
                     kind: InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
@@ -269,25 +306,13 @@ impl TryFrom<Transaction> for TransactionBuilder {
             );
         }
 
-        let commands = tx_commands.into_iter().map(Command::from).collect();
+        builder.data.sender = sender;
+        builder.data.sponsor = (gas_payment.owner != sender).then_some(gas_payment.owner);
+        builder.data.gas_budget = Some(gas_payment.budget);
+        builder.data.gas_price = Some(gas_payment.price);
+        builder.data.expiration = expiration;
 
-        let sponsor = (gas_payment.owner != sender).then_some(gas_payment.owner);
-
-        Ok(TransactionBuilder {
-            data: TransactionBuildData {
-                inputs,
-                commands,
-                gas_budget: Some(gas_payment.budget),
-                gas_price: Some(gas_payment.price),
-                sender,
-                sponsor,
-                expiration,
-                assigned_results: Default::default(),
-                gas_station_data: Default::default(),
-            },
-            client: (),
-            last_command: PhantomData,
-        })
+        Ok(builder)
     }
 }
 

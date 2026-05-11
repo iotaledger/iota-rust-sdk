@@ -4013,6 +4013,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6746,6 +6748,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_programmable_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
@@ -8740,6 +8744,8 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(`ptr`: Poin
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -8753,8 +8759,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_programmabletransaction_new(`inputs`: RustBuffer.ByValue,`commands`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9433,6 +9437,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_programmable_transaction(`ptb`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_transaction(`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -14841,6 +14847,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_programmable_transaction() != 64314.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction() != 19800.toShort()) {
@@ -42898,7 +42907,7 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_programmabletransaction(ptr, status)
                 }
             }
         }
@@ -51966,6 +51975,24 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     companion object {
+        
+    /**
+     * Create a transaction builder from a programmable transaction.
+     *
+     * The returned builder has the original inputs and commands but no
+     * sender, gas payment, sponsor, or expiration; the sender defaults to
+     * the zero address and must be set via `set_sender` before `finish`
+     * is called.
+     */ fun `fromProgrammableTransaction`(`ptb`: ProgrammableTransaction): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_programmable_transaction(
+        FfiConverterTypeProgrammableTransaction.lower(`ptb`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Reconstruct a transaction builder from a finalized transaction.

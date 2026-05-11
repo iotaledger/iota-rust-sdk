@@ -12616,6 +12616,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_programmable_transaction()
+	})
+	if checksum != 64314 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_programmable_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_from_transaction()
 	})
 	if checksum != 19800 {
@@ -33945,6 +33954,18 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 	}))
 }
 
+
+// Create a transaction builder from a programmable transaction.
+//
+// The returned builder has the original inputs and commands but no
+// sender, gas payment, sponsor, or expiration; the sender defaults to
+// the zero address and must be set via `set_sender` before `finish`
+// is called.
+func TransactionBuilderFromProgrammableTransaction(ptb *ProgrammableTransaction) *TransactionBuilder {
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_from_programmable_transaction(FfiConverterProgrammableTransactionINSTANCE.Lower(ptb),_uniffiStatus)
+	}))
+}
 
 // Reconstruct a transaction builder from a finalized transaction.
 // Calling `finish` on the returned builder produces a transaction equal
