@@ -221,7 +221,8 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
     ///
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
-    /// [`Address::ZERO`] and must be set with [`set_sender`] before
+    /// [`Address::ZERO`] and must be set with
+    /// [`set_sender`](TransactionBuilder::set_sender) before
     /// [`finish`](TransactionBuilder::finish) is called.
     fn from(ptb: ProgrammableTransaction) -> Self {
         let ProgrammableTransaction {
