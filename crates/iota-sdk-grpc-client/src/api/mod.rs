@@ -7,8 +7,6 @@
 //! Proto types are exposed directly with lazy conversion methods, allowing
 //! users to convert only what they need to SDK types.
 
-use iota_types::CheckpointSequenceNumber;
-
 mod common;
 pub mod execution;
 pub mod ledger;
@@ -22,6 +20,7 @@ pub(crate) use common::{
     field_mask_with_default, proto_object_id, saturating_usize_to_u32,
 };
 pub use iota_grpc_types::read_masks::*;
+use iota_types::CheckpointSequenceNumber;
 pub use metadata::MetadataEnvelope;
 
 /// An item from a checkpoint data stream.

@@ -3,18 +3,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Proto build tool for generating gRPC types with field constants
+mod codegen;
+mod context;
+mod dependency_graph;
+mod ident;
+mod message_graph;
 
 use std::{collections::BTreeMap, path::PathBuf};
 
 use crate::{
     codegen::generate_fields::FileDescriptorWithPackageVersion, message_graph::DescriptorGraph,
 };
-
-mod codegen;
-mod context;
-mod dependency_graph;
-mod ident;
-mod message_graph;
 
 fn main() {
     let root_dir = PathBuf::from(std::env!("CARGO_MANIFEST_DIR"));
