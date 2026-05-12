@@ -113,7 +113,7 @@ jobs:
 
   sdist:
     name: Build a source distribution (.tar.gz)
-    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'python')) || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-python-sdk')) || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

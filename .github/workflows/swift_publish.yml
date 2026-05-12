@@ -39,7 +39,7 @@ jobs:
 
   prepare-libraries-archives:
     name: Prepare libraries archives
-    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'iota-swift-sdk')) || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-swift-sdk')) || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         include:
