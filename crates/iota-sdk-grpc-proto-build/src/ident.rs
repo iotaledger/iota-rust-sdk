@@ -45,35 +45,6 @@ pub fn to_upper_camel(s: impl AsRef<str>) -> String {
     sanitize_identifier(s.as_ref().to_upper_camel_case())
 }
 
-/// Strip an enum's type name from the prefix of an enum value.
-///
-/// This function assumes that both have been formatted to Rust's
-/// upper camel case naming conventions.
-///
-/// It also tries to handle cases where the stripped name would be
-/// invalid - for example, if it were to begin with a number.
-///
-/// If the stripped name is `"Self"`, it will be replaced with `"Self_"`
-#[allow(unused)]
-pub fn strip_enum_prefix(prefix: &str, name: &str) -> String {
-    let stripped = name.strip_prefix(prefix).unwrap_or(name);
-
-    // If the next character after the stripped prefix is not
-    // uppercase, then it means that we didn't have a true prefix -
-    // for example, "Foo" should not be stripped from "Foobar".
-    let stripped = if stripped
-        .chars()
-        .next()
-        .map(char::is_uppercase)
-        .unwrap_or(false)
-    {
-        stripped
-    } else {
-        name
-    };
-    sanitize_identifier(stripped)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -251,16 +222,5 @@ mod tests {
         assert_eq!("FuzzBuster", &to_upper_camel("fuzzBuster"));
         assert_eq!("FuzzBuster", &to_upper_camel("FuzzBuster"));
         assert_eq!("Self_", &to_upper_camel("self"));
-    }
-
-    #[test]
-    fn test_strip_enum_prefix() {
-        assert_eq!(strip_enum_prefix("Foo", "FooBar"), "Bar");
-        assert_eq!(strip_enum_prefix("Foo", "Foobar"), "Foobar");
-        assert_eq!(strip_enum_prefix("Foo", "Foo"), "Foo");
-        assert_eq!(strip_enum_prefix("Foo", "Bar"), "Bar");
-        assert_eq!(strip_enum_prefix("Foo", "Foo1"), "Foo1");
-        assert_eq!(strip_enum_prefix("Foo", "FooBar"), "Bar");
-        assert_eq!(strip_enum_prefix("Foo", "FooSelf"), "Self_");
     }
 }

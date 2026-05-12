@@ -11,7 +11,6 @@ use crate::{
 };
 
 mod codegen;
-mod comments;
 mod context;
 mod dependency_graph;
 mod ident;
