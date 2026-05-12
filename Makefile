@@ -80,6 +80,10 @@ clean-all: clean ## Clean all generated files, including those ignored by Git. F
 install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
 	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
 
+.PHONY: install-uniffi-bindgen-cs
+install-uniffi-bindgen-cs: ## Install uniffi-bindgen-cs
+	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+
 .PHONY: bindings
 bindings: ## Build all bindings
 	@$(MAKE) go

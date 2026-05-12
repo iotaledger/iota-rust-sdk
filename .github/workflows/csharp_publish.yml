@@ -25,6 +25,16 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name || github.ref }}
 
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: csharp-source
+
+      - name: Install uniffi-bindgen-cs
+        run: make install-uniffi-bindgen-cs
+
+      - name: Generate C# bindings
+        run: make csharp
+
       - name: Archive C# SDK source
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
@@ -35,7 +45,7 @@ jobs:
 
   prepare-libraries-archives:
     name: Prepare libraries archives
-    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'iota-csharp-sdk')) || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-csharp-sdk')) || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         include:
@@ -76,6 +86,10 @@ jobs:
       - name: Install gcc-aarch64-linux-gnu
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: csharp-${{ matrix.target }}
 
       - name: Build ${{ matrix.os }} ${{ matrix.target }} library
         if: matrix.os == 'macos-latest'
