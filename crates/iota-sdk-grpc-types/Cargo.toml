@@ -21,3 +21,6 @@ tonic-prost = "0.14"
 
 # internal dependencies
 iota-types = { workspace = true, features = ["serde"] }
+
+[dev-dependencies]
+base64ct = { workspace = true, features = ["alloc"] }
