@@ -75,6 +75,7 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 cynic.workspace = true
 eyre.workspace = true
+futures.workspace = true
 hex.workspace = true
 rand.workspace = true
 reqwest = { workspace = true, features = ["rustls-tls", "json"] }
