@@ -118,10 +118,8 @@ impl MultisigMember {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigCommittee {
     /// A list of committee members and their corresponding weight.
-    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     members: Vec<MultisigMember>,
     /// If the total weight of the public keys corresponding to verified
     /// signatures is larger than threshold, the Multisig is verified.
@@ -238,13 +236,11 @@ impl MultisigCommittee {
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(Debug, Clone)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
     /// The signatures must be in the same order as they are listed in the
     /// committee.
-    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     signatures: Vec<MultisigMemberSignature>,
     /// A bitmap that indicates the position of which public key the signature
     /// should be authenticated with.
@@ -255,10 +251,6 @@ pub struct MultisigAggregatedSignature {
     /// A bytes representation of [struct MultiSig]. This helps with
     /// implementing [trait AsRef<[u8]>].
     #[cfg(feature = "serde")]
-    #[cfg_attr(
-        feature = "proptest",
-        strategy(proptest::strategy::Just(OnceCell::new()))
-    )]
     bytes: OnceCell<Vec<u8>>,
 }
 
@@ -472,6 +464,60 @@ impl From<SimpleSignature> for MultisigMemberSignature {
             SimpleSignature::Secp256k1 { signature, .. } => Self::Secp256k1(signature),
             SimpleSignature::Secp256r1 { signature, .. } => Self::Secp256r1(signature),
         }
+    }
+}
+
+#[cfg(feature = "proptest")]
+impl proptest::arbitrary::Arbitrary for MultisigCommittee {
+    type Parameters = ();
+    type Strategy = proptest::strategy::BoxedStrategy<Self>;
+
+    fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
+        use proptest::{collection::vec, prelude::*};
+
+        vec(
+            (any::<PublicKey>(), 1u8..=WeightUnit::MAX),
+            1..=MAX_COMMITTEE_SIZE,
+        )
+        .prop_flat_map(|raw_members| {
+            let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
+            for (public_key, weight) in raw_members {
+                if !members.iter().any(|m| m.public_key == public_key) {
+                    members.push(MultisigMember { public_key, weight });
+                }
+            }
+            let sum: ThresholdUnit = members.iter().map(|m| m.weight as ThresholdUnit).sum();
+            (Just(members), 1..=sum)
+        })
+        .prop_map(|(members, threshold)| Self { members, threshold })
+        .boxed()
+    }
+}
+
+#[cfg(feature = "proptest")]
+impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
+    type Parameters = ();
+    type Strategy = proptest::strategy::BoxedStrategy<Self>;
+
+    fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
+        use proptest::{collection::vec, prelude::*};
+
+        any::<MultisigCommittee>()
+            .prop_flat_map(|committee| {
+                let max_sigs = committee.members.len();
+                (
+                    Just(committee),
+                    vec(any::<MultisigMemberSignature>(), 1..=max_sigs),
+                    0..=MAX_BITMAP_VALUE,
+                )
+            })
+            .prop_map(|(committee, signatures, bitmap)| Self {
+                signatures,
+                bitmap,
+                committee,
+                bytes: OnceCell::new(),
+            })
+            .boxed()
     }
 }
 
