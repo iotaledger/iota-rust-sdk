@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{convert::Infallible, str::FromStr};
+use std::str::FromStr;
 
 use super::{
     Ed25519PublicKey, Ed25519Signature, MultisigAggregatedSignature, PasskeyAuthenticator,
@@ -332,7 +332,7 @@ impl UserSignature {
         }
     }
 
-    pub fn to_public_key(&self) -> Result<PublicKey, Infallible> {
+    pub fn to_public_key(&self) -> Result<PublicKey, InvalidSignatureScheme> {
         match self {
             UserSignature::Simple(simple) => match simple {
                 SimpleSignature::Ed25519 { public_key, .. } => Ok(PublicKey::Ed25519(*public_key)),
@@ -343,12 +343,20 @@ impl UserSignature {
                     Ok(PublicKey::Secp256r1(*public_key))
                 }
             },
-            UserSignature::Multisig(_) => panic!(),
-            UserSignature::ZkLoginAuthenticatorDeprecated => panic!(),
+            // TODO this should maybe work
+            UserSignature::Multisig(_) => {
+                Err(InvalidSignatureScheme(SignatureScheme::Multisig.to_u8()))
+            }
+            UserSignature::ZkLoginAuthenticatorDeprecated => Err(InvalidSignatureScheme(
+                SignatureScheme::ZkLoginAuthenticatorDeprecated.to_u8(),
+            )),
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            UserSignature::MoveAuthenticator(_) => panic!(),
+            // TODO
+            UserSignature::MoveAuthenticator(_) => Err(InvalidSignatureScheme(
+                SignatureScheme::MoveAuthenticator.to_u8(),
+            )),
         }
     }
 }
