@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{convert::Infallible, str::FromStr};
+use std::str::FromStr;
 
 use base64ct::{Base64, Encoding};
 
@@ -10,6 +10,16 @@ use super::{
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
 use crate::Address;
+
+#[derive(Debug, thiserror::Error)]
+pub enum PublicKeyError {
+    #[error("{0}")]
+    Base64(#[from] base64ct::Error),
+    #[error("{0}")]
+    TryFromSlice(#[from] std::array::TryFromSliceError),
+    #[error("Invalid input")]
+    InvalidInput,
+}
 
 // TODO adapt comment
 /// Enum of valid public keys for multisig committee members
@@ -79,32 +89,31 @@ impl PublicKey {
         base64ct::Base64::encode_string(&bytes)
     }
 
-    // TODO infallible
-    pub fn from_base64(s: &str) -> Result<Self, Infallible> {
-        let bytes = Base64::decode_vec(s).unwrap();
+    pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
+        let bytes = Base64::decode_vec(s)?;
 
         match bytes.first() {
             Some(x) => {
                 if x == &(SignatureScheme::Ed25519 as u8) {
-                    let pk = Ed25519PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    let pk = Ed25519PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Ed25519(pk))
                 } else if x == &(SignatureScheme::Secp256k1 as u8) {
-                    let pk = Secp256k1PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    let pk = Secp256k1PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256k1(pk))
                 } else if x == &(SignatureScheme::Secp256r1 as u8) {
-                    let pk = Secp256r1PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    let pk = Secp256r1PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256r1(pk))
+                } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
+                    // TODO this or an error?
+                    Ok(Self::ZkLoginDeprecated)
                 } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
-                    let pk =
-                        PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..]).unwrap());
+                    let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..])?);
                     Ok(Self::Passkey(pk))
                 } else {
-                    panic!()
-                    // Err(FastCryptoError::InvalidInput)
+                    Err(PublicKeyError::InvalidInput)
                 }
             }
-            _ => panic!(),
-            // _ => Err(FastCryptoError::InvalidInput),
+            _ => Err(PublicKeyError::InvalidInput),
         }
     }
 }
@@ -134,7 +143,7 @@ impl From<&PublicKey> for Address {
 }
 
 impl FromStr for PublicKey {
-    type Err = Infallible;
+    type Err = PublicKeyError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Self::from_base64(s)
