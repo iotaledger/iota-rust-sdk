@@ -283,7 +283,9 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
-pub use iota_graphql_client::WaitForTx;
+pub use iota_graphql_client::{
+    DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, TransactionArgument, WaitForTx,
+};
 
 pub use self::{
     builder::{
