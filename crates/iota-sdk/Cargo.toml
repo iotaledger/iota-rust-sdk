@@ -43,6 +43,8 @@ bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
+# gRPC
+grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
 # Types
@@ -55,6 +57,8 @@ proptest = ["types", "iota-types/proptest"]
 [dependencies]
 iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
 iota-graphql-client = { workspace = true, optional = true }
+iota-grpc-client = { workspace = true, optional = true }
+iota-grpc-types = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
 iota-types = { workspace = true, features = ["rand"], optional = true }
 

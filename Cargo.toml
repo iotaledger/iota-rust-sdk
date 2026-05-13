@@ -7,6 +7,9 @@ members = [
   "crates/iota-sdk-ffi",
   "crates/iota-sdk-graphql-client",
   "crates/iota-sdk-graphql-client-build",
+  "crates/iota-sdk-grpc-client",
+  "crates/iota-sdk-grpc-proto-build",
+  "crates/iota-sdk-grpc-types",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
   "crates/iota-sdk/examples/polling-indexer",
@@ -26,12 +29,17 @@ bnum = "0.12.0"
 cynic = "3.7.3"
 derive_more = "2.1.1"
 eyre = "0.6"
+futures = "0.3.29"
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
 hex = "0.4.3"
 paste = "1.0.15"
 primitive-types = { version = "0.14", features = ["impl-serde"] }
+proc-macro2 = "1"
 proptest = { version = "1.6.0", default-features = false }
+prost = "0.14"
+prost-types = "0.14"
+quote = "1"
 rand = "0.8.5"
 rand_core = "0.6.4"
 reqwest = { version = "0.12", default-features = false }
@@ -39,9 +47,11 @@ roaring = { version = "0.11.2", default-features = false }
 serde = "1.0.210"
 serde_json = "1.0.128"
 strum = "0.27.2"
+syn = { version = "2", features = ["full"] }
 test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.40.0"
+tonic = "0.14"
 tracing = "0.1"
 variadics_please = "1.1"
 wasm-bindgen-test = "0.3"
@@ -51,6 +61,9 @@ iota-bcs-schema = { version = "0.0.0", package = "iota-sdk-bcs-schema", path = "
 iota-crypto = { version = "0.0.1-alpha.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
 iota-graphql-client = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
 iota-graphql-client-build = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
+iota-grpc-client = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-client", path = "crates/iota-sdk-grpc-client", default-features = false }
+iota-grpc-proto-build = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-proto-build", path = "crates/iota-sdk-grpc-proto-build", default-features = false }
+iota-grpc-types = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-types", path = "crates/iota-sdk-grpc-types", default-features = false }
 iota-sdk = { version = "3.0.0-alpha.1", package = "iota-sdk", path = "crates/iota-sdk", default-features = false }
 iota-transaction-builder = { version = "0.0.1-alpha.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
 iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
