@@ -404,14 +404,12 @@ impl Eq for MultisigAggregatedSignature {}
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
-// TODO why not a regular signature?
 pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLoginDeprecated,
     Passkey(PasskeyAuthenticator),
-    // TODO Move
 }
 
 impl MultisigMemberSignature {
