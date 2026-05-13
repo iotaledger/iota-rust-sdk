@@ -45,13 +45,15 @@ impl Client {
     /// (with access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
+    /// Uses the default field mask [`LIST_DYNAMIC_FIELDS_READ_MASK`]. Use
+    /// [`list_dynamic_fields_masked`](Self::list_dynamic_fields_masked) to
+    /// specify a custom mask.
+    ///
     /// # Parameters
     ///
     /// - `parent` - The object ID of the parent object.
     /// - `page_size` - Optional maximum number of fields per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Optional field mask. If `None`, uses
-    ///   [`LIST_DYNAMIC_FIELDS_READ_MASK`].
     ///
     /// # Examples
     ///
@@ -63,7 +65,7 @@ impl Client {
     /// let client = Client::new("http://localhost:9000").await?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
-    /// let page = client.list_dynamic_fields(parent, None, None, None).await?;
+    /// let page = client.list_dynamic_fields(parent, None, None).await?;
     /// for field in &page.body().items {
     ///     println!("Dynamic field: {:?}", field);
     /// }
@@ -80,7 +82,7 @@ impl Client {
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .list_dynamic_fields(parent, Some(50), None, None)
+    ///     .list_dynamic_fields(parent, Some(50), None)
     ///     .collect(None)
     ///     .await?;
     /// for field in all.body() {
@@ -90,6 +92,35 @@ impl Client {
     /// # }
     /// ```
     pub fn list_dynamic_fields(
+        &self,
+        parent: ObjectId,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+    ) -> ListDynamicFieldsQuery {
+        self.list_dynamic_fields_internal(parent, page_size.into(), page_token.into(), None)
+    }
+
+    /// List dynamic fields owned by a parent object, with a custom read mask.
+    ///
+    /// See [`list_dynamic_fields`](Self::list_dynamic_fields) for behavior.
+    /// Use [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+    /// constants with [`ReadMask::from`] for field selection.
+    pub fn list_dynamic_fields_masked(
+        &self,
+        parent: ObjectId,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+        read_mask: ReadMask<'_>,
+    ) -> ListDynamicFieldsQuery {
+        self.list_dynamic_fields_internal(
+            parent,
+            page_size.into(),
+            page_token.into(),
+            Some(read_mask),
+        )
+    }
+
+    fn list_dynamic_fields_internal(
         &self,
         parent: ObjectId,
         page_size: Option<u32>,

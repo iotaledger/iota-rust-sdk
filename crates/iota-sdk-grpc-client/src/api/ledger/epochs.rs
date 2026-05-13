@@ -20,15 +20,35 @@ impl Client {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type with fields populated according to the
-    /// `read_mask`.
+    /// default field mask [`GET_EPOCH_READ_MASK`]. Use
+    /// [`get_epoch_masked`](Self::get_epoch_masked) to specify a custom mask.
     ///
     /// # Parameters
     ///
     /// * `epoch` - The epoch to query. If `None`, returns the current epoch.
-    /// * `read_mask` - Optional field mask specifying which fields to include.
-    ///   If `None`, uses [`GET_EPOCH_READ_MASK`].
     ///
-    /// # Read Mask
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new("http://localhost:9000").await?;
+    /// let epoch = client.get_epoch(None).await?;
+    /// println!("Epoch: {:?}", epoch.body().epoch);
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_epoch(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<MetadataEnvelope<Epoch>> {
+        self.get_epoch_internal(epoch.into(), None).await
+    }
+
+    /// Get epoch information, with a custom read mask.
+    ///
+    /// Returns the [`Epoch`] proto type with fields populated according to
+    /// `read_mask`.
     ///
     /// Use [`EpochField`](iota_grpc_types::read_mask_fields::EpochField)
     /// constants with [`ReadMask::from`] for field selection. For individual
@@ -36,6 +56,11 @@ impl Client {
     /// [`EpochField::feature_flag`](iota_grpc_types::read_mask_fields::EpochField::feature_flag)
     /// and
     /// [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
+    ///
+    /// # Parameters
+    ///
+    /// * `epoch` - The epoch to query. If `None`, returns the current epoch.
+    /// * `read_mask` - Field mask specifying which fields to include.
     ///
     /// # Example
     ///
@@ -45,68 +70,59 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
     ///
-    /// // Get current epoch with default fields
-    /// let epoch = client.get_epoch(None, None).await?;
-    /// println!("Epoch: {:?}", epoch.body().epoch);
-    ///
-    /// // Get specific epoch with custom fields
+    /// // Specific epoch with selected fields.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .get_epoch_masked(
     ///         Some(0),
-    ///         Some(ReadMask::from(&[
+    ///         ReadMask::from(&[
     ///             EpochField::EPOCH,
     ///             EpochField::REFERENCE_GAS_PRICE,
     ///             EpochField::FIRST_CHECKPOINT,
-    ///         ])),
+    ///         ]),
     ///     )
     ///     .await?;
     ///
-    /// // Get all feature flags for the current epoch
+    /// // All feature flags for the current epoch.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .get_epoch_masked(
     ///         None,
-    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS)),
+    ///         ReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS),
     ///     )
     ///     .await?
     ///     .into_inner();
     /// let flags = epoch.protocol_config.unwrap().feature_flags.unwrap().flags;
     ///
-    /// // Get a single named feature flag
+    /// // A single named feature flag.
     /// let flag_field = EpochField::feature_flag("enable_vdf");
     /// let epoch = client
-    ///     .get_epoch(None, Some(ReadMask::from(flag_field.as_str())))
+    ///     .get_epoch_masked(None, ReadMask::from(flag_field.as_str()))
     ///     .await?;
     ///
-    /// // Get all protocol attributes for the current epoch
-    /// let epoch = client
-    ///     .get_epoch(
-    ///         None,
-    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
-    ///     )
-    ///     .await?
-    ///     .into_inner();
-    /// let attributes = epoch
-    ///     .protocol_config
-    ///     .unwrap()
-    ///     .attributes
-    ///     .unwrap()
-    ///     .attributes;
-    ///
-    /// // Get a single named attribute
+    /// // A single named attribute.
     /// let attr_field = EpochField::attribute("max_tx_gas");
     /// let epoch = client
-    ///     .get_epoch(None, Some(ReadMask::from(attr_field.as_str())))
+    ///     .get_epoch_masked(None, ReadMask::from(attr_field.as_str()))
     ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_epoch(
+    pub async fn get_epoch_masked(
+        &self,
+        epoch: impl Into<Option<u64>>,
+        read_mask: ReadMask<'_>,
+    ) -> Result<MetadataEnvelope<Epoch>> {
+        self.get_epoch_internal(epoch.into(), Some(read_mask)).await
+    }
+
+    async fn get_epoch_internal(
         &self,
         epoch: Option<u64>,
         read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<Epoch>> {
-        let mut request = GetEpochRequest::default()
-            .with_read_mask(field_mask_with_default(read_mask, GET_EPOCH_READ_MASK));
+        let mut request = GetEpochRequest::default().with_read_mask(field_mask_with_default(
+            read_mask,
+            GET_EPOCH_READ_MASK,
+        ));
 
         if let Some(epoch) = epoch {
             request = request.with_epoch(epoch);

@@ -43,14 +43,16 @@ impl Client {
     /// (with access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
+    /// Uses the default field mask [`LIST_OWNED_OBJECTS_READ_MASK`]. Use
+    /// [`list_owned_objects_masked`](Self::list_owned_objects_masked) to
+    /// specify a custom mask.
+    ///
     /// # Parameters
     ///
     /// - `owner` - The address that owns the objects.
     /// - `object_type` - Optional type filter as a [`StructTag`].
     /// - `page_size` - Optional maximum number of objects per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Optional field mask. If `None`, uses
-    ///   [`LIST_OWNED_OBJECTS_READ_MASK`].
     ///
     /// # Examples
     ///
@@ -63,16 +65,10 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client
-    ///     .list_owned_objects(owner, None, None, None, None)
+    ///     .list_owned_objects(owner, None, None, None)
     ///     .await?;
     /// for obj in &page.body().items {
     ///     println!("Owned object: {:?}", obj);
-    /// }
-    /// if let Some(token) = &page.body().next_page_token {
-    ///     // Fetch the next page using the token
-    ///     let next = client
-    ///         .list_owned_objects(owner, None, None, Some(token.clone()), None)
-    ///         .await?;
     /// }
     /// # Ok(())
     /// # }
@@ -87,7 +83,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .list_owned_objects(owner, None, Some(50), None, None)
+    ///     .list_owned_objects(owner, None, Some(50), None)
     ///     .collect(Some(500))
     ///     .await?;
     /// for obj in all.body() {
@@ -99,6 +95,44 @@ impl Client {
     pub fn list_owned_objects(
         &self,
         owner: Address,
+        object_type: impl Into<Option<StructTag>>,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+    ) -> ListOwnedObjectsQuery {
+        self.list_owned_objects_internal(
+            owner,
+            object_type.into(),
+            page_size.into(),
+            page_token.into(),
+            None,
+        )
+    }
+
+    /// List objects owned by an address, with a custom read mask.
+    ///
+    /// See [`list_owned_objects`](Self::list_owned_objects) for behavior. Use
+    /// [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
+    /// constants with [`ReadMask::from`] for field selection.
+    pub fn list_owned_objects_masked(
+        &self,
+        owner: Address,
+        object_type: impl Into<Option<StructTag>>,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+        read_mask: ReadMask<'_>,
+    ) -> ListOwnedObjectsQuery {
+        self.list_owned_objects_internal(
+            owner,
+            object_type.into(),
+            page_size.into(),
+            page_token.into(),
+            Some(read_mask),
+        )
+    }
+
+    fn list_owned_objects_internal(
+        &self,
+        owner: Address,
         object_type: Option<StructTag>,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
@@ -106,10 +140,7 @@ impl Client {
     ) -> ListOwnedObjectsQuery {
         let mut base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))
-            .with_read_mask(field_mask_with_default(
-                read_mask,
-                LIST_OWNED_OBJECTS_READ_MASK,
-            ));
+            .with_read_mask(field_mask_with_default(read_mask, LIST_OWNED_OBJECTS_READ_MASK));
 
         if let Some(t) = object_type {
             base_request = base_request.with_object_type(t.to_string());

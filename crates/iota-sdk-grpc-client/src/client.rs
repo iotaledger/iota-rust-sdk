@@ -19,6 +19,11 @@ type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub type InterceptedChannel =
     tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
 
+pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe";
+pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe";
+pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe";
+pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/grpc";
+
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
 pub struct Client {
@@ -81,6 +86,26 @@ impl Client {
             headers: Default::default(),
             max_decoding_message_size: None,
         })
+    }
+
+    /// Create a new Client instance connected to a local gRPC server.
+    pub async fn new_localnet() -> Result<Self> {
+        Self::new(LOCAL_HOST).await
+    }
+
+    /// Create a new Client instance connected to the devnet gRPC server.
+    pub async fn new_devnet() -> Result<Self> {
+        Self::new(DEVNET_HOST).await
+    }
+
+    /// Create a new Client instance connected to the testnet gRPC server.
+    pub async fn new_testnet() -> Result<Self> {
+        Self::new(TESTNET_HOST).await
+    }
+
+    /// Create a new Client instance connected to the mainnet gRPC server.
+    pub async fn new_mainnet() -> Result<Self> {
+        Self::new(MAINNET_HOST).await
     }
 
     pub fn uri(&self) -> &http::Uri {

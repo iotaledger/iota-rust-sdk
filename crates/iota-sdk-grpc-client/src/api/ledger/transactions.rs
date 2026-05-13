@@ -33,16 +33,46 @@ impl Client {
     /// Results are returned in the same order as the input digests.
     /// If a transaction is not found, an error is returned.
     ///
+    /// Uses the default field mask [`GET_TRANSACTIONS_READ_MASK`]. Use
+    /// [`get_transactions_masked`](Self::get_transactions_masked) to specify a
+    /// custom mask.
+    ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `digests` is empty.
     ///
-    /// # Read Mask
+    /// # Example
     ///
-    /// The optional `read_mask` parameter controls which fields the server
-    /// returns. If `None`, uses [`GET_TRANSACTIONS_READ_MASK`].
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_types::Digest;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new("http://localhost:9000").await?;
+    /// let digest: Digest = Digest::random();
     ///
-    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// let txs = client.get_transactions([digest]).await?;
+    /// for tx in txs.body() {
+    ///     let effects = tx.effects()?.effects()?;
+    ///     println!("Status: {:?}", effects.status());
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_transactions(
+        &self,
+        digests: impl IntoIterator<Item = Digest>,
+    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
+        let requests = digests
+            .into_iter()
+            .map(|d| TransactionRequest::default().with_digest(d))
+            .collect::<Vec<_>>();
+        self.get_transactions_internal(requests, None).await
+    }
+
+    /// Get transactions by their digests, with a custom read mask.
+    ///
+    /// See [`get_transactions`](Self::get_transactions) for behavior. Use
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// constants with [`ReadMask::from`] for field selection.
     ///
     /// # Example
@@ -53,49 +83,40 @@ impl Client {
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000").await?;
-    /// let digest: Digest = todo!();
+    /// let digest: Digest = Digest::random();
     ///
-    /// // Get transactions with default mask
-    /// let txs = client.get_transactions(&[digest], None).await?;
-    ///
-    /// // Get transactions with field mask
     /// let txs = client
-    ///     .get_transactions(
-    ///         &[digest],
-    ///         Some(ReadMask::from(&[
-    ///             TransactionField::EFFECTS,
-    ///             TransactionField::CHECKPOINT,
-    ///         ])),
+    ///     .get_transactions_masked(
+    ///         [digest],
+    ///         ReadMask::from(&[TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
     ///     )
     ///     .await?;
-    ///
-    /// for tx in txs.body() {
-    ///     // Lazy conversion - only deserialize what you need
-    ///     let effects = tx.effects()?.effects()?;
-    ///     println!("Status: {:?}", effects.status());
-    ///
-    ///     // Access checkpoint number
-    ///     let checkpoint = tx.checkpoint_sequence_number()?;
-    ///     println!("Checkpoint: {}", checkpoint);
-    /// }
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_transactions(
+    pub async fn get_transactions_masked(
         &self,
-        digests: &[Digest],
+        digests: impl IntoIterator<Item = Digest>,
+        read_mask: ReadMask<'_>,
+    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
+        let requests = digests
+            .into_iter()
+            .map(|d| TransactionRequest::default().with_digest(d))
+            .collect::<Vec<_>>();
+        self.get_transactions_internal(requests, Some(read_mask))
+            .await
+    }
+
+    async fn get_transactions_internal(
+        &self,
+        requests: Vec<TransactionRequest>,
         read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
-        if digests.is_empty() {
+        if requests.is_empty() {
             return Err(Error::EmptyRequest);
         }
 
-        let requests = TransactionRequests::default().with_requests(
-            digests
-                .iter()
-                .map(|d| TransactionRequest::default().with_digest(*d))
-                .collect(),
-        );
+        let requests = TransactionRequests::default().with_requests(requests);
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)

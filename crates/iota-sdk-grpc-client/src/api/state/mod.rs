@@ -7,5 +7,6 @@
 //! and coin information.
 
 pub mod coin_info;
+pub mod coins;
 pub mod dynamic_fields;
 pub mod owned_objects;

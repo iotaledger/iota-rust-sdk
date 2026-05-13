@@ -32,12 +32,16 @@ impl Client {
     /// This allows you to preview the effects of a transaction before
     /// actually submitting it to the network.
     ///
+    /// Uses the default field mask [`SIMULATE_TRANSACTIONS_READ_MASK`] which
+    /// includes effects, events, and input/output objects. Use
+    /// [`simulate_transaction_masked`](Self::simulate_transaction_masked) to
+    /// specify a custom mask.
+    ///
     /// # Parameters
     ///
     /// - `transaction`: The transaction to simulate
     /// - `skip_checks`: Set to true for relaxed Move VM checks (useful for
     ///   debugging and development)
-    /// - `read_mask`: Optional field mask to control which fields are returned
     ///
     /// Returns [`SimulatedTransaction`] which contains:
     /// - `executed_transaction()` - Access to the simulated ExecutedTransaction
@@ -52,15 +56,6 @@ impl Client {
     /// - `result.executed_transaction()?.output_objects()` - Get output objects
     ///   (if requested)
     ///
-    /// # Read Mask
-    ///
-    /// The optional `read_mask` parameter controls which fields the server
-    /// returns. If `None`, uses [`SIMULATE_TRANSACTIONS_READ_MASK`] which
-    /// includes effects, events, and input/output objects.
-    ///
-    /// Use [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField)
-    /// constants with [`ReadMask::from`] for field selection.
-    ///
     /// # Example
     ///
     /// ```no_run
@@ -70,17 +65,11 @@ impl Client {
     /// let client = Client::new("http://localhost:9000").await?;
     ///
     /// let tx: Transaction = todo!();
+    /// let result = client.simulate_transaction(tx, false).await?;
     ///
-    /// // Simulate transaction - returns proto type
-    /// let result = client.simulate_transaction(tx, false, None).await?;
-    ///
-    /// // Lazy conversion - only deserialize what you need
     /// let executed_tx = result.body().executed_transaction()?;
     /// let effects = executed_tx.effects()?.effects()?;
     /// println!("Simulation status: {:?}", effects.status());
-    ///
-    /// let output_objs = executed_tx.output_objects()?;
-    /// println!("Would create {} objects", output_objs.objects.len());
     /// # Ok(())
     /// # }
     /// ```
@@ -88,21 +77,38 @@ impl Client {
         &self,
         transaction: Transaction,
         skip_checks: bool,
-        read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
-        self.simulate_transactions(
+        self.simulate_transactions_internal(
             vec![SimulateTransactionInput {
                 transaction,
                 skip_checks,
             }],
-            read_mask,
+            None,
         )
         .await?
-        .try_map(|results| {
-            results.into_iter().next().ok_or_else(|| {
-                Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
-            })?
-        })
+        .try_map(extract_single_simulation_result)
+    }
+
+    /// Simulate a transaction without executing it, with a custom read mask.
+    ///
+    /// See [`simulate_transaction`](Self::simulate_transaction) for behavior.
+    /// Use [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField)
+    /// constants with [`ReadMask::from`] for field selection.
+    pub async fn simulate_transaction_masked(
+        &self,
+        transaction: Transaction,
+        skip_checks: bool,
+        read_mask: ReadMask<'_>,
+    ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
+        self.simulate_transactions_internal(
+            vec![SimulateTransactionInput {
+                transaction,
+                skip_checks,
+            }],
+            Some(read_mask),
+        )
+        .await?
+        .try_map(extract_single_simulation_result)
     }
 
     /// Simulate a batch of transactions without executing them.
@@ -114,12 +120,38 @@ impl Client {
     /// input. Each element is either the successfully simulated transaction or
     /// the per-item error returned by the server.
     ///
+    /// Uses the default field mask [`SIMULATE_TRANSACTIONS_READ_MASK`]. Use
+    /// [`simulate_transactions_masked`](Self::simulate_transactions_masked) to
+    /// specify a custom mask.
+    ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `transactions` is empty.
     /// Returns a transport-level [`Error::Grpc`] if the entire RPC fails
     /// (e.g. batch size exceeded).
     pub async fn simulate_transactions(
+        &self,
+        transactions: Vec<SimulateTransactionInput>,
+    ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
+        self.simulate_transactions_internal(transactions, None).await
+    }
+
+    /// Simulate a batch of transactions, with a custom read mask.
+    ///
+    /// See [`simulate_transactions`](Self::simulate_transactions) for
+    /// behavior. Use
+    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField)
+    /// constants with [`ReadMask::from`] for field selection.
+    pub async fn simulate_transactions_masked(
+        &self,
+        transactions: Vec<SimulateTransactionInput>,
+        read_mask: ReadMask<'_>,
+    ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
+        self.simulate_transactions_internal(transactions, Some(read_mask))
+            .await
+    }
+
+    async fn simulate_transactions_internal(
         &self,
         transactions: Vec<SimulateTransactionInput>,
         read_mask: Option<ReadMask<'_>>,
@@ -152,6 +184,14 @@ impl Client {
                 .collect())
         })
     }
+}
+
+fn extract_single_simulation_result(
+    results: Vec<Result<SimulatedTransaction>>,
+) -> Result<SimulatedTransaction> {
+    results.into_iter().next().ok_or_else(|| {
+        Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+    })?
 }
 
 /// Convert a transaction and options into a proto `SimulateTransactionItem`.

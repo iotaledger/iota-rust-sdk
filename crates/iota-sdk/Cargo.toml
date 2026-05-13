@@ -44,7 +44,12 @@ mnemonic = ["crypto", "iota-crypto/mnemonic"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # gRPC
-grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
+grpc = [
+  "dep:iota-grpc-client",
+  "dep:iota-grpc-types",
+  "iota-grpc-client/tls-ring",
+  "iota-grpc-client/tls-native-roots",
+]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
 # Types
