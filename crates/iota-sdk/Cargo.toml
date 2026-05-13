@@ -47,8 +47,8 @@ graphql = ["dep:iota-graphql-client"]
 grpc = [
   "dep:iota-grpc-client",
   "dep:iota-grpc-types",
-  "iota-grpc-client/tls-ring",
   "iota-grpc-client/tls-native-roots",
+  "iota-grpc-client/tls-ring",
 ]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]

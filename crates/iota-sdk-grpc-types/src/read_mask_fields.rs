@@ -810,8 +810,12 @@ mod tests {
     #[test]
     fn scoped_read_mask_from_slice_normalizes() {
         // BCS subsumes nothing, REFERENCE subsumes REFERENCE_OBJECT_ID
-        let mask: ObjectReadMask =
-            [ObjectField::REFERENCE, ObjectField::REFERENCE_OBJECT_ID, ObjectField::BCS].into();
+        let mask: ObjectReadMask = [
+            ObjectField::REFERENCE,
+            ObjectField::REFERENCE_OBJECT_ID,
+            ObjectField::BCS,
+        ]
+        .into();
         assert_eq!(mask.as_str(), "bcs,reference");
     }
 

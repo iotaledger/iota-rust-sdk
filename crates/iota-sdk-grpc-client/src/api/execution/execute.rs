@@ -202,9 +202,10 @@ impl Client {
 fn extract_single_execution_result(
     results: Vec<Result<ExecutedTransaction>>,
 ) -> Result<ExecutedTransaction> {
-    results.into_iter().next().ok_or_else(|| {
-        Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
-    })?
+    results
+        .into_iter()
+        .next()
+        .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("transaction_results")))?
 }
 
 /// Convert a `SignedTransaction` into a proto `ExecuteTransactionItem`.

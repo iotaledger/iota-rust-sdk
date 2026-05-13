@@ -20,8 +20,7 @@ use iota_grpc_types::{
     v1::{
         checkpoint, event, filter as grpc_filter,
         ledger_service::{
-            GetCheckpointRequest, StreamCheckpointsRequest, checkpoint_data,
-            get_checkpoint_request,
+            GetCheckpointRequest, StreamCheckpointsRequest, checkpoint_data, get_checkpoint_request,
         },
         signatures::ValidatorAggregatedSignature as ProtoValidatorAggregatedSignature,
         transaction::ExecutedTransaction,
@@ -542,12 +541,11 @@ impl Client {
         progress_interval_ms: Option<u32>,
     ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
     {
-        let mut request = StreamCheckpointsRequest::default().with_read_mask(
-            field_mask_with_default(
+        let mut request =
+            StreamCheckpointsRequest::default().with_read_mask(field_mask_with_default(
                 read_mask.as_ref().map(|m| m.as_str()),
                 GET_CHECKPOINT_READ_MASK,
-            ),
-        );
+            ));
 
         if let Some(start) = start_sequence_number {
             request = request.with_start_sequence_number(start);

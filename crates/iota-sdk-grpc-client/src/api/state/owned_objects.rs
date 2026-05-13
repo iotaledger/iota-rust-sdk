@@ -67,9 +67,7 @@ impl Client {
     /// let client = Client::new("http://localhost:9000").await?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client
-    ///     .list_owned_objects(owner, None, None, None)
-    ///     .await?;
+    /// let page = client.list_owned_objects(owner, None, None, None).await?;
     /// for obj in &page.body().items {
     ///     println!("Owned object: {:?}", obj);
     /// }

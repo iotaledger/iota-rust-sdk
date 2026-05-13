@@ -137,7 +137,8 @@ impl Client {
         &self,
         transactions: Vec<SimulateTransactionInput>,
     ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
-        self.simulate_transactions_internal(transactions, None).await
+        self.simulate_transactions_internal(transactions, None)
+            .await
     }
 
     /// Simulate a batch of transactions, with a custom read mask.
@@ -193,9 +194,10 @@ impl Client {
 fn extract_single_simulation_result(
     results: Vec<Result<SimulatedTransaction>>,
 ) -> Result<SimulatedTransaction> {
-    results.into_iter().next().ok_or_else(|| {
-        Error::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
-    })?
+    results
+        .into_iter()
+        .next()
+        .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("transaction_results")))?
 }
 
 /// Convert a transaction and options into a proto `SimulateTransactionItem`.

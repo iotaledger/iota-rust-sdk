@@ -168,8 +168,7 @@ impl IntoFuture for GetCoinsQuery {
 
 fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> Result<Coin> {
     let sdk_obj = obj.object()?;
-    Coin::try_from_object(&sdk_obj)
-        .map_err(|e| Error::from(TryFromProtoError::invalid("coin", e)))
+    Coin::try_from_object(&sdk_obj).map_err(|e| Error::from(TryFromProtoError::invalid("coin", e)))
 }
 
 impl Client {
@@ -188,8 +187,8 @@ impl Client {
     /// # Parameters
     ///
     /// - `owner` - The address that owns the coins.
-    /// - `coin_type` - Optional coin type filter as a [`StructTag`]. If
-    ///   `None`, lists all coin types (`0x2::coin::Coin`).
+    /// - `coin_type` - Optional coin type filter as a [`StructTag`]. If `None`,
+    ///   lists all coin types (`0x2::coin::Coin`).
     /// - `page_size` - Optional maximum number of coins per page.
     /// - `page_token` - Optional continuation token from a previous page.
     ///

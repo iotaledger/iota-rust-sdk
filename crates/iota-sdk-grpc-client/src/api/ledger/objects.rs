@@ -107,10 +107,7 @@ impl Client {
     ///
     /// // Multiple fields
     /// let objs = client
-    ///     .get_objects_masked(
-    ///         [object_id],
-    ///         [ObjectField::REFERENCE, ObjectField::BCS],
-    ///     )
+    ///     .get_objects_masked([object_id], [ObjectField::REFERENCE, ObjectField::BCS])
     ///     .await?;
     ///
     /// for obj in objs.body() {
@@ -133,7 +130,8 @@ impl Client {
             })
             .collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, Some(read_mask.into())).await
+        self.get_objects_internal(refs, Some(read_mask.into()))
+            .await
     }
 
     /// Get objects by their IDs and optional versions.
@@ -221,10 +219,7 @@ impl Client {
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// let objs = client
-    ///     .get_objects_with_versions_masked(
-    ///         [(object_id, None)],
-    ///         ObjectField::REFERENCE_OBJECT_ID,
-    ///     )
+    ///     .get_objects_with_versions_masked([(object_id, None)], ObjectField::REFERENCE_OBJECT_ID)
     ///     .await?;
     ///
     /// for obj in objs.body() {
@@ -252,7 +247,8 @@ impl Client {
             })
             .collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, Some(read_mask.into())).await
+        self.get_objects_internal(refs, Some(read_mask.into()))
+            .await
     }
 
     async fn get_objects_internal(
