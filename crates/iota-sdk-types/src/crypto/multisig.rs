@@ -490,7 +490,7 @@ mod serialization {
 
     use super::*;
     use crate::{
-        Address, Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey,
+        Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey,
         SignatureScheme, crypto::SignatureFromBytesError,
     };
 
@@ -791,7 +791,8 @@ mod serialization {
         }
     }
 
-    impl From<&MultisigCommittee> for Address {
+    #[cfg(feature = "hash")]
+    impl From<&MultisigCommittee> for crate::Address {
         fn from(committee: &MultisigCommittee) -> Self {
             committee.derive_address()
         }

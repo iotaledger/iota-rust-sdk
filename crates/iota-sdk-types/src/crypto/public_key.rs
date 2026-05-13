@@ -139,9 +139,9 @@ mod serialization {
     use std::str::FromStr;
 
     use super::*;
-    use crate::Address;
 
-    impl From<&PublicKey> for Address {
+    #[cfg(feature = "hash")]
+    impl From<&PublicKey> for crate::Address {
         fn from(pk: &PublicKey) -> Self {
             pk.derive_address()
         }
