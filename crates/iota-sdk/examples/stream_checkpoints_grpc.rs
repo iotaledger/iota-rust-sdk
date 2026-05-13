@@ -31,8 +31,8 @@ async fn main() -> Result<()> {
     // (or compose more fields) to pull more data per checkpoint.
     let mut stream = client
         .stream_checkpoints_masked(
-            Some(start),
-            Some(end),
+            start,
+            end,
             CheckpointResponseField::CHECKPOINT_SUMMARY,
             None,
             None,
