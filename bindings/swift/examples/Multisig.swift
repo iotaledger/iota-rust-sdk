@@ -41,7 +41,6 @@ struct MultisigExample {
       ],
       threshold: 2
     )
-    precondition(committee.isValid(), "committee must be valid")
 
     // 4. Derive multisig address
     let multisigAddress = committee.deriveAddress()
