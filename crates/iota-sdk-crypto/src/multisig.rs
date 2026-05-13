@@ -356,30 +356,21 @@ fn multisig_pubkey_and_signature_from_user_signature(
         UserSignature::Simple(SimpleSignature::Ed25519 {
             signature,
             public_key,
-        }) => Ok((
-            PublicKey::Ed25519(public_key),
-            MultisigMemberSignature::Ed25519(signature),
-        )),
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::Simple(SimpleSignature::Secp256k1 {
             signature,
             public_key,
-        }) => Ok((
-            PublicKey::Secp256k1(public_key),
-            MultisigMemberSignature::Secp256k1(signature),
-        )),
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::Simple(SimpleSignature::Secp256r1 {
             signature,
             public_key,
-        }) => Ok((
-            PublicKey::Secp256r1(public_key),
-            MultisigMemberSignature::Secp256r1(signature),
-        )),
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::ZkLoginAuthenticatorDeprecated => {
             Err(SignatureError::from_source("zklogin is not supported"))
         }
         UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
-            PublicKey::Passkey(passkey_authenticator.public_key()),
-            MultisigMemberSignature::Passkey(passkey_authenticator),
+            passkey_authenticator.clone().into(),
+            passkey_authenticator.into(),
         )),
         UserSignature::Multisig(_) | UserSignature::MoveAuthenticator(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))

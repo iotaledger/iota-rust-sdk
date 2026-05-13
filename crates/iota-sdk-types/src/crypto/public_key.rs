@@ -7,7 +7,7 @@ use base64ct::{Base64, Encoding};
 
 use super::{
     Ed25519PublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
-    passkey::PasskeyPublicKey,
+    passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
 use crate::Address;
 
@@ -45,6 +45,7 @@ use crate::Address;
 #[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
+// TODO feature gate?
 pub enum PublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
@@ -105,6 +106,12 @@ impl PublicKey {
             _ => panic!(),
             // _ => Err(FastCryptoError::InvalidInput),
         }
+    }
+}
+
+impl From<PasskeyAuthenticator> for PublicKey {
+    fn from(passkey_authenticator: PasskeyAuthenticator) -> Self {
+        Self::Passkey(passkey_authenticator.public_key())
     }
 }
 
