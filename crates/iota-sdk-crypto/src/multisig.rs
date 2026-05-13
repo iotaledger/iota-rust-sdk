@@ -109,10 +109,12 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         message: &[u8],
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
-        if !signature.committee().is_valid() {
-            return Err(SignatureError::from_source("invalid MultisigCommittee"));
-        }
+        signature
+            .committee()
+            .is_valid()
+            .map_err(|e| SignatureError::from_source(format!("invalid MultisigCommittee: {e}")))?;
 
+        // TODO should we add this to is_valid?
         if signature.signatures().len() != signature.bitmap().count_ones() as usize {
             return Err(SignatureError::from_source(
                 "number of signatures does not match bitmap",
@@ -340,7 +342,7 @@ impl MultisigAggregator {
             },
         );
 
-        Ok(MultisigAggregatedSignature::new(
+        Ok(MultisigAggregatedSignature::insecure_new(
             signatures,
             bitmap,
             self.committee.clone(),

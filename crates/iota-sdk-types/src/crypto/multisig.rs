@@ -45,7 +45,7 @@ pub enum MultisigError {
     #[error("Duplicate public key")]
     DuplicatePublicKey,
     #[error("No public key found for signature: {0:?}")]
-    NoPublicKeyForSignature(UserSignature),
+    NoPublicKeyForSignature(Box<UserSignature>),
     #[error("Invalid number of signatures")]
     InvalidSignatureNumber,
     #[error("Invalid bitmap value: {0}")]
@@ -152,11 +152,9 @@ impl MultisigCommittee {
     ) -> Result<Self, MultisigError> {
         let committee = Self::insecure_new(members, threshold);
 
-        if committee.is_valid() {
-            Ok(committee)
-        } else {
-            Err(MultisigError::InvalidCommittee)
-        }
+        committee.is_valid()?;
+
+        Ok(committee)
     }
 
     /// The members of the committee
@@ -192,8 +190,8 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
-    pub fn is_valid(&self) -> bool {
-        self.threshold != 0
+    pub fn is_valid(&self) -> Result<(), MultisigError> {
+        if self.threshold != 0
             && !self.members.is_empty()
             && self.members.len() <= MAX_COMMITTEE_SIZE
             && !self.members.iter().any(|member| member.weight == 0)
@@ -209,6 +207,11 @@ impl MultisigCommittee {
                     .skip(i + 1)
                     .any(|m| member.public_key == m.public_key)
             })
+        {
+            return Ok(());
+        }
+
+        Err(MultisigError::InvalidCommittee)
     }
 }
 
@@ -275,8 +278,7 @@ impl MultisigAggregatedSignature {
     /// the caller to ensure that the provided signature list is in the same
     /// order as it's corresponding member in the provided committee
     /// and that it's position in the provided bitmap is set.
-    // TODO rename to insecure?
-    pub fn new(
+    pub fn insecure_new(
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
         committee: MultisigCommittee,
@@ -290,19 +292,15 @@ impl MultisigAggregatedSignature {
     }
 
     /// This combines a list of [enum Signature] `flag || signature || pk` to a
-    /// MultiSig. The order of full_sigs must be the same as the order of
+    /// MultiSig. The order of signatures must be the same as the order of
     /// public keys in [enum MultiSigPublicKey]. e.g. for [pk1, pk2, pk3,
     /// pk4, pk5], [sig1, sig2, sig5] is valid, but [sig2, sig1, sig5] is
     /// invalid.
-    // TODO keep this name or rename to new?
-    pub fn combine(
+    pub fn new(
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
-        // TODO call is_valid?
-        if !committee.is_valid() {
-            return Err(MultisigError::InvalidCommittee);
-        }
+        committee.is_valid()?;
 
         if signatures.len() > committee.members.len() || signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
@@ -312,9 +310,9 @@ impl MultisigAggregatedSignature {
         let mut member_signatures = Vec::with_capacity(signatures.len());
         for signature in signatures {
             let pk = signature.to_public_key().unwrap();
-            let index = committee
-                .get_public_key_index(&pk)
-                .ok_or(MultisigError::NoPublicKeyForSignature(signature.clone()))?;
+            let index = committee.get_public_key_index(&pk).ok_or(
+                MultisigError::NoPublicKeyForSignature(Box::new(signature.clone())),
+            )?;
             if bitmap & (1 << index) != 0 {
                 return Err(MultisigError::DuplicatePublicKey);
             }
@@ -330,12 +328,13 @@ impl MultisigAggregatedSignature {
         })
     }
 
-    pub fn is_valid(&self) -> bool {
-        if self.signatures.len() > self.committee.members.len()
-            || self.signatures.is_empty()
-            || self.bitmap > MAX_BITMAP_VALUE
-        {
-            return false;
+    pub fn is_valid(&self) -> Result<(), MultisigError> {
+        if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
+            return Err(MultisigError::InvalidSignatureNumber);
+        }
+
+        if self.bitmap > MAX_BITMAP_VALUE {
+            return Err(MultisigError::InvalidBitmap(self.bitmap));
         }
         self.committee.is_valid()
     }
@@ -361,15 +360,6 @@ impl MultisigAggregatedSignature {
 
     pub fn has_scheme_signatures(&self, scheme: SignatureScheme) -> bool {
         self.signatures.iter().any(|s| s.scheme() == scheme)
-    }
-
-    // TODO meh, returns a generic thing
-    pub fn get_scheme_signatures(&self, scheme: SignatureScheme) -> Vec<MultisigMemberSignature> {
-        self.signatures
-            .iter()
-            .filter(|s| s.scheme() == scheme)
-            .cloned()
-            .collect()
     }
 }
 
@@ -673,11 +663,10 @@ mod serialization {
                     committee: multisig.committee,
                     bytes: OnceCell::new(),
                 };
-                if multisig.is_valid() {
-                    Ok(multisig)
-                } else {
-                    Err(SignatureFromBytesError::new("invalid multisig"))
-                }
+                multisig
+                    .is_valid()
+                    .map_err(|_| SignatureFromBytesError::new("invalid multisig"))?;
+                Ok(multisig)
             } else {
                 Err(SignatureFromBytesError::new("invalid multisig"))
             }
@@ -893,9 +882,9 @@ mod tests {
             1,
         )
         .unwrap();
-        assert!(committee.is_valid());
+        assert!(committee.is_valid().is_ok());
 
-        let aggregated = MultisigAggregatedSignature::new(
+        let aggregated = MultisigAggregatedSignature::insecure_new(
             vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
             0b1,
             committee,

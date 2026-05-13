@@ -5,12 +5,15 @@ use std::sync::Arc;
 
 use iota_sdk::types::SignatureScheme;
 
-use crate::types::{
-    address::Address,
-    crypto::{
-        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature,
-        passkey::{PasskeyAuthenticator, PasskeyPublicKey},
+use crate::{
+    error::Result,
+    types::{
+        address::Address,
+        crypto::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            Secp256r1PublicKey, Secp256r1Signature,
+            passkey::{PasskeyAuthenticator, PasskeyPublicKey},
+        },
     },
 };
 
@@ -248,12 +251,12 @@ impl MultisigAggregatedSignature {
     /// order as it's corresponding member in the provided committee
     /// and that it's position in the provided bitmap is set.
     #[uniffi::constructor]
-    pub fn new(
+    pub fn insecure_new(
         signatures: Vec<Arc<MultisigMemberSignature>>,
         bitmap: u16,
         committee: &MultisigCommittee,
     ) -> Self {
-        Self(iota_sdk::types::MultisigAggregatedSignature::new(
+        Self(iota_sdk::types::MultisigAggregatedSignature::insecure_new(
             signatures.into_iter().map(|s| s.0.clone()).collect(),
             bitmap,
             committee.0.clone(),
@@ -356,8 +359,8 @@ impl MultisigCommittee {
     ///  - the sum of the weights of all members must be larger than the
     ///    threshold
     ///  - contains no duplicate members
-    pub fn is_valid(&self) -> bool {
-        self.0.is_valid()
+    pub fn is_valid(&self) -> Result<()> {
+        Ok(self.0.is_valid()?)
     }
 
     /// Derive an `Address` from this MultisigCommittee.
