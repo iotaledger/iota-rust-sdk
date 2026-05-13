@@ -11,6 +11,7 @@ use super::{
 };
 use crate::Address;
 
+// TODO adapt comment
 /// Enum of valid public keys for multisig committee members
 ///
 /// # BCS
@@ -44,7 +45,6 @@ use crate::Address;
 #[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
-// TODO why is this not just PublicKey?
 pub enum PublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
