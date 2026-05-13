@@ -14,7 +14,7 @@ use crate::{
 /// A typed view of an on-chain `0x3::staking_pool::StakedIota` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct StakedIota(pub iota_move_system_types::system::StakedIota);
+pub struct StakedIota(pub iota_move_system_types::iota_system::staking_pool::StakedIota);
 
 #[uniffi::export]
 impl StakedIota {
@@ -22,7 +22,12 @@ impl StakedIota {
     /// object's type tag matches `0x3::staking_pool::StakedIota`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::system::StakedIota::try_from_object(&object.0)?.into())
+        Ok(
+            iota_move_system_types::iota_system::staking_pool::StakedIota::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
     }
 
     /// Decode a `StakedIota` from raw BCS bytes (e.g. the `contents` of an
@@ -30,7 +35,10 @@ impl StakedIota {
     /// [`Self::try_from_object`] when an [`Object`] is available.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_move_system_types::system::StakedIota::try_from_bcs(&bytes)?.into())
+        Ok(
+            iota_move_system_types::iota_system::staking_pool::StakedIota::try_from_bcs(&bytes)?
+                .into(),
+        )
     }
 
     pub fn id(&self) -> ObjectId {

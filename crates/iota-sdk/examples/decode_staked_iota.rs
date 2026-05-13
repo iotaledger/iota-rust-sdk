@@ -22,7 +22,7 @@
 //! [`ObjectId`]: iota_types::ObjectId
 
 use eyre::Result;
-use iota_move_system_types::system::StakedIota;
+use iota_move_system_types::iota_system::staking_pool::StakedIota;
 use iota_sdk::graphql_client::{Client, query_types::ObjectFilter};
 
 #[tokio::main]

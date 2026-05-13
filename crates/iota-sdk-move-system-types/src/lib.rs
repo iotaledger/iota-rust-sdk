@@ -7,14 +7,16 @@
 //! Each top-level module corresponds to a system package, identified by the
 //! address constants on [`iota_types::Address`]:
 //!
-//! - [`std`]          — `0x1`, the Move standard library
-//! - [`framework`]    — `0x2`, the IOTA framework
-//! - [`system`]       — `0x3`, the IOTA system package
-//! - [`system_state`] — `0x5`, the IOTA system state
-//! - [`stardust`]     — `0x107a`, the Stardust migration package
+//! - [`std`]         — `0x1`, the Move standard library
+//! - [`framework`]   — `0x2`, the IOTA framework
+//! - [`iota_system`] — `0x3`, the IOTA system package
+//! - [`stardust`]    — `0x107a`, the Stardust migration package
+//!
+//! Inside each package, every Move source module is mirrored 1:1 as a Rust
+//! `pub mod`. Generic Move types stay generic in Rust (with a
+//! `PhantomData<T>` placeholder for phantom parameters).
 
 pub mod framework;
+pub mod iota_system;
 pub mod stardust;
 pub mod std;
-pub mod system;
-pub mod system_state;
