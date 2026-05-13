@@ -25,7 +25,6 @@ redundant_clone = "warn"
 # external dependencies
 base64ct = "1.6.0"
 bcs = "0.1.6"
-bnum = "0.12.0"
 cynic = "3.7.3"
 derive_more = "2.1.1"
 eyre = "0.6"
