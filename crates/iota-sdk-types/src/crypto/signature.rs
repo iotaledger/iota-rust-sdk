@@ -2,8 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use super::{
     Ed25519PublicKey, Ed25519Signature, MultisigAggregatedSignature, PasskeyAuthenticator,
     PublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
@@ -361,17 +359,11 @@ impl UserSignature {
     }
 }
 
-impl FromStr for UserSignature {
-    type Err = bcs::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_base64(s)
-    }
-}
-
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
+    use std::str::FromStr;
+
     use super::*;
     use crate::crypto::SignatureFromBytesError;
 
@@ -841,6 +833,14 @@ mod serialization {
                     serde_with::Bytes::deserialize_as(deserializer)?;
                 Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
+        }
+    }
+
+    impl FromStr for UserSignature {
+        type Err = bcs::Error;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            Self::from_base64(s)
         }
     }
 

@@ -5,20 +5,16 @@
 // TODO sort out overlap with iota-sdk-crypto's multisig module
 // TODO Harmonise serde primitives (from/to bytes/base64) with regular PK
 
-use std::{
-    hash::{Hash, Hasher},
-    str::FromStr,
-};
-
-use base64ct::{Base64, Encoding};
+#[cfg(feature = "serde")]
 use once_cell::sync::OnceCell;
 
+#[cfg(feature = "serde")]
+use super::SignatureFromBytesError;
 use super::{
-    Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureFromBytesError,
-    SignatureScheme, SimpleSignature,
-    passkey::{PasskeyAuthenticator, PasskeyPublicKey},
+    Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureScheme,
+    SimpleSignature, passkey::PasskeyAuthenticator,
 };
-use crate::{Address, UserSignature};
+use crate::UserSignature;
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -34,6 +30,7 @@ pub enum MultisigError {
     TryFromSlice(#[from] std::array::TryFromSliceError),
     #[error("{0}")]
     Base64(#[from] base64ct::Error),
+    #[cfg(feature = "serde")]
     #[error("{0}")]
     SignatureFromBytes(#[from] SignatureFromBytesError),
     #[error("Invalid multisig committee")]
@@ -215,12 +212,6 @@ impl MultisigCommittee {
     }
 }
 
-impl From<&MultisigCommittee> for Address {
-    fn from(committee: &MultisigCommittee) -> Self {
-        committee.derive_address()
-    }
-}
-
 /// Aggregated signature from members of a multisig committee.
 ///
 /// # BCS
@@ -263,6 +254,7 @@ pub struct MultisigAggregatedSignature {
     committee: MultisigCommittee,
     /// A bytes representation of [struct MultiSig]. This helps with
     /// implementing [trait AsRef<[u8]>].
+    #[cfg(feature = "serde")]
     #[cfg_attr(
         feature = "proptest",
         strategy(proptest::strategy::Just(OnceCell::new()))
@@ -287,6 +279,7 @@ impl MultisigAggregatedSignature {
             signatures,
             bitmap,
             committee,
+            #[cfg(feature = "serde")]
             bytes: OnceCell::new(),
         }
     }
@@ -324,6 +317,7 @@ impl MultisigAggregatedSignature {
             signatures: member_signatures,
             bitmap,
             committee,
+            #[cfg(feature = "serde")]
             bytes: OnceCell::new(),
         })
     }
@@ -388,32 +382,6 @@ impl PartialEq for MultisigAggregatedSignature {
 
 impl Eq for MultisigAggregatedSignature {}
 
-/// This initialize the underlying bytes representation of MultiSig.
-/// It encodes [struct MultiSig] as the MultiSig flag (0x03) concat with the bcs
-/// bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
-impl AsRef<[u8]> for MultisigAggregatedSignature {
-    fn as_ref(&self) -> &[u8] {
-        self.bytes.get_or_init(|| self.to_bytes())
-    }
-}
-
-impl Hash for MultisigAggregatedSignature {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.as_ref().hash(state);
-    }
-}
-
-impl FromStr for MultisigAggregatedSignature {
-    type Err = MultisigError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let bytes = Base64::decode_vec(s)?;
-        let sig = MultisigAggregatedSignature::from_bytes(&bytes)?;
-
-        Ok(sig)
-    }
-}
-
 /// A signature from a member of a multisig committee.
 ///
 /// # BCS
@@ -462,45 +430,6 @@ impl MultisigMemberSignature {
             Self::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
             Self::Passkey(_) => SignatureScheme::PasskeyAuthenticator,
         }
-    }
-
-    pub fn to_base64(&self) -> String {
-        base64ct::Base64::encode_string(self.as_ref())
-    }
-
-    pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
-        let bytes = Base64::decode_vec(s)?;
-
-        match bytes.first() {
-            Some(x) => {
-                if x == &(SignatureScheme::Ed25519 as u8) {
-                    let signature = Ed25519Signature::from_bytes(&bytes[1..])?;
-                    Ok(Self::Ed25519(signature))
-                } else if x == &(SignatureScheme::Secp256k1 as u8) {
-                    let signature = Secp256k1Signature::from_bytes(&bytes[1..])?;
-                    Ok(Self::Secp256k1(signature))
-                } else if x == &(SignatureScheme::Secp256r1 as u8) {
-                    let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
-                    Ok(Self::Secp256r1(signature))
-                } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
-                    Ok(Self::ZkLoginDeprecated)
-                } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
-                    let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
-                    Ok(Self::Passkey(signature))
-                } else {
-                    Err(MultisigError::UnallowedSignatureType)
-                }
-            }
-            _ => Err(MultisigError::InvalidInput),
-        }
-    }
-}
-
-impl FromStr for MultisigMemberSignature {
-    type Err = MultisigError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_base64(s)
     }
 }
 
@@ -551,15 +480,20 @@ impl From<SimpleSignature> for MultisigMemberSignature {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use std::borrow::Cow;
+    use std::{
+        borrow::Cow,
+        hash::{Hash, Hasher},
+        str::FromStr,
+    };
 
+    use base64ct::{Base64, Encoding};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
     use crate::{
-        Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
-        crypto::SignatureFromBytesError,
+        Address, Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey,
+        SignatureScheme, crypto::SignatureFromBytesError,
     };
 
     #[derive(serde::Deserialize)]
@@ -856,6 +790,79 @@ mod serialization {
                     MemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             }
+        }
+    }
+
+    impl From<&MultisigCommittee> for Address {
+        fn from(committee: &MultisigCommittee) -> Self {
+            committee.derive_address()
+        }
+    }
+
+    /// This initialize the underlying bytes representation of MultiSig.
+    /// It encodes [struct MultiSig] as the MultiSig flag (0x03) concat with the
+    /// bcs bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
+    impl AsRef<[u8]> for MultisigAggregatedSignature {
+        fn as_ref(&self) -> &[u8] {
+            self.bytes.get_or_init(|| self.to_bytes())
+        }
+    }
+
+    impl Hash for MultisigAggregatedSignature {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            self.as_ref().hash(state);
+        }
+    }
+
+    impl FromStr for MultisigAggregatedSignature {
+        type Err = MultisigError;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            let bytes = Base64::decode_vec(s)?;
+            let sig = MultisigAggregatedSignature::from_bytes(&bytes)?;
+
+            Ok(sig)
+        }
+    }
+
+    impl MultisigMemberSignature {
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(self.as_ref())
+        }
+
+        pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
+            let bytes = Base64::decode_vec(s)?;
+
+            match bytes.first() {
+                Some(x) => {
+                    if x == &(SignatureScheme::Ed25519 as u8) {
+                        let signature = Ed25519Signature::from_bytes(&bytes[1..])?;
+                        Ok(Self::Ed25519(signature))
+                    } else if x == &(SignatureScheme::Secp256k1 as u8) {
+                        let signature = Secp256k1Signature::from_bytes(&bytes[1..])?;
+                        Ok(Self::Secp256k1(signature))
+                    } else if x == &(SignatureScheme::Secp256r1 as u8) {
+                        let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
+                        Ok(Self::Secp256r1(signature))
+                    } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
+                        Ok(Self::ZkLoginDeprecated)
+                    } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
+                        let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
+                        Ok(Self::Passkey(signature))
+                    } else {
+                        Err(MultisigError::UnallowedSignatureType)
+                    }
+                }
+                _ => Err(MultisigError::InvalidInput),
+            }
+        }
+    }
+
+    impl FromStr for MultisigMemberSignature {
+        type Err = MultisigError;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            Self::from_base64(s)
         }
     }
 }

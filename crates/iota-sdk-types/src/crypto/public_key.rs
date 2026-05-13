@@ -1,15 +1,12 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use base64ct::{Base64, Encoding};
 
 use super::{
     Ed25519PublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
-use crate::Address;
 
 #[derive(Debug, thiserror::Error)]
 pub enum PublicKeyError {
@@ -136,16 +133,25 @@ impl AsRef<[u8]> for PublicKey {
     }
 }
 
-impl From<&PublicKey> for Address {
-    fn from(pk: &PublicKey) -> Self {
-        pk.derive_address()
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod serialization {
+    use std::str::FromStr;
+
+    use super::*;
+    use crate::Address;
+
+    impl From<&PublicKey> for Address {
+        fn from(pk: &PublicKey) -> Self {
+            pk.derive_address()
+        }
     }
-}
 
-impl FromStr for PublicKey {
-    type Err = PublicKeyError;
+    impl FromStr for PublicKey {
+        type Err = PublicKeyError;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_base64(s)
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            Self::from_base64(s)
+        }
     }
 }
