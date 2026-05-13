@@ -314,17 +314,29 @@ pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 #[uniffi::export]
 impl MultisigCommittee {
     /// Construct a new committee from a list of `MultisigMember`s and a
+    /// `threshold` without validating the result.
+    ///
+    /// Note that the order of the members is significant towards deriving the
+    /// `Address` governed by this committee.
+    #[uniffi::constructor]
+    pub fn insecure_new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
+        Self(iota_sdk::types::MultisigCommittee::insecure_new(
+            members.into_iter().map(|m| m.0.clone()).collect(),
+            threshold,
+        ))
+    }
+
+    /// Construct a new committee from a list of `MultisigMember`s and a
     /// `threshold`.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
     #[uniffi::constructor]
-    pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
-        // TODO
-        Self(iota_sdk::types::MultisigCommittee::insecure_new(
+    pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Result<Self> {
+        Ok(Self(iota_sdk::types::MultisigCommittee::new(
             members.into_iter().map(|m| m.0.clone()).collect(),
             threshold,
-        ))
+        )?))
     }
 
     /// The members of the committee
