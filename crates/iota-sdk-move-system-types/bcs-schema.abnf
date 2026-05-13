@@ -1,153 +1,220 @@
 ; Auto-generated BCS schema definitions
 ; Do not edit manually
 
+active-jwk = jwk-id   ; jwk-id
+             jwk      ; jwk
+             u64      ; epoch
+
+address-key = address
+
+alias = uid                     ; id
+        address                 ; legacy-state-controller
+        u32                     ; state-index
+        (%d00 / %d01 bytes)     ; state-metadata
+        (%d00 / %d01 address)   ; sender
+        (%d00 / %d01 bytes)     ; metadata
+        (%d00 / %d01 address)   ; immutable-issuer
+        (%d00 / %d01 bytes)     ; immutable-metadata
+
+authenticator-function-ref-v1-key = bool   ; dummy-field
+
+authenticator-metadata-v1 = ascii-string   ; function-name
+                            type-name      ; account-type
+
+authenticator-state = uid   ; id
+                      u64   ; version
+
+authenticator-state-inner = u64                  ; version
+                            (size *active-jwk)   ; active-jwks
+
 bag = uid   ; id
       u64   ; size
 
-balance = u64   ; value
+bcs = bytes   ; bytes
 
-basic-output = uid                                                     ; id
-               balance                                                 ; balance
-               bag                                                     ; native-tokens
-               (%d00 / %d01 storage-deposit-return-unlock-condition)   ; storage-deposit-return
-               (%d00 / %d01 timelock-unlock-condition)                 ; timelock
-               (%d00 / %d01 expiration-unlock-condition)               ; expiration
-               (%d00 / %d01 bytes)                                     ; metadata
-               (%d00 / %d01 bytes)                                     ; tag
-               (%d00 / %d01 address)                                   ; sender
+bit-vector = u64            ; length
+             (size *bool)   ; bit-field
 
 bool    = %d00   ; false
         / %d01   ; true
 
+borrow = address   ; r#ref
+         id        ; obj
+
 bytes   = size *OCTET
 
-coin = uid       ; id
-       balance   ; balance
+char = u8   ; byte
 
-coin-metadata = uid                    ; id
-                u8                     ; decimals
-                string                 ; name
-                string                 ; symbol
-                string                 ; description
-                (%d00 / %d01 string)   ; icon-url
+clock = uid   ; id
+        u64   ; timestamp-ms
 
-display = uid       ; id
-          vec-map   ; fields
-          u16       ; version
+coin-managed = ascii-string   ; coin-name
+
+committee-validator-join-event = u64       ; epoch
+                                 address   ; validator-address
+                                 id        ; staking-pool-id
+
+committee-validator-leave-event = u64       ; epoch
+                                  address   ; validator-address
+                                  id        ; staking-pool-id
+
+config-key = u64     ; per-type-index
+             bytes   ; per-type-key
+
+config-write-cap = bool
+
+curve = u8   ; id
+
+deny-list = uid   ; id
+            bag   ; lists
 
 expiration-unlock-condition = address   ; owner
                               address   ; return-address
                               u32       ; unix-time
 
+extension = bag    ; storage
+            u128   ; permissions
+            bool   ; is-enabled
+
 fixed-point32 = u64   ; value
+
+g1 = bool   ; dummy-field
+
+g2 = bool   ; dummy-field
+
+genesis-chain-parameters = u64   ; protocol-version
+                           u64   ; chain-start-timestamp-ms
+                           u64   ; epoch-duration-ms
+                           u64   ; max-validator-count
+                           u64   ; min-validator-joining-stake
+                           u64   ; validator-low-stake-threshold
+                           u64   ; validator-very-low-stake-threshold
+                           u64   ; validator-low-stake-grace-period
+
+genesis-validator-metadata = bytes     ; name
+                             bytes     ; description
+                             bytes     ; image-url
+                             bytes     ; project-url
+                             address   ; iota-address
+                             u64       ; gas-price
+                             u64       ; commission-rate
+                             bytes     ; authority-public-key
+                             bytes     ; proof-of-possession
+                             bytes     ; network-public-key
+                             bytes     ; protocol-public-key
+                             bytes     ; network-address
+                             bytes     ; p2p-address
+                             bytes     ; primary-address
+
+global-pause-key = bool
+
+gt = bool   ; dummy-field
 
 i64     = 8OCTET
 
 id = object-id   ; bytes
 
+intent = u8   ; scope
+         u8   ; version
+         u8   ; app-id
+
+iota = bool   ; dummy-field
+
 iota-system-admin-cap = bool   ; dummy-field
 
-iota-system-state-v1 = u64                     ; epoch
-                       u64                     ; protocol-version
-                       u64                     ; system-state-version
-                       iota-treasury-cap       ; iota-treasury-cap
-                       validator-set-v1        ; validators
-                       storage-fund-v1         ; storage-fund
-                       system-parameters-v1    ; parameters
-                       iota-system-admin-cap   ; iota-system-admin-cap
-                       u64                     ; reference-gas-price
-                       vec-map                 ; validator-report-records
-                       bool                    ; safe-mode
-                       balance                 ; safe-mode-storage-charges
-                       balance                 ; safe-mode-computation-rewards
-                       u64                     ; safe-mode-storage-rebates
-                       u64                     ; safe-mode-non-refundable-storage-fee
-                       u64                     ; epoch-start-timestamp-ms
-                       bag                     ; extra-fields
+iota-system-state = uid   ; id
+                    u64   ; version
 
-iota-system-state-v2 = u64                     ; epoch
-                       u64                     ; protocol-version
-                       u64                     ; system-state-version
-                       iota-treasury-cap       ; iota-treasury-cap
-                       validator-set-v2        ; validators
-                       storage-fund-v1         ; storage-fund
-                       system-parameters-v1    ; parameters
-                       iota-system-admin-cap   ; iota-system-admin-cap
-                       u64                     ; reference-gas-price
-                       vec-map                 ; validator-report-records
-                       bool                    ; safe-mode
-                       balance                 ; safe-mode-storage-charges
-                       balance                 ; safe-mode-computation-charges
-                       u64                     ; safe-mode-computation-charges-burned
-                       u64                     ; safe-mode-storage-rebates
-                       u64                     ; safe-mode-non-refundable-storage-fee
-                       u64                     ; epoch-start-timestamp-ms
-                       bag                     ; extra-fields
+item = id   ; id
 
-iota-system-state-wrapper = uid   ; id
-                            u64   ; version
+jwk = move-string   ; kty
+      move-string   ; e
+      move-string   ; n
+      move-string   ; alg
 
-iota-treasury-cap = treasury-cap   ; inner
+jwk-id = move-string   ; iss
+         move-string   ; kid
 
-irc27-metadata = string                 ; version
-                 string                 ; media-type
-                 url                    ; uri
-                 string                 ; name
-                 (%d00 / %d01 string)   ; collection-name
-                 vec-map                ; royalties
-                 (%d00 / %d01 string)   ; issuer-name
-                 (%d00 / %d01 string)   ; description
-                 vec-map                ; attributes
-                 vec-map                ; non-standard-fields
+key-pair = bytes   ; private-key
+           bytes   ; public-key
 
-nft = uid                     ; id
-      (%d00 / %d01 address)   ; legacy-sender
-      (%d00 / %d01 bytes)     ; metadata
-      (%d00 / %d01 bytes)     ; tag
-      (%d00 / %d01 address)   ; immutable-issuer
-      irc27-metadata          ; immutable-metadata
+kiosk-borrow = id   ; kiosk-id
+               id   ; item-id
 
-nft-output = uid                                                     ; id
-             balance                                                 ; balance
-             bag                                                     ; native-tokens
-             (%d00 / %d01 storage-deposit-return-unlock-condition)   ; storage-deposit-return
-             (%d00 / %d01 timelock-unlock-condition)                 ; timelock
-             (%d00 / %d01 expiration-unlock-condition)               ; expiration
+kiosk-owner-cap = uid   ; id
+                  id    ; r#for
+
+listing = id     ; id
+          bool   ; is-exclusive
+
+lock = id   ; id
+
+metadata-ownership-renounced = ascii-string   ; coin-name
+
+module-metadata-v1 = (size *authenticator-metadata-v1)   ; authenticator-metadata
+
+nft = bool   ; dummy-field
+
+object-bag = uid   ; id
+             u64   ; size
+
+package-metadata-key = bool   ; dummy-field
+
+per-type-config-created = config-key   ; key
+                          id           ; config-id
 
 pool-token-exchange-rate = u64   ; iota-amount
                            u64   ; pool-token-amount
 
-receiving = id    ; id
-            u64   ; version
+prepared-verifying-key = bytes   ; vk-gamma-abc-g1-bytes
+                         bytes   ; alpha-g1-beta-g2-bytes
+                         bytes   ; gamma-g2-neg-pc-bytes
+                         bytes   ; delta-g2-neg-pc-bytes
+
+proof-points = bytes   ; bytes
+
+public-proof-inputs = bytes   ; bytes
+
+publisher = uid            ; id
+            ascii-string   ; package
+            ascii-string   ; module-name
+
+random = uid         ; id
+         versioned   ; inner
+
+random-generator = bytes   ; seed
+                   u16     ; counter
+                   bytes   ; buffer
+
+random-inner = u64     ; version
+               u64     ; epoch
+               u64     ; randomness-round
+               bytes   ; random-bytes
+
+scalar = bool   ; dummy-field
+
+scenario = u64          ; txn-number
+           tx-context   ; ctx
 
 size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 
-staked-iota = uid       ; id
-              id        ; pool-id
-              u64       ; stake-activation-epoch
-              balance   ; principal
+staked-iota = uid   ; id
+              id    ; pool-id
+              u64   ; stake-activation-epoch
+              u64   ; principal
 
-staking-pool-v1 = uid                 ; id
-                  (%d00 / %d01 u64)   ; activation-epoch
-                  (%d00 / %d01 u64)   ; deactivation-epoch
-                  u64                 ; iota-balance
-                  balance             ; rewards-pool
-                  u64                 ; pool-token-balance
-                  table               ; exchange-rates
-                  u64                 ; pending-stake
-                  u64                 ; pending-total-iota-withdraw
-                  u64                 ; pending-pool-token-withdraw
-                  bag                 ; extra-fields
+staking-request-event = id        ; pool-id
+                        address   ; validator-address
+                        address   ; staker-address
+                        u64       ; epoch
+                        u64       ; amount
+
+stardust_-upgrade_-label = bool   ; dummy-field
 
 storage-deposit-return-unlock-condition = address   ; return-address
                                           u64       ; return-amount
 
-storage-fund-v1 = balance   ; total-object-storage-rebates
-                  balance   ; non-refundable-balance
-
-string  = size *OCTET   ; UTF-8 encoded
-
-supply = u64   ; value
+string = bytes   ; bytes
 
 system-epoch-info-event-v1 = u64   ; epoch
                              u64   ; protocol-version
@@ -182,20 +249,41 @@ system-parameters-v1 = u64   ; epoch-duration-ms
                        u64   ; validator-low-stake-grace-period
                        bag   ; extra-fields
 
-table = uid   ; id
-        u64   ; size
-
-table-vec = table   ; contents
+test = uid   ; id
 
 timelock-unlock-condition = u32   ; unix-time
 
-timelocked-staked-iota = uid                    ; id
-                         staked-iota            ; staked-iota
-                         u64                    ; expiration-timestamp-ms
-                         (%d00 / %d01 string)   ; label
+timelocked-staked-iota = uid                         ; id
+                         staked-iota                 ; staked-iota
+                         u64                         ; expiration-timestamp-ms
+                         (%d00 / %d01 move-string)   ; label
 
-treasury-cap = uid      ; id
-               supply   ; total-supply
+token-allocation = address                 ; recipient-address
+                   u64                     ; amount-nanos
+                   (%d00 / %d01 address)   ; staked-with-validator
+                   (%d00 / %d01 u64)       ; staked-with-timelock-expiration
+
+token-distribution-schedule = u64                        ; pre-minted-supply
+                              (size *token-allocation)   ; allocations
+
+treasury-ownership-renounced = ascii-string   ; coin-name
+
+tx-context = address   ; sender
+             bytes     ; tx-hash
+             u64       ; epoch
+             u64       ; epoch-timestamp-ms
+             u64       ; ids-created
+
+tx-context-builder = address                 ; sender
+                     u64                     ; epoch
+                     u64                     ; epoch-timestamp-ms
+                     u64                     ; ids-created
+                     (%d00 / %d01 u64)       ; rgp
+                     u64                     ; gas-price
+                     u64                     ; gas-budget
+                     (%d00 / %d01 address)   ; sponsor
+
+type-name = ascii-string   ; name
 
 u128    = 16OCTET
 
@@ -211,65 +299,100 @@ uid = id   ; id
 
 uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer
 
+uncompressed-g1 = bool   ; dummy-field
+
+unstaking-request-event = id        ; pool-id
+                          address   ; validator-address
+                          address   ; staker-address
+                          u64       ; stake-activation-epoch
+                          u64       ; unstaking-epoch
+                          u64       ; principal-amount
+                          u64       ; reward-amount
+
 unverified-validator-operation-cap = uid       ; id
                                      address   ; authorizer-validator-address
 
-url = string
+upgrade-cap = uid   ; id
+              id    ; package
+              u64   ; version
+              u8    ; policy
 
-validator-metadata-v1 = address                ; iota-address
-                        bytes                  ; authority-pubkey-bytes
-                        bytes                  ; network-pubkey-bytes
-                        bytes                  ; protocol-pubkey-bytes
-                        bytes                  ; proof-of-possession-bytes
-                        string                 ; name
-                        string                 ; description
-                        string                 ; image-url
-                        string                 ; project-url
-                        string                 ; net-address
-                        string                 ; p2p-address
-                        string                 ; primary-address
-                        (%d00 / %d01 bytes)    ; next-epoch-authority-pubkey-bytes
-                        (%d00 / %d01 bytes)    ; next-epoch-proof-of-possession
-                        (%d00 / %d01 bytes)    ; next-epoch-network-pubkey-bytes
-                        (%d00 / %d01 bytes)    ; next-epoch-protocol-pubkey-bytes
-                        (%d00 / %d01 string)   ; next-epoch-net-address
-                        (%d00 / %d01 string)   ; next-epoch-p2p-address
-                        (%d00 / %d01 string)   ; next-epoch-primary-address
-                        bag                    ; extra-fields
+upgrade-receipt = id   ; cap
+                  id   ; package
 
-validator-set-v1 = u64                    ; total-stake
-                   (size *validator-v1)   ; active-validators
-                   table-vec              ; pending-active-validators
-                   (size *u64)            ; pending-removals
-                   table                  ; staking-pool-mappings
-                   table                  ; inactive-validators
-                   table                  ; validator-candidates
-                   vec-map                ; at-risk-validators
-                   bag                    ; extra-fields
+upgrade-ticket = id      ; cap
+                 id      ; package
+                 u8      ; policy
+                 bytes   ; digest
 
-validator-set-v2 = u64                    ; total-stake
-                   (size *validator-v1)   ; active-validators
-                   (size *u64)            ; committee-members
-                   table-vec              ; pending-active-validators
-                   (size *u64)            ; pending-removals
-                   table                  ; staking-pool-mappings
-                   table                  ; inactive-validators
-                   table                  ; validator-candidates
-                   vec-map                ; at-risk-validators
-                   bag                    ; extra-fields
+uq32_32 = u64
 
-validator-v1 = validator-metadata-v1   ; metadata
-               u64                     ; voting-power
-               id                      ; operation-cap-id
-               u64                     ; gas-price
-               staking-pool-v1         ; staking-pool
-               u64                     ; commission-rate
-               u64                     ; next-epoch-stake
-               u64                     ; next-epoch-gas-price
-               u64                     ; next-epoch-commission-rate
-               bag                     ; extra-fields
+uq64_64 = u128
 
-validator-wrapper = versioned   ; inner
+url = string   ; url
+
+validator = versioned   ; inner
+
+validator-epoch-info-event-v1 = u64                        ; epoch
+                                address                    ; validator-address
+                                u64                        ; reference-gas-survey-quote
+                                u64                        ; stake
+                                u64                        ; voting-power
+                                u64                        ; commission-rate
+                                u64                        ; pool-staking-reward
+                                pool-token-exchange-rate   ; pool-token-exchange-rate
+                                (size *address)            ; tallying-rule-reporters
+                                u64                        ; tallying-rule-global-score
+
+validator-join-event = u64       ; epoch
+                       address   ; validator-address
+                       id        ; staking-pool-id
+
+validator-leave-event = u64       ; epoch
+                        address   ; validator-address
+                        id        ; staking-pool-id
+                        bool      ; is-voluntary
+
+validator-metadata-v1 = address                     ; iota-address
+                        bytes                       ; authority-pubkey-bytes
+                        bytes                       ; network-pubkey-bytes
+                        bytes                       ; protocol-pubkey-bytes
+                        bytes                       ; proof-of-possession
+                        move-string                 ; name
+                        move-string                 ; description
+                        url                         ; image-url
+                        url                         ; project-url
+                        move-string                 ; net-address
+                        move-string                 ; p2p-address
+                        move-string                 ; primary-address
+                        (%d00 / %d01 bytes)         ; next-epoch-authority-pubkey-bytes
+                        (%d00 / %d01 bytes)         ; next-epoch-proof-of-possession
+                        (%d00 / %d01 bytes)         ; next-epoch-network-pubkey-bytes
+                        (%d00 / %d01 bytes)         ; next-epoch-protocol-pubkey-bytes
+                        (%d00 / %d01 move-string)   ; next-epoch-net-address
+                        (%d00 / %d01 move-string)   ; next-epoch-p2p-address
+                        (%d00 / %d01 move-string)   ; next-epoch-primary-address
+                        bag                         ; extra-fields
+
+validator-operation-cap = address   ; authorizer-validator-address
+
+verified-id = uid           ; id
+              address       ; owner
+              move-string   ; key-claim-name
+              move-string   ; key-claim-value
+              move-string   ; issuer
+              move-string   ; audience
+
+verified-issuer = uid           ; id
+                  address       ; owner
+                  move-string   ; issuer
+
+version-change-cap = id    ; versioned-id
+                     u64   ; old-version
 
 versioned = uid   ; id
             u64   ; version
+
+voting-power-info-v1 = u64   ; validator-index
+                       u64   ; voting-power
+                       u64   ; stake
