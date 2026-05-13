@@ -17,8 +17,9 @@ mod transaction_kind {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
+        Programmable(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -32,7 +33,7 @@ mod transaction_kind {
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -43,8 +44,9 @@ mod transaction_kind {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
+        Programmable(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -52,8 +54,9 @@ mod transaction_kind {
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -68,9 +71,7 @@ mod transaction_kind {
         {
             if serializer.is_human_readable() {
                 let readable = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        ReadableTransactionKindRef::ProgrammableTransaction(k)
-                    }
+                    Self::Programmable(k) => ReadableTransactionKindRef::Programmable(k),
                     Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
@@ -88,9 +89,7 @@ mod transaction_kind {
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        BinaryTransactionKindRef::ProgrammableTransaction(k)
-                    }
+                    Self::Programmable(k) => BinaryTransactionKindRef::Programmable(k),
                     Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
@@ -115,9 +114,7 @@ mod transaction_kind {
         {
             if deserializer.is_human_readable() {
                 ReadableTransactionKind::deserialize(deserializer).map(|readable| match readable {
-                    ReadableTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
+                    ReadableTransactionKind::Programmable(k) => Self::Programmable(k),
                     ReadableTransactionKind::Genesis(k) => Self::Genesis(k),
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
@@ -132,9 +129,7 @@ mod transaction_kind {
                 })
             } else {
                 BinaryTransactionKind::deserialize(deserializer).map(|binary| match binary {
-                    BinaryTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
+                    BinaryTransactionKind::Programmable(k) => Self::Programmable(k),
                     BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)

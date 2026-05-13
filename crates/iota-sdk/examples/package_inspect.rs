@@ -331,7 +331,7 @@ async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result
 
             if object
                 .as_struct_opt()
-                .is_some_and(|move_struct| move_struct.object_type.is_upgrade_cap())
+                .is_some_and(|move_struct| move_struct.object_type().is_upgrade_cap())
             {
                 return Ok(Some(changed_object.object_id));
             }
@@ -350,7 +350,7 @@ fn is_package_make_immutable_call(move_call: &MoveCall) -> bool {
 fn publishes_package_as_immutable(tx: &Transaction) -> bool {
     let Some(programmable_tx) = tx
         .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
     else {
         return false;
     };
@@ -387,7 +387,7 @@ fn publishes_package_as_immutable(tx: &Transaction) -> bool {
 fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<u16> {
     let Some(programmable_tx) = tx
         .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
     else {
         return Vec::new();
     };
@@ -416,7 +416,7 @@ fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<
 fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectId) -> bool {
     let Some(programmable_tx) = tx
         .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
     else {
         return false;
     };

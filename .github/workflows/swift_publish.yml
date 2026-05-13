@@ -21,6 +21,13 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name || github.ref }}
 
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: swift-source
+
+      - name: Generate Swift bindings
+        run: make swift
+
       - name: Archive Swift SDK source
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
@@ -53,6 +60,10 @@ jobs:
 
       - name: Install rust target ${{ matrix.target }}
         run: rustup target add ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: swift-${{ matrix.target }}
 
       - name: Build ${{ matrix.target }} library
         run: ${{ contains(matrix.target, 'ios') && 'IPHONEOS_DEPLOYMENT_TARGET=18.5' || '' }} RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}

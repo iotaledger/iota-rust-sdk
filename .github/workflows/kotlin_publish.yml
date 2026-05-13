@@ -74,6 +74,10 @@ jobs:
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
 
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: kotlin-${{ matrix.target }}
+
       - name: Setup Android NDK
         if: contains(matrix.target, 'android')
         uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
@@ -124,6 +128,13 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: kotlin-publish
+
+      - name: Generate Kotlin bindings
+        run: make kotlin
 
       - name: Download native libraries
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
