@@ -3,16 +3,19 @@
 
 //! High-level API for transaction simulation.
 
-use iota_grpc_types::v1::transaction_execution_service::{
-    SimulateTransactionItem, SimulateTransactionsRequest, SimulatedTransaction,
-    simulate_transaction_item::TransactionCheckModes,
+use iota_grpc_types::{
+    read_mask_fields::SimulateReadMask,
+    v1::transaction_execution_service::{
+        SimulateTransactionItem, SimulateTransactionsRequest, SimulatedTransaction,
+        simulate_transaction_item::TransactionCheckModes,
+    },
 };
 use iota_types::Transaction;
 
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, ProtoResult, ProtocolError, ReadMask, Result,
+        Error, MetadataEnvelope, ProtoResult, ProtocolError, Result,
         SIMULATE_TRANSACTIONS_READ_MASK, build_proto_transaction, field_mask_with_default,
     },
 };
@@ -92,20 +95,21 @@ impl Client {
     /// Simulate a transaction without executing it, with a custom read mask.
     ///
     /// See [`simulate_transaction`](Self::simulate_transaction) for behavior.
-    /// Use [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// Pass a
+    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
+    /// any slice/array/vec of fields — conversion is automatic.
     pub async fn simulate_transaction_masked(
         &self,
         transaction: Transaction,
         skip_checks: bool,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
         self.simulate_transactions_internal(
             vec![SimulateTransactionInput {
                 transaction,
                 skip_checks,
             }],
-            Some(read_mask),
+            Some(read_mask.into()),
         )
         .await?
         .try_map(extract_single_simulation_result)
@@ -139,22 +143,22 @@ impl Client {
     /// Simulate a batch of transactions, with a custom read mask.
     ///
     /// See [`simulate_transactions`](Self::simulate_transactions) for
-    /// behavior. Use
-    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// behavior. Pass a
+    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
+    /// any slice/array/vec of fields — conversion is automatic.
     pub async fn simulate_transactions_masked(
         &self,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
-        self.simulate_transactions_internal(transactions, Some(read_mask))
+        self.simulate_transactions_internal(transactions, Some(read_mask.into()))
             .await
     }
 
     async fn simulate_transactions_internal(
         &self,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: Option<ReadMask<'_>>,
+        read_mask: Option<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
         if transactions.is_empty() {
             return Err(Error::EmptyRequest);
@@ -168,7 +172,7 @@ impl Client {
         let request = SimulateTransactionsRequest::default()
             .with_transactions(items)
             .with_read_mask(field_mask_with_default(
-                read_mask,
+                read_mask.as_ref().map(|m| m.as_str()),
                 SIMULATE_TRANSACTIONS_READ_MASK,
             ));
 

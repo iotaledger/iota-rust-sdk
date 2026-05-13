@@ -9,7 +9,7 @@
 
 use eyre::Result;
 use futures::StreamExt;
-use iota_sdk::grpc_client::{Client, ReadMask, read_mask_fields::CheckpointResponseField};
+use iota_sdk::grpc_client::{Client, read_mask_fields::CheckpointResponseField};
 
 const HOW_MANY: u64 = 5;
 
@@ -29,10 +29,14 @@ async fn main() -> Result<()> {
 
     // Only ask for the summary — keeps the message small. Drop the mask
     // (or compose more fields) to pull more data per checkpoint.
-    let mask = ReadMask::from(CheckpointResponseField::CHECKPOINT_SUMMARY);
-
     let mut stream = client
-        .stream_checkpoints_masked(Some(start), Some(end), mask, None, None)
+        .stream_checkpoints_masked(
+            Some(start),
+            Some(end),
+            CheckpointResponseField::CHECKPOINT_SUMMARY,
+            None,
+            None,
+        )
         .await?;
 
     println!("Streaming checkpoints {start}..={end}");

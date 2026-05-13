@@ -9,16 +9,19 @@
 //! constants with [`ReadMask::from`](crate::ReadMask::from) for field
 //! selection.
 
-use iota_grpc_types::v1::{
-    object::Object,
-    state_service::{ListOwnedObjectsRequest, state_service_client::StateServiceClient},
-    types::Address as ProtoAddress,
+use iota_grpc_types::{
+    read_mask_fields::OwnedObjectReadMask,
+    v1::{
+        object::Object,
+        state_service::{ListOwnedObjectsRequest, state_service_client::StateServiceClient},
+        types::Address as ProtoAddress,
+    },
 };
 use iota_types::{Address, StructTag};
 
 use crate::{
     Client, InterceptedChannel,
-    api::{LIST_OWNED_OBJECTS_READ_MASK, ReadMask, define_list_query, field_mask_with_default},
+    api::{LIST_OWNED_OBJECTS_READ_MASK, define_list_query, field_mask_with_default},
 };
 
 define_list_query! {
@@ -110,23 +113,24 @@ impl Client {
 
     /// List objects owned by an address, with a custom read mask.
     ///
-    /// See [`list_owned_objects`](Self::list_owned_objects) for behavior. Use
+    /// See [`list_owned_objects`](Self::list_owned_objects) for behavior. Pass
+    /// an
     /// [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// or any slice/array/vec of fields — conversion is automatic.
     pub fn list_owned_objects_masked(
         &self,
         owner: Address,
         object_type: impl Into<Option<StructTag>>,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<OwnedObjectReadMask>,
     ) -> ListOwnedObjectsQuery {
         self.list_owned_objects_internal(
             owner,
             object_type.into(),
             page_size.into(),
             page_token.into(),
-            Some(read_mask),
+            Some(read_mask.into()),
         )
     }
 
@@ -136,11 +140,14 @@ impl Client {
         object_type: Option<StructTag>,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<ReadMask<'_>>,
+        read_mask: Option<OwnedObjectReadMask>,
     ) -> ListOwnedObjectsQuery {
         let mut base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))
-            .with_read_mask(field_mask_with_default(read_mask, LIST_OWNED_OBJECTS_READ_MASK));
+            .with_read_mask(field_mask_with_default(
+                read_mask.as_ref().map(|m| m.as_str()),
+                LIST_OWNED_OBJECTS_READ_MASK,
+            ));
 
         if let Some(t) = object_type {
             base_request = base_request.with_object_type(t.to_string());

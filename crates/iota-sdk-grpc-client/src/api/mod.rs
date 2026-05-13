@@ -249,7 +249,7 @@ impl CheckpointResponse {
     ///
     /// let client = Client::new("http://localhost:9000").await?;
     /// let cp = client
-    ///     .get_checkpoint_latest_masked(CHECKPOINT_RESPONSE_CHECKPOINT_DATA.into(), None, None)
+    ///     .get_checkpoint_latest_masked(CHECKPOINT_RESPONSE_CHECKPOINT_DATA, None, None)
     ///     .await?;
     /// let data = cp.body().checkpoint_data()?;
     /// # Ok(())

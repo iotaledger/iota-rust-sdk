@@ -3,10 +3,13 @@
 
 //! High-level API for transaction execution.
 
-use iota_grpc_types::v1::{
-    signatures::{UserSignature as ProtoUserSignature, UserSignatures},
-    transaction::ExecutedTransaction,
-    transaction_execution_service::{ExecuteTransactionItem, ExecuteTransactionsRequest},
+use iota_grpc_types::{
+    read_mask_fields::TransactionReadMask,
+    v1::{
+        signatures::{UserSignature as ProtoUserSignature, UserSignatures},
+        transaction::ExecutedTransaction,
+        transaction_execution_service::{ExecuteTransactionItem, ExecuteTransactionsRequest},
+    },
 };
 use iota_types::SignedTransaction;
 
@@ -14,7 +17,7 @@ use crate::{
     Client,
     api::{
         EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtoResult, ProtocolError,
-        ReadMask, Result, build_proto_transaction, field_mask_with_default,
+        Result, build_proto_transaction, field_mask_with_default,
     },
 };
 
@@ -78,17 +81,18 @@ impl Client {
     /// Execute a signed transaction, with a custom read mask.
     ///
     /// See [`execute_transaction`](Self::execute_transaction) for behavior.
-    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields — conversion is automatic.
     pub async fn execute_transaction_masked(
         &self,
         signed_transaction: SignedTransaction,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<TransactionReadMask>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
     ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
         self.execute_transactions_internal(
             vec![signed_transaction],
-            Some(read_mask),
+            Some(read_mask.into()),
             checkpoint_inclusion_timeout_ms.into(),
         )
         .await?
@@ -138,17 +142,18 @@ impl Client {
     /// Execute a batch of signed transactions, with a custom read mask.
     ///
     /// See [`execute_transactions`](Self::execute_transactions) for behavior.
-    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields — conversion is automatic.
     pub async fn execute_transactions_masked(
         &self,
         transactions: Vec<SignedTransaction>,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<TransactionReadMask>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         self.execute_transactions_internal(
             transactions,
-            Some(read_mask),
+            Some(read_mask.into()),
             checkpoint_inclusion_timeout_ms.into(),
         )
         .await
@@ -157,7 +162,7 @@ impl Client {
     async fn execute_transactions_internal(
         &self,
         transactions: Vec<SignedTransaction>,
-        read_mask: Option<ReadMask<'_>>,
+        read_mask: Option<TransactionReadMask>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if transactions.is_empty() {
@@ -172,7 +177,7 @@ impl Client {
         let mut request = ExecuteTransactionsRequest::default()
             .with_transactions(items)
             .with_read_mask(field_mask_with_default(
-                read_mask,
+                read_mask.as_ref().map(|m| m.as_str()),
                 EXECUTE_TRANSACTIONS_READ_MASK,
             ));
 

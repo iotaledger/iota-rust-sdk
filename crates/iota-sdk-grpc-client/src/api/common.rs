@@ -146,20 +146,18 @@ pub type Result<T> = std::result::Result<T, Error>;
 // Field Masks
 // =============================================================================
 
-/// A read mask that can be passed to client methods.
+/// A low-level read mask string.
 ///
-/// Construct from field path constants defined in
-/// [`read_mask_fields`](crate::read_mask_fields):
+/// Most callers should use the scoped per-endpoint mask types in
+/// [`read_mask_fields`](crate::read_mask_fields)
+/// (e.g. [`ObjectReadMask`](crate::read_mask_fields::ObjectReadMask)) which
+/// are passed directly to the masked client methods. This type is the
+/// underlying string holder, useful when composing masks by hand:
 ///
 /// ```
-/// use iota_sdk_grpc_client::{ReadMask, read_mask_fields::TransactionField};
+/// use iota_sdk_grpc_client::ReadMask;
 ///
-/// // Single field
-/// let mask = ReadMask::from(TransactionField::EFFECTS);
-/// assert_eq!(mask.as_str(), "effects");
-///
-/// // Multiple fields
-/// let mask = ReadMask::from(&[TransactionField::EFFECTS, TransactionField::CHECKPOINT]);
+/// let mask = ReadMask::from("effects,checkpoint");
 /// assert_eq!(mask.as_str(), "effects,checkpoint");
 /// ```
 #[derive(Debug, Clone)]
@@ -209,11 +207,8 @@ impl From<FieldMask> for ReadMask<'_> {
 ///
 /// This is a convenience helper that handles the common pattern of using
 /// a user-provided field mask or falling back to a default.
-pub fn field_mask_with_default(custom: Option<ReadMask<'_>>, default: &str) -> FieldMask {
-    match custom {
-        Some(mask) => FieldMask::from_str(mask.as_str()),
-        None => FieldMask::from_str(default),
-    }
+pub fn field_mask_with_default(custom: Option<&str>, default: &str) -> FieldMask {
+    FieldMask::from_str(custom.unwrap_or(default))
 }
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of

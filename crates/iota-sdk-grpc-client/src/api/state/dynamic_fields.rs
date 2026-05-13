@@ -9,17 +9,19 @@
 //! constants with [`ReadMask::from`](crate::ReadMask::from) for field
 //! selection.
 
-use iota_grpc_types::v1::{
-    dynamic_field::DynamicField,
-    state_service::{ListDynamicFieldsRequest, state_service_client::StateServiceClient},
+use iota_grpc_types::{
+    read_mask_fields::DynamicFieldReadMask,
+    v1::{
+        dynamic_field::DynamicField,
+        state_service::{ListDynamicFieldsRequest, state_service_client::StateServiceClient},
+    },
 };
 use iota_types::ObjectId;
 
 use crate::{
     Client, InterceptedChannel,
     api::{
-        LIST_DYNAMIC_FIELDS_READ_MASK, ReadMask, define_list_query, field_mask_with_default,
-        proto_object_id,
+        LIST_DYNAMIC_FIELDS_READ_MASK, define_list_query, field_mask_with_default, proto_object_id,
     },
 };
 
@@ -103,20 +105,21 @@ impl Client {
     /// List dynamic fields owned by a parent object, with a custom read mask.
     ///
     /// See [`list_dynamic_fields`](Self::list_dynamic_fields) for behavior.
-    /// Use [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// Pass a
+    /// [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+    /// or any slice/array/vec of fields — conversion is automatic.
     pub fn list_dynamic_fields_masked(
         &self,
         parent: ObjectId,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
-        read_mask: ReadMask<'_>,
+        read_mask: impl Into<DynamicFieldReadMask>,
     ) -> ListDynamicFieldsQuery {
         self.list_dynamic_fields_internal(
             parent,
             page_size.into(),
             page_token.into(),
-            Some(read_mask),
+            Some(read_mask.into()),
         )
     }
 
@@ -125,12 +128,12 @@ impl Client {
         parent: ObjectId,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<ReadMask<'_>>,
+        read_mask: Option<DynamicFieldReadMask>,
     ) -> ListDynamicFieldsQuery {
         let base_request = ListDynamicFieldsRequest::default()
             .with_parent(proto_object_id(parent))
             .with_read_mask(field_mask_with_default(
-                read_mask,
+                read_mask.as_ref().map(|m| m.as_str()),
                 LIST_DYNAMIC_FIELDS_READ_MASK,
             ));
 
