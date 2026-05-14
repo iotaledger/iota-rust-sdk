@@ -33,7 +33,7 @@ struct MultisigExample {
     let kp2 = SimpleKeypair.fromEd25519(keypair: key2)
 
     // 3. Build multisig committee: threshold=2, each member weight=1
-    let committee = MultisigCommittee(
+    let committee = try MultisigCommittee(
       members: [
         MultisigMember(publicKey: kp0.publicKey(), weight: 1),
         MultisigMember(publicKey: kp1.publicKey(), weight: 1),
