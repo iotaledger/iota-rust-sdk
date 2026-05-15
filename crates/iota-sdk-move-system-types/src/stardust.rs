@@ -113,6 +113,7 @@ pub mod nft {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct NFT {
         dummy_field: bool,
     }
@@ -179,9 +180,9 @@ pub mod nft {
         use crate::parity_check::assert_parity;
         use iota_types::ObjectId;
 
-        #[test]
-        fn nft_marker_moverox_parity() {
-            assert_parity::<_, crate::generated::stardust::nft::NFT>(&NFT::default());
+        #[test_strategy::proptest]
+        fn nft_marker_moverox_parity(sample: NFT) {
+            assert_parity::<_, crate::generated::stardust::nft::NFT>(&sample);
         }
 
         #[test]
@@ -346,6 +347,7 @@ pub mod stardust_upgrade_label {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct STARDUST_UPGRADE_LABEL {
         dummy_field: bool,
     }
@@ -363,12 +365,12 @@ pub mod stardust_upgrade_label {
             assert_eq!(l, decoded);
         }
 
-        #[test]
-        fn stardust_upgrade_label_moverox_parity() {
+        #[test_strategy::proptest]
+        fn stardust_upgrade_label_moverox_parity(sample: STARDUST_UPGRADE_LABEL) {
             crate::parity_check::assert_parity::<
                 _,
                 crate::generated::stardust::stardust_upgrade_label::STARDUST_UPGRADE_LABEL,
-            >(&STARDUST_UPGRADE_LABEL::default());
+            >(&sample);
         }
     }
 }
@@ -555,6 +557,7 @@ pub mod alias {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Alias {
         /// The ID of the Alias — hash of the Output ID that created the
         /// Alias Output in Stardust.
@@ -621,19 +624,11 @@ pub mod alias {
             assert_eq!(a, decoded);
         }
 
-        #[test]
-        fn alias_moverox_parity() {
-            let a = Alias {
-                id: UID::new(ObjectId::ZERO),
-                legacy_state_controller: Address::new([0xab; 32]),
-                state_index: 7,
-                state_metadata: Some(b"state".to_vec()),
-                sender: Some(Address::new([0xcd; 32])),
-                metadata: Some(b"meta".to_vec()),
-                immutable_issuer: Some(Address::new([0xef; 32])),
-                immutable_metadata: Some(b"immutable".to_vec()),
-            };
-            crate::parity_check::assert_parity::<_, crate::generated::stardust::alias::Alias>(&a);
+        #[test_strategy::proptest]
+        fn alias_moverox_parity(sample: Alias) {
+            crate::parity_check::assert_parity::<_, crate::generated::stardust::alias::Alias>(
+                &sample,
+            );
         }
     }
 }
@@ -737,6 +732,7 @@ pub mod timelock_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TimelockUnlockCondition {
         /// Unix time (seconds since the Unix epoch) from which the output
         /// can be consumed.
@@ -761,13 +757,12 @@ pub mod timelock_unlock_condition {
             assert_eq!(t, decoded);
         }
 
-        #[test]
-        fn timelock_unlock_condition_moverox_parity() {
-            let t = TimelockUnlockCondition::new(1_700_000_000);
+        #[test_strategy::proptest]
+        fn timelock_unlock_condition_moverox_parity(sample: TimelockUnlockCondition) {
             crate::parity_check::assert_parity::<
                 _,
                 crate::generated::stardust::timelock_unlock_condition::TimelockUnlockCondition,
-            >(&t);
+            >(&sample);
         }
     }
 }
@@ -782,6 +777,7 @@ pub mod expiration_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ExpirationUnlockCondition {
         /// The address that owns the output before `unix_time` is reached.
         pub owner: Address,
@@ -818,17 +814,12 @@ pub mod expiration_unlock_condition {
             assert_eq!(e, decoded);
         }
 
-        #[test]
-        fn expiration_unlock_condition_moverox_parity() {
-            let e = ExpirationUnlockCondition::new(
-                Address::new([0xab; 32]),
-                Address::new([0xcd; 32]),
-                1_700_000_000,
-            );
+        #[test_strategy::proptest]
+        fn expiration_unlock_condition_moverox_parity(sample: ExpirationUnlockCondition) {
             crate::parity_check::assert_parity::<
                 _,
                 crate::generated::stardust::expiration_unlock_condition::ExpirationUnlockCondition,
-            >(&e);
+            >(&sample);
         }
     }
 }
@@ -842,6 +833,7 @@ pub mod storage_deposit_return_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct StorageDepositReturnUnlockCondition {
         /// The address to which the consuming transaction should deposit
         /// `return_amount`.
@@ -872,13 +864,14 @@ pub mod storage_deposit_return_unlock_condition {
             assert_eq!(s, decoded);
         }
 
-        #[test]
-        fn storage_deposit_return_unlock_condition_moverox_parity() {
-            let s = StorageDepositReturnUnlockCondition::new(Address::new([0xab; 32]), 12_345);
+        #[test_strategy::proptest]
+        fn storage_deposit_return_unlock_condition_moverox_parity(
+            sample: StorageDepositReturnUnlockCondition,
+        ) {
             crate::parity_check::assert_parity::<
                 _,
                 crate::generated::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
-            >(&s);
+            >(&sample);
         }
     }
 }

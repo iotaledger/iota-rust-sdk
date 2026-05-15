@@ -14,6 +14,7 @@ pub mod object {
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ID {
         pub bytes: ObjectId,
     }
@@ -46,6 +47,7 @@ pub mod object {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UID {
         pub id: ID,
     }
@@ -133,6 +135,7 @@ pub mod iota {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct IOTA {
         dummy_field: bool,
     }
@@ -210,6 +213,7 @@ pub mod system_admin_cap {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct IotaSystemAdminCap {
         dummy_field: bool,
     }
@@ -291,6 +295,37 @@ pub mod balance {
         }
     }
 
+    // Manual `Arbitrary` impls for the two phantom-only generics in this
+    // module so that downstream types containing `Balance<IOTA>` or
+    // `Supply<IOTA>` can derive `Arbitrary` themselves. The `test-strategy`
+    // derive can't cope with `PhantomData<T>` fields well; rolling these by
+    // hand keeps composites simple.
+    #[cfg(test)]
+    impl<T> proptest::arbitrary::Arbitrary for Balance<T>
+    where
+        T: 'static + core::fmt::Debug,
+    {
+        type Parameters = ();
+        type Strategy = proptest::strategy::BoxedStrategy<Self>;
+        fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
+            use proptest::prelude::*;
+            any::<u64>().prop_map(Balance::new).boxed()
+        }
+    }
+
+    #[cfg(test)]
+    impl<T> proptest::arbitrary::Arbitrary for Supply<T>
+    where
+        T: 'static + core::fmt::Debug,
+    {
+        type Parameters = ();
+        type Strategy = proptest::strategy::BoxedStrategy<Self>;
+        fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
+            use proptest::prelude::*;
+            any::<u64>().prop_map(Supply::new).boxed()
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -349,6 +384,7 @@ pub mod bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Bag {
         /// The ID of this bag.
         pub id: UID,
@@ -751,6 +787,7 @@ pub mod url {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Url {
         pub url: ascii::String,
     }
@@ -990,6 +1027,7 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Versioned {
         pub id: UID,
         pub version: u64,
@@ -1008,6 +1046,7 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
         pub old_version: u64,
@@ -1072,6 +1111,7 @@ pub mod bcs {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct BCS {
         pub bytes: Vec<u8>,
     }
@@ -1095,6 +1135,7 @@ pub mod clock {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
@@ -1121,6 +1162,7 @@ pub mod tx_context {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TxContext {
         /// Address of the user that signed the current transaction.
         pub sender: Address,
@@ -1145,6 +1187,7 @@ pub mod intent {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Intent {
         pub scope: u8,
         pub version: u8,
@@ -1168,6 +1211,7 @@ pub mod ecdsa_k1 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct KeyPair {
         pub private_key: Vec<u8>,
         pub public_key: Vec<u8>,
@@ -1189,6 +1233,7 @@ pub mod zklogin_verified_id {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VerifiedID {
         pub id: UID,
         /// The address this `VerifiedID` is associated with.
@@ -1216,6 +1261,7 @@ pub mod zklogin_verified_issuer {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VerifiedIssuer {
         pub id: UID,
         pub owner: Address,
@@ -1320,6 +1366,7 @@ pub mod borrow {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
@@ -1329,6 +1376,7 @@ pub mod borrow {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Test {
         pub id: UID,
     }
@@ -1501,6 +1549,7 @@ pub mod object_bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ObjectBag {
         pub id: UID,
         pub size: u64,
@@ -1568,6 +1617,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorState {
         pub id: UID,
         pub version: u64,
@@ -1578,6 +1628,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorStateInner {
         pub version: u64,
         /// List of currently active JWKs.
@@ -1590,6 +1641,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct JWK {
         pub kty: MoveString,
         pub e: MoveString,
@@ -1603,6 +1655,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct JwkId {
         pub iss: MoveString,
         pub kid: MoveString,
@@ -1613,6 +1666,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
@@ -1721,6 +1775,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Publisher {
         pub id: UID,
         pub package: AsciiString,
@@ -1733,6 +1788,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeCap {
         pub id: UID,
         /// (Mutable) ID of the package that can be upgraded.
@@ -1751,6 +1807,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeTicket {
         pub cap: ID,
         pub package: ID,
@@ -1768,6 +1825,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
@@ -1783,6 +1841,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Scalar {
         dummy_field: bool,
     }
@@ -1791,6 +1850,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct G1 {
         dummy_field: bool,
     }
@@ -1799,6 +1859,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct G2 {
         dummy_field: bool,
     }
@@ -1807,6 +1868,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GT {
         dummy_field: bool,
     }
@@ -1815,6 +1877,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UncompressedG1 {
         dummy_field: bool,
     }
@@ -1829,6 +1892,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Curve {
         pub id: u8,
     }
@@ -1837,6 +1901,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PreparedVerifyingKey {
         pub vk_gamma_abc_g1_bytes: Vec<u8>,
         pub alpha_g1_beta_g2_bytes: Vec<u8>,
@@ -1848,6 +1913,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PublicProofInputs {
         pub bytes: Vec<u8>,
     }
@@ -1856,6 +1922,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ProofPoints {
         pub bytes: Vec<u8>,
     }
@@ -1960,6 +2027,7 @@ pub mod account {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorFunctionRefV1Key {
         dummy_field: bool,
     }
@@ -2075,6 +2143,7 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct CoinManaged {
         pub coin_name: AsciiString,
     }
@@ -2084,6 +2153,7 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TreasuryOwnershipRenounced {
         pub coin_name: AsciiString,
     }
@@ -2093,6 +2163,7 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct MetadataOwnershipRenounced {
         pub coin_name: AsciiString,
     }
@@ -2962,6 +3033,7 @@ pub mod test_scenario {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Scenario {
         pub txn_number: u64,
         pub ctx: TxContext,
@@ -2971,6 +3043,7 @@ pub mod test_scenario {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TxContextBuilder {
         pub sender: Address,
         pub epoch: u64,
@@ -3012,6 +3085,7 @@ pub mod package_metadata {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PackageMetadataKey {
         dummy_field: bool,
     }
@@ -3040,6 +3114,7 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ModuleMetadataV1 {
         pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
     }
@@ -3049,6 +3124,7 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorMetadataV1 {
         pub function_name: AsciiString,
         pub account_type: TypeName,
@@ -3068,6 +3144,7 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct DenyList {
         pub id: UID,
         /// The individual deny lists.
@@ -3080,12 +3157,14 @@ pub mod deny_list {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ConfigWriteCap(bool);
 
     /// Rust version of the Move `iota::deny_list::ConfigKey` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ConfigKey {
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
@@ -3095,12 +3174,14 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AddressKey(pub Address);
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GlobalPauseKey(bool);
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
@@ -3108,6 +3189,7 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PerTypeConfigCreated {
         pub key: ConfigKey,
         pub config_id: ID,
@@ -3126,6 +3208,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Random {
         pub id: UID,
         pub inner: Versioned,
@@ -3135,6 +3218,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct RandomInner {
         pub version: u64,
         pub epoch: u64,
@@ -3148,6 +3232,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct RandomGenerator {
         pub seed: Vec<u8>,
         pub counter: u16,
@@ -3393,6 +3478,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct KioskOwnerCap {
         pub id: UID,
         pub r#for: ID,
@@ -3445,6 +3531,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Item {
         pub id: ID,
     }
@@ -3453,6 +3540,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Listing {
         pub id: ID,
         pub is_exclusive: bool,
@@ -3462,6 +3550,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Lock {
         pub id: ID,
     }
@@ -3544,6 +3633,7 @@ pub mod kiosk_extension {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and

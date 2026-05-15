@@ -40,6 +40,13 @@ iota-types = { workspace = true }
 moverox = { version = "=0.1.3", features = ["bcs"] }
 moverox-build = "=0.2.3"
 tempfile = "3"
+# Proptest drives the `*_moverox_parity` checks: a single
+# `#[test_strategy::proptest]` per type generates many random values via the
+# `Arbitrary` derives gated on `cfg(test)`. Activates the `proptest` feature
+# of `iota-types` so `Address`, `ObjectId`, and friends become arbitrary.
+proptest = { workspace = true, features = ["std"] }
+test-strategy = { workspace = true }
+iota-types = { workspace = true, features = ["proptest"] }
 
 [[example]]
 name = "regenerate"
