@@ -138,10 +138,10 @@ pub mod iota {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
-        use crate::framework::balance::Supply;
-        use crate::framework::object::UID;
         use iota_types::ObjectId;
+
+        use super::*;
+        use crate::framework::{balance::Supply, object::UID};
 
         #[test]
         fn iota_bcs_roundtrip() {
@@ -304,8 +304,9 @@ pub mod bag {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn bag_bcs_roundtrip() {
@@ -321,11 +322,12 @@ pub mod bag {
 pub mod coin {
     use core::marker::PhantomData;
 
-    use super::balance::{Balance, Supply};
-    use super::object::{ID, UID};
-    use super::url::Url;
-    use crate::std::ascii;
-    use crate::std::string;
+    use super::{
+        balance::{Balance, Supply},
+        object::{ID, UID},
+        url::Url,
+    };
+    use crate::std::{ascii, string};
 
     /// Rust version of the Move `iota::coin::Coin<T>` type.
     ///
@@ -407,10 +409,10 @@ pub mod coin {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_coin_metadata() {
+            if !move_struct.object_type().is_coin_metadata() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -483,8 +485,9 @@ pub mod coin {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         // Phantom markers in field positions (e.g. `balance: Balance<T>`) make
         // serde's auto-derive require `T: Serialize + Deserialize<'de>` even
@@ -522,7 +525,9 @@ pub mod coin {
                 string::String::new(b"Test Coin".to_vec()),
                 ascii::String::new(b"TST".to_vec()),
                 string::String::new(b"a test coin".to_vec()),
-                Some(Url::new(ascii::String::new(b"https://iota.org/logo.png".to_vec()))),
+                Some(Url::new(ascii::String::new(
+                    b"https://iota.org/logo.png".to_vec(),
+                ))),
             );
             let bytes = bcs::to_bytes(&m).unwrap();
             let decoded: CoinMetadata<TestCoin> = bcs::from_bytes(&bytes).unwrap();
@@ -587,8 +592,9 @@ pub mod table {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn table_bcs_roundtrip() {
@@ -789,9 +795,10 @@ pub mod table_vec {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::object::UID;
-        use iota_types::ObjectId;
 
         #[test]
         fn table_vec_bcs_roundtrip() {
@@ -849,8 +856,9 @@ pub mod versioned {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn versioned_bcs_roundtrip() {
@@ -1431,8 +1439,10 @@ pub mod authenticator_state {
 pub mod display {
     use core::marker::PhantomData;
 
-    use super::object::{ID, UID};
-    use super::vec_map::VecMap;
+    use super::{
+        object::{ID, UID},
+        vec_map::VecMap,
+    };
     use crate::std::string::String as MoveString;
 
     /// Rust version of the Move `iota::display::Display<T>` type.
@@ -1454,11 +1464,7 @@ pub mod display {
     }
 
     impl<T> Display<T> {
-        pub const fn new(
-            id: UID,
-            fields: VecMap<MoveString, MoveString>,
-            version: u16,
-        ) -> Self {
+        pub const fn new(id: UID, fields: VecMap<MoveString, MoveString>, version: u16) -> Self {
             Self {
                 id,
                 fields,
@@ -1500,11 +1506,7 @@ pub mod display {
     }
 
     impl<T> VersionUpdated<T> {
-        pub const fn new(
-            id: ID,
-            version: u16,
-            fields: VecMap<MoveString, MoveString>,
-        ) -> Self {
+        pub const fn new(id: ID, version: u16, fields: VecMap<MoveString, MoveString>) -> Self {
             Self {
                 id,
                 version,
@@ -1714,7 +1716,11 @@ pub mod authenticator_function {
     }
 
     impl<Account> AuthenticatorFunctionRefV1<Account> {
-        pub const fn new(package: ID, module_name: AsciiString, function_name: AsciiString) -> Self {
+        pub const fn new(
+            package: ID,
+            module_name: AsciiString,
+            function_name: AsciiString,
+        ) -> Self {
             Self {
                 package,
                 module_name,
@@ -1727,8 +1733,7 @@ pub mod authenticator_function {
 
 /// Types from `0x2::account`.
 pub mod account {
-    use super::authenticator_function::AuthenticatorFunctionRefV1;
-    use super::object::ID;
+    use super::{authenticator_function::AuthenticatorFunctionRefV1, object::ID};
 
     /// Rust version of the Move `iota::account::ImmutableAccountCreated`
     /// event type.
@@ -1776,11 +1781,12 @@ pub mod account {
 pub mod coin_manager {
     use core::marker::PhantomData;
 
-    use super::coin::{CoinMetadata, TreasuryCap};
-    use super::object::UID;
-    use super::url::Url;
-    use crate::std::ascii::String as AsciiString;
-    use crate::std::string::String as MoveString;
+    use super::{
+        coin::{CoinMetadata, TreasuryCap},
+        object::UID,
+        url::Url,
+    };
+    use crate::std::{ascii::String as AsciiString, string::String as MoveString};
 
     /// Rust version of the Move `iota::coin_manager::CoinManager<T>` type.
     ///
@@ -1914,8 +1920,7 @@ mod round4_tests {
     use iota_types::{Address, ObjectId};
 
     use super::*;
-    use crate::std::ascii;
-    use crate::std::string::String as MoveString;
+    use crate::std::{ascii, string::String as MoveString};
 
     fn oid() -> ObjectId {
         ObjectId::new([0xab; ObjectId::LENGTH])
@@ -2158,8 +2163,7 @@ mod round4_tests {
 
     #[test]
     fn display_bcs_roundtrip() {
-        let d: display::Display<u64> =
-            display::Display::new(uid(), vec_map::VecMap::default(), 1);
+        let d: display::Display<u64> = display::Display::new(uid(), vec_map::VecMap::default(), 1);
         let bytes = ::bcs::to_bytes(&d).unwrap();
         let decoded: display::Display<u64> = ::bcs::from_bytes(&bytes).unwrap();
         assert_eq!(d, decoded);
@@ -2260,12 +2264,13 @@ pub mod token {
 
     use iota_types::Address;
 
-    use super::balance::Balance;
-    use super::object::{ID, UID};
-    use super::vec_map::VecMap;
-    use super::vec_set::VecSet;
-    use crate::std::string::String as MoveString;
-    use crate::std::type_name::TypeName;
+    use super::{
+        balance::Balance,
+        object::{ID, UID},
+        vec_map::VecMap,
+        vec_set::VecSet,
+    };
+    use crate::std::{string::String as MoveString, type_name::TypeName};
 
     /// Rust version of the Move `iota::token::Token<T>` type.
     ///
@@ -2394,9 +2399,7 @@ pub mod token {
 pub mod test_scenario {
     use iota_types::Address;
 
-    use super::object::ID;
-    use super::tx_context::TxContext;
-    use super::vec_map::VecMap;
+    use super::{object::ID, tx_context::TxContext, vec_map::VecMap};
 
     /// Rust version of the Move `iota::test_scenario::Scenario` type.
     ///
@@ -2442,10 +2445,11 @@ pub mod test_scenario {
 
 /// Types from `0x2::package_metadata`.
 pub mod package_metadata {
-    use super::object::{ID, UID};
-    use super::vec_map::VecMap;
-    use crate::std::ascii::String as AsciiString;
-    use crate::std::type_name::TypeName;
+    use super::{
+        object::{ID, UID},
+        vec_map::VecMap,
+    };
+    use crate::std::{ascii::String as AsciiString, type_name::TypeName};
 
     /// Rust version of the Move
     /// `iota::package_metadata::PackageMetadataKey` type.
@@ -2502,8 +2506,10 @@ pub mod package_metadata {
 pub mod deny_list {
     use iota_types::Address;
 
-    use super::bag::Bag;
-    use super::object::{ID, UID};
+    use super::{
+        bag::Bag,
+        object::{ID, UID},
+    };
 
     /// Rust version of the Move `iota::deny_list::DenyList` type.
     ///
@@ -2559,8 +2565,7 @@ pub mod deny_list {
 
 /// Types from `0x2::random`.
 pub mod random {
-    use super::object::UID;
-    use super::versioned::Versioned;
+    use super::{object::UID, versioned::Versioned};
 
     /// Rust version of the Move `iota::random::Random` type.
     ///
@@ -2648,8 +2653,7 @@ pub mod config {
 /// Types from `0x2::ptb_command`.
 pub mod ptb_command {
     use super::object::ID;
-    use crate::std::ascii::String as AsciiString;
-    use crate::std::type_name::TypeName;
+    use crate::std::{ascii::String as AsciiString, type_name::TypeName};
 
     /// Rust version of the Move `iota::ptb_command::Argument` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
@@ -2775,8 +2779,7 @@ pub mod ptb_call_arg {
 
 /// Types from `0x2::ptb`.
 pub mod ptb {
-    use super::ptb_call_arg::CallArg;
-    use super::ptb_command::Command;
+    use super::{ptb_call_arg::CallArg, ptb_command::Command};
 
     /// Rust version of the Move `iota::ptb::ProgrammableTransaction` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
@@ -2789,8 +2792,7 @@ pub mod ptb {
 
 /// Types from `0x2::auth_context`.
 pub mod auth_context {
-    use super::ptb_call_arg::CallArg;
-    use super::ptb_command::Command;
+    use super::{ptb_call_arg::CallArg, ptb_command::Command};
 
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
@@ -2811,9 +2813,11 @@ pub mod kiosk {
 
     use iota_types::Address;
 
-    use super::balance::Balance;
-    use super::iota::IOTA;
-    use super::object::{ID, UID};
+    use super::{
+        balance::Balance,
+        iota::IOTA,
+        object::{ID, UID},
+    };
 
     /// Rust version of the Move `iota::kiosk::Kiosk` type.
     ///
@@ -3011,10 +3015,12 @@ pub mod kiosk_extension {
 pub mod transfer_policy {
     use core::marker::PhantomData;
 
-    use super::balance::Balance;
-    use super::iota::IOTA;
-    use super::object::{ID, UID};
-    use super::vec_set::VecSet;
+    use super::{
+        balance::Balance,
+        iota::IOTA,
+        object::{ID, UID},
+        vec_set::VecSet,
+    };
     use crate::std::type_name::TypeName;
 
     /// Rust version of the Move
@@ -3163,9 +3169,7 @@ mod round5_tests {
     use iota_types::{Address, ObjectId};
 
     use super::*;
-    use crate::std::ascii;
-    use crate::std::string::String as MoveString;
-    use crate::std::type_name::TypeName;
+    use crate::std::{ascii, string::String as MoveString, type_name::TypeName};
 
     fn oid() -> ObjectId {
         ObjectId::new([0xab; ObjectId::LENGTH])
@@ -3184,8 +3188,7 @@ mod round5_tests {
 
     #[test]
     fn token_bcs_roundtrip() {
-        let t: token::Token<TestT> =
-            token::Token::new(uid(), balance::Balance::new(1_000));
+        let t: token::Token<TestT> = token::Token::new(uid(), balance::Balance::new(1_000));
         let bytes = ::bcs::to_bytes(&t).unwrap();
         let decoded: token::Token<TestT> = ::bcs::from_bytes(&bytes).unwrap();
         assert_eq!(t, decoded);
@@ -3240,8 +3243,7 @@ mod round5_tests {
             account_type: TypeName::new(ascii::String::new(b"0x2::account::Account".to_vec())),
         };
         let bytes = ::bcs::to_bytes(&m).unwrap();
-        let decoded: package_metadata::AuthenticatorMetadataV1 =
-            ::bcs::from_bytes(&bytes).unwrap();
+        let decoded: package_metadata::AuthenticatorMetadataV1 = ::bcs::from_bytes(&bytes).unwrap();
         assert_eq!(m, decoded);
     }
 
@@ -3445,5 +3447,4 @@ mod round5_tests {
         let decoded: transfer_policy::TransferRequest<TestT> = ::bcs::from_bytes(&bytes).unwrap();
         assert_eq!(r, decoded);
     }
-
 }

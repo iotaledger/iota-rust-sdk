@@ -12,8 +12,7 @@
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
-//!   [`ExpirationUnlockCondition`],
-//!   [`StorageDepositReturnUnlockCondition`].
+//!   [`ExpirationUnlockCondition`], [`StorageDepositReturnUnlockCondition`].
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
@@ -160,10 +159,12 @@ impl CoinMetadata {
     /// marker is not re-checked against `IOTA`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::framework::coin::CoinMetadata::<IOTA>::try_from_object(
-            &object.0,
-        )?
-        .into())
+        Ok(
+            iota_move_system_types::framework::coin::CoinMetadata::<IOTA>::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
     }
 
     #[uniffi::constructor]
@@ -301,10 +302,12 @@ pub struct BasicOutput(pub iota_move_system_types::stardust::basic_output::Basic
 impl BasicOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_object(
-            &object.0,
-        )?
-        .into())
+        Ok(
+            iota_move_system_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
     }
 
     #[uniffi::constructor]
@@ -375,10 +378,12 @@ pub struct NftOutput(pub iota_move_system_types::stardust::nft_output::NftOutput
 impl NftOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::nft_output::NftOutput::<IOTA>::try_from_object(
-            &object.0,
-        )?
-        .into())
+        Ok(
+            iota_move_system_types::stardust::nft_output::NftOutput::<IOTA>::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
     }
 
     #[uniffi::constructor]
@@ -433,10 +438,12 @@ pub struct AliasOutput(pub iota_move_system_types::stardust::alias_output::Alias
 impl AliasOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_object(
-            &object.0,
-        )?
-        .into())
+        Ok(
+            iota_move_system_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
     }
 
     #[uniffi::constructor]
@@ -514,7 +521,8 @@ impl Alias {
 
 // Unlock conditions used by `BasicOutput` and `NftOutput`.
 
-/// A typed view of `0x107a::timelock_unlock_condition::TimelockUnlockCondition`.
+/// A typed view of
+/// `0x107a::timelock_unlock_condition::TimelockUnlockCondition`.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct TimelockUnlockCondition(

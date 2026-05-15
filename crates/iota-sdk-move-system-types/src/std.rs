@@ -64,7 +64,7 @@ pub mod string {
     ///
     /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror
     /// does **not** enforce that invariant. Wire format: a length-prefixed
-    /// byte vector — identical to Rust's [`prim@String`].
+    /// byte vector — identical to Rust's [`struct@String`].
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -144,7 +144,7 @@ pub mod type_name {
     /// String representation of a Move type, using its source syntax. For
     /// example: `00000000000000000000000000000001::string::String`, or
     /// for nested generics:
-    /// `0000…0a::module_name1::type_name1<0000…0a::module_name2::type_name2<u64>>`.
+    /// `0a::module_name1::type_name1<0a::module_name2::type_name2<u64>>`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -164,7 +164,7 @@ pub mod option {
     /// Rust version of the Move `std::option::Option<Element>` type.
     ///
     /// Move encodes optional values as a `vector` of length 0 or 1. The wire
-    /// format is identical to Rust's prelude [`prim@Option`], so most code
+    /// format is identical to Rust's prelude [`struct@Option`], so most code
     /// can use that instead — this mirror is provided for parity with the
     /// Move source.
     #[derive(Debug, Clone, Eq, PartialEq)]
@@ -270,5 +270,4 @@ mod tests {
         let decoded: bit_vector::BitVector = bcs::from_bytes(&bytes).unwrap();
         assert_eq!(bv, decoded);
     }
-
 }

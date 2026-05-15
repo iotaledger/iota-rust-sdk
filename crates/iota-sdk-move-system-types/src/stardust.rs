@@ -7,10 +7,10 @@
 pub mod irc27 {
     use iota_types::Address;
 
-    use crate::framework::url::Url;
-    use crate::framework::vec_map::VecMap;
-    use crate::std::fixed_point32::FixedPoint32;
-    use crate::std::string::String as MoveString;
+    use crate::{
+        framework::{url::Url, vec_map::VecMap},
+        std::{fixed_point32::FixedPoint32, string::String as MoveString},
+    };
 
     /// Rust version of the Move `stardust::irc27::Irc27Metadata` type.
     ///
@@ -56,8 +56,7 @@ pub mod irc27 {
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
-        use crate::framework::vec_map::Entry;
-        use crate::std::ascii;
+        use crate::{framework::vec_map::Entry, std::ascii};
 
         fn sample() -> Irc27Metadata {
             Irc27Metadata {
@@ -146,10 +145,10 @@ pub mod nft {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_nft() {
+            if !move_struct.object_type().is_nft() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -170,12 +169,12 @@ pub mod nft {
 
 /// Types from `0x107a::nft_output`.
 pub mod nft_output {
-    use super::expiration_unlock_condition::ExpirationUnlockCondition;
-    use super::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition;
-    use super::timelock_unlock_condition::TimelockUnlockCondition;
-    use crate::framework::bag::Bag;
-    use crate::framework::balance::Balance;
-    use crate::framework::object::UID;
+    use super::{
+        expiration_unlock_condition::ExpirationUnlockCondition,
+        storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
+        timelock_unlock_condition::TimelockUnlockCondition,
+    };
+    use crate::framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::nft_output::NftOutput<T>` type.
     ///
@@ -237,18 +236,19 @@ pub mod nft_output {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_nft_output() {
+            if !move_struct.object_type().is_nft_output() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::iota::IOTA;
-        use iota_types::ObjectId;
 
         #[test]
         fn nft_output_bcs_roundtrip() {
@@ -302,12 +302,12 @@ pub mod stardust_upgrade_label {
 pub mod basic_output {
     use iota_types::Address;
 
-    use super::expiration_unlock_condition::ExpirationUnlockCondition;
-    use super::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition;
-    use super::timelock_unlock_condition::TimelockUnlockCondition;
-    use crate::framework::bag::Bag;
-    use crate::framework::balance::Balance;
-    use crate::framework::object::UID;
+    use super::{
+        expiration_unlock_condition::ExpirationUnlockCondition,
+        storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
+        timelock_unlock_condition::TimelockUnlockCondition,
+    };
+    use crate::framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::basic_output::BasicOutput<T>`
     /// type.
@@ -389,18 +389,19 @@ pub mod basic_output {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_basic_output() {
+            if !move_struct.object_type().is_basic_output() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::iota::IOTA;
-        use iota_types::ObjectId;
 
         #[test]
         fn basic_output_bcs_roundtrip() {
@@ -474,17 +475,18 @@ pub mod alias {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_alias() {
+            if !move_struct.object_type().is_alias() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn alias_bcs_roundtrip() {
@@ -507,9 +509,7 @@ pub mod alias {
 
 /// Types from `0x107a::alias_output`.
 pub mod alias_output {
-    use crate::framework::bag::Bag;
-    use crate::framework::balance::Balance;
-    use crate::framework::object::UID;
+    use crate::framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::alias_output::AliasOutput<T>`
     /// type.
@@ -557,18 +557,19 @@ pub mod alias_output {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_alias_output() {
+            if !move_struct.object_type().is_alias_output() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::iota::IOTA;
-        use iota_types::ObjectId;
 
         #[test]
         fn alias_output_bcs_roundtrip() {
@@ -669,7 +670,8 @@ pub mod expiration_unlock_condition {
 pub mod storage_deposit_return_unlock_condition {
     use iota_types::Address;
 
-    /// Rust version of the Move `stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition`
+    /// Rust version of the Move
+    /// `stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition`
     /// type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

@@ -48,7 +48,7 @@ async fn main() -> Result<()> {
 
     let mut total_principal: u128 = 0;
     for object in page.data() {
-        let staked: StakedIota = bcs::from_bytes(&object.as_struct().contents)?;
+        let staked: StakedIota = bcs::from_bytes(object.as_struct().contents())?;
         total_principal += u128::from(staked.principal());
 
         println!("- id:               {}", staked.id());

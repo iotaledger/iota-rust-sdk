@@ -7,11 +7,13 @@
 pub mod staking_pool {
     use iota_types::ObjectId;
 
-    use crate::framework::bag::Bag;
-    use crate::framework::balance::Balance;
-    use crate::framework::iota::IOTA;
-    use crate::framework::object::{ID, UID};
-    use crate::framework::table::Table;
+    use crate::framework::{
+        bag::Bag,
+        balance::Balance,
+        iota::IOTA,
+        object::{ID, UID},
+        table::Table,
+    };
 
     /// Rust version of the Move
     /// `iota_system::staking_pool::PoolTokenExchangeRate` type.
@@ -99,10 +101,10 @@ pub mod staking_pool {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_staked_iota() {
+            if !move_struct.object_type().is_staked_iota() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -319,8 +321,9 @@ pub mod validator_cap {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn unverified_validator_operation_cap_bcs_roundtrip() {
@@ -367,9 +370,10 @@ pub mod validator_wrapper {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::object::UID;
-        use iota_types::ObjectId;
 
         #[test]
         fn validator_bcs_roundtrip() {
@@ -386,10 +390,10 @@ pub mod validator {
     use iota_types::Address;
 
     use super::staking_pool::StakingPoolV1;
-    use crate::framework::bag::Bag;
-    use crate::framework::object::ID;
-    use crate::framework::url::Url;
-    use crate::std::string::String as MoveString;
+    use crate::{
+        framework::{bag::Bag, object::ID, url::Url},
+        std::string::String as MoveString,
+    };
 
     /// Rust version of the Move
     /// `iota_system::validator::ValidatorMetadataV1` type.
@@ -492,10 +496,10 @@ pub mod validator {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
-        use crate::framework::object::UID;
-        use crate::std::ascii;
         use iota_types::ObjectId;
+
+        use super::*;
+        use crate::{framework::object::UID, std::ascii};
 
         fn sample_metadata() -> ValidatorMetadataV1 {
             ValidatorMetadataV1 {
@@ -566,14 +570,12 @@ pub mod validator {
 pub mod validator_set {
     use iota_types::Address;
 
-    use super::staking_pool::PoolTokenExchangeRate;
-    use super::validator::ValidatorV1;
-    use super::validator_wrapper::Validator;
-    use crate::framework::bag::Bag;
-    use crate::framework::object::ID;
-    use crate::framework::table::Table;
-    use crate::framework::table_vec::TableVec;
-    use crate::framework::vec_map::VecMap;
+    use super::{
+        staking_pool::PoolTokenExchangeRate, validator::ValidatorV1, validator_wrapper::Validator,
+    };
+    use crate::framework::{
+        bag::Bag, object::ID, table::Table, table_vec::TableVec, vec_map::VecMap,
+    };
 
     /// Rust version of the Move `iota_system::validator_set::ValidatorSetV1`
     /// type.
@@ -704,8 +706,9 @@ pub mod validator_set {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn validator_epoch_info_event_v1_bcs_roundtrip() {
@@ -757,14 +760,18 @@ pub mod validator_set {
 pub mod iota_system_state_inner {
     use iota_types::Address;
 
-    use super::storage_fund::StorageFundV1;
-    use super::validator_set::{ValidatorSetV1, ValidatorSetV2};
-    use crate::framework::bag::Bag;
-    use crate::framework::balance::Balance;
-    use crate::framework::iota::{IOTA, IotaTreasuryCap};
-    use crate::framework::system_admin_cap::IotaSystemAdminCap;
-    use crate::framework::vec_map::VecMap;
-    use crate::framework::vec_set::VecSet;
+    use super::{
+        storage_fund::StorageFundV1,
+        validator_set::{ValidatorSetV1, ValidatorSetV2},
+    };
+    use crate::framework::{
+        bag::Bag,
+        balance::Balance,
+        iota::{IOTA, IotaTreasuryCap},
+        system_admin_cap::IotaSystemAdminCap,
+        vec_map::VecMap,
+        vec_set::VecSet,
+    };
 
     /// Rust version of the Move
     /// `iota_system::iota_system_state_inner::SystemParametersV1` type.
@@ -907,9 +914,10 @@ pub mod iota_system_state_inner {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
+        use iota_types::ObjectId;
+
         use super::*;
         use crate::framework::object::UID;
-        use iota_types::ObjectId;
 
         #[test]
         fn system_parameters_v1_bcs_roundtrip() {
@@ -971,6 +979,7 @@ pub mod iota_system_state_inner {
 }
 
 /// Types from `0x3::iota_system`.
+#[allow(clippy::module_inception)]
 pub mod iota_system {
     use crate::framework::object::UID;
 
@@ -997,8 +1006,9 @@ pub mod iota_system {
 
     #[cfg(all(test, feature = "serde"))]
     mod tests {
-        use super::*;
         use iota_types::ObjectId;
+
+        use super::*;
 
         #[test]
         fn iota_system_state_bcs_roundtrip() {
@@ -1012,8 +1022,7 @@ pub mod iota_system {
 
 /// Types from `0x3::storage_fund`.
 pub mod storage_fund {
-    use crate::framework::balance::Balance;
-    use crate::framework::iota::IOTA;
+    use crate::framework::{balance::Balance, iota::IOTA};
 
     /// Rust version of the Move `iota_system::storage_fund::StorageFundV1`
     /// type.
@@ -1060,8 +1069,7 @@ pub mod timelocked_staking {
     use iota_types::ObjectId;
 
     use super::staking_pool::StakedIota;
-    use crate::framework::object::UID;
-    use crate::std::string::String as MoveString;
+    use crate::{framework::object::UID, std::string::String as MoveString};
 
     /// Rust version of the Move
     /// `iota_system::timelocked_staking::TimelockedStakedIota` type.
@@ -1106,10 +1114,10 @@ pub mod timelocked_staking {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.type_.is_timelocked_staked_iota() {
+            if !move_struct.object_type().is_timelocked_staked_iota() {
                 return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -1143,12 +1151,7 @@ pub mod timelocked_staking {
         fn timelocked_staked_iota_no_label_bcs_roundtrip() {
             let tsi = TimelockedStakedIota {
                 id: UID::new(sample_object_id(0xc3)),
-                staked_iota: StakedIota::new(
-                    sample_object_id(0xa1),
-                    sample_object_id(0xb2),
-                    7,
-                    42,
-                ),
+                staked_iota: StakedIota::new(sample_object_id(0xa1), sample_object_id(0xb2), 7, 42),
                 expiration_timestamp_ms: 0,
                 label: None,
             };
@@ -1163,8 +1166,8 @@ pub mod timelocked_staking {
 pub mod genesis {
     use iota_types::Address;
 
-    /// Rust version of the Move `iota_system::genesis::GenesisValidatorMetadata`
-    /// type.
+    /// Rust version of the Move
+    /// `iota_system::genesis::GenesisValidatorMetadata` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

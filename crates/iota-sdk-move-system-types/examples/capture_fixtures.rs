@@ -20,22 +20,20 @@
 //!
 //! # Capture strategies
 //!
-//! - [`Source::ObjectId`]: fetch a specific object by its known
-//!   address. The default for almost all fixtures — every entry
-//!   carries a hard-pinned mainnet object ID so re-runs produce the
-//!   same bytes byte-for-byte. When a pinned object is spent /
-//!   deleted, capture for that fixture fails loudly; the operator
-//!   picks a fresh ID (often via [`Source::TypeFilter`] locally)
+//! - [`Source::ObjectId`]: fetch a specific object by its known address. The
+//!   default for almost all fixtures — every entry carries a hard-pinned
+//!   mainnet object ID so re-runs produce the same bytes byte-for-byte. When a
+//!   pinned object is spent / deleted, capture for that fixture fails loudly;
+//!   the operator picks a fresh ID (often via [`Source::TypeFilter`] locally)
 //!   and commits the new pin alongside the new fixture.
-//! - [`Source::TypeFilter`]: ask the GraphQL endpoint for any object
-//!   matching the given fully-qualified type tag and take the first
-//!   one returned. Useful for *discovery* (finding a candidate to
-//!   pin), but inherently non-deterministic across runs so we don't
-//!   leave this in `FIXTURES` permanently.
-//! - [`Source::DynamicField`]: walk a dynamic field of a parent
-//!   object. Used for the versioned inner state (`IotaSystemStateInnerV2`
-//!   sits as a dynamic field of the 0x5 wrapper, keyed by version
-//!   number).
+//! - [`Source::TypeFilter`]: ask the GraphQL endpoint for any object matching
+//!   the given fully-qualified type tag and take the first one returned. Useful
+//!   for *discovery* (finding a candidate to pin), but inherently
+//!   non-deterministic across runs so we don't leave this in `FIXTURES`
+//!   permanently.
+//! - [`Source::DynamicField`]: walk a dynamic field of a parent object. Used
+//!   for the versioned inner state (`IotaSystemStateInnerV2` sits as a dynamic
+//!   field of the 0x5 wrapper, keyed by version number).
 //!
 //! Run this manually whenever you want to refresh the fixtures
 //! against current chain state — there is no automated CI job that
@@ -269,7 +267,7 @@ async fn capture(
             let move_struct = object
                 .as_struct_opt()
                 .ok_or("object is not a Move struct")?;
-            Ok(move_struct.contents.clone())
+            Ok(move_struct.contents().to_vec())
         }
         Source::ObjectId(id_str) => {
             let id: ObjectId = id_str.parse()?;
@@ -280,7 +278,7 @@ async fn capture(
             let move_struct = object
                 .as_struct_opt()
                 .ok_or("object is not a Move struct")?;
-            Ok(move_struct.contents.clone())
+            Ok(move_struct.contents().to_vec())
         }
         Source::DynamicField {
             parent,
@@ -296,9 +294,7 @@ async fn capture(
                     iota_graphql_client::BcsName(name_bcs.to_vec()),
                 )
                 .await?
-                .ok_or_else(|| {
-                    format!("dynamic field `{name_type}` on `{parent}` not found")
-                })?;
+                .ok_or_else(|| format!("dynamic field `{name_type}` on `{parent}` not found"))?;
             let value = df
                 .value
                 .ok_or("dynamic field has no value (was it removed?)")?;

@@ -17,21 +17,24 @@
 
 #![cfg(feature = "serde")]
 
-use iota_sdk_move_system_types::framework::clock::Clock;
-use iota_sdk_move_system_types::framework::coin::{Coin, CoinMetadata};
-use iota_sdk_move_system_types::framework::deny_list::DenyList;
-use iota_sdk_move_system_types::framework::iota::IOTA;
-use iota_sdk_move_system_types::framework::package::UpgradeCap;
-use iota_sdk_move_system_types::framework::random::Random;
-use iota_sdk_move_system_types::iota_system::iota_system::IotaSystemState;
-use iota_sdk_move_system_types::iota_system::iota_system_state_inner::IotaSystemStateV2;
-use iota_sdk_move_system_types::iota_system::staking_pool::StakedIota;
-use iota_sdk_move_system_types::iota_system::timelocked_staking::TimelockedStakedIota;
-use iota_sdk_move_system_types::stardust::alias::Alias;
-use iota_sdk_move_system_types::stardust::alias_output::AliasOutput;
-use iota_sdk_move_system_types::stardust::basic_output::BasicOutput;
-use iota_sdk_move_system_types::stardust::nft::Nft;
-use iota_sdk_move_system_types::stardust::nft_output::NftOutput;
+use iota_sdk_move_system_types::{
+    framework::{
+        clock::Clock,
+        coin::{Coin, CoinMetadata},
+        deny_list::DenyList,
+        iota::IOTA,
+        package::UpgradeCap,
+        random::Random,
+    },
+    iota_system::{
+        iota_system::IotaSystemState, iota_system_state_inner::IotaSystemStateV2,
+        staking_pool::StakedIota, timelocked_staking::TimelockedStakedIota,
+    },
+    stardust::{
+        alias::Alias, alias_output::AliasOutput, basic_output::BasicOutput, nft::Nft,
+        nft_output::NftOutput,
+    },
+};
 
 fn roundtrip<T>(bytes: &[u8])
 where
