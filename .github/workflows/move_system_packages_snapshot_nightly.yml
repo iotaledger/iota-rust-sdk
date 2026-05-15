@@ -1,0 +1,52 @@
+name: Move System Packages Snapshot Nightly
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # Daily at 3am UTC
+  workflow_dispatch:
+
+concurrency:
+  group: move-system-packages-snapshot-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  drift-check:
+    # Regenerates `crates/iota-sdk-move-system-types/generated/` from
+    # the IOTA core Move source at the upstream ref configured in
+    # `examples/regenerate.rs` (currently the moving `develop` branch)
+    # and fails if the committed snapshot differs. A failure means
+    # upstream changed a Move struct shape since the snapshot was last
+    # committed — review the diff and re-commit the snapshot (and any
+    # of our hand-curated types that need updating) in a follow-up PR.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Regenerate the moverox snapshot
+        run: cargo run -p iota-sdk-move-system-types --example regenerate
+
+      - name: Verify committed snapshot matches regeneration
+        run: |
+          if ! git diff --exit-code crates/iota-sdk-move-system-types/generated/; then
+            echo
+            echo "::error::Move system packages snapshot drift detected."
+            echo "The committed crates/iota-sdk-move-system-types/generated/ no longer matches with upstream."
+            echo "Run 'cargo run -p iota-sdk-move-system-types --example regenerate' locally, inspect the diff, update types whose layouts changed, fix any failing parity test, and commit the new generated/ snapshot in a PR."
+            exit 1
+          fi

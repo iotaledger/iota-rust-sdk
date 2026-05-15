@@ -32,5 +32,18 @@ serde = { workspace = true, features = ["derive"], optional = true }
 iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
+[dev-dependencies]
+# moverox versions are pinned with `=` so the regen output and the parity-test
+# compile artifacts are reproducible across local dev and CI (where Cargo.lock
+# is not committed). Bumping either version is a deliberate decision: review
+# the resulting `generated/` diff in the same PR.
+moverox = { version = "=0.1.3", features = ["bcs"] }
+moverox-build = "=0.2.3"
+tempfile = "3"
+
+[[example]]
+name = "regenerate"
+path = "examples/regenerate.rs"
+
 [build-dependencies]
 filetime = "0.2"

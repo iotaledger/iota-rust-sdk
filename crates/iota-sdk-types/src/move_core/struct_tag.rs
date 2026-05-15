@@ -443,6 +443,13 @@ impl StructTag {
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, coin::Coin, balance::Balance, timelock::TimeLock);
     add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);
+    add_struct_tag_ctor!(STARDUST, alias::Alias, nft::Nft, irc27::Irc27Metadata);
+    add_struct_tag_ctor_from_type_tag!(
+        STARDUST,
+        basic_output::BasicOutput,
+        nft_output::NftOutput,
+        alias_output::AliasOutput,
+    );
 }
 
 impl std::fmt::Display for StructTag {

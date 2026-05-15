@@ -270,4 +270,63 @@ mod tests {
         let decoded: bit_vector::BitVector = bcs::from_bytes(&bytes).unwrap();
         assert_eq!(bv, decoded);
     }
+
+    // -------------------------------------------------------------
+    // moverox-parity tests
+    // -------------------------------------------------------------
+
+    use crate::parity_check::assert_parity;
+
+    #[test]
+    fn fixed_point32_moverox_parity() {
+        let sample = fixed_point32::FixedPoint32::new(42);
+        assert_parity::<_, crate::generated::std::fixed_point32::FixedPoint32>(&sample);
+    }
+
+    #[test]
+    fn uq32_32_moverox_parity() {
+        let sample = uq32_32::UQ32_32::new(42);
+        assert_parity::<_, crate::generated::std::uq32_32::UQ32_32>(&sample);
+    }
+
+    #[test]
+    fn uq64_64_moverox_parity() {
+        let sample = uq64_64::UQ64_64::new(42);
+        assert_parity::<_, crate::generated::std::uq64_64::UQ64_64>(&sample);
+    }
+
+    #[test]
+    fn bit_vector_moverox_parity() {
+        let sample = bit_vector::BitVector::new(3, vec![true, false, true]);
+        assert_parity::<_, crate::generated::std::bit_vector::BitVector>(&sample);
+    }
+
+    #[test]
+    fn string_moverox_parity() {
+        let sample = string::String::new(b"hello".to_vec());
+        assert_parity::<_, crate::generated::std::string::String>(&sample);
+    }
+
+    #[test]
+    fn ascii_string_and_char_moverox_parity() {
+        let s = ascii::String::new(b"hi".to_vec());
+        assert_parity::<_, crate::generated::std::ascii::String>(&s);
+        let c = ascii::Char::new(b'A');
+        assert_parity::<_, crate::generated::std::ascii::Char>(&c);
+    }
+
+    #[test]
+    fn option_moverox_parity() {
+        let none: option::Option<u64> = option::Option::default();
+        assert_parity::<_, crate::generated::std::option::Option<u64>>(&none);
+        let some: option::Option<u64> = option::Option::new(vec![42]);
+        assert_parity::<_, crate::generated::std::option::Option<u64>>(&some);
+    }
+
+    #[test]
+    fn type_name_moverox_parity() {
+        let sample =
+            type_name::TypeName::new(ascii::String::new(b"0x2::iota::IOTA".to_vec()));
+        assert_parity::<_, crate::generated::std::type_name::TypeName>(&sample);
+    }
 }

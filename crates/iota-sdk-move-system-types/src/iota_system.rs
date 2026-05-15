@@ -95,49 +95,14 @@ pub mod staking_pool {
         /// the object's type tag matches `0x3::staking_pool::StakedIota`.
         pub fn try_from_object(
             object: &iota_types::Object,
-        ) -> Result<Self, StakedIotaFromObjectError> {
+        ) -> Result<Self, crate::FromObjectError> {
             let move_struct = object
                 .as_struct_opt()
-                .ok_or(StakedIotaFromObjectError::NotAMoveStruct)?;
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
             if !move_struct.type_.is_staked_iota() {
-                return Err(StakedIotaFromObjectError::WrongType);
+                return Err(crate::FromObjectError::WrongType);
             }
-            bcs::from_bytes(&move_struct.contents).map_err(StakedIotaFromObjectError::Bcs)
-        }
-    }
-
-    /// Error returned by [`StakedIota::try_from_object`].
-    #[cfg(feature = "serde")]
-    #[derive(Debug)]
-    pub enum StakedIotaFromObjectError {
-        /// The object is a package, not a Move struct.
-        NotAMoveStruct,
-        /// The Move struct's type tag is not `0x3::staking_pool::StakedIota`.
-        WrongType,
-        /// BCS decoding of the struct contents failed.
-        Bcs(bcs::Error),
-    }
-
-    #[cfg(feature = "serde")]
-    impl core::fmt::Display for StakedIotaFromObjectError {
-        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-            match self {
-                Self::NotAMoveStruct => f.write_str("object is not a Move struct"),
-                Self::WrongType => {
-                    f.write_str("object's type tag is not 0x3::staking_pool::StakedIota")
-                }
-                Self::Bcs(e) => write!(f, "bcs decoding failed: {e}"),
-            }
-        }
-    }
-
-    #[cfg(feature = "serde")]
-    impl core::error::Error for StakedIotaFromObjectError {
-        fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
-            match self {
-                Self::Bcs(e) => Some(e),
-                _ => None,
-            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -262,6 +227,47 @@ pub mod staking_pool {
             let decoded: StakingPoolV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(pool, decoded);
         }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn pool_token_exchange_rate_moverox_parity() {
+            let sample = PoolTokenExchangeRate::new(1_000, 999);
+            assert_parity::<_, crate::generated::iota_system::staking_pool::PoolTokenExchangeRate>(
+                &sample,
+            );
+        }
+
+        #[test]
+        fn staked_iota_moverox_parity() {
+            let staked = StakedIota::new(
+                sample_object_id(0xa1),
+                sample_object_id(0xb2),
+                42,
+                1_000_000_000,
+            );
+            assert_parity::<_, crate::generated::iota_system::staking_pool::StakedIota>(&staked);
+        }
+
+        #[test]
+        fn staking_pool_v1_moverox_parity() {
+            let pool = StakingPoolV1::new(
+                UID::new(sample_object_id(0x01)),
+                Some(10),
+                None,
+                1_000_000,
+                Balance::new(50_000),
+                500_000,
+                Table::new(UID::new(sample_object_id(0x02)), 3),
+                123,
+                0,
+                0,
+                Bag::new(UID::new(sample_object_id(0x03)), 0),
+            );
+            assert_parity::<_, crate::generated::iota_system::staking_pool::StakingPoolV1>(&pool);
+        }
     }
 }
 
@@ -298,6 +304,15 @@ pub mod voting_power {
             let bytes = bcs::to_bytes(&v).unwrap();
             let decoded: VotingPowerInfoV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(v, decoded);
+        }
+
+        #[test]
+        fn voting_power_info_v1_moverox_parity() {
+            let v = VotingPowerInfoV1::new(0, 100, 1_000);
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::iota_system::voting_power::VotingPowerInfoV1,
+            >(&v);
         }
     }
 }
@@ -375,6 +390,29 @@ pub mod validator_cap {
             let decoded: ValidatorOperationCap = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(cap, decoded);
         }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn unverified_validator_operation_cap_moverox_parity() {
+            let sample = UnverifiedValidatorOperationCap::new(
+                UID::new(ObjectId::ZERO),
+                Address::new([0xab; 32]),
+            );
+            assert_parity::<_, crate::generated::iota_system::validator_cap::UnverifiedValidatorOperationCap>(
+                &sample,
+            );
+        }
+
+        #[test]
+        fn validator_operation_cap_moverox_parity() {
+            let sample = ValidatorOperationCap::new(Address::new([0xcd; 32]));
+            assert_parity::<_, crate::generated::iota_system::validator_cap::ValidatorOperationCap>(
+                &sample,
+            );
+        }
     }
 }
 
@@ -412,6 +450,15 @@ pub mod validator_wrapper {
             let bytes = bcs::to_bytes(&v).unwrap();
             let decoded: Validator = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(v, decoded);
+        }
+
+        #[test]
+        fn validator_moverox_parity() {
+            let v = Validator::new(Versioned::new(UID::new(ObjectId::ZERO), 1));
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::iota_system::validator_wrapper::Validator,
+            >(&v);
         }
     }
 }
@@ -593,6 +640,44 @@ pub mod validator {
             let bytes = bcs::to_bytes(&e).unwrap();
             let decoded: UnstakingRequestEvent = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn validator_metadata_v1_moverox_parity() {
+            let m = sample_metadata();
+            assert_parity::<_, crate::generated::iota_system::validator::ValidatorMetadataV1>(&m);
+        }
+
+        #[test]
+        fn staking_request_event_moverox_parity() {
+            let e = StakingRequestEvent {
+                pool_id: ID::new(ObjectId::ZERO),
+                validator_address: Address::new([0; 32]),
+                staker_address: Address::new([1; 32]),
+                epoch: 7,
+                amount: 1_000_000,
+            };
+            assert_parity::<_, crate::generated::iota_system::validator::StakingRequestEvent>(&e);
+        }
+
+        #[test]
+        fn unstaking_request_event_moverox_parity() {
+            let e = UnstakingRequestEvent {
+                pool_id: ID::new(ObjectId::ZERO),
+                validator_address: Address::new([0; 32]),
+                staker_address: Address::new([1; 32]),
+                stake_activation_epoch: 7,
+                unstaking_epoch: 10,
+                principal_amount: 1_000_000,
+                reward_amount: 12_345,
+            };
+            assert_parity::<_, crate::generated::iota_system::validator::UnstakingRequestEvent>(
+                &e,
+            );
         }
     }
 }
@@ -784,6 +869,69 @@ pub mod validator_set {
             let bytes = bcs::to_bytes(&e).unwrap();
             let decoded: ValidatorLeaveEvent = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn validator_epoch_info_event_v1_moverox_parity() {
+            let e = ValidatorEpochInfoEventV1 {
+                epoch: 1,
+                validator_address: Address::new([0; 32]),
+                reference_gas_survey_quote: 100,
+                stake: 1_000_000,
+                voting_power: 50,
+                commission_rate: 5,
+                pool_staking_reward: 1_234,
+                pool_token_exchange_rate: PoolTokenExchangeRate::new(1, 1),
+                tallying_rule_reporters: vec![Address::new([1; 32])],
+                tallying_rule_global_score: 99,
+            };
+            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorEpochInfoEventV1>(&e);
+        }
+
+        #[test]
+        fn validator_join_leave_events_moverox_parity() {
+            let join = ValidatorJoinEvent {
+                epoch: 1,
+                validator_address: Address::new([0; 32]),
+                staking_pool_id: ID::new(ObjectId::ZERO),
+            };
+            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorJoinEvent>(
+                &join,
+            );
+
+            let leave = ValidatorLeaveEvent {
+                epoch: 1,
+                validator_address: Address::new([0; 32]),
+                staking_pool_id: ID::new(ObjectId::ZERO),
+                is_voluntary: true,
+            };
+            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorLeaveEvent>(
+                &leave,
+            );
+
+            let cjoin = CommitteeValidatorJoinEvent {
+                epoch: 1,
+                validator_address: Address::new([0; 32]),
+                staking_pool_id: ID::new(ObjectId::ZERO),
+            };
+            assert_parity::<
+                _,
+                crate::generated::iota_system::validator_set::CommitteeValidatorJoinEvent,
+            >(&cjoin);
+
+            let cleave = CommitteeValidatorLeaveEvent {
+                epoch: 1,
+                validator_address: Address::new([0; 32]),
+                staking_pool_id: ID::new(ObjectId::ZERO),
+            };
+            assert_parity::<
+                _,
+                crate::generated::iota_system::validator_set::CommitteeValidatorLeaveEvent,
+            >(&cleave);
         }
     }
 }
@@ -1002,6 +1150,61 @@ pub mod iota_system_state_inner {
             let decoded: SystemEpochInfoEventV2 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
         }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn system_parameters_v1_moverox_parity() {
+            let p = SystemParametersV1 {
+                epoch_duration_ms: 86_400_000,
+                min_validator_count: 4,
+                max_validator_count: 150,
+                min_validator_joining_stake: 30_000_000,
+                validator_low_stake_threshold: 25_000_000,
+                validator_very_low_stake_threshold: 20_000_000,
+                validator_low_stake_grace_period: 7,
+                extra_fields: Bag::new(UID::new(ObjectId::ZERO), 0),
+            };
+            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemParametersV1>(&p);
+        }
+
+        #[test]
+        fn system_epoch_info_event_v1_moverox_parity() {
+            let e = SystemEpochInfoEventV1 {
+                epoch: 1,
+                protocol_version: 1,
+                reference_gas_price: 1_000,
+                total_stake: 1_000_000_000,
+                storage_charge: 10_000,
+                storage_rebate: 8_000,
+                storage_fund_balance: 100_000,
+                total_gas_fees: 10_000,
+                total_stake_rewards_distributed: 1_000,
+                burnt_tokens_amount: 0,
+                minted_tokens_amount: 0,
+            };
+            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemEpochInfoEventV1>(&e);
+        }
+
+        #[test]
+        fn system_epoch_info_event_v2_moverox_parity() {
+            let e = SystemEpochInfoEventV2 {
+                epoch: 1,
+                protocol_version: 1,
+                total_stake: 1_000_000_000,
+                storage_charge: 10_000,
+                storage_rebate: 8_000,
+                storage_fund_balance: 100_000,
+                total_gas_fees: 10_000,
+                total_stake_rewards_distributed: 1_000,
+                burnt_tokens_amount: 0,
+                minted_tokens_amount: 0,
+                tips_amount: 42,
+            };
+            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemEpochInfoEventV2>(&e);
+        }
     }
 }
 
@@ -1041,6 +1244,15 @@ pub mod iota_system {
             let bytes = bcs::to_bytes(&s).unwrap();
             let decoded: IotaSystemState = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
+        }
+
+        #[test]
+        fn iota_system_state_moverox_parity() {
+            let s = IotaSystemState::new(UID::new(ObjectId::ZERO), 1);
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::iota_system::iota_system::IotaSystemState,
+            >(&s);
         }
     }
 }
@@ -1087,6 +1299,15 @@ pub mod storage_fund {
             let decoded: StorageFundV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(f, decoded);
         }
+
+        #[test]
+        fn storage_fund_v1_moverox_parity() {
+            let f = StorageFundV1::new(Balance::new(1_000_000), Balance::new(500));
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::iota_system::storage_fund::StorageFundV1,
+            >(&f);
+        }
     }
 }
 
@@ -1116,6 +1337,35 @@ pub mod timelocked_staking {
     impl TimelockedStakedIota {
         pub fn id(&self) -> &ObjectId {
             self.id.object_id()
+        }
+
+        pub fn expiration_timestamp_ms(&self) -> u64 {
+            self.expiration_timestamp_ms
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl TimelockedStakedIota {
+        /// Decode a [`TimelockedStakedIota`] from BCS bytes (e.g. the
+        /// `contents` of an on-chain Move struct) without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`TimelockedStakedIota`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x3::timelocked_staking::TimelockedStakedIota`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_timelocked_staked_iota() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
         }
     }
 
@@ -1161,6 +1411,48 @@ pub mod timelocked_staking {
             let bytes = bcs::to_bytes(&tsi).unwrap();
             let decoded: TimelockedStakedIota = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(tsi, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn timelocked_staked_iota_moverox_parity() {
+            let tsi = TimelockedStakedIota {
+                id: UID::new(sample_object_id(0xc3)),
+                staked_iota: StakedIota::new(
+                    sample_object_id(0xa1),
+                    sample_object_id(0xb2),
+                    42,
+                    1_000_000_000,
+                ),
+                expiration_timestamp_ms: 1_700_000_000_000,
+                label: Some(MoveString::new(b"vested".to_vec())),
+            };
+            assert_parity::<
+                _,
+                crate::generated::iota_system::timelocked_staking::TimelockedStakedIota,
+            >(&tsi);
+        }
+
+        #[test]
+        fn timelocked_staked_iota_no_label_moverox_parity() {
+            let tsi = TimelockedStakedIota {
+                id: UID::new(sample_object_id(0xc3)),
+                staked_iota: StakedIota::new(
+                    sample_object_id(0xa1),
+                    sample_object_id(0xb2),
+                    7,
+                    42,
+                ),
+                expiration_timestamp_ms: 0,
+                label: None,
+            };
+            assert_parity::<
+                _,
+                crate::generated::iota_system::timelocked_staking::TimelockedStakedIota,
+            >(&tsi);
         }
     }
 }
@@ -1273,6 +1565,64 @@ pub mod genesis {
             let bytes = bcs::to_bytes(&s).unwrap();
             let decoded: TokenDistributionSchedule = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn genesis_validator_metadata_moverox_parity() {
+            let m = GenesisValidatorMetadata {
+                name: b"alice".to_vec(),
+                description: b"a validator".to_vec(),
+                image_url: b"https://iota.org/a.png".to_vec(),
+                project_url: b"https://iota.org/".to_vec(),
+                iota_address: Address::new([0xab; 32]),
+                gas_price: 1_000,
+                commission_rate: 5,
+                authority_public_key: vec![0; 96],
+                proof_of_possession: vec![0; 48],
+                network_public_key: vec![0; 32],
+                protocol_public_key: vec![0; 32],
+                network_address: b"/ip4/127.0.0.1/tcp/1".to_vec(),
+                p2p_address: b"/ip4/127.0.0.1/tcp/2".to_vec(),
+                primary_address: b"/ip4/127.0.0.1/tcp/3".to_vec(),
+            };
+            assert_parity::<_, crate::generated::iota_system::genesis::GenesisValidatorMetadata>(
+                &m,
+            );
+        }
+
+        #[test]
+        fn genesis_chain_parameters_moverox_parity() {
+            let p = GenesisChainParameters {
+                protocol_version: 1,
+                chain_start_timestamp_ms: 1_700_000_000_000,
+                epoch_duration_ms: 86_400_000,
+                max_validator_count: 150,
+                min_validator_joining_stake: 30_000_000,
+                validator_low_stake_threshold: 25_000_000,
+                validator_very_low_stake_threshold: 20_000_000,
+                validator_low_stake_grace_period: 7,
+            };
+            assert_parity::<_, crate::generated::iota_system::genesis::GenesisChainParameters>(&p);
+        }
+
+        #[test]
+        fn token_distribution_schedule_moverox_parity() {
+            let s = TokenDistributionSchedule {
+                pre_minted_supply: 1_000_000_000,
+                allocations: vec![TokenAllocation {
+                    recipient_address: Address::new([0; 32]),
+                    amount_nanos: 1_000_000,
+                    staked_with_validator: Some(Address::new([1; 32])),
+                    staked_with_timelock_expiration: Some(1_700_000_000_000),
+                }],
+            };
+            assert_parity::<_, crate::generated::iota_system::genesis::TokenDistributionSchedule>(
+                &s,
+            );
         }
     }
 }

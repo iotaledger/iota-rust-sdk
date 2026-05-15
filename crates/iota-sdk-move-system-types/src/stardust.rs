@@ -43,15 +43,24 @@ pub mod irc27 {
         pub non_standard_fields: VecMap<MoveString, MoveString>,
     }
 
+    #[cfg(feature = "serde")]
+    impl Irc27Metadata {
+        /// Decode an [`Irc27Metadata`] from BCS bytes without verifying any
+        /// on-chain type tag (the metadata is usually nested inside an
+        /// [`Nft`](super::nft::Nft), not stored as a top-level object).
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
         use crate::framework::vec_map::Entry;
         use crate::std::ascii;
 
-        #[test]
-        fn irc27_metadata_bcs_roundtrip() {
-            let m = Irc27Metadata {
+        fn sample() -> Irc27Metadata {
+            Irc27Metadata {
                 version: MoveString::new(b"1.0".to_vec()),
                 media_type: MoveString::new(b"image/png".to_vec()),
                 uri: Url::new(ascii::String::new(b"https://iota.org/n.png".to_vec())),
@@ -68,10 +77,23 @@ pub mod irc27 {
                     MoveString::new(b"v".to_vec()),
                 )]),
                 non_standard_fields: VecMap::default(),
-            };
+            }
+        }
+
+        #[test]
+        fn irc27_metadata_bcs_roundtrip() {
+            let m = sample();
             let bytes = bcs::to_bytes(&m).unwrap();
             let decoded: Irc27Metadata = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(m, decoded);
+        }
+
+        #[test]
+        fn irc27_metadata_moverox_parity() {
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::irc27::Irc27Metadata,
+            >(&sample());
         }
     }
 }
@@ -116,6 +138,29 @@ pub mod nft {
         pub immutable_metadata: Irc27Metadata,
     }
 
+    #[cfg(feature = "serde")]
+    impl Nft {
+        /// Decode an [`Nft`] from BCS bytes without verifying the on-chain
+        /// type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode an [`Nft`] from an on-chain object, validating that the
+        /// object's type tag matches `0x107a::nft::Nft`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_nft() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -127,6 +172,49 @@ pub mod nft {
             assert_eq!(bytes, [0u8]);
             let decoded: NFT = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(n, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+        use iota_types::ObjectId;
+
+        #[test]
+        fn nft_marker_moverox_parity() {
+            assert_parity::<_, crate::generated::stardust::nft::NFT>(&NFT::default());
+        }
+
+        #[test]
+        fn nft_moverox_parity() {
+            use crate::framework::url::Url;
+            use crate::framework::vec_map::{Entry, VecMap};
+            use crate::std::ascii;
+            use crate::std::fixed_point32::FixedPoint32;
+            use crate::std::string::String as MoveString;
+
+            let sample = Nft {
+                id: UID::new(ObjectId::new([0x10; ObjectId::LENGTH])),
+                legacy_sender: Some(Address::new([0xab; 32])),
+                metadata: Some(b"metadata".to_vec()),
+                tag: None,
+                immutable_issuer: Some(Address::new([0xcd; 32])),
+                immutable_metadata: Irc27Metadata {
+                    version: MoveString::new(b"1.0".to_vec()),
+                    media_type: MoveString::new(b"image/png".to_vec()),
+                    uri: Url::new(ascii::String::new(b"https://iota.org/n.png".to_vec())),
+                    name: MoveString::new(b"name".to_vec()),
+                    collection_name: None,
+                    royalties: VecMap::new(vec![Entry::new(
+                        Address::new([0xab; 32]),
+                        FixedPoint32::new(1_000),
+                    )]),
+                    issuer_name: None,
+                    description: None,
+                    attributes: VecMap::default(),
+                    non_standard_fields: VecMap::default(),
+                },
+            };
+            assert_parity::<_, crate::generated::stardust::nft::Nft>(&sample);
         }
     }
 }
@@ -180,6 +268,33 @@ pub mod nft_output {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> NftOutput<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`NftOutput<T>`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`NftOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches `0x107a::nft_output::NftOutput`
+        /// (the inner coin marker is not checked against `T`).
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_nft_output() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -199,6 +314,22 @@ pub mod nft_output {
             let bytes = bcs::to_bytes(&o).unwrap();
             let decoded: NftOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(o, decoded);
+        }
+
+        #[test]
+        fn nft_output_moverox_parity() {
+            let o: NftOutput<IOTA> = NftOutput::new(
+                UID::new(ObjectId::ZERO),
+                Balance::new(1_000_000),
+                Bag::new(UID::new(ObjectId::ZERO), 0),
+                None,
+                Some(TimelockUnlockCondition::new(1_700_000_000)),
+                None,
+            );
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::nft_output::NftOutput<u64>,
+            >(&o);
         }
     }
 }
@@ -230,6 +361,14 @@ pub mod stardust_upgrade_label {
             assert_eq!(bytes, [0u8]);
             let decoded: STARDUST_UPGRADE_LABEL = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(l, decoded);
+        }
+
+        #[test]
+        fn stardust_upgrade_label_moverox_parity() {
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::stardust_upgrade_label::STARDUST_UPGRADE_LABEL,
+            >(&STARDUST_UPGRADE_LABEL::default());
         }
     }
 }
@@ -304,6 +443,34 @@ pub mod basic_output {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> BasicOutput<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`BasicOutput<T>`] from BCS bytes without verifying
+        /// the on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`BasicOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x107a::basic_output::BasicOutput` (the inner coin marker is
+        /// not checked against `T`).
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_basic_output() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -326,6 +493,49 @@ pub mod basic_output {
             let bytes = bcs::to_bytes(&o).unwrap();
             let decoded: BasicOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(o, decoded);
+        }
+
+        // moverox-parity --------------------------------------------------
+
+        use crate::parity_check::assert_parity;
+
+        #[test]
+        fn basic_output_full_moverox_parity() {
+            let o: BasicOutput<IOTA> = BasicOutput::new(
+                UID::new(ObjectId::ZERO),
+                Balance::new(1_000_000),
+                Bag::new(UID::new(ObjectId::ZERO), 0),
+                Some(StorageDepositReturnUnlockCondition::new(
+                    Address::new([0xab; 32]),
+                    500_000,
+                )),
+                Some(TimelockUnlockCondition::new(1_700_000_000)),
+                Some(ExpirationUnlockCondition::new(
+                    Address::new([0xab; 32]),
+                    Address::new([0xcd; 32]),
+                    1_800_000_000,
+                )),
+                Some(b"metadata".to_vec()),
+                Some(b"tag".to_vec()),
+                Some(Address::new([0xef; 32])),
+            );
+            assert_parity::<_, crate::generated::stardust::basic_output::BasicOutput<u64>>(&o);
+        }
+
+        #[test]
+        fn basic_output_minimal_moverox_parity() {
+            let o: BasicOutput<IOTA> = BasicOutput::new(
+                UID::new(ObjectId::ZERO),
+                Balance::new(0),
+                Bag::new(UID::new(ObjectId::ZERO), 0),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            );
+            assert_parity::<_, crate::generated::stardust::basic_output::BasicOutput<u64>>(&o);
         }
     }
 }
@@ -366,6 +576,29 @@ pub mod alias {
         pub immutable_metadata: Option<Vec<u8>>,
     }
 
+    #[cfg(feature = "serde")]
+    impl Alias {
+        /// Decode an [`Alias`] from BCS bytes without verifying the on-chain
+        /// type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode an [`Alias`] from an on-chain object, validating that the
+        /// object's type tag matches `0x107a::alias::Alias`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_alias() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -386,6 +619,21 @@ pub mod alias {
             let bytes = bcs::to_bytes(&a).unwrap();
             let decoded: Alias = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(a, decoded);
+        }
+
+        #[test]
+        fn alias_moverox_parity() {
+            let a = Alias {
+                id: UID::new(ObjectId::ZERO),
+                legacy_state_controller: Address::new([0xab; 32]),
+                state_index: 7,
+                state_metadata: Some(b"state".to_vec()),
+                sender: Some(Address::new([0xcd; 32])),
+                metadata: Some(b"meta".to_vec()),
+                immutable_issuer: Some(Address::new([0xef; 32])),
+                immutable_metadata: Some(b"immutable".to_vec()),
+            };
+            crate::parity_check::assert_parity::<_, crate::generated::stardust::alias::Alias>(&a);
         }
     }
 }
@@ -421,6 +669,34 @@ pub mod alias_output {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> AliasOutput<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode an [`AliasOutput<T>`] from BCS bytes without verifying
+        /// the on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode an [`AliasOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x107a::alias_output::AliasOutput` (the inner coin marker is
+        /// not checked against `T`).
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.type_.is_alias_output() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(&move_struct.contents).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -437,6 +713,19 @@ pub mod alias_output {
             let bytes = bcs::to_bytes(&o).unwrap();
             let decoded: AliasOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(o, decoded);
+        }
+
+        #[test]
+        fn alias_output_moverox_parity() {
+            let o: AliasOutput<IOTA> = AliasOutput::new(
+                UID::new(ObjectId::ZERO),
+                Balance::new(5_000_000),
+                Bag::new(UID::new(ObjectId::ZERO), 0),
+            );
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::alias_output::AliasOutput<u64>,
+            >(&o);
         }
     }
 }
@@ -470,6 +759,15 @@ pub mod timelock_unlock_condition {
             let bytes = bcs::to_bytes(&t).unwrap();
             let decoded: TimelockUnlockCondition = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(t, decoded);
+        }
+
+        #[test]
+        fn timelock_unlock_condition_moverox_parity() {
+            let t = TimelockUnlockCondition::new(1_700_000_000);
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::timelock_unlock_condition::TimelockUnlockCondition,
+            >(&t);
         }
     }
 }
@@ -519,6 +817,19 @@ pub mod expiration_unlock_condition {
             let decoded: ExpirationUnlockCondition = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
         }
+
+        #[test]
+        fn expiration_unlock_condition_moverox_parity() {
+            let e = ExpirationUnlockCondition::new(
+                Address::new([0xab; 32]),
+                Address::new([0xcd; 32]),
+                1_700_000_000,
+            );
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::expiration_unlock_condition::ExpirationUnlockCondition,
+            >(&e);
+        }
     }
 }
 
@@ -559,6 +870,15 @@ pub mod storage_deposit_return_unlock_condition {
             let bytes = bcs::to_bytes(&s).unwrap();
             let decoded: StorageDepositReturnUnlockCondition = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
+        }
+
+        #[test]
+        fn storage_deposit_return_unlock_condition_moverox_parity() {
+            let s = StorageDepositReturnUnlockCondition::new(Address::new([0xab; 32]), 12_345);
+            crate::parity_check::assert_parity::<
+                _,
+                crate::generated::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
+            >(&s);
         }
     }
 }
