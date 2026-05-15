@@ -283,7 +283,9 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
-pub use iota_graphql_client::WaitForTx;
+pub use iota_graphql_client::{
+    DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, TransactionArgument, WaitForTx,
+};
 
 pub use self::{
     builder::{
@@ -307,7 +309,7 @@ mod tests {
     };
     use iota_types::{
         Address, Digest, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectReference,
-        ObjectType, TransactionEffects, UpgradePolicy, Version,
+        ObjectType, Transaction, TransactionEffects, UpgradePolicy, Version,
     };
 
     use crate::{TransactionBuilder, assigned, error::Error};
@@ -426,6 +428,73 @@ mod tests {
         tx.gas_price(1000);
 
         tx.finish().unwrap();
+    }
+
+    #[test]
+    fn test_transaction_to_builder_roundtrip() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+            .parse()
+            .unwrap();
+        let recipient = Address::generate(rand::thread_rng());
+        let coin = ObjectReference::new(
+            "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                .parse()
+                .unwrap(),
+            Version::from_u64(2),
+            "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9"
+                .parse()
+                .unwrap(),
+        );
+        let gas_coin = ObjectReference::new(
+            "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
+                .parse()
+                .unwrap(),
+            Version::from_u64(2),
+            "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
+                .parse()
+                .unwrap(),
+        );
+
+        // Build a transaction with multiple commands and a sponsor to exercise
+        // inputs, gas, and the various builder fields.
+        let mut tx = TransactionBuilder::new(sender);
+        tx.transfer_objects(recipient, vec![coin]);
+        tx.split_coins(crate::unresolved::Argument::Gas, [42u64]);
+        tx.gas([gas_coin]);
+        tx.gas_price(1000);
+        tx.gas_budget(5_000_000);
+        tx.sponsor(sponsor);
+        tx.expiration(123);
+
+        let original = tx.finish().unwrap();
+
+        let rebuilt: TransactionBuilder = TransactionBuilder::try_from(original.clone()).unwrap();
+        let roundtrip = rebuilt.finish().unwrap();
+
+        assert_eq!(original, roundtrip);
+    }
+
+    #[test]
+    fn test_transaction_to_builder_rejects_non_ptb() {
+        // A non-programmable Transaction kind should not be accepted.
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
+            sender: Address::generate(rand::thread_rng()),
+            gas_payment: iota_types::GasPayment {
+                objects: vec![],
+                owner: Address::generate(rand::thread_rng()),
+                price: 0,
+                budget: 0,
+            },
+            expiration: Default::default(),
+        });
+        assert!(matches!(
+            TransactionBuilder::try_from(txn),
+            Err(Error::UnsupportedTransactionKind)
+        ));
     }
 
     #[tokio::test]

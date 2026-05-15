@@ -126,6 +126,7 @@ pub mod object;
 pub mod object_id;
 pub mod transaction;
 pub mod u256;
+pub mod utils;
 pub mod validator;
 pub mod version;
 
@@ -159,7 +160,8 @@ pub use gas::GasCostSummary;
 pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
-    GenesisObject, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
+    GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,
+    ObjectReference, ObjectType, Owner,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
@@ -170,8 +172,9 @@ pub use transaction::{
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments,
     EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SignedTransaction, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
-    TransactionKind, TransactionV1, TransferObjects, Upgrade, VersionAssignment,
+    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
+    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
+    VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
@@ -305,9 +308,26 @@ macro_rules! def_is_as_into_opt {
             self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
+        #[inline]
+        pub fn [< as_ $rename _mut >](&mut self) -> &mut $inner {
+            self.[< as_ $rename _mut_opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
+        #[inline]
+        pub fn [< as_ $rename _mut_opt >](&mut self) -> Option<&mut $inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)

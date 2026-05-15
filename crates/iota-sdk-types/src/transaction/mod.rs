@@ -6,6 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
     ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
 };
+use crate::utils::write_sep;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -25,13 +26,12 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Transaction {
-    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     V1(TransactionV1),
     // When new variants are introduced, it is important that we check version support
     // in the validity_check function based on the protocol config.
@@ -47,7 +47,7 @@ impl From<TransactionV1> for Transaction {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -117,7 +117,7 @@ impl TransactionExpiration {
 ///               u64                       ; price
 ///               u64                       ; budget
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -173,20 +173,20 @@ pub struct RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %d00 ptb                                    ; ProgrammableTransaction
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
 ///                     =/ %d01 genesis-transaction                    ; Genesis
 ///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
-    ProgrammableTransaction(ProgrammableTransaction),
+    Programmable(ProgrammableTransaction),
     /// Transaction used to initialize the chain state.
     ///
     /// Only valid if in the genesis checkpoint (0) and if this is the very
@@ -205,14 +205,99 @@ pub enum TransactionKind {
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
-        ProgrammableTransaction,
         ConsensusCommitPrologueV1,
         RandomnessStateUpdate,
     }
 
     crate::def_is_as_into_opt! {
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+    }
+
+    /// Create a [`TransactionKind::Programmable`].
+    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
+        Self::Programmable(tx)
+    }
+
+    /// Create a [`TransactionKind::Genesis`].
+    pub fn new_genesis(tx: GenesisTransaction) -> Self {
+        Self::Genesis(tx)
+    }
+
+    /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
+    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(tx)
+    }
+
+    /// Create a [`TransactionKind::EndOfEpoch`].
+    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(tx)
+    }
+
+    /// Create a [`TransactionKind::RandomnessStateUpdate`].
+    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(tx)
+    }
+
+    /// Returns `true` if this is a system transaction.
+    pub fn is_system(&self) -> bool {
+        match self {
+            TransactionKind::Genesis(_)
+            | TransactionKind::ConsensusCommitPrologueV1(_)
+            | TransactionKind::AuthenticatorStateUpdateV1Deprecated
+            | TransactionKind::RandomnessStateUpdate(_)
+            | TransactionKind::EndOfEpoch(_) => true,
+            TransactionKind::Programmable(_) => false,
+        }
+    }
+
+    /// Returns the number of commands, or 0 if it is a system transaction.
+    pub fn num_commands(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns the number of transactions, or 1 if it is a system transaction.
+    pub fn num_transactions(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 1,
+        }
+    }
+}
+
+impl core::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match &self {
+            Self::Programmable(p) => {
+                writeln!(f, "Transaction Kind : Programmable")?;
+                write!(f, "{p}")
+            }
+            Self::Genesis(_) => writeln!(f, "Transaction Kind : Genesis"),
+            Self::ConsensusCommitPrologueV1(p) => {
+                writeln!(f, "Transaction Kind : Consensus Commit Prologue V1")?;
+                writeln!(f, "Timestamp : {}", p.commit_timestamp_ms)?;
+                writeln!(f, "Consensus Digest: {}", p.consensus_commit_digest)?;
+                writeln!(
+                    f,
+                    "Consensus determined version assignment: {:?}",
+                    p.consensus_determined_version_assignments
+                )
+            }
+            Self::AuthenticatorStateUpdateV1Deprecated => {
+                writeln!(
+                    f,
+                    "Transaction Kind : Authenticator State Update (Deprecated)"
+                )
+            }
+            Self::EndOfEpoch(_) => writeln!(f, "Transaction Kind : End of Epoch Transaction"),
+            Self::RandomnessStateUpdate(_) => {
+                writeln!(f, "Transaction Kind : Randomness State Update")
+            }
+        }
     }
 }
 
@@ -228,7 +313,7 @@ impl TransactionKind {
 ///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -244,10 +329,133 @@ pub enum EndOfEpochTransactionKind {
 }
 
 impl EndOfEpochTransactionKind {
-    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2);
+    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,);
+
+    /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpoch(ChangeEpoch {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV2`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v2(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpochV2(ChangeEpochV2 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV3`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v3(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+    ) -> Self {
+        Self::ChangeEpochV3(ChangeEpochV3 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV4`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v4(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+        scores: Vec<u64>,
+        adjust_rewards_by_score: bool,
+    ) -> Self {
+        Self::ChangeEpochV4(ChangeEpochV4 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+            scores,
+            adjust_rewards_by_score,
+        })
+    }
+
+    /// Returns an iterator over the shared input objects required by this
+    /// transaction kind.
+    pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
+        match self {
+            Self::ChangeEpoch(_)
+            | Self::ChangeEpochV2(_)
+            | Self::ChangeEpochV3(_)
+            | Self::ChangeEpochV4(_) => {
+                vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter()
+            }
+        }
+    }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -279,8 +487,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// ```text
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CancelledTransaction {
@@ -293,19 +500,25 @@ pub struct CancelledTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form for this type is defined by the
+/// following ABNF:
 ///
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
+}
+
+impl VersionAssignment {
+    /// Creates a [`VersionAssignment`].
+    pub fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
 }
 
 /// V1 of the consensus commit prologue system transaction
@@ -318,7 +531,7 @@ pub struct VersionAssignment {
 /// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -362,7 +575,7 @@ pub struct ConsensusCommitPrologueV1 {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -417,7 +630,7 @@ pub struct ChangeEpoch {
 ///                   u64  ; epoch start timestamp
 ///                   (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -458,7 +671,7 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -502,7 +715,7 @@ pub struct ChangeEpochV3 {
     pub eligible_active_validators: Vec<u64>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -551,7 +764,7 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -578,7 +791,7 @@ pub struct SystemPackage {
 /// ```text
 /// genesis-transaction = (vector genesis-object)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -601,7 +814,7 @@ pub struct GenesisTransaction {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -615,6 +828,17 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
+impl core::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let ProgrammableTransaction { inputs, commands } = self;
+        writeln!(f, "Inputs: {inputs:?}")?;
+        writeln!(f, "Commands: [")?;
+        for c in commands {
+            writeln!(f, "  {c},")?;
+        }
+        writeln!(f, "]")
+    }
+}
 /// An input to a user transaction
 ///
 /// # BCS
@@ -644,29 +868,122 @@ pub enum Input {
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure { value: Vec<u8> },
+    Pure(Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
-    Shared {
-        object_id: ObjectId,
-        initial_shared_version: Version,
-        /// Controls whether the caller asks for a mutable reference to the
-        /// shared object.
-        mutable: bool,
-    },
+    Shared(SharedObjectReference),
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
 }
 
 impl Input {
-    crate::def_is!(Pure, Shared);
+    /// Shared `Input` for the IOTA system state object.
+    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_IMMUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: false,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
 
     crate::def_is_as_into_opt!(
+        Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
+        Shared(SharedObjectReference),
         Receiving(ObjectReference)
     );
+
+    /// Create a `Pure` input from a BCS-serializable value.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn pure<T: serde::Serialize>(value: &T) -> Self {
+        Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
+    }
+
+    /// Returns the object id referenced by this input, if any.
+    ///
+    /// Returns `None` for `Pure` inputs.
+    pub fn object_id_opt(&self) -> Option<&ObjectId> {
+        match self {
+            Self::Pure { .. } => None,
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
+            Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
+        }
+    }
+
+    /// Returns `true` if this input references a mutable shared object.
+    pub fn is_mutable_shared(&self) -> bool {
+        matches!(
+            self,
+            Self::Shared(SharedObjectReference { mutable: true, .. })
+        )
+    }
+
+    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
+    /// `Receiving` input.
+    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+        match self {
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
+            _ => None,
+        }
+    }
+
+    /// Returns the pure value bytes if this is a `Pure` input.
+    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
+        match self {
+            Self::Pure(value) => Some(value),
+            _ => None,
+        }
+    }
+}
+
+/// A shared object input to a programmable transaction
+#[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct SharedObjectReference {
+    pub object_id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub initial_shared_version: Version,
+    /// Controls whether the caller asks for a mutable reference to the
+    /// shared object.
+    pub mutable: bool,
+}
+
+impl SharedObjectReference {
+    pub const IOTA_SYSTEM_STATE_OBJ_MUTABLE: Self = Self {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    };
+
+    /// Creates a new shared object reference from the object's id, initial
+    /// shared version, and mutability.
+    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
+        Self {
+            object_id,
+            initial_shared_version,
+            mutable,
+        }
+    }
 }
 
 /// A single command in a programmable transaction.
@@ -692,7 +1009,7 @@ impl Input {
 /// command-make-move-vector    = %d05 make-move-vector
 /// command-upgrade             = %d06 upgrade
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -738,6 +1055,178 @@ impl Command {
         MakeMoveVector,
         Upgrade,
     );
+
+    /// Create a command to call a Move function.
+    pub fn new_move_call(
+        package: ObjectId,
+        module: Identifier,
+        function: Identifier,
+        type_arguments: Vec<TypeTag>,
+        arguments: Vec<Argument>,
+    ) -> Self {
+        Command::MoveCall(MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        })
+    }
+
+    /// Create a command to transfer objects to an address.
+    pub fn new_transfer_objects(objects: Vec<Argument>, address: Argument) -> Self {
+        Command::TransferObjects(TransferObjects { objects, address })
+    }
+
+    /// Create a command to split a coin into multiple coins by amounts.
+    pub fn new_split_coins(coin: Argument, amounts: Vec<Argument>) -> Self {
+        Command::SplitCoins(SplitCoins { coin, amounts })
+    }
+
+    /// Create a command to merge multiple coins into one.
+    pub fn new_merge_coins(coin: Argument, coins_to_merge: Vec<Argument>) -> Self {
+        Command::MergeCoins(MergeCoins {
+            coin,
+            coins_to_merge,
+        })
+    }
+
+    /// Create a command to publish a new Move package.
+    pub fn new_publish(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
+        Command::Publish(Publish {
+            modules,
+            dependencies,
+        })
+    }
+
+    /// Create a command to construct a Move vector from elements.
+    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    }
+
+    /// Create a command to upgrade an existing Move package.
+    pub fn new_upgrade(
+        modules: Vec<Vec<u8>>,
+        dependencies: Vec<ObjectId>,
+        package: ObjectId,
+        ticket: Argument,
+    ) -> Self {
+        Command::Upgrade(Upgrade {
+            modules,
+            dependencies,
+            package,
+            ticket,
+        })
+    }
+}
+
+impl core::fmt::Display for MoveCall {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        } = self;
+        write!(f, "MoveCall(")?;
+        write!(f, "{package}::{module}::{function}")?;
+        if !type_arguments.is_empty() {
+            write_sep(f, type_arguments, Some(("<", ">")), ",")?;
+        }
+        write_sep(f, arguments, Some(("(", ")")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { objects, address } = self;
+
+        write!(f, "TransferObjects(")?;
+        write_sep(f, objects, Some(("[", "]")), ",")?;
+        write!(f, ",{address})")
+    }
+}
+
+impl core::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { coin, amounts } = self;
+
+        write!(f, "SplitCoins({coin},")?;
+        write_sep(f, amounts, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            coin,
+            coins_to_merge,
+        } = self;
+
+        write!(f, "MergeCoins({coin},")?;
+        write_sep(f, coins_to_merge, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Publish {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { dependencies, .. } = self;
+
+        write!(f, "Publish(_,")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { type_, elements } = self;
+
+        write!(f, "MakeMoveVector(")?;
+        if let Some(ty) = type_ {
+            write!(f, "Some({ty})")?;
+        } else {
+            write!(f, "None")?;
+        }
+        write!(f, ",")?;
+        write_sep(f, elements, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            dependencies,
+            package,
+            ticket,
+            ..
+        } = self;
+
+        write!(f, "Upgrade(_,")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
+        write!(f, ", {package}")?;
+        write!(f, ", {ticket}")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Command {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Command::MoveCall(cmd) => write!(f, "{cmd}"),
+            Command::TransferObjects(cmd) => write!(f, "{cmd}"),
+            Command::SplitCoins(cmd) => write!(f, "{cmd}"),
+            Command::MergeCoins(cmd) => write!(f, "{cmd}"),
+            Command::Publish(cmd) => write!(f, "{cmd}"),
+            Command::MakeMoveVector(cmd) => write!(f, "{cmd}"),
+            Command::Upgrade(cmd) => write!(f, "{cmd}"),
+        }
+    }
 }
 
 /// Command to transfer ownership of a set of objects to an address
@@ -749,7 +1238,7 @@ impl Command {
 /// ```text
 /// transfer-objects = (vector argument) argument
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -770,7 +1259,7 @@ pub struct TransferObjects {
 /// ```text
 /// split-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -791,7 +1280,7 @@ pub struct SplitCoins {
 /// ```text
 /// merge-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -815,7 +1304,7 @@ pub struct MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -841,7 +1330,7 @@ pub struct Publish {
 /// ```text
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -869,7 +1358,7 @@ pub struct MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1004,7 +1493,7 @@ impl Argument {
 ///             (vector type-tag)   ; type arguments, if any
 ///             (vector argument)   ; input arguments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1012,6 +1501,10 @@ pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
     /// The specific module in the package containing the function.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
+    )]
     pub module: Identifier,
     /// The function to be called.
     pub function: Identifier,

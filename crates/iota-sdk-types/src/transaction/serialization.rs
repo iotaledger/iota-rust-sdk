@@ -6,7 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
-use crate::{ObjectId, ObjectReference};
+use crate::{Identifier, ObjectId, ObjectReference};
 
 mod transaction_kind {
     use super::*;
@@ -17,8 +17,9 @@ mod transaction_kind {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
+        Programmable(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -32,7 +33,7 @@ mod transaction_kind {
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -43,8 +44,9 @@ mod transaction_kind {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
+        Programmable(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -52,8 +54,9 @@ mod transaction_kind {
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdateV1Deprecated,
@@ -68,9 +71,7 @@ mod transaction_kind {
         {
             if serializer.is_human_readable() {
                 let readable = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        ReadableTransactionKindRef::ProgrammableTransaction(k)
-                    }
+                    Self::Programmable(k) => ReadableTransactionKindRef::Programmable(k),
                     Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
@@ -88,9 +89,7 @@ mod transaction_kind {
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        BinaryTransactionKindRef::ProgrammableTransaction(k)
-                    }
+                    Self::Programmable(k) => BinaryTransactionKindRef::Programmable(k),
                     Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
@@ -115,9 +114,7 @@ mod transaction_kind {
         {
             if deserializer.is_human_readable() {
                 ReadableTransactionKind::deserialize(deserializer).map(|readable| match readable {
-                    ReadableTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
+                    ReadableTransactionKind::Programmable(k) => Self::Programmable(k),
                     ReadableTransactionKind::Genesis(k) => Self::Genesis(k),
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
@@ -132,9 +129,7 @@ mod transaction_kind {
                 })
             } else {
                 BinaryTransactionKind::deserialize(deserializer).map(|binary| match binary {
-                    BinaryTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
+                    BinaryTransactionKind::Programmable(k) => Self::Programmable(k),
                     BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
@@ -177,6 +172,7 @@ mod end_of_epoch {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
@@ -185,6 +181,7 @@ mod end_of_epoch {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
@@ -259,36 +256,34 @@ mod end_of_epoch {
 
 mod version_assignments {
     use super::*;
-    use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+    use crate::transaction::{
+        CancelledTransaction, ConsensusDeterminedVersionAssignments, VersionAssignment,
+    };
 
     #[derive(serde::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
+    /// Uses an enum to allow for future expansion of the
+    /// ConsensusDeterminedVersionAssignments.
     #[derive(serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     impl Serialize for ConsensusDeterminedVersionAssignments {
@@ -300,18 +295,18 @@ mod version_assignments {
                 let readable = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 binary.serialize(serializer)
             }
@@ -326,9 +321,9 @@ mod version_assignments {
             if deserializer.is_human_readable() {
                 ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
@@ -336,9 +331,9 @@ mod version_assignments {
             } else {
                 BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
@@ -346,26 +341,134 @@ mod version_assignments {
             }
         }
     }
+
+    #[derive(serde::Serialize)]
+    #[serde(rename = "VersionAssignment")]
+    struct BinaryVersionAssignmentRef<'a>(&'a ObjectId, &'a crate::Version);
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "VersionAssignment")]
+    struct BinaryVersionAssignment(ObjectId, crate::Version);
+
+    impl Serialize for VersionAssignment {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.object_id)?;
+                tuple.serialize_element(&self.version)?;
+                tuple.end()
+            } else {
+                let binary = BinaryVersionAssignmentRef(&self.object_id, &self.version);
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for VersionAssignment {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (object_id, version): (ObjectId, u64) = Deserialize::deserialize(deserializer)?;
+                Ok(VersionAssignment {
+                    object_id,
+                    version: version.into(),
+                })
+            } else {
+                BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
+                    object_id: b.0,
+                    version: b.1,
+                })
+            }
+        }
+    }
+
+    #[derive(serde::Serialize)]
+    #[serde(rename = "CancelledTransaction")]
+    struct BinaryCancelledTransactionRef<'a>(&'a crate::Digest, &'a Vec<VersionAssignment>);
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "CancelledTransaction")]
+    struct BinaryCancelledTransaction(crate::Digest, Vec<VersionAssignment>);
+
+    impl Serialize for CancelledTransaction {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.digest)?;
+                tuple.serialize_element(&self.version_assignments)?;
+                tuple.end()
+            } else {
+                let binary = BinaryCancelledTransactionRef(&self.digest, &self.version_assignments);
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for CancelledTransaction {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (digest, version_assignments): (crate::Digest, Vec<VersionAssignment>) =
+                    Deserialize::deserialize(deserializer)?;
+                Ok(CancelledTransaction {
+                    digest,
+                    version_assignments,
+                })
+            } else {
+                BinaryCancelledTransaction::deserialize(deserializer).map(|b| {
+                    CancelledTransaction {
+                        digest: b.0,
+                        version_assignments: b.1,
+                    }
+                })
+            }
+        }
+    }
 }
 
 mod input_argument {
     use super::*;
-    use crate::{Version, transaction::Input};
+    use crate::{
+        Version,
+        transaction::{Input, SharedObjectReference},
+    };
+
+    #[derive(serde::Serialize, serde::Deserialize)]
+    struct PureInput {
+        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        value: Vec<u8>,
+    }
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "snake_case")]
     enum ReadableInput {
-        Pure {
-            #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-            value: Vec<u8>,
-        },
+        /// A move value serialized as BCS.
+        ///
+        /// For normal operations this is required to be a move primitive type
+        /// and not contain structs or objects.
+        Pure(PureInput),
+        /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
+        /// A move object whose owner is "Shared"
         Shared {
             object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+            #[serde(with = "crate::_serde::ReadableDisplay")]
             initial_shared_version: Version,
             mutable: bool,
         },
+        /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
     }
 
@@ -395,15 +498,15 @@ mod input_argument {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    Input::Pure { value } => ReadableInput::Pure { value },
+                    Input::Pure(value) => ReadableInput::Pure(PureInput { value }),
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => ReadableInput::Shared {
+                    }) => ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -413,15 +516,15 @@ mod input_argument {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    Input::Pure { value } => CallArg::Pure(value),
+                    Input::Pure(value) => CallArg::Pure(value),
                     Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => CallArg::Object(ObjectArg::Shared {
+                    }) => CallArg::Object(ObjectArg::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -442,7 +545,7 @@ mod input_argument {
         {
             if deserializer.is_human_readable() {
                 ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure { value },
+                    ReadableInput::Pure(PureInput { value }) => Input::Pure(value),
                     ReadableInput::ImmutableOrOwned(object_ref) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -450,16 +553,16 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => Input::Shared {
+                    } => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => Input::Pure { value },
+                    CallArg::Pure(value) => Input::Pure(value),
                     CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -467,11 +570,11 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    }) => Input::Shared {
+                    }) => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
@@ -595,6 +698,7 @@ mod command {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "Command")]
     enum BinaryCommandRef<'a> {
         MoveCall(&'a MoveCall),
         TransferObjects(&'a TransferObjects),
@@ -606,6 +710,7 @@ mod command {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "Command")]
     enum BinaryCommand {
         MoveCall(MoveCall),
         TransferObjects(TransferObjects),
@@ -803,8 +908,8 @@ mod transaction_expiration {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
-    #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
+        None,
         /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(
@@ -813,6 +918,7 @@ mod transaction_expiration {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,
@@ -828,8 +934,8 @@ mod transaction_expiration {
         {
             if serializer.is_human_readable() {
                 match *self {
-                    Self::None => None,
-                    Self::Epoch(epoch) => Some(ReadableTransactionExpiration::Epoch(epoch)),
+                    Self::None => ReadableTransactionExpiration::None,
+                    Self::Epoch(epoch) => ReadableTransactionExpiration::Epoch(epoch),
                 }
                 .serialize(serializer)
             } else {
@@ -848,10 +954,10 @@ mod transaction_expiration {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                Option::<ReadableTransactionExpiration>::deserialize(deserializer).map(|readable| {
+                ReadableTransactionExpiration::deserialize(deserializer).map(|readable| {
                     match readable {
-                        None => Self::None,
-                        Some(ReadableTransactionExpiration::Epoch(epoch)) => Self::Epoch(epoch),
+                        ReadableTransactionExpiration::None => Self::None,
+                        ReadableTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
                     }
                 })
             } else {
@@ -864,6 +970,23 @@ mod transaction_expiration {
     }
 }
 
+/// Deserialize an `Identifier` without validating that it is a valid Move
+/// identifier. This is used for deserializing the module in `MoveCall`
+/// commands, where BCS bytes could contain invalid identifiers but we still
+/// want to be able to deserialize them and let the move VM handle the
+/// validation.
+pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    if d.is_human_readable() {
+        serde::Deserialize::deserialize(d)
+    } else {
+        let s: String = serde::Deserialize::deserialize(d)?;
+        Ok(Identifier::new_unchecked(s))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use base64ct::{Base64, Encoding};
@@ -872,7 +995,7 @@ mod tests {
 
     use crate::{
         Digest, ObjectId, ObjectReference, Version,
-        transaction::{Argument, Input, Transaction},
+        transaction::{Argument, Input, SharedObjectReference, Transaction},
     };
 
     #[test]
@@ -901,9 +1024,7 @@ mod tests {
     fn input_argument() {
         let test_cases = [
             (
-                Input::Pure {
-                    value: vec![1, 2, 3, 4],
-                },
+                Input::Pure(vec![1, 2, 3, 4]),
                 serde_json::json!({
                   "pure": {
                     "value": "AQIDBA=="
@@ -925,11 +1046,11 @@ mod tests {
                 }),
             ),
             (
-                Input::Shared {
+                Input::Shared(SharedObjectReference {
                     object_id: ObjectId::ZERO,
                     initial_shared_version: Version::from_u64(1),
                     mutable: true,
-                },
+                }),
                 serde_json::json!({
                   "shared": {
                     "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",

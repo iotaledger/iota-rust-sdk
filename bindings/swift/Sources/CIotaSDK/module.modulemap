@@ -1,7 +1,0 @@
-module CIotaSDK {
-    header "CIotaSDK.h"
-    export *
-    use "Darwin"
-    use "_Builtin_stdbool"
-    use "_Builtin_stdint"
-}

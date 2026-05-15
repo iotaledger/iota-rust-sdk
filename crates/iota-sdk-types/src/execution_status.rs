@@ -206,7 +206,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 // Reordering or inserting variants will break protocol compatibility.
 // New variants MUST be added at the end.
 // The `execution_error_bcs_discriminants` snapshot test enforces this.
-#[derive(Eq, PartialEq, Clone, Debug, Error)]
+#[derive(Eq, PartialEq, Clone, Debug, Error, strum::AsRefStr)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ExecutionError {
