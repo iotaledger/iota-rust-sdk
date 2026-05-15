@@ -19,10 +19,14 @@
 
 use iota_sdk_move_system_types::framework::clock::Clock;
 use iota_sdk_move_system_types::framework::coin::{Coin, CoinMetadata};
+use iota_sdk_move_system_types::framework::deny_list::DenyList;
 use iota_sdk_move_system_types::framework::iota::IOTA;
+use iota_sdk_move_system_types::framework::package::UpgradeCap;
+use iota_sdk_move_system_types::framework::random::Random;
 use iota_sdk_move_system_types::iota_system::iota_system::IotaSystemState;
 use iota_sdk_move_system_types::iota_system::iota_system_state_inner::IotaSystemStateV2;
 use iota_sdk_move_system_types::iota_system::staking_pool::StakedIota;
+use iota_sdk_move_system_types::iota_system::timelocked_staking::TimelockedStakedIota;
 use iota_sdk_move_system_types::stardust::alias::Alias;
 use iota_sdk_move_system_types::stardust::alias_output::AliasOutput;
 use iota_sdk_move_system_types::stardust::basic_output::BasicOutput;
@@ -91,4 +95,24 @@ fn alias() {
 #[test]
 fn alias_output_iota() {
     roundtrip::<AliasOutput<IOTA>>(include_bytes!("fixtures/alias_output_iota.bcs"));
+}
+
+#[test]
+fn random() {
+    roundtrip::<Random>(include_bytes!("fixtures/random.bcs"));
+}
+
+#[test]
+fn deny_list() {
+    roundtrip::<DenyList>(include_bytes!("fixtures/deny_list.bcs"));
+}
+
+#[test]
+fn timelocked_staked_iota() {
+    roundtrip::<TimelockedStakedIota>(include_bytes!("fixtures/timelocked_staked_iota.bcs"));
+}
+
+#[test]
+fn upgrade_cap() {
+    roundtrip::<UpgradeCap>(include_bytes!("fixtures/upgrade_cap.bcs"));
 }

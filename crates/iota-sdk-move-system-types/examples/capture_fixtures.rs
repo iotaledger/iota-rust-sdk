@@ -154,6 +154,36 @@ const FIXTURES: &[Fixture] = &[
             name_bcs: &2u64.to_le_bytes(),
         },
     },
+    // -- Other system singletons --------------------------------------------
+    // Note: 0x7 (`AuthenticatorState`) is not present on IOTA mainnet —
+    // the zkLogin feature it backs is not activated here, so we skip it.
+    Fixture {
+        file: "random",
+        // Wraps an inner `Versioned`; `RandomInner` lives off the
+        // `Versioned`'s UID (not the wrapper's), so we skip it for now —
+        // capturing it would need a nested dynamic-field walk.
+        source: Source::ObjectId("0x8"),
+    },
+    Fixture {
+        file: "deny_list",
+        source: Source::ObjectId("0x403"),
+    },
+    // -- Validator / staking auxiliary -------------------------------------
+    Fixture {
+        file: "timelocked_staked_iota",
+        // mainnet `0x3::timelocked_staking::TimelockedStakedIota`
+        source: Source::ObjectId(
+            "0x000526665a4137147b17cf4ea84d6df809ef28b0586b6c497423ce866b57dabc",
+        ),
+    },
+    // -- Packages ---------------------------------------------------------
+    Fixture {
+        file: "upgrade_cap",
+        // mainnet `0x2::package::UpgradeCap`
+        source: Source::ObjectId(
+            "0x00339e728b01f73e07c30da31fafc8f72d975cfdd176c5913ff516bd294b47f3",
+        ),
+    },
 ];
 
 #[tokio::main]
@@ -233,6 +263,9 @@ async fn capture(
                 .data()
                 .first()
                 .ok_or_else(|| format!("no objects of type `{type_str}` on this network"))?;
+            // Print the discovered ID so an operator can copy-paste it
+            // into FIXTURES as a `Source::ObjectId` pin.
+            eprintln!("    └─ discovered: {}", object.object_id());
             let move_struct = object
                 .as_struct_opt()
                 .ok_or("object is not a Move struct")?;
