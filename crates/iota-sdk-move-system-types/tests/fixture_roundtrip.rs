@@ -1,0 +1,94 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+//! BCS roundtrip tests against real on-chain bytes.
+//!
+//! Each test loads a fixture captured from mainnet by
+//! `examples/capture_fixtures.rs`, decodes it into the corresponding
+//! hand-curated Move-mirror type, re-encodes, and asserts the bytes
+//! are bit-identical. A wire-shape mismatch (renamed field, wrong
+//! type, reordered fields, missing variant) fails the assertion.
+//!
+//! To refresh the fixtures against current chain state, run:
+//!
+//! ```bash
+//! cargo run -p iota-sdk-move-system-types --example capture_fixtures
+//! ```
+
+#![cfg(feature = "serde")]
+
+use iota_sdk_move_system_types::framework::clock::Clock;
+use iota_sdk_move_system_types::framework::coin::{Coin, CoinMetadata};
+use iota_sdk_move_system_types::framework::iota::IOTA;
+use iota_sdk_move_system_types::iota_system::iota_system::IotaSystemState;
+use iota_sdk_move_system_types::iota_system::iota_system_state_inner::IotaSystemStateV2;
+use iota_sdk_move_system_types::iota_system::staking_pool::StakedIota;
+use iota_sdk_move_system_types::stardust::alias::Alias;
+use iota_sdk_move_system_types::stardust::alias_output::AliasOutput;
+use iota_sdk_move_system_types::stardust::basic_output::BasicOutput;
+use iota_sdk_move_system_types::stardust::nft::Nft;
+use iota_sdk_move_system_types::stardust::nft_output::NftOutput;
+
+fn roundtrip<T>(bytes: &[u8])
+where
+    T: serde::Serialize + serde::de::DeserializeOwned,
+{
+    let value: T = bcs::from_bytes(bytes).expect("decode fixture");
+    let encoded = bcs::to_bytes(&value).expect("encode value");
+    assert_eq!(bytes, encoded.as_slice(), "wire-shape mismatch");
+}
+
+#[test]
+fn iota_system_state() {
+    roundtrip::<IotaSystemState>(include_bytes!("fixtures/iota_system_state.bcs"));
+}
+
+#[test]
+fn iota_system_state_inner_v2() {
+    roundtrip::<IotaSystemStateV2>(include_bytes!("fixtures/iota_system_state_inner_v2.bcs"));
+}
+
+#[test]
+fn clock() {
+    roundtrip::<Clock>(include_bytes!("fixtures/clock.bcs"));
+}
+
+#[test]
+fn staked_iota() {
+    roundtrip::<StakedIota>(include_bytes!("fixtures/staked_iota.bcs"));
+}
+
+#[test]
+fn coin_iota() {
+    roundtrip::<Coin<IOTA>>(include_bytes!("fixtures/coin_iota.bcs"));
+}
+
+#[test]
+fn coin_metadata_iota() {
+    roundtrip::<CoinMetadata<IOTA>>(include_bytes!("fixtures/coin_metadata_iota.bcs"));
+}
+
+#[test]
+fn nft() {
+    roundtrip::<Nft>(include_bytes!("fixtures/nft.bcs"));
+}
+
+#[test]
+fn basic_output_iota() {
+    roundtrip::<BasicOutput<IOTA>>(include_bytes!("fixtures/basic_output_iota.bcs"));
+}
+
+#[test]
+fn nft_output_iota() {
+    roundtrip::<NftOutput<IOTA>>(include_bytes!("fixtures/nft_output_iota.bcs"));
+}
+
+#[test]
+fn alias() {
+    roundtrip::<Alias>(include_bytes!("fixtures/alias.bcs"));
+}
+
+#[test]
+fn alias_output_iota() {
+    roundtrip::<AliasOutput<IOTA>>(include_bytes!("fixtures/alias_output_iota.bcs"));
+}

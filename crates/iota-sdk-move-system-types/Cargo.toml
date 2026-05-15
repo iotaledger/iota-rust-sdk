@@ -33,24 +33,14 @@ iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
 [dev-dependencies]
-# moverox versions are pinned with `=` so the regen output and the parity-test
-# compile artifacts are reproducible across local dev and CI (where Cargo.lock
-# is not committed). Bumping either version is a deliberate decision: review
-# the resulting `generated/` diff in the same PR.
-moverox = { version = "=0.1.3", features = ["bcs"] }
-moverox-build = "=0.2.3"
-tempfile = "3"
-# Proptest drives the `*_moverox_parity` checks: a single
-# `#[test_strategy::proptest]` per type generates many random values via the
-# `Arbitrary` derives gated on `cfg(test)`. Activates the `proptest` feature
-# of `iota-types` so `Address`, `ObjectId`, and friends become arbitrary.
-proptest = { workspace = true, features = ["std"] }
-test-strategy = { workspace = true }
-iota-types = { workspace = true, features = ["proptest"] }
+# Used only by `examples/capture_fixtures.rs` to query a live IOTA GraphQL
+# endpoint and snapshot real on-chain BCS bytes into `tests/fixtures/`.
+iota-graphql-client = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 [[example]]
-name = "regenerate"
-path = "examples/regenerate.rs"
+name = "capture_fixtures"
+path = "examples/capture_fixtures.rs"
 
 [build-dependencies]
 filetime = "0.2"

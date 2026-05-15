@@ -20,7 +20,6 @@ pub mod staking_pool {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PoolTokenExchangeRate {
         pub iota_amount: u64,
         pub pool_token_amount: u64,
@@ -41,7 +40,6 @@ pub mod staking_pool {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct StakedIota {
         pub id: UID,
         /// ID of the staking pool we are staking with.
@@ -229,40 +227,6 @@ pub mod staking_pool {
             let decoded: StakingPoolV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(pool, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn pool_token_exchange_rate_moverox_parity(sample: PoolTokenExchangeRate) {
-            assert_parity::<_, crate::generated::iota_system::staking_pool::PoolTokenExchangeRate>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn staked_iota_moverox_parity(sample: StakedIota) {
-            assert_parity::<_, crate::generated::iota_system::staking_pool::StakedIota>(&sample);
-        }
-
-        #[test]
-        fn staking_pool_v1_moverox_parity() {
-            let pool = StakingPoolV1::new(
-                UID::new(sample_object_id(0x01)),
-                Some(10),
-                None,
-                1_000_000,
-                Balance::new(50_000),
-                500_000,
-                Table::new(UID::new(sample_object_id(0x02)), 3),
-                123,
-                0,
-                0,
-                Bag::new(UID::new(sample_object_id(0x03)), 0),
-            );
-            assert_parity::<_, crate::generated::iota_system::staking_pool::StakingPoolV1>(&pool);
-        }
     }
 }
 
@@ -273,7 +237,6 @@ pub mod voting_power {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VotingPowerInfoV1 {
         pub validator_index: u64,
         pub voting_power: u64,
@@ -301,14 +264,6 @@ pub mod voting_power {
             let decoded: VotingPowerInfoV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(v, decoded);
         }
-
-        #[test_strategy::proptest]
-        fn voting_power_info_v1_moverox_parity(sample: VotingPowerInfoV1) {
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::iota_system::voting_power::VotingPowerInfoV1,
-            >(&sample);
-        }
     }
 }
 
@@ -328,7 +283,6 @@ pub mod validator_cap {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UnverifiedValidatorOperationCap {
         pub id: UID,
         pub authorizer_validator_address: Address,
@@ -351,7 +305,6 @@ pub mod validator_cap {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ValidatorOperationCap {
         pub authorizer_validator_address: Address,
     }
@@ -387,26 +340,6 @@ pub mod validator_cap {
             let decoded: ValidatorOperationCap = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(cap, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn unverified_validator_operation_cap_moverox_parity(
-            sample: UnverifiedValidatorOperationCap,
-        ) {
-            assert_parity::<_, crate::generated::iota_system::validator_cap::UnverifiedValidatorOperationCap>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn validator_operation_cap_moverox_parity(sample: ValidatorOperationCap) {
-            assert_parity::<_, crate::generated::iota_system::validator_cap::ValidatorOperationCap>(
-                &sample,
-            );
-        }
     }
 }
 
@@ -422,7 +355,6 @@ pub mod validator_wrapper {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Validator {
         pub inner: Versioned,
     }
@@ -446,14 +378,6 @@ pub mod validator_wrapper {
             let decoded: Validator = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(v, decoded);
         }
-
-        #[test_strategy::proptest]
-        fn validator_moverox_parity(sample: Validator) {
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::iota_system::validator_wrapper::Validator,
-            >(&sample);
-        }
     }
 }
 
@@ -472,7 +396,6 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ValidatorMetadataV1 {
         /// The IOTA Address of the validator.
         pub iota_address: Address,
@@ -544,7 +467,6 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct StakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -558,7 +480,6 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UnstakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -637,31 +558,6 @@ pub mod validator {
             let bytes = bcs::to_bytes(&e).unwrap();
             let decoded: UnstakingRequestEvent = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
-        }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn validator_metadata_v1_moverox_parity(sample: ValidatorMetadataV1) {
-            assert_parity::<_, crate::generated::iota_system::validator::ValidatorMetadataV1>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn staking_request_event_moverox_parity(sample: StakingRequestEvent) {
-            assert_parity::<_, crate::generated::iota_system::validator::StakingRequestEvent>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn unstaking_request_event_moverox_parity(sample: UnstakingRequestEvent) {
-            assert_parity::<_, crate::generated::iota_system::validator::UnstakingRequestEvent>(
-                &sample,
-            );
         }
     }
 }
@@ -748,7 +644,6 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ValidatorEpochInfoEventV1 {
         pub epoch: u64,
         pub validator_address: Address,
@@ -767,7 +662,6 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -779,7 +673,6 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -792,7 +685,6 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct CommitteeValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -804,7 +696,6 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct CommitteeValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -859,57 +750,6 @@ pub mod validator_set {
             let decoded: ValidatorLeaveEvent = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn validator_epoch_info_event_v1_moverox_parity(sample: ValidatorEpochInfoEventV1) {
-            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorEpochInfoEventV1>(&sample);
-        }
-
-        #[test]
-        fn validator_join_leave_events_moverox_parity() {
-            let join = ValidatorJoinEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-            };
-            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorJoinEvent>(
-                &join,
-            );
-
-            let leave = ValidatorLeaveEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-                is_voluntary: true,
-            };
-            assert_parity::<_, crate::generated::iota_system::validator_set::ValidatorLeaveEvent>(
-                &leave,
-            );
-
-            let cjoin = CommitteeValidatorJoinEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-            };
-            assert_parity::<
-                _,
-                crate::generated::iota_system::validator_set::CommitteeValidatorJoinEvent,
-            >(&cjoin);
-
-            let cleave = CommitteeValidatorLeaveEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-            };
-            assert_parity::<
-                _,
-                crate::generated::iota_system::validator_set::CommitteeValidatorLeaveEvent,
-            >(&cleave);
-        }
     }
 }
 
@@ -933,7 +773,6 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct SystemParametersV1 {
         /// The duration of an epoch, in milliseconds.
         pub epoch_duration_ms: u64,
@@ -1030,7 +869,6 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct SystemEpochInfoEventV1 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -1053,7 +891,6 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct SystemEpochInfoEventV2 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -1130,25 +967,6 @@ pub mod iota_system_state_inner {
             let decoded: SystemEpochInfoEventV2 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(e, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn system_parameters_v1_moverox_parity(sample: SystemParametersV1) {
-            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemParametersV1>(&sample);
-        }
-
-        #[test_strategy::proptest]
-        fn system_epoch_info_event_v1_moverox_parity(sample: SystemEpochInfoEventV1) {
-            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemEpochInfoEventV1>(&sample);
-        }
-
-        #[test_strategy::proptest]
-        fn system_epoch_info_event_v2_moverox_parity(sample: SystemEpochInfoEventV2) {
-            assert_parity::<_, crate::generated::iota_system::iota_system_state_inner::SystemEpochInfoEventV2>(&sample);
-        }
     }
 }
 
@@ -1166,7 +984,6 @@ pub mod iota_system {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct IotaSystemState {
         pub id: UID,
         pub version: u64,
@@ -1190,14 +1007,6 @@ pub mod iota_system {
             let decoded: IotaSystemState = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
         }
-
-        #[test_strategy::proptest]
-        fn iota_system_state_moverox_parity(sample: IotaSystemState) {
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::iota_system::iota_system::IotaSystemState,
-            >(&sample);
-        }
     }
 }
 
@@ -1215,7 +1024,6 @@ pub mod storage_fund {
     /// not be paid back out.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct StorageFundV1 {
         pub total_object_storage_rebates: Balance<IOTA>,
         pub non_refundable_balance: Balance<IOTA>,
@@ -1244,14 +1052,6 @@ pub mod storage_fund {
             let decoded: StorageFundV1 = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(f, decoded);
         }
-
-        #[test_strategy::proptest]
-        fn storage_fund_v1_moverox_parity(sample: StorageFundV1) {
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::iota_system::storage_fund::StorageFundV1,
-            >(&sample);
-        }
     }
 }
 
@@ -1268,7 +1068,6 @@ pub mod timelocked_staking {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TimelockedStakedIota {
         pub id: UID,
         /// A self-custodial object holding the staked IOTA tokens.
@@ -1357,21 +1156,6 @@ pub mod timelocked_staking {
             let decoded: TimelockedStakedIota = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(tsi, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        // Proptest naturally covers both label=Some and label=None cases
-        // through Arbitrary's Option strategy — one test replaces the
-        // previous two hand-crafted variants.
-        #[test_strategy::proptest]
-        fn timelocked_staked_iota_moverox_parity(sample: TimelockedStakedIota) {
-            assert_parity::<
-                _,
-                crate::generated::iota_system::timelocked_staking::TimelockedStakedIota,
-            >(&sample);
-        }
     }
 }
 
@@ -1384,7 +1168,6 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GenesisValidatorMetadata {
         pub name: Vec<u8>,
         pub description: Vec<u8>,
@@ -1407,7 +1190,6 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GenesisChainParameters {
         pub protocol_version: u64,
         pub chain_start_timestamp_ms: u64,
@@ -1423,7 +1205,6 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TokenAllocation {
         pub recipient_address: Address,
         pub amount_nanos: u64,
@@ -1440,7 +1221,6 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TokenDistributionSchedule {
         pub pre_minted_supply: u64,
         pub allocations: Vec<TokenAllocation>,
@@ -1487,31 +1267,6 @@ pub mod genesis {
             let bytes = bcs::to_bytes(&s).unwrap();
             let decoded: TokenDistributionSchedule = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
-        }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test_strategy::proptest]
-        fn genesis_validator_metadata_moverox_parity(sample: GenesisValidatorMetadata) {
-            assert_parity::<_, crate::generated::iota_system::genesis::GenesisValidatorMetadata>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn genesis_chain_parameters_moverox_parity(sample: GenesisChainParameters) {
-            assert_parity::<_, crate::generated::iota_system::genesis::GenesisChainParameters>(
-                &sample,
-            );
-        }
-
-        #[test_strategy::proptest]
-        fn token_distribution_schedule_moverox_parity(sample: TokenDistributionSchedule) {
-            assert_parity::<_, crate::generated::iota_system::genesis::TokenDistributionSchedule>(
-                &sample,
-            );
         }
     }
 }

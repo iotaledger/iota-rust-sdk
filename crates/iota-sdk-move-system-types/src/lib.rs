@@ -16,88 +16,10 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
-// The file is named `iota.rs` to mirror the moverox snapshot's
-// `generated/iota.rs`. The Rust module stays `framework` so the public
-// API (`iota_move_system_types::framework::*`) and FFI shim paths don't
-// shift.
-#[path = "iota.rs"]
 pub mod framework;
 pub mod iota_system;
 pub mod stardust;
 pub mod std;
-
-#[cfg(test)]
-pub(crate) mod generated {
-    #[allow(dead_code)]
-    pub mod framework {
-        include!("../generated/iota.rs");
-    }
-
-    #[allow(dead_code)]
-    pub mod iota_system {
-        include!("../generated/iota_system.rs");
-    }
-
-    #[allow(dead_code)]
-    pub mod stardust {
-        include!("../generated/stardust.rs");
-    }
-
-    #[allow(dead_code)]
-    pub mod std {
-        include!("../generated/std.rs");
-    }
-}
-
-// Moverox emits absolute paths `crate::iota_framework::*` and
-// `crate::move_stdlib::*` inside the generated files. The snapshot stays
-// byte-identical to moverox's output so the Layer-1 drift diff is exact;
-// these aliases bridge the paths to where we actually hold the code.
-#[cfg(test)]
-#[allow(unused_imports)]
-pub(crate) use generated::framework as iota_framework;
-#[cfg(test)]
-#[allow(unused_imports)]
-pub(crate) use generated::std as move_stdlib;
-
-/// Shared helpers for the `*_moverox_parity` tests scattered across each
-/// type's `#[cfg(all(test, feature = "serde"))] mod tests` block.
-///
-/// Each parity test takes a sample value from our hand-curated type,
-/// BCS-encodes it, decodes as the moverox-generated counterpart under
-/// [`crate::generated`], re-encodes, and asserts byte equality. If the
-/// bytes survive the round trip, our hand-curated layout is wire-
-/// compatible with what moverox emits from the Move source — any
-/// reordered field, missing field, type swap, or generic-instantiation
-/// drift surfaces as a `wire-format drift` test failure naming the
-/// exact type whose `mod tests` holds the test.
-#[cfg(test)]
-pub(crate) mod parity_check {
-    use iota_types::ObjectId;
-
-    /// BCS-encode `ours`, decode the bytes as the moverox-generated type
-    /// `M`, re-encode from `M`, and assert byte equality.
-    pub(crate) fn assert_parity<O, M>(ours: &O)
-    where
-        O: serde::Serialize,
-        M: serde::de::DeserializeOwned + serde::Serialize,
-    {
-        let bytes = bcs::to_bytes(ours).expect("encode ours");
-        let mx_value: M =
-            bcs::from_bytes(&bytes).expect("decode bytes as moverox-generated type");
-        let bytes2 = bcs::to_bytes(&mx_value).expect("re-encode moverox-generated value");
-        assert_eq!(
-            bytes, bytes2,
-            "wire-format drift: our type and the moverox snapshot disagree"
-        );
-    }
-
-    /// Build a sample `ObjectId` whose every byte equals `byte`.
-    #[allow(dead_code)]
-    pub(crate) fn oid(byte: u8) -> ObjectId {
-        ObjectId::new([byte; ObjectId::LENGTH])
-    }
-}
 
 /// Error returned by the `try_from_object` constructors on type mirrors.
 ///

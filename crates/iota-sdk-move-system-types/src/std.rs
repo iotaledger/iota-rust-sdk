@@ -12,7 +12,6 @@ pub mod fixed_point32 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct FixedPoint32 {
         pub value: u64,
     }
@@ -34,7 +33,6 @@ pub mod ascii {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -49,7 +47,6 @@ pub mod ascii {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Char {
         pub byte: u8,
     }
@@ -71,7 +68,6 @@ pub mod string {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -93,7 +89,6 @@ pub mod uq32_32 {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UQ32_32(pub u64);
 
     impl UQ32_32 {
@@ -113,7 +108,6 @@ pub mod uq64_64 {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UQ64_64(pub u128);
 
     impl UQ64_64 {
@@ -129,7 +123,6 @@ pub mod bit_vector {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct BitVector {
         pub length: u64,
         pub bit_field: Vec<bool>,
@@ -155,7 +148,6 @@ pub mod type_name {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TypeName {
         pub name: AsciiString,
     }
@@ -175,11 +167,6 @@ pub mod option {
     /// format is identical to Rust's prelude [`prim@Option`], so most code
     /// can use that instead — this mirror is provided for parity with the
     /// Move source.
-    // Note: `Option<Element>` deliberately does *not* derive
-    // `test_strategy::Arbitrary` because the auto-derive doesn't
-    // propagate the `Debug` bound that `proptest::Arbitrary` requires
-    // through the generic parameter. Parity is tested by the
-    // hand-crafted `option_moverox_parity` test below instead.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     pub struct Option<Element> {
@@ -284,60 +271,4 @@ mod tests {
         assert_eq!(bv, decoded);
     }
 
-    // -------------------------------------------------------------
-    // moverox-parity tests (proptest-driven)
-    // -------------------------------------------------------------
-
-    use crate::parity_check::assert_parity;
-
-    #[test_strategy::proptest]
-    fn fixed_point32_moverox_parity(sample: fixed_point32::FixedPoint32) {
-        assert_parity::<_, crate::generated::std::fixed_point32::FixedPoint32>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn uq32_32_moverox_parity(sample: uq32_32::UQ32_32) {
-        assert_parity::<_, crate::generated::std::uq32_32::UQ32_32>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn uq64_64_moverox_parity(sample: uq64_64::UQ64_64) {
-        assert_parity::<_, crate::generated::std::uq64_64::UQ64_64>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn bit_vector_moverox_parity(sample: bit_vector::BitVector) {
-        assert_parity::<_, crate::generated::std::bit_vector::BitVector>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn string_moverox_parity(sample: string::String) {
-        assert_parity::<_, crate::generated::std::string::String>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn ascii_string_moverox_parity(sample: ascii::String) {
-        assert_parity::<_, crate::generated::std::ascii::String>(&sample);
-    }
-
-    #[test_strategy::proptest]
-    fn ascii_char_moverox_parity(sample: ascii::Char) {
-        assert_parity::<_, crate::generated::std::ascii::Char>(&sample);
-    }
-
-    // Generic `Option<Element>` skips the Arbitrary derive — see the
-    // note next to its type definition. Hand-crafted samples cover the
-    // wire-shape cases that matter (empty vs single-element).
-    #[test]
-    fn option_moverox_parity() {
-        let none: option::Option<u64> = option::Option::default();
-        assert_parity::<_, crate::generated::std::option::Option<u64>>(&none);
-        let some: option::Option<u64> = option::Option::new(vec![42]);
-        assert_parity::<_, crate::generated::std::option::Option<u64>>(&some);
-    }
-
-    #[test_strategy::proptest]
-    fn type_name_moverox_parity(sample: type_name::TypeName) {
-        assert_parity::<_, crate::generated::std::type_name::TypeName>(&sample);
-    }
 }

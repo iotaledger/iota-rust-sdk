@@ -14,7 +14,6 @@ pub mod object {
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ID {
         pub bytes: ObjectId,
     }
@@ -47,7 +46,6 @@ pub mod object {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UID {
         pub id: ID,
     }
@@ -104,22 +102,6 @@ pub mod object {
             let decoded: UID = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(uid, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test]
-        fn id_moverox_parity() {
-            let sample = ID::new(sample_object_id());
-            assert_parity::<_, crate::generated::framework::object::ID>(&sample);
-        }
-
-        #[test]
-        fn uid_moverox_parity() {
-            let sample = UID::new(sample_object_id());
-            assert_parity::<_, crate::generated::framework::object::UID>(&sample);
-        }
     }
 }
 
@@ -135,7 +117,6 @@ pub mod iota {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct IOTA {
         dummy_field: bool,
     }
@@ -181,24 +162,6 @@ pub mod iota {
             let decoded: IotaTreasuryCap = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(cap, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test]
-        fn iota_marker_moverox_parity() {
-            assert_parity::<_, crate::generated::framework::iota::IOTA>(&IOTA::default());
-        }
-
-        #[test]
-        fn iota_treasury_cap_moverox_parity() {
-            let sample = IotaTreasuryCap::new(TreasuryCap::new(
-                UID::new(ObjectId::ZERO),
-                Supply::new(1_000_000),
-            ));
-            assert_parity::<_, crate::generated::framework::iota::IotaTreasuryCap>(&sample);
-        }
     }
 }
 
@@ -213,7 +176,6 @@ pub mod system_admin_cap {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct IotaSystemAdminCap {
         dummy_field: bool,
     }
@@ -229,14 +191,6 @@ pub mod system_admin_cap {
             assert_eq!(bytes, [0u8]);
             let decoded: IotaSystemAdminCap = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(cap, decoded);
-        }
-
-        #[test]
-        fn iota_system_admin_cap_moverox_parity() {
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::system_admin_cap::IotaSystemAdminCap,
-            >(&IotaSystemAdminCap::default());
         }
     }
 }
@@ -295,37 +249,6 @@ pub mod balance {
         }
     }
 
-    // Manual `Arbitrary` impls for the two phantom-only generics in this
-    // module so that downstream types containing `Balance<IOTA>` or
-    // `Supply<IOTA>` can derive `Arbitrary` themselves. The `test-strategy`
-    // derive can't cope with `PhantomData<T>` fields well; rolling these by
-    // hand keeps composites simple.
-    #[cfg(test)]
-    impl<T> proptest::arbitrary::Arbitrary for Balance<T>
-    where
-        T: 'static + core::fmt::Debug,
-    {
-        type Parameters = ();
-        type Strategy = proptest::strategy::BoxedStrategy<Self>;
-        fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
-            use proptest::prelude::*;
-            any::<u64>().prop_map(Balance::new).boxed()
-        }
-    }
-
-    #[cfg(test)]
-    impl<T> proptest::arbitrary::Arbitrary for Supply<T>
-    where
-        T: 'static + core::fmt::Debug,
-    {
-        type Parameters = ();
-        type Strategy = proptest::strategy::BoxedStrategy<Self>;
-        fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
-            use proptest::prelude::*;
-            any::<u64>().prop_map(Supply::new).boxed()
-        }
-    }
-
     #[cfg(all(test, feature = "serde"))]
     mod tests {
         use super::*;
@@ -351,24 +274,6 @@ pub mod balance {
             let decoded: Supply<TestCoin> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
         }
-
-        #[test]
-        fn balance_moverox_parity() {
-            let sample: Balance<u64> = Balance::new(1_000);
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::balance::Balance<u64>,
-            >(&sample);
-        }
-
-        #[test]
-        fn supply_moverox_parity() {
-            let sample: Supply<u64> = Supply::new(7);
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::balance::Supply<u64>,
-            >(&sample);
-        }
     }
 }
 
@@ -384,7 +289,6 @@ pub mod bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Bag {
         /// The ID of this bag.
         pub id: UID,
@@ -409,12 +313,6 @@ pub mod bag {
             let bytes = bcs::to_bytes(&b).unwrap();
             let decoded: Bag = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(b, decoded);
-        }
-
-        #[test]
-        fn bag_moverox_parity() {
-            let sample = Bag::new(UID::new(ObjectId::new([0x02; ObjectId::LENGTH])), 5);
-            crate::parity_check::assert_parity::<_, crate::generated::framework::bag::Bag>(&sample);
         }
     }
 }
@@ -650,70 +548,6 @@ pub mod coin {
             let decoded: DenyCapV1<TestCoin> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(d, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::framework::iota::IOTA;
-        use crate::parity_check::assert_parity;
-
-        #[test]
-        fn coin_moverox_parity() {
-            let sample: Coin<u64> = Coin::new(UID::new(sample_object_id()), Balance::new(42));
-            assert_parity::<_, crate::generated::framework::coin::Coin<u64>>(&sample);
-        }
-
-        #[test]
-        fn treasury_cap_moverox_parity() {
-            let sample: TreasuryCap<u64> =
-                TreasuryCap::new(UID::new(sample_object_id()), Supply::new(7));
-            assert_parity::<_, crate::generated::framework::coin::TreasuryCap<u64>>(&sample);
-        }
-
-        #[test]
-        fn coin_metadata_iota_moverox_parity() {
-            let sample = CoinMetadata::<IOTA>::new(
-                UID::new(sample_object_id()),
-                9,
-                string::String::new(b"IOTA".to_vec()),
-                ascii::String::new(b"IOTA".to_vec()),
-                string::String::new(b"Native IOTA coin".to_vec()),
-                Some(Url::new(ascii::String::new(b"https://iota.org/logo.png".to_vec()))),
-            );
-            // moverox's CoinMetadata<T> is phantom in T; instantiate with u64
-            // on that side — the wire shape is identical regardless of T.
-            assert_parity::<_, crate::generated::framework::coin::CoinMetadata<u64>>(&sample);
-        }
-
-        #[test]
-        fn coin_metadata_no_icon_moverox_parity() {
-            let sample = CoinMetadata::<IOTA>::new(
-                UID::new(sample_object_id()),
-                0,
-                string::String::new(b"X".to_vec()),
-                ascii::String::new(b"X".to_vec()),
-                string::String::new(b"".to_vec()),
-                None,
-            );
-            assert_parity::<_, crate::generated::framework::coin::CoinMetadata<u64>>(&sample);
-        }
-
-        #[test]
-        fn regulated_coin_metadata_moverox_parity() {
-            let sample: RegulatedCoinMetadata<u64> = RegulatedCoinMetadata::new(
-                UID::new(sample_object_id()),
-                ID::new(sample_object_id()),
-                ID::new(sample_object_id()),
-            );
-            assert_parity::<_, crate::generated::framework::coin::RegulatedCoinMetadata<u64>>(
-                &sample,
-            );
-        }
-
-        #[test]
-        fn deny_cap_v1_moverox_parity() {
-            let sample: DenyCapV1<u64> = DenyCapV1::new(UID::new(sample_object_id()), true);
-            assert_parity::<_, crate::generated::framework::coin::DenyCapV1<u64>>(&sample);
-        }
     }
 }
 
@@ -763,15 +597,6 @@ pub mod table {
             let decoded: Table<u64, u64> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(t, decoded);
         }
-
-        #[test]
-        fn table_moverox_parity() {
-            let sample: Table<u64, u64> = Table::new(UID::new(ObjectId::ZERO), 3);
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::table::Table<u64, u64>,
-            >(&sample);
-        }
     }
 }
 
@@ -787,7 +612,6 @@ pub mod url {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Url {
         pub url: ascii::String,
     }
@@ -838,14 +662,6 @@ pub mod url {
             );
             let decoded: Url = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(u, decoded);
-        }
-
-        #[test]
-        fn url_moverox_parity() {
-            let sample = Url::try_from_ascii("https://iota.org/").unwrap();
-            crate::parity_check::assert_parity::<_, crate::generated::framework::url::Url>(
-                &sample,
-            );
         }
 
         #[test]
@@ -907,16 +723,6 @@ pub mod vec_map {
             let decoded: VecMap<u64, u64> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(m, decoded);
         }
-
-        #[test]
-        fn vec_map_moverox_parity() {
-            let sample: VecMap<u64, u64> =
-                VecMap::new(vec![Entry::new(1, 10), Entry::new(2, 20)]);
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::vec_map::VecMap<u64, u64>,
-            >(&sample);
-        }
     }
 }
 
@@ -957,15 +763,6 @@ pub mod vec_set {
             let decoded: VecSet<u64> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(s, decoded);
         }
-
-        #[test]
-        fn vec_set_moverox_parity() {
-            let sample: VecSet<u64> = VecSet::new(vec![1, 2, 3]);
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::vec_set::VecSet<u64>,
-            >(&sample);
-        }
     }
 }
 
@@ -1003,15 +800,6 @@ pub mod table_vec {
             let decoded: TableVec<u64> = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(tv, decoded);
         }
-
-        #[test]
-        fn table_vec_moverox_parity() {
-            let sample: TableVec<u64> = TableVec::new(Table::new(UID::new(ObjectId::ZERO), 3));
-            crate::parity_check::assert_parity::<
-                _,
-                crate::generated::framework::table_vec::TableVec<u64>,
-            >(&sample);
-        }
     }
 }
 
@@ -1027,7 +815,6 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Versioned {
         pub id: UID,
         pub version: u64,
@@ -1046,7 +833,6 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
         pub old_version: u64,
@@ -1081,24 +867,6 @@ pub mod versioned {
             let decoded: VersionChangeCap = bcs::from_bytes(&bytes).unwrap();
             assert_eq!(c, decoded);
         }
-
-        // moverox-parity --------------------------------------------------
-
-        use crate::parity_check::assert_parity;
-
-        #[test]
-        fn versioned_moverox_parity() {
-            let sample = Versioned::new(UID::new(ObjectId::ZERO), 7);
-            assert_parity::<_, crate::generated::framework::versioned::Versioned>(&sample);
-        }
-
-        #[test]
-        fn version_change_cap_moverox_parity() {
-            let sample = VersionChangeCap::new(ID::new(ObjectId::ZERO), 3);
-            assert_parity::<_, crate::generated::framework::versioned::VersionChangeCap>(
-                &sample,
-            );
-        }
     }
 }
 
@@ -1111,7 +879,6 @@ pub mod bcs {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct BCS {
         pub bytes: Vec<u8>,
     }
@@ -1135,7 +902,6 @@ pub mod clock {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
@@ -1162,7 +928,6 @@ pub mod tx_context {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TxContext {
         /// Address of the user that signed the current transaction.
         pub sender: Address,
@@ -1187,7 +952,6 @@ pub mod intent {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Intent {
         pub scope: u8,
         pub version: u8,
@@ -1211,7 +975,6 @@ pub mod ecdsa_k1 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct KeyPair {
         pub private_key: Vec<u8>,
         pub public_key: Vec<u8>,
@@ -1233,7 +996,6 @@ pub mod zklogin_verified_id {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VerifiedID {
         pub id: UID,
         /// The address this `VerifiedID` is associated with.
@@ -1261,7 +1023,6 @@ pub mod zklogin_verified_issuer {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct VerifiedIssuer {
         pub id: UID,
         pub owner: Address,
@@ -1366,7 +1127,6 @@ pub mod borrow {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
@@ -1376,7 +1136,6 @@ pub mod borrow {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Test {
         pub id: UID,
     }
@@ -1549,7 +1308,6 @@ pub mod object_bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ObjectBag {
         pub id: UID,
         pub size: u64,
@@ -1617,7 +1375,6 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorState {
         pub id: UID,
         pub version: u64,
@@ -1628,7 +1385,6 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorStateInner {
         pub version: u64,
         /// List of currently active JWKs.
@@ -1641,7 +1397,6 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct JWK {
         pub kty: MoveString,
         pub e: MoveString,
@@ -1655,7 +1410,6 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct JwkId {
         pub iss: MoveString,
         pub kid: MoveString,
@@ -1666,7 +1420,6 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
@@ -1775,7 +1528,6 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Publisher {
         pub id: UID,
         pub package: AsciiString,
@@ -1788,7 +1540,6 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeCap {
         pub id: UID,
         /// (Mutable) ID of the package that can be upgraded.
@@ -1807,7 +1558,6 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeTicket {
         pub cap: ID,
         pub package: ID,
@@ -1825,7 +1575,6 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
@@ -1841,7 +1590,6 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Scalar {
         dummy_field: bool,
     }
@@ -1850,7 +1598,6 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct G1 {
         dummy_field: bool,
     }
@@ -1859,7 +1606,6 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct G2 {
         dummy_field: bool,
     }
@@ -1868,7 +1614,6 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GT {
         dummy_field: bool,
     }
@@ -1877,7 +1622,6 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct UncompressedG1 {
         dummy_field: bool,
     }
@@ -1892,7 +1636,6 @@ pub mod groth16 {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Curve {
         pub id: u8,
     }
@@ -1901,7 +1644,6 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PreparedVerifyingKey {
         pub vk_gamma_abc_g1_bytes: Vec<u8>,
         pub alpha_g1_beta_g2_bytes: Vec<u8>,
@@ -1913,7 +1655,6 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PublicProofInputs {
         pub bytes: Vec<u8>,
     }
@@ -1922,7 +1663,6 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ProofPoints {
         pub bytes: Vec<u8>,
     }
@@ -2027,7 +1767,6 @@ pub mod account {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorFunctionRefV1Key {
         dummy_field: bool,
     }
@@ -2143,7 +1882,6 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct CoinManaged {
         pub coin_name: AsciiString,
     }
@@ -2153,7 +1891,6 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TreasuryOwnershipRenounced {
         pub coin_name: AsciiString,
     }
@@ -2163,7 +1900,6 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct MetadataOwnershipRenounced {
         pub coin_name: AsciiString,
     }
@@ -2516,370 +2252,6 @@ mod round4_tests {
         let decoded: coin_manager::CoinManaged = ::bcs::from_bytes(&bytes).unwrap();
         assert_eq!(e, decoded);
     }
-
-    // -------------------------------------------------------------
-    // moverox-parity for round-4 modules (one test per type)
-    // -------------------------------------------------------------
-
-    use crate::generated as mx;
-    use crate::parity_check::assert_parity;
-
-    #[test]
-    fn bcs_moverox_parity() {
-        let sample = bcs::BCS::new(vec![1, 2, 3]);
-        assert_parity::<_, mx::framework::bcs::BCS>(&sample);
-    }
-
-    #[test]
-    fn clock_moverox_parity() {
-        let sample = clock::Clock::new(uid(), 1_700_000_000_000);
-        assert_parity::<_, mx::framework::clock::Clock>(&sample);
-    }
-
-    #[test]
-    fn tx_context_moverox_parity() {
-        let sample = tx_context::TxContext {
-            sender: Address::new([0xab; 32]),
-            tx_hash: vec![0; 32],
-            epoch: 1,
-            epoch_timestamp_ms: 1_700_000_000_000,
-            ids_created: 0,
-        };
-        assert_parity::<_, mx::framework::tx_context::TxContext>(&sample);
-    }
-
-    #[test]
-    fn intent_moverox_parity() {
-        assert_parity::<_, mx::framework::intent::Intent>(&intent::Intent::new(1, 2, 3));
-    }
-
-    #[test]
-    fn ecdsa_k1_keypair_moverox_parity() {
-        let sample = ecdsa_k1::KeyPair {
-            private_key: vec![1; 32],
-            public_key: vec![2; 33],
-        };
-        assert_parity::<_, mx::framework::ecdsa_k1::KeyPair>(&sample);
-    }
-
-    #[test]
-    fn zklogin_verified_id_moverox_parity() {
-        let sample = zklogin_verified_id::VerifiedID {
-            id: uid(),
-            owner: Address::new([0; 32]),
-            key_claim_name: MoveString::new(b"sub".to_vec()),
-            key_claim_value: MoveString::new(b"123".to_vec()),
-            issuer: MoveString::new(b"https://accounts.google.com".to_vec()),
-            audience: MoveString::new(b"wallet".to_vec()),
-        };
-        assert_parity::<_, mx::framework::zklogin_verified_id::VerifiedID>(&sample);
-    }
-
-    #[test]
-    fn zklogin_verified_issuer_moverox_parity() {
-        let sample = zklogin_verified_issuer::VerifiedIssuer {
-            id: uid(),
-            owner: Address::new([0; 32]),
-            issuer: MoveString::new(b"https://accounts.google.com".to_vec()),
-        };
-        assert_parity::<_, mx::framework::zklogin_verified_issuer::VerifiedIssuer>(&sample);
-    }
-
-    #[test]
-    fn receiving_moverox_parity() {
-        let sample: transfer::Receiving<u64> = transfer::Receiving::new(object::ID::new(oid()), 7);
-        assert_parity::<_, mx::framework::transfer::Receiving<u64>>(&sample);
-    }
-
-    #[test]
-    fn timelock_moverox_parity() {
-        let sample: timelock::TimeLock<u64> =
-            timelock::TimeLock::new(uid(), 42, 1_700_000_000_000, None);
-        assert_parity::<_, mx::framework::timelock::TimeLock<u64>>(&sample);
-    }
-
-    #[test]
-    fn borrow_referent_moverox_parity() {
-        let sample: borrow::Referent<u64> = borrow::Referent::new(Address::new([0; 32]), Some(42));
-        assert_parity::<_, mx::framework::borrow::Referent<u64>>(&sample);
-    }
-
-    #[test]
-    fn borrow_borrow_moverox_parity() {
-        let sample = borrow::Borrow {
-            r#ref: Address::new([0; 32]),
-            obj: object::ID::new(oid()),
-        };
-        assert_parity::<_, mx::framework::borrow::Borrow>(&sample);
-    }
-
-    #[test]
-    fn borrow_test_moverox_parity() {
-        let sample = borrow::Test { id: uid() };
-        assert_parity::<_, mx::framework::borrow::Test>(&sample);
-    }
-
-    #[test]
-    fn dynamic_field_field_moverox_parity() {
-        let sample: dynamic_field::Field<u64, u64> = dynamic_field::Field::new(uid(), 1, 2);
-        assert_parity::<_, mx::framework::dynamic_field::Field<u64, u64>>(&sample);
-    }
-
-    #[test]
-    fn dynamic_object_field_wrapper_moverox_parity() {
-        let sample: dynamic_object_field::Wrapper<u64> = dynamic_object_field::Wrapper::new(7);
-        assert_parity::<_, mx::framework::dynamic_object_field::Wrapper<u64>>(&sample);
-    }
-
-    #[test]
-    fn labeler_cap_moverox_parity() {
-        let sample: labeler::LabelerCap<u64> = labeler::LabelerCap::new(uid());
-        assert_parity::<_, mx::framework::labeler::LabelerCap<u64>>(&sample);
-    }
-
-    #[test]
-    fn linked_table_moverox_parity() {
-        let sample: linked_table::LinkedTable<u64, u64> =
-            linked_table::LinkedTable::new(uid(), 2, Some(1), Some(2));
-        assert_parity::<_, mx::framework::linked_table::LinkedTable<u64, u64>>(&sample);
-    }
-
-    #[test]
-    fn linked_table_node_moverox_parity() {
-        let sample: linked_table::Node<u64, u64> = linked_table::Node::new(None, Some(2), 1);
-        assert_parity::<_, mx::framework::linked_table::Node<u64, u64>>(&sample);
-    }
-
-    #[test]
-    fn object_table_moverox_parity() {
-        let sample: object_table::ObjectTable<u64, u64> =
-            object_table::ObjectTable::new(uid(), 3);
-        assert_parity::<_, mx::framework::object_table::ObjectTable<u64, u64>>(&sample);
-    }
-
-    #[test]
-    fn object_bag_moverox_parity() {
-        let sample = object_bag::ObjectBag { id: uid(), size: 5 };
-        assert_parity::<_, mx::framework::object_bag::ObjectBag>(&sample);
-    }
-
-    #[test]
-    fn priority_queue_moverox_parity() {
-        let sample: priority_queue::PriorityQueue<u64> = priority_queue::PriorityQueue::new(vec![
-            priority_queue::Entry::new(10, 100),
-            priority_queue::Entry::new(5, 50),
-        ]);
-        assert_parity::<_, mx::framework::priority_queue::PriorityQueue<u64>>(&sample);
-    }
-
-    #[test]
-    fn derived_object_key_moverox_parity() {
-        let sample: derived_object::DerivedObjectKey<u64> =
-            derived_object::DerivedObjectKey::new(42);
-        assert_parity::<_, mx::framework::derived_object::DerivedObjectKey<u64>>(&sample);
-    }
-
-    #[test]
-    fn authenticator_state_moverox_parity() {
-        let sample = authenticator_state::AuthenticatorState {
-            id: uid(),
-            version: 1,
-        };
-        assert_parity::<_, mx::framework::authenticator_state::AuthenticatorState>(&sample);
-    }
-
-    #[test]
-    fn authenticator_state_inner_moverox_parity() {
-        let sample = authenticator_state::AuthenticatorStateInner {
-            version: 1,
-            active_jwks: vec![authenticator_state::ActiveJwk {
-                jwk_id: authenticator_state::JwkId {
-                    iss: MoveString::new(b"google".to_vec()),
-                    kid: MoveString::new(b"kid".to_vec()),
-                },
-                jwk: authenticator_state::JWK {
-                    kty: MoveString::new(b"RSA".to_vec()),
-                    e: MoveString::new(b"AQAB".to_vec()),
-                    n: MoveString::new(b"...".to_vec()),
-                    alg: MoveString::new(b"RS256".to_vec()),
-                },
-                epoch: 1,
-            }],
-        };
-        assert_parity::<_, mx::framework::authenticator_state::AuthenticatorStateInner>(&sample);
-    }
-
-    #[test]
-    fn display_moverox_parity() {
-        let sample: display::Display<u64> =
-            display::Display::new(uid(), vec_map::VecMap::default(), 1);
-        assert_parity::<_, mx::framework::display::Display<u64>>(&sample);
-    }
-
-    #[test]
-    fn package_publisher_moverox_parity() {
-        let sample = package::Publisher {
-            id: uid(),
-            package: ascii::String::new(b"0x2".to_vec()),
-            module_name: ascii::String::new(b"package".to_vec()),
-        };
-        assert_parity::<_, mx::framework::package::Publisher>(&sample);
-    }
-
-    #[test]
-    fn package_upgrade_cap_moverox_parity() {
-        let sample = package::UpgradeCap {
-            id: uid(),
-            package: object::ID::new(oid()),
-            version: 1,
-            policy: 0,
-        };
-        assert_parity::<_, mx::framework::package::UpgradeCap>(&sample);
-    }
-
-    #[test]
-    fn package_upgrade_ticket_moverox_parity() {
-        let sample = package::UpgradeTicket {
-            cap: object::ID::new(oid()),
-            package: object::ID::new(oid()),
-            policy: 0,
-            digest: vec![0xab; 32],
-        };
-        assert_parity::<_, mx::framework::package::UpgradeTicket>(&sample);
-    }
-
-    #[test]
-    fn package_upgrade_receipt_moverox_parity() {
-        let sample = package::UpgradeReceipt {
-            cap: object::ID::new(oid()),
-            package: object::ID::new(oid()),
-        };
-        assert_parity::<_, mx::framework::package::UpgradeReceipt>(&sample);
-    }
-
-    #[test]
-    fn bls12381_markers_moverox_parity() {
-        assert_parity::<_, mx::framework::bls12381::Scalar>(&bls12381::Scalar::default());
-        assert_parity::<_, mx::framework::bls12381::G1>(&bls12381::G1::default());
-        assert_parity::<_, mx::framework::bls12381::G2>(&bls12381::G2::default());
-        assert_parity::<_, mx::framework::bls12381::GT>(&bls12381::GT::default());
-        assert_parity::<_, mx::framework::bls12381::UncompressedG1>(
-            &bls12381::UncompressedG1::default(),
-        );
-    }
-
-    #[test]
-    fn groth16_moverox_parity() {
-        assert_parity::<_, mx::framework::groth16::Curve>(&groth16::Curve { id: 1 });
-        assert_parity::<_, mx::framework::groth16::PreparedVerifyingKey>(
-            &groth16::PreparedVerifyingKey {
-                vk_gamma_abc_g1_bytes: vec![1],
-                alpha_g1_beta_g2_bytes: vec![2],
-                gamma_g2_neg_pc_bytes: vec![3],
-                delta_g2_neg_pc_bytes: vec![4],
-            },
-        );
-        assert_parity::<_, mx::framework::groth16::PublicProofInputs>(
-            &groth16::PublicProofInputs { bytes: vec![1, 2, 3] },
-        );
-        assert_parity::<_, mx::framework::groth16::ProofPoints>(&groth16::ProofPoints {
-            bytes: vec![4, 5, 6],
-        });
-    }
-
-    #[test]
-    fn group_ops_element_moverox_parity() {
-        let sample: group_ops::Element<u64> = group_ops::Element::new(vec![1, 2, 3]);
-        assert_parity::<_, mx::framework::group_ops::Element<u64>>(&sample);
-    }
-
-    #[test]
-    fn authenticator_function_ref_v1_moverox_parity() {
-        let sample: authenticator_function::AuthenticatorFunctionRefV1<u64> =
-            authenticator_function::AuthenticatorFunctionRefV1::new(
-                object::ID::new(oid()),
-                ascii::String::new(b"m".to_vec()),
-                ascii::String::new(b"f".to_vec()),
-            );
-        assert_parity::<
-            _,
-            mx::framework::authenticator_function::AuthenticatorFunctionRefV1<u64>,
-        >(&sample);
-    }
-
-    #[test]
-    fn account_authenticator_function_ref_v1_key_moverox_parity() {
-        assert_parity::<_, mx::framework::account::AuthenticatorFunctionRefV1Key>(
-            &account::AuthenticatorFunctionRefV1Key::default(),
-        );
-    }
-
-    #[test]
-    fn account_immutable_account_created_moverox_parity() {
-        let sample = account::ImmutableAccountCreated::<u64> {
-            account_id: object::ID::new(oid()),
-            authenticator: authenticator_function::AuthenticatorFunctionRefV1::<u64>::new(
-                object::ID::new(oid()),
-                ascii::String::new(b"m".to_vec()),
-                ascii::String::new(b"f".to_vec()),
-            ),
-        };
-        assert_parity::<_, mx::framework::account::ImmutableAccountCreated<u64>>(&sample);
-    }
-
-    #[test]
-    fn coin_manager_events_moverox_parity() {
-        let coin_name = ascii::String::new(b"0x2::iota::IOTA".to_vec());
-        assert_parity::<_, mx::framework::coin_manager::CoinManaged>(
-            &coin_manager::CoinManaged {
-                coin_name: coin_name.clone(),
-            },
-        );
-        assert_parity::<_, mx::framework::coin_manager::TreasuryOwnershipRenounced>(
-            &coin_manager::TreasuryOwnershipRenounced {
-                coin_name: coin_name.clone(),
-            },
-        );
-        assert_parity::<_, mx::framework::coin_manager::MetadataOwnershipRenounced>(
-            &coin_manager::MetadataOwnershipRenounced { coin_name },
-        );
-    }
-
-    #[test]
-    fn coin_manager_moverox_parity() {
-        let sample = coin_manager::CoinManager::<u64> {
-            id: uid(),
-            treasury_cap: coin::TreasuryCap::<u64>::new(uid(), balance::Supply::<u64>::new(0)),
-            metadata: None,
-            immutable_metadata: None,
-            maximum_supply: Some(1_000_000),
-            supply_immutable: false,
-            metadata_immutable: false,
-        };
-        assert_parity::<_, mx::framework::coin_manager::CoinManager<u64>>(&sample);
-    }
-
-    #[test]
-    fn coin_manager_caps_moverox_parity() {
-        assert_parity::<_, mx::framework::coin_manager::CoinManagerTreasuryCap<u64>>(
-            &coin_manager::CoinManagerTreasuryCap::<u64>::new(uid()),
-        );
-        assert_parity::<_, mx::framework::coin_manager::CoinManagerMetadataCap<u64>>(
-            &coin_manager::CoinManagerMetadataCap::<u64>::new(uid()),
-        );
-    }
-
-    #[test]
-    fn coin_manager_immutable_coin_metadata_moverox_parity() {
-        let sample = coin_manager::ImmutableCoinMetadata::<u64>::new(
-            9,
-            MoveString::new(b"X".to_vec()),
-            ascii::String::new(b"X".to_vec()),
-            MoveString::new(b"".to_vec()),
-            Some(url::Url::new(ascii::String::new(b"https://x".to_vec()))),
-        );
-        assert_parity::<_, mx::framework::coin_manager::ImmutableCoinMetadata<u64>>(&sample);
-    }
 }
 
 /// Types from `0x2::token`.
@@ -3033,7 +2405,6 @@ pub mod test_scenario {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Scenario {
         pub txn_number: u64,
         pub ctx: TxContext,
@@ -3043,7 +2414,6 @@ pub mod test_scenario {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct TxContextBuilder {
         pub sender: Address,
         pub epoch: u64,
@@ -3085,7 +2455,6 @@ pub mod package_metadata {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PackageMetadataKey {
         dummy_field: bool,
     }
@@ -3114,7 +2483,6 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ModuleMetadataV1 {
         pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
     }
@@ -3124,7 +2492,6 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AuthenticatorMetadataV1 {
         pub function_name: AsciiString,
         pub account_type: TypeName,
@@ -3144,7 +2511,6 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct DenyList {
         pub id: UID,
         /// The individual deny lists.
@@ -3157,14 +2523,12 @@ pub mod deny_list {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ConfigWriteCap(bool);
 
     /// Rust version of the Move `iota::deny_list::ConfigKey` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct ConfigKey {
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
@@ -3174,14 +2538,12 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct AddressKey(pub Address);
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct GlobalPauseKey(bool);
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
@@ -3189,7 +2551,6 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct PerTypeConfigCreated {
         pub key: ConfigKey,
         pub config_id: ID,
@@ -3208,7 +2569,6 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Random {
         pub id: UID,
         pub inner: Versioned,
@@ -3218,7 +2578,6 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct RandomInner {
         pub version: u64,
         pub epoch: u64,
@@ -3232,7 +2591,6 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct RandomGenerator {
         pub seed: Vec<u8>,
         pub counter: u16,
@@ -3478,7 +2836,6 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct KioskOwnerCap {
         pub id: UID,
         pub r#for: ID,
@@ -3531,7 +2888,6 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Item {
         pub id: ID,
     }
@@ -3540,7 +2896,6 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Listing {
         pub id: ID,
         pub is_exclusive: bool,
@@ -3550,7 +2905,6 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Lock {
         pub id: ID,
     }
@@ -3633,7 +2987,6 @@ pub mod kiosk_extension {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(test_strategy::Arbitrary))]
     pub struct Extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
@@ -4093,403 +3446,4 @@ mod round5_tests {
         assert_eq!(r, decoded);
     }
 
-    // -------------------------------------------------------------
-    // moverox-parity for round-5 modules (one test per type)
-    // -------------------------------------------------------------
-
-    use crate::generated as mx;
-    use crate::parity_check::assert_parity;
-
-    #[test]
-    fn token_moverox_parity() {
-        let sample: token::Token<u64> =
-            token::Token::new(uid(), balance::Balance::<u64>::new(1_000));
-        assert_parity::<_, mx::framework::token::Token<u64>>(&sample);
-    }
-
-    #[test]
-    fn token_policy_cap_moverox_parity() {
-        let sample: token::TokenPolicyCap<u64> = token::TokenPolicyCap::new(uid(), iid());
-        assert_parity::<_, mx::framework::token::TokenPolicyCap<u64>>(&sample);
-    }
-
-    #[test]
-    fn token_policy_moverox_parity() {
-        let sample: token::TokenPolicy<u64> = token::TokenPolicy::new(
-            uid(),
-            balance::Balance::<u64>::new(0),
-            vec_map::VecMap::default(),
-        );
-        assert_parity::<_, mx::framework::token::TokenPolicy<u64>>(&sample);
-    }
-
-    #[test]
-    fn token_action_request_moverox_parity() {
-        let sample = token::ActionRequest::<u64> {
-            name: MoveString::new(b"transfer".to_vec()),
-            amount: 1_000,
-            sender: Address::new([0; 32]),
-            recipient: Some(Address::new([1; 32])),
-            spent_balance: None,
-            approvals: vec_set::VecSet::default(),
-        };
-        assert_parity::<_, mx::framework::token::ActionRequest<u64>>(&sample);
-    }
-
-    #[test]
-    fn token_rule_key_moverox_parity() {
-        assert_parity::<_, mx::framework::token::RuleKey<u64>>(&token::RuleKey::<u64>::new(true));
-    }
-
-    #[test]
-    fn token_policy_created_moverox_parity() {
-        let sample = token::TokenPolicyCreated::<u64>::new(iid(), true);
-        assert_parity::<_, mx::framework::token::TokenPolicyCreated<u64>>(&sample);
-    }
-
-    #[test]
-    fn test_scenario_scenario_moverox_parity() {
-        let sample = test_scenario::Scenario {
-            txn_number: 0,
-            ctx: tx_context::TxContext {
-                sender: Address::new([0; 32]),
-                tx_hash: vec![0; 32],
-                epoch: 0,
-                epoch_timestamp_ms: 0,
-                ids_created: 0,
-            },
-        };
-        assert_parity::<_, mx::framework::test_scenario::Scenario>(&sample);
-    }
-
-    #[test]
-    fn test_scenario_transaction_effects_moverox_parity() {
-        let sample = test_scenario::TransactionEffects {
-            created: vec![iid()],
-            written: vec![],
-            deleted: vec![],
-            transferred_to_account: vec_map::VecMap::default(),
-            transferred_to_object: vec_map::VecMap::default(),
-            shared: vec![],
-            frozen: vec![],
-            num_user_events: 0,
-        };
-        assert_parity::<_, mx::framework::test_scenario::TransactionEffects>(&sample);
-    }
-
-    #[test]
-    fn package_metadata_authenticator_metadata_v1_moverox_parity() {
-        let sample = package_metadata::AuthenticatorMetadataV1 {
-            function_name: ascii::String::new(b"authenticate".to_vec()),
-            account_type: TypeName::new(ascii::String::new(b"0x2::account::Account".to_vec())),
-        };
-        assert_parity::<_, mx::framework::package_metadata::AuthenticatorMetadataV1>(&sample);
-    }
-
-    #[test]
-    fn package_metadata_v1_moverox_parity() {
-        let sample = package_metadata::PackageMetadataV1 {
-            id: uid(),
-            storage_id: iid(),
-            runtime_id: iid(),
-            package_version: 1,
-            modules_metadata: vec_map::VecMap::new(vec![vec_map::Entry::new(
-                ascii::String::new(b"m".to_vec()),
-                package_metadata::ModuleMetadataV1 {
-                    authenticator_metadata: vec![package_metadata::AuthenticatorMetadataV1 {
-                        function_name: ascii::String::new(b"authenticate".to_vec()),
-                        account_type: TypeName::new(ascii::String::new(b"0x2::a::A".to_vec())),
-                    }],
-                },
-            )]),
-        };
-        assert_parity::<_, mx::framework::package_metadata::PackageMetadataV1>(&sample);
-    }
-
-    #[test]
-    fn deny_list_moverox_parity() {
-        let sample = deny_list::DenyList {
-            id: uid(),
-            lists: bag::Bag::new(uid(), 0),
-        };
-        assert_parity::<_, mx::framework::deny_list::DenyList>(&sample);
-    }
-
-    #[test]
-    fn deny_list_keys_moverox_parity() {
-        assert_parity::<_, mx::framework::deny_list::ConfigWriteCap>(
-            &deny_list::ConfigWriteCap::default(),
-        );
-        assert_parity::<_, mx::framework::deny_list::ConfigKey>(&deny_list::ConfigKey {
-            per_type_index: 1,
-            per_type_key: vec![1, 2, 3],
-        });
-        assert_parity::<_, mx::framework::deny_list::AddressKey>(&deny_list::AddressKey(
-            Address::new([0xab; 32]),
-        ));
-        assert_parity::<_, mx::framework::deny_list::GlobalPauseKey>(
-            &deny_list::GlobalPauseKey::default(),
-        );
-        assert_parity::<_, mx::framework::deny_list::PerTypeConfigCreated>(
-            &deny_list::PerTypeConfigCreated {
-                key: deny_list::ConfigKey {
-                    per_type_index: 1,
-                    per_type_key: vec![],
-                },
-                config_id: iid(),
-            },
-        );
-    }
-
-    #[test]
-    fn random_moverox_parity() {
-        let sample = random::Random {
-            id: uid(),
-            inner: versioned::Versioned::new(uid(), 1),
-        };
-        assert_parity::<_, mx::framework::random::Random>(&sample);
-    }
-
-    #[test]
-    fn random_inner_moverox_parity() {
-        let sample = random::RandomInner {
-            version: 1,
-            epoch: 1,
-            randomness_round: 1,
-            random_bytes: vec![0; 32],
-        };
-        assert_parity::<_, mx::framework::random::RandomInner>(&sample);
-    }
-
-    #[test]
-    fn random_generator_moverox_parity() {
-        let sample = random::RandomGenerator {
-            seed: vec![0; 32],
-            counter: 0,
-            buffer: vec![],
-        };
-        assert_parity::<_, mx::framework::random::RandomGenerator>(&sample);
-    }
-
-    #[test]
-    fn config_moverox_parity() {
-        let sample: config::Config<u64> = config::Config::new(uid());
-        assert_parity::<_, mx::framework::config::Config<u64>>(&sample);
-    }
-
-    #[test]
-    fn setting_data_moverox_parity() {
-        let sample: config::SettingData<u64> = config::SettingData {
-            newer_value_epoch: 0,
-            newer_value: Some(42),
-            older_value_opt: None,
-        };
-        assert_parity::<_, mx::framework::config::SettingData<u64>>(&sample);
-    }
-
-    #[test]
-    fn ptb_command_argument_moverox_parity() {
-        use ptb_command::Argument as A;
-        for sample in [A::GasCoin, A::Input(7), A::Result(3), A::NestedResult(1, 2)] {
-            assert_parity::<_, mx::framework::ptb_command::Argument>(&sample);
-        }
-    }
-
-    #[test]
-    fn ptb_command_command_moverox_parity() {
-        let cases: Vec<ptb_command::Command> = vec![
-            ptb_command::Command::TransferObjects(ptb_command::TransferObjectsData {
-                objects: vec![ptb_command::Argument::Input(0)],
-                recipient: ptb_command::Argument::Input(1),
-            }),
-            ptb_command::Command::SplitCoins(ptb_command::SplitCoinsData {
-                coin: ptb_command::Argument::GasCoin,
-                amounts: vec![ptb_command::Argument::Input(0)],
-            }),
-            ptb_command::Command::MergeCoins(ptb_command::MergeCoinsData {
-                target_coin: ptb_command::Argument::GasCoin,
-                source_coins: vec![ptb_command::Argument::Input(0)],
-            }),
-            ptb_command::Command::Publish(ptb_command::PublishData {
-                modules: vec![vec![1, 2, 3]],
-                dependencies: vec![iid()],
-            }),
-            ptb_command::Command::MakeMoveVec(ptb_command::MakeMoveVecData {
-                type_arg: None,
-                elements: vec![],
-            }),
-            ptb_command::Command::Upgrade(ptb_command::UpgradeData {
-                modules: vec![vec![1]],
-                dependencies: vec![],
-                package: iid(),
-                upgrade_ticket: ptb_command::Argument::Input(0),
-            }),
-        ];
-        for c in cases {
-            assert_parity::<_, mx::framework::ptb_command::Command>(&c);
-        }
-    }
-
-    #[test]
-    fn ptb_call_arg_variants_moverox_parity() {
-        let cases: Vec<ptb_call_arg::CallArg> = vec![
-            ptb_call_arg::CallArg::PureData(vec![1, 2, 3]),
-            ptb_call_arg::CallArg::ObjectData(ptb_call_arg::ObjectArg::ImmOrOwnedObject(
-                ptb_call_arg::ObjectRef {
-                    object_id: iid(),
-                    sequence_number: 1,
-                    object_digest: vec![0; 32],
-                },
-            )),
-            ptb_call_arg::CallArg::ObjectData(ptb_call_arg::ObjectArg::SharedObject {
-                id: iid(),
-                initial_shared_version: 7,
-                mutable: true,
-            }),
-            ptb_call_arg::CallArg::ObjectData(ptb_call_arg::ObjectArg::ReceivingObject(
-                ptb_call_arg::ObjectRef {
-                    object_id: iid(),
-                    sequence_number: 2,
-                    object_digest: vec![1; 32],
-                },
-            )),
-        ];
-        for c in cases {
-            assert_parity::<_, mx::framework::ptb_call_arg::CallArg>(&c);
-        }
-    }
-
-    #[test]
-    fn ptb_programmable_transaction_moverox_parity() {
-        let sample = ptb::ProgrammableTransaction {
-            inputs: vec![ptb_call_arg::CallArg::PureData(vec![1])],
-            commands: vec![ptb_command::Command::SplitCoins(
-                ptb_command::SplitCoinsData {
-                    coin: ptb_command::Argument::GasCoin,
-                    amounts: vec![ptb_command::Argument::Input(0)],
-                },
-            )],
-        };
-        assert_parity::<_, mx::framework::ptb::ProgrammableTransaction>(&sample);
-    }
-
-    #[test]
-    fn auth_context_moverox_parity() {
-        let sample = auth_context::AuthContext {
-            auth_digest: vec![0; 32],
-            tx_inputs: vec![],
-            tx_commands: vec![],
-        };
-        assert_parity::<_, mx::framework::auth_context::AuthContext>(&sample);
-    }
-
-    #[test]
-    fn kiosk_moverox_parity() {
-        let sample = kiosk::Kiosk {
-            id: uid(),
-            profits: balance::Balance::new(1_000),
-            owner: Address::new([0; 32]),
-            item_count: 5,
-        };
-        assert_parity::<_, mx::framework::kiosk::Kiosk>(&sample);
-    }
-
-    #[test]
-    fn kiosk_owner_cap_moverox_parity() {
-        let sample = kiosk::KioskOwnerCap {
-            id: uid(),
-            r#for: iid(),
-        };
-        assert_parity::<_, mx::framework::kiosk::KioskOwnerCap>(&sample);
-    }
-
-    #[test]
-    fn kiosk_purchase_cap_moverox_parity() {
-        let sample = kiosk::PurchaseCap::<u64>::new(uid(), iid(), iid(), 100);
-        assert_parity::<_, mx::framework::kiosk::PurchaseCap<u64>>(&sample);
-    }
-
-    #[test]
-    fn kiosk_records_moverox_parity() {
-        assert_parity::<_, mx::framework::kiosk::Borrow>(&kiosk::Borrow {
-            kiosk_id: iid(),
-            item_id: iid(),
-        });
-        assert_parity::<_, mx::framework::kiosk::Item>(&kiosk::Item { id: iid() });
-        assert_parity::<_, mx::framework::kiosk::Listing>(&kiosk::Listing {
-            id: iid(),
-            is_exclusive: false,
-        });
-        assert_parity::<_, mx::framework::kiosk::Lock>(&kiosk::Lock { id: iid() });
-    }
-
-    #[test]
-    fn kiosk_item_events_moverox_parity() {
-        assert_parity::<_, mx::framework::kiosk::ItemListed<u64>>(
-            &kiosk::ItemListed::<u64>::new(iid(), iid(), 1_000),
-        );
-        assert_parity::<_, mx::framework::kiosk::ItemPurchased<u64>>(
-            &kiosk::ItemPurchased::<u64>::new(iid(), iid(), 1_000),
-        );
-        assert_parity::<_, mx::framework::kiosk::ItemDelisted<u64>>(
-            &kiosk::ItemDelisted::<u64>::new(iid(), iid()),
-        );
-    }
-
-    #[test]
-    fn kiosk_extension_moverox_parity() {
-        let sample = kiosk_extension::Extension {
-            storage: bag::Bag::new(uid(), 0),
-            permissions: 0b11,
-            is_enabled: true,
-        };
-        assert_parity::<_, mx::framework::kiosk_extension::Extension>(&sample);
-    }
-
-    #[test]
-    fn kiosk_extension_key_moverox_parity() {
-        assert_parity::<_, mx::framework::kiosk_extension::ExtensionKey<u64>>(
-            &kiosk_extension::ExtensionKey::<u64>::default(),
-        );
-    }
-
-    #[test]
-    fn transfer_policy_moverox_parity() {
-        let sample = transfer_policy::TransferPolicy::<u64>::new(
-            uid(),
-            balance::Balance::<iota::IOTA>::new(0),
-            vec_set::VecSet::default(),
-        );
-        assert_parity::<_, mx::framework::transfer_policy::TransferPolicy<u64>>(&sample);
-    }
-
-    #[test]
-    fn transfer_request_moverox_parity() {
-        let sample = transfer_policy::TransferRequest::<u64>::new(
-            iid(),
-            1_000,
-            iid(),
-            vec_set::VecSet::default(),
-        );
-        assert_parity::<_, mx::framework::transfer_policy::TransferRequest<u64>>(&sample);
-    }
-
-    #[test]
-    fn transfer_policy_cap_moverox_parity() {
-        let sample = transfer_policy::TransferPolicyCap::<u64>::new(uid(), iid());
-        assert_parity::<_, mx::framework::transfer_policy::TransferPolicyCap<u64>>(&sample);
-    }
-
-    #[test]
-    fn transfer_policy_events_moverox_parity() {
-        assert_parity::<_, mx::framework::transfer_policy::TransferPolicyCreated<u64>>(
-            &transfer_policy::TransferPolicyCreated::<u64>::new(iid()),
-        );
-        assert_parity::<_, mx::framework::transfer_policy::TransferPolicyDestroyed<u64>>(
-            &transfer_policy::TransferPolicyDestroyed::<u64>::new(iid()),
-        );
-        assert_parity::<_, mx::framework::transfer_policy::RuleKey<u64>>(
-            &transfer_policy::RuleKey::<u64>::new(),
-        );
-    }
 }
