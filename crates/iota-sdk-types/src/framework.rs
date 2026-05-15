@@ -53,6 +53,16 @@ impl Coin {
     }
 }
 
+impl std::fmt::Display for Coin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Coin {{ type: {}, balance: {}, id: {} }}",
+            self.coin_type, self.balance, self.id
+        )
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum CoinFromObjectError {

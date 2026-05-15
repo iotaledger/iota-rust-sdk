@@ -77,3 +77,26 @@ impl Event {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
     }
 }
+
+impl core::fmt::Display for Event {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "Event {{ package_id: {}, module: {}, sender: {}, type: {} }}",
+            self.package_id, self.module, self.sender, self.type_
+        )
+    }
+}
+
+impl core::fmt::Display for TransactionEvents {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "[")?;
+        for (i, event) in self.0.iter().enumerate() {
+            if i > 0 {
+                write!(f, ", ")?;
+            }
+            write!(f, "{}", event)?;
+        }
+        write!(f, "]")
+    }
+}

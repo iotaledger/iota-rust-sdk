@@ -85,6 +85,38 @@ impl TransactionEffectsV1 {
     }
 }
 
+impl core::fmt::Display for TransactionEffectsV1 {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        writeln!(f, "Transaction Effects (V1):")?;
+        writeln!(f, "  Status: {}", self.status)?;
+        writeln!(f, "  Epoch: {}", self.epoch)?;
+        writeln!(f, "  Gas Used: {}", self.gas_used)?;
+        writeln!(f, "  Transaction Digest: {}", self.transaction_digest)?;
+        if let Some(gas_idx) = self.gas_object_index {
+            writeln!(f, "  Gas Object Index: {}", gas_idx)?;
+        }
+        if let Some(events_digest) = &self.events_digest {
+            writeln!(f, "  Events Digest: {}", events_digest)?;
+        }
+        writeln!(f, "  Dependencies: {:?}", self.dependencies)?;
+        writeln!(f, "  Lamport Version: {}", self.lamport_version)?;
+        writeln!(f, "  Changed Objects: [")?;
+        for obj in &self.changed_objects {
+            writeln!(f, "    {},", obj)?;
+        }
+        writeln!(f, "  ]")?;
+        writeln!(f, "  Unchanged Shared Objects: [")?;
+        for obj in &self.unchanged_shared_objects {
+            writeln!(f, "    {},", obj)?;
+        }
+        writeln!(f, "  ]")?;
+        if let Some(aux_digest) = &self.auxiliary_data_digest {
+            writeln!(f, "  Auxiliary Data Digest: {}", aux_digest)?;
+        }
+        Ok(())
+    }
+}
+
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -111,6 +143,16 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
+impl core::fmt::Display for ChangedObject {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "ChangedObject {{ id: {}, op: {:?}, in: {}, out: {} }}",
+            self.object_id, self.id_operation, self.input_state, self.output_state
+        )
+    }
+}
+
 /// A shared object that wasn't changed during execution
 ///
 /// # BCS
@@ -128,6 +170,16 @@ pub struct ChangedObject {
 pub struct UnchangedSharedObject {
     pub object_id: ObjectId,
     pub kind: UnchangedSharedKind,
+}
+
+impl core::fmt::Display for UnchangedSharedObject {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "UnchangedSharedObject {{ id: {}, kind: {:?} }}",
+            self.object_id, self.kind
+        )
+    }
 }
 
 /// Type of unchanged shared object
@@ -172,6 +224,20 @@ impl UnchangedSharedKind {
         Cancelled,
         PerEpochConfig
     );
+}
+
+impl core::fmt::Display for UnchangedSharedKind {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                write!(f, "ReadOnlyRoot(v: {}, d: {})", version, digest)
+            }
+            UnchangedSharedKind::MutateDeleted { version } => write!(f, "MutateDeleted(v: {})", version),
+            UnchangedSharedKind::ReadDeleted { version } => write!(f, "ReadDeleted(v: {})", version),
+            UnchangedSharedKind::Cancelled { version } => write!(f, "Cancelled(v: {})", version),
+            UnchangedSharedKind::PerEpochConfig => write!(f, "PerEpochConfig"),
+        }
+    }
 }
 
 /// State of an object prior to execution
@@ -239,6 +305,19 @@ impl ObjectIn {
 
     pub fn owner(&self) -> Owner {
         self.owner_opt().expect("object does not exist")
+    }
+}
+
+impl core::fmt::Display for ObjectIn {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            ObjectIn::Missing => write!(f, "Missing"),
+            ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            } => write!(f, "Data(v: {}, d: {}, o: {})", version, digest, owner),
+        }
     }
 }
 
@@ -316,6 +395,20 @@ impl ObjectOut {
 
     pub fn package_digest(&self) -> Digest {
         self.package_digest_opt().expect("package does not exist")
+    }
+}
+
+impl core::fmt::Display for ObjectOut {
+    fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            ObjectOut::Missing => write!(f, "Missing"),
+            ObjectOut::ObjectWrite { digest, owner } => {
+                write!(f, "ObjectWrite(d: {}, o: {})", digest, owner)
+            }
+            ObjectOut::PackageWrite { version, digest } => {
+                write!(f, "PackageWrite(v: {}, d: {})", version, digest)
+            }
+        }
     }
 }
 
