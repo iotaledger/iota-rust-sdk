@@ -6,7 +6,7 @@ edition = "2024"
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
-description = "Rust representations of Move system types used by the IOTA blockchain"
+description = "Rust representations of Move types used by the IOTA blockchain"
 
 [lints]
 workspace = true

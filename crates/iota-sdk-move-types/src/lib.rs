@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Rust representations of Move system types used by the IOTA blockchain.
+//! Rust representations of Move types used by the IOTA blockchain.
 //!
 //! Each top-level module corresponds to a system package, identified by the
 //! address constants on [`iota_types::Address`]:

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Bindings for selected Rust mirrors of Move system types.
+//! Bindings for selected Rust mirrors of Move types.
 //!
 //! Each FFI shim wraps an inner [`iota_move_types`] type and exposes
 //! the fields that non-Rust consumers typically need when decoding objects
