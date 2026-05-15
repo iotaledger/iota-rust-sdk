@@ -293,8 +293,7 @@ fn generate_selective_accessors_for_field(
     let base_field_type_path = field.resolve_rust_type_path(context, &package);
     let field_type_path = if is_boxed_in_accessor {
         TokenStream::from_str(&format!(
-            "::prost::alloc::boxed::Box<{}>",
-            base_field_type_path
+            "::prost::alloc::boxed::Box<{base_field_type_path}>"
         ))
         .unwrap()
     } else {
@@ -808,7 +807,7 @@ fn type_default(field: &Field, context: &Context, package: &str) -> String {
         Type::Bytes => String::from("&[]"),
         Type::Group | Type::Message => {
             let ty = context.resolve_ident(package, field.inner.type_name());
-            format!("{}::default_instance() as _", ty)
+            format!("{ty}::default_instance() as _")
         }
     }
 }
@@ -826,7 +825,7 @@ fn ref_return_type(field: &Field, context: &Context, package: &str) -> String {
         Type::Bytes => String::from("&[u8]"),
         Type::Group | Type::Message => {
             let ty = context.resolve_ident(package, field.inner.type_name());
-            format!("&{}", ty)
+            format!("&{ty}")
         }
     }
 }

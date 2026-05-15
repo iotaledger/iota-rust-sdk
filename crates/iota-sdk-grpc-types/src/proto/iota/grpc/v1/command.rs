@@ -35,7 +35,7 @@ impl TryFrom<iota_types::transaction::Argument> for Argument {
             }
             _ => {
                 return Err(GrpcConversionError::UnsupportedArgumentType {
-                    arg_type: format!("{:?}", arg),
+                    arg_type: format!("{arg:?}"),
                 });
             }
         };
