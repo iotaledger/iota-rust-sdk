@@ -150,10 +150,10 @@ impl TimelockedStakedIota {
 /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct CoinMetadata(pub iota_move_system_types::framework::coin::CoinMetadata<IOTA>);
+pub struct IotaCoinMetadata(pub iota_move_system_types::framework::coin::CoinMetadata<IOTA>);
 
 #[uniffi::export]
-impl CoinMetadata {
+impl IotaCoinMetadata {
     /// Decode a `CoinMetadata` from an on-chain object, validating that the
     /// object's type tag matches `0x2::coin::CoinMetadata`. The inner coin
     /// marker is not re-checked against `IOTA`.
