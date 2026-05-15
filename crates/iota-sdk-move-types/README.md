@@ -1,6 +1,6 @@
-# iota-sdk-move-system-types
+# iota-sdk-move-types
 
-Rust representations of Move system types used by the IOTA blockchain.
+Rust representations of Move types used by the IOTA blockchain.
 
 ## Refreshing the BCS test fixtures
 
@@ -11,7 +11,7 @@ type mirrors and re-encode to assert byte-for-byte equality.
 To refresh those fixtures against current chain state:
 
 ```bash
-cargo run -p iota-sdk-move-system-types --example capture_fixtures
+cargo run -p iota-sdk-move-types --example capture_fixtures
 ```
 
 This queries the IOTA mainnet GraphQL endpoint, re-fetches each pinned

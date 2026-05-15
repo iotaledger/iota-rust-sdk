@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Decode `StakedIota` objects into typed Rust structs using
-//! `iota-sdk-move-system-types`.
+//! `iota-sdk-move-types`.
 //!
 //! The GraphQL client returns each object's `contents` as a raw BCS byte
 //! buffer. Without a Rust mirror of the Move type you would have to walk
@@ -11,7 +11,7 @@
 //! principal — and you'd be on the hook for keeping that decoder in sync
 //! with every Move-side change.
 //!
-//! With the move-system-types crate, a single `bcs::from_bytes::<StakedIota>`
+//! With the move-types crate, a single `bcs::from_bytes::<StakedIota>`
 //! gives you typed, named-field access:
 //!
 //! - `staked.id()` — the staked object's [`ObjectId`]
@@ -22,7 +22,7 @@
 //! [`ObjectId`]: iota_types::ObjectId
 
 use eyre::Result;
-use iota_move_system_types::iota_system::staking_pool::StakedIota;
+use iota_move_types::iota_system::staking_pool::StakedIota;
 use iota_sdk::graphql_client::{Client, query_types::ObjectFilter};
 
 #[tokio::main]

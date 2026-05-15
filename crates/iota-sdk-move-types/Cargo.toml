@@ -1,5 +1,5 @@
 [package]
-name = "iota-sdk-move-system-types"
+name = "iota-sdk-move-types"
 version = "0.0.1-alpha.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"

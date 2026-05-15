@@ -3,7 +3,7 @@
 
 //! Bindings for selected Rust mirrors of Move system types.
 //!
-//! Each FFI shim wraps an inner [`iota_move_system_types`] type and exposes
+//! Each FFI shim wraps an inner [`iota_move_types`] type and exposes
 //! the fields that non-Rust consumers typically need when decoding objects
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
@@ -21,7 +21,7 @@
 
 use std::sync::Arc;
 
-use iota_move_system_types::framework::iota::IOTA;
+use iota_move_types::framework::iota::IOTA;
 
 use crate::{
     error::Result,
@@ -31,15 +31,15 @@ use crate::{
     },
 };
 
-fn ascii_to_string(s: &iota_move_system_types::std::ascii::String) -> String {
+fn ascii_to_string(s: &iota_move_types::std::ascii::String) -> String {
     String::from_utf8_lossy(&s.bytes).into_owned()
 }
 
-fn move_string_to_string(s: &iota_move_system_types::std::string::String) -> String {
+fn move_string_to_string(s: &iota_move_types::std::string::String) -> String {
     String::from_utf8_lossy(&s.bytes).into_owned()
 }
 
-fn url_to_string(u: &iota_move_system_types::framework::url::Url) -> String {
+fn url_to_string(u: &iota_move_types::framework::url::Url) -> String {
     ascii_to_string(&u.url)
 }
 
@@ -50,7 +50,7 @@ fn url_to_string(u: &iota_move_system_types::framework::url::Url) -> String {
 /// A typed view of an on-chain `0x3::staking_pool::StakedIota` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct StakedIota(pub iota_move_system_types::iota_system::staking_pool::StakedIota);
+pub struct StakedIota(pub iota_move_types::iota_system::staking_pool::StakedIota);
 
 #[uniffi::export]
 impl StakedIota {
@@ -59,10 +59,8 @@ impl StakedIota {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::iota_system::staking_pool::StakedIota::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_move_types::iota_system::staking_pool::StakedIota::try_from_object(&object.0)?
+                .into(),
         )
     }
 
@@ -70,10 +68,7 @@ impl StakedIota {
     /// prefer [`Self::try_from_object`] when an [`Object`] is available.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_move_system_types::iota_system::staking_pool::StakedIota::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_move_types::iota_system::staking_pool::StakedIota::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -99,7 +94,7 @@ impl StakedIota {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct TimelockedStakedIota(
-    pub iota_move_system_types::iota_system::timelocked_staking::TimelockedStakedIota,
+    pub iota_move_types::iota_system::timelocked_staking::TimelockedStakedIota,
 );
 
 #[uniffi::export]
@@ -107,7 +102,7 @@ impl TimelockedStakedIota {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_object(
+            iota_move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_object(
                 &object.0,
             )?
             .into(),
@@ -117,7 +112,7 @@ impl TimelockedStakedIota {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_move_system_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_bcs(
+            iota_move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_bcs(
                 &bytes,
             )?
             .into(),
@@ -150,7 +145,7 @@ impl TimelockedStakedIota {
 /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct IotaCoinMetadata(pub iota_move_system_types::framework::coin::CoinMetadata<IOTA>);
+pub struct IotaCoinMetadata(pub iota_move_types::framework::coin::CoinMetadata<IOTA>);
 
 #[uniffi::export]
 impl IotaCoinMetadata {
@@ -160,19 +155,14 @@ impl IotaCoinMetadata {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::framework::coin::CoinMetadata::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_move_types::framework::coin::CoinMetadata::<IOTA>::try_from_object(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_move_system_types::framework::coin::CoinMetadata::<IOTA>::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_move_types::framework::coin::CoinMetadata::<IOTA>::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -207,18 +197,18 @@ impl IotaCoinMetadata {
 /// A typed view of an on-chain `0x107a::nft::Nft` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Nft(pub iota_move_system_types::stardust::nft::Nft);
+pub struct Nft(pub iota_move_types::stardust::nft::Nft);
 
 #[uniffi::export]
 impl Nft {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::nft::Nft::try_from_object(&object.0)?.into())
+        Ok(iota_move_types::stardust::nft::Nft::try_from_object(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::nft::Nft::try_from_bcs(&bytes)?.into())
+        Ok(iota_move_types::stardust::nft::Nft::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -254,13 +244,13 @@ impl Nft {
 /// can decode the inner type from BCS in Rust.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Irc27Metadata(pub iota_move_system_types::stardust::irc27::Irc27Metadata);
+pub struct Irc27Metadata(pub iota_move_types::stardust::irc27::Irc27Metadata);
 
 #[uniffi::export]
 impl Irc27Metadata {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::irc27::Irc27Metadata::try_from_bcs(&bytes)?.into())
+        Ok(iota_move_types::stardust::irc27::Irc27Metadata::try_from_bcs(&bytes)?.into())
     }
 
     pub fn version(&self) -> String {
@@ -296,14 +286,14 @@ impl Irc27Metadata {
 /// `0x107a::basic_output::BasicOutput<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct BasicOutput(pub iota_move_system_types::stardust::basic_output::BasicOutput<IOTA>);
+pub struct BasicOutput(pub iota_move_types::stardust::basic_output::BasicOutput<IOTA>);
 
 #[uniffi::export]
 impl BasicOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_object(
+            iota_move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_object(
                 &object.0,
             )?
             .into(),
@@ -313,10 +303,8 @@ impl BasicOutput {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_move_system_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_bcs(
-                &bytes,
-            )?
-            .into(),
+            iota_move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_bcs(&bytes)?
+                .into(),
         )
     }
 
@@ -372,26 +360,21 @@ impl BasicOutput {
 /// A typed view of an on-chain `0x107a::nft_output::NftOutput<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct NftOutput(pub iota_move_system_types::stardust::nft_output::NftOutput<IOTA>);
+pub struct NftOutput(pub iota_move_types::stardust::nft_output::NftOutput<IOTA>);
 
 #[uniffi::export]
 impl NftOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::stardust::nft_output::NftOutput::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_move_types::stardust::nft_output::NftOutput::<IOTA>::try_from_object(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_move_system_types::stardust::nft_output::NftOutput::<IOTA>::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_move_types::stardust::nft_output::NftOutput::<IOTA>::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -432,14 +415,14 @@ impl NftOutput {
 /// `0x107a::alias_output::AliasOutput<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct AliasOutput(pub iota_move_system_types::stardust::alias_output::AliasOutput<IOTA>);
+pub struct AliasOutput(pub iota_move_types::stardust::alias_output::AliasOutput<IOTA>);
 
 #[uniffi::export]
 impl AliasOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_move_system_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_object(
+            iota_move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_object(
                 &object.0,
             )?
             .into(),
@@ -449,10 +432,8 @@ impl AliasOutput {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_move_system_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_bcs(
-                &bytes,
-            )?
-            .into(),
+            iota_move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_bcs(&bytes)?
+                .into(),
         )
     }
 
@@ -472,18 +453,18 @@ impl AliasOutput {
 /// A typed view of an on-chain `0x107a::alias::Alias` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Alias(pub iota_move_system_types::stardust::alias::Alias);
+pub struct Alias(pub iota_move_types::stardust::alias::Alias);
 
 #[uniffi::export]
 impl Alias {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::alias::Alias::try_from_object(&object.0)?.into())
+        Ok(iota_move_types::stardust::alias::Alias::try_from_object(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_move_system_types::stardust::alias::Alias::try_from_bcs(&bytes)?.into())
+        Ok(iota_move_types::stardust::alias::Alias::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -526,7 +507,7 @@ impl Alias {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct TimelockUnlockCondition(
-    pub iota_move_system_types::stardust::timelock_unlock_condition::TimelockUnlockCondition,
+    pub iota_move_types::stardust::timelock_unlock_condition::TimelockUnlockCondition,
 );
 
 #[uniffi::export]
@@ -543,7 +524,7 @@ impl TimelockUnlockCondition {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ExpirationUnlockCondition(
-    pub iota_move_system_types::stardust::expiration_unlock_condition::ExpirationUnlockCondition,
+    pub iota_move_types::stardust::expiration_unlock_condition::ExpirationUnlockCondition,
 );
 
 #[uniffi::export]
@@ -566,7 +547,7 @@ impl ExpirationUnlockCondition {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct StorageDepositReturnUnlockCondition(
-    pub  iota_move_system_types::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
+    pub  iota_move_types::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
 );
 
 #[uniffi::export]

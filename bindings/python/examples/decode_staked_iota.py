@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Decode `StakedIota` objects into typed Python values via the Rust mirror in
-# `iota-sdk-move-system-types`.
+# `iota-sdk-move-types`.
 #
 # The GraphQL client returns each object's contents as raw BCS bytes. Without
 # a Rust mirror of the Move type, an FFI caller would have to walk those bytes
-# by hand. With the move-system-types crate exposed through the bindings, a
+# by hand. With the move-types crate exposed through the bindings, a
 # single `StakedIota.try_from_object(obj)` call gives typed, named-field
 # access to id / pool_id / activation_epoch / principal.
 

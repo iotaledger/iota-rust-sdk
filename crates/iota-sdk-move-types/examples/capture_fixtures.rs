@@ -12,7 +12,7 @@
 //! Invocation:
 //!
 //! ```bash
-//! cargo run -p iota-sdk-move-system-types --example capture_fixtures
+//! cargo run -p iota-sdk-move-types --example capture_fixtures
 //! # optional: pick a different network (defaults to mainnet)
 //! IOTA_NETWORK=testnet cargo run …
 //! IOTA_NETWORK=devnet cargo run …

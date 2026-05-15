@@ -12,12 +12,12 @@
 //! To refresh the fixtures against current chain state, run:
 //!
 //! ```bash
-//! cargo run -p iota-sdk-move-system-types --example capture_fixtures
+//! cargo run -p iota-sdk-move-types --example capture_fixtures
 //! ```
 
 #![cfg(feature = "serde")]
 
-use iota_sdk_move_system_types::{
+use iota_sdk_move_types::{
     framework::{
         clock::Clock,
         coin::{Coin, CoinMetadata},

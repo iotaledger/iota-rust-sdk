@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Decode StakedIota objects into typed C# values via the Rust mirror in
-// iota-sdk-move-system-types.
+// iota-sdk-move-types.
 //
 // The GraphQL client returns each object's contents as raw BCS bytes. With the
 // move-system-types crate exposed through the bindings, a single

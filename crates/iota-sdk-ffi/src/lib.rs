@@ -15,6 +15,7 @@ mod macros;
 pub mod crypto;
 pub mod error;
 pub mod graphql;
+pub mod move_types;
 pub mod transaction_builder;
 pub mod types;
 
