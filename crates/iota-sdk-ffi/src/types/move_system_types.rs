@@ -8,7 +8,8 @@
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
 //! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`].
-//! - **Framework types** (`0x2`): [`CoinMetadata`].
+//! - **Framework types** (`0x2`): [`MoveCoinMetadata`] (the `Move` prefix
+//!   disambiguates this from the GraphQL-derived `CoinMetadata` record).
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -16,7 +17,7 @@
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
-//! `CoinMetadata<IOTA>`). The on-chain type-tag check verifies the
+//! `MoveCoinMetadata<IOTA>`). The on-chain type-tag check verifies the
 //! struct's module path but does *not* re-check the coin marker.
 
 use std::sync::Arc;
@@ -150,10 +151,10 @@ impl TimelockedStakedIota {
 /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct CoinMetadata(pub iota_move_system_types::framework::coin::CoinMetadata<IOTA>);
+pub struct IotaCoinMetadata(pub iota_move_system_types::framework::coin::CoinMetadata<IOTA>);
 
 #[uniffi::export]
-impl CoinMetadata {
+impl IotaCoinMetadata {
     /// Decode a `CoinMetadata` from an on-chain object, validating that the
     /// object's type tag matches `0x2::coin::CoinMetadata`. The inner coin
     /// marker is not re-checked against `IOTA`.
