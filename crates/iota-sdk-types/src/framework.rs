@@ -57,9 +57,32 @@ impl std::fmt::Display for Coin {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Coin {{ type: {}, balance: {}, id: {} }}",
+            "Coin {{\n  type: {},\n  balance: {},\n  id: {}\n}}",
             self.coin_type, self.balance, self.id
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{ObjectId, StructTag, Address, Identifier};
+
+    #[test]
+    fn test_coin_display() {
+        let coin = Coin {
+            id: ObjectId::ZERO,
+            coin_type: StructTag {
+                address: Address::ZERO,
+                module: Identifier::new("m").unwrap(),
+                name: Identifier::new("n").unwrap(),
+                type_params: vec![],
+            },
+            balance: 100,
+        };
+        let s = format!("{}", coin);
+        assert!(s.contains("balance: 100"));
+        assert!(s.contains("id:"));
     }
 }
 

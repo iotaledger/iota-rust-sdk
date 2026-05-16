@@ -82,7 +82,7 @@ impl core::fmt::Display for Event {
     fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
         write!(
             f,
-            "Event {{ package_id: {}, module: {}, sender: {}, type: {} }}",
+            "Event {{\n  package_id: {},\n  module: {},\n  sender: {},\n  type: {}\n}}",
             self.package_id, self.module, self.sender, self.type_
         )
     }
@@ -90,13 +90,38 @@ impl core::fmt::Display for Event {
 
 impl core::fmt::Display for TransactionEvents {
     fn fmt(&self, f: &mut core::fmt::Display::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "[")?;
-        for (i, event) in self.0.iter().enumerate() {
-            if i > 0 {
-                write!(f, ", ")?;
+        writeln!(f, "TransactionEvents [")?;
+        for event in &self.0 {
+            let s = format!("{}", event);
+            for line in s.lines() {
+                writeln!(f, "  {}", line)?;
             }
-            write!(f, "{}", event)?;
         }
         write!(f, "]")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Address, Identifier, ObjectId, StructTag};
+
+    #[test]
+    fn test_event_display() {
+        let event = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("test").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag {
+                address: Address::ZERO,
+                module: Identifier::new("m").unwrap(),
+                name: Identifier::new("n").unwrap(),
+                type_params: vec![],
+            },
+            contents: vec![],
+        };
+        let s = format!("{}", event);
+        assert!(s.contains("package_id:"));
+        assert!(s.contains("sender:"));
     }
 }
