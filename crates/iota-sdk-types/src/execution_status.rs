@@ -120,7 +120,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-///
+/// 
 /// execution-error =  insufficient-gas
 ///                 =/ invalid-gas-object
 ///                 =/ invariant-violation
