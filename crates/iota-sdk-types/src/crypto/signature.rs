@@ -330,6 +330,7 @@ impl UserSignature {
         }
     }
 
+    /// Return the public key for this signature, if the scheme supports it.
     pub fn to_public_key(&self) -> Result<PublicKey, InvalidSignatureScheme> {
         match self {
             UserSignature::Simple(simple) => match simple {
