@@ -182,7 +182,9 @@ impl crate::PublicKey {
             Self::Ed25519(pk) => pk.derive_address(),
             Self::Secp256k1(pk) => pk.derive_address(),
             Self::Secp256r1(pk) => pk.derive_address(),
-            Self::ZkLoginDeprecated => panic!(),
+            Self::ZkLoginDeprecated => {
+                panic!("zkLogin is deprecated and was never enabled on IOTA")
+            }
             Self::Passkey(pk) => pk.derive_address(),
         }
     }

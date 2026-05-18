@@ -466,7 +466,7 @@ impl AsRef<[u8]> for MultisigMemberSignature {
             Self::Ed25519(s) => s.as_ref(),
             Self::Secp256k1(s) => s.as_ref(),
             Self::Secp256r1(s) => s.as_ref(),
-            Self::ZkLoginDeprecated => panic!(),
+            Self::ZkLoginDeprecated => &[],
             Self::Passkey(s) => s.signature.as_ref(),
         }
     }
