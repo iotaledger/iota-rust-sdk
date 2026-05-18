@@ -323,12 +323,6 @@ impl MultisigAggregatedSignature {
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
-        committee.is_valid()?;
-
-        if signatures.len() > committee.members.len() || signatures.is_empty() {
-            return Err(MultisigError::InvalidSignatureNumber);
-        }
-
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
         for signature in signatures {
@@ -343,15 +337,20 @@ impl MultisigAggregatedSignature {
             member_signatures.push(signature.try_into()?);
         }
 
-        Ok(MultisigAggregatedSignature {
+        let signature = MultisigAggregatedSignature {
             signatures: member_signatures,
             bitmap,
             committee,
             #[cfg(feature = "serde")]
             bytes: OnceCell::new(),
-        })
+        };
+
+        signature.is_valid()?;
+
+        Ok(signature)
     }
 
+    /// Validates the structural integrity of this aggregated signature.
     pub fn is_valid(&self) -> Result<(), MultisigError> {
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
