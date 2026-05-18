@@ -178,8 +178,9 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 1. Add type definition with `#[derive(Debug, Clone, PartialEq, Eq)]`
 2. Add `#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]` if needed
 3. Add `#[cfg_attr(feature = "schemars", derive(JsonSchema))]` if needed
-4. Export from appropriate module
-5. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
+4. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
+5. Export from appropriate module
+6. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
 
 ### Adding a New GraphQL Query
 
@@ -202,7 +203,7 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 
 ## WASM Considerations
 
-All non-FFI crates support WASM. When adding dependencies:
+The `make wasm` target builds the following crates for `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The gRPC client/types and FFI crate are not built for WASM. When adding dependencies to any of the WASM-built crates:
 
 - Ensure they support `wasm32-unknown-unknown`
 - Use `getrandom` with the `js` / `wasm_js` feature for randomness
