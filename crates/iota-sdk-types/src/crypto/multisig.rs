@@ -326,7 +326,9 @@ impl MultisigAggregatedSignature {
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
         for signature in signatures {
-            let pk = signature.to_public_key().unwrap();
+            let pk = signature
+                .to_public_key()
+                .map_err(|_| MultisigError::UnallowedSignatureType)?;
             let index = committee.get_public_key_index(&pk).ok_or(
                 MultisigError::NoPublicKeyForSignature(Box::new(signature.clone())),
             )?;
