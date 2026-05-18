@@ -542,18 +542,26 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
     type Strategy = proptest::strategy::BoxedStrategy<Self>;
 
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
-        use proptest::{collection::vec, prelude::*};
+        use proptest::{collection::vec, prelude::*, sample::subsequence};
 
         any::<MultisigCommittee>()
             .prop_flat_map(|committee| {
-                let max_sigs = committee.members.len();
+                let n = committee.members.len();
+                let all_indices: Vec<usize> = (0..n).collect();
+                (Just(committee), subsequence(all_indices, 1..=n))
+            })
+            .prop_flat_map(|(committee, indices)| {
+                let count = indices.len();
+                let bitmap = indices
+                    .iter()
+                    .fold(0 as BitmapUnit, |acc, &i| acc | (1 << i));
                 (
                     Just(committee),
-                    vec(any::<MultisigMemberSignature>(), 1..=max_sigs),
-                    0..=MAX_BITMAP_VALUE,
+                    Just(bitmap),
+                    vec(any::<MultisigMemberSignature>(), count..=count),
                 )
             })
-            .prop_map(|(committee, signatures, bitmap)| Self {
+            .prop_map(|(committee, bitmap, signatures)| Self {
                 signatures,
                 bitmap,
                 committee,
