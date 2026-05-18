@@ -53,6 +53,27 @@ pub struct PasskeyAuthenticator {
 }
 
 impl PasskeyAuthenticator {
+    /// The passkey public key
+    pub fn public_key(&self) -> PasskeyPublicKey {
+        PasskeyPublicKey::new(self.public_key)
+    }
+
+    /// The passkey signature.
+    pub fn signature(&self) -> SimpleSignature {
+        SimpleSignature::Secp256r1 {
+            signature: self.signature,
+            public_key: self.public_key,
+        }
+    }
+
+    /// The parsed challenge message for this passkey signature.
+    ///
+    /// This is parsed by decoding the base64url data from the
+    /// `client_data_json.challenge` field.
+    pub fn challenge(&self) -> &[u8] {
+        &self.challenge
+    }
+
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
@@ -67,27 +88,6 @@ impl PasskeyAuthenticator {
     /// for more information on this field.
     pub fn client_data_json(&self) -> &str {
         &self.client_data_json
-    }
-
-    /// The parsed challenge message for this passkey signature.
-    ///
-    /// This is parsed by decoding the base64url data from the
-    /// `client_data_json.challenge` field.
-    pub fn challenge(&self) -> &[u8] {
-        &self.challenge
-    }
-
-    /// The passkey signature.
-    pub fn signature(&self) -> SimpleSignature {
-        SimpleSignature::Secp256r1 {
-            signature: self.signature,
-            public_key: self.public_key,
-        }
-    }
-
-    /// The passkey public key
-    pub fn public_key(&self) -> PasskeyPublicKey {
-        PasskeyPublicKey::new(self.public_key)
     }
 }
 
