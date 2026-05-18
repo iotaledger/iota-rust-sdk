@@ -126,12 +126,11 @@ impl std::fmt::Display for GrpcConversionError {
             Self::UnsupportedArgumentType { arg_type } => {
                 write!(
                     f,
-                    "Unsupported argument type for gRPC conversion: {}",
-                    arg_type
+                    "Unsupported argument type for gRPC conversion: {arg_type}"
                 )
             }
             Self::BcsSerializationFailed { message } => {
-                write!(f, "Failed to serialize BCS data: {}", message)
+                write!(f, "Failed to serialize BCS data: {message}")
             }
         }
     }

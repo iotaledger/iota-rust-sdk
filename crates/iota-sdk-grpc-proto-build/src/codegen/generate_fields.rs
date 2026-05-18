@@ -176,7 +176,7 @@ fn collect_external_types(
                 let field_message_name = full_type_name.split('.').next_back().unwrap();
 
                 // Check if this type is external (from a different package)
-                let is_external = !full_type_name.starts_with(&format!(".{}", current_package));
+                let is_external = !full_type_name.starts_with(&format!(".{current_package}"));
 
                 if is_external {
                     // Check if this external type is a transparent wrapper
@@ -395,7 +395,7 @@ fn build_nested_messages_map(messages: &[DescriptorProto]) -> HashMap<String, St
                 // Merge deeper nested messages
                 for (nested_name, nested_parent) in deeper_nested {
                     nested_messages
-                        .insert(nested_name, format!("{}::{}", parent_module, nested_parent));
+                        .insert(nested_name, format!("{parent_module}::{nested_parent}"));
                 }
             }
         }
@@ -810,7 +810,7 @@ fn generate_field_path_builders_impl(
 
 // Helper function to check if a field should be boxed based on its path
 fn should_box_field(message_type: &str, field_name: &str, boxed_types: &[String]) -> bool {
-    let field_path = format!("{}.{}", message_type, field_name);
+    let field_path = format!("{message_type}.{field_name}");
     boxed_types.iter().any(|boxed_path| {
         // Remove leading dot if present
         let boxed_path = boxed_path.strip_prefix('.').unwrap_or(boxed_path);
@@ -897,7 +897,7 @@ fn generate_field_chain_methods(
             };
 
             // Check if this field should be boxed
-            let full_message_type = format!(".{}.{}", package, message_name);
+            let full_message_type = format!(".{package}.{message_name}");
             if should_box_field(&full_message_type, field.name(), boxed_types) {
                 quote! {
                     pub fn #name(mut self) -> Box<#return_type> {
