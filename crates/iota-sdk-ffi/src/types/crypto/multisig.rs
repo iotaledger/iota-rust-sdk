@@ -244,13 +244,25 @@ pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSi
 
 #[uniffi::export]
 impl MultisigAggregatedSignature {
-    /// Construct a new aggregated multisig signature.
+    /// Construct a `MultisigAggregatedSignature` from its raw parts without
+    /// validation.
     ///
-    /// Since the list of signatures doesn't contain sufficient information to
-    /// identify which committee member provided the signature, it is up to
-    /// the caller to ensure that the provided signature list is in the same
-    /// order as it's corresponding member in the provided committee
-    /// and that it's position in the provided bitmap is set.
+    /// Unlike `new`, this performs no checks: the `committee` is not
+    /// validated, the `bitmap` is trusted as-is, and the signatures are not
+    /// cross-referenced against the committee. The resulting value may be
+    /// rejected by on-chain verification.
+    ///
+    /// The caller must ensure that:
+    ///  - `signatures` appear in the same order as their corresponding members
+    ///    in `committee` (e.g. for committee `[pk1, pk2, pk3, pk4, pk5]`,
+    ///    valid signature orderings include `[sig1, sig2, sig5]` but not
+    ///    `[sig2, sig1, sig5]`);
+    ///  - each contributing member's position is set in `bitmap`;
+    ///  - `committee` itself satisfies `MultisigCommittee::is_valid`.
+    ///
+    /// Prefer `new` when starting from `UserSignature`s; this constructor is
+    /// intended for deserialization paths and tests where the inputs are
+    /// already known to be well-formed.
     #[uniffi::constructor]
     pub fn insecure_new(
         signatures: Vec<Arc<MultisigMemberSignature>>,
@@ -264,11 +276,20 @@ impl MultisigAggregatedSignature {
         ))
     }
 
-    /// This combines a list of UserSignature `flag || signature || pk` to a
-    /// MultisigAggregatedSignature.
-    /// The order of signatures must be the same as the order of public keys in
-    /// MultisigCommittee. e.g. for [pk1, pk2, pk3, pk4, pk5], [sig1,
-    /// sig2, sig5] is valid, but [sig2, sig1, sig5] is invalid.
+    /// Construct a `MultisigAggregatedSignature` from a list of
+    /// `UserSignature`s and a `MultisigCommittee`.
+    ///
+    /// Compared to `insecure_new`, this:
+    ///  - validates `committee` via `MultisigCommittee::is_valid`;
+    ///  - converts each `UserSignature` into a `MultisigMemberSignature`;
+    ///  - derives the `bitmap` by locating each signature's public key in the
+    ///    committee, rejecting duplicates and signatures from non-members;
+    ///  - rejects empty signature lists and lists longer than the committee.
+    ///
+    /// The caller must still provide `signatures` in the same order as their
+    /// corresponding members in `committee`: for committee
+    /// `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is valid but
+    /// `[sig2, sig1, sig5]` is not.
     #[uniffi::constructor]
     pub fn new(signatures: Vec<Arc<UserSignature>>, committee: &MultisigCommittee) -> Result<Self> {
         Ok(Self(iota_sdk::types::MultisigAggregatedSignature::new(
@@ -327,11 +348,18 @@ pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 
 #[uniffi::export]
 impl MultisigCommittee {
-    /// Construct a new committee from a list of `MultisigMember`s and a
-    /// `threshold` without validating the result.
+    /// Construct a `MultisigCommittee` without validating the result.
+    ///
+    /// Unlike `new`, this performs no checks: the committee may violate any
+    /// of the invariants enforced by `is_valid` (zero threshold, empty or
+    /// oversized member list, zero-weight members, duplicate public keys, or
+    /// a threshold exceeding the sum of weights).
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
+    ///
+    /// Prefer `new`; this constructor is intended for deserialization paths
+    /// and tests where the inputs are already known to be well-formed.
     #[uniffi::constructor]
     pub fn insecure_new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
         Self(iota_sdk::types::MultisigCommittee::insecure_new(
@@ -340,8 +368,14 @@ impl MultisigCommittee {
         ))
     }
 
-    /// Construct a new committee from a list of `MultisigMember`s and a
-    /// `threshold`.
+    /// Construct a `MultisigCommittee` and verify it via `is_valid`.
+    ///
+    /// Compared to `insecure_new`, this rejects committees that:
+    ///  - have a zero `threshold`;
+    ///  - contain zero or more than ten members;
+    ///  - contain a member with weight 0;
+    ///  - have a `threshold` greater than the sum of all member weights;
+    ///  - contain duplicate public keys.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
