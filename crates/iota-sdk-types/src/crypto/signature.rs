@@ -341,7 +341,6 @@ impl UserSignature {
                     Ok(PublicKey::Secp256r1(*public_key))
                 }
             },
-            // TODO this should maybe work
             UserSignature::Multisig(_) => {
                 Err(InvalidSignatureScheme(SignatureScheme::Multisig.to_u8()))
             }
