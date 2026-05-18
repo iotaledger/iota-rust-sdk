@@ -282,9 +282,9 @@ impl MultisigAggregatedSignature {
     ///
     /// The caller must ensure that:
     ///  - `signatures` appear in the same order as their corresponding members
-    ///    in `committee` (e.g. for committee `[pk1, pk2, pk3, pk4, pk5]`,
-    ///    valid signature orderings include `[sig1, sig2, sig5]` but not
-    ///    `[sig2, sig1, sig5]`);
+    ///    in `committee` (e.g. for committee `[pk1, pk2, pk3, pk4, pk5]`, valid
+    ///    signature orderings include `[sig1, sig2, sig5]` but not `[sig2,
+    ///    sig1, sig5]`);
     ///  - each contributing member's position is set in `bitmap`;
     ///  - `committee` itself satisfies [`MultisigCommittee::is_valid`].
     ///
