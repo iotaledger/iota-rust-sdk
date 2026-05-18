@@ -105,12 +105,12 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Regenerate gRPC types
-        run: ./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+        run: make grpc
 
       - name: Check for uncommitted changes
         run: |
           if ! git diff --quiet -- crates/iota-sdk-grpc-types/src/proto/generated/; then
-            echo "Generated gRPC types are out of date! Please run './crates/iota-sdk-grpc-proto-build/update_grpc_types.sh' and commit the changes."
+            echo "Generated gRPC types are out of date! Please run 'make grpc' and commit the changes."
             git diff -- crates/iota-sdk-grpc-types/src/proto/generated/
             exit 1
           fi
