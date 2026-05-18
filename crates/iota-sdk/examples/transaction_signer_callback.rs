@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
         TransactionEffects::V1(v1) => {
             println!("Digest: {}", v1.transaction_digest);
             println!("Transaction status: {:?}", v1.status);
-            println!("Effects: {:#?}", v1);
+            println!("Effects: {v1:#?}");
         }
         _ => unimplemented!(
             "a new TransactionEffects enum variant was added and needs to be handled"
