@@ -12,7 +12,7 @@ use crate::{
     },
     error::Result,
     types::{
-        crypto::{intent::PersonalMessage, multisig::PublicKey},
+        crypto::{intent::PersonalMessage, public_key::PublicKey},
         signature::SimpleSignature,
     },
 };
