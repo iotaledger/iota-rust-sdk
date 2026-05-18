@@ -18,41 +18,42 @@ pub enum PublicKeyError {
     InvalidInput,
 }
 
-// TODO adapt comment
-/// Enum of valid public keys for multisig committee members
+/// Enum of valid public keys for the signature schemes supported by IOTA.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// multisig-member-public-key = ed25519-multisig-member-public-key /
-///                              secp256k1-multisig-member-public-key /
-///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key-deprecated /
-///                              passkey-multisig-member-public-key
+/// public-key = ed25519-public-key-variant /
+///              secp256k1-public-key-variant /
+///              secp256r1-public-key-variant /
+///              zklogin-public-key-variant-deprecated /
+///              passkey-public-key-variant
 ///
-/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated   = %d03
-/// passkey-multisig-member-public-key              = %d04 passkey-public-key
+/// ed25519-public-key-variant              = %d00 ed25519-public-key
+/// secp256k1-public-key-variant            = %d01 secp256k1-public-key
+/// secp256r1-public-key-variant            = %d02 secp256r1-public-key
+/// zklogin-public-key-variant-deprecated   = %d03
+/// passkey-public-key-variant              = %d04 passkey-public-key
 /// ```
 ///
-/// There is also a legacy encoding for this type defined as:
+/// There is also a base64 encoding for this type, used by [`Self::to_base64`]
+/// and [`Self::from_base64`], defined as:
 ///
 /// ```text
-/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
-///                                            ; and the decoded bytes are defined
-///                                            ; by legacy-public-key
-/// legacy-public-key = (ed25519-flag ed25519-public-key) /
-///                     (secp256k1-flag secp256k1-public-key) /
-///                     (secp256r1-flag secp256r1-public-key)
+/// base64-public-key = string ; which is valid base64 encoded
+///                            ; and the decoded bytes are defined
+///                            ; by flagged-public-key
+/// flagged-public-key = (ed25519-flag ed25519-public-key) /
+///                      (secp256k1-flag secp256k1-public-key) /
+///                      (secp256r1-flag secp256r1-public-key) /
+///                      (zklogin-flag-deprecated) /
+///                      (passkey-flag passkey-public-key)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
-// TODO feature gate?
 pub enum PublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
