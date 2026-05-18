@@ -89,25 +89,25 @@ impl Client {
     }
 
     /// Create a new client connected to the `mainnet` gRPC server:
-    /// {MAINNET_HOST}.
+    /// <https://grpc.mainnet.iota.cafe:443>.
     pub async fn new_mainnet() -> Result<Self> {
         Self::new(MAINNET_HOST).await
     }
 
     /// Create a new client connected to the `testnet` gRPC server:
-    /// {TESTNET_HOST}.
+    /// <https://grpc.testnet.iota.cafe:443>.
     pub async fn new_testnet() -> Result<Self> {
         Self::new(TESTNET_HOST).await
     }
 
     /// Create a new client connected to the `devnet` gRPC server:
-    /// {DEVNET_HOST}.
+    /// <https://grpc.devnet.iota.cafe:443>.
     pub async fn new_devnet() -> Result<Self> {
         Self::new(DEVNET_HOST).await
     }
 
     /// Create a new client connected to a `localnet` gRPC server:
-    /// {LOCAL_HOST}.
+    /// <http://localhost:9000>.
     pub async fn new_localnet() -> Result<Self> {
         Self::new(LOCAL_HOST).await
     }
