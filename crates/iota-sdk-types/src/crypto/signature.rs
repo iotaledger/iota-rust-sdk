@@ -350,7 +350,6 @@ impl UserSignature {
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            // TODO
             UserSignature::MoveAuthenticator(_) => Err(InvalidSignatureScheme(
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
