@@ -63,7 +63,7 @@ make csharp          # C# only
 make swift           # Swift only
 
 # gRPC proto regeneration
-crates/iota-sdk-grpc-proto-build/update_grpc_types.sh   # Pull/refresh protos and regenerate types
+make grpc   # Pull/refresh protos and regenerate types
 
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
