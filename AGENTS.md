@@ -18,22 +18,22 @@ The **IOTA Rust SDK** is a modular software development kit for integrating with
 ```
 crates/
 ├── iota-sdk/                       # Umbrella SDK that re-exports the other crates behind feature flags
-├── iota-sdk-types/                 # Core blockchain types (Address, ObjectId, Transaction, Checkpoint, ...) — BCS-compatible
-├── iota-sdk-crypto/                # Signing traits (`IotaSigner`, `IotaVerifier`) and implementations (ed25519, secp256r1, secp256k1, bls12381, passkey)
 ├── iota-sdk-bcs-schema/            # Proc macro that generates BCS schema definitions (ABNF) from Rust types
+├── iota-sdk-crypto/                # Signing traits (`IotaSigner`, `IotaVerifier`) and implementations (ed25519, secp256r1, secp256k1, bls12381, passkey)
+├── iota-sdk-ffi/                   # FFI layer powering language bindings via `uniffi` (not published)
 ├── iota-sdk-graphql-client/        # Type-safe GraphQL RPC client using `cynic`
 ├── iota-sdk-graphql-client-build/  # Build-time GraphQL schema registration for `cynic` codegen
 ├── iota-sdk-grpc-client/           # gRPC client built on `tonic` (ledger, execution, state, move package services)
-├── iota-sdk-grpc-types/            # Generated gRPC/protobuf types
 ├── iota-sdk-grpc-proto-build/      # Build-time codegen for gRPC/protobuf types (`update_grpc_types.sh` regenerates from upstream protos)
+├── iota-sdk-grpc-types/            # Generated gRPC/protobuf types
 ├── iota-sdk-transaction-builder/   # Fluent API for building transactions (online/offline modes)
-└── iota-sdk-ffi/                   # FFI layer powering language bindings via `uniffi` (not published)
+└── iota-sdk-types/                 # Core blockchain types (Address, ObjectId, Transaction, Checkpoint, ...) — BCS-compatible
 
 bindings/
+├── csharp/                         # C# bindings
 ├── go/                             # Go bindings
 ├── kotlin/                         # Kotlin bindings
 ├── python/                         # Python bindings
-├── csharp/                         # C# bindings
 └── swift/                          # Swift bindings
 ```
 
