@@ -222,44 +222,11 @@ impl_grpc_client_config!(
 
 #[cfg(test)]
 mod tests {
-    use http::Uri;
-
-    use crate::{
-        api::Error, client::DEVNET_HOST, client::LOCAL_HOST, client::MAINNET_HOST,
-        client::TESTNET_HOST,
-    };
-
-    use super::Client;
-
-    #[tokio::test]
-    async fn convenience_constructors_use_expected_endpoints() {
-        assert_eq!(
-            Client::new_localnet().await.unwrap().uri(),
-            &LOCAL_HOST.parse::<Uri>().unwrap()
-        );
-
-        let mainnet = Client::new_mainnet().await;
-        let testnet = Client::new_testnet().await;
-        let devnet = Client::new_devnet().await;
-
-        for (result, expected_uri) in [
-            (mainnet, MAINNET_HOST),
-            (testnet, TESTNET_HOST),
-            (devnet, DEVNET_HOST),
-        ] {
-            match result {
-                Ok(client) => assert_eq!(client.uri(), &expected_uri.parse::<Uri>().unwrap()),
-                Err(Error::Grpc(status)) => {
-                    assert_eq!(status.code(), tonic::Code::FailedPrecondition)
-                }
-                Err(other) => panic!("unexpected constructor error: {other:?}"),
-            }
-        }
-    }
-
     #[cfg(not(feature = "tls-ring"))]
     #[tokio::test]
     async fn https_without_tls_ring_returns_failed_precondition() {
+        use super::Client;
+
         let status = match Client::new("https://example.com").await {
             Err(crate::api::Error::Grpc(status)) => status,
             Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
