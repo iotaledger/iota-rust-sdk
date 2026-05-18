@@ -16,6 +16,11 @@ use crate::{api::Result, interceptors::HeadersInterceptor};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
+pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
+pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
+pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
+pub(crate) const LOCAL_HOST: &str = "http://localhost:9000";
+
 pub type InterceptedChannel =
     tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
 
@@ -81,6 +86,30 @@ impl Client {
             headers: Default::default(),
             max_decoding_message_size: None,
         })
+    }
+
+    /// Create a new client connected to the `mainnet` gRPC server:
+    /// {MAINNET_HOST}.
+    pub async fn new_mainnet() -> Result<Self> {
+        Self::new(MAINNET_HOST).await
+    }
+
+    /// Create a new client connected to the `testnet` gRPC server:
+    /// {TESTNET_HOST}.
+    pub async fn new_testnet() -> Result<Self> {
+        Self::new(TESTNET_HOST).await
+    }
+
+    /// Create a new client connected to the `devnet` gRPC server:
+    /// {DEVNET_HOST}.
+    pub async fn new_devnet() -> Result<Self> {
+        Self::new(DEVNET_HOST).await
+    }
+
+    /// Create a new client connected to a `localnet` gRPC server:
+    /// {LOCAL_HOST}.
+    pub async fn new_localnet() -> Result<Self> {
+        Self::new(LOCAL_HOST).await
     }
 
     pub fn uri(&self) -> &http::Uri {
@@ -193,11 +222,44 @@ impl_grpc_client_config!(
 
 #[cfg(test)]
 mod tests {
+    use http::Uri;
+
+    use crate::{
+        api::Error, client::DEVNET_HOST, client::LOCAL_HOST, client::MAINNET_HOST,
+        client::TESTNET_HOST,
+    };
+
+    use super::Client;
+
+    #[tokio::test]
+    async fn convenience_constructors_use_expected_endpoints() {
+        assert_eq!(
+            Client::new_localnet().await.unwrap().uri(),
+            &LOCAL_HOST.parse::<Uri>().unwrap()
+        );
+
+        let mainnet = Client::new_mainnet().await;
+        let testnet = Client::new_testnet().await;
+        let devnet = Client::new_devnet().await;
+
+        for (result, expected_uri) in [
+            (mainnet, MAINNET_HOST),
+            (testnet, TESTNET_HOST),
+            (devnet, DEVNET_HOST),
+        ] {
+            match result {
+                Ok(client) => assert_eq!(client.uri(), &expected_uri.parse::<Uri>().unwrap()),
+                Err(Error::Grpc(status)) => {
+                    assert_eq!(status.code(), tonic::Code::FailedPrecondition)
+                }
+                Err(other) => panic!("unexpected constructor error: {other:?}"),
+            }
+        }
+    }
+
     #[cfg(not(feature = "tls-ring"))]
     #[tokio::test]
     async fn https_without_tls_ring_returns_failed_precondition() {
-        use super::Client;
-
         let status = match Client::new("https://example.com").await {
             Err(crate::api::Error::Grpc(status)) => status,
             Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
