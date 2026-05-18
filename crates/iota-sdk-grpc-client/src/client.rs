@@ -16,6 +16,11 @@ use crate::{api::Result, interceptors::HeadersInterceptor};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
+pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
+pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
+pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
+pub(crate) const LOCAL_HOST: &str = "http://localhost:9000";
+
 pub type InterceptedChannel =
     tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
 
@@ -81,6 +86,30 @@ impl Client {
             headers: Default::default(),
             max_decoding_message_size: None,
         })
+    }
+
+    /// Create a new client connected to the `mainnet` gRPC server:
+    /// <https://grpc.mainnet.iota.cafe:443>.
+    pub async fn new_mainnet() -> Result<Self> {
+        Self::new(MAINNET_HOST).await
+    }
+
+    /// Create a new client connected to the `testnet` gRPC server:
+    /// <https://grpc.testnet.iota.cafe:443>.
+    pub async fn new_testnet() -> Result<Self> {
+        Self::new(TESTNET_HOST).await
+    }
+
+    /// Create a new client connected to the `devnet` gRPC server:
+    /// <https://grpc.devnet.iota.cafe:443>.
+    pub async fn new_devnet() -> Result<Self> {
+        Self::new(DEVNET_HOST).await
+    }
+
+    /// Create a new client connected to a `localnet` gRPC server:
+    /// <http://localhost:9000>.
+    pub async fn new_localnet() -> Result<Self> {
+        Self::new(LOCAL_HOST).await
     }
 
     pub fn uri(&self) -> &http::Uri {
