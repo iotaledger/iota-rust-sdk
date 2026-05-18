@@ -411,8 +411,7 @@ mod signing_message {
     where
         T: serde::Serialize,
     {
-        // TODO right name?
-        pub fn signing_message(&self) -> Digest {
+        pub fn signing_digest(&self) -> Digest {
             Hasher::digest(bcs::to_bytes(&self).unwrap())
         }
     }
