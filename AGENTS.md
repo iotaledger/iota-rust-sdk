@@ -217,4 +217,4 @@ All non-FFI crates support WASM. When adding dependencies:
 4. **NEVER use `#[allow(dead_code)]`, `#[allow(unused)]`, or other lint suppressions** to silence warnings — fix the underlying issue.
 5. **Types in `iota-sdk-types` must stay BCS-compatible** — verify BCS and JSON round-trips when adding or changing a type. `u64` is serialized as a string in JSON for JS safety.
 6. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
-7. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, `make check-fmt`, and `make bindings-examples-format-check` for binding examples.
+7. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
