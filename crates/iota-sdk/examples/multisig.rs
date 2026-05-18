@@ -38,7 +38,6 @@ async fn main() -> Result<()> {
         MultisigMember::new(PublicKey::Ed25519(key2.public_key()), 1),
     ];
     let committee = MultisigCommittee::new(members, 2)?;
-    assert!(committee.is_valid().is_ok(), "committee must be valid");
 
     // 3. Derive the multisig address
     let multisig_address = committee.derive_address();
