@@ -350,7 +350,6 @@ mod keypair {
 
     #[derive(Debug, Clone, Eq, PartialEq)]
     pub struct SimpleVerifyingKey {
-        // TODO can we do without inner?
         inner: InnerVerifyingKey,
     }
 
