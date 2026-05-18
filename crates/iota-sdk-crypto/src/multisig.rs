@@ -110,22 +110,8 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
         signature
-            .committee()
             .is_valid()
-            .map_err(|e| SignatureError::from_source(format!("invalid MultisigCommittee: {e}")))?;
-
-        // TODO should we add this to is_valid?
-        if signature.signatures().len() != signature.bitmap().count_ones() as usize {
-            return Err(SignatureError::from_source(
-                "number of signatures does not match bitmap",
-            ));
-        }
-
-        if signature.signatures().len() > signature.committee().members().len() {
-            return Err(SignatureError::from_source(
-                "more signatures than committee members",
-            ));
-        }
+            .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
 
         let weight = BitmapIndices::new(signature.bitmap())
             .map(|member_idx| {

@@ -358,9 +358,12 @@ impl MultisigAggregatedSignature {
             return Err(MultisigError::InvalidSignatureNumber);
         }
 
-        if self.bitmap > MAX_BITMAP_VALUE {
+        if self.bitmap > MAX_BITMAP_VALUE
+            || self.signatures.len() != self.bitmap.count_ones() as usize
+        {
             return Err(MultisigError::InvalidBitmap(self.bitmap));
         }
+
         self.committee.is_valid()
     }
 
