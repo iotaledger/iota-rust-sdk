@@ -14,6 +14,7 @@ use crate::{
             Secp256r1PublicKey, Secp256r1Signature,
             passkey::{PasskeyAuthenticator, PasskeyPublicKey},
         },
+        signature::UserSignature,
     },
 };
 
@@ -261,6 +262,19 @@ impl MultisigAggregatedSignature {
             bitmap,
             committee.0.clone(),
         ))
+    }
+
+    /// This combines a list of UserSignature `flag || signature || pk` to a
+    /// MultisigAggregatedSignature.
+    /// The order of signatures must be the same as the order of public keys in
+    /// MultisigCommittee. e.g. for [pk1, pk2, pk3, pk4, pk5], [sig1,
+    /// sig2, sig5] is valid, but [sig2, sig1, sig5] is invalid.
+    #[uniffi::constructor]
+    pub fn new(signatures: Vec<Arc<UserSignature>>, committee: &MultisigCommittee) -> Result<Self> {
+        Ok(Self(iota_sdk::types::MultisigAggregatedSignature::new(
+            signatures.into_iter().map(|s| s.0.clone()).collect(),
+            committee.0.clone(),
+        )?))
     }
 
     /// The list of signatures from committee members

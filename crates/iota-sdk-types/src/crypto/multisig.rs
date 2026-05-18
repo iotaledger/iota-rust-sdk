@@ -276,11 +276,11 @@ impl MultisigAggregatedSignature {
         }
     }
 
-    /// This combines a list of [enum Signature] `flag || signature || pk` to a
-    /// MultiSig. The order of signatures must be the same as the order of
-    /// public keys in [enum MultiSigPublicKey]. e.g. for [pk1, pk2, pk3,
-    /// pk4, pk5], [sig1, sig2, sig5] is valid, but [sig2, sig1, sig5] is
-    /// invalid.
+    /// This combines a list of [UserSignature] `flag || signature || pk` to a
+    /// [MultisigAggregatedSignature].
+    /// The order of signatures must be the same as the order of public keys in
+    /// [MultisigCommittee]. e.g. for [pk1, pk2, pk3, pk4, pk5], [sig1,
+    /// sig2, sig5] is valid, but [sig2, sig1, sig5] is invalid.
     pub fn new(
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
