@@ -393,7 +393,7 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
         return Err(MultisigError::InvalidBitmap(bitmap));
     }
     let mut res = Vec::new();
-    for i in 0..10 {
+    for i in 0..MAX_COMMITTEE_SIZE {
         if bitmap & (1 << i) != 0 {
             res.push(i as u8);
         }
