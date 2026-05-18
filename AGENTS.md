@@ -71,7 +71,7 @@ make bcs-schema      # Regenerate bcs-schema.abnf
 # Examples
 make examples                    # Run all Rust examples
 make bindings-examples           # Run all binding examples
-make <lang>-example example=NAME # Run a single example (lang ∈ {go, kotlin, python, csharp, swift})
+make <lang>-example NAME         # Run a single example (lang ∈ {go, kotlin, python, csharp, swift})
 
 # Full CI check
 make ci              # check-features + check-fmt + test + wasm
