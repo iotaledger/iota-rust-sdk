@@ -312,7 +312,7 @@ mod tests {
         ObjectType, Transaction, TransactionEffects, UpgradePolicy, Version,
     };
 
-    use crate::{TransactionBuilder, assigned, error::Error};
+    use crate::{ClientMethods, TransactionBuilder, assigned, error::Error};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -693,11 +693,112 @@ mod tests {
         check_effects_status_success(effects).await;
     }
 
-    /// Fund the sender with 2048 coins (the protocol's per-tx object-creation
-    /// cap, reached via four `split_coins` commands at the 512-argument-per-
-    /// command ceiling) and verify automatic gas-payment selection still
-    /// produces a working transaction.
-    #[ignore = "diagnosing CI failure separately"]
+    /// Test client that wraps a real [`Client`] and counts how many gas-coin
+    /// pages the auto gas-selection loop fetches.
+    struct PageCountingClient {
+        inner: Client,
+        gas_page_calls: std::sync::Arc<std::sync::atomic::AtomicUsize>,
+    }
+
+    impl ClientMethods for PageCountingClient {
+        type Error = <Client as ClientMethods>::Error;
+        type DryRunResult = <Client as ClientMethods>::DryRunResult;
+
+        async fn object(
+            &self,
+            object_id: ObjectId,
+            version: impl Into<Option<Version>>,
+        ) -> Result<Option<iota_types::Object>, Self::Error> {
+            ClientMethods::object(&self.inner, object_id, version).await
+        }
+
+        async fn objects(
+            &self,
+            type_tag: Option<iota_types::TypeTag>,
+            owner: Option<Address>,
+            object_ids: Option<Vec<ObjectId>>,
+            ascending: bool,
+            cursor: Option<String>,
+            limit: Option<usize>,
+        ) -> Result<Vec<iota_types::Object>, Self::Error> {
+            ClientMethods::objects(
+                &self.inner,
+                type_tag,
+                owner,
+                object_ids,
+                ascending,
+                cursor,
+                limit,
+            )
+            .await
+        }
+
+        async fn gas_coins_page(
+            &self,
+            owner: Address,
+            cursor: Option<String>,
+        ) -> Result<(Vec<iota_types::Object>, Option<String>), Self::Error> {
+            self.gas_page_calls
+                .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            ClientMethods::gas_coins_page(&self.inner, owner, cursor).await
+        }
+
+        async fn transaction(
+            &self,
+            digest: Digest,
+        ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
+            ClientMethods::transaction(&self.inner, digest).await
+        }
+
+        async fn transaction_effects(
+            &self,
+            digest: Digest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            ClientMethods::transaction_effects(&self.inner, digest).await
+        }
+
+        async fn reference_gas_price(
+            &self,
+            epoch: impl Into<Option<u64>>,
+        ) -> Result<Option<u64>, Self::Error> {
+            ClientMethods::reference_gas_price(&self.inner, epoch).await
+        }
+
+        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            ClientMethods::estimate_tx_budget(&self.inner, tx).await
+        }
+
+        async fn dry_run_tx(
+            &self,
+            tx: &Transaction,
+            skip_checks: bool,
+        ) -> Result<Self::DryRunResult, Self::Error> {
+            ClientMethods::dry_run_tx(&self.inner, tx, skip_checks).await
+        }
+
+        async fn execute_tx(
+            &self,
+            signatures: &[iota_types::UserSignature],
+            tx: &Transaction,
+            wait_for: impl Into<Option<WaitForTx>>,
+        ) -> Result<TransactionEffects, Self::Error> {
+            ClientMethods::execute_tx(&self.inner, signatures, tx, wait_for).await
+        }
+
+        async fn wait_for_tx(
+            &self,
+            digest: Digest,
+            wait_for: WaitForTx,
+        ) -> Result<(), Self::Error> {
+            ClientMethods::wait_for_tx(&self.inner, digest, wait_for).await
+        }
+    }
+
+    /// Fund the sender with ~2048 coins via repeated `split_coins` (each
+    /// command capped at 511 amounts, since the coin slot counts toward the
+    /// 512-argument-per-command limit), then exercise auto gas-payment
+    /// selection through a counting wrapper and assert it paginates across
+    /// multiple pages of gas coins.
     #[tokio::test]
     async fn test_auto_gas_selection_with_many_coins() {
         use crate::unresolved::Argument;
@@ -707,8 +808,11 @@ mod tests {
 
         let source = coins.first().unwrap().id;
 
-        const SPLITS_PER_CMD: usize = 512;
+        // Each PTB command tops out at 512 arguments. `split_coins` consumes
+        // one slot for the coin itself, leaving 511 for the amounts.
+        const SPLITS_PER_CMD: usize = 511;
         const NUM_SPLIT_CMDS: usize = 4;
+        const TOTAL_NEW_COINS: usize = SPLITS_PER_CMD * NUM_SPLIT_CMDS;
 
         for round in 0..NUM_SPLIT_CMDS {
             tx.split_coins(source, vec![1u64; SPLITS_PER_CMD]);
@@ -722,22 +826,52 @@ mod tests {
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
-        let total = client
-            .coins(sender, None, PaginationFilter::default())
-            .await
-            .unwrap()
-            .data()
-            .len();
+        // Paginate over the sender's coins manually; the default page size
+        // tops out around 50 on localnet, so the funded address spans many
+        // pages.
+        let mut total = 0usize;
+        let mut cursor = None;
+        loop {
+            let page = client
+                .coins(
+                    sender,
+                    None,
+                    PaginationFilter {
+                        direction: iota_graphql_client::pagination::Direction::Forward,
+                        cursor: cursor.clone(),
+                        limit: None,
+                    },
+                )
+                .await
+                .unwrap();
+            total += page.data().len();
+            if !page.page_info().has_next_page {
+                break;
+            }
+            cursor = page.page_info().end_cursor.clone();
+        }
         assert!(
-            total >= 2048,
-            "expected the sender to own at least 2048 coins; got {total}"
+            total >= TOTAL_NEW_COINS,
+            "expected the sender to own at least {TOTAL_NEW_COINS} coins; got {total}"
         );
 
-        let mut tx2 = TransactionBuilder::new(sender).with_client(client);
+        let counter = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counting = PageCountingClient {
+            inner: client,
+            gas_page_calls: counter.clone(),
+        };
+
+        let mut tx2 = TransactionBuilder::new(sender).with_client(counting);
         let recipient = Address::generate(rand::thread_rng());
         tx2.send_iota(recipient, 1_000u64);
 
         let effects = tx2.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
+
+        let pages = counter.load(std::sync::atomic::Ordering::SeqCst);
+        assert!(
+            pages >= 2,
+            "expected auto gas-selection to fetch at least 2 pages of gas coins; got {pages}"
+        );
     }
 }

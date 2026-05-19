@@ -136,12 +136,12 @@ impl<T: ClientMethods> ClientMethods for &T {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
     }
 
-    fn gas_coins_page(
+    async fn gas_coins_page(
         &self,
         owner: Address,
         cursor: Option<String>,
-    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
-        (*self).gas_coins_page(owner, cursor)
+    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
+        (*self).gas_coins_page(owner, cursor).await
     }
 
     fn transaction(
@@ -337,12 +337,12 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
     }
 
-    fn gas_coins_page(
+    async fn gas_coins_page(
         &self,
         owner: Address,
         cursor: Option<String>,
-    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
-        self.as_ref().gas_coins_page(owner, cursor)
+    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
+        self.as_ref().gas_coins_page(owner, cursor).await
     }
 
     fn transaction(

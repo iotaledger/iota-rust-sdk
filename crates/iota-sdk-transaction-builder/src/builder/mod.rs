@@ -12,7 +12,7 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
+    ProgrammableTransaction, SharedObjectReference, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
@@ -46,11 +46,13 @@ const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
 /// Upper bound on the number of gas-coin inputs pinned by automatic gas
-/// selection when no explicit `gas(...)` pin is supplied. Matches the
-/// protocol-level maximum on gas payment objects per transaction; in
-/// practice we pick fewer-larger coins first and stop early once the
-/// requested budget is covered, so this is only a hard ceiling.
-const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 256;
+/// selection when no explicit `gas(...)` pin is supplied. Each pinned gas
+/// coin contributes ~170 bytes to the GraphQL query part, which the server
+/// caps at 5000 bytes — so the safe ceiling is well below the protocol's
+/// max-gas-payment-objects limit. Selection prefers fewer-larger coins
+/// first and stops early once the requested budget is covered, so this
+/// only matters when the sender has many small coins.
+const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 24;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -1092,38 +1094,44 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            // Pull a page of gas coins owned by the gas owner. Prefer
-            // larger-balance coins first and pin only as many as the
-            // requested budget needs, capped by the protocol limit. Using a
-            // single page keeps the pin count bounded by the server's max
-            // page size, which matters because each pinned gas coin
-            // contributes a ref to the GraphQL query part (~150 bytes per
-            // coin, and the server enforces a 5000-byte cap on that part).
+            // Page through the owner's gas coins, keeping the running
+            // top-K by balance (where K is the auto-gas-selection cap).
+            // Stop as soon as the running top covers the requested budget,
+            // so the per-tx cost only scales with what's actually needed,
+            // not with how many coins the sender happens to own.
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
-            let mut candidates: Vec<(u64, ObjectReference)> = self
-                .client
-                .objects(
-                    Some(StructTag::new_gas_coin().into()),
-                    Some(owner),
-                    None,
-                    true,
-                    None,
-                    None,
-                )
-                .await
-                .map_err(Error::client)?
-                .into_iter()
-                .filter(|obj| !unusable_object_ids.contains(&obj.object_id()))
-                .filter_map(|obj| {
-                    let coin = Coin::try_from_object(&obj).ok()?;
-                    Some((coin.balance(), obj.object_ref()))
-                })
-                .collect();
-            candidates.sort_by_key(|c| std::cmp::Reverse(c.0));
-
             let target_budget = self.data.gas_budget;
+            let mut top: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut cursor: Option<String> = None;
+            loop {
+                let (page, next_cursor) = self
+                    .client
+                    .gas_coins_page(owner, cursor)
+                    .await
+                    .map_err(Error::client)?;
+                for obj in page {
+                    if unusable_object_ids.contains(&obj.object_id()) {
+                        continue;
+                    }
+                    let Ok(coin) = Coin::try_from_object(&obj) else {
+                        continue;
+                    };
+                    top.push((coin.balance(), obj.object_ref()));
+                }
+                top.sort_by_key(|c| std::cmp::Reverse(c.0));
+                top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
+
+                let covers_budget = target_budget.is_some_and(|budget| {
+                    top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
+                });
+                if covers_budget || next_cursor.is_none() {
+                    break;
+                }
+                cursor = next_cursor;
+            }
+
             let mut accumulated: u64 = 0;
-            for (balance, obj_ref) in candidates.into_iter().take(MAX_AUTO_GAS_PAYMENT_OBJECTS) {
+            for (balance, obj_ref) in top {
                 self.set_input(
                     InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
                     true,
