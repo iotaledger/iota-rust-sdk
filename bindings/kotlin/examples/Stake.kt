@@ -6,10 +6,12 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
         val myAddress =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(myAddress, client)
 
         val validators = client.activeValidators()
         if (validators.data.isEmpty()) {
@@ -23,7 +25,7 @@ fun main() = runBlocking {
 
         builder.stake(PtbArgument.u64(1000000000uL), validator.address)
 
-        val res = builder.dryRun()
+        val res = builder.dryRun(false)
 
         if (res.error != null) {
             throw Exception("Failed to stake: ${res.error}")

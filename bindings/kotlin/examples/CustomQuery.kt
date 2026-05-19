@@ -8,7 +8,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun main() = runBlocking {
-    val client = GraphQlClient.newTestnet()
+    val client = GraphQlClient.newLocalnet()
 
     val queryEpochDataStr =
         """

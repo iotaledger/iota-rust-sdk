@@ -5,14 +5,19 @@ from lib.iota_sdk import *
 
 import asyncio
 
+# A pre-encoded programmable transaction calling `0x1::u64::max(1, 2)` with
+# empty gas-payment objects. Because the bytes do not reference any on-chain
+# object refs, they stay valid across networks — the dry-run endpoint fills in
+# gas coins on demand.
+TX_BYTES_BASE64 = "AAACAAgBAAAAAAAAAAAIAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA3U2NANtYXgAAgEAAAEBACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUiACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUi6AMAAAAAAAAAAAAAAAAAAAA="
+
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    tx_bytes_base64 = "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA=="
-    transaction = Transaction.from_base64(tx_bytes_base64)
+    transaction = Transaction.from_base64(TX_BYTES_BASE64)
 
-    res = await client.dry_run_tx(transaction)
+    res = await client.dry_run_tx(transaction, False)
     if res.error is not None:
         raise Exception(f"Dry run failed: {res.error}")
 

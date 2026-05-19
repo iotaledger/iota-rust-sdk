@@ -6,12 +6,14 @@ import IotaSDK
 @main
 struct PackageEventsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
+    // Query events emitted by the validator-set module in the IOTA system
+    // framework (0x3). These fire on every epoch change so they are reliably
+    // present on every network including localnet.
     let events = try await client.events(
       filter: EventFilter(
-        eventType:
-          "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
+        eventType: "0x3::validator::StakingRequestEvent"
       ),
       paginationFilter: PaginationFilter(direction: Direction.forward, limit: 10)
     )

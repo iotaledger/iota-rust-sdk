@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	chainID, err := client.ChainId()
 	if err != nil {

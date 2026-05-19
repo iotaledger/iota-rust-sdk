@@ -1,14 +1,18 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Digest
 import iota_sdk.GraphQlClient
+import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
-        val digest = Digest.fromBase58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
+        val client = GraphQlClient.newLocalnet()
+        val latest =
+            client.transactions(TransactionsFilter()).data.firstOrNull()
+                ?: throw Exception("no transactions available on the network")
+        val digest = latest.transaction.digest()
+        println("Querying transaction: ${digest.toBase58()}")
 
         val signedTransaction = client.transaction(digest)
         println("Signed Transaction: ${signedTransaction?.toString()}\n")

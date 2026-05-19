@@ -3,26 +3,33 @@
 
 use std::str::FromStr;
 
-use eyre::Result;
+use eyre::{OptionExt, Result};
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::TransactionBuilder,
-    types::{Address, ObjectId},
+    types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let from_address =
-        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+        Address::from_str("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")?;
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
-    // This is a coin of type
-    // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
-    let coin =
-        ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(from_address, &client)
+        .await?;
+
+    let coin = *client
+        .coins(from_address, None, Default::default())
+        .await?
+        .data()
+        .first()
+        .ok_or_eyre("sender has no coins")?
+        .id();
 
     let mut builder = TransactionBuilder::new(from_address).with_client(&client);
 

@@ -11,11 +11,17 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
-	digest, err := iota_sdk.DigestFromBase58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
+	client := iota_sdk.GraphQlClientNewLocalnet()
+
+	transactions, err := client.Transactions(nil, nil)
 	if err != nil {
-		log.Fatalf("Failed to parse digest: %v", err)
+		log.Fatalf("Failed to list transactions: %v", err)
 	}
+	if len(transactions.Data) == 0 {
+		log.Fatal("no transactions available on the network")
+	}
+	digest := transactions.Data[0].Transaction.Digest()
+	fmt.Printf("Querying transaction: %s\n", digest.ToBase58())
 
 	signed_transaction, err := client.Transaction(digest)
 	if err != nil {

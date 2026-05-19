@@ -10,18 +10,28 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *iota_sdk.ObjectId {
-	id, err := iota_sdk.ObjectIdFromHex(hex)
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	return id
-}
-
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	objectID := objIdFromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
+	address, err := iota_sdk.AddressFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err = faucet.RequestAndWaitForFinalized(address, client)
+	if err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
+
+	coins, err := client.Coins(address, nil, nil)
+	if err != nil {
+		log.Fatalf("Failed to fetch coins: %v", err)
+	}
+	if len(coins.Data) == 0 {
+		log.Fatal("address has no coins after faucet request")
+	}
+	objectID := coins.Data[0].Id()
 
 	objOpt, err := client.Object(objectID, nil)
 	if err != nil {

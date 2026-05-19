@@ -6,10 +6,11 @@ import IotaSDK
 @main
 struct TransactionsWithSharedExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let sharedObjId = try ObjectId.fromHex(
-      hex: "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
+    // The IOTA system state object (0x5) is a well-known shared object that is
+    // present on every network including localnet.
+    let sharedObjId = try ObjectId.fromHex(hex: "0x5")
 
     let transactions = try await client.transactions(
       filter: TransactionsFilter(inputObject: sharedObjId))

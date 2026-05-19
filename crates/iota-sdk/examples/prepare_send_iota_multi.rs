@@ -3,22 +3,31 @@
 
 use std::str::FromStr;
 
-use eyre::Result;
+use eyre::{OptionExt, Result};
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
-    types::{Address, ObjectId},
+    types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
-
-    let coin =
-        ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    let client = Client::new_localnet();
 
     let sender =
-        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+        Address::from_str("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")?;
+
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(sender, &client)
+        .await?;
+
+    let coin = *client
+        .coins(sender, None, Default::default())
+        .await?
+        .data()
+        .first()
+        .ok_or_eyre("sender has no coins")?
+        .id();
 
     // Recipients and amounts
     let recipients = [

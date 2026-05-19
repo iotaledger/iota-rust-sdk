@@ -3,23 +3,32 @@
 
 use std::str::FromStr;
 
-use eyre::Result;
+use eyre::{Result, eyre};
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::TransactionBuilder,
-    types::{Address, ObjectId},
+    types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let sender =
-        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
-    let coin_0 =
-        ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
-    let coin_1 =
-        ObjectId::from_str("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
+        Address::from_str("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")?;
+
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(sender, &client)
+        .await?;
+
+    let coins = client.coins(sender, None, Default::default()).await?;
+    let mut coin_ids = coins.data().iter().map(|c| *c.id());
+    let coin_0 = coin_ids
+        .next()
+        .ok_or_else(|| eyre!("sender has no coins to merge"))?;
+    let coin_1 = coin_ids
+        .next()
+        .ok_or_else(|| eyre!("sender has only one coin, need two to merge"))?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
 

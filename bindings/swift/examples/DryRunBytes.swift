@@ -4,16 +4,21 @@
 import Foundation
 import IotaSDK
 
+// A pre-encoded programmable transaction calling `0x1::u64::max(1, 2)` with
+// empty gas-payment objects. Because the bytes do not reference any on-chain
+// object refs, they stay valid across networks — the dry-run endpoint fills in
+// gas coins on demand.
+let txBytesBase64 =
+  "AAACAAgBAAAAAAAAAAAIAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA3U2NANtYXgAAgEAAAEBACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUiACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUi6AMAAAAAAAAAAAAAAAAAAAA="
+
 @main
 struct DryRunBytesExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let txBytesBase64 =
-      "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA=="
     let transaction = try Transaction.fromBase64(base64: txBytesBase64)
 
-    let res = try await client.dryRunTx(tx: transaction)
+    let res = try await client.dryRunTx(tx: transaction, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "DryRunBytes", code: 1,

@@ -1,9 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// This example inspects a published Move package on testnet and prints its
-// upgrade policy, version history, dependencies, functions, types, and sample
-// objects.
+// This example inspects a published Move package and prints its upgrade
+// policy, version history, dependencies, functions, types, and sample objects.
+// By default it inspects the IOTA framework package (0x2), which is available
+// on every network including localnet.
 
 import Foundation
 import IotaSDK
@@ -13,10 +14,8 @@ private let frameworkPackageId = Address.framework().toHex()
 @main
 struct PackageInspectExample {
   static func main() async throws {
-    let packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-
-    let packageAddress = try Address.fromHex(hex: packageId)
-    let client = GraphQlClient.newTestnet()
+    let packageAddress = Address.framework()
+    let client = GraphQlClient.newLocalnet()
 
     // Fetch package metadata and version history.
     guard let package = try await client.package(address: packageAddress) else {

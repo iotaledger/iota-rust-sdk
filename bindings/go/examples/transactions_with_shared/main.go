@@ -10,18 +10,12 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *iota_sdk.ObjectId {
-	id, err := iota_sdk.ObjectIdFromHex(hex)
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	return id
-}
-
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	sharedObjId := objIdFromHex("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
+	// The IOTA system state object (0x5) is a well-known shared object that is
+	// present on every network including localnet.
+	sharedObjId := iota_sdk.ObjectIdSystemState()
 
 	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
 	if err != nil {

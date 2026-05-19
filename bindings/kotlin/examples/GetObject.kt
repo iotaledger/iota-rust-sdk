@@ -1,18 +1,24 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+import iota_sdk.Address
+import iota_sdk.FaucetClient
 import iota_sdk.GraphQlClient
-import iota_sdk.ObjectId
 import iota_sdk.hexEncode
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
 
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
+        val address =
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(address, client)
+        val coins = client.coins(address)
         val objectId =
-            ObjectId.fromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
+            coins.data.firstOrNull()?.id()
+                ?: throw Exception("address has no coins after faucet request")
 
         val obj = client.`object`(objectId)!!
 

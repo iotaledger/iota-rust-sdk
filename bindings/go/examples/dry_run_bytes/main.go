@@ -9,10 +9,15 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+// A pre-encoded programmable transaction calling `0x1::u64::max(1, 2)` with
+// empty gas-payment objects. Because the bytes do not reference any on-chain
+// object refs, they stay valid across networks — the dry-run endpoint fills in
+// gas coins on demand.
+const txBytesBase64 = "AAACAAgBAAAAAAAAAAAIAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA3U2NANtYXgAAgEAAAEBACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUiACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUi6AMAAAAAAAAAAAAAAAAAAAA="
 
-	txBytesBase64 := "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA=="
+func main() {
+	client := iota_sdk.GraphQlClientNewLocalnet()
+
 	transaction, err := iota_sdk.TransactionFromBase64(txBytesBase64)
 	if err != nil {
 		log.Fatalf("Failed to parse transaction: %v", err)

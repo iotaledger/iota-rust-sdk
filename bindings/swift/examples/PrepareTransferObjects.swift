@@ -7,28 +7,31 @@ import IotaSDK
 @main
 struct PrepareTransferObjectsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let fromAddress = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+      hex: "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
     let toAddress = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-    let objsToTransfer = [
-      try PtbArgument.objectIdFromHex(
-        hex: "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"
-      ),
-      try PtbArgument.objectIdFromHex(
-        hex: "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"
-      ),
-      try PtbArgument.objectIdFromHex(
-        hex: "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"
-      ),
-    ]
+
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: fromAddress, client: client)
+
+    let coins = try await client.coins(owner: fromAddress)
+    guard coins.data.count >= 3 else {
+      throw NSError(
+        domain: "PrepareTransferObjects", code: 1,
+        userInfo: [
+          NSLocalizedDescriptionKey:
+            "sender does not own at least 3 coin objects to transfer"
+        ])
+    }
+    let objsToTransfer = coins.data[0..<3].map { PtbArgument.objectId(id: $0.id()) }
 
     let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
     _ = builder.transferObjects(
       recipient: toAddress,
-      objects: objsToTransfer
+      objects: Array(objsToTransfer)
     )
 
     let txn = try await builder.finish()
@@ -36,7 +39,7 @@ struct PrepareTransferObjectsExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn)
+    let res = try await client.dryRunTx(tx: txn, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "PrepareTransferObjects", code: 1,

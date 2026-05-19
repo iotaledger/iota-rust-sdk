@@ -7,90 +7,32 @@ import IotaSDK
 @main
 struct DevInspectExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let sender = Address.zero()
-
-    let iotaNamesPackageAddress = try Address.fromHex(
-      hex: "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea")
-    let iotaNamesObjectId = try ObjectId.fromHex(
-      hex: "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
     let stdAddress = Address.std()
-
-    let name = "name.iota"
-    print("Looking up name: \(name)")
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    // 1. Get the registry
-    _ = try builder.moveCall(
-      package: iotaNamesPackageAddress,
-      module: Identifier(identifier: "iota_names"),
-      function: Identifier(identifier: "registry"),
-      arguments: [PtbArgument.sharedMut(id: iotaNamesObjectId)],
-      typeArgs: [
-        TypeTag.newStruct(
-          structTag: StructTag(
-            address: iotaNamesPackageAddress,
-            module: Identifier(identifier: "registry"),
-            name: Identifier(identifier: "Registry")
-          ))
-      ],
-      names: ["iota_names"]
-    )
+    // Build a small chain of stdlib Move calls and extract the return value
+    // from the final command via dry_run.
 
-    // 2. Create name from string
-    _ = try builder.moveCall(
-      package: iotaNamesPackageAddress,
-      module: Identifier(identifier: "name"),
-      function: Identifier(identifier: "new"),
-      arguments: [PtbArgument.string(string: name)],
-      names: ["name"]
-    )
-
-    // 3. Lookup name record
-    _ = try builder.moveCall(
-      package: iotaNamesPackageAddress,
-      module: Identifier(identifier: "registry"),
-      function: Identifier(identifier: "lookup"),
-      arguments: [PtbArgument.assigned(name: "iota_names"), PtbArgument.assigned(name: "name")],
-      names: ["name_record_opt"]
-    )
-
-    // 4. Borrow name record from option
+    // 1. max(100, 200) -> assign "max_value"
     _ = try builder.moveCall(
       package: stdAddress,
-      module: Identifier(identifier: "option"),
-      function: Identifier(identifier: "borrow"),
-      arguments: [PtbArgument.assigned(name: "name_record_opt")],
-      typeArgs: [
-        TypeTag.newStruct(
-          structTag: StructTag(
-            address: iotaNamesPackageAddress,
-            module: Identifier(identifier: "name_record"),
-            name: Identifier(identifier: "NameRecord")
-          ))
-      ],
-      names: ["name_record"]
+      module: Identifier(identifier: "u64"),
+      function: Identifier(identifier: "max"),
+      arguments: [PtbArgument.u64(value: 100), PtbArgument.u64(value: 200)],
+      names: ["max_value"]
     )
 
-    // 5. Get target address from name record
-    _ = try builder.moveCall(
-      package: iotaNamesPackageAddress,
-      module: Identifier(identifier: "name_record"),
-      function: Identifier(identifier: "target_address"),
-      arguments: [PtbArgument.assigned(name: "name_record")],
-      names: ["target_address_opt"]
-    )
-
-    // 6. Borrow address from option
+    // 2. min(max_value, 150) -> assign "result"
     _ = try builder.moveCall(
       package: stdAddress,
-      module: Identifier(identifier: "option"),
-      function: Identifier(identifier: "borrow"),
-      arguments: [PtbArgument.assigned(name: "target_address_opt")],
-      typeArgs: [TypeTag.newAddress()],
-      names: ["target_address"]
+      module: Identifier(identifier: "u64"),
+      function: Identifier(identifier: "min"),
+      arguments: [PtbArgument.assigned(name: "max_value"), PtbArgument.u64(value: 150)],
+      names: ["result"]
     )
 
     let res = try await builder.dryRun(skipChecks: true)
@@ -98,27 +40,22 @@ struct DevInspectExample {
     if res.error != nil {
       throw NSError(
         domain: "DevInspect", code: 1,
-        userInfo: [NSLocalizedDescriptionKey: "Failed to lookup name: \(res.error!)"])
+        userInfo: [NSLocalizedDescriptionKey: "Failed to dry-run: \(res.error!)"])
     }
 
-    // Extract the resolved address from the last result
-    if res.results.count > 0 {
-      let lastEffect = res.results[res.results.count - 1]
-      if lastEffect.returnValues.count > 0 {
-        let returnValue = lastEffect.returnValues[0]
-        if returnValue.typeTag.isAddress() && returnValue.bcs.count == 32 {
-          let resolvedAddress = try Address.fromBytes(bytes: returnValue.bcs)
-          print("Resolved address: \(resolvedAddress.toHex())")
-        } else {
-          print(
-            "Last result is not an address type or has wrong length: \(returnValue.bcs.count)"
-          )
-        }
-      } else {
-        print("No return value in last effect")
+    // Extract the u64 return value from the last result.
+    if let lastEffect = res.results.last,
+      let returnValue = lastEffect.returnValues.first,
+      returnValue.typeTag.isU64(),
+      returnValue.bcs.count == 8
+    {
+      var value: UInt64 = 0
+      for i in 0..<8 {
+        value |= UInt64(returnValue.bcs[i]) << (8 * i)
       }
+      print("min(max(100, 200), 150) = \(value)")
     } else {
-      print("No results found")
+      print("Failed to extract u64 from results")
     }
   }
 }

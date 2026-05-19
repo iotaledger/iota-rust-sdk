@@ -3,16 +3,21 @@
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{Client, pagination::PaginationFilter, query_types::ObjectFilter},
+    graphql_client::{
+        Client, faucet::FaucetClient, pagination::PaginationFilter, query_types::ObjectFilter,
+    },
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let address =
-        Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+        Address::from_hex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")?;
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(address, &client)
+        .await?;
 
     let mut all_objects = Vec::new();
     let mut next_cursor = None;

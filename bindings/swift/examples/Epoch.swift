@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct EpochExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     // Get current epoch
     guard let currentEpoch = try await client.epoch() else {
@@ -18,6 +18,11 @@ struct EpochExample {
 
     print("Current epoch: \(currentEpoch.epochId)")
     print("Current epoch start time: \(currentEpoch.startTimestamp)")
+
+    if currentEpoch.epochId == 0 {
+      print("No previous epoch (current is epoch 0)")
+      return
+    }
 
     // Get previous epoch
     let previousEpochId = currentEpoch.epochId - 1
@@ -30,6 +35,8 @@ struct EpochExample {
     print("Previous epoch: \(previousEpoch.epochId)")
     if let totalStakeRewards = previousEpoch.totalStakeRewards {
       print("Previous epoch stake rewards: \(totalStakeRewards)")
+    } else {
+      print("Previous epoch stake rewards: <none>")
     }
   }
 }

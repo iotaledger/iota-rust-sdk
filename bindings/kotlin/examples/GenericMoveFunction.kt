@@ -6,10 +6,12 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
         val sender =
-            Address.fromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(sender, client)
 
         val builder = TransactionBuilder(sender).withClient(client)
 
@@ -30,12 +32,13 @@ fun main() = runBlocking {
                 PtbArgument.addressVec(listOf(address1, address2)),
                 PtbArgument.u64Vec(listOf(10_000_000uL, 20_000_000uL)),
             ),
+            listOf(TypeTag.newAddress(), TypeTag.newU64()),
         )
 
         val res = builder.dryRun()
 
         if (res.error != null) {
-            println("Failed to call generic Move function: $res.error")
+            throw Exception("Failed to call generic Move function: ${res.error}")
         }
 
         println("Successfully called generic Move function!")

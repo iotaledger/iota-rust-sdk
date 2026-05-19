@@ -7,10 +7,11 @@ import IotaSDK
 @main
 struct MoveFunctionsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let packageAddress = try Address.fromHex(
-      hex: "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d")
+    // Inspect the IOTA framework package (0x2). It is present on every network
+    // including localnet.
+    let packageAddress = Address.framework()
 
     guard let package = try await client.package(address: packageAddress) else {
       throw NSError(

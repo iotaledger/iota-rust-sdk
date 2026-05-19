@@ -7,12 +7,19 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var fromAddress = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var fromAddress = Address.FromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522");
         var toAddress = Address.FromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900");
 
-        var coinId = PtbArgument.ObjectIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2");
+        await FaucetClient.NewLocalnet().RequestAndWaitForFinalized(fromAddress, client);
+
+        var coins = await client.Coins(fromAddress, null, null);
+        if (coins.data.Length == 0)
+        {
+            throw new Exception("sender has no coins");
+        }
+        var coinId = PtbArgument.ObjectId(coins.data[0].Id());
 
         var builder = new TransactionBuilder(fromAddress).WithClient(client);
 
@@ -23,7 +30,7 @@ class Program
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
 
-        var res = await builder.DryRun(false);
+        var res = await client.DryRunTx(txn);
 
         if (res.error != null)
         {

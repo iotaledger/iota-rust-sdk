@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)

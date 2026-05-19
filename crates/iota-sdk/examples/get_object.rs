@@ -1,17 +1,24 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use eyre::{OptionExt, Result, bail};
-use iota_sdk::{graphql_client::Client, types::ObjectId};
+use iota_sdk::graphql_client::{Client, faucet::FaucetClient};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let object_id =
-        ObjectId::from_str("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")?;
+    let address = "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522".parse()?;
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(address, &client)
+        .await?;
+    let object_id = *client
+        .coins(address, None, Default::default())
+        .await?
+        .data()
+        .first()
+        .ok_or_eyre("address has no coins after faucet request")?
+        .id();
 
     let obj = client
         .object(object_id, None)

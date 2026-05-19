@@ -9,14 +9,6 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *iota_sdk.ObjectId {
-	id, err := iota_sdk.ObjectIdFromHex(hex)
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	return id
-}
-
 func addrFromHex(hex string) *iota_sdk.Address {
 	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
@@ -25,46 +17,47 @@ func addrFromHex(hex string) *iota_sdk.Address {
 	return address
 }
 
-func getObject(client *iota_sdk.GraphQlClient, objId *iota_sdk.ObjectId) *iota_sdk.Object {
-	obj, err := client.Object(objId, nil)
-	if err != nil {
-		log.Fatalf("Failed to get object: %v", err)
-	}
-	if obj == nil {
-		log.Fatalf("Missing object: %v", objId)
-	}
-	return *obj
-}
-
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	fromAddress := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	fromAddress := addrFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-	objIds := []*iota_sdk.ObjectId{
-		objIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"),
-		objIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"),
-		objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"),
-	}
-	objsToTransfer := []*iota_sdk.PtbArgument{}
-	for _, objId := range objIds {
-		obj := getObject(client, objId)
-		objsToTransfer = append(objsToTransfer, iota_sdk.PtbArgumentObjectRef(obj.ObjectRef()))
+	// Prefetch object refs and gas price online so the rest of the example can
+	// be assembled offline.
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err := faucet.RequestAndWaitForFinalized(fromAddress, client)
+	if err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	gasCoinId := objIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
-	gasCoin := getObject(client, gasCoinId).ObjectRef()
+	coinType := "0x2::coin::Coin<0x2::iota::IOTA>"
+	owned, err := client.Objects(&iota_sdk.ObjectFilter{Owner: &fromAddress, TypeTag: &coinType}, nil)
+	if err != nil {
+		log.Fatalf("Failed to list owned objects: %v", err)
+	}
+	if len(owned.Data) < 4 {
+		log.Fatal("sender does not own at least 4 coins (1 for gas + 3 to transfer)")
+	}
+	gasCoin := owned.Data[0].ObjectRef()
+	objsToTransfer := []*iota_sdk.PtbArgument{
+		iota_sdk.PtbArgumentObjectRef(owned.Data[1].ObjectRef()),
+		iota_sdk.PtbArgumentObjectRef(owned.Data[2].ObjectRef()),
+		iota_sdk.PtbArgumentObjectRef(owned.Data[3].ObjectRef()),
+	}
 
 	gasPrice, err := client.ReferenceGasPrice(nil)
 	if err != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	if gasPrice == nil {
-		*gasPrice = uint64(100)
+		fallback := uint64(100)
+		gasPrice = &fallback
 	}
 
+	// From here on, no further network calls are made; the transaction is
+	// assembled entirely from the prefetched object refs.
 	builder := iota_sdk.NewTransactionBuilder(fromAddress)
 	builder.TransferObjects(toAddress, objsToTransfer)
 	builder.Gas([]iota_sdk.ObjectReference{gasCoin}).GasPrice(*gasPrice).GasBudget(500000000)

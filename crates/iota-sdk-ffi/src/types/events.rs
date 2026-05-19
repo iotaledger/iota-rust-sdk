@@ -25,20 +25,23 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 #[derive(uniffi::Record)]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
-    /// triggered this event to be emitted.
-    pub package_id: Arc<ObjectId>,
+    /// triggered this event to be emitted. Optional because some system
+    /// events (e.g. validator events) are emitted without a sending module.
+    pub package_id: Option<Arc<ObjectId>>,
     /// Module name of the top-level function invoked by a MoveCall command
-    /// which triggered this event to be emitted.
-    pub module: String,
+    /// which triggered this event to be emitted. Optional because some system
+    /// events (e.g. validator events) are emitted without a sending module.
+    pub module: Option<String>,
     /// Address of the account that sent the transaction where this event was
-    /// emitted.
-    pub sender: Arc<Address>,
+    /// emitted. Optional because some system events are emitted without a
+    /// sender.
+    pub sender: Option<Arc<Address>>,
     /// The type of the event emitted
     pub type_: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
     /// UTC timestamp in milliseconds since epoch (1/1/1970)
-    pub timestamp: String,
+    pub timestamp: Option<String>,
     /// Structured contents of a Move value
     pub data: String,
     /// Representation of a Move value in JSON
@@ -47,16 +50,21 @@ pub struct Event {
 
 impl From<iota_sdk::graphql_client::query_types::Event> for Event {
     fn from(value: iota_sdk::graphql_client::query_types::Event) -> Self {
-        let sending_module = value.sending_module.as_ref().unwrap();
+        let sending_module = value.sending_module.as_ref();
         Self {
-            package_id: Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
-                sending_module.package.address,
-            ))),
-            module: sending_module.name.clone(),
-            sender: Arc::new(Address(value.sender.as_ref().unwrap().address)),
+            package_id: sending_module.map(|module| {
+                Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
+                    module.package.address,
+                )))
+            }),
+            module: sending_module.map(|module| module.name.clone()),
+            sender: value
+                .sender
+                .as_ref()
+                .map(|sender| Arc::new(Address(sender.address))),
             type_: value.type_.repr.clone(),
             contents: base64ct::Base64::decode_vec(&value.bcs.0).unwrap_or_default(),
-            timestamp: value.timestamp.as_ref().unwrap().0.clone(),
+            timestamp: value.timestamp.as_ref().map(|ts| ts.0.clone()),
             data: value.data.0.to_string(),
             json: value.json.to_string(),
         }
@@ -66,9 +74,15 @@ impl From<iota_sdk::graphql_client::query_types::Event> for Event {
 impl From<Event> for iota_sdk::types::Event {
     fn from(value: Event) -> Self {
         Self {
-            package_id: (**value.package_id),
-            module: Identifier::from_str(&value.module).unwrap(),
-            sender: (**value.sender),
+            package_id: value
+                .package_id
+                .map(|id| **id)
+                .unwrap_or(iota_sdk::types::ObjectId::ZERO),
+            module: Identifier::from_str(value.module.as_deref().unwrap_or("")).unwrap(),
+            sender: value
+                .sender
+                .map(|s| **s)
+                .unwrap_or(iota_sdk::types::Address::ZERO),
             type_: StructTag::from_str(&value.type_).unwrap(),
             contents: value.contents,
         }
@@ -78,21 +92,22 @@ impl From<Event> for iota_sdk::types::Event {
 impl From<Event> for iota_sdk::graphql_client::query_types::Event {
     fn from(value: Event) -> Self {
         Self {
-            sending_module: Some(MoveModuleQuery {
+            sending_module: value.package_id.as_ref().map(|package_id| MoveModuleQuery {
                 package: MovePackageQuery {
-                    address: iota_sdk::types::Address::from(**value.package_id),
+                    address: iota_sdk::types::Address::from(***package_id),
                     bcs: None,
                 },
-                name: value.module.clone(),
+                name: value.module.clone().unwrap_or_default(),
             }),
-            sender: Some(GQLAddress {
-                address: (**value.sender),
-            }),
+            sender: value
+                .sender
+                .as_ref()
+                .map(|sender| GQLAddress { address: ***sender }),
             type_: MoveType {
                 repr: value.type_.clone(),
             },
             bcs: Base64(base64ct::Base64::encode_string(&value.contents)),
-            timestamp: Some(DateTime(value.timestamp.clone())),
+            timestamp: value.timestamp.clone().map(DateTime),
             data: MoveData(serde_json::from_str(&value.data).unwrap_or_default()),
             json: serde_json::Value::from_str(&value.json).unwrap_or_default(),
         }
@@ -102,12 +117,12 @@ impl From<Event> for iota_sdk::graphql_client::query_types::Event {
 impl From<iota_sdk::types::Event> for Event {
     fn from(value: iota_sdk::types::Event) -> Self {
         Self {
-            package_id: Arc::new(value.package_id.into()),
-            module: value.module.to_string(),
-            sender: Arc::new(value.sender.into()),
+            package_id: Some(Arc::new(value.package_id.into())),
+            module: Some(value.module.to_string()),
+            sender: Some(Arc::new(value.sender.into())),
             type_: value.type_.to_string(),
             contents: value.contents,
-            timestamp: String::new(),
+            timestamp: None,
             data: String::new(),
             json: String::new(),
         }

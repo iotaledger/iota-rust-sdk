@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct ObjectsByTypeExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let stakedIotas = try await client.objects(
       filter: ObjectFilter(typeTag: "0x3::staking_pool::StakedIota"))

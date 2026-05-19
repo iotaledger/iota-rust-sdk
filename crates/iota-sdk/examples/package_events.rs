@@ -7,15 +7,15 @@ use iota_sdk::graphql_client::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
+    // Query events emitted by the validator-set module in the IOTA system
+    // framework (0x3). These fire on every epoch change so they are reliably
+    // present on every network including localnet.
     let events = client
         .events(
             EventFilter {
-                event_type: Some(
-                    "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
-                        .to_string(),
-                ),
+                event_type: Some("0x3::validator::StakingRequestEvent".to_string()),
                 ..Default::default()
             },
             PaginationFilter {
@@ -27,8 +27,12 @@ async fn main() -> Result<()> {
 
     for event in events.data() {
         println!("Type: {}", event.type_.repr);
-        println!("Sender: {}", event.sender.as_ref().unwrap().address);
-        println!("Module: {}", event.sending_module.as_ref().unwrap().name);
+        if let Some(sender) = event.sender.as_ref() {
+            println!("Sender: {}", sender.address);
+        }
+        if let Some(module) = event.sending_module.as_ref() {
+            println!("Module: {}", module.name);
+        }
         println!("JSON: {}", event.json);
     }
 

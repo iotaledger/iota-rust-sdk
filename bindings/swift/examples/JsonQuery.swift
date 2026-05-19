@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct JsonQueryExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let queryStr = """
       query getLatestIotaSystemState {

@@ -7,17 +7,20 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
     from_address = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    # This is a coin of type
-    # 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
-    coin_id = PtbArgument.object_id_from_hex(
-        "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")
+    await FaucetClient.new_localnet().request_and_wait_for_finalized(
+        from_address, client)
+
+    coins = await client.coins(from_address)
+    if len(coins.data) == 0:
+        raise Exception("sender has no coins")
+    coin_id = PtbArgument.object_id(coins.data[0].id())
 
     builder = TransactionBuilder(from_address).with_client(client)
     builder.send_coins(
@@ -31,7 +34,7 @@ async def main():
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await builder.dry_run()
+    res = await client.dry_run_tx(txn, False)
     if res.error is not None:
         raise Exception("Failed to send coins:", res.error)
 

@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
     # Get current epoch
     current_epoch = await client.epoch()
@@ -16,6 +16,10 @@ async def main():
 
     print(f"Current epoch: {current_epoch.epoch_id}")
     print(f"Current epoch start time: {current_epoch.start_timestamp}")
+
+    if current_epoch.epoch_id == 0:
+        print("No previous epoch (current is epoch 0)")
+        return
 
     # Get previous epoch
     previous_epoch_id = current_epoch.epoch_id - 1
@@ -28,6 +32,8 @@ async def main():
         print(
             f"Previous epoch stake rewards: {previous_epoch.total_stake_rewards}"
         )
+    else:
+        print("Previous epoch stake rewards: <none>")
 
 
 if __name__ == "__main__":

@@ -7,45 +7,42 @@ import IotaSDK
 @main
 struct PrepareTransferObjectsOfflineExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let fromAddress = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+      hex: "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
     let toAddress = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-    let objIds = [
-      try ObjectId.fromHex(
-        hex: "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"),
-      try ObjectId.fromHex(
-        hex: "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"),
-      try ObjectId.fromHex(
-        hex: "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"),
-    ]
-    var objsToTransfer: [PtbArgument] = []
-    for objId in objIds {
-      guard let obj = try await client.object(objectId: objId) else {
-        throw NSError(
-          domain: "PrepareTransferObjectsOffline", code: 1,
-          userInfo: [NSLocalizedDescriptionKey: "Missing object: \(objId)"])
-      }
-      objsToTransfer.append(PtbArgument.objectRef(id: obj.objectRef()))
-    }
 
-    let gasCoinId = try ObjectId.fromHex(
-      hex: "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
-    guard let gasCoin = try await client.object(objectId: gasCoinId) else {
+    // Prefetch object refs and gas price online so the rest of the example can
+    // be assembled offline.
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: fromAddress, client: client)
+    let owned = try await client.objects(
+      filter: ObjectFilter(
+        typeTag: "0x2::coin::Coin<0x2::iota::IOTA>",
+        owner: fromAddress
+      ))
+    guard owned.data.count >= 4 else {
       throw NSError(
         domain: "PrepareTransferObjectsOffline", code: 1,
-        userInfo: [NSLocalizedDescriptionKey: "Missing gas coin"])
+        userInfo: [
+          NSLocalizedDescriptionKey:
+            "sender does not own at least 4 coins (1 for gas + 3 to transfer)"
+        ])
     }
+    let gasCoinRef = owned.data[0].objectRef()
+    let objsToTransfer = owned.data[1..<4].map { PtbArgument.objectRef(id: $0.objectRef()) }
     let gasPrice = try await client.referenceGasPrice() ?? 100
 
+    // From here on, no further network calls are made; the transaction is
+    // assembled entirely from the prefetched object refs.
     let builder = TransactionBuilder(sender: fromAddress)
     _ = builder.transferObjects(
       recipient: toAddress,
-      objects: objsToTransfer
+      objects: Array(objsToTransfer)
     )
-    _ = builder.gas(objectRefs: [gasCoin.objectRef()]).gasPrice(price: gasPrice).gasBudget(
+    _ = builder.gas(objectRefs: [gasCoinRef]).gasPrice(price: gasPrice).gasBudget(
       budget: 500_000_000)
 
     let txn = try builder.finish()
@@ -53,7 +50,7 @@ struct PrepareTransferObjectsOfflineExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn)
+    let res = try await client.dryRunTx(tx: txn, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "PrepareTransferObjectsOffline", code: 1,

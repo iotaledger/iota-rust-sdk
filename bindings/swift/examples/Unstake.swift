@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct UnstakeExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let stakedIotas = try await client.objects(
       filter: ObjectFilter(typeTag: String(describing: StructTag.newStakedIota())))
@@ -17,13 +17,12 @@ struct UnstakeExample {
         userInfo: [NSLocalizedDescriptionKey: "no staked iotas found"])
     }
     let stakedIota = stakedIotas.data[0]
+    let staker = stakedIota.owner().asAddress()
 
-    let builder = TransactionBuilder(sender: stakedIota.owner().asAddress()).withClient(
-      client: client)
-
+    let builder = TransactionBuilder(sender: staker).withClient(client: client)
     _ = builder.unstake(stakedIota: PtbArgument.objectId(id: stakedIota.objectId()))
 
-    let res = try await builder.dryRun()
+    let res = try await builder.dryRun(skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "Unstake", code: 1,

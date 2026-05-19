@@ -7,10 +7,13 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
     my_address = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+    await FaucetClient.new_localnet().request_and_wait_for_finalized(
+        my_address, client)
 
     validators = await client.active_validators()
     if len(validators.data) == 0:
@@ -23,7 +26,7 @@ async def main():
 
     builder.stake(PtbArgument.u64(1000000000), validator.address)
 
-    res = await builder.dry_run()
+    res = await builder.dry_run(False)
     if res.error is not None:
         raise Exception("Failed to stake:", res.error)
 

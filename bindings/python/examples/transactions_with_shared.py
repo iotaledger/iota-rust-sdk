@@ -7,10 +7,11 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    shared_obj_id = ObjectId.from_hex(
-        "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
+    # The IOTA system state object (0x5) is a well-known shared object that is
+    # present on every network including localnet.
+    shared_obj_id = ObjectId.system_state()
 
     transactions = await client.transactions(
         TransactionsFilter(input_object=shared_obj_id),)

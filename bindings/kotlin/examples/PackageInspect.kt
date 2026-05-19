@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * This example inspects a published Move package on testnet and prints its upgrade policy, version
- * history, dependencies, functions, types, and sample objects.
+ * This example inspects a published Move package and prints its upgrade policy, version history,
+ * dependencies, functions, types, and sample objects. By default it inspects the IOTA framework
+ * package (0x2), which is available on every network including localnet.
  */
 import iota_sdk.Address
 import iota_sdk.Direction
@@ -36,10 +37,8 @@ private val jsonParser = Json { ignoreUnknownKeys = true }
 
 fun main() = runBlocking {
     try {
-        val packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
-
-        val packageAddress = Address.fromHex(packageId)
-        val client = GraphQlClient.newTestnet()
+        val packageAddress = Address.framework()
+        val client = GraphQlClient.newLocalnet()
 
         // Fetch package metadata and version history.
         val pkg = client.`package`(packageAddress, null) ?: error("missing package")

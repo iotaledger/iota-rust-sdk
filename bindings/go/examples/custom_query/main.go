@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	queryEpochDataStr := `
 	query MyQuery($id: UInt53) {

@@ -6,20 +6,20 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
         val stakedIotas =
             client.objects(ObjectFilter(typeTag = StructTag.newStakedIota().toString()))
         if (stakedIotas.data.isEmpty()) {
-            throw Exception("no validators found")
+            throw Exception("no staked iota found")
         }
         val stakedIota = stakedIotas.data[0]
+        val staker = stakedIota.owner().asAddress()
 
-        val builder = TransactionBuilder(stakedIota.owner().asAddress()).withClient(client)
-
+        val builder = TransactionBuilder(staker).withClient(client)
         builder.unstake(PtbArgument.objectId(stakedIota.objectId()))
 
-        val res = builder.dryRun()
+        val res = builder.dryRun(false)
 
         if (res.error != null) {
             throw Exception(res.error)

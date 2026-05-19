@@ -7,9 +7,11 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var sender = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var sender = Address.FromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522");
+
+        await FaucetClient.NewLocalnet().RequestAndWaitForFinalized(sender, client);
 
         var builder = new TransactionBuilder(sender).WithClient(client);
 

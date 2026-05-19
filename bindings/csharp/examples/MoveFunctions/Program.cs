@@ -7,9 +7,11 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var packageAddress = Address.FromHex("0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d");
+        // Inspect the IOTA framework package (0x2). It is present on every network
+        // including localnet.
+        var packageAddress = Address.Framework();
 
         var package = await client.Package(packageAddress);
         if (package == null)

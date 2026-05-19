@@ -5,12 +5,17 @@ using IotaSdk;
 
 class Program
 {
+    // A pre-encoded programmable transaction calling `0x1::u64::max(1, 2)` with
+    // empty gas-payment objects. Because the bytes do not reference any on-chain
+    // object refs, they stay valid across networks — the dry-run endpoint fills
+    // in gas coins on demand.
+    const string TxBytesBase64 = "AAACAAgBAAAAAAAAAAAIAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA3U2NANtYXgAAgEAAAEBACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUiACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUi6AMAAAAAAAAAAAAAAAAAAAA=";
+
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var txBytesBase64 = "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA==";
-        var transaction = Transaction.FromBase64(txBytesBase64);
+        var transaction = Transaction.FromBase64(TxBytesBase64);
 
         var res = await client.DryRunTx(transaction);
         if (res.error != null)

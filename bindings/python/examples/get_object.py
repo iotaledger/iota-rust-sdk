@@ -7,10 +7,16 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    object_id = ObjectId.from_hex(
-        "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
+    address = Address.from_hex(
+        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+    await FaucetClient.new_localnet().request_and_wait_for_finalized(
+        address, client)
+    coins = await client.coins(address)
+    if len(coins.data) == 0:
+        raise Exception("address has no coins after faucet request")
+    object_id = coins.data[0].id()
 
     obj = await client.object(object_id)
     if obj is None:

@@ -10,7 +10,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let staked_iota = client
         .objects(

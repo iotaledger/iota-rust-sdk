@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct CustomQueryExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let queryEpochDataStr = """
       query MyQuery($id: UInt53) {

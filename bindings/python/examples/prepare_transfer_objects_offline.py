@@ -7,51 +7,44 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
     from_address = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-    obj_ids = [
-        ObjectId.from_hex(
-            "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"
-        ),
-        ObjectId.from_hex(
-            "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"
-        ),
-        ObjectId.from_hex(
-            "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"
-        ),
-    ]
-    objs_to_transfer = []
-    for obj_id in obj_ids:
-        obj = await client.object(obj_id)
-        if obj == None:
-            raise Exception("Missing object:", obj_id)
-        objs_to_transfer.append(PtbArgument.object_ref(obj.object_ref()))
 
-    gas_coin_id = ObjectId.from_hex(
-        "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
-    gas_coin = await client.object(gas_coin_id)
-    if gas_coin == None:
-        raise Exception("Missing gas coin:", gas_coin)
+    # Prefetch object refs and gas price online so the rest of the example can
+    # be assembled offline.
+    await FaucetClient.new_localnet().request_and_wait_for_finalized(
+        from_address, client)
+    owned = await client.objects(
+        ObjectFilter(owner=from_address,
+                     type_tag="0x2::coin::Coin<0x2::iota::IOTA>"))
+    if len(owned.data) < 4:
+        raise Exception(
+            "sender does not own at least 4 coins (1 for gas + 3 to transfer)")
+    gas_coin_ref = owned.data[0].object_ref()
+    objs_to_transfer = [
+        PtbArgument.object_ref(obj.object_ref()) for obj in owned.data[1:4]
+    ]
     gas_price = await client.reference_gas_price() or 100
 
+    # From here on, no further network calls are made; the transaction is
+    # assembled entirely from the prefetched object refs.
     builder = TransactionBuilder(from_address)
     builder.transfer_objects(
         to_address,
         objs_to_transfer,
     )
-    builder.gas([gas_coin.object_ref()
-                ]).gas_price(gas_price).gas_budget(500000000)
+    builder.gas([gas_coin_ref]).gas_price(gas_price).gas_budget(500000000)
 
     txn = builder.finish()
 
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await client.dry_run_tx(txn)
+    res = await client.dry_run_tx(txn, False)
     if res.error is not None:
         raise Exception("Failed to transfer objects:", res.error)
 

@@ -3,6 +3,7 @@
 
 import iota_sdk.Address
 import iota_sdk.Direction
+import iota_sdk.FaucetClient
 import iota_sdk.GraphQlClient
 import iota_sdk.Object
 import iota_sdk.ObjectFilter
@@ -11,9 +12,10 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
         val address =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(address, client)
         val allObjects = mutableListOf<Object>()
         var nextCursor: String? = null
         while (true) {

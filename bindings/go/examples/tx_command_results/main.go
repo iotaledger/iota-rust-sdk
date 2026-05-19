@@ -26,9 +26,15 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	sender := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	sender := addrFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err := faucet.RequestAndWaitForFinalized(sender, client)
+	if err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 

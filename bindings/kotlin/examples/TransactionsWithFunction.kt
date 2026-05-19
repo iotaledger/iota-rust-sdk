@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
         val transactions =
             client.transactions(
                 TransactionsFilter(function = "0x3::iota_system::request_add_stake")

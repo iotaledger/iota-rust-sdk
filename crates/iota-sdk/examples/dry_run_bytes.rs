@@ -4,12 +4,17 @@
 use eyre::Result;
 use iota_sdk::{graphql_client::Client, types::Transaction};
 
+// A pre-encoded programmable transaction calling `0x1::u64::max(1, 2)` with
+// empty gas-payment objects. Because the bytes do not reference any on-chain
+// object refs, they stay valid across networks — the dry-run endpoint fills in
+// gas coins on demand.
+const TX_BYTES_BASE64: &str = "AAACAAgBAAAAAAAAAAAIAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA3U2NANtYXgAAgEAAAEBACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUiACIitGaiQ5nrz17A8EgggSriD+oQN8c2z+xgh1OqOLUi6AMAAAAAAAAAAAAAAAAAAAA=";
+
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let tx_bytes_base64 = "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA==";
-    let transaction = Transaction::from_base64(tx_bytes_base64)?;
+    let transaction = Transaction::from_base64(TX_BYTES_BASE64)?;
 
     let res = client.dry_run_tx(&transaction, false).await?;
 

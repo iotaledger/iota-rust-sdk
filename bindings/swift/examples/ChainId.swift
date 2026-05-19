@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct ChainIdExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let chainId = try await client.chainId()
     print("Chain ID:", chainId)

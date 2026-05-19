@@ -4,13 +4,22 @@
 use core::str::FromStr;
 
 use eyre::Result;
-use iota_sdk::{graphql_client::Client, transaction_builder::TransactionBuilder, types::Address};
+use iota_sdk::{
+    graphql_client::{Client, faucet::FaucetClient},
+    transaction_builder::TransactionBuilder,
+    types::Address,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
+    let sender: Address =
+        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522".parse()?;
+
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(sender, &client)
+        .await?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(client);
 

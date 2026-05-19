@@ -6,8 +6,16 @@ import IotaSDK
 @main
 struct GetTransactionExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
-    let digest = try Digest.fromBase58(base58: "3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
+    let client = GraphQlClient.newLocalnet()
+
+    let latestPage = try await client.transactions()
+    guard let latest = latestPage.data.first else {
+      throw NSError(
+        domain: "GetTransaction", code: 1,
+        userInfo: [NSLocalizedDescriptionKey: "no transactions available on the network"])
+    }
+    let digest = latest.transaction.digest()
+    print("Querying transaction: \(digest.toBase58())")
 
     let signedTransaction = try await client.transaction(digest: digest)
     print("Signed Transaction: `\(String(describing: signedTransaction))`\n")

@@ -7,15 +7,24 @@ import IotaSDK
 @main
 struct PrepareMergeCoinsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let sender = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+      hex: "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
 
-    let coin0 = try PtbArgument.objectIdFromHex(
-      hex: "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
-    let coin1 = try PtbArgument.objectIdFromHex(
-      hex: "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: sender, client: client)
+
+    let coins = try await client.coins(owner: sender)
+    guard coins.data.count >= 2 else {
+      throw NSError(
+        domain: "PrepareMergeCoins", code: 1,
+        userInfo: [
+          NSLocalizedDescriptionKey: "sender has only one coin, need two to merge"
+        ])
+    }
+    let coin0 = PtbArgument.objectId(id: coins.data[0].id())
+    let coin1 = PtbArgument.objectId(id: coins.data[1].id())
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
@@ -26,7 +35,7 @@ struct PrepareMergeCoinsExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await builder.dryRun()
+    let res = try await client.dryRunTx(tx: txn, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "PrepareMergeCoins", code: 1,

@@ -7,8 +7,13 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
-    digest = Digest.from_base58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
+    client = GraphQlClient.new_localnet()
+
+    transactions = await client.transactions()
+    if len(transactions.data) == 0:
+        raise Exception("no transactions available on the network")
+    digest = transactions.data[0].transaction.digest()
+    print(f"Querying transaction: {digest.to_base58()}")
 
     signed_transaction = await client.transaction(digest)
     print(f"Signed Transaction: `{signed_transaction}`\n")

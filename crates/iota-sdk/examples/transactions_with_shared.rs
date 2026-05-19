@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use iota_sdk::{
     graphql_client::{Client, error::Result, query_types::TransactionsFilter},
     types::ObjectId,
@@ -10,10 +8,11 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let shared_obj_id =
-        ObjectId::from_str("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")?;
+    // The IOTA system state object (0x5) is a well-known shared object that is
+    // present on every network including localnet.
+    let shared_obj_id = ObjectId::SYSTEM_STATE;
     let transactions = client
         .transactions(
             TransactionsFilter {

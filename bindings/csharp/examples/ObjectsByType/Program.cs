@@ -7,7 +7,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
         var filter = new ObjectFilter(typeTag: "0x3::staking_pool::StakedIota");
 
         var stakedIotas = await client.Objects(filter);

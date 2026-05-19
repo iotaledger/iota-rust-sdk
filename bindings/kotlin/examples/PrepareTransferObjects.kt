@@ -6,23 +6,24 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
         val fromAddress =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
         val toAddress =
             Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(fromAddress, client)
+
+        val coins = client.coins(fromAddress).data
+        if (coins.size < 3) {
+            throw Exception("sender does not own at least 3 coin objects to transfer")
+        }
         val objsToTransfer =
             listOf(
-                PtbArgument.objectIdFromHex(
-                    "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"
-                ),
-                PtbArgument.objectIdFromHex(
-                    "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"
-                ),
-                PtbArgument.objectIdFromHex(
-                    "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"
-                ),
+                PtbArgument.objectId(coins[0].id()),
+                PtbArgument.objectId(coins[1].id()),
+                PtbArgument.objectId(coins[2].id()),
             )
 
         val builder = TransactionBuilder(fromAddress).withClient(client)
@@ -34,7 +35,7 @@ fun main() = runBlocking {
         println("Signing Digest: ${txn.signingDigestHex()}")
         println("Txn Bytes: ${txn.toBase64()}")
 
-        val res = builder.dryRun()
+        val res = client.dryRunTx(txn, false)
 
         if (res.error != null) {
             throw Exception("Failed to transfer objects: ${res.error}")

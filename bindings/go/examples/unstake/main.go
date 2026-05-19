@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
@@ -21,8 +21,9 @@ func main() {
 		log.Fatal("No staked iota objects found")
 	}
 	stakedIota := stakedIotas.Data[0]
+	staker := stakedIota.Owner().AsAddress()
 
-	builder := iota_sdk.NewTransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client)
+	builder := iota_sdk.NewTransactionBuilder(staker).WithClient(client)
 	builder.Unstake(iota_sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)

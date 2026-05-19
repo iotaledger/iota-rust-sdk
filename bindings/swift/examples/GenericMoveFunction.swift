@@ -7,10 +7,13 @@ import IotaSDK
 @main
 struct GenericMoveFunctionExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let sender = try Address.fromHex(
-      hex: "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
+      hex: "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: sender, client: client)
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
@@ -30,7 +33,7 @@ struct GenericMoveFunctionExample {
       typeArgs: [TypeTag.newAddress(), TypeTag.newU64()]
     )
 
-    let res = try await builder.dryRun()
+    let res = try await builder.dryRun(skipChecks: false)
 
     if res.error != nil {
       throw NSError(

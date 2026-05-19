@@ -7,10 +7,13 @@ import IotaSDK
 @main
 struct StakeExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
     let myAddress = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+      hex: "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: myAddress, client: client)
 
     let validators = try await client.activeValidators()
     if validators.data.isEmpty {
@@ -27,7 +30,7 @@ struct StakeExample {
     _ = builder.stake(
       stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)
 
-    let res = try await builder.dryRun()
+    let res = try await builder.dryRun(skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "Stake", code: 1,

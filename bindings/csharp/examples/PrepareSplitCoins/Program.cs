@@ -7,11 +7,18 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var sender = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var sender = Address.FromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522");
 
-        var coinId = ObjectId.FromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc");
+        await FaucetClient.NewLocalnet().RequestAndWaitForFinalized(sender, client);
+
+        var coins = await client.Coins(sender, null, null);
+        if (coins.data.Length == 0)
+        {
+            throw new Exception("sender has no coins");
+        }
+        var coinId = coins.data[0].Id();
 
         var builder = new TransactionBuilder(sender).WithClient(client);
 

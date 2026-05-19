@@ -7,7 +7,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
         var queryStr = @"
         query getLatestIotaSystemState {

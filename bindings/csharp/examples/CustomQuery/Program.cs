@@ -8,7 +8,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
         var queryEpochDataStr = @"
         query MyQuery($id: UInt53) {

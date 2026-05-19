@@ -11,9 +11,12 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	eventType := string("0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent")
+	// Query events emitted by the validator-set module in the IOTA system
+	// framework (0x3). These fire on every epoch change so they are reliably
+	// present on every network including localnet.
+	eventType := string("0x3::validator::StakingRequestEvent")
 	eventFilter := iota_sdk.EventFilter{
 		EventType: &eventType,
 	}
@@ -33,8 +36,12 @@ func main() {
 
 	for _, event := range events.Data {
 		fmt.Println("Type: ", event.Type)
-		fmt.Println("Sender: ", event.Sender.ToHex())
-		fmt.Println("Module: ", event.Module)
+		if event.Sender != nil {
+			fmt.Println("Sender: ", (*event.Sender).ToHex())
+		}
+		if event.Module != nil {
+			fmt.Println("Module: ", *event.Module)
+		}
 		fmt.Println("JSON: ", event.Json)
 	}
 }

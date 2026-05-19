@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
     address = Address.zero()
     objects_page = await client.objects(ObjectFilter(owner=address))
     print(f"Owned objects({len(objects_page.data)}):")

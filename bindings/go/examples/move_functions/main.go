@@ -11,12 +11,11 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	packageAddress, err := iota_sdk.AddressFromHex("0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	// Inspect the IOTA framework package (0x2). It is present on every network
+	// including localnet.
+	packageAddress := iota_sdk.AddressFramework()
 
 	packageOpt, err := client.Package(packageAddress, nil)
 	if err != nil {

@@ -7,8 +7,15 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
-        var digest = Digest.FromBase58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh");
+        var client = GraphQlClient.NewLocalnet();
+
+        var latest = await client.Transactions();
+        if (latest.data.Length == 0)
+        {
+            throw new Exception("no transactions available on the network");
+        }
+        var digest = latest.data[0].transaction.Digest();
+        Console.WriteLine($"Querying transaction: {digest.ToBase58()}");
 
         var signedTransaction = await client.Transaction(digest);
         Console.WriteLine($"Signed Transaction: `{signedTransaction}`\n");

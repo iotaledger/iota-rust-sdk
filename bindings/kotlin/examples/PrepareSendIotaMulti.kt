@@ -17,11 +17,14 @@ fun ULong.toLeByteArray(): ByteArray {
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
         val sender =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+            Address.fromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+        FaucetClient.newLocalnet().requestAndWaitForFinalized(sender, client)
+
         val coinId =
-            ObjectId.fromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
+            client.coins(sender).data.firstOrNull()?.id() ?: throw Exception("sender has no coins")
 
         val recipients =
             listOf(
@@ -54,7 +57,7 @@ fun main() = runBlocking {
         println("Signing Digest: ${txn.signingDigestHex()}")
         println("Txn Bytes: ${txn.toBase64()}")
 
-        val res = builder.dryRun()
+        val res = client.dryRunTx(txn, false)
 
         if (res.error != null) {
             throw Exception("Failed to send IOTA: ${res.error}")

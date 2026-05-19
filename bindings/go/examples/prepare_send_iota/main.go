@@ -18,11 +18,17 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	fromAddress := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	fromAddress := addrFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err := faucet.RequestAndWaitForFinalized(fromAddress, client)
+	if err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
 
 	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))

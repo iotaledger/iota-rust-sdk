@@ -7,20 +7,22 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
+    # Query events emitted by the validator-set module in the IOTA system
+    # framework (0x3). These fire on every epoch change so they are reliably
+    # present on every network including localnet.
     events = await client.events(
-        EventFilter(
-            event_type=
-            "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
-        ),
+        EventFilter(event_type="0x3::validator::StakingRequestEvent"),
         PaginationFilter(direction=Direction.FORWARD, limit=10),
     )
 
     for event in events.data:
         print(f"Type: {event.type}")
-        print(f"Sender: {event.sender.to_hex()}")
-        print(f"Module: {event.module}")
+        if event.sender is not None:
+            print(f"Sender: {event.sender.to_hex()}")
+        if event.module is not None:
+            print(f"Module: {event.module}")
         print(f"JSON: {event.json}")
 
 

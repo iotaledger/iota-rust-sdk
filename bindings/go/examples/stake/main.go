@@ -18,9 +18,15 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	myAddress := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	myAddress := addrFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err := faucet.RequestAndWaitForFinalized(myAddress, client)
+	if err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
 
 	validators, err := client.ActiveValidators(nil, nil)
 	if err != nil {
@@ -41,12 +47,11 @@ func main() {
 	log.Printf("Staking to validator %v", validatorName)
 
 	builder := iota_sdk.NewTransactionBuilder(myAddress).WithClient(client)
-
 	builder.Stake(iota_sdk.PtbArgumentU64(1000000000), validator.Address)
 
 	res, err := builder.DryRun(false)
 	if err != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
+		log.Fatalf("Failed to stake: %v", err)
 	}
 
 	if res.Error != nil {

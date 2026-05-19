@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct TransactionsWithFunctionExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
     let transactions = try await client.transactions(
       filter: TransactionsFilter(function: "0x3::iota_system::request_add_stake"))
     for transaction in transactions.data {

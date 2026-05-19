@@ -3,26 +3,35 @@
 
 use std::str::FromStr;
 
-use eyre::Result;
+use eyre::{Result, eyre};
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::TransactionBuilder,
-    types::{Address, ObjectId},
+    types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let from_address =
-        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+        Address::from_str("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")?;
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
-    let objs_to_transfer = [
-        ObjectId::from_str("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?,
-        ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?,
-        ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?,
-    ];
+
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(from_address, &client)
+        .await?;
+
+    let coins = client.coins(from_address, None, Default::default()).await?;
+    let objs_to_transfer: [_; 3] = coins
+        .data()
+        .iter()
+        .map(|c| *c.id())
+        .take(3)
+        .collect::<Vec<_>>()
+        .try_into()
+        .map_err(|_| eyre!("sender does not own at least 3 coin objects to transfer"))?;
 
     let mut builder = TransactionBuilder::new(from_address).with_client(&client);
 

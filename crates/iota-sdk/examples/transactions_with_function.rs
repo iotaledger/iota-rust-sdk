@@ -7,7 +7,7 @@ use iota_sdk::graphql_client::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
     let transactions = client
         .transactions(
