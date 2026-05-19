@@ -104,11 +104,11 @@ let chain_id = client.chain_id().await?;
 ```rust
 use iota_sdk::grpc_client::Client;
 
-let client = Client::new("http://localhost:9000").await?;
+let client = Client::new_devnet().await?;
 let ledger = client.ledger_service_client();
 ```
 
-Per-service clients are obtained via `ledger_service_client()`, `execution_service_client()`, `state_service_client()`, `move_package_service_client()`. Headers and message-size limits are configured with `with_headers` / `with_max_decoding_message_size`.
+`Client` exposes `new_mainnet`, `new_testnet`, `new_devnet`, `new_localnet`, and a generic `new(url)` constructor. Per-service clients are obtained via `ledger_service_client()`, `execution_service_client()`, `state_service_client()`, `move_package_service_client()`. Headers and message-size limits are configured with `with_headers` / `with_max_decoding_message_size`.
 
 ### Transaction Building
 
@@ -219,3 +219,5 @@ The `make wasm` target builds the following crates for `wasm32-unknown-unknown`:
 5. **Types in `iota-sdk-types` must stay BCS-compatible** — verify BCS and JSON round-trips when adding or changing a type. `u64` is serialized as a string in JSON for JS safety.
 6. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 7. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
+8. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
+9. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together.
