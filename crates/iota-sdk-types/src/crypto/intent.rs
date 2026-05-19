@@ -108,7 +108,8 @@ impl Intent {
     }
 
     #[cfg(feature = "serde")]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, IntentError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, IntentError> {
+        let bytes = bytes.as_ref();
         if bytes.len() != INTENT_PREFIX_LENGTH {
             return Err(IntentError::Bytes);
         }

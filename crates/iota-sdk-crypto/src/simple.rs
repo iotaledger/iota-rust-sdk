@@ -163,7 +163,8 @@ mod keypair {
         }
 
         /// Decode a SimpleKeypair from `flag || privkey` bytes
-        pub fn from_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureError> {
+            let bytes = bytes.as_ref();
             if bytes.is_empty() {
                 return Err(SignatureError::from_source("empty bytes"));
             }

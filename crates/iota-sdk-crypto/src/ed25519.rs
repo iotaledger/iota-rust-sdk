@@ -120,7 +120,8 @@ impl crate::ToFromBytes for Ed25519PrivateKey {
         self.0.to_bytes()
     }
 
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
+        let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid ed25519 key length".to_string(),
