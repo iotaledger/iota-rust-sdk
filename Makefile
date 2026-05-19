@@ -388,6 +388,10 @@ bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
 
+.PHONY: grpc
+grpc: ## Regenerate gRPC protobuf types
+	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+
 .PHONY: help
 help: ## Show this help
 	@printf "Available targets:\n"
