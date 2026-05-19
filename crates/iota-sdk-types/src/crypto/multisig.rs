@@ -38,6 +38,8 @@ pub enum MultisigError {
     InvalidInput,
     #[error("Duplicate public key")]
     DuplicatePublicKey,
+    #[error("Signatures are not in committee order")]
+    SignaturesOutOfOrder,
     #[error("No public key found for signature: {0:?}")]
     NoPublicKeyForSignature(Box<UserSignature>),
     #[error("Invalid number of signatures")]
@@ -310,29 +312,36 @@ impl MultisigAggregatedSignature {
     ///  - converts each [`UserSignature`] into a [`MultisigMemberSignature`];
     ///  - derives the `bitmap` by locating each signature's public key in the
     ///    committee, rejecting duplicates and signatures from non-members;
-    ///  - rejects empty signature lists and lists longer than the committee.
+    ///  - rejects empty signature lists and lists longer than the committee;
+    ///  - rejects `signatures` that are not in committee order.
     ///
-    /// The caller must still provide `signatures` in the same order as their
-    /// corresponding members in `committee`: for committee
-    /// `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is valid but
-    /// `[sig2, sig1, sig5]` is not.
+    /// `signatures` must appear in the same order as their corresponding
+    /// members in `committee`: for committee `[pk1, pk2, pk3, pk4, pk5]`,
+    /// `[sig1, sig2, sig5]` is accepted but `[sig2, sig1, sig5]` is rejected
+    /// with [`MultisigError::SignaturesOutOfOrder`].
     pub fn new(
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
+        let mut prev_index: Option<u8> = None;
         for signature in signatures {
             let pk = signature
                 .to_public_key()
                 .map_err(|_| MultisigError::UnallowedSignatureType)?;
-            let index = committee.get_public_key_index(&pk).ok_or(
-                MultisigError::NoPublicKeyForSignature(Box::new(signature.clone())),
-            )?;
-            if bitmap & (1 << index) != 0 {
-                return Err(MultisigError::DuplicatePublicKey);
+            let index = committee.get_public_key_index(&pk).ok_or_else(|| {
+                MultisigError::NoPublicKeyForSignature(Box::new(signature.clone()))
+            })?;
+            if let Some(prev) = prev_index {
+                match index.cmp(&prev) {
+                    std::cmp::Ordering::Less => return Err(MultisigError::SignaturesOutOfOrder),
+                    std::cmp::Ordering::Equal => return Err(MultisigError::DuplicatePublicKey),
+                    std::cmp::Ordering::Greater => {}
+                }
             }
             bitmap |= 1 << index;
+            prev_index = Some(index);
             member_signatures.push(signature.try_into()?);
         }
 
@@ -1023,6 +1032,67 @@ mod tests {
         assert_eq!(
             as_indices(0b1111111111).unwrap(),
             vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        );
+    }
+
+    /// `MultisigAggregatedSignature::new` must reject `UserSignature`s that
+    /// are not provided in committee order, since the resulting bitmap and
+    /// signatures vector would otherwise misalign at verification time.
+    #[test]
+    fn new_rejects_out_of_order_signatures() {
+        use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
+
+        let pk0 = Ed25519PublicKey::new([1; 32]);
+        let pk1 = Ed25519PublicKey::new([2; 32]);
+        let pk2 = Ed25519PublicKey::new([3; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(pk0, 1),
+                MultisigMember::new(pk1, 1),
+                MultisigMember::new(pk2, 1),
+            ],
+            2,
+        )
+        .unwrap();
+
+        let dummy_sig = Ed25519Signature::new([0; 64]);
+        let sig = |pk| {
+            UserSignature::Simple(SimpleSignature::Ed25519 {
+                signature: dummy_sig,
+                public_key: pk,
+            })
+        };
+
+        // In-order input is accepted and the bitmap matches the indices used.
+        let ok = MultisigAggregatedSignature::new(
+            vec![sig(pk0), sig(pk2)],
+            committee.clone(),
+        )
+        .unwrap();
+        assert_eq!(ok.bitmap(), 0b101);
+        assert_eq!(ok.signatures().len(), 2);
+
+        // Out-of-order input is rejected.
+        let err = MultisigAggregatedSignature::new(
+            vec![sig(pk2), sig(pk0)],
+            committee.clone(),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::SignaturesOutOfOrder),
+            "expected SignaturesOutOfOrder, got {err:?}"
+        );
+
+        // Adjacent duplicates are reported as duplicates, not as ordering errors.
+        let err = MultisigAggregatedSignature::new(
+            vec![sig(pk0), sig(pk0)],
+            committee,
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::DuplicatePublicKey),
+            "expected DuplicatePublicKey, got {err:?}"
         );
     }
 }
