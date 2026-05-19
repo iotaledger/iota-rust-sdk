@@ -110,7 +110,7 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
         signature
-            .is_valid()
+            .validate()
             .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
 
         let weight = BitmapIndices::new(signature.bitmap())

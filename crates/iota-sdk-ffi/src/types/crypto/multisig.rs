@@ -152,7 +152,7 @@ impl MultisigAggregatedSignature {
     ///    signature orderings include `[sig1, sig2, sig5]` but not `[sig2,
     ///    sig1, sig5]`);
     ///  - each contributing member's position is set in `bitmap`;
-    ///  - `committee` itself satisfies `MultisigCommittee::is_valid`.
+    ///  - `committee` itself satisfies `MultisigCommittee::validate`.
     ///
     /// Prefer `new` when starting from `UserSignature`s; this constructor is
     /// intended for deserialization paths and tests where the inputs are
@@ -174,7 +174,7 @@ impl MultisigAggregatedSignature {
     /// `UserSignature`s and a `MultisigCommittee`.
     ///
     /// Compared to `insecure_new`, this:
-    ///  - validates `committee` via `MultisigCommittee::is_valid`;
+    ///  - validates `committee` via `MultisigCommittee::validate`;
     ///  - converts each `UserSignature` into a `MultisigMemberSignature`;
     ///  - derives the `bitmap` by locating each signature's public key in the
     ///    committee, rejecting duplicates and signatures from non-members;
@@ -245,7 +245,7 @@ impl MultisigCommittee {
     /// Construct a `MultisigCommittee` without validating the result.
     ///
     /// Unlike `new`, this performs no checks: the committee may violate any
-    /// of the invariants enforced by `is_valid` (zero threshold, empty or
+    /// of the invariants enforced by `validate` (zero threshold, empty or
     /// oversized member list, zero-weight members, duplicate public keys, or
     /// a threshold exceeding the sum of weights).
     ///
@@ -262,7 +262,7 @@ impl MultisigCommittee {
         ))
     }
 
-    /// Construct a `MultisigCommittee` and verify it via `is_valid`.
+    /// Construct a `MultisigCommittee` and verify it via `validate`.
     ///
     /// Compared to `insecure_new`, this rejects committees that:
     ///  - have a zero `threshold`;
@@ -313,8 +313,8 @@ impl MultisigCommittee {
     ///  - the sum of the weights of all members must be larger than the
     ///    threshold
     ///  - contains no duplicate members
-    pub fn is_valid(&self) -> Result<()> {
-        Ok(self.0.is_valid()?)
+    pub fn validate(&self) -> Result<()> {
+        Ok(self.0.validate()?)
     }
 
     /// Derive an `Address` from this MultisigCommittee.

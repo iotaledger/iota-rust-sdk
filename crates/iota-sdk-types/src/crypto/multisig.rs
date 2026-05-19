@@ -130,7 +130,7 @@ impl MultisigCommittee {
     /// Construct a [`MultisigCommittee`] without validating the result.
     ///
     /// Unlike [`Self::new`], this performs no checks: the committee may
-    /// violate any of the invariants enforced by [`Self::is_valid`] (zero
+    /// violate any of the invariants enforced by [`Self::validate`] (zero
     /// threshold, empty or oversized member list, zero-weight members,
     /// duplicate public keys, or a threshold exceeding the sum of weights).
     ///
@@ -145,7 +145,7 @@ impl MultisigCommittee {
         Self { members, threshold }
     }
 
-    /// Construct a [`MultisigCommittee`] and verify it via [`Self::is_valid`].
+    /// Construct a [`MultisigCommittee`] and verify it via [`Self::validate`].
     ///
     /// Compared to [`Self::insecure_new`], this rejects committees that:
     ///  - have a zero `threshold`;
@@ -164,7 +164,7 @@ impl MultisigCommittee {
     ) -> Result<Self, MultisigError> {
         let committee = Self::insecure_new(members, threshold);
 
-        committee.is_valid()?;
+        committee.validate()?;
 
         Ok(committee)
     }
@@ -202,7 +202,7 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
-    pub fn is_valid(&self) -> Result<(), MultisigError> {
+    pub fn validate(&self) -> Result<(), MultisigError> {
         if self.threshold != 0
             && !self.members.is_empty()
             && self.members.len() <= MAX_COMMITTEE_SIZE
@@ -278,7 +278,7 @@ impl MultisigAggregatedSignature {
     /// Unlike [`Self::new`], this performs no checks: the `committee` is not
     /// validated, the `bitmap` is trusted as-is, and the signatures are not
     /// cross-referenced against the committee. The resulting value may be
-    /// rejected by [`Self::is_valid`] or by on-chain verification.
+    /// rejected by [`Self::validate`] or by on-chain verification.
     ///
     /// The caller must ensure that:
     ///  - `signatures` appear in the same order as their corresponding members
@@ -286,7 +286,7 @@ impl MultisigAggregatedSignature {
     ///    signature orderings include `[sig1, sig2, sig5]` but not `[sig2,
     ///    sig1, sig5]`);
     ///  - each contributing member's position is set in `bitmap`;
-    ///  - `committee` itself satisfies [`MultisigCommittee::is_valid`].
+    ///  - `committee` itself satisfies [`MultisigCommittee::validate`].
     ///
     /// Prefer [`Self::new`] when starting from [`UserSignature`]s; this
     /// constructor is intended for deserialization paths and tests where the
@@ -309,7 +309,7 @@ impl MultisigAggregatedSignature {
     /// [`UserSignature`]s and a [`MultisigCommittee`].
     ///
     /// Compared to [`Self::insecure_new`], this:
-    ///  - validates `committee` via [`MultisigCommittee::is_valid`];
+    ///  - validates `committee` via [`MultisigCommittee::validate`];
     ///  - converts each [`UserSignature`] into a [`MultisigMemberSignature`];
     ///  - derives the `bitmap` by locating each signature's public key in the
     ///    committee, rejecting duplicates and signatures from non-members;
@@ -347,13 +347,13 @@ impl MultisigAggregatedSignature {
             bytes: OnceCell::new(),
         };
 
-        signature.is_valid()?;
+        signature.validate()?;
 
         Ok(signature)
     }
 
     /// Validates the structural integrity of this aggregated signature.
-    pub fn is_valid(&self) -> Result<(), MultisigError> {
+    pub fn validate(&self) -> Result<(), MultisigError> {
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
         }
@@ -364,7 +364,7 @@ impl MultisigAggregatedSignature {
             return Err(MultisigError::InvalidBitmap(self.bitmap));
         }
 
-        self.committee.is_valid()
+        self.committee.validate()
     }
 
     /// The list of signatures from committee members
@@ -692,7 +692,7 @@ mod serialization {
                     bytes: OnceCell::new(),
                 };
                 multisig
-                    .is_valid()
+                    .validate()
                     .map_err(|_| SignatureFromBytesError::new("invalid multisig"))?;
                 Ok(multisig)
             } else {
@@ -984,7 +984,7 @@ mod tests {
             1,
         )
         .unwrap();
-        assert!(committee.is_valid().is_ok());
+        assert!(committee.validate().is_ok());
 
         let aggregated = MultisigAggregatedSignature::insecure_new(
             vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
