@@ -6,7 +6,7 @@ use iota_sdk::{
     crypto::{IotaSigner, SignatureError, ed25519::Ed25519PrivateKey},
     graphql_client::{Client, WaitForTx, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, TransactionSigner},
-    types::{Address, Transaction, TransactionEffects, UserSignature},
+    types::{Address, Transaction, UserSignature},
 };
 
 struct AsyncSigner(Ed25519PrivateKey);
@@ -41,16 +41,10 @@ async fn main() -> Result<()> {
     builder.send_iota(recipient_address, amount);
 
     let signer = AsyncSigner(private_key);
-    match builder.execute(&signer, WaitForTx::Finalized).await? {
-        TransactionEffects::V1(v1) => {
-            println!("Digest: {}", v1.transaction_digest);
-            println!("Transaction status: {:?}", v1.status);
-            println!("Effects: {v1:#?}");
-        }
-        _ => unimplemented!(
-            "a new TransactionEffects enum variant was added and needs to be handled"
-        ),
-    }
+    let effects = builder.execute(&signer, WaitForTx::Finalized).await?;
+    println!("Digest: {}", effects.digest());
+    println!("Transaction status: {:?}", effects.as_v1().status);
+    println!("Effects: {effects:#?}");
 
     Ok(())
 }

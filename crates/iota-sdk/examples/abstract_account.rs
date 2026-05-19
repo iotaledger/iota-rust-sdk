@@ -81,7 +81,6 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (publish the package)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
     println!("Publishing package: {:?}\n", effects.as_v1().status);
 
     // Get package, package metadata and account IDs from the effects
@@ -136,7 +135,6 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (link the authenticator)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
     println!(
         "Linking account to authenticate method: {:?}\n",
         effects.as_v1().status

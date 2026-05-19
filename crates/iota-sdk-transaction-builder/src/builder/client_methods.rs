@@ -225,7 +225,7 @@ impl ClientMethods for iota_graphql_client::Client {
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         let res = self.dry_run_tx(tx, true).await?;
         Ok(res.effects.map(|effects| match effects {
-            TransactionEffects::V1(v1) => v1.gas_used.gas_used(),
+            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
             _ => unimplemented!(
                 "a new TransactionEffects enum variant was added and needs to be handled"
             ),

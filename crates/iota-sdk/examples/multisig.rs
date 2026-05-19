@@ -74,7 +74,6 @@ async fn main() -> Result<()> {
     // 8. Execute
     let user_sig = UserSignature::Multisig(multisig_sig);
     let effects = client.execute_tx(&[user_sig], &tx, None).await?;
-
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");

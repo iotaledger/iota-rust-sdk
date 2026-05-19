@@ -35,7 +35,7 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Digest,
     /// The updated gas object reference, as an index into the `changed_objects`
@@ -72,7 +72,7 @@ impl Default for TransactionEffectsV1 {
         Self {
             status: ExecutionStatus::Success,
             epoch: 0,
-            gas_used: GasCostSummary::default(),
+            gas_cost_summary: GasCostSummary::default(),
             transaction_digest: Digest::default(),
             gas_object_index: None,
             events_digest: None,
@@ -338,7 +338,8 @@ mod serialization {
         status: &'a ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -357,7 +358,8 @@ mod serialization {
         status: ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -374,7 +376,7 @@ mod serialization {
     struct BinaryTransactionEffectsV1Ref<'a> {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -390,7 +392,7 @@ mod serialization {
     struct BinaryTransactionEffectsV1 {
         status: ExecutionStatus,
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -409,7 +411,7 @@ mod serialization {
             let Self {
                 status,
                 epoch,
-                gas_used,
+                gas_cost_summary,
                 transaction_digest,
                 gas_object_index,
                 events_digest,
@@ -423,7 +425,7 @@ mod serialization {
                 let readable = ReadableTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -438,7 +440,7 @@ mod serialization {
                 let binary = BinaryTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -462,7 +464,7 @@ mod serialization {
                 let ReadableTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -475,7 +477,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -489,7 +491,7 @@ mod serialization {
                 let BinaryTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -502,7 +504,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
