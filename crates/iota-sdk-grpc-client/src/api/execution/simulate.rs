@@ -77,7 +77,7 @@ impl Client {
     /// // Lazy conversion - only deserialize what you need
     /// let executed_tx = result.body().executed_transaction()?;
     /// let effects = executed_tx.effects()?.effects()?;
-    /// println!("Simulation status: {:?}", effects.status());
+    /// println!("Simulation status: {:?}", effects.as_v1().status);
     ///
     /// let output_objs = executed_tx.output_objects()?;
     /// println!("Would create {} objects", output_objs.objects.len());
