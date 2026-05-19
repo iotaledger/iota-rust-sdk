@@ -39,7 +39,7 @@ pub struct Client {
 
 impl Client {
     /// Create a new Client instance for the given gRPC server URI.
-    pub async fn new<T>(uri: T) -> Result<Self>
+    pub fn new<T>(uri: T) -> Result<Self>
     where
         T: TryInto<http::Uri>,
         T::Error: Into<BoxError>,
@@ -90,26 +90,26 @@ impl Client {
 
     /// Create a new client connected to the `mainnet` gRPC server:
     /// <https://grpc.mainnet.iota.cafe:443>.
-    pub async fn new_mainnet() -> Result<Self> {
-        Self::new(MAINNET_HOST).await
+    pub fn new_mainnet() -> Result<Self> {
+        Self::new(MAINNET_HOST)
     }
 
     /// Create a new client connected to the `testnet` gRPC server:
     /// <https://grpc.testnet.iota.cafe:443>.
-    pub async fn new_testnet() -> Result<Self> {
-        Self::new(TESTNET_HOST).await
+    pub fn new_testnet() -> Result<Self> {
+        Self::new(TESTNET_HOST)
     }
 
     /// Create a new client connected to the `devnet` gRPC server:
     /// <https://grpc.devnet.iota.cafe:443>.
-    pub async fn new_devnet() -> Result<Self> {
-        Self::new(DEVNET_HOST).await
+    pub fn new_devnet() -> Result<Self> {
+        Self::new(DEVNET_HOST)
     }
 
     /// Create a new client connected to a `localnet` gRPC server:
     /// <http://localhost:9000>.
-    pub async fn new_localnet() -> Result<Self> {
-        Self::new(LOCAL_HOST).await
+    pub fn new_localnet() -> Result<Self> {
+        Self::new(LOCAL_HOST)
     }
 
     pub fn uri(&self) -> &http::Uri {
