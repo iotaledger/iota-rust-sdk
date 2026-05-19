@@ -1119,7 +1119,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 }
                 // Keep the largest-balance candidates within the protocol
                 // cap.
-                top.sort_by(|a, b| b.0.cmp(&a.0));
+                top.sort_by_key(|c| std::cmp::Reverse(c.0));
                 top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
 
                 let done = match target_budget {
