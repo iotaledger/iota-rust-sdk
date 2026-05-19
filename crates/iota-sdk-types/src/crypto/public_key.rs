@@ -80,15 +80,15 @@ impl PublicKey {
         }
     }
 
-    pub fn to_base64(&self) -> String {
+    pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes: Vec<u8> = Vec::new();
         bytes.extend_from_slice(&[self.scheme() as u8]);
         bytes.extend_from_slice(self.as_ref());
-        base64ct::Base64::encode_string(&bytes)
+        bytes
     }
 
-    pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
-        let bytes = Base64::decode_vec(s)?;
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, PublicKeyError> {
+        let bytes = bytes.as_ref();
 
         match bytes.first() {
             Some(x) => {
@@ -113,6 +113,14 @@ impl PublicKey {
             }
             _ => Err(PublicKeyError::InvalidInput),
         }
+    }
+
+    pub fn to_base64(&self) -> String {
+        Base64::encode_string(&self.to_bytes())
+    }
+
+    pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
+        Self::from_bytes(&Base64::decode_vec(s)?)
     }
 }
 
