@@ -70,16 +70,18 @@ impl PublicKey {
         Passkey(PasskeyPublicKey),
     );
 
+    /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         match self {
-            PublicKey::Ed25519(ed25519_public_key) => ed25519_public_key.scheme(),
-            PublicKey::Secp256k1(secp256k1_public_key) => secp256k1_public_key.scheme(),
-            PublicKey::Secp256r1(secp256r1_public_key) => secp256r1_public_key.scheme(),
+            PublicKey::Ed25519(pk) => pk.scheme(),
+            PublicKey::Secp256k1(pk) => pk.scheme(),
+            PublicKey::Secp256r1(pk) => pk.scheme(),
             PublicKey::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
-            PublicKey::Passkey(passkey_public_key) => passkey_public_key.scheme(),
+            PublicKey::Passkey(pk) => pk.scheme(),
         }
     }
 
+    /// Encode this public key as the scheme flag byte followed by the raw key bytes
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes: Vec<u8> = Vec::new();
         bytes.extend_from_slice(&[self.scheme() as u8]);
@@ -87,6 +89,7 @@ impl PublicKey {
         bytes
     }
 
+    /// Decode a public key from its scheme-flagged byte representation
     pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, PublicKeyError> {
         let bytes = bytes.as_ref();
 
@@ -102,7 +105,6 @@ impl PublicKey {
                     let pk = Secp256r1PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256r1(pk))
                 } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
-                    // TODO this or an error?
                     Ok(Self::ZkLoginDeprecated)
                 } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
                     let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..])?);
@@ -115,10 +117,12 @@ impl PublicKey {
         }
     }
 
+    /// Encode this public key as a base64 string of its scheme-flagged byte representation
     pub fn to_base64(&self) -> String {
         Base64::encode_string(&self.to_bytes())
     }
 
+    /// Decode a public key from a base64 string of its scheme-flagged byte representation
     pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
         Self::from_bytes(&Base64::decode_vec(s)?)
     }
