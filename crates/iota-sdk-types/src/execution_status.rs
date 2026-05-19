@@ -17,7 +17,7 @@ use super::{Address, Digest, Identifier, ObjectId};
 /// success = %d00
 /// failure = %d01 execution-error (option u64)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -206,7 +206,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 // Reordering or inserting variants will break protocol compatibility.
 // New variants MUST be added at the end.
 // The `execution_error_bcs_discriminants` snapshot test enforces this.
-#[derive(Eq, PartialEq, Clone, Debug, Error, strum::AsRefStr)]
+#[derive(Clone, Debug, Eq, Error, PartialEq, strum::AsRefStr)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ExecutionError {
@@ -448,8 +448,8 @@ impl ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveLocation {
@@ -522,7 +522,7 @@ impl core::fmt::Display for MoveLocation {
 /// invalid-object-by-mut-ref                   = %d10
 /// shared-object-operation-not-allowed         = %d11
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
+#[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -637,7 +637,7 @@ impl CommandArgumentError {
 /// unknown-upgrade-policy      = %d04 u8
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
+#[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -687,10 +687,10 @@ impl PackageUpgradeError {
 /// type-not-found = %d00
 /// constraint-not-satisfied = %d01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug, Hash, Error)]
+#[derive(Clone, Copy, Debug, Eq, Error, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -716,7 +716,7 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "ExecutionStatus")]
     struct ReadableExecutionStatus {
         success: bool,
@@ -724,14 +724,14 @@ mod serialization {
         status: Option<FailureStatus>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct FailureStatus {
         error: ExecutionError,
         #[serde(skip_serializing_if = "Option::is_none")]
         command: Option<u16>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "ExecutionStatus")]
     enum BinaryExecutionStatus {
         Success,
@@ -807,7 +807,7 @@ mod serialization {
 
     // WARNING: Variant order must match `ExecutionError`. Do not reorder.
     // New variants MUST be added at the end.
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "error", rename_all = "snake_case")]
     enum ReadableExecutionError {
         InsufficientGas,
@@ -904,7 +904,7 @@ mod serialization {
 
     // WARNING: Variant order is protocol-significant — it determines the BCS wire
     // format. Do not reorder. New variants MUST be added at the end.
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(
         feature = "bcs-schema",
         derive(iota_bcs_schema::BcsSchema),
@@ -1483,7 +1483,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableCommandArgumentError {
         TypeMismatch,
@@ -1501,7 +1501,7 @@ mod serialization {
         InvalidArgumentArity,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "CommandArgumentError")]
     enum BinaryCommandArgumentError {
         TypeMismatch,
@@ -1675,7 +1675,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadablePackageUpgradeError {
         UnableToFetchPackage {
@@ -1697,7 +1697,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "PackageUpgradeError")]
     enum BinaryPackageUpgradeError {
         UnableToFetchPackage {

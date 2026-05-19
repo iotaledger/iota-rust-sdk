@@ -20,7 +20,7 @@ impl GraphQLClient {
     }
 }
 
-#[derive(Debug, uniffi::Record, serde::Serialize)]
+#[derive(Debug, serde::Serialize, uniffi::Record)]
 pub struct Query {
     pub query: String,
     #[uniffi(default = None)]

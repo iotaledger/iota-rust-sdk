@@ -26,7 +26,7 @@ use crate::{
 ///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
 ///                          (option digest)                    ; auxiliary-data-digest
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
@@ -94,8 +94,8 @@ impl TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -121,8 +121,8 @@ pub struct ChangedObject {
 /// unchanged-shared-object = object-id               ; object-id
 ///                           unchanged-shared-kind   ; kind
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnchangedSharedObject {
@@ -143,7 +143,7 @@ pub struct UnchangedSharedObject {
 ///                       / %d03 u64           ; Cancelled
 ///                       / %d04               ; PerEpochConfig
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -188,7 +188,7 @@ impl UnchangedSharedKind {
 /// object-in = %d00           ; Missing
 ///           / %d01 u64 digest owner   ; Data
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -253,7 +253,7 @@ impl ObjectIn {
 ///            / %d01 digest owner   ; ObjectWrite
 ///            / %d02 u64 digest     ; PackageWrite
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -330,10 +330,10 @@ impl ObjectOut {
 ///              / %d01   ; Created
 ///              / %d02   ; Deleted
 /// ```
-#[derive(Eq, PartialEq, Copy, Clone, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -537,7 +537,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
@@ -560,7 +560,7 @@ mod serialization {
         PerEpochConfig,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "UnchangedSharedKind")]
     enum BinaryUnchangedSharedKind {
         ReadOnlyRoot { version: Version, digest: Digest },
@@ -658,7 +658,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectIn {
         Missing,
@@ -670,7 +670,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     enum BinaryObjectIn {
         Missing,
         Data {
@@ -752,7 +752,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
         Missing,
@@ -767,7 +767,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {

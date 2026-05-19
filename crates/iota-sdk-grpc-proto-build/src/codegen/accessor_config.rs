@@ -8,7 +8,7 @@ use prost_types::FieldDescriptorProto;
 
 bitflags! {
     /// Flags for different types of accessor methods to generate
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     pub struct AccessorTypes: u8 {
         /// Generate `field()` getter returning value or default
         const GETTER = 0b0000_0001;
