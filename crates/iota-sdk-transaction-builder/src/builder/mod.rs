@@ -12,7 +12,7 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, Transaction, TransactionEffects,
+    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
@@ -1092,53 +1092,38 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            // Page through gas coins owned by the gas owner, keeping the
-            // running top set by balance. Stop fetching as soon as the
-            // running top covers the requested budget — this is the key
-            // bound that keeps the request size small even on senders that
-            // own thousands of coins. The hard cap on retained candidates
-            // mirrors the protocol's max-gas-payment-objects limit.
+            // Pull a page of gas coins owned by the gas owner. Prefer
+            // larger-balance coins first and pin only as many as the
+            // requested budget needs, capped by the protocol limit. Using a
+            // single page keeps the pin count bounded by the server's max
+            // page size, which matters because each pinned gas coin
+            // contributes a ref to the GraphQL query part (~150 bytes per
+            // coin, and the server enforces a 5000-byte cap on that part).
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
+            let mut candidates: Vec<(u64, ObjectReference)> = self
+                .client
+                .objects(
+                    Some(StructTag::new_gas_coin().into()),
+                    Some(owner),
+                    None,
+                    true,
+                    None,
+                    None,
+                )
+                .await
+                .map_err(Error::client)?
+                .into_iter()
+                .filter(|obj| !unusable_object_ids.contains(&obj.object_id()))
+                .filter_map(|obj| {
+                    let coin = Coin::try_from_object(&obj).ok()?;
+                    Some((coin.balance(), obj.object_ref()))
+                })
+                .collect();
+            candidates.sort_by_key(|c| std::cmp::Reverse(c.0));
+
             let target_budget = self.data.gas_budget;
-            let mut top: Vec<(u64, ObjectReference)> = Vec::new();
-            let mut cursor: Option<String> = None;
-            loop {
-                let (page, next_cursor) = self
-                    .client
-                    .gas_coins_page(owner, cursor)
-                    .await
-                    .map_err(Error::client)?;
-                for obj in page {
-                    if unusable_object_ids.contains(&obj.object_id()) {
-                        continue;
-                    }
-                    let Ok(coin) = Coin::try_from_object(&obj) else {
-                        continue;
-                    };
-                    top.push((coin.balance(), obj.object_ref()));
-                }
-                // Keep the largest-balance candidates within the protocol
-                // cap.
-                top.sort_by_key(|c| std::cmp::Reverse(c.0));
-                top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
-
-                let done = match target_budget {
-                    Some(budget) => {
-                        top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
-                    }
-                    // No explicit budget: cap on count so we don't drain
-                    // pages forever on senders with thousands of coins.
-                    None => top.len() >= MAX_AUTO_GAS_PAYMENT_OBJECTS,
-                };
-
-                if done || next_cursor.is_none() {
-                    break;
-                }
-                cursor = next_cursor;
-            }
-
             let mut accumulated: u64 = 0;
-            for (balance, obj_ref) in top {
+            for (balance, obj_ref) in candidates.into_iter().take(MAX_AUTO_GAS_PAYMENT_OBJECTS) {
                 self.set_input(
                     InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
                     true,
