@@ -81,7 +81,8 @@ impl PublicKey {
         }
     }
 
-    /// Encode this public key as the scheme flag byte followed by the raw key bytes
+    /// Encode this public key as the scheme flag byte followed by the raw key
+    /// bytes
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut bytes: Vec<u8> = Vec::new();
         bytes.extend_from_slice(&[self.scheme() as u8]);
@@ -117,12 +118,14 @@ impl PublicKey {
         }
     }
 
-    /// Encode this public key as a base64 string of its scheme-flagged byte representation
+    /// Encode this public key as a base64 string of its scheme-flagged byte
+    /// representation
     pub fn to_base64(&self) -> String {
         Base64::encode_string(&self.to_bytes())
     }
 
-    /// Decode a public key from a base64 string of its scheme-flagged byte representation
+    /// Decode a public key from a base64 string of its scheme-flagged byte
+    /// representation
     pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
         Self::from_bytes(&Base64::decode_vec(s)?)
     }

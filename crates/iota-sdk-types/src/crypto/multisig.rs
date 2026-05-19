@@ -332,7 +332,7 @@ impl MultisigAggregatedSignature {
                 .map_err(|_| MultisigError::UnallowedSignatureType)?;
             let index = committee
                 .get_public_key_index(&pk)
-                .ok_or_else(|| MultisigError::NoPublicKeyForSignature(sig_index))?;
+                .ok_or(MultisigError::NoPublicKeyForSignature(sig_index))?;
             if let Some(prev) = prev_index {
                 match index.cmp(&prev) {
                     std::cmp::Ordering::Less => return Err(MultisigError::SignaturesOutOfOrder),
