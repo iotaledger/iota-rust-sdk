@@ -146,6 +146,12 @@ impl From<reqwest::Error> for Error {
     }
 }
 
+impl From<serde_json::Error> for Error {
+    fn from(error: serde_json::Error) -> Self {
+        Self::from_error(Kind::Deserialization, error)
+    }
+}
+
 impl From<url::ParseError> for Error {
     fn from(error: url::ParseError) -> Self {
         Self::from_error(Kind::Parse, error)

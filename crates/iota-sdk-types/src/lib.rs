@@ -181,7 +181,7 @@ pub use validator::{
 };
 pub use version::Version;
 
-#[cfg(all(test, feature = "serde", feature = "proptest"))]
+#[cfg(all(test, feature = "serde", feature = "schemars", feature = "proptest"))]
 mod serialization_proptests;
 
 /// Returns the next array in byte-increasing order.
