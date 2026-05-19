@@ -40,8 +40,8 @@ pub enum MultisigError {
     DuplicatePublicKey,
     #[error("Signatures are not in committee order")]
     SignaturesOutOfOrder,
-    #[error("No public key found for signature: {0:?}")]
-    NoPublicKeyForSignature(Box<UserSignature>),
+    #[error("No public key found for signature at index: {0}")]
+    NoPublicKeyForSignature(usize),
     #[error("Invalid number of signatures")]
     InvalidSignatureNumber,
     #[error("Invalid bitmap value: {0}")]
@@ -326,13 +326,13 @@ impl MultisigAggregatedSignature {
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
         let mut prev_index: Option<u8> = None;
-        for signature in signatures {
+        for (sig_index, signature) in signatures.into_iter().enumerate() {
             let pk = signature
                 .to_public_key()
                 .map_err(|_| MultisigError::UnallowedSignatureType)?;
-            let index = committee.get_public_key_index(&pk).ok_or_else(|| {
-                MultisigError::NoPublicKeyForSignature(Box::new(signature.clone()))
-            })?;
+            let index = committee
+                .get_public_key_index(&pk)
+                .ok_or_else(|| MultisigError::NoPublicKeyForSignature(sig_index))?;
             if let Some(prev) = prev_index {
                 match index.cmp(&prev) {
                     std::cmp::Ordering::Less => return Err(MultisigError::SignaturesOutOfOrder),
@@ -1065,31 +1065,22 @@ mod tests {
         };
 
         // In-order input is accepted and the bitmap matches the indices used.
-        let ok = MultisigAggregatedSignature::new(
-            vec![sig(pk0), sig(pk2)],
-            committee.clone(),
-        )
-        .unwrap();
+        let ok =
+            MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk2)], committee.clone()).unwrap();
         assert_eq!(ok.bitmap(), 0b101);
         assert_eq!(ok.signatures().len(), 2);
 
         // Out-of-order input is rejected.
-        let err = MultisigAggregatedSignature::new(
-            vec![sig(pk2), sig(pk0)],
-            committee.clone(),
-        )
-        .unwrap_err();
+        let err = MultisigAggregatedSignature::new(vec![sig(pk2), sig(pk0)], committee.clone())
+            .unwrap_err();
         assert!(
             matches!(err, MultisigError::SignaturesOutOfOrder),
             "expected SignaturesOutOfOrder, got {err:?}"
         );
 
         // Adjacent duplicates are reported as duplicates, not as ordering errors.
-        let err = MultisigAggregatedSignature::new(
-            vec![sig(pk0), sig(pk0)],
-            committee,
-        )
-        .unwrap_err();
+        let err =
+            MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk0)], committee).unwrap_err();
         assert!(
             matches!(err, MultisigError::DuplicatePublicKey),
             "expected DuplicatePublicKey, got {err:?}"
