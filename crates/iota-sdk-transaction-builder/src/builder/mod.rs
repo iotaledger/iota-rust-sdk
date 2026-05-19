@@ -11,7 +11,7 @@ use std::{
 
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
@@ -44,6 +44,12 @@ pub mod signer;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
+
+/// Upper bound on the number of gas coins pinned by automatic gas selection
+/// when no explicit `gas(...)` pin is supplied. Keeps the resulting request
+/// small enough to fit within typical RPC limits (e.g. the GraphQL `query
+/// part` cap of 5000 bytes).
+const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 16;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -1085,7 +1091,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            for coin in self
+            let mut candidates: Vec<(u64, ObjectReference)> = self
                 .client
                 .objects(
                     Some(StructTag::new_gas_coin().into()),
@@ -1097,12 +1103,29 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 )
                 .await
                 .map_err(Error::client)?
-            {
-                if !unusable_object_ids.contains(&coin.object_id()) {
-                    self.set_input(
-                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                        true,
-                    );
+                .into_iter()
+                .filter(|obj| !unusable_object_ids.contains(&obj.object_id()))
+                .filter_map(|obj| {
+                    let balance = Coin::try_from_object(&obj).ok().map(|c| c.balance())?;
+                    Some((balance, obj.object_ref()))
+                })
+                .collect();
+            // Prefer fewer-larger coins so we hit the requested budget with as
+            // few inputs as possible.
+            candidates.sort_by(|a, b| b.0.cmp(&a.0));
+
+            let target_budget = self.data.gas_budget;
+            let mut accumulated: u64 = 0;
+            for (balance, obj_ref) in candidates.into_iter().take(MAX_AUTO_GAS_PAYMENT_OBJECTS) {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    true,
+                );
+                accumulated = accumulated.saturating_add(balance);
+                if let Some(budget) = target_budget
+                    && accumulated >= budget
+                {
+                    break;
                 }
             }
         }
