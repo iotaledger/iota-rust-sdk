@@ -692,4 +692,65 @@ mod tests {
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
     }
+
+    /// Verifies auto gas-payment selection still works for a sender that
+    /// owns thousands of gas coins — the scenario from issue #1160 where the
+    /// builder previously pinned every coin and blew past the GraphQL
+    /// `query part` limit. We first fund the sender with 2048 fresh coins
+    /// (the protocol's per-tx object-creation cap) via repeated
+    /// `split_coins` commands, each capped at 512 amounts since a single
+    /// command tops out at that many arguments.
+    #[tokio::test]
+    async fn test_auto_gas_selection_with_many_coins() {
+        use crate::unresolved::Argument;
+
+        // Funding phase: explicit gas pin from helper_setup avoids the
+        // auto-selection code path for the funding tx itself.
+        let (mut tx, sender, pk, coins) = helper_setup().await;
+        let client = tx.get_client().clone();
+
+        // Use a non-gas faucet coin as the source for all splits.
+        let source = coins.first().unwrap().id;
+
+        const SPLITS_PER_CMD: usize = 512;
+        const NUM_SPLIT_CMDS: usize = 4; // 4 * 512 = 2048 new coins
+
+        for round in 0..NUM_SPLIT_CMDS {
+            tx.split_coins(source, vec![1u64; SPLITS_PER_CMD]);
+            // Each (split_coins, transfer_objects) pair adds two commands;
+            // the split's index is the even slot in the pair.
+            let split_cmd = (round * 2) as u16;
+            let outputs: Vec<Argument> = (0..SPLITS_PER_CMD as u16)
+                .map(|i| Argument::NestedResult(split_cmd, i))
+                .collect();
+            tx.transfer_objects(sender, outputs);
+        }
+
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+        check_effects_status_success(effects).await;
+
+        // Sanity-check: the sender now owns enough coins to have triggered
+        // the historical "request too large" failure on auto-selection.
+        let total = client
+            .coins(sender, None, PaginationFilter::default())
+            .await
+            .unwrap()
+            .data()
+            .len();
+        assert!(
+            total >= 2048,
+            "expected the sender to own at least 2048 coins; got {total}"
+        );
+
+        // Exercise phase: build a fresh tx with no explicit gas pin so the
+        // builder has to auto-select. With pagination + budget-aware
+        // selection this should succeed even with thousands of candidate
+        // coins.
+        let mut tx2 = TransactionBuilder::new(sender).with_client(client);
+        let recipient = Address::generate(rand::thread_rng());
+        tx2.send_iota(recipient, 1_000u64);
+
+        let effects = tx2.execute(&pk, WaitForTx::Finalized).await;
+        check_effects_status_success(effects).await;
+    }
 }

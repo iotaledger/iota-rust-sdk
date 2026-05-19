@@ -42,6 +42,14 @@ impl ClientMethods for GraphQLClient {
         .await
     }
 
+    async fn gas_coins_page(
+        &self,
+        owner: Address,
+        cursor: Option<String>,
+    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
+        ClientMethods::gas_coins_page(&*self.0.read().await, owner, cursor).await
+    }
+
     async fn transaction(
         &self,
         digest: Digest,

@@ -7,8 +7,8 @@ use iota_graphql_client::{
     query_types::ObjectFilter,
 };
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature, Version,
+    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, TypeTag, UserSignature, Version,
 };
 
 /// A trait which defines methods needed from the client for the Transaction
@@ -36,6 +36,34 @@ pub trait ClientMethods {
         cursor: Option<String>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>>;
+
+    /// Fetch one page of gas-coin objects owned by `owner`, returning the
+    /// page contents and a cursor for the next page (when one exists).
+    ///
+    /// Used by the transaction builder's automatic gas-payment selection to
+    /// page through gas coins, stopping once cumulative balance meets the
+    /// target budget. The default implementation falls back to
+    /// [`Self::objects`] and reports no next cursor; clients with native
+    /// pagination support should override it.
+    fn gas_coins_page(
+        &self,
+        owner: Address,
+        cursor: Option<String>,
+    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
+        async move {
+            let objects = self
+                .objects(
+                    Some(StructTag::new_gas_coin().into()),
+                    Some(owner),
+                    None,
+                    true,
+                    cursor,
+                    None,
+                )
+                .await?;
+            Ok((objects, None))
+        }
+    }
 
     /// Fetch a transaction
     fn transaction(
@@ -106,6 +134,14 @@ impl<T: ClientMethods> ClientMethods for &T {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn gas_coins_page(
+        &self,
+        owner: Address,
+        cursor: Option<String>,
+    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
+        (*self).gas_coins_page(owner, cursor)
     }
 
     fn transaction(
@@ -204,6 +240,33 @@ impl ClientMethods for iota_graphql_client::Client {
             .data)
     }
 
+    async fn gas_coins_page(
+        &self,
+        owner: Address,
+        cursor: Option<String>,
+    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
+        let page = self
+            .objects(
+                ObjectFilter {
+                    type_: Some(StructTag::new_gas_coin().to_string()),
+                    owner: Some(owner),
+                    object_ids: None,
+                },
+                PaginationFilter {
+                    direction: Direction::Forward,
+                    cursor,
+                    limit: None,
+                },
+            )
+            .await?;
+        let (page_info, data) = page.into_parts();
+        let next = page_info
+            .has_next_page
+            .then_some(page_info.end_cursor)
+            .flatten();
+        Ok((data, next))
+    }
+
     async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
         self.transaction(digest).await
     }
@@ -272,6 +335,14 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
         self.as_ref()
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn gas_coins_page(
+        &self,
+        owner: Address,
+        cursor: Option<String>,
+    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
+        self.as_ref().gas_coins_page(owner, cursor)
     }
 
     fn transaction(

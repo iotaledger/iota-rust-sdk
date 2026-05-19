@@ -12,7 +12,7 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
+    ProgrammableTransaction, SharedObjectReference, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
@@ -45,11 +45,12 @@ pub mod signer;
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
-/// Upper bound on the number of gas coins pinned by automatic gas selection
-/// when no explicit `gas(...)` pin is supplied. Keeps the resulting request
-/// small enough to fit within typical RPC limits (e.g. the GraphQL `query
-/// part` cap of 5000 bytes).
-const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 16;
+/// Upper bound on the number of gas-coin inputs pinned by automatic gas
+/// selection when no explicit `gas(...)` pin is supplied. Matches the
+/// protocol-level maximum on gas payment objects per transaction; in
+/// practice we pick fewer-larger coins first and stop early once the
+/// requested budget is covered, so this is only a hard ceiling.
+const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 256;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -1091,32 +1092,48 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            let mut candidates: Vec<(u64, ObjectReference)> = self
-                .client
-                .objects(
-                    Some(StructTag::new_gas_coin().into()),
-                    Some(self.data.sponsor.unwrap_or(self.data.sender)),
-                    None,
-                    true,
-                    None,
-                    None,
-                )
-                .await
-                .map_err(Error::client)?
-                .into_iter()
-                .filter(|obj| !unusable_object_ids.contains(&obj.object_id()))
-                .filter_map(|obj| {
-                    let balance = Coin::try_from_object(&obj).ok().map(|c| c.balance())?;
-                    Some((balance, obj.object_ref()))
-                })
-                .collect();
-            // Prefer fewer-larger coins so we hit the requested budget with as
-            // few inputs as possible.
-            candidates.sort_by(|a, b| b.0.cmp(&a.0));
-
+            // Page through gas coins owned by the gas owner, keeping the
+            // running top set by balance. Stop fetching as soon as the
+            // running top covers the requested budget — this is the key
+            // bound that keeps the request size small even on senders that
+            // own thousands of coins. The hard cap on retained candidates
+            // mirrors the protocol's max-gas-payment-objects limit.
+            let owner = self.data.sponsor.unwrap_or(self.data.sender);
             let target_budget = self.data.gas_budget;
+            let mut top: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut cursor: Option<String> = None;
+            loop {
+                let (page, next_cursor) = self
+                    .client
+                    .gas_coins_page(owner, cursor)
+                    .await
+                    .map_err(Error::client)?;
+                for obj in page {
+                    if unusable_object_ids.contains(&obj.object_id()) {
+                        continue;
+                    }
+                    let Ok(coin) = Coin::try_from_object(&obj) else {
+                        continue;
+                    };
+                    top.push((coin.balance(), obj.object_ref()));
+                }
+                // Keep the largest-balance candidates within the protocol
+                // cap.
+                top.sort_by(|a, b| b.0.cmp(&a.0));
+                top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
+
+                let covers_budget = target_budget.is_some_and(|budget| {
+                    top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
+                });
+
+                if covers_budget || next_cursor.is_none() {
+                    break;
+                }
+                cursor = next_cursor;
+            }
+
             let mut accumulated: u64 = 0;
-            for (balance, obj_ref) in candidates.into_iter().take(MAX_AUTO_GAS_PAYMENT_OBJECTS) {
+            for (balance, obj_ref) in top {
                 self.set_input(
                     InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
                     true,
