@@ -258,7 +258,7 @@ impl Address {
         }
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, AddressParseError> {
         let bytes = bytes.as_ref();
         <[u8; Self::LENGTH]>::try_from(bytes)
             .map_err(|_| AddressParseError::InvalidByteLength {

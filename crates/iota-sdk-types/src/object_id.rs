@@ -121,7 +121,7 @@ impl ObjectId {
         Self(address)
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, AddressParseError> {
         Address::from_bytes(bytes).map(Self)
     }
 
