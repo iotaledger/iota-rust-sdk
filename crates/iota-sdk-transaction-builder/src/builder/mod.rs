@@ -12,7 +12,7 @@ use std::{
 use iota_graphql_client::Client;
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, Transaction, TransactionEffects,
+    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
@@ -46,12 +46,27 @@ const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
 /// Upper bound on the number of gas-coin inputs pinned by automatic gas
-/// selection when no explicit `gas(...)` pin is supplied. Each pinned gas
-/// coin contributes ~170 bytes to the GraphQL query part, which the server
-/// caps at 5000 bytes — so the safe ceiling is well below the protocol's
-/// max-gas-payment-objects limit. Selection prefers fewer-larger coins
-/// first and stops early once the requested budget is covered, so this
-/// only matters when the sender has many small coins.
+/// selection when no explicit `gas(...)` pin is supplied.
+///
+/// Auto-selection always dry-runs the tx for budget estimation, and
+/// `dryRunTransactionBlock` lifts gas refs out of `txBytes` into the
+/// GraphQL `TransactionMetadata.gas_objects` input — ~170 bytes per ref
+/// against the server's 5000-byte `max_query_payload_size`. The protocol
+/// cap (`gas().len() < max_gas_payment_objects`, configured at 256, so
+/// 255 inclusive) is much higher; this query-payload budget is what
+/// binds here.
+///
+/// The cap does not apply when callers pin gas via
+/// [`TransactionBuilder::gas`] *and* set [`TransactionBuilder::gas_budget`]
+/// (which skips the auto-estimate dry-run). `executeTransactionBlock`
+/// BCS-encodes the full tx into `txBytes` (~128 KiB budget), so pinning
+/// up to 255 coins works — useful for consolidating many small coins,
+/// since the gas-smashing prologue merges them into the primary gas coin
+/// during execution.
+///
+/// Selection prefers fewer-larger coins first and stops early once the
+/// budget is covered, so this cap only matters when the sender has many
+/// small coins.
 const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 24;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -1102,11 +1117,18 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
             let target_budget = self.data.gas_budget;
             let mut top: Vec<(u64, ObjectReference)> = Vec::new();
-            let mut cursor: Option<String> = None;
+            let mut cursor: Option<Vec<u8>> = None;
             loop {
                 let (page, next_cursor) = self
                     .client
-                    .gas_coins_page(owner, cursor)
+                    .objects(
+                        Some(StructTag::new_gas_coin().into()),
+                        Some(owner),
+                        None,
+                        true,
+                        cursor,
+                        None,
+                    )
                     .await
                     .map_err(Error::client)?;
                 for obj in page {

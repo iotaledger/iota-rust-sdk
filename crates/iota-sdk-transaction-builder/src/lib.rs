@@ -290,7 +290,7 @@ pub use iota_graphql_client::{
 pub use self::{
     builder::{
         TransactionBuilder,
-        client_methods::ClientMethods,
+        client_methods::{ClientMethods, ObjectsPage},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
@@ -312,7 +312,7 @@ mod tests {
         ObjectType, Transaction, TransactionEffects, UpgradePolicy, Version,
     };
 
-    use crate::{ClientMethods, TransactionBuilder, assigned, error::Error};
+    use crate::{ClientMethods, ObjectsPage, TransactionBuilder, assigned, error::Error};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -718,9 +718,11 @@ mod tests {
             owner: Option<Address>,
             object_ids: Option<Vec<ObjectId>>,
             ascending: bool,
-            cursor: Option<String>,
+            cursor: Option<Vec<u8>>,
             limit: Option<usize>,
-        ) -> Result<Vec<iota_types::Object>, Self::Error> {
+        ) -> Result<ObjectsPage, Self::Error> {
+            self.gas_page_calls
+                .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
             ClientMethods::objects(
                 &self.inner,
                 type_tag,
@@ -731,16 +733,6 @@ mod tests {
                 limit,
             )
             .await
-        }
-
-        async fn gas_coins_page(
-            &self,
-            owner: Address,
-            cursor: Option<String>,
-        ) -> Result<(Vec<iota_types::Object>, Option<String>), Self::Error> {
-            self.gas_page_calls
-                .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-            ClientMethods::gas_coins_page(&self.inner, owner, cursor).await
         }
 
         async fn transaction(
@@ -872,6 +864,105 @@ mod tests {
         assert!(
             pages >= 2,
             "expected auto gas-selection to fetch at least 2 pages of gas coins; got {pages}"
+        );
+    }
+
+    /// Pin 255 gas coins (the protocol cap — `gas().len() <
+    /// max_gas_payment_objects`, configured at 256). The
+    /// `MAX_AUTO_GAS_PAYMENT_OBJECTS` cap (24) only binds the
+    /// auto-selection path, which dry-runs the tx and carries gas refs in
+    /// the GraphQL query metadata (5 KB `max_query_payload_size`).
+    /// Pinning gas via `.gas(...)` *and* setting `.gas_budget(...)` skips
+    /// the auto-estimate dry-run, so execution BCS-encodes everything
+    /// into `txBytes` (~128 KiB) and the gas-smashing prologue
+    /// consolidates all 255 pinned coins into one.
+    #[tokio::test]
+    async fn test_manual_gas_pin_consolidates_255_coins() {
+        use iota_graphql_client::pagination::Direction;
+
+        use crate::unresolved::Argument;
+
+        let (mut tx, sender, pk, coins) = helper_setup().await;
+        let client = tx.get_client().clone();
+
+        // helper_setup pinned coins.last() as gas; split a different
+        // faucet coin so the source isn't already reserved.
+        let source = coins.first().unwrap().id;
+
+        // 255 outputs fits in a single split_coins command (511-arg cap,
+        // minus the source-coin slot). PER_COIN × 255 must fit in the
+        // source coin and exceed the gas budget below.
+        const NUM_GAS_COINS: usize = 255;
+        const PER_COIN: u64 = 10_000_000;
+        const GAS_BUDGET: u64 = 100_000_000;
+
+        tx.split_coins(source, vec![PER_COIN; NUM_GAS_COINS]);
+        tx.transfer_objects(
+            sender,
+            (0..NUM_GAS_COINS as u16)
+                .map(|i| Argument::NestedResult(0, i))
+                .collect::<Vec<_>>(),
+        );
+        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await).await;
+
+        async fn list_coins(client: &Client, owner: Address) -> Vec<(ObjectId, u64)> {
+            let mut out = Vec::new();
+            let mut cursor = None;
+            loop {
+                let page = client
+                    .coins(
+                        owner,
+                        None,
+                        PaginationFilter {
+                            direction: Direction::Forward,
+                            cursor: cursor.clone(),
+                            limit: None,
+                        },
+                    )
+                    .await
+                    .unwrap();
+                out.extend(page.data().iter().map(|c| (*c.id(), c.balance())));
+                if !page.page_info().has_next_page {
+                    break;
+                }
+                cursor = page.page_info().end_cursor.clone();
+            }
+            out
+        }
+
+        let before = list_coins(&client, sender).await;
+        let split_ids: Vec<ObjectId> = before
+            .iter()
+            .filter(|(_, b)| *b == PER_COIN)
+            .take(NUM_GAS_COINS)
+            .map(|(id, _)| *id)
+            .collect();
+        assert_eq!(
+            split_ids.len(),
+            NUM_GAS_COINS,
+            "expected {NUM_GAS_COINS} split coins; got {}",
+            split_ids.len(),
+        );
+
+        // Explicit gas_budget makes finish_internal skip estimate_tx_budget
+        // — its dry-run would otherwise exceed `max_query_payload_size`.
+        let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
+        let recipient = Address::generate(rand::thread_rng());
+        tx2.gas(split_ids)
+            .gas_budget(GAS_BUDGET)
+            .send_iota(recipient, 1_000u64);
+        check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await).await;
+
+        // send_iota's output belongs to `recipient`, so the only delta on
+        // sender's side is the 255 → 1 smashing.
+        let before_count = before.len();
+        let after_count = list_coins(&client, sender).await.len();
+        let expected_drop = NUM_GAS_COINS - 1;
+        assert_eq!(
+            before_count - after_count,
+            expected_drop,
+            "expected sender's coin count to drop by {expected_drop} after smashing; \
+             went from {before_count} to {after_count}",
         );
     }
 }

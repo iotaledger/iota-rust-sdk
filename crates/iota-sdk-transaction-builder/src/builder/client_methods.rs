@@ -7,9 +7,13 @@ use iota_graphql_client::{
     query_types::ObjectFilter,
 };
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
-    TransactionEffects, TypeTag, UserSignature, Version,
+    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
+    UserSignature, Version,
 };
+
+/// One page of objects plus an optional cursor for the next page. See
+/// [`ClientMethods::objects`].
+pub type ObjectsPage = (Vec<Object>, Option<Vec<u8>>);
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
@@ -26,44 +30,22 @@ pub trait ClientMethods {
         version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
-    /// Fetch objects
+    /// Fetch one page of objects matching the filter, returning the page
+    /// contents and a continuation cursor (when more pages exist).
+    ///
+    /// The cursor is opaque to callers — both GraphQL (base64-encoded
+    /// JSON/BCS) and gRPC (`prost::bytes::Bytes` page token) formats fit
+    /// into `Option<Vec<u8>>`. Pass `None` to start from the beginning;
+    /// pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
         type_tag: Option<TypeTag>,
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>>;
-
-    /// Fetch one page of gas-coin objects owned by `owner`, returning the
-    /// page contents and a cursor for the next page (when one exists).
-    ///
-    /// Used by the transaction builder's automatic gas-payment selection to
-    /// page through gas coins, stopping once cumulative balance meets the
-    /// target budget. The default implementation falls back to
-    /// [`Self::objects`] and reports no next cursor; clients with native
-    /// pagination support should override it.
-    fn gas_coins_page(
-        &self,
-        owner: Address,
-        cursor: Option<String>,
-    ) -> impl std::future::Future<Output = Result<(Vec<Object>, Option<String>), Self::Error>> {
-        async move {
-            let objects = self
-                .objects(
-                    Some(StructTag::new_gas_coin().into()),
-                    Some(owner),
-                    None,
-                    true,
-                    cursor,
-                    None,
-                )
-                .await?;
-            Ok((objects, None))
-        }
-    }
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
     /// Fetch a transaction
     fn transaction(
@@ -130,18 +112,10 @@ impl<T: ClientMethods> ClientMethods for &T {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
-    }
-
-    async fn gas_coins_page(
-        &self,
-        owner: Address,
-        cursor: Option<String>,
-    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
-        (*self).gas_coins_page(owner, cursor).await
     }
 
     fn transaction(
@@ -216,10 +190,14 @@ impl ClientMethods for iota_graphql_client::Client {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
-        Ok(self
+    ) -> Result<ObjectsPage, Self::Error> {
+        // GraphQL cursors are base64 ASCII, so round-tripping through
+        // Vec<u8> is lossless. Caller-supplied cursors must come from a
+        // prior call to this method.
+        let cursor = cursor.map(|b| String::from_utf8(b).expect("GraphQL cursor must be UTF-8"));
+        let page = self
             .objects(
                 ObjectFilter {
                     type_: type_tag.as_ref().map(ToString::to_string),
@@ -236,34 +214,13 @@ impl ClientMethods for iota_graphql_client::Client {
                     limit: limit.map(|v| v as _),
                 },
             )
-            .await?
-            .data)
-    }
-
-    async fn gas_coins_page(
-        &self,
-        owner: Address,
-        cursor: Option<String>,
-    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
-        let page = self
-            .objects(
-                ObjectFilter {
-                    type_: Some(StructTag::new_gas_coin().to_string()),
-                    owner: Some(owner),
-                    object_ids: None,
-                },
-                PaginationFilter {
-                    direction: Direction::Forward,
-                    cursor,
-                    limit: None,
-                },
-            )
             .await?;
         let (page_info, data) = page.into_parts();
         let next = page_info
             .has_next_page
             .then_some(page_info.end_cursor)
-            .flatten();
+            .flatten()
+            .map(String::into_bytes);
         Ok((data, next))
     }
 
@@ -330,19 +287,11 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         self.as_ref()
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
-    }
-
-    async fn gas_coins_page(
-        &self,
-        owner: Address,
-        cursor: Option<String>,
-    ) -> Result<(Vec<Object>, Option<String>), Self::Error> {
-        self.as_ref().gas_coins_page(owner, cursor).await
     }
 
     fn transaction(
