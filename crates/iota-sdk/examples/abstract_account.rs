@@ -10,7 +10,7 @@ use iota_sdk::{
     transaction_builder::{
         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
     },
-    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut, TransactionEffects},
+    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut},
 };
 use rand::rngs::OsRng;
 
@@ -38,17 +38,13 @@ async fn main() -> Result<()> {
         .finish(&client)
         .await?;
 
-    match builder
+    let effects = builder
         .execute(&move_authenticator, WaitForTx::Finalized)
-        .await?
-    {
-        TransactionEffects::V1(v1) => {
-            println!("Sending IOTA via abstract account: {:?}", v1.status);
-        }
-        _ => unimplemented!(
-            "a new TransactionEffects enum variant was added and needs to be handled"
-        ),
-    }
+        .await?;
+    println!(
+        "Sending IOTA via abstract account: {:?}",
+        effects.as_v1().status
+    );
 
     Ok(())
 }

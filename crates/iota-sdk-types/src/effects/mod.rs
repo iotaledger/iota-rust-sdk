@@ -42,12 +42,6 @@ impl TransactionEffects {
     }
 }
 
-impl Default for TransactionEffects {
-    fn default() -> Self {
-        Self::V1(Box::default())
-    }
-}
-
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

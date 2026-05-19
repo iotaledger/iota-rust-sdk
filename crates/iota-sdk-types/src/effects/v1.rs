@@ -67,24 +67,6 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Digest>,
 }
 
-impl Default for TransactionEffectsV1 {
-    fn default() -> Self {
-        Self {
-            status: ExecutionStatus::Success,
-            epoch: 0,
-            gas_cost_summary: GasCostSummary::default(),
-            transaction_digest: Digest::default(),
-            gas_object_index: None,
-            events_digest: None,
-            dependencies: vec![],
-            lamport_version: Version::default(),
-            changed_objects: vec![],
-            unchanged_shared_objects: vec![],
-            auxiliary_data_digest: None,
-        }
-    }
-}
-
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -98,8 +80,7 @@ impl Default for TransactionEffectsV1 {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Deserialize, serde::Serialize),
-    serde(rename = "EffectsObjectChange"),
-    serde(rename_all = "camelCase")
+    serde(rename = "EffectsObjectChange")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
