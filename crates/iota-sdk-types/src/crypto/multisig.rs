@@ -2,9 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO sort out overlap with iota-sdk-crypto's multisig module
-// TODO Harmonise serde primitives (from/to bytes/base64) with regular PK
-
 #[cfg(feature = "serde")]
 use once_cell::sync::OnceCell;
 
