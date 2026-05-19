@@ -698,7 +698,7 @@ mod serialization {
                 };
                 multisig
                     .validate()
-                    .map_err(|_| SignatureFromBytesError::new("invalid multisig"))?;
+                    .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
                 Ok(multisig)
             } else {
                 Err(SignatureFromBytesError::new("invalid multisig"))
