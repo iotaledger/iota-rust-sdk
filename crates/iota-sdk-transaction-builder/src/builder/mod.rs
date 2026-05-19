@@ -1122,11 +1122,16 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 top.sort_by(|a, b| b.0.cmp(&a.0));
                 top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
 
-                let covers_budget = target_budget.is_some_and(|budget| {
-                    top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
-                });
+                let done = match target_budget {
+                    Some(budget) => {
+                        top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
+                    }
+                    // No explicit budget: cap on count so we don't drain
+                    // pages forever on senders with thousands of coins.
+                    None => top.len() >= MAX_AUTO_GAS_PAYMENT_OBJECTS,
+                };
 
-                if covers_budget || next_cursor.is_none() {
+                if done || next_cursor.is_none() {
                     break;
                 }
                 cursor = next_cursor;
