@@ -488,10 +488,10 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
             UserSignature::Simple(SimpleSignature::Secp256r1 { signature, .. }) => {
                 Ok(Self::Secp256r1(signature))
             }
-            UserSignature::Multisig(_) => panic!(),
+            UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
             UserSignature::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
-            UserSignature::MoveAuthenticator(_) => panic!(),
+            UserSignature::MoveAuthenticator(_) => Err(MultisigError::UnallowedSignatureType),
         }
     }
 }
@@ -588,7 +588,6 @@ mod serialization {
     };
 
     #[derive(serde::Deserialize)]
-    // TODO is this really needed?
     pub struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
