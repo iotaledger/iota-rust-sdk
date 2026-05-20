@@ -125,35 +125,6 @@ make ci              # check-features + check-fmt + test + wasm
 - Draft PRs can force CI with `[run-ci]` in the PR body
 - **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, and `release` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
 
-## Common Tasks
-
-### Adding a New Type to `iota-sdk-types`
-
-1. Add type definition with `#[derive(Clone, Debug, Eq, PartialEq)]`
-2. Add `#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]` if needed
-3. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
-4. Export from appropriate module
-5. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
-
-### Adding a New GraphQL Query
-
-1. Add `.graphql` file in `crates/iota-sdk-graphql-client/queries/`
-2. Define corresponding types in `query_types/`
-3. Add convenience method in `api/` module
-
-### Adding a New gRPC Method
-
-1. Update protos in `crates/iota-sdk-grpc-proto-build/` (or run `update_grpc_types.sh` to refresh from upstream)
-2. Regenerate types — the build script for `iota-sdk-grpc-types` consumes them via `prost`/`tonic-build`
-3. Add a convenience method in `crates/iota-sdk-grpc-client/src/api/` and expose it from the relevant per-service client
-
-### Adding a New Signature Scheme
-
-1. Create module in `crates/iota-sdk-crypto/src/`
-2. Implement `IotaSigner` and/or `IotaVerifier` traits
-3. Add a feature flag in `Cargo.toml`
-4. Re-export from `iota-sdk` with feature gate
-
 ## WASM Considerations
 
 The `make wasm` target builds the following crates for `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The gRPC client/types and FFI crate are not built for WASM. When adding dependencies to any of the WASM-built crates:
