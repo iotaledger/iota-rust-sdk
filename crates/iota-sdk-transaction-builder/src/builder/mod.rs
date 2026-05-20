@@ -45,18 +45,12 @@ pub mod signer;
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
-/// Upper bound on gas-coin inputs pinned by automatic gas selection.
-///
-/// Bound by GraphQL `max_query_payload_size` (5000 B): the budget-
-/// estimation dry-run carries gas refs in `TransactionMetadata.gas_objects`
-/// at ~148 B each, cliff measured at N=27. The protocol cap (255) is much
-/// higher — this query-payload budget is what binds.
-///
-/// Bypassed when callers pin gas via [`TransactionBuilder::gas`] *and* set
-/// [`TransactionBuilder::gas_budget`] (no dry-run): the execute path
-/// BCS-encodes the full tx and accepts up to 255 coins, which the gas-
-/// smashing prologue then consolidates.
-const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 24;
+/// Protocol cap on `gas_payment.objects.len()` (`max_gas_payment_objects`
+/// is 256 exclusive, so 255 inclusive). Used as the size of the running
+/// top-K kept during paginated gas-coin discovery: an address with many
+/// tiny coins on the early pages and a few large ones later still
+/// converges on the highest-balance set without unbounded memory.
+const MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -1130,7 +1124,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     top.push((coin.balance(), obj.object_ref()));
                 }
                 top.sort_by_key(|c| std::cmp::Reverse(c.0));
-                top.truncate(MAX_AUTO_GAS_PAYMENT_OBJECTS);
+                top.truncate(MAX_GAS_PAYMENT_OBJECTS);
 
                 let covers_budget = target_budget.is_some_and(|budget| {
                     top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget

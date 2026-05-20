@@ -724,15 +724,9 @@ mod tests {
         check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await).await;
     }
 
-    /// Pin 255 gas coins (the protocol cap — `gas().len() <
-    /// max_gas_payment_objects`, configured at 256). The
-    /// `MAX_AUTO_GAS_PAYMENT_OBJECTS` cap (24) only binds the
-    /// auto-selection path, which dry-runs the tx and carries gas refs in
-    /// the GraphQL query metadata (5 KB `max_query_payload_size`).
-    /// Pinning gas via `.gas(...)` *and* setting `.gas_budget(...)` skips
-    /// the auto-estimate dry-run, so execution BCS-encodes everything
-    /// into `txBytes` (~128 KiB) and the gas-smashing prologue
-    /// consolidates all 255 pinned coins into one.
+    /// Pin all 255 gas coins (the protocol cap, `gas().len() <
+    /// max_gas_payment_objects = 256`) and assert the gas-smashing
+    /// prologue consolidates them into a single coin during execution.
     #[tokio::test]
     async fn test_manual_gas_pin_consolidates_255_coins() {
         use iota_graphql_client::pagination::Direction;
@@ -801,8 +795,6 @@ mod tests {
             split_ids.len(),
         );
 
-        // Explicit gas_budget makes finish_internal skip estimate_tx_budget
-        // — its dry-run would otherwise exceed `max_query_payload_size`.
         let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
         let recipient = Address::generate(rand::thread_rng());
         tx2.gas(split_ids)
