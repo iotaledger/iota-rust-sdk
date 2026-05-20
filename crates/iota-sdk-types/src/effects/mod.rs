@@ -9,8 +9,6 @@ pub use v1::{
     UnchangedSharedObject,
 };
 
-use crate::{Digest, ObjectId, ObjectReference, Version};
-
 /// The output or effects of executing a transaction
 ///
 /// # BCS
@@ -141,40 +139,6 @@ mod serialization {
     }
 }
 
-/// Description of a shared object that was used as input to a transaction
-///
-/// Captures how each shared object was accessed during execution: whether it
-/// was mutated, read-only, deleted after mutable or read-only access, or
-/// cancelled.
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum InputSharedObject {
-    Mutate(ObjectReference),
-    ReadOnly(ObjectReference),
-    ReadDeleted(ObjectId, Version),
-    MutateDeleted(ObjectId, Version),
-    Cancelled(ObjectId, Version),
-}
-
-impl InputSharedObject {
-    pub fn id_and_version(&self) -> (ObjectId, Version) {
-        let (object_id, version, ..) = self.object_ref().into_parts();
-        (object_id, version)
-    }
-
-    pub fn object_ref(&self) -> ObjectReference {
-        match self {
-            InputSharedObject::Mutate(oref) | InputSharedObject::ReadOnly(oref) => *oref,
-            InputSharedObject::ReadDeleted(id, version)
-            | InputSharedObject::MutateDeleted(id, version) => {
-                ObjectReference::new(*id, *version, Digest::OBJECT_DELETED)
-            }
-            InputSharedObject::Cancelled(id, version) => {
-                ObjectReference::new(*id, *version, Digest::OBJECT_CANCELLED)
-            }
-        }
-    }
-}
-
 /// Defines what happened to an ObjectId during execution
 ///
 /// # BCS
@@ -203,19 +167,4 @@ pub enum IdOperation {
 
 impl IdOperation {
     crate::def_is!(None, Created, Deleted);
-}
-
-/// Effect on an individual object, keyed by its [`ObjectId`]
-///
-/// Describes the input and output state of a single object that was read or
-/// modified during transaction execution, along with the [`IdOperation`] that
-/// was applied to it.
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub struct ObjectChange {
-    pub id: ObjectId,
-    pub input_version: Option<Version>,
-    pub input_digest: Option<Digest>,
-    pub output_version: Option<Version>,
-    pub output_digest: Option<Digest>,
-    pub id_operation: IdOperation,
 }
