@@ -195,8 +195,14 @@ impl ClientMethods for iota_graphql_client::Client {
     ) -> Result<ObjectsPage, Self::Error> {
         // GraphQL cursors are base64 ASCII, so round-tripping through
         // Vec<u8> is lossless. Caller-supplied cursors must come from a
-        // prior call to this method.
-        let cursor = cursor.map(|b| String::from_utf8(b).expect("GraphQL cursor must be UTF-8"));
+        // prior call to this method; anything else is rejected here
+        // rather than panicked on.
+        let cursor = cursor.map(String::from_utf8).transpose().map_err(|e| {
+            iota_graphql_client::error::Error::from_error(
+                iota_graphql_client::error::Kind::Parse,
+                e,
+            )
+        })?;
         let page = self
             .objects(
                 ObjectFilter {
