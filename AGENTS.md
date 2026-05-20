@@ -172,6 +172,29 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 - Draft PRs can force CI with `[run-ci]` in the PR body
 - **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, and `release` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
 
+## Handling Multiple GitHub Issues
+
+**CRITICAL: When given multiple GitHub issues to work on, ALWAYS create separate pull requests for each issue.**
+
+Even if the issues seem related or could technically be combined, each issue must get its own dedicated PR. This is non-negotiable for this repository.
+
+**Why:**
+- Easier to review — reviewers can focus on one concern at a time
+- Easier to merge — individual changes can land independently
+- Easier to revert — if one change causes problems, it can be reverted without affecting the others
+- Better tracking — each issue gets its own dedicated PR link in the issue tracker
+
+**Example workflow when given issues #1122, #1095, and #1117:**
+
+1. Create separate branches: `claude/fix-1122`, `claude/fix-1095`, `claude/fix-1117`
+2. Fix issue #1122 on its branch, commit, push, create PR
+3. Fix issue #1095 on its branch, commit, push, create PR  
+4. Fix issue #1117 on its branch, commit, push, create PR
+
+Result: Three separate PRs, one per issue.
+
+**The ONLY exception:** If explicitly instructed to combine issues into a single PR, or if the issues are genuinely interdependent (e.g., one fix depends on another's changes to work).
+
 ## Common Tasks
 
 ### Adding a New Type to `iota-sdk-types`
@@ -220,5 +243,5 @@ The `make wasm` target builds the following crates for `wasm32-unknown-unknown`:
 6. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 7. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
 8. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
-9. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together.
+9. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together. **Critically: when given multiple GitHub issues, ALWAYS create one PR per issue** — never bundle multiple issues into a single PR unless explicitly instructed or the issues are genuinely interdependent.
 10. **Keep PR descriptions short and skimmable** — write for a human reviewer who has 30 seconds. Cover the _why_ and the high-level _what_, and stop. Don't enumerate every line of the diff; reviewers can read the code. Avoid long wall-of-text summaries, exhaustive bullet lists of every renamed symbol, or restating what the diff obviously shows. A few crisp sentences (plus a test plan if relevant) is the goal.
