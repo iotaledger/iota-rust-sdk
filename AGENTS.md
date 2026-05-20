@@ -99,49 +99,6 @@ make ci              # check-features + check-fmt + test + wasm
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
 - **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]` and `#[cfg_attr(doc_cfg, doc(cfg(feature = "…")))]` for docs.rs visibility
 
-## Key Patterns
-
-### GraphQL Client Usage
-
-```rust
-use iota_sdk::graphql_client::Client;
-
-let client = Client::new_devnet();
-let chain_id = client.chain_id().await?;
-```
-
-`Client` exposes `new_mainnet`, `new_testnet`, `new_devnet`, `new_localnet`, and a generic `new(url)` constructor.
-
-### gRPC Client Usage
-
-```rust
-use iota_sdk::grpc_client::Client;
-
-let client = Client::new_devnet()?;
-let ledger = client.ledger_service_client();
-```
-
-`Client` exposes `new_mainnet`, `new_testnet`, `new_devnet`, `new_localnet`, and a generic `new(url)` constructor. Per-service clients are obtained via `ledger_service_client()`, `execution_service_client()`, `state_service_client()`, `move_package_service_client()`. Headers and message-size limits are configured with `with_headers` / `with_max_decoding_message_size`.
-
-### Transaction Building
-
-```rust
-use iota_sdk::transaction_builder::TransactionBuilder;
-
-let mut builder = TransactionBuilder::new(sender).with_client(&client);
-builder.send_iota(recipient, amount);
-let tx = builder.finish().await?;
-```
-
-### Signing
-
-```rust
-use iota_sdk::crypto::{IotaSigner, Ed25519PrivateKey};
-
-let key = Ed25519PrivateKey::generate(&mut rng);
-let signature = key.sign_transaction(&tx)?;
-```
-
 ## Important Files
 
 | File                                      | Purpose                                                |
