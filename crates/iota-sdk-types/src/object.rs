@@ -20,7 +20,7 @@ use super::{Identifier, TypeOrigin, UpgradeInfo};
 /// ```text
 /// object-reference = object-id u64 digest
 /// ```
-#[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectReference {
@@ -87,7 +87,7 @@ impl ObjectReference {
 /// owner-shared    = %d02 u64
 /// owner-immutable = %d03
 /// ```
-#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -156,8 +156,8 @@ impl std::fmt::Display for Owner {
 /// object-data-struct  = %d00 object-move-struct
 /// object-data-package = %d01 object-move-package
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -210,7 +210,7 @@ impl ObjectData {
 /// staked-iota-type      = %x02
 /// coin-type             = %x03 type-tag
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveObjectType(StructTag);
 
@@ -281,7 +281,7 @@ impl std::str::FromStr for MoveObjectType {
 ///
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
-#[derive(Eq, PartialEq, Debug, Clone, Hash)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
@@ -414,7 +414,7 @@ impl MoveStruct {
 
 /// Error returned when [`MoveStruct`] contents are too short to contain an
 /// [`ObjectId`].
-#[derive(thiserror::Error, Debug, Clone)]
+#[derive(Clone, Debug, thiserror::Error)]
 #[error(
     "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {actual}",
     ObjectId::LENGTH
@@ -424,7 +424,7 @@ pub struct MoveStructContentsError {
 }
 
 /// Type of an IOTA object
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
@@ -456,7 +456,7 @@ impl std::fmt::Display for ObjectType {
 /// ```text
 /// object = object-data owner digest u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Object {
@@ -592,7 +592,7 @@ impl Object {
 /// ```text
 /// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
     pub data: ObjectData,
@@ -650,7 +650,7 @@ mod serialization {
     use super::*;
     use crate::TypeTag;
 
-    #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
     #[serde(rename = "Owner")]
     enum ReadableOwner {
         /// Object is exclusively owned by a single address, and is mutable.
@@ -892,7 +892,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Object")]
     struct ReadableObject {
         object_id: ObjectId,
@@ -909,14 +909,14 @@ mod serialization {
         storage_rebate: u64,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(untagged)]
     enum ReadableObjectData {
         Move(ReadableMoveStruct),
         Package(ReadablePackage),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct ReadablePackage {
         #[serde(
             with = "::serde_with::As::<BTreeMap<::serde_with::Same, crate::_serde::Base64Encoded>>"
@@ -926,7 +926,7 @@ mod serialization {
         linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct ReadableMoveStruct {
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
         contents: Vec<u8>,
@@ -1048,7 +1048,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct BinaryObject {
         data: ObjectData,
         owner: Owner,
@@ -1056,7 +1056,7 @@ mod serialization {
         storage_rebate: u64,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "GenesisObject")]
     struct ReadableGenesisObject {
         object_id: ObjectId,
@@ -1070,7 +1070,7 @@ mod serialization {
         data: ReadableObjectData,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "GenesisObject")]
     #[cfg_attr(
         feature = "bcs-schema",
@@ -1177,7 +1177,7 @@ mod serialization {
     }
 
     // Custom serialization to be backwards compatible with the JSON RPC
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct TupleObjectReference(ObjectId, Version, Digest);
 
     impl Serialize for ObjectReference {

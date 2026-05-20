@@ -207,7 +207,7 @@ impl Signer<UserSignature> for Secp256k1PrivateKey {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Secp256k1VerifyingKey(VerifyingKey);
 
 impl Secp256k1VerifyingKey {
@@ -303,7 +303,7 @@ impl Verifier<UserSignature> for Secp256k1VerifyingKey {
     }
 }
 
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Secp256k1Verifier {}
 
 impl Secp256k1Verifier {

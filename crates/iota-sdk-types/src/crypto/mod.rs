@@ -31,7 +31,7 @@ pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
 
 #[cfg(feature = "serde")]
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[error("error deserializing bytes: {0}")]
 pub struct SignatureFromBytesError(String);
 
