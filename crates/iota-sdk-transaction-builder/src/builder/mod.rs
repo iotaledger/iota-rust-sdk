@@ -45,28 +45,17 @@ pub mod signer;
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
-/// Upper bound on the number of gas-coin inputs pinned by automatic gas
-/// selection when no explicit `gas(...)` pin is supplied.
+/// Upper bound on gas-coin inputs pinned by automatic gas selection.
 ///
-/// Auto-selection always dry-runs the tx for budget estimation, and
-/// `dryRunTransactionBlock` lifts gas refs out of `txBytes` into the
-/// GraphQL `TransactionMetadata.gas_objects` input — ~170 bytes per ref
-/// against the server's 5000-byte `max_query_payload_size`. The protocol
-/// cap (`gas().len() < max_gas_payment_objects`, configured at 256, so
-/// 255 inclusive) is much higher; this query-payload budget is what
-/// binds here.
+/// Bound by GraphQL `max_query_payload_size` (5000 B): the budget-
+/// estimation dry-run carries gas refs in `TransactionMetadata.gas_objects`
+/// at ~148 B each, cliff measured at N=27. The protocol cap (255) is much
+/// higher — this query-payload budget is what binds.
 ///
-/// The cap does not apply when callers pin gas via
-/// [`TransactionBuilder::gas`] *and* set [`TransactionBuilder::gas_budget`]
-/// (which skips the auto-estimate dry-run). `executeTransactionBlock`
-/// BCS-encodes the full tx into `txBytes` (~128 KiB budget), so pinning
-/// up to 255 coins works — useful for consolidating many small coins,
-/// since the gas-smashing prologue merges them into the primary gas coin
-/// during execution.
-///
-/// Selection prefers fewer-larger coins first and stops early once the
-/// budget is covered, so this cap only matters when the sender has many
-/// small coins.
+/// Bypassed when callers pin gas via [`TransactionBuilder::gas`] *and* set
+/// [`TransactionBuilder::gas_budget`] (no dry-run): the execute path
+/// BCS-encodes the full tx and accepts up to 255 coins, which the gas-
+/// smashing prologue then consolidates.
 const MAX_AUTO_GAS_PAYMENT_OBJECTS: usize = 24;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
