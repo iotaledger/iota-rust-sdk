@@ -5,8 +5,11 @@ use std::sync::Arc;
 
 use iota_sdk::types::SignatureScheme;
 
-use crate::types::crypto::{
-    Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, passkey::PasskeyPublicKey,
+use crate::{
+    error::Result,
+    types::crypto::{
+        Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, passkey::PasskeyPublicKey,
+    },
 };
 
 /// Enum of valid public keys for the signature schemes supported by IOTA.
@@ -113,5 +116,30 @@ impl PublicKey {
 
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
+    }
+
+    /// Encode this public key as the scheme flag byte followed by the raw key
+    /// bytes
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes()
+    }
+
+    /// Decode a public key from its scheme-flagged byte representation
+    #[uniffi::constructor]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        Ok(Self(iota_sdk::types::PublicKey::from_bytes(bytes)?))
+    }
+
+    /// Encode this public key as a base64 string of its scheme-flagged byte
+    /// representation
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
+    }
+
+    /// Decode a public key from a base64 string of its scheme-flagged byte
+    /// representation
+    #[uniffi::constructor]
+    pub fn from_base64(s: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::PublicKey::from_base64(s)?))
     }
 }

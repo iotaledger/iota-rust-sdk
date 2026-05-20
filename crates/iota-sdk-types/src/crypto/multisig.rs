@@ -22,6 +22,7 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum MultisigError {
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),

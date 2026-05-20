@@ -9,6 +9,7 @@ use super::{
 };
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum PublicKeyError {
     #[error("{0}")]
     Base64(#[from] base64ct::Error),
