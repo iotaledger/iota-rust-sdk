@@ -1,8 +1,5 @@
 # iota-sdk-grpc-client
 
-[![iota-sdk-grpc-client on crates.io](https://img.shields.io/crates/v/iota-sdk-grpc-client)](https://crates.io/crates/iota-sdk-grpc-client)
-[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-grpc-client)
-
 The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes four service clients:
 
 - **Ledger Service** — query blocks, transactions, and ledger state
@@ -64,4 +61,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Service examples
 
-Each service client exposes methods corresponding to the gRPC service definition. See the [API documentation](https://docs.rs/iota-sdk-grpc-client) for the full list of available methods.
+Each service client exposes methods corresponding to the gRPC service definition. See the crate documentation for the full list of available methods.
