@@ -56,13 +56,21 @@ The `iota-sdk` umbrella crate exposes the other crates via modules gated by feat
 
 ```bash
 # Lint, format, tests
-make test            # Unit tests (nextest)
-make test-docs       # Doc tests
-make clippy          # Clippy
-make fmt             # Format Rust code (requires nightly)
-make check-fmt       # Verify Rust formatting
+make test                        # Unit tests (nextest)
+make test-docs                   # Doc tests
+make test-with-localnet          # Tests requiring a running localnet
+cargo nextest run                # Direct nextest invocation
+cargo test --doc                 # Direct doc test invocation
+make clippy                      # Clippy
+make fmt                         # Format Rust code (requires nightly)
+make check-fmt                   # Verify Rust formatting
 make bindings-examples-format        # Format the examples shipped with each binding
 make bindings-examples-format-check  # Verify formatting of binding examples
+
+# Localnet (IOTA node + faucet + indexer + GraphQL + gas station)
+./run_localnet.sh start [iota-localnet-binary]   # Start localnet + gas station (Postgres, Redis)
+./run_localnet.sh stop                           # Tear it all down
+# Defaults to `iota-localnet` on PATH; pass explicit path as second arg to override
 
 # WASM
 make wasm            # Build WASM modules
@@ -109,31 +117,6 @@ make ci              # check-features + check-fmt + test + wasm
 | `.github/workflows/`                      | CI workflows                                           |
 | `crates/iota-sdk-grpc-proto-build/`       | Proto sources and codegen entry point for gRPC types   |
 | `crates/iota-sdk-graphql-client/queries/` | `.graphql` query files consumed by the `cynic` codegen |
-
-## Testing
-
-- **Unit tests**: Inline with `#[cfg(test)]`
-- **Doc tests**: Examples in documentation
-- **Property tests**: Using `proptest` for type variants
-- **Integration tests**: Transaction builder has test Move packages
-- **WASM tests**: `wasm-pack test` for browser compatibility
-
-Run specific test categories:
-
-```bash
-cargo nextest run                    # Unit tests
-cargo test --doc                     # Doc tests
-make test-with-localnet              # Tests requiring a running localnet
-```
-
-To spin up a localnet (IOTA node + faucet + indexer + GraphQL) together with a gas station, use the helper script at the repo root:
-
-```bash
-./run_localnet.sh start [iota-localnet-binary]   # Start localnet + gas station (Postgres, Redis)
-./run_localnet.sh stop                           # Tear it all down
-```
-
-It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as the second arg to override.
 
 ## Git Workflow
 
