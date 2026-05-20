@@ -59,18 +59,11 @@ The `iota-sdk` umbrella crate exposes the other crates via modules gated by feat
 make test                        # Unit tests (nextest)
 make test-docs                   # Doc tests
 make test-with-localnet          # Tests requiring a running localnet
-cargo nextest run                # Direct nextest invocation
-cargo test --doc                 # Direct doc test invocation
 make clippy                      # Clippy
 make fmt                         # Format Rust code (requires nightly)
 make check-fmt                   # Verify Rust formatting
 make bindings-examples-format        # Format the examples shipped with each binding
 make bindings-examples-format-check  # Verify formatting of binding examples
-
-# Localnet (IOTA node + faucet + indexer + GraphQL + gas station)
-./run_localnet.sh start [iota-localnet-binary]   # Start localnet + gas station (Postgres, Redis)
-./run_localnet.sh stop                           # Tear it all down
-# Defaults to `iota-localnet` on PATH; pass explicit path as second arg to override
 
 # WASM
 make wasm            # Build WASM modules
@@ -96,6 +89,15 @@ make <lang>-example NAME         # Run a single example (lang ∈ {go, kotlin, p
 
 # Full CI check
 make ci              # check-features + check-fmt + test + wasm
+
+# Localnet (IOTA node + faucet + indexer + GraphQL + gas station)
+./run_localnet.sh start [iota-localnet-binary]   # Start localnet + gas station (Postgres, Redis)
+./run_localnet.sh stop                           # Tear it all down
+# Defaults to `iota-localnet` on PATH; pass explicit path as second arg to override
+
+# Direct cargo invocations
+cargo nextest run                # Direct nextest invocation
+cargo test --doc                 # Direct doc test invocation
 ```
 
 ## Code Conventions
