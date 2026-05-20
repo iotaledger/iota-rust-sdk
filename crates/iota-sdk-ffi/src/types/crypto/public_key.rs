@@ -41,7 +41,7 @@ use crate::types::crypto::{
 ///                      (zklogin-flag-deprecated) /
 ///                      (passkey-flag passkey-public-key)
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct PublicKey(pub iota_sdk::types::PublicKey);
 

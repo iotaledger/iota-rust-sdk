@@ -24,7 +24,7 @@ pub type ProtocolVersion = u64;
 /// checkpoint-commitment = ecmh-live-object-set
 /// ecmh-live-object-set = %d00 digest
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -57,8 +57,8 @@ impl CheckpointCommitment {
 ///                     (vector checkpoint-commitment)        ; epoch-commitments
 ///                     i64                                   ; epoch-supply-change
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct EndOfEpochData {
@@ -115,7 +115,7 @@ pub struct EndOfEpochData {
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointSummary {
@@ -156,7 +156,7 @@ pub struct CheckpointSummary {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SignedCheckpointSummary {
@@ -184,7 +184,7 @@ pub struct SignedCheckpointSummary {
 ///
 /// execution-digests = digest digest   ; transaction, effects
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointContents(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -206,8 +206,8 @@ impl CheckpointContents {
 }
 
 /// Transaction information committed to in a checkpoint
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
     pub transaction: Digest,
@@ -217,7 +217,7 @@ pub struct CheckpointTransactionInfo {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointData {
@@ -227,8 +227,8 @@ pub struct CheckpointData {
     pub transactions: Vec<CheckpointTransaction>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointTransaction {
@@ -576,13 +576,13 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
     enum ReadableCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     enum BinaryCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }

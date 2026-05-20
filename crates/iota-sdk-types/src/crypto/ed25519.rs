@@ -15,8 +15,8 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// ```text
 /// ed25519-public-key = 32OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519PublicKey(
     #[cfg_attr(
@@ -129,8 +129,8 @@ impl std::fmt::Debug for Ed25519PublicKey {
 /// ```text
 /// ed25519-signature = 64OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519Signature(
     #[cfg_attr(

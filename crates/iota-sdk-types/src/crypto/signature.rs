@@ -30,7 +30,7 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum SimpleSignature {
@@ -210,7 +210,7 @@ impl SimpleSignature {
 /// passkey-auth-flag               = %d06
 /// move-auth-flag                  = %d07
 /// ```
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display)]
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
@@ -265,7 +265,7 @@ impl super::PasskeyPublicKey {
     }
 }
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct InvalidSignatureScheme(u8);
 
 impl std::fmt::Display for InvalidSignatureScheme {
@@ -293,7 +293,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",

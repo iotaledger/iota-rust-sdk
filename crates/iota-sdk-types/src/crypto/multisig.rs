@@ -65,8 +65,8 @@ pub enum MultisigError {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigMember {
     public_key: PublicKey,
@@ -115,8 +115,8 @@ impl MultisigMember {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MultisigCommittee {
     /// A list of committee members and their corresponding weight.
     members: Vec<MultisigMember>,
@@ -251,7 +251,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
@@ -441,7 +441,7 @@ impl Eq for MultisigAggregatedSignature {}
 /// zklogin-multisig-member-signature-deprecated    = %d03
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
@@ -706,7 +706,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     enum MemberPublicKey {
         Ed25519(Ed25519PublicKey),
         Secp256k1(Secp256k1PublicKey),
@@ -715,7 +715,7 @@ mod serialization {
         Passkey(PasskeyPublicKey),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "PublicKey")]
     enum ReadableMemberPublicKey {
@@ -792,7 +792,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     enum MemberSignature {
         Ed25519(Ed25519Signature),
         Secp256k1(Secp256k1Signature),
@@ -801,7 +801,7 @@ mod serialization {
         Passkey(PasskeyAuthenticator),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "MultisigMemberSignature")]
     enum ReadableMemberSignature {

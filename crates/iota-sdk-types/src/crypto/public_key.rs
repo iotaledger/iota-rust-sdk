@@ -51,7 +51,7 @@ pub enum PublicKeyError {
 ///                      (zklogin-flag-deprecated) /
 ///                      (passkey-flag passkey-public-key)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum PublicKey {

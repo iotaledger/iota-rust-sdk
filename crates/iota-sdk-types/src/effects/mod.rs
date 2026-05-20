@@ -20,7 +20,7 @@ use crate::execution_status::ExecutionStatus;
 /// ```text
 /// transaction-effects = %d00 transaction-effects-v1   ; V1
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]

@@ -445,13 +445,13 @@ mod input_argument {
         transaction::{Input, SharedObjectReference},
     };
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct PureInput {
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
         value: Vec<u8>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename_all = "snake_case")]
     enum ReadableInput {
         /// A move value serialized as BCS.
@@ -472,14 +472,14 @@ mod input_argument {
         Receiving(ObjectReference),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
@@ -587,7 +587,7 @@ mod input_argument {
 mod argument {
     use super::*;
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Argument")]
     enum ReadableArgument {
         /// # Gas
@@ -600,7 +600,7 @@ mod argument {
         NestedResult(u16, u16),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Argument")]
     enum BinaryArgument {
         Gas,
@@ -906,7 +906,7 @@ mod transaction_expiration {
 
     use crate::{EpochId, TransactionExpiration};
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "TransactionExpiration")]
     enum ReadableTransactionExpiration {
         None,
@@ -917,7 +917,7 @@ mod transaction_expiration {
         ),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration

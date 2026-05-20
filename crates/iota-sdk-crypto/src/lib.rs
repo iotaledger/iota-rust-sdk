@@ -8,7 +8,7 @@ use iota_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PrivateKeyError {
     /// Empty input data

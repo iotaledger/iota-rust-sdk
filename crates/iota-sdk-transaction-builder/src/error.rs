@@ -9,7 +9,7 @@ use iota_types::{Digest, ObjectId};
 
 use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
 
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
 pub enum Error {

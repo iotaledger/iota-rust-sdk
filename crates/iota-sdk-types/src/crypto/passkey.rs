@@ -31,7 +31,7 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -102,10 +102,10 @@ impl PasskeyAuthenticator {
 /// ```text
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(transparent)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -304,7 +304,7 @@ mod serialization {
     /// <https://w3c.github.io/webauthn/#dictionary-client-data>
     ///
     /// [5.8.1.1 Serialization]: https://w3c.github.io/webauthn/#clientdatajson-serialization
-    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[derive(Clone, Debug, Deserialize, Serialize)]
     #[serde(rename_all = "camelCase")]
     pub(super) struct CollectedClientData {
         /// This member contains the value [`ClientDataType::Create`] when
@@ -344,7 +344,7 @@ mod serialization {
 
     /// Used to limit the values of [`CollectedClientData::ty`] and serializes
     /// to static strings.
-    #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
     pub(super) enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///

@@ -20,8 +20,8 @@ const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
-#[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Deref)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -291,7 +291,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 pub enum DigestParseError {
     #[error("digest must be Base58 string of length 44")]
     Base58(#[from] bs58::decode::Error),
