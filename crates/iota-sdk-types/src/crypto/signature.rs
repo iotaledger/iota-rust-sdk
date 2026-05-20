@@ -49,6 +49,27 @@ pub enum SimpleSignature {
 }
 
 impl SimpleSignature {
+    pub fn new_ed25519(signature: Ed25519Signature, public_key: Ed25519PublicKey) -> Self {
+        Self::Ed25519 {
+            signature,
+            public_key,
+        }
+    }
+
+    pub fn new_secp256k1(signature: Secp256k1Signature, public_key: Secp256k1PublicKey) -> Self {
+        Self::Secp256k1 {
+            signature,
+            public_key,
+        }
+    }
+
+    pub fn new_secp256r1(signature: Secp256r1Signature, public_key: Secp256r1PublicKey) -> Self {
+        Self::Secp256r1 {
+            signature,
+            public_key,
+        }
+    }
+
     crate::def_is!(Ed25519, Secp256k1, Secp256r1);
 
     pub fn as_ed25519_sig_opt(&self) -> Option<&Ed25519Signature> {
