@@ -19,7 +19,11 @@
 //! Below is a list of the available feature flags.
 //!
 //! - `serde`: Enables support for serializing and deserializing types to/from
-//!   BCS utilizing [serde] library.
+//!   BCS utilizing [serde] library. **Note:** The JSON serialization provided by
+//!   this crate is NOT guaranteed to be consistent with the IOTA monorepo's
+//!   JSON-RPC format. This SDK does not provide a JSON-RPC client, and the
+//!   derived serde implementations are optimized for BCS rather than JSON-RPC
+//!   compatibility.
 //! - `rand`: Enables support for generating random instances of a number of
 //!   types via the [rand] library.
 //! - `hash`: Enables support for hashing, which is required for deriving
