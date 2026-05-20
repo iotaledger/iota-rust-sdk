@@ -407,8 +407,8 @@ impl MoveStruct {
 
     /// Deserializes the BCS-encoded contents into a Rust type.
     #[cfg(feature = "serde")]
-    pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Option<T> {
-        bcs::from_bytes(self.contents()).ok()
+    pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Result<T, bcs::Error> {
+        bcs::from_bytes(self.contents())
     }
 }
 
