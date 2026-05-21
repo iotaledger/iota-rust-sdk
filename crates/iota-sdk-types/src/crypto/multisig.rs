@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
-use once_cell::sync::OnceCell;
+use std::sync::OnceLock;
 
 #[cfg(feature = "serde")]
 use super::SignatureFromBytesError;
@@ -268,7 +268,7 @@ pub struct MultisigAggregatedSignature {
     /// A bytes representation of [struct MultiSig]. This helps with
     /// implementing [trait AsRef<[u8]>].
     #[cfg(feature = "serde")]
-    bytes: OnceCell<Vec<u8>>,
+    bytes: OnceLock<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -301,7 +301,7 @@ impl MultisigAggregatedSignature {
             bitmap,
             committee,
             #[cfg(feature = "serde")]
-            bytes: OnceCell::new(),
+            bytes: OnceLock::new(),
         }
     }
 
@@ -351,7 +351,7 @@ impl MultisigAggregatedSignature {
             bitmap,
             committee,
             #[cfg(feature = "serde")]
-            bytes: OnceCell::new(),
+            bytes: OnceLock::new(),
         };
 
         signature.validate()?;
@@ -572,7 +572,7 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
                 signatures,
                 bitmap,
                 committee,
-                bytes: OnceCell::new(),
+                bytes: OnceLock::new(),
             })
             .boxed()
     }
@@ -657,7 +657,7 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
-                    bytes: OnceCell::new(),
+                    bytes: OnceLock::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
@@ -697,7 +697,7 @@ mod serialization {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
-                    bytes: OnceCell::new(),
+                    bytes: OnceLock::new(),
                 };
                 multisig
                     .validate()
