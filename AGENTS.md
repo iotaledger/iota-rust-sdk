@@ -104,7 +104,7 @@ let chain_id = client.chain_id().await?;
 ```rust
 use iota_sdk::grpc_client::Client;
 
-let client = Client::new_devnet().await?;
+let client = Client::new_devnet()?;
 let ledger = client.ledger_service_client();
 ```
 
