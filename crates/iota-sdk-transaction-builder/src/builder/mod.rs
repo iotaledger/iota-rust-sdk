@@ -46,7 +46,7 @@ const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
@@ -55,7 +55,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 }
 
 /// Transaction data used to build a [`Transaction`].
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.

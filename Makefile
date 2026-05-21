@@ -60,7 +60,7 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt test wasm ## Run the full CI process
+ci: check-features check-fmt check-sort-derives test wasm ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
@@ -68,6 +68,14 @@ ci-full: ci doc ## Run the full CI process and generate documentation
 .PHONY: cargo-sort
 cargo-sort: ## Sort, consolidate, and format Cargo.toml dependencies
 	cd scripts/cargo_sort && ./run_consolidate.sh
+
+.PHONY: sort-derives
+sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the workspace
+	python3 scripts/sort_derives/sort_derives.py
+
+.PHONY: check-sort-derives
+check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
+	python3 scripts/sort_derives/sort_derives.py --check
 
 .PHONY: clean
 clean: ## Clean build artifacts

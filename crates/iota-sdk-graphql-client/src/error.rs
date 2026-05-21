@@ -31,7 +31,7 @@ struct InnerError {
     source: Option<BoxError>,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub enum Kind {
     Deserialization,

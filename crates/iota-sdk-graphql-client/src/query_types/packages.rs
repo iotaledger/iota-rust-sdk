@@ -10,7 +10,7 @@ use crate::query_types::{Base64, PageInfo, schema};
 // Package by address (and optional version)
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct PackageQuery {
     #[arguments(address: $address, version: $version)]
@@ -21,20 +21,20 @@ pub struct PackageQuery {
 // Latest Package
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct LatestPackageQuery {
     #[arguments(address: $address)]
     pub latest_package: Option<MovePackageQuery>,
 }
 
-#[derive(cynic::QueryVariables, Debug, Clone)]
+#[derive(Clone, cynic::QueryVariables, Debug)]
 pub struct PackageArgs {
     pub address: Address,
     pub version: Option<u64>,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
 pub struct MovePackageQuery {
     pub address: Address,
@@ -45,7 +45,7 @@ pub struct MovePackageQuery {
 // Packages
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
@@ -56,7 +56,7 @@ pub struct PackagesQuery {
     pub packages: MovePackageConnection,
 }
 
-#[derive(cynic::QueryVariables, Debug, Clone)]
+#[derive(Clone, cynic::QueryVariables, Debug)]
 pub struct PackagesQueryArgs<'a> {
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
@@ -65,14 +65,14 @@ pub struct PackagesQueryArgs<'a> {
     pub last: Option<i32>,
 }
 
-#[derive(cynic::InputObject, Debug, Clone)]
+#[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageCheckpointFilter")]
 pub struct PackageCheckpointFilter {
     pub after_checkpoint: Option<u64>,
     pub before_checkpoint: Option<u64>,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub struct MovePackageConnection {
     pub nodes: Vec<MovePackageQuery>,
@@ -83,7 +83,7 @@ pub struct MovePackageConnection {
 // PackagesVersions
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
@@ -94,7 +94,7 @@ pub struct PackageVersionsQuery {
     pub package_versions: MovePackageConnection,
 }
 
-#[derive(cynic::QueryVariables, Debug, Clone)]
+#[derive(Clone, cynic::QueryVariables, Debug)]
 pub struct PackageVersionsArgs<'a> {
     pub address: Address,
     pub after: Option<&'a str>,
@@ -104,7 +104,7 @@ pub struct PackageVersionsArgs<'a> {
     pub filter: Option<MovePackageVersionFilter>,
 }
 
-#[derive(cynic::InputObject, Debug, Clone)]
+#[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageVersionFilter")]
 pub struct MovePackageVersionFilter {
     pub after_version: Option<u64>,

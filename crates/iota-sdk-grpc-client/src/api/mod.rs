@@ -34,7 +34,7 @@ pub use metadata::MetadataEnvelope;
 /// `tokio::time::timeout()` — if neither a `Checkpoint` nor a `Progress`
 /// arrives within your chosen duration plus some buffer for connection latency,
 /// the connection is likely dead.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[non_exhaustive]
 pub enum CheckpointStreamItem {
     /// A complete checkpoint with its transactions and events.
@@ -84,7 +84,7 @@ impl CheckpointStreamItem {
 /// Fields are proto types that can be accessed directly or converted to SDK
 /// types using their conversion methods (e.g.,
 /// `response.summary()?.summary()?`, `response.contents()?.contents()?`).
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct CheckpointResponse {
     /// The checkpoint sequence number.
     pub sequence_number: CheckpointSequenceNumber,

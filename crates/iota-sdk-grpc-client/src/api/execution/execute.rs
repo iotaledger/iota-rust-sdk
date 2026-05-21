@@ -62,7 +62,7 @@ impl Client {
     ///
     /// // Lazy conversion - only deserialize what you need
     /// let effects = result.body().effects()?.effects()?;
-    /// println!("Status: {:?}", effects.status());
+    /// println!("Status: {:?}", effects.as_v1().status);
     ///
     /// let events = result.body().events()?.events()?;
     /// if !events.0.is_empty() {

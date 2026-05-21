@@ -13,22 +13,22 @@
 #[derive(
     Clone,
     Copy,
-    Hash,
     Debug,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    derive_more::From,
-    derive_more::Display,
     derive_more::Add,
     derive_more::AddAssign,
+    derive_more::Display,
+    derive_more::From,
     derive_more::Sub,
     derive_more::SubAssign,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
 )]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(transparent)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
