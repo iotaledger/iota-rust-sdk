@@ -194,6 +194,18 @@ impl PartialEq<Digest> for [u8; Digest::LENGTH] {
     }
 }
 
+impl PartialEq<Digest> for &[u8] {
+    fn eq(&self, other: &Digest) -> bool {
+        *self == other.0.as_slice()
+    }
+}
+
+impl PartialEq<&[u8]> for Digest {
+    fn eq(&self, other: &&[u8]) -> bool {
+        self.0.as_slice() == *other
+    }
+}
+
 impl PartialEq<Vec<u8>> for Digest {
     fn eq(&self, other: &Vec<u8>) -> bool {
         self.0.as_slice() == other.as_slice()
