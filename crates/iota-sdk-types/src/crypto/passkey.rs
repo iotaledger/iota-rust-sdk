@@ -202,13 +202,12 @@ mod serialization {
             authenticator_data: Vec<u8>,
             client_data_json: String,
             signature: SimpleSignature,
-        ) -> Option<Self> {
+        ) -> Result<Self, SignatureFromBytesError> {
             Self::try_from_raw(Authenticator {
                 authenticator_data,
                 client_data_json,
                 signature,
             })
-            .ok()
         }
 
         fn try_from_raw(
