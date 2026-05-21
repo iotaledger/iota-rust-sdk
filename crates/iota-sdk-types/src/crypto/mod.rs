@@ -152,7 +152,7 @@ pub trait PublicKeyExt: Sized {
     fn as_bytes(&self) -> &[u8];
 
     /// Tries to create a PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr>;
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr>;
 
     /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme;

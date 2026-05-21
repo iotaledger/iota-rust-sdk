@@ -655,7 +655,7 @@ mod serialization {
             }
         }
 
-        pub fn from_bytes(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, bcs::Error> {
             Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
         }
 
