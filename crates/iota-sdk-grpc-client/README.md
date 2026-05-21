@@ -33,13 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Network presets
 
-The client provides constructors for standard networks:
-
-- `Client::new_mainnet()` — IOTA mainnet
-- `Client::new_testnet()` — IOTA testnet
-- `Client::new_devnet()` — IOTA devnet
-- `Client::new_localnet()` — Local development network
-- `Client::new(url)` — Custom gRPC endpoint
+The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_localnet()`, and `new(url)` for custom endpoints.
 
 ## Configuration
 
