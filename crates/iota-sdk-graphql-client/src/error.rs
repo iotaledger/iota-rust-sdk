@@ -47,6 +47,10 @@ struct InnerError {
     query_errors: Option<Vec<GraphQlError>>,
     /// The original error.
     source: Option<BoxError>,
+    /// Name of the type the response was being deserialized into, if known.
+    /// Recorded by the client so a bare HTTP/JSON error also reveals *what*
+    /// the client was trying to decode.
+    target_type: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -56,7 +60,10 @@ pub enum Kind {
     Parse,
     Query,
     Missing,
-    Http,
+    /// The HTTP response carried a non-success status code.
+    Http {
+        status: reqwest::StatusCode,
+    },
     Other,
 }
 
@@ -71,6 +78,12 @@ impl std::error::Error for Error {
 }
 
 impl Error {
+    /// Error kind, useful for programmatic handling (e.g. matching on
+    /// [`Kind::Http`] to retry on certain status codes).
+    pub fn kind(&self) -> Kind {
+        self.inner.kind
+    }
+
     /// Original GraphQL query errors.
     pub fn graphql_errors(&self) -> Option<&[GraphQlError]> {
         self.inner.query_errors.as_deref()
@@ -83,6 +96,7 @@ impl Error {
                 kind,
                 source: Some(error.into()),
                 query_errors: None,
+                target_type: None,
             }),
         }
     }
@@ -94,6 +108,7 @@ impl Error {
                 kind,
                 source: Some(message.into()),
                 query_errors: None,
+                target_type: None,
             }),
         }
     }
@@ -106,6 +121,7 @@ impl Error {
                 kind: Kind::Query,
                 source: Some("Expected a non-empty response data from query".into()),
                 query_errors: None,
+                target_type: None,
             }),
         }
     }
@@ -115,9 +131,9 @@ impl Error {
     /// snapshot of the response body.
     pub fn http(url: Url, status: StatusCode, body: &[u8]) -> Self {
         Self::from_message(
-            Kind::Http,
+            Kind::Http { status },
             format!(
-                "GraphQL request to {url} failed: HTTP {status}, body={:?}",
+                "GraphQL request to {url} failed, body={:?}",
                 truncated_body(body)
             ),
         )
@@ -137,6 +153,15 @@ impl Error {
         )
     }
 
+    /// Record the name of the type the response was being deserialized into,
+    /// adding `while decoding \`T\`` context to the error message. A plain HTTP
+    /// status or `serde_json` error does not reveal *what* the client was
+    /// trying to decode; this fills that gap.
+    pub fn while_decoding(mut self, target_type: impl Into<String>) -> Self {
+        self.inner.target_type = Some(target_type.into());
+        self
+    }
+
     /// Create a Query kind of error with the original graphql errors.
     pub fn graphql_error(errors: Vec<GraphQlError>) -> Self {
         Self {
@@ -144,6 +169,7 @@ impl Error {
                 kind: Kind::Query,
                 source: None,
                 query_errors: Some(errors),
+                target_type: None,
             }),
         }
     }
@@ -156,7 +182,7 @@ impl std::fmt::Display for Kind {
             Kind::Parse => write!(f, "Parse error:"),
             Kind::Query => write!(f, "Query error:"),
             Kind::Missing => write!(f, "Missing:"),
-            Kind::Http => write!(f, "HTTP error:"),
+            Kind::Http { status } => write!(f, "HTTP {status}:"),
             Kind::Other => write!(f, "Error:"),
         }
     }
@@ -168,6 +194,10 @@ impl std::fmt::Display for Error {
 
         if let Some(source) = &self.inner.source {
             write!(f, " {source}")?;
+        }
+
+        if let Some(target_type) = &self.inner.target_type {
+            write!(f, " (while decoding `{target_type}`)")?;
         }
 
         if let Some(errors) = &self.inner.query_errors {
@@ -317,6 +347,18 @@ mod tests {
         // deeper cause, so the chain does not repeat "outer message".
         let source = error.source().expect("expected an underlying cause");
         assert_eq!(source.to_string(), "inner cause");
+    }
+
+    #[test]
+    fn while_decoding_adds_target_type_and_keeps_status() {
+        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
+        let error = Error::http(url, StatusCode::BAD_GATEWAY, b"Bad Gateway")
+            .while_decoding("my_crate::MyResponse");
+        let message = error.to_string();
+        // The decode target is surfaced in the message,
+        assert!(message.contains("while decoding `my_crate::MyResponse`"));
+        // yet the HTTP status remains programmatically inspectable.
+        assert!(matches!(error.kind(), Kind::Http { status } if status == StatusCode::BAD_GATEWAY));
     }
 
     #[test]
