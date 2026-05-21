@@ -16,7 +16,7 @@ use crate::error::Result;
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct Identifier(pub iota_sdk::types::Identifier);
 

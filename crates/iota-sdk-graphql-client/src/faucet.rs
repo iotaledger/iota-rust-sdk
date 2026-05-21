@@ -19,7 +19,7 @@ pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
 const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
@@ -50,14 +50,14 @@ struct FaucetResponse {
     error: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct BatchStatusFaucetResponse {
     pub status: Option<BatchSendStatus>,
     pub error: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "UPPERCASE")]
 #[non_exhaustive]
 pub enum BatchSendStatusType {
@@ -66,18 +66,18 @@ pub enum BatchSendStatusType {
     Discarded,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BatchSendStatus {
     pub status: BatchSendStatusType,
     pub transferred_gas_objects: Option<FaucetReceipt>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FaucetReceipt {
     pub sent: Vec<CoinInfo>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CoinInfo {
     pub amount: u64,
