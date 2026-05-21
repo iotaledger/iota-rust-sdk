@@ -19,7 +19,7 @@ use iota_sdk_grpc_client::Client;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Connect to devnet
-    let client = Client::new_devnet().await?;
+    let client = Client::new_devnet()?;
 
     // Access service clients
     let ledger = client.ledger_service_client();
@@ -44,8 +44,7 @@ use iota_sdk_grpc_client::Client;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new_devnet()
-        .await?
+    let client = Client::new_devnet()?
         .with_headers(vec![("x-custom-header", "value")])
         .with_max_decoding_message_size(16 * 1024 * 1024); // 16MB
 
