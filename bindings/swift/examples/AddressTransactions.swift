@@ -5,15 +5,7 @@
 //
 // The GraphQL service does not have a single filter that returns transactions
 // in both directions for an address. To get the full history, run two queries
-// and merge the results:
-//   * signAddress -> transactions sent by the address (outgoing,
-//                    equivalent to GraphQL's `relation: SENT`).
-//   * recvAddress -> transactions that transferred objects to the address
-//                    (incoming, equivalent to GraphQL's `relation: RECV`).
-//
-// Omitting both filters effectively returns sent-only, so an address that has
-// only ever received coins will appear to have no history unless recvAddress
-// is set.
+// and merge the results.
 
 import IotaSDK
 

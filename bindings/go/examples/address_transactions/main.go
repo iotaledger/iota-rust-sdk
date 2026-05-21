@@ -5,15 +5,7 @@
 //
 // The GraphQL service does not have a single filter that returns transactions
 // in both directions for an address. To get the full history, run two queries
-// and merge the results:
-//   - SignAddress -> transactions sent by the address (outgoing,
-//     equivalent to GraphQL's `relation: SENT`).
-//   - RecvAddress -> transactions that transferred objects to the address
-//     (incoming, equivalent to GraphQL's `relation: RECV`).
-//
-// Omitting both filters effectively returns sent-only, so an address that has
-// only ever received coins will appear to have no history unless RecvAddress
-// is set.
+// and merge the results.
 package main
 
 import (

@@ -5,16 +5,7 @@
 //!
 //! The GraphQL service does not have a single filter that returns
 //! transactions in *both* directions for an address. To get the full
-//! history, run two queries and merge the results:
-//!
-//! * `sign_address` filters for transactions **sent by** the address (outgoing
-//!   — equivalent to GraphQL's `relation: SENT`).
-//! * `recv_address` filters for transactions that **transferred objects to**
-//!   the address (incoming — equivalent to GraphQL's `relation: RECV`).
-//!
-//! Omitting both filters effectively returns sent-only, so an address that
-//! has only ever received coins will appear to have no history unless
-//! `recv_address` is set.
+//! history, run two queries and merge the results.
 
 use std::str::FromStr;
 
