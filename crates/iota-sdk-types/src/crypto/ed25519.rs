@@ -64,7 +64,7 @@ impl PublicKeyExt for Ed25519PublicKey {
     }
 
     /// Tries to create an Ed25519PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
@@ -174,7 +174,7 @@ impl Ed25519Signature {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }

@@ -186,7 +186,7 @@ pub trait ToFromBytes {
     fn to_bytes(&self) -> Self::ByteArray;
 
     /// Create an instance from raw bytes
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error>
     where
         Self: Sized;
 }
