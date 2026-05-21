@@ -53,7 +53,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
     ///
