@@ -21,13 +21,13 @@ class Program
 
         Console.WriteLine($"Transactions for {address.ToHex()}");
 
-        Console.WriteLine($"\nOutgoing (sent by address): {outgoing.data.Count}");
+        Console.WriteLine($"\nOutgoing (sent by address): {outgoing.data.Length}");
         foreach (var tx in outgoing.data)
         {
             Console.WriteLine($"  - {tx.transaction.Digest().ToBase58()}");
         }
 
-        Console.WriteLine($"\nIncoming (received by address): {incoming.data.Count}");
+        Console.WriteLine($"\nIncoming (received by address): {incoming.data.Length}");
         foreach (var tx in incoming.data)
         {
             Console.WriteLine($"  - {tx.transaction.Digest().ToBase58()}");
