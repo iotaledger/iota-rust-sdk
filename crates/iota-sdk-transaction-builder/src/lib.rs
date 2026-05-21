@@ -384,14 +384,19 @@ mod tests {
         }
     }
 
-    /// Wait for the transaction to be finalized and indexed, and check the
-    /// effects' to ensure the transaction was successfully executed.
-    async fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
+    /// Check the effects to ensure the transaction was successfully executed.
+    fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
         assert!(effects.is_ok(), "Execution failed. Effects: {effects:?}");
+
         // check that it succeeded
-        let status = effects.unwrap();
-        let expected_status = ExecutionStatus::Success;
-        assert_eq!(&expected_status, status.status());
+        match effects.unwrap() {
+            TransactionEffects::V1(v1) => {
+                assert_eq!(ExecutionStatus::Success, v1.status);
+            }
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
+        };
     }
 
     #[tokio::test]
@@ -508,7 +513,7 @@ mod tests {
         tx.transfer_objects(recipient, [coin]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
 
         // check that recipient has 1 coin
         let recipient_coins = client
@@ -529,7 +534,7 @@ mod tests {
             .arguments([Some(1u64)]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
     }
 
     #[tokio::test]
@@ -544,7 +549,7 @@ mod tests {
         tx.transfer_objects(recipient, [assigned("coin")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
 
         // check that recipient has 1 coin
         let recipient_coins = client
@@ -563,11 +568,15 @@ mod tests {
         // transfer 1 IOTA
         tx.split_coins(coin, [1_000_000_000u64]);
 
-        let effects = tx.execute(&pk, WaitForTx::Finalized).await.unwrap();
-
-        let expected_status = ExecutionStatus::Success;
-        // The tx failed, so we expect Failure instead of Success
-        assert_ne!(&expected_status, effects.status());
+        match tx.execute(&pk, WaitForTx::Finalized).await.unwrap() {
+            TransactionEffects::V1(v1) => {
+                // The tx failed, so we expect Failure instead of Success
+                assert_ne!(ExecutionStatus::Success, v1.status);
+            }
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
+        };
     }
 
     #[tokio::test]
@@ -586,7 +595,7 @@ mod tests {
         let client = tx.get_client().clone();
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
 
         // check that there are two coins
         let coins_after = client
@@ -603,7 +612,7 @@ mod tests {
         tx.make_move_vec([1u64]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
     }
 
     #[tokio::test]
@@ -616,7 +625,7 @@ mod tests {
             .transfer_objects(address, [assigned("cap")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
     }
 
     #[tokio::test]
@@ -652,7 +661,7 @@ mod tests {
                 _ => unimplemented!("a new enum variant was added and needs to be handled"),
             }
         }
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
 
         let client = Client::new_localnet();
         let mut tx = TransactionBuilder::new(address).with_client(&client);
@@ -690,6 +699,6 @@ mod tests {
         tx.gas([coins.last().unwrap().id]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-        check_effects_status_success(effects).await;
+        check_effects_status_success(effects);
     }
 }

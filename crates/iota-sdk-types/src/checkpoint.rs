@@ -263,6 +263,7 @@ mod serialization {
     use super::*;
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "CheckpointSummary")]
     struct ReadableCheckpointSummaryRef<'a> {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
@@ -286,6 +287,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "CheckpointSummary")]
     struct ReadableCheckpointSummary {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
@@ -309,6 +311,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "CheckpointSummary")]
     struct BinaryCheckpointSummaryRef<'a> {
         epoch: &'a EpochId,
         sequence_number: &'a CheckpointSequenceNumber,
@@ -323,6 +326,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "CheckpointSummary")]
     struct BinaryCheckpointSummary {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
@@ -520,6 +524,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "CheckpointContents")]
     #[cfg_attr(
         feature = "bcs-schema",
         derive(iota_bcs_schema::BcsSchema),
@@ -578,11 +583,13 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
+    #[serde(rename = "CheckpointCommitment")]
     enum ReadableCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "CheckpointCommitment")]
     enum BinaryCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }

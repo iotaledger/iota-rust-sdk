@@ -612,6 +612,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "MultisigAggregatedSignature")]
     struct ReadableMultisigAggregatedSignature {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
@@ -619,6 +620,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "MultisigAggregatedSignature")]
     struct ReadableMultisigAggregatedSignatureRef<'a> {
         signatures: &'a [MultisigMemberSignature],
         bitmap: BitmapUnit,
