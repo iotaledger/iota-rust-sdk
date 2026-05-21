@@ -33,12 +33,14 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// the completely serialized signature.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
-    /// The secp256r1 public key for this passkey.
+    /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
-    /// The secp256r1 signature from the passkey.
+    /// Normalized r1 signature from the passkey.
     pub(crate) signature: Secp256r1Signature,
     /// Parsed base64url decoded challenge bytes from
-    /// `client_data_json.challenge`.
+    /// `client_data_json.challenge`, which is expected to be the signing
+    /// message `hash(Intent | bcs_message)`
+    // TODO  challenge: [u8; DefaultHash::OUTPUT_SIZE] ?
     pub(crate) challenge: Vec<u8>,
     /// Opaque authenticator data for this passkey signature.
     ///
@@ -50,6 +52,8 @@ pub struct PasskeyAuthenticator {
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
     pub(crate) client_data_json: String,
+    //     /// Initialization of bytes for passkey in serialized form.
+    // bytes: OnceCell<Vec<u8>>,
 }
 
 impl PasskeyAuthenticator {
