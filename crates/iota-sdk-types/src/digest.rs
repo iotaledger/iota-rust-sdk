@@ -109,7 +109,7 @@ impl Digest {
     }
 
     /// Generates a digest from bytes.
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, DigestParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, DigestParseError> {
         let bytes = bytes.as_ref();
         <[u8; Self::LENGTH]>::try_from(bytes)
             .map_err(|_| DigestParseError::InvalidByteLength {

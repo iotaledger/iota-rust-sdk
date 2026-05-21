@@ -68,7 +68,7 @@ impl Bls12381PublicKey {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }
@@ -178,7 +178,7 @@ impl Bls12381Signature {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }
