@@ -21,6 +21,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
 [workspace.lints.clippy]
 redundant_clone = "warn"
 uninlined_format_args = "warn"
+unused_async = "warn"
 
 [workspace.dependencies]
 # external dependencies
