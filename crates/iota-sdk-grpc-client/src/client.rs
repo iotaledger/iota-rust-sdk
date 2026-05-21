@@ -227,7 +227,7 @@ mod tests {
     async fn https_without_tls_ring_returns_failed_precondition() {
         use super::Client;
 
-        let status = match Client::new("https://example.com").await {
+        let status = match Client::new("https://example.com") {
             Err(crate::api::Error::Grpc(status)) => status,
             Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
             Ok(_) => panic!("new should fail without tls-ring"),
