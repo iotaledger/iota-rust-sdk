@@ -223,8 +223,8 @@ impl_grpc_client_config!(
 #[cfg(test)]
 mod tests {
     #[cfg(not(feature = "tls-ring"))]
-    #[tokio::test]
-    async fn https_without_tls_ring_returns_failed_precondition() {
+    #[test]
+    fn https_without_tls_ring_returns_failed_precondition() {
         use super::Client;
 
         let status = match Client::new("https://example.com") {
