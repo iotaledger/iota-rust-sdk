@@ -809,6 +809,7 @@ mod serialization {
     // New variants MUST be added at the end.
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "error", rename_all = "snake_case")]
+    #[serde(rename = "ExecutionError")]
     enum ReadableExecutionError {
         InsufficientGas,
         InvalidGasObject,
@@ -1485,6 +1486,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "CommandArgumentError")]
     enum ReadableCommandArgumentError {
         TypeMismatch,
         InvalidBcsBytes,
@@ -1677,6 +1679,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "PackageUpgradeError")]
     enum ReadablePackageUpgradeError {
         UnableToFetchPackage {
             package_id: ObjectId,

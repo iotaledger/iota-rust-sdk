@@ -72,7 +72,7 @@ impl Client {
     /// for tx in txs.body() {
     ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
-    ///     println!("Status: {:?}", effects.status());
+    ///     println!("Status: {:?}", effects.as_v1().status);
     ///
     ///     // Access checkpoint number
     ///     let checkpoint = tx.checkpoint_sequence_number()?;

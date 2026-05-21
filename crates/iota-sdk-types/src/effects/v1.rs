@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId, Version, execution_status::ExecutionStatus,
-    object::Owner,
+    Digest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectId, Owner, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -36,7 +35,7 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Digest,
     /// The updated gas object reference, as an index into the `changed_objects`
@@ -68,23 +67,6 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Digest>,
 }
 
-impl TransactionEffectsV1 {
-    /// The status of the execution
-    pub fn status(&self) -> &ExecutionStatus {
-        &self.status
-    }
-
-    /// The epoch when this transaction was executed.
-    pub fn epoch(&self) -> EpochId {
-        self.epoch
-    }
-
-    /// The gas used in this transaction.
-    pub fn gas_summary(&self) -> &GasCostSummary {
-        &self.gas_used
-    }
-}
-
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -95,7 +77,11 @@ impl TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Deserialize, serde::Serialize),
+    serde(rename = "EffectsObjectChange")
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -319,36 +305,6 @@ impl ObjectOut {
     }
 }
 
-/// Defines what happened to an ObjectId during execution
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation = %d00   ; None
-///              / %d01   ; Created
-///              / %d02   ; Deleted
-/// ```
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[non_exhaustive]
-pub enum IdOperation {
-    None,
-    Created,
-    Deleted,
-}
-
-impl IdOperation {
-    crate::def_is!(None, Created, Deleted);
-}
-
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
@@ -357,12 +313,14 @@ mod serialization {
     use super::*;
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1Ref<'a> {
         #[serde(flatten)]
         status: &'a ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -375,12 +333,14 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1 {
         #[serde(flatten)]
         status: ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -393,10 +353,11 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1Ref<'a> {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -408,10 +369,11 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1 {
         status: ExecutionStatus,
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -430,7 +392,7 @@ mod serialization {
             let Self {
                 status,
                 epoch,
-                gas_used,
+                gas_cost_summary,
                 transaction_digest,
                 gas_object_index,
                 events_digest,
@@ -444,7 +406,7 @@ mod serialization {
                 let readable = ReadableTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -459,7 +421,7 @@ mod serialization {
                 let binary = BinaryTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -483,7 +445,7 @@ mod serialization {
                 let ReadableTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -496,7 +458,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -510,7 +472,7 @@ mod serialization {
                 let BinaryTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -523,7 +485,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -539,6 +501,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "UnchangedSharedKind")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -660,6 +623,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectIn")]
     enum ReadableObjectIn {
         Missing,
         Data {
@@ -671,6 +635,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectIn")]
     enum BinaryObjectIn {
         Missing,
         Data {
@@ -754,6 +719,7 @@ mod serialization {
 
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectOut")]
     enum ReadableObjectOut {
         Missing,
         ObjectWrite {
@@ -768,6 +734,7 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectOut")]
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {

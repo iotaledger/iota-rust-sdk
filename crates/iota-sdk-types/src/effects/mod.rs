@@ -5,11 +5,9 @@
 mod v1;
 
 pub use v1::{
-    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
+    ChangedObject, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
     UnchangedSharedObject,
 };
-
-use crate::execution_status::ExecutionStatus;
 
 /// The output or effects of executing a transaction
 ///
@@ -40,27 +38,6 @@ impl TransactionEffects {
         let Self::V1(effects) = self;
         *effects
     }
-
-    /// Return the status of the transaction.
-    pub fn status(&self) -> &ExecutionStatus {
-        match self {
-            TransactionEffects::V1(e) => e.status(),
-        }
-    }
-
-    /// Return the epoch in which this transaction was executed.
-    pub fn epoch(&self) -> u64 {
-        match self {
-            TransactionEffects::V1(e) => e.epoch(),
-        }
-    }
-
-    /// Return the gas cost summary of the transaction.
-    pub fn gas_summary(&self) -> &crate::gas::GasCostSummary {
-        match self {
-            TransactionEffects::V1(e) => e.gas_summary(),
-        }
-    }
 }
 
 #[cfg(feature = "serde")]
@@ -72,25 +49,29 @@ mod serialization {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "version")]
-    enum ReadableEffectsRef<'a> {
+    #[serde(rename = "TransactionEffects")]
+    enum ReadableTransactionEffectsRef<'a> {
         #[serde(rename = "1")]
         V1(&'a TransactionEffectsV1),
     }
 
     #[derive(serde::Deserialize)]
     #[serde(tag = "version")]
-    pub enum ReadableEffects {
+    #[serde(rename = "TransactionEffects")]
+    pub enum ReadableTransactionEffects {
         #[serde(rename = "1")]
         V1(Box<TransactionEffectsV1>),
     }
 
     #[derive(serde::Serialize)]
-    enum BinaryEffectsRef<'a> {
+    #[serde(rename = "TransactionEffects")]
+    enum BinaryTransactionEffectsRef<'a> {
         V1(&'a TransactionEffectsV1),
     }
 
     #[derive(serde::Deserialize)]
-    pub enum BinaryEffects {
+    #[serde(rename = "TransactionEffects")]
+    pub enum BinaryTransactionEffects {
         V1(Box<TransactionEffectsV1>),
     }
 
@@ -101,12 +82,12 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = match self {
-                    TransactionEffects::V1(fx) => ReadableEffectsRef::V1(fx),
+                    TransactionEffects::V1(fx) => ReadableTransactionEffectsRef::V1(fx),
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
-                    TransactionEffects::V1(fx) => BinaryEffectsRef::V1(fx),
+                    TransactionEffects::V1(fx) => BinaryTransactionEffectsRef::V1(fx),
                 };
                 binary.serialize(serializer)
             }
@@ -119,12 +100,13 @@ mod serialization {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                ReadableEffects::deserialize(deserializer).map(|readable| match readable {
-                    ReadableEffects::V1(fx) => Self::V1(fx),
-                })
+                ReadableTransactionEffects::deserialize(deserializer)
+                    .map(|readable| match readable {
+                        ReadableTransactionEffects::V1(fx) => Self::V1(fx),
+                    })
             } else {
-                BinaryEffects::deserialize(deserializer).map(|binary| match binary {
-                    BinaryEffects::V1(fx) => Self::V1(fx),
+                BinaryTransactionEffects::deserialize(deserializer).map(|binary| match binary {
+                    BinaryTransactionEffects::V1(fx) => Self::V1(fx),
                 })
             }
         }
@@ -155,4 +137,34 @@ mod serialization {
             }
         }
     }
+}
+
+/// Defines what happened to an ObjectId during execution
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// id-operation = %d00   ; None
+///              / %d01   ; Created
+///              / %d02   ; Deleted
+/// ```
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Deserialize, serde::Serialize),
+    serde(rename_all = "lowercase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum IdOperation {
+    None,
+    Created,
+    Deleted,
+}
+
+impl IdOperation {
+    crate::def_is!(None, Created, Deleted);
 }
