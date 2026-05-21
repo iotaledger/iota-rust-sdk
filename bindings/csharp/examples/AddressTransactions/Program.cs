@@ -13,8 +13,8 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
-        var address = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var client = GraphQlClient.NewLocalnet();
+        var address = Address.FromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa");
 
         var outgoing = await client.Transactions(filter: new TransactionsFilter(signAddress: address));
         var incoming = await client.Transactions(filter: new TransactionsFilter(recvAddress: address));

@@ -14,9 +14,9 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
         val address =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+            Address.fromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
         val outgoing = client.transactions(TransactionsFilter(signAddress = address))
         val incoming = client.transactions(TransactionsFilter(recvAddress = address))
