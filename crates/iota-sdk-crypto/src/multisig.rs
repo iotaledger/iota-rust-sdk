@@ -4,7 +4,7 @@
 
 use iota_types::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
-    UserSignature,
+    UserSignature, crypto::ThresholdUnit,
 };
 
 use crate::{SignatureError, Verifier};

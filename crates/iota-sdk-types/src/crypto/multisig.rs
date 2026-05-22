@@ -682,17 +682,16 @@ mod serialization {
 
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag =
-                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                    SignatureFromBytesError::new("missing signature scheme flag")
-                })?)
-                .map_err(SignatureFromBytesError::new)?;
+            let (flag, tail) = bytes.split_first().ok_or(SignatureFromBytesError::new(
+                "missing signature scheme flag",
+            ))?;
+            let scheme = SignatureScheme::from_byte(*flag).map_err(SignatureFromBytesError::new)?;
 
-            if flag != SignatureScheme::Multisig {
+            if scheme != SignatureScheme::Multisig {
                 return Err(SignatureFromBytesError::new("invalid multisig flag"));
             }
 
-            if let Ok(multisig) = bcs::from_bytes::<Multisig>(&bytes[1..]) {
+            if let Ok(multisig) = bcs::from_bytes::<Multisig>(tail) {
                 let multisig = Self {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
