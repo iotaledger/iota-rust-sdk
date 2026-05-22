@@ -2,6 +2,11 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::{
+    hash::{Hash, Hasher},
+    sync::OnceLock,
+};
+
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 
 /// A passkey authenticator.
@@ -31,7 +36,7 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -52,8 +57,8 @@ pub struct PasskeyAuthenticator {
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
     pub(crate) client_data_json: String,
-    //     /// Initialization of bytes for passkey in serialized form.
-    // bytes: OnceCell<Vec<u8>>,
+    /// Initialization of bytes for passkey in serialized form.
+    bytes: OnceLock<Vec<u8>>,
 }
 
 impl PasskeyAuthenticator {
@@ -92,6 +97,18 @@ impl PasskeyAuthenticator {
     /// for more information on this field.
     pub fn client_data_json(&self) -> &str {
         &self.client_data_json
+    }
+}
+
+impl Hash for PasskeyAuthenticator {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.as_ref().hash(state);
+    }
+}
+
+impl AsRef<[u8]> for PasskeyAuthenticator {
+    fn as_ref(&self) -> &[u8] {
+        self.bytes.get_or_init(|| self.to_bytes())
     }
 }
 
@@ -250,6 +267,7 @@ mod serialization {
                 challenge,
                 authenticator_data,
                 client_data_json,
+                bytes: OnceLock::new(),
             })
         }
 
@@ -401,6 +419,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
                         challenge: challenge_bytes,
                         authenticator_data,
                         client_data_json,
+                        bytes: OnceLock::new(),
                     }
                 },
             )
