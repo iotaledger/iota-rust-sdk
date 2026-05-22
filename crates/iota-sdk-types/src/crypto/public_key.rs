@@ -6,6 +6,7 @@ use base64ct::{Base64, Encoding};
 use super::{
     Ed25519PublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
+    signature::InvalidSignatureScheme,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -17,6 +18,8 @@ pub enum PublicKeyError {
     TryFromSlice(#[from] std::array::TryFromSliceError),
     #[error("Invalid input")]
     InvalidInput,
+    #[error("{0}")]
+    InvalidSignatureScheme(#[from] InvalidSignatureScheme),
 }
 
 /// Enum of valid public keys for the signature schemes supported by IOTA.
@@ -95,27 +98,28 @@ impl PublicKey {
     pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, PublicKeyError> {
         let bytes = bytes.as_ref();
 
-        match bytes.first() {
-            Some(x) => {
-                if x == &(SignatureScheme::Ed25519 as u8) {
-                    let pk = Ed25519PublicKey::from_bytes(&bytes[1..])?;
+        match bytes.split_first() {
+            Some((flag, tail)) => match SignatureScheme::from_byte(*flag)? {
+                SignatureScheme::Ed25519 => {
+                    let pk = Ed25519PublicKey::from_bytes(tail)?;
                     Ok(Self::Ed25519(pk))
-                } else if x == &(SignatureScheme::Secp256k1 as u8) {
+                }
+                SignatureScheme::Secp256k1 => {
                     let pk = Secp256k1PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256k1(pk))
-                } else if x == &(SignatureScheme::Secp256r1 as u8) {
+                }
+                SignatureScheme::Secp256r1 => {
                     let pk = Secp256r1PublicKey::from_bytes(&bytes[1..])?;
                     Ok(Self::Secp256r1(pk))
-                } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
-                    Ok(Self::ZkLoginDeprecated)
-                } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
+                }
+                SignatureScheme::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
+                SignatureScheme::PasskeyAuthenticator => {
                     let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..])?);
                     Ok(Self::Passkey(pk))
-                } else {
-                    Err(PublicKeyError::InvalidInput)
                 }
-            }
-            _ => Err(PublicKeyError::InvalidInput),
+                _ => Err(PublicKeyError::InvalidInput),
+            },
+            None => Err(PublicKeyError::InvalidInput),
         }
     }
 
