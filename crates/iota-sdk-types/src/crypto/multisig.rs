@@ -489,15 +489,7 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
 
     fn try_from(signature: UserSignature) -> Result<Self, Self::Error> {
         match signature {
-            UserSignature::Simple(SimpleSignature::Ed25519 { signature, .. }) => {
-                Ok(Self::Ed25519(signature))
-            }
-            UserSignature::Simple(SimpleSignature::Secp256k1 { signature, .. }) => {
-                Ok(Self::Secp256k1(signature))
-            }
-            UserSignature::Simple(SimpleSignature::Secp256r1 { signature, .. }) => {
-                Ok(Self::Secp256r1(signature))
-            }
+            UserSignature::Simple(simple) => Ok(simple.into()),
             UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
             UserSignature::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
