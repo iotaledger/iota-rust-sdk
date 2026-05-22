@@ -125,7 +125,7 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
             .map(|(maybe_member, signature)| {
                 let member = maybe_member?;
                 self.verify_member_signature(message, member.public_key(), signature)
-                    .map(|()| member.weight() as u16)
+                    .map(|()| member.weight() as ThresholdUnit)
             })
             .sum::<Result<u16, SignatureError>>()?;
 
