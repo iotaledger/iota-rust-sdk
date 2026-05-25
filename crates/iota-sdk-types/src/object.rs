@@ -572,8 +572,8 @@ impl Object {
     }
 
     #[cfg(feature = "serde")]
-    pub fn to_rust<T: serde::de::DeserializeOwned>(
-        &self,
+    pub fn to_rust<'de, T: serde::Deserialize<'de>>(
+        &'de self,
     ) -> Result<T, Box<dyn std::error::Error + Send + Sync>> {
         let contents = self.as_struct_opt().ok_or("not a struct")?.contents();
         Ok(bcs::from_bytes::<T>(contents)?)
