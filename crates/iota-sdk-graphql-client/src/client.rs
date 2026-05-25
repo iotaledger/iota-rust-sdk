@@ -34,7 +34,7 @@ pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Erro
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Client {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
