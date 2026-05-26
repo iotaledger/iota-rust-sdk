@@ -290,7 +290,7 @@ pub use iota_graphql_client::{
 pub use self::{
     builder::{
         TransactionBuilder,
-        client_methods::{ClientMethods, ObjectsPage},
+        client_methods::{ClientMethods, ObjectsPage, ProtocolConfig},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,

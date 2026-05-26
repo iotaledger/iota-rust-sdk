@@ -51,7 +51,7 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`ClientMethods::protocol_attr`] and falls back to this if the
+/// value via [`ClientMethods::protocol_config`] and falls back to this if the
 /// implementation does not expose protocol config or the value cannot be
 /// parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
@@ -1109,11 +1109,14 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             //   on a wallet with thousands of dust coins.
             let max_gas_payment_objects = self
                 .client
-                .protocol_attr(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                .protocol_config()
                 .await
                 .ok()
-                .flatten()
-                .and_then(|v| v.parse::<usize>().ok())
+                .and_then(|cfg| {
+                    cfg.attributes
+                        .get(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                        .and_then(|v| v.parse::<usize>().ok())
+                })
                 .and_then(|v| v.checked_sub(1))
                 .unwrap_or(DEFAULT_MAX_GAS_PAYMENT_OBJECTS);
             let owner = self.data.sponsor.unwrap_or(self.data.sender);

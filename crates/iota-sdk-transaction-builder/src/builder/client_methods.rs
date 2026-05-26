@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::collections::BTreeMap;
+
 use iota_graphql_client::{
     DryRunResult, WaitForTx,
     pagination::{Direction, PaginationFilter},
@@ -14,6 +16,19 @@ use iota_types::{
 /// One page of objects plus an optional cursor for the next page. See
 /// [`ClientMethods::objects`].
 pub type ObjectsPage = (Vec<Object>, Option<Vec<u8>>);
+
+/// Transport-neutral view of the chain's protocol configuration.
+///
+/// The trait only needs key→value strings — both GraphQL
+/// (`Vec<ProtocolConfigAttr>`) and gRPC (`map<string, string>`) collapse
+/// into this shape — so the type deliberately does not enumerate every
+/// individual on-chain field. Callers parse the values they care about.
+#[derive(Debug, Default, Clone)]
+pub struct ProtocolConfig {
+    /// All available configuration attributes, keyed by their canonical
+    /// protocol name (e.g. `"max_gas_payment_objects"`).
+    pub attributes: BTreeMap<String, String>,
+}
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
@@ -47,18 +62,18 @@ pub trait ClientMethods {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
-    /// Fetch a single protocol-config attribute by key (e.g.
-    /// `"max_gas_payment_objects"`). Returns `None` if the key is unknown
-    /// or the implementation does not expose protocol config.
+    /// Fetch the chain's protocol configuration. Implementations should
+    /// populate [`ProtocolConfig::attributes`] with whatever key→value
+    /// pairs the underlying transport exposes; callers look up the keys
+    /// they care about.
     ///
-    /// The default impl returns `Ok(None)` so existing implementors do not
-    /// have to grow protocol-config plumbing; callers should treat `None`
-    /// as "use a hardcoded fallback".
-    fn protocol_attr(
+    /// The default impl returns an empty [`ProtocolConfig`] so existing
+    /// implementors do not have to grow protocol-config plumbing; callers
+    /// should treat a missing key as "use a hardcoded fallback".
+    fn protocol_config(
         &self,
-        _key: &str,
-    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
-        std::future::ready(Ok(None))
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        std::future::ready(Ok(ProtocolConfig::default()))
     }
 
     /// Fetch a transaction
@@ -132,11 +147,10 @@ impl<T: ClientMethods> ClientMethods for &T {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
     }
 
-    fn protocol_attr(
+    fn protocol_config(
         &self,
-        key: &str,
-    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
-        (*self).protocol_attr(key)
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        (*self).protocol_config()
     }
 
     fn transaction(
@@ -251,13 +265,16 @@ impl ClientMethods for iota_graphql_client::Client {
         Ok((data, next))
     }
 
-    async fn protocol_attr(&self, key: &str) -> Result<Option<String>, Self::Error> {
-        let cfg = self.protocol_config(None).await?;
-        Ok(cfg
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        // `protocol_config(None)` is the inherent method; the trait method has
+        // no extra arguments, so the compiler resolves the two unambiguously.
+        let cfg = iota_graphql_client::Client::protocol_config(self, None).await?;
+        let attributes = cfg
             .configs
             .into_iter()
-            .find(|attr| attr.key == key)
-            .and_then(|attr| attr.value))
+            .filter_map(|attr| attr.value.map(|v| (attr.key, v)))
+            .collect();
+        Ok(ProtocolConfig { attributes })
     }
 
     async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
@@ -330,11 +347,10 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
     }
 
-    fn protocol_attr(
+    fn protocol_config(
         &self,
-        key: &str,
-    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
-        self.as_ref().protocol_attr(key)
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        self.as_ref().protocol_config()
     }
 
     fn transaction(
