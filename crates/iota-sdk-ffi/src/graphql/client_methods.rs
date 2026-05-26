@@ -42,6 +42,10 @@ impl ClientMethods for GraphQLClient {
         .await
     }
 
+    async fn protocol_attr(&self, key: &str) -> Result<Option<String>, Self::Error> {
+        ClientMethods::protocol_attr(&*self.0.read().await, key).await
+    }
+
     async fn transaction(
         &self,
         digest: Digest,

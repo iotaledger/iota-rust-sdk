@@ -814,4 +814,54 @@ mod tests {
              went from {before_count} to {after_count}",
         );
     }
+
+    /// Mint 50 coins of 1 IOTA each — any single one trivially covers the
+    /// gas budget — and let auto gas selection resolve a fresh tx without
+    /// pinning gas. The fast path should pin *every* coin from the first
+    /// page (not just the one minimally needed), so gas smashing can
+    /// consolidate them into a single coin during execution.
+    #[tokio::test]
+    async fn test_auto_gas_pins_full_first_page_for_consolidation() {
+        use crate::unresolved::Argument;
+
+        let (mut tx, sender, pk, coins) = helper_setup().await;
+        let client = tx.get_client().clone();
+        let source = coins.first().unwrap().id;
+
+        // 50 matches the default IOTA GraphQL `max_page_size`, so all newly
+        // minted coins land on the first page even alongside the few
+        // leftover faucet coins. 1 IOTA per coin is well above any
+        // realistic gas budget for a `send_iota` of 1 nano.
+        const NUM_COINS: usize = 50;
+        const PER_COIN: u64 = 1_000_000_000;
+        const GAS_BUDGET: u64 = 50_000_000;
+
+        tx.split_coins(source, vec![PER_COIN; NUM_COINS]);
+        tx.transfer_objects(
+            sender,
+            (0..NUM_COINS as u16)
+                .map(|i| Argument::NestedResult(0, i))
+                .collect::<Vec<_>>(),
+        );
+        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await).await;
+
+        // Build (but don't execute) a fresh tx without pinning gas. The
+        // resolved transaction reveals what auto-gas picked.
+        let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
+        let recipient = Address::generate(rand::thread_rng());
+        tx2.gas_budget(GAS_BUDGET);
+        tx2.send_iota(recipient, 1u64);
+        let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
+            panic!("expected TransactionV1");
+        };
+        // First page covers the budget many times over, so the fast path
+        // runs: every gas coin from the first page (capped at the protocol
+        // max) is pinned, including the 50 newly minted ones.
+        assert!(
+            resolved.gas_payment.objects.len() >= NUM_COINS,
+            "auto-gas fast path should pin every gas coin from the first page \
+             so smashing consolidates them; pinned {}, expected at least {NUM_COINS}",
+            resolved.gas_payment.objects.len(),
+        );
+    }
 }

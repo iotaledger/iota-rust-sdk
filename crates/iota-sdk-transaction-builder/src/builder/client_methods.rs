@@ -47,6 +47,20 @@ pub trait ClientMethods {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
+    /// Fetch a single protocol-config attribute by key (e.g.
+    /// `"max_gas_payment_objects"`). Returns `None` if the key is unknown
+    /// or the implementation does not expose protocol config.
+    ///
+    /// The default impl returns `Ok(None)` so existing implementors do not
+    /// have to grow protocol-config plumbing; callers should treat `None`
+    /// as "use a hardcoded fallback".
+    fn protocol_attr(
+        &self,
+        _key: &str,
+    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
+        std::future::ready(Ok(None))
+    }
+
     /// Fetch a transaction
     fn transaction(
         &self,
@@ -116,6 +130,13 @@ impl<T: ClientMethods> ClientMethods for &T {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn protocol_attr(
+        &self,
+        key: &str,
+    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
+        (*self).protocol_attr(key)
     }
 
     fn transaction(
@@ -230,6 +251,15 @@ impl ClientMethods for iota_graphql_client::Client {
         Ok((data, next))
     }
 
+    async fn protocol_attr(&self, key: &str) -> Result<Option<String>, Self::Error> {
+        let cfg = self.protocol_config(None).await?;
+        Ok(cfg
+            .configs
+            .into_iter()
+            .find(|attr| attr.key == key)
+            .and_then(|attr| attr.value))
+    }
+
     async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
         self.transaction(digest).await
     }
@@ -298,6 +328,13 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         self.as_ref()
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn protocol_attr(
+        &self,
+        key: &str,
+    ) -> impl std::future::Future<Output = Result<Option<String>, Self::Error>> {
+        self.as_ref().protocol_attr(key)
     }
 
     fn transaction(

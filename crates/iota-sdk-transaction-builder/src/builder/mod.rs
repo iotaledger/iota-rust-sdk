@@ -45,12 +45,16 @@ pub mod signer;
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
-/// Protocol cap on `gas_payment.objects.len()` (`max_gas_payment_objects`
-/// is 256 exclusive, so 255 inclusive). Used as the size of the running
-/// top-K kept during paginated gas-coin discovery: an address with many
-/// tiny coins on the early pages and a few large ones later still
-/// converges on the highest-balance set without unbounded memory.
-const MAX_GAS_PAYMENT_OBJECTS: usize = 255;
+/// Protocol-config key for the (exclusive) cap on `gas_payment.objects.len()`.
+const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
+
+/// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
+/// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
+/// time of writing, so 255 inclusive). Auto gas selection fetches the live
+/// value via [`ClientMethods::protocol_attr`] and falls back to this if the
+/// implementation does not expose protocol config or the value cannot be
+/// parsed.
+const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -1092,15 +1096,31 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            // Page through the owner's gas coins, keeping the running
-            // top-K by balance (where K is the auto-gas-selection cap).
-            // Stop as soon as the running top covers the requested budget,
-            // so the per-tx cost only scales with what's actually needed,
-            // not with how many coins the sender happens to own.
+            // Auto gas selection has two paths:
+            //
+            // * Fast path: if the very first page already covers the requested budget, pin
+            //   *every* gas coin from that page (capped at the protocol limit). This is the
+            //   common case — typical wallets have far fewer than one page of gas coins —
+            //   and it deliberately over-includes so gas smashing during execution can
+            //   consolidate small balances into a single coin.
+            // * Slow path: when the first page is not enough, keep a running top-K by
+            //   balance across subsequent pages (K = protocol cap) and stop as soon as the
+            //   running top covers the budget or pages run out. Memory stays bounded even
+            //   on a wallet with thousands of dust coins.
+            let max_gas_payment_objects = self
+                .client
+                .protocol_attr(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                .await
+                .ok()
+                .flatten()
+                .and_then(|v| v.parse::<usize>().ok())
+                .and_then(|v| v.checked_sub(1))
+                .unwrap_or(DEFAULT_MAX_GAS_PAYMENT_OBJECTS);
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
             let target_budget = self.data.gas_budget;
-            let mut top: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
             let mut cursor: Option<Vec<u8>> = None;
+            let mut is_first_page = true;
             loop {
                 let (page, next_cursor) = self
                     .client
@@ -1114,6 +1134,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     )
                     .await
                     .map_err(Error::client)?;
+                let mut page_coins: Vec<(u64, ObjectReference)> = Vec::new();
                 for obj in page {
                     if unusable_object_ids.contains(&obj.object_id()) {
                         continue;
@@ -1121,13 +1142,41 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     let Ok(coin) = Coin::try_from_object(&obj) else {
                         continue;
                     };
-                    top.push((coin.balance(), obj.object_ref()));
+                    page_coins.push((coin.balance(), obj.object_ref()));
                 }
-                top.sort_by_key(|c| std::cmp::Reverse(c.0));
-                top.truncate(MAX_GAS_PAYMENT_OBJECTS);
+
+                if is_first_page {
+                    is_first_page = false;
+                    let page_total: u64 = page_coins
+                        .iter()
+                        .map(|(b, _)| *b)
+                        .fold(0u64, u64::saturating_add);
+                    // First-page-suffices if it covers the budget, or if there
+                    // is no further page to look at anyway. When the caller did
+                    // not set a budget the slow path takes over — there is no
+                    // way to know what "enough" means here.
+                    let first_page_suffices = match target_budget {
+                        Some(budget) => page_total >= budget,
+                        None => next_cursor.is_none(),
+                    };
+                    if first_page_suffices {
+                        page_coins.sort_by_key(|c| std::cmp::Reverse(c.0));
+                        page_coins.truncate(max_gas_payment_objects);
+                        selected = page_coins;
+                        break;
+                    }
+                }
+
+                selected.extend(page_coins);
+                selected.sort_by_key(|c| std::cmp::Reverse(c.0));
+                selected.truncate(max_gas_payment_objects);
 
                 let covers_budget = target_budget.is_some_and(|budget| {
-                    top.iter().map(|(b, _)| *b).fold(0u64, u64::saturating_add) >= budget
+                    selected
+                        .iter()
+                        .map(|(b, _)| *b)
+                        .fold(0u64, u64::saturating_add)
+                        >= budget
                 });
                 if covers_budget || next_cursor.is_none() {
                     break;
@@ -1135,18 +1184,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 cursor = next_cursor;
             }
 
-            let mut accumulated: u64 = 0;
-            for (balance, obj_ref) in top {
+            // Add all selected coins as gas inputs (without early break): the
+            // extra balance gets consolidated by gas smashing during execution.
+            for (_, obj_ref) in selected {
                 self.set_input(
                     InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
                     true,
                 );
-                accumulated = accumulated.saturating_add(balance);
-                if let Some(budget) = target_budget
-                    && accumulated >= budget
-                {
-                    break;
-                }
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
