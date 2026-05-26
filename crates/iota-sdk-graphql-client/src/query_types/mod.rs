@@ -22,9 +22,11 @@ mod protocol_config;
 mod service_config;
 mod transaction;
 
+#[allow(deprecated)]
+pub use active_validators::ValidatorSetQuery;
 pub use active_validators::{
-    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorCredentials, ValidatorSetQuery,
+    ActiveValidatorSet, ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator,
+    ValidatorConnection, ValidatorCredentials,
 };
 pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
 pub use chain::ChainIdentifierQuery;

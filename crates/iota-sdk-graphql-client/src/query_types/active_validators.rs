@@ -1,5 +1,5 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2025-2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
@@ -31,7 +31,7 @@ pub struct ActiveValidatorsArgs<'a> {
     variables = "ActiveValidatorsArgs"
 )]
 pub struct EpochValidator {
-    pub validator_set: Option<ValidatorSetQuery>,
+    pub validator_set: Option<ActiveValidatorSet>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -40,10 +40,16 @@ pub struct EpochValidator {
     graphql_type = "ValidatorSet",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct ValidatorSetQuery {
+pub struct ActiveValidatorSet {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub active_validators: ValidatorConnection,
 }
+
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `ActiveValidatorSet` for naming consistency (fragments do not carry the `Query` suffix)"
+)]
+pub type ValidatorSetQuery = ActiveValidatorSet;
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ValidatorConnection")]
