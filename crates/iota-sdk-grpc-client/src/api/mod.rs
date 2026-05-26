@@ -214,7 +214,7 @@ impl CheckpointResponse {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// use iota_sdk_grpc_client::CHECKPOINT_RESPONSE_CHECKPOINT_DATA;
     ///
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let cp = client
     ///     .get_checkpoint_latest(Some(CHECKPOINT_RESPONSE_CHECKPOINT_DATA.into()), None, None)
     ///     .await?;

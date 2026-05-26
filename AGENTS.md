@@ -104,7 +104,7 @@ let chain_id = client.chain_id().await?;
 ```rust
 use iota_sdk::grpc_client::Client;
 
-let client = Client::new_devnet().await?;
+let client = Client::new_devnet()?;
 let ledger = client.ledger_service_client();
 ```
 
@@ -176,12 +176,11 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 
 ### Adding a New Type to `iota-sdk-types`
 
-1. Add type definition with `#[derive(Debug, Clone, PartialEq, Eq)]`
+1. Add type definition with `#[derive(Clone, Debug, Eq, PartialEq)]`
 2. Add `#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]` if needed
-3. Add `#[cfg_attr(feature = "schemars", derive(JsonSchema))]` if needed
-4. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
-5. Export from appropriate module
-6. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
+3. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
+4. Export from appropriate module
+5. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
 
 ### Adding a New GraphQL Query
 
