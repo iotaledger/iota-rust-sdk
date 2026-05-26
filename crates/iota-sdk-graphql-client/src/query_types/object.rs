@@ -1,5 +1,5 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2025-2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo, schema};
@@ -9,37 +9,48 @@ use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectArgs")]
 pub struct ObjectQuery {
     #[arguments(address: $object_id, version: $version)]
     pub object: Option<Object>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectsQueryArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectsArgs")]
 pub struct ObjectsQuery {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub objects: ObjectConnection,
 }
 
 // ===========================================================================
-// Object(s) Query Args
+// Object(s) Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectQueryArgs {
+pub struct ObjectArgs {
     pub object_id: ObjectId,
     pub version: Option<u64>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectsQueryArgs {
+pub struct ObjectsArgs {
     pub after: Option<String>,
     pub before: Option<String>,
     pub filter: Option<ObjectFilter>,
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
+
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `ObjectArgs` for naming consistency"
+)]
+pub type ObjectQueryArgs = ObjectArgs;
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `ObjectsArgs` for naming consistency"
+)]
+pub type ObjectsQueryArgs = ObjectsArgs;
 
 // ===========================================================================
 // Object(s) Types

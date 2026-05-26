@@ -11,7 +11,7 @@ use crate::{
     Client,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{Event, EventFilter, EventsQuery, EventsQueryArgs},
+    query_types::{Event, EventFilter, EventsArgs, EventsQuery},
     streams::stream_paginated_query,
 };
 
@@ -37,7 +37,7 @@ impl Client {
     ) -> Result<Page<Event>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = EventsQuery::build(EventsQueryArgs {
+        let operation = EventsQuery::build(EventsArgs {
             filter: filter.into(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),

@@ -13,7 +13,7 @@ use crate::{
     Client,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs},
+    query_types::{ObjectArgs, ObjectFilter, ObjectQuery, ObjectsArgs, ObjectsQuery},
     streams::stream_paginated_query,
 };
 
@@ -41,7 +41,7 @@ impl Client {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQuery::build(ObjectArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -83,7 +83,7 @@ impl Client {
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Object>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = ObjectsQuery::build(ObjectsQueryArgs {
+        let operation = ObjectsQuery::build(ObjectsArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into(),
@@ -115,7 +115,7 @@ impl Client {
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`](iota_types::Address).
     pub async fn object_bcs(&self, object_id: ObjectId) -> Result<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQuery::build(ObjectArgs {
             object_id,
             version: None,
         });
@@ -141,7 +141,7 @@ impl Client {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQuery::build(ObjectArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -165,7 +165,7 @@ impl Client {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQuery::build(ObjectArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });

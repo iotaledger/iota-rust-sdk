@@ -22,7 +22,7 @@ use crate::{
         ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
         TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
         TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
-        TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+        TransactionBlocksArgs, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
         TransactionBlocksWithEffectsQuery, TransactionsFilter,
     },
     streams::stream_paginated_query,
@@ -77,7 +77,7 @@ impl Client {
     ) -> Result<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
+        let operation = TransactionBlocksQuery::build(TransactionBlocksArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into(),
@@ -119,7 +119,7 @@ impl Client {
     ) -> Result<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
+        let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into(),
@@ -175,7 +175,7 @@ impl Client {
     ) -> Result<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
+        let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into(),

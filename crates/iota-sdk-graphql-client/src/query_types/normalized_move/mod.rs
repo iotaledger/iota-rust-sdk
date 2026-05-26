@@ -1,15 +1,19 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2025-2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 mod function;
 mod module;
 
-pub use function::{NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs};
+#[allow(deprecated)]
+pub use function::NormalizedMoveFunctionQueryArgs;
+pub use function::{NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery};
+#[allow(deprecated)]
+pub use module::NormalizedMoveModuleQueryArgs;
 pub use module::{
     MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunctionConnection, MoveModule,
     MoveModuleConnection, MoveModuleQuery, MoveStructConnection, MoveStructQuery,
-    MoveStructTypeParameter, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
+    MoveStructTypeParameter, NormalizedMoveModuleArgs, NormalizedMoveModuleQuery,
 };
 
 use crate::query_types::schema;

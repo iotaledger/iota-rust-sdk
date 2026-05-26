@@ -48,7 +48,9 @@ pub use dynamic_fields::{
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
-pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
+#[allow(deprecated)]
+pub use events::EventsQueryArgs;
+pub use events::{Event, EventConnection, EventFilter, EventsArgs, EventsQuery};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
     IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
@@ -61,27 +63,33 @@ pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
     MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
-    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
+    MoveVisibility, NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery,
+    NormalizedMoveModuleArgs, NormalizedMoveModuleQuery, OpenMoveType,
 };
-pub use object::{
-    ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
-};
+#[allow(deprecated)]
+pub use normalized_move::{NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQueryArgs};
+pub use object::{ObjectArgs, ObjectFilter, ObjectKey, ObjectQuery, ObjectsArgs, ObjectsQuery};
+#[allow(deprecated)]
+pub use object::{ObjectQueryArgs, ObjectsQueryArgs};
+#[allow(deprecated)]
+pub use packages::PackagesQueryArgs;
 pub use packages::{
     LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
     PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs,
+    PackagesArgs, PackagesQuery,
 };
 pub use protocol_config::{
     ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
     ProtocolVersionArgs,
 };
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
+#[allow(deprecated)]
+pub use transaction::TransactionBlocksQueryArgs;
 pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
     TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
     TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+    TransactionBlocksArgs, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
     TransactionBlocksWithEffectsQuery, TransactionsFilter,
 };
 
