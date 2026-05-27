@@ -1,0 +1,73 @@
+name: Publish WASM SDK to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      test_publish:
+        description: "Dry-run only (npm publish --dry-run)"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  build-and-publish:
+    name: Build and publish WASM SDK
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-wasm-sdk')) || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout iota-rust-sdk
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - uses: taiki-e/install-action@wasm-pack
+
+      - name: Install clang
+        run: sudo apt-get install -y clang
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: wasm-publish
+
+      - name: Install WASM bindings prerequisites
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.114
+          npm install -g pnpm@10
+
+      - name: Build WASM bindings
+        run: make wasm
+
+      - name: Set package version from release tag
+        if: github.event_name == 'release'
+        working-directory: bindings/wasm
+        run: |
+          version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-wasm-sdk-v(.*)|\1|p')
+          echo "Publishing version $version"
+          npm version "$version" --no-git-tag-version --allow-same-version
+
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Publish to npm (dry-run)
+        if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
+        working-directory: bindings/wasm
+        run: npm publish --access public --dry-run
+
+      - name: Publish to npm
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
+        working-directory: bindings/wasm
+        run: npm publish --access public

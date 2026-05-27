@@ -1,12 +1,22 @@
 {
   "name": "iota-sdk-wasm",
   "version": "0.0.0",
-  "private": true,
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/iotaledger/iota-rust-sdk"
   },
+  "type": "module",
   "browser": "src/ts/index.web.ts",
+  "main": "dist/iota-sdk.js",
+  "module": "dist/iota-sdk.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
     "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",
