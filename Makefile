@@ -400,6 +400,10 @@ bcs-schema: ## Regenerate bcs-schema.abnf
 grpc: ## Regenerate gRPC protobuf types
 	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
 
+.PHONY: update-compiled-packages
+update-compiled-packages: ## Fetch compiled system packages from iota monorepo (BRANCH=develop by default)
+	@bash scripts/update_compiled_packages.sh $(BRANCH)
+
 .PHONY: help
 help: ## Show this help
 	@printf "Available targets:\n"
