@@ -12,7 +12,7 @@ use crate::{
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 pub enum UpgradePolicy {
@@ -54,7 +54,7 @@ impl TryFrom<u8> for UpgradePolicy {
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
     #[cfg_attr(feature = "serde", serde(with = "serialization::modules"))]
@@ -88,8 +88,8 @@ impl MovePackageData {
 /// ```text
 /// upgrade-info = object-id version
 /// ```
-#[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UpgradeInfo {
@@ -110,8 +110,8 @@ pub struct UpgradeInfo {
 /// ```text
 /// type-origin = identifier identifier object-id
 /// ```
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TypeOrigin {
@@ -139,8 +139,8 @@ pub struct TypeOrigin {
 ///                (vector type-origin)               ; type-origin-table
 ///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
-#[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MovePackage {

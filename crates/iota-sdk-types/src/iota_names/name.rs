@@ -15,8 +15,8 @@ use crate::{
     move_core::Identifier,
 };
 
-#[derive(Debug, Clone, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Name {
     // Labels of the name, in reverse order
     labels: Vec<String>,
@@ -168,7 +168,7 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum NameFormat {
     At,
     Dot,
