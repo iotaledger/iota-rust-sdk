@@ -725,12 +725,12 @@ mod tests {
                 .collect();
             tx.transfer_objects(sender, outputs);
         }
-        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await).await;
+        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
 
         let mut tx2 = TransactionBuilder::new(sender).with_client(client);
         let recipient = Address::generate(rand::thread_rng());
         tx2.send_iota(recipient, 1_000u64);
-        check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await).await;
+        check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
     }
 
     /// Pin all 255 gas coins (the protocol cap, `gas().len() <
@@ -763,7 +763,7 @@ mod tests {
                 .map(|i| Argument::NestedResult(0, i))
                 .collect::<Vec<_>>(),
         );
-        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await).await;
+        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
 
         async fn list_coins(client: &Client, owner: Address) -> Vec<(ObjectId, u64)> {
             let mut out = Vec::new();
@@ -809,7 +809,7 @@ mod tests {
         tx2.gas(split_ids)
             .gas_budget(GAS_BUDGET)
             .send_iota(recipient, 1_000u64);
-        check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await).await;
+        check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
 
         // send_iota's output belongs to `recipient`, so the only delta on
         // sender's side is the 255 → 1 smashing.
@@ -852,7 +852,7 @@ mod tests {
                 .map(|i| Argument::NestedResult(0, i))
                 .collect::<Vec<_>>(),
         );
-        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await).await;
+        check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
 
         // Build (but don't execute) a fresh tx without pinning gas. The
         // resolved transaction reveals what auto-gas picked.
