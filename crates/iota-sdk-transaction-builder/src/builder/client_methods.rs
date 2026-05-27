@@ -19,7 +19,7 @@ pub type ObjectsPage = (Vec<Object>, Option<Vec<u8>>);
 
 /// Transport-neutral view of the chain's protocol configuration: a flat
 /// map of attribute name to value, parsed by callers as needed.
-#[derive(Debug, Default, Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct ProtocolConfig {
     /// All available configuration attributes, keyed by their canonical
     /// protocol name (e.g. `"max_gas_payment_objects"`).
