@@ -8,7 +8,8 @@
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
 //! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`].
-//! - **Framework types** (`0x2`): [`CoinMetadata`].
+//! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
+//!   disambiguates this from the GraphQL-derived `CoinMetadata` record).
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -16,8 +17,9 @@
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
-//! `CoinMetadata<IOTA>`). The on-chain type-tag check verifies the
-//! struct's module path but does *not* re-check the coin marker.
+//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`). The on-chain
+//! type-tag check verifies the struct's module path but does *not*
+//! re-check the coin marker.
 
 use std::sync::Arc;
 
@@ -547,7 +549,7 @@ impl ExpirationUnlockCondition {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct StorageDepositReturnUnlockCondition(
-    pub  iota_move_types::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
+    pub iota_move_types::stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
 );
 
 #[uniffi::export]
