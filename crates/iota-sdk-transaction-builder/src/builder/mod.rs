@@ -1096,16 +1096,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            // Auto gas selection:
-            //
-            // * If the very first page already covers the requested budget, pin *every* gas
-            //   coin from that page (capped at the protocol limit). This is the common case
-            //   — typical wallets have far fewer than one page of gas coins — and it
-            //   deliberately over-includes so gas smashing during execution can consolidate
-            //   small balances into a single coin.
-            // * Otherwise, keep a running top-K by balance across subsequent pages (K =
-            //   protocol cap) and stop as soon as the running top covers the budget or
-            //   pages run out.
+            // Auto gas selection: page through the owner's gas coins, keeping a
+            // running top-K by balance (K = the protocol cap). Stop as soon as
+            // the selected coins cover the requested budget, or the pages run
+            // out; with no budget set, walk every page. This deliberately
+            // over-includes — in the common case a wallet owns fewer coins than
+            // the cap, so the whole set is pinned — and gas smashing during
+            // execution consolidates the balances into a single coin.
             let max_gas_payment_objects = self
                 .client
                 .protocol_config()
@@ -1122,7 +1119,6 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             let target_budget = self.data.gas_budget;
             let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
             let mut cursor: Option<Vec<u8>> = None;
-            let mut is_first_page = true;
             loop {
                 let (page, next_cursor) = self
                     .client
@@ -1136,7 +1132,6 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     )
                     .await
                     .map_err(Error::client)?;
-                let mut page_coins: Vec<(u64, ObjectReference)> = Vec::new();
                 for obj in page {
                     if unusable_object_ids.contains(&obj.object_id()) {
                         continue;
@@ -1144,32 +1139,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     let Ok(coin) = Coin::try_from_object(&obj) else {
                         continue;
                     };
-                    page_coins.push((coin.balance(), obj.object_ref()));
+                    selected.push((coin.balance(), obj.object_ref()));
                 }
-
-                if is_first_page {
-                    is_first_page = false;
-                    let page_total: u64 = page_coins
-                        .iter()
-                        .map(|(b, _)| *b)
-                        .fold(0u64, u64::saturating_add);
-                    // First-page-suffices if it covers the budget, or if there
-                    // is no further page to look at anyway. When the caller did
-                    // not set a budget, keep paginating — there is no way to
-                    // know what "enough" means from a single page.
-                    let first_page_suffices = match target_budget {
-                        Some(budget) => page_total >= budget,
-                        None => next_cursor.is_none(),
-                    };
-                    if first_page_suffices {
-                        page_coins.sort_by_key(|c| std::cmp::Reverse(c.0));
-                        page_coins.truncate(max_gas_payment_objects);
-                        selected = page_coins;
-                        break;
-                    }
-                }
-
-                selected.extend(page_coins);
                 selected.sort_by_key(|c| std::cmp::Reverse(c.0));
                 selected.truncate(max_gas_payment_objects);
 
