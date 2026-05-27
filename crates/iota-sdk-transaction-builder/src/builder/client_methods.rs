@@ -59,9 +59,8 @@ pub trait ClientMethods {
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
     /// Fetch the chain's protocol configuration. Implementations should
-    /// populate [`ProtocolConfig::attributes`] with whatever key→value
-    /// pairs the underlying transport exposes; callers look up the keys
-    /// they care about.
+    /// populate [`ProtocolConfig::attributes`] with the protocol config
+    /// attributes; callers look up the keys they care about.
     ///
     /// The default impl returns an empty [`ProtocolConfig`] so existing
     /// implementors do not have to grow protocol-config plumbing.

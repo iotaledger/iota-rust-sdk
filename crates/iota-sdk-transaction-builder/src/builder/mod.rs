@@ -1105,8 +1105,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             //   consolidate small balances into a single coin.
             // * Slow path: when the first page is not enough, keep a running top-K by
             //   balance across subsequent pages (K = protocol cap) and stop as soon as the
-            //   running top covers the budget or pages run out. Memory stays bounded even
-            //   on a wallet with thousands of dust coins.
+            //   running top covers the budget or pages run out.
             let max_gas_payment_objects = self
                 .client
                 .protocol_config()
