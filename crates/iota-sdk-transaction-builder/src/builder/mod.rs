@@ -1099,13 +1099,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             // Auto gas selection:
             //
             // * If the very first page already covers the requested budget, pin *every* gas
-            //   coin from that page (capped at the protocol limit). This is the common case —
-            //   typical wallets have far fewer than one page of gas coins — and it
+            //   coin from that page (capped at the protocol limit). This is the common case
+            //   — typical wallets have far fewer than one page of gas coins — and it
             //   deliberately over-includes so gas smashing during execution can consolidate
             //   small balances into a single coin.
             // * Otherwise, keep a running top-K by balance across subsequent pages (K =
-            //   protocol cap) and stop as soon as the running top covers the budget or pages
-            //   run out.
+            //   protocol cap) and stop as soon as the running top covers the budget or
+            //   pages run out.
             let max_gas_payment_objects = self
                 .client
                 .protocol_config()
