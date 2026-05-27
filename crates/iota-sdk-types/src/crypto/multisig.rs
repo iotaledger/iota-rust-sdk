@@ -356,6 +356,12 @@ impl MultisigAggregatedSignature {
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
+        if signatures.len() > committee.members.len() || signatures.is_empty() {
+            return Err(MultisigError::InvalidSignatureNumber);
+        }
+
+        committee.validate()?;
+
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
         let mut prev_index: Option<u8> = None;
@@ -385,8 +391,6 @@ impl MultisigAggregatedSignature {
             #[cfg(feature = "serde")]
             bytes: OnceLock::new(),
         };
-
-        signature.validate()?;
 
         Ok(signature)
     }
