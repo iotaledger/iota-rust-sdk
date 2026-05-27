@@ -307,7 +307,10 @@ impl MultisigAggregator {
             }
         }
 
-        self.signed_weight += self.committee.members()[member_idx].weight() as u16;
+        self.signed_weight = self
+            .signed_weight
+            .checked_add(self.committee.members()[member_idx].weight() as ThresholdUnit)
+            .ok_or_else(|| SignatureError::from_source("signed weight overflow"))?;
 
         Ok(())
     }
