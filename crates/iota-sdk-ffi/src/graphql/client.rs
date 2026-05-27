@@ -1,15 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use iota_sdk::graphql_client::query_types::ServiceConfig;
 use tokio::sync::RwLock;
 
-use crate::{
-    error::{Result, SdkFfiError},
-    graphql::inspector::{FfiInspectorAdapter, GraphQlRequestInspectorFn},
-};
+use crate::error::{Result, SdkFfiError};
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
@@ -86,18 +81,6 @@ impl GraphQLClient {
     /// and mutation limits, supported versions, and others.
     pub async fn service_config(&self) -> Result<ServiceConfig> {
         Ok(self.0.read().await.service_config().await?.clone())
-    }
-
-    /// Attach a request inspector callback that will be invoked after
-    /// every GraphQL request completes (both successes and failures).
-    pub async fn set_inspector(&self, inspector: Arc<dyn GraphQlRequestInspectorFn>) {
-        let adapter = FfiInspectorAdapter(inspector);
-        self.0.write().await.set_inspector(adapter);
-    }
-
-    /// Remove any previously set request inspector.
-    pub async fn clear_inspector(&self) {
-        self.0.write().await.clear_inspector();
     }
 
     /// Run a query.

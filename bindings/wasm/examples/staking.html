@@ -238,17 +238,6 @@
         default: c = GraphQlClient.newTestnet();
       }
 
-      // Attach a request inspector that logs every GraphQL request.
-      await c.setInspector({
-        onRequestComplete(result) {
-          const status = result.error ? "FAIL" : "OK";
-          console.log(
-            `[inspector] ${status} ${result.url} (${result.durationMs}ms)`,
-            result.error ?? ""
-          );
-        },
-      });
-
       return c;
     }
 

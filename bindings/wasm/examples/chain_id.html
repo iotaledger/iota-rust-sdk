@@ -30,17 +30,6 @@
 
       const client = GraphQlClient.newTestnet();
 
-      // Attach a request inspector that logs every GraphQL request to the console.
-      await client.setInspector({
-        onRequestComplete(result) {
-          const status = result.error ? "FAIL" : "OK";
-          console.log(
-            `[inspector] ${status} ${result.url} (${result.durationMs}ms)`,
-            result.error ?? ""
-          );
-        },
-      });
-
       const chainId = await client.chainId();
       console.log("Chain ID:", chainId);
 
