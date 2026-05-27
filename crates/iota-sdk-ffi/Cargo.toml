@@ -54,7 +54,7 @@ iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features =
 tokio = { workspace = true, features = ["time"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-# wasm needs macros+rt for async and sync for tokio::sync::RwLock used in the graphql client
-tokio = { workspace = true, features = ["macros", "rt", "sync"] }
 # Required to make rand/getrandom work in WASM environments
 getrandom = { version = "0.2", features = ["js"] }
+# wasm needs macros+rt for async and sync for tokio::sync::RwLock used in the graphql client
+tokio = { workspace = true, features = ["macros", "rt", "sync"] }

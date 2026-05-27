@@ -74,12 +74,12 @@ iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "cr
 # Custom profile for WASM builds — optimizes for binary size.
 # Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
 [profile.wasm-release]
-inherits = "release"
-opt-level = "z"
-lto = true
 codegen-units = 1
-strip = true
+inherits = "release"
+lto = true
+opt-level = "z"
 panic = "abort"
+strip = true
 
 # Replace async-compat with a wasm32-compatible version that uses a transparent
 # passthrough on wasm32 (no thread spawning, no Instant::now).
