@@ -10,6 +10,7 @@
   "browser": "src/ts/index.web.ts",
   "main": "dist/iota-sdk.js",
   "module": "dist/iota-sdk.js",
+  "types": "dist/types/index.web.d.ts",
   "files": [
     "dist",
     "README.md"
@@ -19,11 +20,13 @@
   },
   "scripts": {
     "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
-    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/ && pnpm run build:types",
     "serve": "pnpm run build && node scripts/serve.mjs 5173"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0"
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {

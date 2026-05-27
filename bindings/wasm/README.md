@@ -29,7 +29,7 @@ From the workspace root, run:
 make wasm
 ```
 
-This single command performs all three stages (generate bindings, compile to WASM, bundle for browser) and works on both macOS and Linux without any manual changes. The output is `bindings/wasm/dist/iota-sdk.js` + `dist/index_bg.wasm`.
+This single command performs all three stages (generate bindings, compile to WASM, bundle for browser) and works on both macOS and Linux without any manual changes. The output is `bindings/wasm/dist/iota-sdk.js` + `dist/index_bg.wasm`, along with TypeScript declarations under `dist/types/` (entry `dist/types/index.web.d.ts`).
 
 <details>
 <summary>What the build does (detailed steps)</summary>
@@ -47,7 +47,7 @@ Compiles `iota-sdk-wasm` to `wasm32-unknown-unknown` with the `wasm-release` pro
 
 ### Step 3 – Bundle for the browser
 
-Runs the TypeScript fixer script, bundles everything into `dist/iota-sdk.js` via esbuild, and copies the WASM binary alongside it.
+Runs the TypeScript fixer script, bundles everything into `dist/iota-sdk.js` via esbuild, copies the WASM binary alongside it, and emits TypeScript declarations to `dist/types/` (via `tsc -p tsconfig.types.json`).
 
 </details>
 
