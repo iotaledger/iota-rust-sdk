@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Fetch the compiled IOTA system-package blobs from the iota monorepo and
-# overwrite the vendored copies under
+# Fetch the compiled IOTA system-package blobs and `published_api.txt` from
+# the iota monorepo and overwrite the vendored copies under
 # `crates/iota-sdk-move-types/src/packages_compiled/`.
 #
-# These blobs are read by `move_shape_compare.rs` to cross-check each Rust
-# mirror against its Move-side counterpart.
+# The blobs are read by `move_shape_compare.rs` to cross-check each Rust
+# mirror against its Move-side counterpart. `published_api.txt` is the
+# upstream's public-API manifest — its committed copy is diffed against
+# the upstream version by the nightly drift workflow.
 #
 # Usage:
 #   ./update_compiled_packages.sh                 # pulls from `develop` (default)
@@ -17,24 +19,28 @@ set -euo pipefail
 
 BRANCH="${1:-develop}"
 REPO="iotaledger/iota"
-SRC_PATH="crates/iota-framework/packages_compiled"
+SRC_BASE="crates/iota-framework"
 TARGET_DIR="$(cd "$(dirname "$0")/.." && pwd)/crates/iota-sdk-move-types/src/packages_compiled"
 
-PACKAGES=(
-    "iota-framework"
-    "move-stdlib"
-    "iota-system"
-    "stardust"
+# Each entry: <source-path-under-$SRC_BASE>:<dest-filename-under-$TARGET_DIR>
+ARTIFACTS=(
+    "packages_compiled/iota-framework:iota-framework"
+    "packages_compiled/move-stdlib:move-stdlib"
+    "packages_compiled/iota-system:iota-system"
+    "packages_compiled/stardust:stardust"
+    "published_api.txt:published_api.txt"
 )
 
-echo "Fetching compiled packages from $REPO@$BRANCH into:"
+echo "Fetching artifacts from $REPO@$BRANCH into:"
 echo "  $TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
-for pkg in "${PACKAGES[@]}"; do
-    url="https://raw.githubusercontent.com/$REPO/$BRANCH/$SRC_PATH/$pkg"
-    out="$TARGET_DIR/$pkg"
-    printf "  %-16s <- %s\n" "$pkg" "$url"
+for entry in "${ARTIFACTS[@]}"; do
+    src="${entry%%:*}"
+    dst="${entry##*:}"
+    url="https://raw.githubusercontent.com/$REPO/$BRANCH/$SRC_BASE/$src"
+    out="$TARGET_DIR/$dst"
+    printf "  %-20s <- %s\n" "$dst" "$url"
     curl --fail --location --silent --show-error "$url" --output "$out"
 done
 

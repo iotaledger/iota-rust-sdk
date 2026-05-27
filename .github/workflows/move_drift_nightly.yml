@@ -1,0 +1,47 @@
+name: Move Drift Nightly
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # Daily at 3am UTC
+  workflow_dispatch:
+
+concurrency:
+  group: move-drift-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    # Diffs the upstream `crates/iota-framework/published_api.txt` on the
+    # iota monorepo's `develop` branch against the committed copy under
+    # `crates/iota-sdk-move-types/src/packages_compiled/published_api.txt`.
+    # A failure means upstream added/removed/changed a public Move-side
+    # symbol since the snapshot was last refreshed — review the diff,
+    # update any Rust mirrors whose Move counterparts changed, refresh
+    # the vendored artifacts with `make update-compiled-packages`, and
+    # commit the new `published_api.txt` snapshot.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Fetch upstream published_api.txt
+        run: |
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-framework/published_api.txt \
+            --output upstream_published_api.txt
+
+      - name: Diff against vendored copy
+        run: |
+          if ! diff -u \
+            crates/iota-sdk-move-types/src/packages_compiled/published_api.txt \
+            upstream_published_api.txt; then
+            echo
+            echo "::error::Move framework published_api.txt drift detected."
+            echo "Upstream iotaledger/iota@develop changed crates/iota-framework/published_api.txt since the vendored snapshot was last refreshed."
+            echo "Review the diff above, update any Rust mirrors whose Move counterparts changed, run 'make update-compiled-packages' locally, and commit the refreshed crates/iota-sdk-move-types/src/packages_compiled/* artifacts in a PR."
+            exit 1
+          fi
