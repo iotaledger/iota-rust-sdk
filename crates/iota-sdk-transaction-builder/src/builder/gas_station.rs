@@ -46,7 +46,7 @@ fn idx_to_segment_name(idx: usize) -> &'static str {
 }
 
 /// Data to configure gas station sponsorship.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct GasStationData {
     /// The gas station URL.
@@ -75,7 +75,7 @@ impl GasStationData {
     }
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GasStationVersion {
     version_core: [u8; 3],
     // Suffix without leading '-'.

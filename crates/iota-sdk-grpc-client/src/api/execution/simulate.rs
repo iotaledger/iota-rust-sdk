@@ -67,7 +67,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Transaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     ///
     /// let tx: Transaction = todo!();
     ///
@@ -77,7 +77,7 @@ impl Client {
     /// // Lazy conversion - only deserialize what you need
     /// let executed_tx = result.body().executed_transaction()?;
     /// let effects = executed_tx.effects()?.effects()?;
-    /// println!("Simulation status: {:?}", effects.status());
+    /// println!("Simulation status: {:?}", effects.as_v1().status);
     ///
     /// let output_objs = executed_tx.output_objects()?;
     /// println!("Would create {} objects", output_objs.objects.len());

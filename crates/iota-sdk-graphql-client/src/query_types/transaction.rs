@@ -164,7 +164,7 @@ pub struct TransactionBlockCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 
-#[derive(cynic::Enum, Clone, Copy, Debug)]
+#[derive(Clone, Copy, cynic::Enum, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "TransactionBlockKindInput",

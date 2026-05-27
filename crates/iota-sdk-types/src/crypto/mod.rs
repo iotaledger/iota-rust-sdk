@@ -31,7 +31,7 @@ pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
 
 #[cfg(feature = "serde")]
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[error("error deserializing bytes: {0}")]
 pub struct SignatureFromBytesError(String);
 
@@ -152,7 +152,7 @@ pub trait PublicKeyExt: Sized {
     fn as_bytes(&self) -> &[u8];
 
     /// Tries to create a PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr>;
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr>;
 
     /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme;

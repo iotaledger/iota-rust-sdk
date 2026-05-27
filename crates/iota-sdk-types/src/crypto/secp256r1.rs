@@ -15,8 +15,8 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// ```text
 /// secp256r1-public-key = 33OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Secp256r1PublicKey(
     #[cfg_attr(
@@ -66,7 +66,7 @@ impl PublicKeyExt for Secp256r1PublicKey {
     }
 
     /// Tries to create a Secp256r1PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
@@ -131,8 +131,8 @@ impl std::fmt::Debug for Secp256r1PublicKey {
 /// ```text
 /// secp256r1-signature = 64OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Secp256r1Signature(
     #[cfg_attr(
@@ -176,7 +176,7 @@ impl Secp256r1Signature {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }

@@ -104,11 +104,11 @@ let chain_id = client.chain_id().await?;
 ```rust
 use iota_sdk::grpc_client::Client;
 
-let client = Client::new("http://localhost:9000").await?;
+let client = Client::new_devnet()?;
 let ledger = client.ledger_service_client();
 ```
 
-Per-service clients are obtained via `ledger_service_client()`, `execution_service_client()`, `state_service_client()`, `move_package_service_client()`. Headers and message-size limits are configured with `with_headers` / `with_max_decoding_message_size`.
+`Client` exposes `new_mainnet`, `new_testnet`, `new_devnet`, `new_localnet`, and a generic `new(url)` constructor. Per-service clients are obtained via `ledger_service_client()`, `execution_service_client()`, `state_service_client()`, `move_package_service_client()`. Headers and message-size limits are configured with `with_headers` / `with_max_decoding_message_size`.
 
 ### Transaction Building
 
@@ -170,17 +170,17 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 - **Main branch**: `develop` (not `main`)
 - **CI**: All tests must pass, no clippy warnings, proper formatting
 - Draft PRs can force CI with `[run-ci]` in the PR body
+- **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, and `release` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
 
 ## Common Tasks
 
 ### Adding a New Type to `iota-sdk-types`
 
-1. Add type definition with `#[derive(Debug, Clone, PartialEq, Eq)]`
+1. Add type definition with `#[derive(Clone, Debug, Eq, PartialEq)]`
 2. Add `#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]` if needed
-3. Add `#[cfg_attr(feature = "schemars", derive(JsonSchema))]` if needed
-4. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
-5. Export from appropriate module
-6. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
+3. Add `#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]` if the type should appear in `bcs-schema.abnf` (run `make bcs-schema` to regenerate)
+4. Export from appropriate module
+5. Verify BCS and JSON round-trips (JSON is human-readable; `u64` is serialized as a string for JS safety)
 
 ### Adding a New GraphQL Query
 
@@ -219,3 +219,6 @@ The `make wasm` target builds the following crates for `wasm32-unknown-unknown`:
 5. **Types in `iota-sdk-types` must stay BCS-compatible** — verify BCS and JSON round-trips when adding or changing a type. `u64` is serialized as a string in JSON for JS safety.
 6. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 7. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
+8. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
+9. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together.
+10. **Keep PR descriptions short and skimmable** — write for a human reviewer who has 30 seconds. Cover the _why_ and the high-level _what_, and stop. Don't enumerate every line of the diff; reviewers can read the code. Avoid long wall-of-text summaries, exhaustive bullet lists of every renamed symbol, or restating what the diff obviously shows. A few crisp sentences (plus a test plan if relevant) is the goal.
