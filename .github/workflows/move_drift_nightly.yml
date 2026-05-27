@@ -28,11 +28,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Fetch upstream published_api.txt
+      - name: Fetch upstream published_api.txt (type-only filter)
+        # The vendored copy contains only `public struct`/`public enum`
+        # records — function-signature churn is irrelevant to a crate that
+        # only mirrors Move *types*. Apply the same filter to the upstream
+        # fetch so the diff compares like-for-like.
         run: |
           curl --fail --location --silent --show-error \
             https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-framework/published_api.txt \
-            --output upstream_published_api.txt
+            | awk '
+                NR%3==1 {name=$0}
+                NR%3==2 {kind=$0}
+                NR%3==0 {
+                    if (kind ~ /(struct|enum)$/) {
+                        print name; print kind; print $0
+                    }
+                }' > upstream_published_api.txt
 
       - name: Diff against vendored copy
         run: |

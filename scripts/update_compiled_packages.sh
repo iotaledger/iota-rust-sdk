@@ -5,8 +5,10 @@
 #
 # The blobs are read by `move_shape_compare.rs` to cross-check each Rust
 # mirror against its Move-side counterpart. `published_api.txt` is the
-# upstream's public-API manifest — its committed copy is diffed against
-# the upstream version by the nightly drift workflow.
+# upstream's public-API manifest — only `public struct`/`public enum`
+# records are kept (function-signature churn is irrelevant to this crate).
+# The committed copy is diffed against the upstream by the nightly drift
+# workflow, which applies the same filter to its fetched copy.
 #
 # Usage:
 #   ./update_compiled_packages.sh                 # pulls from `develop` (default)
@@ -35,6 +37,21 @@ echo "Fetching artifacts from $REPO@$BRANCH into:"
 echo "  $TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
+# Keep only `public struct` / `public enum` records (3-line records whose
+# second line ends in `struct` or `enum`) from the published_api.txt
+# manifest. Used by both this script and the nightly drift workflow.
+filter_published_api() {
+    awk '
+        NR%3==1 {name=$0}
+        NR%3==2 {kind=$0}
+        NR%3==0 {
+            if (kind ~ /(struct|enum)$/) {
+                print name; print kind; print $0
+            }
+        }
+    ' "$1"
+}
+
 for entry in "${ARTIFACTS[@]}"; do
     src="${entry%%:*}"
     dst="${entry##*:}"
@@ -42,6 +59,10 @@ for entry in "${ARTIFACTS[@]}"; do
     out="$TARGET_DIR/$dst"
     printf "  %-20s <- %s\n" "$dst" "$url"
     curl --fail --location --silent --show-error "$url" --output "$out"
+    if [[ "$dst" == "published_api.txt" ]]; then
+        filter_published_api "$out" > "$out.tmp"
+        mv "$out.tmp" "$out"
+    fi
 done
 
 echo "Done."
