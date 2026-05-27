@@ -17,12 +17,8 @@ use iota_types::{
 /// [`ClientMethods::objects`].
 pub type ObjectsPage = (Vec<Object>, Option<Vec<u8>>);
 
-/// Transport-neutral view of the chain's protocol configuration.
-///
-/// The trait only needs key→value strings — both GraphQL
-/// (`Vec<ProtocolConfigAttr>`) and gRPC (`map<string, string>`) collapse
-/// into this shape — so the type deliberately does not enumerate every
-/// individual on-chain field. Callers parse the values they care about.
+/// Transport-neutral view of the chain's protocol configuration: a flat
+/// map of attribute name to value, parsed by callers as needed.
 #[derive(Debug, Default, Clone)]
 pub struct ProtocolConfig {
     /// All available configuration attributes, keyed by their canonical
@@ -68,8 +64,7 @@ pub trait ClientMethods {
     /// they care about.
     ///
     /// The default impl returns an empty [`ProtocolConfig`] so existing
-    /// implementors do not have to grow protocol-config plumbing; callers
-    /// should treat a missing key as "use a hardcoded fallback".
+    /// implementors do not have to grow protocol-config plumbing.
     fn protocol_config(
         &self,
     ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
