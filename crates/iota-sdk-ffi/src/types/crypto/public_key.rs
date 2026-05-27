@@ -19,17 +19,11 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// public-key = ed25519-public-key-variant /
-///              secp256k1-public-key-variant /
-///              secp256r1-public-key-variant /
-///              zklogin-public-key-variant-deprecated /
-///              passkey-public-key-variant
-///
-/// ed25519-public-key-variant              = %d00 ed25519-public-key
-/// secp256k1-public-key-variant            = %d01 secp256k1-public-key
-/// secp256r1-public-key-variant            = %d02 secp256r1-public-key
-/// zklogin-public-key-variant-deprecated   = %d05
-/// passkey-public-key-variant              = %d06 passkey-public-key
+/// public-key = %d00 ed25519-public-key /
+///              %d01 secp256k1-public-key /
+///              %d02 secp256r1-public-key /
+///              %d05 /
+///              %d06 passkey-public-key
 /// ```
 ///
 /// There is also a base64 encoding for this type defined as:
