@@ -38,8 +38,8 @@ pub enum PublicKeyError {
 /// ed25519-public-key-variant              = %d00 ed25519-public-key
 /// secp256k1-public-key-variant            = %d01 secp256k1-public-key
 /// secp256r1-public-key-variant            = %d02 secp256r1-public-key
-/// zklogin-public-key-variant-deprecated   = %d03
-/// passkey-public-key-variant              = %d04 passkey-public-key
+/// zklogin-public-key-variant-deprecated   = %d05
+/// passkey-public-key-variant              = %d06 passkey-public-key
 /// ```
 ///
 /// There is also a base64 encoding for this type, used by [`Self::to_base64`]
