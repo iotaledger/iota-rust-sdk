@@ -33,9 +33,9 @@ iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
 [dev-dependencies]
-# Used only by `examples/capture_fixtures.rs` to query a live IOTA GraphQL
-# endpoint and snapshot real on-chain BCS bytes into `tests/fixtures/`.
+iota-bcs-schema = { workspace = true, features = ["move-shape"] }
 iota-graphql-client = { workspace = true }
+move-binary-format = { git = "https://github.com/iotaledger/iota.git", branch = "develop" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 [[example]]

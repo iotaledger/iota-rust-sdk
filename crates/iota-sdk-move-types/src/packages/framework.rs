@@ -14,6 +14,7 @@ pub mod object {
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ID {
         pub bytes: ObjectId,
     }
@@ -46,6 +47,7 @@ pub mod object {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UID {
         pub id: ID,
     }
@@ -73,36 +75,6 @@ pub mod object {
             self.id.fmt(f)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        fn sample_object_id() -> ObjectId {
-            ObjectId::new([0xab; ObjectId::LENGTH])
-        }
-
-        #[test]
-        fn id_bcs_roundtrip() {
-            let id = ID::new(sample_object_id());
-            let bytes = bcs::to_bytes(&id).unwrap();
-            // `#[serde(transparent)]`: an ID encodes exactly as its inner ObjectId.
-            assert_eq!(bytes, bcs::to_bytes(&sample_object_id()).unwrap());
-            let decoded: ID = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(id, decoded);
-        }
-
-        #[test]
-        fn uid_bcs_roundtrip() {
-            let uid = UID::new(sample_object_id());
-            let bytes = bcs::to_bytes(&uid).unwrap();
-            // UID wraps an ID, which is transparent over ObjectId, so the
-            // wire format is exactly an ObjectId.
-            assert_eq!(bytes, bcs::to_bytes(&sample_object_id()).unwrap());
-            let decoded: UID = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(uid, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::iota`.
@@ -114,9 +86,16 @@ pub mod iota {
     /// Name of the coin. The Move struct is empty; Move bytecode requires at
     /// least one field, so this carries a `dummy_field` to preserve the BCS
     /// wire format (1 byte, always `false`).
+    // MoveShape derive enables `Balance<IOTA>` references in mirrors like
+    // `Kiosk` to resolve `<IOTA as MoveShape>::NAME` at macro time. IOTA
+    // itself is NOT registered with the comparator — the Move bytecode
+    // defines it as a true empty struct (`{}`), while the Rust mirror
+    // carries a `dummy_field: bool` to preserve the BCS wire format. The
+    // comparator would flag that as a 0-vs-1 field-count mismatch.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IOTA {
         dummy_field: bool,
     }
@@ -126,6 +105,7 @@ pub mod iota {
     /// The non-generic IOTA treasury cap, wrapping a [`TreasuryCap<IOTA>`].
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaTreasuryCap {
         pub inner: TreasuryCap<IOTA>,
     }
@@ -133,34 +113,6 @@ pub mod iota {
     impl IotaTreasuryCap {
         pub const fn new(inner: TreasuryCap<IOTA>) -> Self {
             Self { inner }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::{balance::Supply, object::UID};
-
-        #[test]
-        fn iota_bcs_roundtrip() {
-            let i = IOTA::default();
-            let bytes = bcs::to_bytes(&i).unwrap();
-            assert_eq!(bytes, [0u8]);
-            let decoded: IOTA = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(i, decoded);
-        }
-
-        #[test]
-        fn iota_treasury_cap_bcs_roundtrip() {
-            let cap = IotaTreasuryCap::new(TreasuryCap::new(
-                UID::new(ObjectId::ZERO),
-                Supply::new(1_000_000),
-            ));
-            let bytes = bcs::to_bytes(&cap).unwrap();
-            let decoded: IotaTreasuryCap = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(cap, decoded);
         }
     }
 }
@@ -176,22 +128,9 @@ pub mod system_admin_cap {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemAdminCap {
         dummy_field: bool,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn iota_system_admin_cap_bcs_roundtrip() {
-            let cap = IotaSystemAdminCap::default();
-            let bytes = bcs::to_bytes(&cap).unwrap();
-            assert_eq!(bytes, [0u8]);
-            let decoded: IotaSystemAdminCap = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(cap, decoded);
-        }
     }
 }
 
@@ -205,6 +144,7 @@ pub mod balance {
     /// `TreasuryCap` in the `coin` module.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Supply<T> {
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -230,6 +170,7 @@ pub mod balance {
     /// to store coins which don't need the `key` ability.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Balance<T> {
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -248,33 +189,6 @@ pub mod balance {
             self.value
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[derive(Debug, Clone, Eq, PartialEq)]
-        struct TestCoin;
-
-        #[test]
-        fn balance_bcs_roundtrip() {
-            let b: Balance<TestCoin> = Balance::new(1_000_000_000);
-            let bytes = bcs::to_bytes(&b).unwrap();
-            // BCS shape: just a u64
-            assert_eq!(bytes.len(), 8);
-            let decoded: Balance<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(b, decoded);
-        }
-
-        #[test]
-        fn supply_bcs_roundtrip() {
-            let s: Supply<TestCoin> = Supply::new(42);
-            let bytes = bcs::to_bytes(&s).unwrap();
-            assert_eq!(bytes.len(), 8);
-            let decoded: Supply<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(s, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::bag`.
@@ -289,6 +203,7 @@ pub mod bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Bag {
         /// The ID of this bag.
         pub id: UID,
@@ -299,21 +214,6 @@ pub mod bag {
     impl Bag {
         pub const fn new(id: UID, size: u64) -> Self {
             Self { id, size }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn bag_bcs_roundtrip() {
-            let b = Bag::new(UID::new(ObjectId::ZERO), 5);
-            let bytes = bcs::to_bytes(&b).unwrap();
-            let decoded: Bag = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(b, decoded);
         }
     }
 }
@@ -334,6 +234,7 @@ pub mod coin {
     /// A coin of type `T` worth `balance`. Transferable and storable.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Coin<T> {
         pub id: UID,
         pub balance: Balance<T>,
@@ -351,6 +252,7 @@ pub mod coin {
     /// `CoinMetadata<T>` storing display metadata for the coin type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinMetadata<T> {
         pub id: UID,
         /// Number of decimal places the coin uses.
@@ -422,6 +324,7 @@ pub mod coin {
     /// that use the DenyList. Always immutable.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RegulatedCoinMetadata<T> {
         pub id: UID,
         /// The ID of the coin's `CoinMetadata` object.
@@ -448,6 +351,7 @@ pub mod coin {
     /// Capability allowing the bearer to mint and burn coins of type `T`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TreasuryCap<T> {
         pub id: UID,
         pub total_supply: Supply<T>,
@@ -466,6 +370,7 @@ pub mod coin {
     /// also enable a global pause.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DenyCapV1<T> {
         pub id: UID,
         pub allow_global_pause: bool,
@@ -482,78 +387,6 @@ pub mod coin {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        // Phantom markers in field positions (e.g. `balance: Balance<T>`) make
-        // serde's auto-derive require `T: Serialize + Deserialize<'de>` even
-        // though `T` is only carried via `PhantomData`. Real coin markers
-        // satisfy this trivially (e.g. `IOTA` derives both).
-        #[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-        struct TestCoin;
-
-        fn sample_object_id() -> ObjectId {
-            ObjectId::new([0xab; ObjectId::LENGTH])
-        }
-
-        #[test]
-        fn coin_bcs_roundtrip() {
-            let c: Coin<TestCoin> = Coin::new(UID::new(sample_object_id()), Balance::new(1_000));
-            let bytes = bcs::to_bytes(&c).unwrap();
-            let decoded: Coin<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(c, decoded);
-        }
-
-        #[test]
-        fn treasury_cap_bcs_roundtrip() {
-            let t: TreasuryCap<TestCoin> =
-                TreasuryCap::new(UID::new(sample_object_id()), Supply::new(7));
-            let bytes = bcs::to_bytes(&t).unwrap();
-            let decoded: TreasuryCap<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(t, decoded);
-        }
-
-        #[test]
-        fn coin_metadata_bcs_roundtrip() {
-            let m: CoinMetadata<TestCoin> = CoinMetadata::new(
-                UID::new(sample_object_id()),
-                9,
-                string::String::new(b"Test Coin".to_vec()),
-                ascii::String::new(b"TST".to_vec()),
-                string::String::new(b"a test coin".to_vec()),
-                Some(Url::new(ascii::String::new(
-                    b"https://iota.org/logo.png".to_vec(),
-                ))),
-            );
-            let bytes = bcs::to_bytes(&m).unwrap();
-            let decoded: CoinMetadata<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(m, decoded);
-        }
-
-        #[test]
-        fn regulated_coin_metadata_bcs_roundtrip() {
-            let r: RegulatedCoinMetadata<TestCoin> = RegulatedCoinMetadata::new(
-                UID::new(sample_object_id()),
-                ID::new(sample_object_id()),
-                ID::new(sample_object_id()),
-            );
-            let bytes = bcs::to_bytes(&r).unwrap();
-            let decoded: RegulatedCoinMetadata<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(r, decoded);
-        }
-
-        #[test]
-        fn deny_cap_v1_bcs_roundtrip() {
-            let d: DenyCapV1<TestCoin> = DenyCapV1::new(UID::new(sample_object_id()), true);
-            let bytes = bcs::to_bytes(&d).unwrap();
-            let decoded: DenyCapV1<TestCoin> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(d, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::table`.
@@ -568,6 +401,7 @@ pub mod table {
     /// off the table's `UID`, not inside the struct itself.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Table<K, V> {
         /// The ID of this table.
         pub id: UID,
@@ -589,21 +423,6 @@ pub mod table {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn table_bcs_roundtrip() {
-            let t: Table<u64, u64> = Table::new(UID::new(ObjectId::ZERO), 3);
-            let bytes = bcs::to_bytes(&t).unwrap();
-            let decoded: Table<u64, u64> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(t, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::url`.
@@ -618,6 +437,7 @@ pub mod url {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Url {
         pub url: ascii::String,
     }
@@ -642,6 +462,9 @@ pub mod url {
 
     /// Returned by [`Url::try_from_ascii`] when the input contains non-ASCII
     /// bytes.
+    ///
+    /// This is a Rust-side error type, not a mirror of a Move struct, so it
+    /// has no Move counterpart and no `MoveShape` derive.
     #[derive(Clone, Copy, Debug, PartialEq, Eq)]
     pub struct NonAsciiUrl;
 
@@ -653,22 +476,9 @@ pub mod url {
 
     impl core::error::Error for NonAsciiUrl {}
 
-    #[cfg(all(test, feature = "serde"))]
+    #[cfg(test)]
     mod tests {
         use super::*;
-
-        #[test]
-        fn url_bcs_roundtrip() {
-            let u = Url::try_from_ascii("https://iota.org/").unwrap();
-            let bytes = bcs::to_bytes(&u).unwrap();
-            // Wire format: length-prefixed bytes (the inner ascii::String).
-            assert_eq!(
-                bytes,
-                bcs::to_bytes(&b"https://iota.org/".to_vec()).unwrap()
-            );
-            let decoded: Url = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(u, decoded);
-        }
 
         #[test]
         fn url_rejects_non_ascii() {
@@ -682,6 +492,7 @@ pub mod vec_map {
     /// Rust version of the Move `iota::vec_map::Entry<K, V>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Entry<K, V> {
         pub key: K,
         pub value: V,
@@ -700,6 +511,7 @@ pub mod vec_map {
     /// operations are O(N).
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VecMap<K, V> {
         pub contents: Vec<Entry<K, V>>,
     }
@@ -717,19 +529,6 @@ pub mod vec_map {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn vec_map_bcs_roundtrip() {
-            let m: VecMap<u64, u64> = VecMap::new(vec![Entry::new(1, 10), Entry::new(2, 20)]);
-            let bytes = bcs::to_bytes(&m).unwrap();
-            let decoded: VecMap<u64, u64> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(m, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::vec_set`.
@@ -740,6 +539,7 @@ pub mod vec_set {
     /// All operations are O(N).
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VecSet<K> {
         pub contents: Vec<K>,
     }
@@ -757,19 +557,6 @@ pub mod vec_set {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn vec_set_bcs_roundtrip() {
-            let s: VecSet<u64> = VecSet::new(vec![1, 2, 3]);
-            let bytes = bcs::to_bytes(&s).unwrap();
-            let decoded: VecSet<u64> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(s, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::table_vec`.
@@ -782,6 +569,7 @@ pub mod table_vec {
     /// off an inner [`Table<u64, Element>`].
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TableVec<Element> {
         /// The contents of the table vector.
         pub contents: Table<u64, Element>,
@@ -790,22 +578,6 @@ pub mod table_vec {
     impl<Element> TableVec<Element> {
         pub const fn new(contents: Table<u64, Element>) -> Self {
             Self { contents }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::object::UID;
-
-        #[test]
-        fn table_vec_bcs_roundtrip() {
-            let tv: TableVec<u64> = TableVec::new(Table::new(UID::new(ObjectId::ZERO), 3));
-            let bytes = bcs::to_bytes(&tv).unwrap();
-            let decoded: TableVec<u64> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(tv, decoded);
         }
     }
 }
@@ -822,6 +594,7 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Versioned {
         pub id: UID,
         pub version: u64,
@@ -840,6 +613,7 @@ pub mod versioned {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
         pub old_version: u64,
@@ -853,29 +627,6 @@ pub mod versioned {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn versioned_bcs_roundtrip() {
-            let v = Versioned::new(UID::new(ObjectId::ZERO), 7);
-            let bytes = bcs::to_bytes(&v).unwrap();
-            let decoded: Versioned = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(v, decoded);
-        }
-
-        #[test]
-        fn version_change_cap_bcs_roundtrip() {
-            let c = VersionChangeCap::new(ID::new(ObjectId::ZERO), 3);
-            let bytes = bcs::to_bytes(&c).unwrap();
-            let decoded: VersionChangeCap = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(c, decoded);
-        }
-    }
 }
 
 /// Types from `0x2::bcs`.
@@ -887,6 +638,7 @@ pub mod bcs {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BCS {
         pub bytes: Vec<u8>,
     }
@@ -910,6 +662,7 @@ pub mod clock {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
@@ -936,6 +689,7 @@ pub mod tx_context {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TxContext {
         /// Address of the user that signed the current transaction.
         pub sender: Address,
@@ -960,6 +714,7 @@ pub mod intent {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Intent {
         pub scope: u8,
         pub version: u8,
@@ -980,6 +735,9 @@ pub mod intent {
 /// Types from `0x2::ecdsa_k1`.
 pub mod ecdsa_k1 {
     /// Rust version of the Move `iota::ecdsa_k1::KeyPair` type.
+    // The Move-side `KeyPair` struct is `#[test_only]`, so it's absent
+    // from the compiled package and cannot participate in the
+    // `move_shape_compare` cross-check. No `MoveShape` derive here.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1004,6 +762,7 @@ pub mod zklogin_verified_id {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VerifiedID {
         pub id: UID,
         /// The address this `VerifiedID` is associated with.
@@ -1031,6 +790,7 @@ pub mod zklogin_verified_issuer {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VerifiedIssuer {
         pub id: UID,
         pub owner: Address,
@@ -1050,6 +810,7 @@ pub mod transfer {
     /// Ephemeral per-transaction; cannot be stored on-chain.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Receiving<T> {
         pub id: ID,
         pub version: u64,
@@ -1078,6 +839,7 @@ pub mod timelock {
     /// A `TimeLock` that holds a locked object until `expiration_timestamp_ms`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimeLock<T> {
         pub id: UID,
         /// The locked object.
@@ -1116,6 +878,7 @@ pub mod borrow {
     /// An object wrapping a `T` and providing the borrow API.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Referent<T> {
         pub id: Address,
         pub value: Option<T>,
@@ -1135,12 +898,17 @@ pub mod borrow {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
     }
 
     /// Rust version of the Move `iota::borrow::Test` type.
+    ///
+    /// The Move-side `Test` struct is `#[test_only]`, so it doesn't ship
+    /// in the compiled package and can't participate in the
+    /// `move_shape_compare` cross-check. No `MoveShape` derive here.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1160,6 +928,7 @@ pub mod dynamic_field {
     /// ID is determined by `hash(parent.id || name || Name)`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Field<Name, Value> {
         pub id: UID,
         /// The value for the name of this field.
@@ -1181,6 +950,7 @@ pub mod dynamic_object_field {
     /// `iota::dynamic_object_field::Wrapper<Name>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Wrapper<Name> {
         pub name: Name,
     }
@@ -1204,6 +974,7 @@ pub mod labeler {
     /// transferred like any other object.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct LabelerCap<L> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1234,6 +1005,7 @@ pub mod linked_table {
     /// table's UID, not inside the struct.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct LinkedTable<K, V> {
         pub id: UID,
         /// The number of key-value pairs in the table.
@@ -1261,6 +1033,7 @@ pub mod linked_table {
     /// Rust version of the Move `iota::linked_table::Node<K, V>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Node<K, V> {
         pub prev: Option<K>,
         pub next: Option<K>,
@@ -1287,6 +1060,7 @@ pub mod object_table {
     /// be objects themselves.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectTable<K, V> {
         pub id: UID,
         pub size: u64,
@@ -1316,6 +1090,7 @@ pub mod object_bag {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectBag {
         pub id: UID,
         pub size: u64,
@@ -1327,6 +1102,7 @@ pub mod priority_queue {
     /// Rust version of the Move `iota::priority_queue::Entry<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Entry<T> {
         pub priority: u64,
         pub value: T,
@@ -1345,6 +1121,7 @@ pub mod priority_queue {
     /// root; children of `entries[i]` are at `i * 2 + 1` and `i * 2 + 2`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PriorityQueue<T> {
         pub entries: Vec<Entry<T>>,
     }
@@ -1364,6 +1141,7 @@ pub mod derived_object {
     /// An internal key to protect from generating the same UID twice.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DerivedObjectKey<K>(pub K);
 
     impl<K> DerivedObjectKey<K> {
@@ -1383,6 +1161,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorState {
         pub id: UID,
         pub version: u64,
@@ -1393,6 +1172,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorStateInner {
         pub version: u64,
         /// List of currently active JWKs.
@@ -1405,6 +1185,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JWK {
         pub kty: MoveString,
         pub e: MoveString,
@@ -1418,6 +1199,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JwkId {
         pub iss: MoveString,
         pub kid: MoveString,
@@ -1428,6 +1210,7 @@ pub mod authenticator_state {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
@@ -1452,6 +1235,7 @@ pub mod display {
     /// property names take priority over their types.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Display<T> {
         pub id: UID,
         /// Fields for display. Currently supported field names are `name`,
@@ -1478,6 +1262,7 @@ pub mod display {
     /// type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DisplayCreated<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1497,6 +1282,7 @@ pub mod display {
     /// type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VersionUpdated<T> {
         pub id: ID,
         pub version: u16,
@@ -1530,6 +1316,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Publisher {
         pub id: UID,
         pub package: AsciiString,
@@ -1542,6 +1329,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeCap {
         pub id: UID,
         /// (Mutable) ID of the package that can be upgraded.
@@ -1560,6 +1348,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeTicket {
         pub cap: ID,
         pub package: ID,
@@ -1577,6 +1366,7 @@ pub mod package {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
@@ -1592,6 +1382,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Scalar {
         dummy_field: bool,
     }
@@ -1600,6 +1391,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct G1 {
         dummy_field: bool,
     }
@@ -1608,6 +1400,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct G2 {
         dummy_field: bool,
     }
@@ -1616,6 +1409,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GT {
         dummy_field: bool,
     }
@@ -1624,6 +1418,7 @@ pub mod bls12381 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UncompressedG1 {
         dummy_field: bool,
     }
@@ -1638,6 +1433,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Curve {
         pub id: u8,
     }
@@ -1646,6 +1442,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PreparedVerifyingKey {
         pub vk_gamma_abc_g1_bytes: Vec<u8>,
         pub alpha_g1_beta_g2_bytes: Vec<u8>,
@@ -1657,6 +1454,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PublicProofInputs {
         pub bytes: Vec<u8>,
     }
@@ -1665,6 +1463,7 @@ pub mod groth16 {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProofPoints {
         pub bytes: Vec<u8>,
     }
@@ -1677,6 +1476,7 @@ pub mod group_ops {
     /// Rust version of the Move `iota::group_ops::Element<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Element<T> {
         pub bytes: Vec<u8>,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1707,6 +1507,7 @@ pub mod authenticator_function {
     /// Represents a validated authenticate function.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1<Account> {
         pub package: ID,
         pub module_name: AsciiString,
@@ -1739,6 +1540,7 @@ pub mod account {
     /// event type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ImmutableAccountCreated<Account> {
         pub account_id: ID,
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
@@ -1748,6 +1550,7 @@ pub mod account {
     /// event type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MutableAccountCreated<Account> {
         pub account_id: ID,
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
@@ -1757,6 +1560,7 @@ pub mod account {
     /// `iota::account::AuthenticatorFunctionRefV1Rotated` event type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1Rotated<Account> {
         pub account_id: ID,
         pub from: AuthenticatorFunctionRefV1<Account>,
@@ -1772,6 +1576,7 @@ pub mod account {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1Key {
         dummy_field: bool,
     }
@@ -1794,6 +1599,7 @@ pub mod coin_manager {
     /// shared object.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManager<T> {
         pub id: UID,
         /// The original `TreasuryCap` object as returned by
@@ -1817,6 +1623,7 @@ pub mod coin_manager {
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManagerTreasuryCap<T> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1836,6 +1643,7 @@ pub mod coin_manager {
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManagerMetadataCap<T> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1855,6 +1663,7 @@ pub mod coin_manager {
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ImmutableCoinMetadata<T> {
         pub decimals: u8,
         pub name: MoveString,
@@ -1888,6 +1697,7 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManaged {
         pub coin_name: AsciiString,
     }
@@ -1897,6 +1707,7 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TreasuryOwnershipRenounced {
         pub coin_name: AsciiString,
     }
@@ -1906,355 +1717,9 @@ pub mod coin_manager {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MetadataOwnershipRenounced {
         pub coin_name: AsciiString,
-    }
-}
-
-#[cfg(all(test, feature = "serde"))]
-mod round4_tests {
-    //! Sanity round-trip tests for the round-4 modules added above. One
-    //! representative test per module — exhaustive shape testing on every
-    //! field is left to consumers who care.
-
-    use iota_types::{Address, ObjectId};
-
-    use super::*;
-    use crate::std::{ascii, string::String as MoveString};
-
-    fn oid() -> ObjectId {
-        ObjectId::new([0xab; ObjectId::LENGTH])
-    }
-
-    fn uid() -> object::UID {
-        object::UID::new(oid())
-    }
-
-    #[test]
-    fn bcs_bcs_roundtrip() {
-        let b = bcs::BCS::new(vec![1, 2, 3]);
-        let bytes = ::bcs::to_bytes(&b).unwrap();
-        let decoded: bcs::BCS = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(b, decoded);
-    }
-
-    #[test]
-    fn clock_bcs_roundtrip() {
-        let c = clock::Clock::new(uid(), 1_700_000_000_000);
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: clock::Clock = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn tx_context_bcs_roundtrip() {
-        let t = tx_context::TxContext {
-            sender: Address::new([0xab; 32]),
-            tx_hash: vec![0; 32],
-            epoch: 1,
-            epoch_timestamp_ms: 1_700_000_000_000,
-            ids_created: 0,
-        };
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: tx_context::TxContext = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn intent_bcs_roundtrip() {
-        let i = intent::Intent::new(1, 2, 3);
-        let bytes = ::bcs::to_bytes(&i).unwrap();
-        let decoded: intent::Intent = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(i, decoded);
-    }
-
-    #[test]
-    fn ecdsa_k1_keypair_bcs_roundtrip() {
-        let k = ecdsa_k1::KeyPair {
-            private_key: vec![1; 32],
-            public_key: vec![2; 33],
-        };
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        let decoded: ecdsa_k1::KeyPair = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn zklogin_verified_id_bcs_roundtrip() {
-        let v = zklogin_verified_id::VerifiedID {
-            id: uid(),
-            owner: Address::new([0; 32]),
-            key_claim_name: MoveString::new(b"sub".to_vec()),
-            key_claim_value: MoveString::new(b"123".to_vec()),
-            issuer: MoveString::new(b"https://accounts.google.com".to_vec()),
-            audience: MoveString::new(b"wallet".to_vec()),
-        };
-        let bytes = ::bcs::to_bytes(&v).unwrap();
-        let decoded: zklogin_verified_id::VerifiedID = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(v, decoded);
-    }
-
-    #[test]
-    fn zklogin_verified_issuer_bcs_roundtrip() {
-        let v = zklogin_verified_issuer::VerifiedIssuer {
-            id: uid(),
-            owner: Address::new([0; 32]),
-            issuer: MoveString::new(b"https://accounts.google.com".to_vec()),
-        };
-        let bytes = ::bcs::to_bytes(&v).unwrap();
-        let decoded: zklogin_verified_issuer::VerifiedIssuer = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(v, decoded);
-    }
-
-    #[test]
-    fn receiving_bcs_roundtrip() {
-        let r: transfer::Receiving<u64> = transfer::Receiving::new(object::ID::new(oid()), 7);
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: transfer::Receiving<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
-    }
-
-    #[test]
-    fn timelock_bcs_roundtrip() {
-        let t: timelock::TimeLock<u64> =
-            timelock::TimeLock::new(uid(), 42, 1_700_000_000_000, None);
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: timelock::TimeLock<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn borrow_referent_bcs_roundtrip() {
-        let r: borrow::Referent<u64> = borrow::Referent::new(Address::new([0; 32]), Some(42));
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: borrow::Referent<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
-    }
-
-    #[test]
-    fn borrow_borrow_bcs_roundtrip() {
-        let b = borrow::Borrow {
-            r#ref: Address::new([0; 32]),
-            obj: object::ID::new(oid()),
-        };
-        let bytes = ::bcs::to_bytes(&b).unwrap();
-        let decoded: borrow::Borrow = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(b, decoded);
-    }
-
-    #[test]
-    fn borrow_test_bcs_roundtrip() {
-        let t = borrow::Test { id: uid() };
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: borrow::Test = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn dynamic_field_field_bcs_roundtrip() {
-        let f: dynamic_field::Field<u64, u64> = dynamic_field::Field::new(uid(), 1, 2);
-        let bytes = ::bcs::to_bytes(&f).unwrap();
-        let decoded: dynamic_field::Field<u64, u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(f, decoded);
-    }
-
-    #[test]
-    fn dynamic_object_field_wrapper_bcs_roundtrip() {
-        let w: dynamic_object_field::Wrapper<u64> = dynamic_object_field::Wrapper::new(7);
-        let bytes = ::bcs::to_bytes(&w).unwrap();
-        let decoded: dynamic_object_field::Wrapper<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(w, decoded);
-    }
-
-    #[test]
-    fn labeler_cap_bcs_roundtrip() {
-        let c: labeler::LabelerCap<u64> = labeler::LabelerCap::new(uid());
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: labeler::LabelerCap<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn linked_table_bcs_roundtrip() {
-        let t: linked_table::LinkedTable<u64, u64> =
-            linked_table::LinkedTable::new(uid(), 2, Some(1), Some(2));
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: linked_table::LinkedTable<u64, u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn linked_table_node_bcs_roundtrip() {
-        let n: linked_table::Node<u64, u64> = linked_table::Node::new(None, Some(2), 1);
-        let bytes = ::bcs::to_bytes(&n).unwrap();
-        let decoded: linked_table::Node<u64, u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(n, decoded);
-    }
-
-    #[test]
-    fn object_table_bcs_roundtrip() {
-        let t: object_table::ObjectTable<u64, u64> = object_table::ObjectTable::new(uid(), 3);
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: object_table::ObjectTable<u64, u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn object_bag_bcs_roundtrip() {
-        let b = object_bag::ObjectBag { id: uid(), size: 5 };
-        let bytes = ::bcs::to_bytes(&b).unwrap();
-        let decoded: object_bag::ObjectBag = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(b, decoded);
-    }
-
-    #[test]
-    fn priority_queue_bcs_roundtrip() {
-        let q: priority_queue::PriorityQueue<u64> = priority_queue::PriorityQueue::new(vec![
-            priority_queue::Entry::new(10, 100),
-            priority_queue::Entry::new(5, 50),
-        ]);
-        let bytes = ::bcs::to_bytes(&q).unwrap();
-        let decoded: priority_queue::PriorityQueue<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(q, decoded);
-    }
-
-    #[test]
-    fn derived_object_key_bcs_roundtrip() {
-        let k: derived_object::DerivedObjectKey<u64> = derived_object::DerivedObjectKey::new(42);
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        let decoded: derived_object::DerivedObjectKey<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn authenticator_state_bcs_roundtrip() {
-        let s = authenticator_state::AuthenticatorState {
-            id: uid(),
-            version: 1,
-        };
-        let bytes = ::bcs::to_bytes(&s).unwrap();
-        let decoded: authenticator_state::AuthenticatorState = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn authenticator_state_inner_bcs_roundtrip() {
-        let inner = authenticator_state::AuthenticatorStateInner {
-            version: 1,
-            active_jwks: vec![authenticator_state::ActiveJwk {
-                jwk_id: authenticator_state::JwkId {
-                    iss: MoveString::new(b"google".to_vec()),
-                    kid: MoveString::new(b"kid".to_vec()),
-                },
-                jwk: authenticator_state::JWK {
-                    kty: MoveString::new(b"RSA".to_vec()),
-                    e: MoveString::new(b"AQAB".to_vec()),
-                    n: MoveString::new(b"...".to_vec()),
-                    alg: MoveString::new(b"RS256".to_vec()),
-                },
-                epoch: 1,
-            }],
-        };
-        let bytes = ::bcs::to_bytes(&inner).unwrap();
-        let decoded: authenticator_state::AuthenticatorStateInner =
-            ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(inner, decoded);
-    }
-
-    #[test]
-    fn display_bcs_roundtrip() {
-        let d: display::Display<u64> = display::Display::new(uid(), vec_map::VecMap::default(), 1);
-        let bytes = ::bcs::to_bytes(&d).unwrap();
-        let decoded: display::Display<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(d, decoded);
-    }
-
-    #[test]
-    fn package_publisher_bcs_roundtrip() {
-        let p = package::Publisher {
-            id: uid(),
-            package: ascii::String::new(b"0x2".to_vec()),
-            module_name: ascii::String::new(b"package".to_vec()),
-        };
-        let bytes = ::bcs::to_bytes(&p).unwrap();
-        let decoded: package::Publisher = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(p, decoded);
-    }
-
-    #[test]
-    fn package_upgrade_cap_bcs_roundtrip() {
-        let u = package::UpgradeCap {
-            id: uid(),
-            package: object::ID::new(oid()),
-            version: 1,
-            policy: 0,
-        };
-        let bytes = ::bcs::to_bytes(&u).unwrap();
-        let decoded: package::UpgradeCap = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(u, decoded);
-    }
-
-    #[test]
-    fn bls12381_scalar_bcs_roundtrip() {
-        let s = bls12381::Scalar::default();
-        let bytes = ::bcs::to_bytes(&s).unwrap();
-        assert_eq!(bytes, [0u8]);
-        let decoded: bls12381::Scalar = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn groth16_prepared_verifying_key_bcs_roundtrip() {
-        let k = groth16::PreparedVerifyingKey {
-            vk_gamma_abc_g1_bytes: vec![1],
-            alpha_g1_beta_g2_bytes: vec![2],
-            gamma_g2_neg_pc_bytes: vec![3],
-            delta_g2_neg_pc_bytes: vec![4],
-        };
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        let decoded: groth16::PreparedVerifyingKey = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn group_ops_element_bcs_roundtrip() {
-        let e: group_ops::Element<u64> = group_ops::Element::new(vec![1, 2, 3]);
-        let bytes = ::bcs::to_bytes(&e).unwrap();
-        let decoded: group_ops::Element<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(e, decoded);
-    }
-
-    #[test]
-    fn authenticator_function_ref_v1_bcs_roundtrip() {
-        let r: authenticator_function::AuthenticatorFunctionRefV1<u64> =
-            authenticator_function::AuthenticatorFunctionRefV1::new(
-                object::ID::new(oid()),
-                ascii::String::new(b"m".to_vec()),
-                ascii::String::new(b"f".to_vec()),
-            );
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: authenticator_function::AuthenticatorFunctionRefV1<u64> =
-            ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
-    }
-
-    #[test]
-    fn account_authenticator_function_ref_v1_key_bcs_roundtrip() {
-        let k = account::AuthenticatorFunctionRefV1Key::default();
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        assert_eq!(bytes, [0u8]);
-        let decoded: account::AuthenticatorFunctionRefV1Key = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn coin_manager_event_bcs_roundtrip() {
-        let e = coin_manager::CoinManaged {
-            coin_name: ascii::String::new(b"0x2::iota::IOTA".to_vec()),
-        };
-        let bytes = ::bcs::to_bytes(&e).unwrap();
-        let decoded: coin_manager::CoinManaged = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(e, decoded);
     }
 }
 
@@ -2278,6 +1743,7 @@ pub mod token {
     /// address; actions on it must be confirmed in a matching `TokenPolicy`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Token<T> {
         pub id: UID,
         pub balance: Balance<T>,
@@ -2292,6 +1758,7 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicyCap<T> {
         pub id: UID,
         pub r#for: ID,
@@ -2312,6 +1779,7 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicy<T> {
         pub id: UID,
         /// Balance effectively spent on the `spend` action. Cannot be
@@ -2339,6 +1807,7 @@ pub mod token {
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ActionRequest<T> {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
@@ -2359,6 +1828,7 @@ pub mod token {
     /// Dynamic-field key for storing a `Config` for a specific action rule.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RuleKey<T> {
         pub is_protected: bool,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2377,6 +1847,7 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicyCreated<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicyCreated<T> {
         pub id: ID,
         pub is_mutable: bool,
@@ -2396,6 +1867,11 @@ pub mod token {
 }
 
 /// Types from `0x2::test_scenario`.
+///
+/// The Move-side `test_scenario` module is annotated `#[test_only]`, so
+/// none of its structs ship in the compiled package — they're omitted
+/// from the `move_shape_compare` cross-check and therefore don't carry the
+/// `MoveShape` derive.
 pub mod test_scenario {
     use iota_types::Address;
 
@@ -2459,6 +1935,7 @@ pub mod package_metadata {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PackageMetadataKey {
         dummy_field: bool,
     }
@@ -2470,6 +1947,7 @@ pub mod package_metadata {
     /// runtime ID, version, and per-module metadata.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PackageMetadataV1 {
         pub id: UID,
         /// Storage ID of the package represented by this metadata.
@@ -2487,6 +1965,7 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ModuleMetadataV1 {
         pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
     }
@@ -2496,6 +1975,7 @@ pub mod package_metadata {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorMetadataV1 {
         pub function_name: AsciiString,
         pub account_type: TypeName,
@@ -2517,6 +1997,7 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DenyList {
         pub id: UID,
         /// The individual deny lists.
@@ -2525,16 +2006,23 @@ pub mod deny_list {
 
     /// Rust version of the Move `iota::deny_list::ConfigWriteCap` type.
     ///
-    /// Tuple newtype `(bool)` — preserves the BCS wire format.
+    /// Move's source declares `ConfigWriteCap()` (positional empty) but
+    /// the compiler injects a `dummy_field: bool` into the bytecode, so
+    /// the Rust mirror carries the same named field to preserve the BCS
+    /// wire format.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct ConfigWriteCap(bool);
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    pub struct ConfigWriteCap {
+        dummy_field: bool,
+    }
 
     /// Rust version of the Move `iota::deny_list::ConfigKey` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ConfigKey {
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
@@ -2544,19 +2032,27 @@ pub mod deny_list {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AddressKey(pub Address);
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
+    ///
+    /// Move's source declares `GlobalPauseKey()` (positional empty) but
+    /// the compiler injects a `dummy_field: bool` into the bytecode.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct GlobalPauseKey(bool);
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    pub struct GlobalPauseKey {
+        dummy_field: bool,
+    }
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
     /// event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PerTypeConfigCreated {
         pub key: ConfigKey,
         pub config_id: ID,
@@ -2574,6 +2070,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Random {
         pub id: UID,
         pub inner: Versioned,
@@ -2583,6 +2080,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RandomInner {
         pub version: u64,
         pub epoch: u64,
@@ -2596,6 +2094,7 @@ pub mod random {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RandomGenerator {
         pub seed: Vec<u8>,
         pub counter: u16,
@@ -2612,6 +2111,7 @@ pub mod config {
     /// Rust version of the Move `iota::config::Config<WriteCap>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Config<WriteCap> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2630,6 +2130,7 @@ pub mod config {
     /// Rust version of the Move `iota::config::Setting<Value>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Setting<Value> {
         pub data: Option<SettingData<Value>>,
     }
@@ -2643,6 +2144,7 @@ pub mod config {
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SettingData<Value> {
         pub newer_value_epoch: u64,
         pub newer_value: Option<Value>,
@@ -2658,6 +2160,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::Argument` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum Argument {
         GasCoin,
         Input(u16),
@@ -2669,6 +2172,7 @@ pub mod ptb_command {
     /// `iota::ptb_command::ProgrammableMoveCall` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProgrammableMoveCall {
         pub package: ID,
         pub module_name: AsciiString,
@@ -2681,6 +2185,7 @@ pub mod ptb_command {
     /// `iota::ptb_command::TransferObjectsData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferObjectsData {
         pub objects: Vec<Argument>,
         pub recipient: Argument,
@@ -2689,6 +2194,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::SplitCoinsData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SplitCoinsData {
         pub coin: Argument,
         pub amounts: Vec<Argument>,
@@ -2697,6 +2203,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::MergeCoinsData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MergeCoinsData {
         pub target_coin: Argument,
         pub source_coins: Vec<Argument>,
@@ -2705,6 +2212,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::PublishData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PublishData {
         pub modules: Vec<Vec<u8>>,
         pub dependencies: Vec<ID>,
@@ -2713,6 +2221,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::MakeMoveVecData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MakeMoveVecData {
         pub type_arg: Option<TypeName>,
         pub elements: Vec<Argument>,
@@ -2721,6 +2230,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::UpgradeData` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeData {
         pub modules: Vec<Vec<u8>>,
         pub dependencies: Vec<ID>,
@@ -2731,6 +2241,7 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::Command` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum Command {
         MoveCall(ProgrammableMoveCall),
         TransferObjects(TransferObjectsData),
@@ -2749,6 +2260,7 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::ObjectRef` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectRef {
         pub object_id: ID,
         pub sequence_number: u64,
@@ -2758,6 +2270,7 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::ObjectArg` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum ObjectArg {
         ImmOrOwnedObject(ObjectRef),
         SharedObject {
@@ -2771,6 +2284,7 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::CallArg` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum CallArg {
         PureData(Vec<u8>),
         ObjectData(ObjectArg),
@@ -2784,6 +2298,7 @@ pub mod ptb {
     /// Rust version of the Move `iota::ptb::ProgrammableTransaction` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProgrammableTransaction {
         pub inputs: Vec<CallArg>,
         pub commands: Vec<Command>,
@@ -2797,6 +2312,7 @@ pub mod auth_context {
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthContext {
         /// Digest of the `MoveAuthenticator`.
         pub auth_digest: Vec<u8>,
@@ -2825,6 +2341,7 @@ pub mod kiosk {
     /// ecosystem.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Kiosk {
         pub id: UID,
         /// Balance of the Kiosk — all profits from sales go here.
@@ -2840,6 +2357,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct KioskOwnerCap {
         pub id: UID,
         pub r#for: ID,
@@ -2848,6 +2366,7 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::PurchaseCap<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PurchaseCap<T> {
         pub id: UID,
         pub kiosk_id: ID,
@@ -2881,6 +2400,7 @@ pub mod kiosk {
         derive(iota_bcs_schema::BcsSchema),
         bcs_schema(name = "kiosk-borrow")
     )]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Borrow {
         pub kiosk_id: ID,
         pub item_id: ID,
@@ -2892,6 +2412,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Item {
         pub id: ID,
     }
@@ -2900,6 +2421,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Listing {
         pub id: ID,
         pub is_exclusive: bool,
@@ -2909,6 +2431,7 @@ pub mod kiosk {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Lock {
         pub id: ID,
     }
@@ -2916,6 +2439,7 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemListed<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemListed<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2938,6 +2462,7 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemPurchased<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemPurchased<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2960,6 +2485,7 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemDelisted<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemDelisted<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2991,6 +2517,7 @@ pub mod kiosk_extension {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
@@ -3004,6 +2531,7 @@ pub mod kiosk_extension {
     /// `iota::kiosk_extension::ExtensionKey<Ext>` type.
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ExtensionKey<Ext> {
         dummy_field: bool,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -3030,6 +2558,7 @@ pub mod transfer_policy {
     /// the item type's owner on purchase.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferRequest<T> {
         pub item: ID,
         /// Amount of IOTA paid for the item.
@@ -3059,6 +2588,7 @@ pub mod transfer_policy {
     /// type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicy<T> {
         pub id: UID,
         /// The Balance of the `TransferPolicy` (collected in IOTA).
@@ -3084,6 +2614,7 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyCap<T> {
         pub id: UID,
         pub policy_id: ID,
@@ -3105,6 +2636,7 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyCreated<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -3124,6 +2656,7 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyDestroyed<T>` event.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyDestroyed<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -3142,6 +2675,7 @@ pub mod transfer_policy {
     /// Rust version of the Move `iota::transfer_policy::RuleKey<T>` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RuleKey<T> {
         dummy_field: bool,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -3161,290 +2695,5 @@ pub mod transfer_policy {
         fn default() -> Self {
             Self::new()
         }
-    }
-}
-
-#[cfg(all(test, feature = "serde"))]
-mod round5_tests {
-    use iota_types::{Address, ObjectId};
-
-    use super::*;
-    use crate::std::{ascii, string::String as MoveString, type_name::TypeName};
-
-    fn oid() -> ObjectId {
-        ObjectId::new([0xab; ObjectId::LENGTH])
-    }
-
-    fn uid() -> object::UID {
-        object::UID::new(oid())
-    }
-
-    fn iid() -> object::ID {
-        object::ID::new(oid())
-    }
-
-    #[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-    struct TestT;
-
-    #[test]
-    fn token_bcs_roundtrip() {
-        let t: token::Token<TestT> = token::Token::new(uid(), balance::Balance::new(1_000));
-        let bytes = ::bcs::to_bytes(&t).unwrap();
-        let decoded: token::Token<TestT> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(t, decoded);
-    }
-
-    #[test]
-    fn token_policy_cap_bcs_roundtrip() {
-        let c: token::TokenPolicyCap<TestT> = token::TokenPolicyCap::new(uid(), iid());
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: token::TokenPolicyCap<TestT> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn test_scenario_scenario_bcs_roundtrip() {
-        let s = test_scenario::Scenario {
-            txn_number: 0,
-            ctx: tx_context::TxContext {
-                sender: Address::new([0; 32]),
-                tx_hash: vec![0; 32],
-                epoch: 0,
-                epoch_timestamp_ms: 0,
-                ids_created: 0,
-            },
-        };
-        let bytes = ::bcs::to_bytes(&s).unwrap();
-        let decoded: test_scenario::Scenario = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn test_scenario_transaction_effects_bcs_roundtrip() {
-        let e = test_scenario::TransactionEffects {
-            created: vec![iid()],
-            written: vec![],
-            deleted: vec![],
-            transferred_to_account: vec_map::VecMap::default(),
-            transferred_to_object: vec_map::VecMap::default(),
-            shared: vec![],
-            frozen: vec![],
-            num_user_events: 0,
-        };
-        let bytes = ::bcs::to_bytes(&e).unwrap();
-        let decoded: test_scenario::TransactionEffects = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(e, decoded);
-    }
-
-    #[test]
-    fn package_metadata_authenticator_metadata_v1_bcs_roundtrip() {
-        let m = package_metadata::AuthenticatorMetadataV1 {
-            function_name: ascii::String::new(b"authenticate".to_vec()),
-            account_type: TypeName::new(ascii::String::new(b"0x2::account::Account".to_vec())),
-        };
-        let bytes = ::bcs::to_bytes(&m).unwrap();
-        let decoded: package_metadata::AuthenticatorMetadataV1 = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(m, decoded);
-    }
-
-    #[test]
-    fn deny_list_bcs_roundtrip() {
-        let d = deny_list::DenyList {
-            id: uid(),
-            lists: bag::Bag::new(uid(), 0),
-        };
-        let bytes = ::bcs::to_bytes(&d).unwrap();
-        let decoded: deny_list::DenyList = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(d, decoded);
-    }
-
-    #[test]
-    fn deny_list_address_key_bcs_roundtrip() {
-        let k = deny_list::AddressKey(Address::new([0xab; 32]));
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        let decoded: deny_list::AddressKey = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn random_bcs_roundtrip() {
-        let r = random::Random {
-            id: uid(),
-            inner: versioned::Versioned::new(uid(), 1),
-        };
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: random::Random = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
-    }
-
-    #[test]
-    fn random_inner_bcs_roundtrip() {
-        let r = random::RandomInner {
-            version: 1,
-            epoch: 1,
-            randomness_round: 1,
-            random_bytes: vec![0; 32],
-        };
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: random::RandomInner = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
-    }
-
-    #[test]
-    fn config_bcs_roundtrip() {
-        let c: config::Config<TestT> = config::Config::new(uid());
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: config::Config<TestT> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn setting_data_bcs_roundtrip() {
-        let s: config::SettingData<u64> = config::SettingData {
-            newer_value_epoch: 0,
-            newer_value: Some(42),
-            older_value_opt: None,
-        };
-        let bytes = ::bcs::to_bytes(&s).unwrap();
-        let decoded: config::SettingData<u64> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn ptb_command_argument_bcs_roundtrip() {
-        for a in [
-            ptb_command::Argument::GasCoin,
-            ptb_command::Argument::Input(7),
-            ptb_command::Argument::Result(3),
-            ptb_command::Argument::NestedResult(1, 2),
-        ] {
-            let bytes = ::bcs::to_bytes(&a).unwrap();
-            let decoded: ptb_command::Argument = ::bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(a, decoded);
-        }
-    }
-
-    #[test]
-    fn ptb_command_command_bcs_roundtrip() {
-        let c = ptb_command::Command::TransferObjects(ptb_command::TransferObjectsData {
-            objects: vec![ptb_command::Argument::Input(0)],
-            recipient: ptb_command::Argument::Input(1),
-        });
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: ptb_command::Command = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn ptb_call_arg_object_arg_bcs_roundtrip() {
-        let o = ptb_call_arg::ObjectArg::SharedObject {
-            id: iid(),
-            initial_shared_version: 1,
-            mutable: true,
-        };
-        let bytes = ::bcs::to_bytes(&o).unwrap();
-        let decoded: ptb_call_arg::ObjectArg = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(o, decoded);
-    }
-
-    #[test]
-    fn ptb_programmable_transaction_bcs_roundtrip() {
-        let p = ptb::ProgrammableTransaction {
-            inputs: vec![ptb_call_arg::CallArg::PureData(vec![1, 2, 3])],
-            commands: vec![ptb_command::Command::SplitCoins(
-                ptb_command::SplitCoinsData {
-                    coin: ptb_command::Argument::GasCoin,
-                    amounts: vec![ptb_command::Argument::Input(0)],
-                },
-            )],
-        };
-        let bytes = ::bcs::to_bytes(&p).unwrap();
-        let decoded: ptb::ProgrammableTransaction = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(p, decoded);
-    }
-
-    #[test]
-    fn auth_context_bcs_roundtrip() {
-        let a = auth_context::AuthContext {
-            auth_digest: vec![0; 32],
-            tx_inputs: vec![],
-            tx_commands: vec![],
-        };
-        let bytes = ::bcs::to_bytes(&a).unwrap();
-        let decoded: auth_context::AuthContext = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(a, decoded);
-    }
-
-    #[test]
-    fn kiosk_bcs_roundtrip() {
-        let k = kiosk::Kiosk {
-            id: uid(),
-            profits: balance::Balance::new(1_000),
-            owner: Address::new([0; 32]),
-            item_count: 5,
-        };
-        let bytes = ::bcs::to_bytes(&k).unwrap();
-        let decoded: kiosk::Kiosk = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(k, decoded);
-    }
-
-    #[test]
-    fn kiosk_owner_cap_bcs_roundtrip() {
-        let c = kiosk::KioskOwnerCap {
-            id: uid(),
-            r#for: iid(),
-        };
-        let bytes = ::bcs::to_bytes(&c).unwrap();
-        let decoded: kiosk::KioskOwnerCap = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn kiosk_borrow_bcs_roundtrip() {
-        let b = kiosk::Borrow {
-            kiosk_id: iid(),
-            item_id: iid(),
-        };
-        let bytes = ::bcs::to_bytes(&b).unwrap();
-        let decoded: kiosk::Borrow = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(b, decoded);
-    }
-
-    #[test]
-    fn kiosk_extension_bcs_roundtrip() {
-        let e = kiosk_extension::Extension {
-            storage: bag::Bag::new(uid(), 0),
-            permissions: 0b11,
-            is_enabled: true,
-        };
-        let bytes = ::bcs::to_bytes(&e).unwrap();
-        let decoded: kiosk_extension::Extension = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(e, decoded);
-    }
-
-    #[test]
-    fn transfer_policy_bcs_roundtrip() {
-        let p: transfer_policy::TransferPolicy<TestT> = transfer_policy::TransferPolicy::new(
-            uid(),
-            balance::Balance::new(0),
-            vec_set::VecSet::default(),
-        );
-        let bytes = ::bcs::to_bytes(&p).unwrap();
-        let decoded: transfer_policy::TransferPolicy<TestT> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(p, decoded);
-    }
-
-    #[test]
-    fn transfer_request_bcs_roundtrip() {
-        let r: transfer_policy::TransferRequest<TestT> = transfer_policy::TransferRequest::new(
-            iid(),
-            1_000,
-            iid(),
-            vec_set::VecSet::new(vec![TypeName::new(ascii::String::new(b"X".to_vec()))]),
-        );
-        let _ = MoveString::new(b"unused".to_vec());
-        let bytes = ::bcs::to_bytes(&r).unwrap();
-        let decoded: transfer_policy::TransferRequest<TestT> = ::bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(r, decoded);
     }
 }

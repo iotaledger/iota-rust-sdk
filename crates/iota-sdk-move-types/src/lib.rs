@@ -16,10 +16,14 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
-pub mod framework;
-pub mod iota_system;
-pub mod stardust;
-pub mod std;
+mod packages;
+pub use packages::{framework, iota_system, stardust, std};
+
+#[cfg(test)]
+mod move_shape;
+
+#[cfg(all(test, feature = "serde"))]
+mod move_shape_compare;
 
 /// Error returned by the `try_from_object` constructors on type mirrors.
 ///

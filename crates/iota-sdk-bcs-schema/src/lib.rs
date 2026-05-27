@@ -15,6 +15,9 @@ use syn::{
 
 const DEFAULT_BCS_SCHEMA_FILE: &str = "bcs-schema.abnf";
 
+#[cfg(feature = "move-shape")]
+mod move_shape;
+
 fn defined_names() -> &'static Mutex<HashMap<String, String>> {
     static NAMES: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
     NAMES.get_or_init(|| Mutex::new(HashMap::new()))
@@ -24,6 +27,16 @@ fn defined_names() -> &'static Mutex<HashMap<String, String>> {
 pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     match expand(&input) {
+        Ok(ts) => ts.into(),
+        Err(e) => e.to_compile_error().into(),
+    }
+}
+
+#[cfg(feature = "move-shape")]
+#[proc_macro_derive(MoveShape, attributes(bcs_schema))]
+pub fn derive_move_shape(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    match move_shape::expand(&input) {
         Ok(ts) => ts.into(),
         Err(e) => e.to_compile_error().into(),
     }

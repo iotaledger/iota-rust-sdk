@@ -12,6 +12,7 @@ pub mod fixed_point32 {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct FixedPoint32 {
         pub value: u64,
     }
@@ -33,6 +34,7 @@ pub mod ascii {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -47,6 +49,7 @@ pub mod ascii {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Char {
         pub byte: u8,
     }
@@ -68,6 +71,7 @@ pub mod string {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -89,6 +93,7 @@ pub mod uq32_32 {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UQ32_32(pub u64);
 
     impl UQ32_32 {
@@ -108,6 +113,7 @@ pub mod uq64_64 {
     #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UQ64_64(pub u128);
 
     impl UQ64_64 {
@@ -123,6 +129,7 @@ pub mod bit_vector {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BitVector {
         pub length: u64,
         pub bit_field: Vec<bool>,
@@ -137,7 +144,7 @@ pub mod bit_vector {
 
 /// Types from `0x1::type_name`.
 pub mod type_name {
-    use super::ascii::String as AsciiString;
+    use super::ascii;
 
     /// Rust version of the Move `std::type_name::TypeName` type.
     ///
@@ -148,12 +155,13 @@ pub mod type_name {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TypeName {
-        pub name: AsciiString,
+        pub name: ascii::String,
     }
 
     impl TypeName {
-        pub const fn new(name: AsciiString) -> Self {
+        pub const fn new(name: ascii::String) -> Self {
             Self { name }
         }
     }
@@ -169,6 +177,7 @@ pub mod option {
     /// Move source.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Option<Element> {
         pub vec: Vec<Element>,
     }
@@ -183,91 +192,5 @@ pub mod option {
         fn default() -> Self {
             Self { vec: Vec::new() }
         }
-    }
-}
-
-#[cfg(all(test, feature = "serde"))]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn fixed_point32_bcs_roundtrip() {
-        let f = fixed_point32::FixedPoint32::new(0xdead_beef);
-        let bytes = bcs::to_bytes(&f).unwrap();
-        let decoded: fixed_point32::FixedPoint32 = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(f, decoded);
-    }
-
-    #[test]
-    fn ascii_string_bcs_roundtrip() {
-        let s = ascii::String::new(b"hello".to_vec());
-        let bytes = bcs::to_bytes(&s).unwrap();
-        // Wire format: length-prefixed bytes — identical to a `Vec<u8>`.
-        assert_eq!(bytes, bcs::to_bytes(&b"hello".to_vec()).unwrap());
-        let decoded: ascii::String = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn ascii_char_bcs_roundtrip() {
-        let c = ascii::Char::new(b'A');
-        let bytes = bcs::to_bytes(&c).unwrap();
-        assert_eq!(bytes, [b'A']);
-        let decoded: ascii::Char = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(c, decoded);
-    }
-
-    #[test]
-    fn string_bcs_roundtrip() {
-        let s = string::String::new("héllo".as_bytes().to_vec());
-        let bytes = bcs::to_bytes(&s).unwrap();
-        let decoded: string::String = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(s, decoded);
-    }
-
-    #[test]
-    fn option_none_bcs_roundtrip() {
-        let o: option::Option<u64> = option::Option::default();
-        let bytes = bcs::to_bytes(&o).unwrap();
-        // Move `option::Option<T>` is wire-compatible with Rust's `Option<T>`:
-        //   None → [0]; Some(x) → [1, <x>].
-        assert_eq!(bytes, bcs::to_bytes::<Option<u64>>(&None).unwrap());
-        let decoded: option::Option<u64> = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(o, decoded);
-    }
-
-    #[test]
-    fn option_some_bcs_roundtrip() {
-        let o: option::Option<u64> = option::Option::new(vec![42]);
-        let bytes = bcs::to_bytes(&o).unwrap();
-        assert_eq!(bytes, bcs::to_bytes::<Option<u64>>(&Some(42)).unwrap());
-        let decoded: option::Option<u64> = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(o, decoded);
-    }
-
-    #[test]
-    fn uq32_32_bcs_roundtrip() {
-        let q = uq32_32::UQ32_32::new(0xdead_beef_cafe_babe);
-        let bytes = bcs::to_bytes(&q).unwrap();
-        assert_eq!(bytes, 0xdead_beef_cafe_babe_u64.to_le_bytes());
-        let decoded: uq32_32::UQ32_32 = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(q, decoded);
-    }
-
-    #[test]
-    fn uq64_64_bcs_roundtrip() {
-        let q = uq64_64::UQ64_64::new(0xdead_beef);
-        let bytes = bcs::to_bytes(&q).unwrap();
-        assert_eq!(bytes, 0xdead_beef_u128.to_le_bytes());
-        let decoded: uq64_64::UQ64_64 = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(q, decoded);
-    }
-
-    #[test]
-    fn bit_vector_bcs_roundtrip() {
-        let bv = bit_vector::BitVector::new(3, vec![true, false, true]);
-        let bytes = bcs::to_bytes(&bv).unwrap();
-        let decoded: bit_vector::BitVector = bcs::from_bytes(&bytes).unwrap();
-        assert_eq!(bv, decoded);
     }
 }

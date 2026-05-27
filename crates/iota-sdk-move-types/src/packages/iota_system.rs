@@ -22,6 +22,7 @@ pub mod staking_pool {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PoolTokenExchangeRate {
         pub iota_amount: u64,
         pub pool_token_amount: u64,
@@ -42,6 +43,7 @@ pub mod staking_pool {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakedIota {
         pub id: UID,
         /// ID of the staking pool we are staking with.
@@ -115,6 +117,7 @@ pub mod staking_pool {
     /// object.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakingPoolV1 {
         pub id: UID,
         /// The epoch at which this pool became active.
@@ -179,57 +182,6 @@ pub mod staking_pool {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-        use crate::framework::table::Table;
-
-        fn sample_object_id(byte: u8) -> ObjectId {
-            ObjectId::new([byte; ObjectId::LENGTH])
-        }
-
-        #[test]
-        fn pool_token_exchange_rate_bcs_roundtrip() {
-            let r = PoolTokenExchangeRate::new(1_000, 999);
-            let bytes = bcs::to_bytes(&r).unwrap();
-            let decoded: PoolTokenExchangeRate = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(r, decoded);
-        }
-
-        #[test]
-        fn staked_iota_bcs_roundtrip() {
-            let staked = StakedIota::new(
-                sample_object_id(0xa1),
-                sample_object_id(0xb2),
-                42,
-                1_000_000_000,
-            );
-            let bytes = bcs::to_bytes(&staked).unwrap();
-            let decoded: StakedIota = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(staked, decoded);
-        }
-
-        #[test]
-        fn staking_pool_v1_bcs_roundtrip() {
-            let pool = StakingPoolV1::new(
-                UID::new(sample_object_id(0x01)),
-                Some(10),
-                None,
-                1_000_000,
-                Balance::new(50_000),
-                500_000,
-                Table::new(UID::new(sample_object_id(0x02)), 3),
-                123,
-                0,
-                0,
-                Bag::new(UID::new(sample_object_id(0x03)), 0),
-            );
-            let bytes = bcs::to_bytes(&pool).unwrap();
-            let decoded: StakingPoolV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(pool, decoded);
-        }
-    }
 }
 
 /// Types from `0x3::voting_power`.
@@ -239,6 +191,7 @@ pub mod voting_power {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VotingPowerInfoV1 {
         pub validator_index: u64,
         pub voting_power: u64,
@@ -252,19 +205,6 @@ pub mod voting_power {
                 voting_power,
                 stake,
             }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn voting_power_info_v1_bcs_roundtrip() {
-            let v = VotingPowerInfoV1::new(0, 100, 1_000);
-            let bytes = bcs::to_bytes(&v).unwrap();
-            let decoded: VotingPowerInfoV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(v, decoded);
         }
     }
 }
@@ -285,6 +225,7 @@ pub mod validator_cap {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UnverifiedValidatorOperationCap {
         pub id: UID,
         pub authorizer_validator_address: Address,
@@ -307,6 +248,7 @@ pub mod validator_cap {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorOperationCap {
         pub authorizer_validator_address: Address,
     }
@@ -316,32 +258,6 @@ pub mod validator_cap {
             Self {
                 authorizer_validator_address,
             }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn unverified_validator_operation_cap_bcs_roundtrip() {
-            let cap = UnverifiedValidatorOperationCap::new(
-                UID::new(ObjectId::ZERO),
-                Address::new([0xab; 32]),
-            );
-            let bytes = bcs::to_bytes(&cap).unwrap();
-            let decoded: UnverifiedValidatorOperationCap = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(cap, decoded);
-        }
-
-        #[test]
-        fn validator_operation_cap_bcs_roundtrip() {
-            let cap = ValidatorOperationCap::new(Address::new([0xcd; 32]));
-            let bytes = bcs::to_bytes(&cap).unwrap();
-            let decoded: ValidatorOperationCap = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(cap, decoded);
         }
     }
 }
@@ -358,6 +274,7 @@ pub mod validator_wrapper {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Validator {
         pub inner: Versioned,
     }
@@ -365,22 +282,6 @@ pub mod validator_wrapper {
     impl Validator {
         pub const fn new(inner: Versioned) -> Self {
             Self { inner }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::object::UID;
-
-        #[test]
-        fn validator_bcs_roundtrip() {
-            let v = Validator::new(Versioned::new(UID::new(ObjectId::ZERO), 1));
-            let bytes = bcs::to_bytes(&v).unwrap();
-            let decoded: Validator = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(v, decoded);
         }
     }
 }
@@ -400,6 +301,7 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorMetadataV1 {
         /// The IOTA Address of the validator.
         pub iota_address: Address,
@@ -440,6 +342,7 @@ pub mod validator {
     /// Rust version of the Move `iota_system::validator::ValidatorV1` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorV1 {
         /// Summary of the validator.
         pub metadata: ValidatorMetadataV1,
@@ -471,6 +374,7 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -484,6 +388,7 @@ pub mod validator {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UnstakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -492,77 +397,6 @@ pub mod validator {
         pub unstaking_epoch: u64,
         pub principal_amount: u64,
         pub reward_amount: u64,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::{framework::object::UID, std::ascii};
-
-        fn sample_metadata() -> ValidatorMetadataV1 {
-            ValidatorMetadataV1 {
-                iota_address: Address::new([0xab; 32]),
-                authority_pubkey_bytes: vec![0; 96],
-                network_pubkey_bytes: vec![0; 32],
-                protocol_pubkey_bytes: vec![0; 32],
-                proof_of_possession: vec![0; 48],
-                name: MoveString::new(b"alice".to_vec()),
-                description: MoveString::new(b"a validator".to_vec()),
-                image_url: Url::new(ascii::String::new(b"https://iota.org/a.png".to_vec())),
-                project_url: Url::new(ascii::String::new(b"https://iota.org/".to_vec())),
-                net_address: MoveString::new(b"/ip4/127.0.0.1/tcp/1".to_vec()),
-                p2p_address: MoveString::new(b"/ip4/127.0.0.1/tcp/2".to_vec()),
-                primary_address: MoveString::new(b"/ip4/127.0.0.1/tcp/3".to_vec()),
-                next_epoch_authority_pubkey_bytes: None,
-                next_epoch_proof_of_possession: None,
-                next_epoch_network_pubkey_bytes: None,
-                next_epoch_protocol_pubkey_bytes: None,
-                next_epoch_net_address: None,
-                next_epoch_p2p_address: None,
-                next_epoch_primary_address: None,
-                extra_fields: Bag::new(UID::new(ObjectId::ZERO), 0),
-            }
-        }
-
-        #[test]
-        fn validator_metadata_v1_bcs_roundtrip() {
-            let m = sample_metadata();
-            let bytes = bcs::to_bytes(&m).unwrap();
-            let decoded: ValidatorMetadataV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(m, decoded);
-        }
-
-        #[test]
-        fn staking_request_event_bcs_roundtrip() {
-            let e = StakingRequestEvent {
-                pool_id: ID::new(ObjectId::ZERO),
-                validator_address: Address::new([0; 32]),
-                staker_address: Address::new([1; 32]),
-                epoch: 7,
-                amount: 1_000_000,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: StakingRequestEvent = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
-
-        #[test]
-        fn unstaking_request_event_bcs_roundtrip() {
-            let e = UnstakingRequestEvent {
-                pool_id: ID::new(ObjectId::ZERO),
-                validator_address: Address::new([0; 32]),
-                staker_address: Address::new([1; 32]),
-                stake_activation_epoch: 7,
-                unstaking_epoch: 10,
-                principal_amount: 1_000_000,
-                reward_amount: 12_345,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: UnstakingRequestEvent = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
     }
 }
 
@@ -581,6 +415,7 @@ pub mod validator_set {
     /// type.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorSetV1 {
         /// Total stake from all active validators at the beginning of the
         /// epoch.
@@ -614,6 +449,7 @@ pub mod validator_set {
     /// current epoch.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorSetV2 {
         /// Total stake from all committee validators at the beginning of the
         /// epoch.
@@ -646,6 +482,7 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorEpochInfoEventV1 {
         pub epoch: u64,
         pub validator_address: Address,
@@ -664,6 +501,7 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -675,6 +513,7 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -687,6 +526,7 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CommitteeValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -698,61 +538,11 @@ pub mod validator_set {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CommitteeValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
         pub staking_pool_id: ID,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn validator_epoch_info_event_v1_bcs_roundtrip() {
-            let e = ValidatorEpochInfoEventV1 {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                reference_gas_survey_quote: 100,
-                stake: 1_000_000,
-                voting_power: 50,
-                commission_rate: 5,
-                pool_staking_reward: 1_234,
-                pool_token_exchange_rate: PoolTokenExchangeRate::new(1, 1),
-                tallying_rule_reporters: vec![Address::new([1; 32])],
-                tallying_rule_global_score: 99,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: ValidatorEpochInfoEventV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
-
-        #[test]
-        fn validator_join_event_bcs_roundtrip() {
-            let e = ValidatorJoinEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: ValidatorJoinEvent = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
-
-        #[test]
-        fn validator_leave_event_bcs_roundtrip() {
-            let e = ValidatorLeaveEvent {
-                epoch: 1,
-                validator_address: Address::new([0; 32]),
-                staking_pool_id: ID::new(ObjectId::ZERO),
-                is_voluntary: true,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: ValidatorLeaveEvent = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
     }
 }
 
@@ -780,6 +570,7 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemParametersV1 {
         /// The duration of an epoch, in milliseconds.
         pub epoch_duration_ms: u64,
@@ -808,6 +599,7 @@ pub mod iota_system_state_inner {
     /// The top-level object containing all information of the IOTA system.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemStateV1 {
         /// The current epoch ID, starting from 0.
         pub epoch: u64,
@@ -850,6 +642,7 @@ pub mod iota_system_state_inner {
     /// `protocol_defined_base_fee` is enabled.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemStateV2 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -876,6 +669,7 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemEpochInfoEventV1 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -898,6 +692,7 @@ pub mod iota_system_state_inner {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemEpochInfoEventV2 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -910,71 +705,6 @@ pub mod iota_system_state_inner {
         pub burnt_tokens_amount: u64,
         pub minted_tokens_amount: u64,
         pub tips_amount: u64,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::object::UID;
-
-        #[test]
-        fn system_parameters_v1_bcs_roundtrip() {
-            let p = SystemParametersV1 {
-                epoch_duration_ms: 86_400_000,
-                min_validator_count: 4,
-                max_validator_count: 150,
-                min_validator_joining_stake: 30_000_000,
-                validator_low_stake_threshold: 25_000_000,
-                validator_very_low_stake_threshold: 20_000_000,
-                validator_low_stake_grace_period: 7,
-                extra_fields: Bag::new(UID::new(ObjectId::ZERO), 0),
-            };
-            let bytes = bcs::to_bytes(&p).unwrap();
-            let decoded: SystemParametersV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(p, decoded);
-        }
-
-        #[test]
-        fn system_epoch_info_event_v1_bcs_roundtrip() {
-            let e = SystemEpochInfoEventV1 {
-                epoch: 1,
-                protocol_version: 1,
-                reference_gas_price: 1_000,
-                total_stake: 1_000_000_000,
-                storage_charge: 10_000,
-                storage_rebate: 8_000,
-                storage_fund_balance: 100_000,
-                total_gas_fees: 10_000,
-                total_stake_rewards_distributed: 1_000,
-                burnt_tokens_amount: 0,
-                minted_tokens_amount: 0,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: SystemEpochInfoEventV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
-
-        #[test]
-        fn system_epoch_info_event_v2_bcs_roundtrip() {
-            let e = SystemEpochInfoEventV2 {
-                epoch: 1,
-                protocol_version: 1,
-                total_stake: 1_000_000_000,
-                storage_charge: 10_000,
-                storage_rebate: 8_000,
-                storage_fund_balance: 100_000,
-                total_gas_fees: 10_000,
-                total_stake_rewards_distributed: 1_000,
-                burnt_tokens_amount: 0,
-                minted_tokens_amount: 0,
-                tips_amount: 42,
-            };
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: SystemEpochInfoEventV2 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
     }
 }
 
@@ -993,6 +723,7 @@ pub mod iota_system {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemState {
         pub id: UID,
         pub version: u64,
@@ -1001,21 +732,6 @@ pub mod iota_system {
     impl IotaSystemState {
         pub const fn new(id: UID, version: u64) -> Self {
             Self { id, version }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn iota_system_state_bcs_roundtrip() {
-            let s = IotaSystemState::new(UID::new(ObjectId::ZERO), 1);
-            let bytes = bcs::to_bytes(&s).unwrap();
-            let decoded: IotaSystemState = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(s, decoded);
         }
     }
 }
@@ -1033,6 +749,7 @@ pub mod storage_fund {
     /// not be paid back out.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StorageFundV1 {
         pub total_object_storage_rebates: Balance<IOTA>,
         pub non_refundable_balance: Balance<IOTA>,
@@ -1049,19 +766,6 @@ pub mod storage_fund {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn storage_fund_v1_bcs_roundtrip() {
-            let f = StorageFundV1::new(Balance::new(1_000_000), Balance::new(500));
-            let bytes = bcs::to_bytes(&f).unwrap();
-            let decoded: StorageFundV1 = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(f, decoded);
-        }
-    }
 }
 
 /// Types from `0x3::timelocked_staking`.
@@ -1076,6 +780,7 @@ pub mod timelocked_staking {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimelockedStakedIota {
         pub id: UID,
         /// A self-custodial object holding the staked IOTA tokens.
@@ -1120,46 +825,6 @@ pub mod timelocked_staking {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        fn sample_object_id(byte: u8) -> ObjectId {
-            ObjectId::new([byte; ObjectId::LENGTH])
-        }
-
-        #[test]
-        fn timelocked_staked_iota_bcs_roundtrip() {
-            let tsi = TimelockedStakedIota {
-                id: UID::new(sample_object_id(0xc3)),
-                staked_iota: StakedIota::new(
-                    sample_object_id(0xa1),
-                    sample_object_id(0xb2),
-                    42,
-                    1_000_000_000,
-                ),
-                expiration_timestamp_ms: 1_700_000_000_000,
-                label: Some(MoveString::new(b"vested".to_vec())),
-            };
-            let bytes = bcs::to_bytes(&tsi).unwrap();
-            let decoded: TimelockedStakedIota = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(tsi, decoded);
-        }
-
-        #[test]
-        fn timelocked_staked_iota_no_label_bcs_roundtrip() {
-            let tsi = TimelockedStakedIota {
-                id: UID::new(sample_object_id(0xc3)),
-                staked_iota: StakedIota::new(sample_object_id(0xa1), sample_object_id(0xb2), 7, 42),
-                expiration_timestamp_ms: 0,
-                label: None,
-            };
-            let bytes = bcs::to_bytes(&tsi).unwrap();
-            let decoded: TimelockedStakedIota = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(tsi, decoded);
-        }
-    }
 }
 
 /// Types from `0x3::genesis`.
@@ -1171,6 +836,7 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GenesisValidatorMetadata {
         pub name: Vec<u8>,
         pub description: Vec<u8>,
@@ -1193,6 +859,7 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GenesisChainParameters {
         pub protocol_version: u64,
         pub chain_start_timestamp_ms: u64,
@@ -1208,6 +875,7 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenAllocation {
         pub recipient_address: Address,
         pub amount_nanos: u64,
@@ -1224,52 +892,9 @@ pub mod genesis {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenDistributionSchedule {
         pub pre_minted_supply: u64,
         pub allocations: Vec<TokenAllocation>,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn genesis_validator_metadata_bcs_roundtrip() {
-            let m = GenesisValidatorMetadata {
-                name: b"alice".to_vec(),
-                description: b"a validator".to_vec(),
-                image_url: b"https://iota.org/a.png".to_vec(),
-                project_url: b"https://iota.org/".to_vec(),
-                iota_address: Address::new([0xab; 32]),
-                gas_price: 1_000,
-                commission_rate: 5,
-                authority_public_key: vec![0; 96],
-                proof_of_possession: vec![0; 48],
-                network_public_key: vec![0; 32],
-                protocol_public_key: vec![0; 32],
-                network_address: b"/ip4/127.0.0.1/tcp/1".to_vec(),
-                p2p_address: b"/ip4/127.0.0.1/tcp/2".to_vec(),
-                primary_address: b"/ip4/127.0.0.1/tcp/3".to_vec(),
-            };
-            let bytes = bcs::to_bytes(&m).unwrap();
-            let decoded: GenesisValidatorMetadata = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(m, decoded);
-        }
-
-        #[test]
-        fn token_distribution_schedule_bcs_roundtrip() {
-            let s = TokenDistributionSchedule {
-                pre_minted_supply: 1_000_000_000,
-                allocations: vec![TokenAllocation {
-                    recipient_address: Address::new([0; 32]),
-                    amount_nanos: 1_000_000,
-                    staked_with_validator: Some(Address::new([1; 32])),
-                    staked_with_timelock_expiration: Some(1_700_000_000_000),
-                }],
-            };
-            let bytes = bcs::to_bytes(&s).unwrap();
-            let decoded: TokenDistributionSchedule = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(s, decoded);
-        }
     }
 }

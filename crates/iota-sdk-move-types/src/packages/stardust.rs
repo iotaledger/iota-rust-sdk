@@ -17,6 +17,7 @@ pub mod irc27 {
     /// The IRC27 NFT metadata standard schema.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Irc27Metadata {
         /// Version of the metadata standard.
         pub version: MoveString,
@@ -52,41 +53,6 @@ pub mod irc27 {
             bcs::from_bytes(bytes)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-        use crate::{framework::vec_map::Entry, std::ascii};
-
-        fn sample() -> Irc27Metadata {
-            Irc27Metadata {
-                version: MoveString::new(b"1.0".to_vec()),
-                media_type: MoveString::new(b"image/png".to_vec()),
-                uri: Url::new(ascii::String::new(b"https://iota.org/n.png".to_vec())),
-                name: MoveString::new(b"name".to_vec()),
-                collection_name: Some(MoveString::new(b"collection".to_vec())),
-                royalties: VecMap::new(vec![Entry::new(
-                    Address::new([0xab; 32]),
-                    FixedPoint32::new(1_000),
-                )]),
-                issuer_name: None,
-                description: None,
-                attributes: VecMap::new(vec![Entry::new(
-                    MoveString::new(b"k".to_vec()),
-                    MoveString::new(b"v".to_vec()),
-                )]),
-                non_standard_fields: VecMap::default(),
-            }
-        }
-
-        #[test]
-        fn irc27_metadata_bcs_roundtrip() {
-            let m = sample();
-            let bytes = bcs::to_bytes(&m).unwrap();
-            let decoded: Irc27Metadata = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(m, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::nft`.
@@ -104,6 +70,7 @@ pub mod nft {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct NFT {
         dummy_field: bool,
     }
@@ -113,6 +80,7 @@ pub mod nft {
     /// The Stardust NFT representation.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Nft {
         /// The Nft's ID is inherited from Stardust.
         pub id: UID,
@@ -151,20 +119,6 @@ pub mod nft {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn nft_marker_bcs_roundtrip() {
-            let n = NFT::default();
-            let bytes = bcs::to_bytes(&n).unwrap();
-            assert_eq!(bytes, [0u8]);
-            let decoded: NFT = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(n, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::nft_output`.
@@ -181,6 +135,7 @@ pub mod nft_output {
     /// The Stardust NFT output representation.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct NftOutput<T> {
         /// A fresh UID — not the NFTID from Stardust.
         pub id: UID,
@@ -242,29 +197,6 @@ pub mod nft_output {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::iota::IOTA;
-
-        #[test]
-        fn nft_output_bcs_roundtrip() {
-            let o: NftOutput<IOTA> = NftOutput::new(
-                UID::new(ObjectId::ZERO),
-                Balance::new(1_000_000),
-                Bag::new(UID::new(ObjectId::ZERO), 0),
-                None,
-                Some(TimelockUnlockCondition::new(1_700_000_000)),
-                None,
-            );
-            let bytes = bcs::to_bytes(&o).unwrap();
-            let decoded: NftOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(o, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::stardust_upgrade_label`.
@@ -279,22 +211,9 @@ pub mod stardust_upgrade_label {
     #[derive(Debug, Default, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct STARDUST_UPGRADE_LABEL {
         dummy_field: bool,
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn stardust_upgrade_label_bcs_roundtrip() {
-            let l = STARDUST_UPGRADE_LABEL::default();
-            let bytes = bcs::to_bytes(&l).unwrap();
-            assert_eq!(bytes, [0u8]);
-            let decoded: STARDUST_UPGRADE_LABEL = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(l, decoded);
-        }
     }
 }
 
@@ -320,6 +239,7 @@ pub mod basic_output {
     /// `extract_assets` or call `receive` to obtain a `BasicOutput`.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BasicOutput<T> {
         /// Hash of the `outputId` that was migrated.
         pub id: UID,
@@ -395,32 +315,6 @@ pub mod basic_output {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::iota::IOTA;
-
-        #[test]
-        fn basic_output_bcs_roundtrip() {
-            let o: BasicOutput<IOTA> = BasicOutput::new(
-                UID::new(ObjectId::ZERO),
-                Balance::new(1_000_000),
-                Bag::new(UID::new(ObjectId::ZERO), 0),
-                None,
-                None,
-                None,
-                Some(b"metadata".to_vec()),
-                Some(b"tag".to_vec()),
-                Some(Address::new([0xab; 32])),
-            );
-            let bytes = bcs::to_bytes(&o).unwrap();
-            let decoded: BasicOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(o, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::alias`.
@@ -438,6 +332,7 @@ pub mod alias {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Alias {
         /// The ID of the Alias — hash of the Output ID that created the
         /// Alias Output in Stardust.
@@ -481,30 +376,6 @@ pub mod alias {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-
-        #[test]
-        fn alias_bcs_roundtrip() {
-            let a = Alias {
-                id: UID::new(ObjectId::ZERO),
-                legacy_state_controller: Address::new([0xab; 32]),
-                state_index: 7,
-                state_metadata: Some(b"state".to_vec()),
-                sender: Some(Address::new([0xcd; 32])),
-                metadata: None,
-                immutable_issuer: None,
-                immutable_metadata: None,
-            };
-            let bytes = bcs::to_bytes(&a).unwrap();
-            let decoded: Alias = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(a, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::alias_output`.
@@ -517,6 +388,7 @@ pub mod alias_output {
     /// Owned object controlled by the Governor Address.
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AliasOutput<T> {
         /// A fresh UID — not the AliasID from Stardust.
         pub id: UID,
@@ -563,26 +435,6 @@ pub mod alias_output {
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use iota_types::ObjectId;
-
-        use super::*;
-        use crate::framework::iota::IOTA;
-
-        #[test]
-        fn alias_output_bcs_roundtrip() {
-            let o: AliasOutput<IOTA> = AliasOutput::new(
-                UID::new(ObjectId::ZERO),
-                Balance::new(5_000_000),
-                Bag::new(UID::new(ObjectId::ZERO), 0),
-            );
-            let bytes = bcs::to_bytes(&o).unwrap();
-            let decoded: AliasOutput<IOTA> = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(o, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::timelock_unlock_condition`.
@@ -592,6 +444,7 @@ pub mod timelock_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimelockUnlockCondition {
         /// Unix time (seconds since the Unix epoch) from which the output
         /// can be consumed.
@@ -601,19 +454,6 @@ pub mod timelock_unlock_condition {
     impl TimelockUnlockCondition {
         pub const fn new(unix_time: u32) -> Self {
             Self { unix_time }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn timelock_unlock_condition_bcs_roundtrip() {
-            let t = TimelockUnlockCondition::new(1_700_000_000);
-            let bytes = bcs::to_bytes(&t).unwrap();
-            let decoded: TimelockUnlockCondition = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(t, decoded);
         }
     }
 }
@@ -628,6 +468,7 @@ pub mod expiration_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ExpirationUnlockCondition {
         /// The address that owns the output before `unix_time` is reached.
         pub owner: Address,
@@ -647,23 +488,6 @@ pub mod expiration_unlock_condition {
             }
         }
     }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn expiration_unlock_condition_bcs_roundtrip() {
-            let e = ExpirationUnlockCondition::new(
-                Address::new([0xab; 32]),
-                Address::new([0xcd; 32]),
-                1_700_000_000,
-            );
-            let bytes = bcs::to_bytes(&e).unwrap();
-            let decoded: ExpirationUnlockCondition = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(e, decoded);
-        }
-    }
 }
 
 /// Types from `0x107a::storage_deposit_return_unlock_condition`.
@@ -676,6 +500,7 @@ pub mod storage_deposit_return_unlock_condition {
     #[derive(Debug, Clone, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StorageDepositReturnUnlockCondition {
         /// The address to which the consuming transaction should deposit
         /// `return_amount`.
@@ -691,19 +516,6 @@ pub mod storage_deposit_return_unlock_condition {
                 return_address,
                 return_amount,
             }
-        }
-    }
-
-    #[cfg(all(test, feature = "serde"))]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn storage_deposit_return_unlock_condition_bcs_roundtrip() {
-            let s = StorageDepositReturnUnlockCondition::new(Address::new([0xab; 32]), 12_345);
-            let bytes = bcs::to_bytes(&s).unwrap();
-            let decoded: StorageDepositReturnUnlockCondition = bcs::from_bytes(&bytes).unwrap();
-            assert_eq!(s, decoded);
         }
     }
 }
