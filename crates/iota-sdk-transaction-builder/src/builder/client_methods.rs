@@ -260,8 +260,6 @@ impl ClientMethods for iota_graphql_client::Client {
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        // `protocol_config(None)` is the inherent method; the trait method has
-        // no extra arguments, so the compiler resolves the two unambiguously.
         let cfg = iota_graphql_client::Client::protocol_config(self, None).await?;
         let attributes = cfg
             .configs
