@@ -57,7 +57,7 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
@@ -66,7 +66,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 }
 
 /// Transaction data used to build a [`Transaction`].
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.
@@ -1155,8 +1155,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                         .fold(0u64, u64::saturating_add);
                     // First-page-suffices if it covers the budget, or if there
                     // is no further page to look at anyway. When the caller did
-                    // not set a budget the slow path takes over — there is no
-                    // way to know what "enough" means here.
+                    // not set a budget, keep paginating — there is no way to
+                    // know what "enough" means from a single page.
                     let first_page_suffices = match target_budget {
                         Some(budget) => page_total >= budget,
                         None => next_cursor.is_none(),

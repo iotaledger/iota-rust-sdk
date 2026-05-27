@@ -817,9 +817,9 @@ mod tests {
 
     /// Mint 50 coins of 1 IOTA each — any single one trivially covers the
     /// gas budget — and let auto gas selection resolve a fresh tx without
-    /// pinning gas. The fast path should pin *every* coin from the first
-    /// page (not just the one minimally needed), so gas smashing can
-    /// consolidate them into a single coin during execution.
+    /// pinning gas. It should pin *every* coin from the first page (not just
+    /// the one minimally needed), so gas smashing can consolidate them into
+    /// a single coin during execution.
     #[tokio::test]
     async fn test_auto_gas_pins_full_first_page_for_consolidation() {
         use crate::unresolved::Argument;
@@ -854,12 +854,12 @@ mod tests {
         let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
             panic!("expected TransactionV1");
         };
-        // First page covers the budget many times over, so the fast path
-        // runs: every gas coin from the first page (capped at the protocol
-        // max) is pinned, including the 50 newly minted ones.
+        // First page covers the budget many times over, so every gas coin
+        // from that page (capped at the protocol max) is pinned, including
+        // the 50 newly minted ones.
         assert!(
             resolved.gas_payment.objects.len() >= NUM_COINS,
-            "auto-gas fast path should pin every gas coin from the first page \
+            "auto-gas should pin every gas coin from the first page \
              so smashing consolidates them; pinned {}, expected at least {NUM_COINS}",
             resolved.gas_payment.objects.len(),
         );
