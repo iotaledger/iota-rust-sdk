@@ -105,16 +105,16 @@ impl PublicKey {
                     Ok(Self::Ed25519(pk))
                 }
                 SignatureScheme::Secp256k1 => {
-                    let pk = Secp256k1PublicKey::from_bytes(&bytes[1..])?;
+                    let pk = Secp256k1PublicKey::from_bytes(tail)?;
                     Ok(Self::Secp256k1(pk))
                 }
                 SignatureScheme::Secp256r1 => {
-                    let pk = Secp256r1PublicKey::from_bytes(&bytes[1..])?;
+                    let pk = Secp256r1PublicKey::from_bytes(tail)?;
                     Ok(Self::Secp256r1(pk))
                 }
                 SignatureScheme::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
                 SignatureScheme::PasskeyAuthenticator => {
-                    let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(&bytes[1..])?);
+                    let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(tail)?);
                     Ok(Self::Passkey(pk))
                 }
                 _ => Err(PublicKeyError::InvalidInput),
