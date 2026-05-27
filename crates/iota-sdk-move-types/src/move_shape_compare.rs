@@ -5,11 +5,6 @@
 //! compared against the canonical Move definition parsed from a vendored
 //! `packages_compiled` blob.
 //!
-//! Complements the fixture-roundtrip tests: those decode pinned on-chain
-//! bytes for ~15 high-value types, while this harness gives wide structural
-//! coverage across every registered mirror — catching renamed, reordered,
-//! or retyped fields on Move-mirror types that have no on-chain fixture.
-//!
 //! Extend by vendoring more blobs into `src/packages_compiled/`, deriving
 //! `MoveShape` on more mirrors, and registering more entries in
 //! [`expected_entries`].
