@@ -18,7 +18,6 @@ pub type ThresholdUnit = u16;
 pub type BitmapUnit = u16;
 
 const MAX_COMMITTEE_SIZE: usize = 10;
-// TODO validate sigs
 const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
 #[derive(Debug, thiserror::Error)]
