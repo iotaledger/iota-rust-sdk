@@ -26,6 +26,9 @@ use crate::{
 ///              %d06 passkey-public-key
 /// ```
 ///
+/// The gap in the flag values is intentional, as not all signature scheme
+/// support public keys.
+///
 /// There is also a base64 encoding for this type defined as:
 ///
 /// ```text
