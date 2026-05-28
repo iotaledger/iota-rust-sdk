@@ -32,7 +32,6 @@ pub enum PublicKeyError {
 /// public-key = %d00 ed25519-public-key /
 ///              %d01 secp256k1-public-key /
 ///              %d02 secp256r1-public-key /
-///              %d05 /
 ///              %d06 passkey-public-key
 /// ```
 ///
@@ -49,7 +48,6 @@ pub enum PublicKeyError {
 /// flagged-public-key = (ed25519-flag ed25519-public-key) /
 ///                      (secp256k1-flag secp256k1-public-key) /
 ///                      (secp256r1-flag secp256r1-public-key) /
-///                      (zklogin-flag-deprecated) /
 ///                      (passkey-flag passkey-public-key)
 /// ```
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
@@ -59,7 +57,6 @@ pub enum PublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
     Secp256r1(Secp256r1PublicKey),
-    ZkLoginDeprecated,
     Passkey(PasskeyPublicKey),
 }
 
@@ -77,7 +74,6 @@ impl PublicKey {
             PublicKey::Ed25519(pk) => pk.scheme(),
             PublicKey::Secp256k1(pk) => pk.scheme(),
             PublicKey::Secp256r1(pk) => pk.scheme(),
-            PublicKey::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
             PublicKey::Passkey(pk) => pk.scheme(),
         }
     }
@@ -109,7 +105,6 @@ impl PublicKey {
                     let pk = Secp256r1PublicKey::from_bytes(tail)?;
                     Ok(Self::Secp256r1(pk))
                 }
-                SignatureScheme::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
                 SignatureScheme::PasskeyAuthenticator => {
                     let pk = PasskeyPublicKey::new(Secp256r1PublicKey::from_bytes(tail)?);
                     Ok(Self::Passkey(pk))
@@ -145,7 +140,6 @@ impl AsRef<[u8]> for PublicKey {
             Self::Ed25519(pk) => pk.as_ref(),
             Self::Secp256k1(pk) => pk.as_ref(),
             Self::Secp256r1(pk) => pk.as_ref(),
-            Self::ZkLoginDeprecated => &[],
             Self::Passkey(pk) => pk.as_ref(),
         }
     }

@@ -182,9 +182,6 @@ impl crate::PublicKey {
             Self::Ed25519(pk) => pk.derive_address(),
             Self::Secp256k1(pk) => pk.derive_address(),
             Self::Secp256r1(pk) => pk.derive_address(),
-            Self::ZkLoginDeprecated => {
-                panic!("zkLogin is deprecated and was never enabled on IOTA")
-            }
             Self::Passkey(pk) => pk.derive_address(),
         }
     }
@@ -210,9 +207,6 @@ impl crate::MultisigCommittee {
                 PublicKey::Ed25519(p) => p.write_into_hasher(&mut hasher),
                 PublicKey::Secp256k1(p) => p.write_into_hasher(&mut hasher),
                 PublicKey::Secp256r1(p) => p.write_into_hasher(&mut hasher),
-                PublicKey::ZkLoginDeprecated => {
-                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
-                }
                 PublicKey::Passkey(p) => p.write_into_hasher(&mut hasher),
             }
 

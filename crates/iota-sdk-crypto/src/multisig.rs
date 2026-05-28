@@ -57,9 +57,6 @@ impl MultisigVerifier {
                 MultisigMemberSignature::Secp256r1(r1_signature),
             ) => crate::secp256r1::Secp256r1VerifyingKey::new(r1_public_key)?
                 .verify(message, r1_signature),
-            (PublicKey::ZkLoginDeprecated, MultisigMemberSignature::ZkLoginDeprecated) => {
-                Err(SignatureError::from_source("zklogin is not supported"))
-            }
             #[cfg(not(feature = "passkey"))]
             (PublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
                 SignatureError::from_source("support for passkey is not enabled"),

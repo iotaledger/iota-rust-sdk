@@ -22,7 +22,6 @@ use crate::{
 /// public-key = %d00 ed25519-public-key /
 ///              %d01 secp256k1-public-key /
 ///              %d02 secp256r1-public-key /
-///              %d05 /
 ///              %d06 passkey-public-key
 /// ```
 ///
@@ -38,7 +37,6 @@ use crate::{
 /// flagged-public-key = (ed25519-flag ed25519-public-key) /
 ///                      (secp256k1-flag secp256k1-public-key) /
 ///                      (secp256r1-flag secp256r1-public-key) /
-///                      (zklogin-flag-deprecated) /
 ///                      (passkey-flag passkey-public-key)
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]

@@ -739,7 +739,6 @@ mod serialization {
                     PublicKey::Secp256r1(public_key) => ReadableMemberPublicKey::Secp256r1 {
                         public_key: *public_key,
                     },
-                    PublicKey::ZkLoginDeprecated => ReadableMemberPublicKey::ZkLoginDeprecated,
                     PublicKey::Passkey(public_key) => ReadableMemberPublicKey::Passkey {
                         public_key: public_key.clone(),
                     },
@@ -750,7 +749,6 @@ mod serialization {
                     PublicKey::Ed25519(public_key) => MemberPublicKey::Ed25519(*public_key),
                     PublicKey::Secp256k1(public_key) => MemberPublicKey::Secp256k1(*public_key),
                     PublicKey::Secp256r1(public_key) => MemberPublicKey::Secp256r1(*public_key),
-                    PublicKey::ZkLoginDeprecated => MemberPublicKey::ZkLoginDeprecated,
                     PublicKey::Passkey(public_key) => MemberPublicKey::Passkey(public_key.clone()),
                 };
                 binary.serialize(serializer)
@@ -773,7 +771,11 @@ mod serialization {
                     ReadableMemberPublicKey::Secp256r1 { public_key } => {
                         Self::Secp256r1(public_key)
                     }
-                    ReadableMemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    ReadableMemberPublicKey::ZkLoginDeprecated => {
+                        return Err(serde::de::Error::custom(
+                            "zkLoginDeprecated is not supported",
+                        ));
+                    }
                     ReadableMemberPublicKey::Passkey { public_key } => Self::Passkey(public_key),
                 })
             } else {
@@ -782,7 +784,11 @@ mod serialization {
                     MemberPublicKey::Ed25519(public_key) => Self::Ed25519(public_key),
                     MemberPublicKey::Secp256k1(public_key) => Self::Secp256k1(public_key),
                     MemberPublicKey::Secp256r1(public_key) => Self::Secp256r1(public_key),
-                    MemberPublicKey::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    MemberPublicKey::ZkLoginDeprecated => {
+                        return Err(serde::de::Error::custom(
+                            "zkLoginDeprecated is not supported",
+                        ));
+                    }
                     MemberPublicKey::Passkey(public_key) => Self::Passkey(public_key),
                 })
             }
