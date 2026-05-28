@@ -450,16 +450,16 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     ///
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// let client = iota_graphql_client::Client::new_devnet();
     /// let sender =
-    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_str("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
     /// # builder
     /// #     .split_coins(
     /// #         ObjectId::from_str(
-    /// #             "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
+    /// #             "0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280",
     /// #         )?,
     /// #         [1000u64],
     /// #     )
@@ -470,15 +470,15 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     (
     ///         // ObjectIds can be passed when a client is provided
     ///         ObjectId::from_str(
-    ///             "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+    ///             "0x623c68d6ca1fb4f0df4102f73073d1322336b78b2f835dd25426390b1ee90004",
     ///         )?,
     ///         // ObjectReferences are always allowed, though they must be correct
     ///         ObjectReference {
     ///             object_id: ObjectId::from_str(
-    ///                 "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
+    ///                 "0x6bc897a7e896cab7e412a1b0cd2c6d95f2a8e3df6d1ad85b94379a6d64601dc0",
     ///             )?,
-    ///             digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
-    ///             version: Version::from_u64(545110774),
+    ///             digest: Digest::from_str("29Xb7L9f8k9Fgp8m1DXgNDVSMK9aaXCXQqdKeUEoLh3c")?,
+    ///             version: Version::from_u64(138895608),
     ///         },
     ///         // The result of a previous command can also be used
     ///         assigned("coin"),
@@ -518,9 +518,9 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let from_address =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
@@ -573,16 +573,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let from_address =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
-    /// // This is a coin of type
-    /// // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
     /// let coin =
-    ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///     ObjectId::from_hex("0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280")?;
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
     /// builder.send_coins([coin], to_address, 50000000000u64);
@@ -649,14 +647,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let sender =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     ///
     /// let coin_0 =
-    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///     ObjectId::from_hex("0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280")?;
     /// let coin_1 =
-    ///     ObjectId::from_hex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
+    ///     ObjectId::from_hex("0x623c68d6ca1fb4f0df4102f73073d1322336b78b2f835dd25426390b1ee90004")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.merge_coins(coin_0, [coin_1]);
@@ -689,11 +687,11 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let sender =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     /// let coin =
-    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///     ObjectId::from_hex("0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder
@@ -758,9 +756,9 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let sender =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     /// let validator_address = client
     ///     .active_validators(None, Default::default())
     ///     .await?
@@ -803,12 +801,12 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// let client = Client::new_devnet();
     /// let sender =
-    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_hex("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
     /// let staked_iota =
-    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    ///     ObjectId::from_hex("0x95bbccd2f930aefb76710543033ec22cc4864d263e3f7b5c931a6f26077b8cec")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.unstake(staked_iota);
@@ -842,8 +840,8 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
-    /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender = "0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab".parse()?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
@@ -890,20 +888,20 @@ impl<L> TransactionBuilder<(), L> {
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// let sender =
-    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_str("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender);
     ///
     /// let gas_coin1 = ObjectReference {
     ///     object_id: ObjectId::from_str(
-    ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
+    ///         "0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280",
     ///     )?,
     ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
     ///     version: Version::from_u64(473053811),
     /// };
     /// let gas_coin2 = ObjectReference {
     ///     object_id: ObjectId::from_str(
-    ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+    ///         "0x623c68d6ca1fb4f0df4102f73073d1322336b78b2f835dd25426390b1ee90004",
     ///     )?,
     ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
     ///     version: Version::from_u64(473053810),
@@ -1032,16 +1030,16 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// let client = iota_graphql_client::Client::new_devnet();
     /// let sender =
-    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///     Address::from_str("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
     /// let gas_coin1 =
-    ///     ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///     ObjectId::from_str("0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280")?;
     /// let gas_coin2 =
-    ///     ObjectId::from_str("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
+    ///     ObjectId::from_str("0x623c68d6ca1fb4f0df4102f73073d1322336b78b2f835dd25426390b1ee90004")?;
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])

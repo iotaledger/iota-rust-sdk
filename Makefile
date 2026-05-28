@@ -26,7 +26,9 @@ test: ## Run unit tests
 
 .PHONY: test-docs
 test-docs: ## Run doc tests
-	cargo test --all-features --doc
+	# `--test-threads=1` keeps the live devnet doctests serialised; devnet's
+	# load balancer drops connections when many doctests pound it in parallel.
+	cargo test --all-features --doc -- --test-threads=1
 
 .PHONY: build-docs
 build-docs: ## Build docs

@@ -31,14 +31,14 @@
 //! # async fn main() -> eyre::Result<()> {
 //!
 //! let sender =
-//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+//!     Address::from_str("0x2214d627c48154536a168ed89fddaf7a87e509c2d3b853737555168526acd8ab")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
-//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_testnet());
+//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_devnet());
 //!
 //! let coin =
-//!     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+//!     ObjectId::from_str("0x5d34525da0712d713c9ea8872cf04976948312eb603990ba860a55c1b5652280")?;
 //!
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
