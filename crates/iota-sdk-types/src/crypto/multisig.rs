@@ -996,4 +996,144 @@ mod tests {
             "expected DuplicatePublicKey, got {err:?}"
         );
     }
+
+    /// `MultisigMemberSignature::to_base64` is supposed to be the inverse of
+    /// `from_base64`, but `to_base64` encodes `self.as_ref()` (the *raw*
+    /// signature bytes, no scheme flag) while `from_base64` reads the first
+    /// byte as a scheme flag. The round-trip therefore corrupts data on
+    /// every variant.
+    #[test]
+    fn member_signature_base64_roundtrip() {
+        use crate::Ed25519Signature;
+
+        let sig = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0xAB; 64]));
+        let encoded = sig.to_base64();
+        let decoded = MultisigMemberSignature::from_base64(&encoded)
+            .expect("from_base64 should accept what to_base64 produced");
+        assert_eq!(
+            sig, decoded,
+            "to_base64/from_base64 must be inverses of each other"
+        );
+    }
+
+    /// Same round-trip bug, exercised on the Passkey variant. Here
+    /// `from_base64` strips the leading byte and then `PasskeyAuthenticator::
+    /// from_bytes` expects a leading flag byte itself, so the decoder
+    /// double-strips and the round-trip is doubly broken.
+    #[test]
+    fn member_signature_base64_roundtrip_passkey() {
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+        let sig = MultisigMemberSignature::Passkey(passkey_authenticator);
+        let encoded = sig.to_base64();
+        let decoded = MultisigMemberSignature::from_base64(&encoded)
+            .expect("from_base64 should accept what to_base64 produced");
+        assert_eq!(
+            sig, decoded,
+            "passkey to_base64/from_base64 must round-trip"
+        );
+    }
+
+    /// `MultisigAggregatedSignature::validate` is documented as checking
+    /// "structural integrity", but it only checks `bitmap > MAX_BITMAP_VALUE`
+    /// (which caps at 10 bits) — never against `committee.members.len()`.
+    /// A 2-member committee paired with bitmap bits set past member index 1
+    /// passes `validate()` and only blows up later when the verifier indexes
+    /// into `members` with the out-of-range bit position.
+    #[test]
+    fn validate_rejects_bitmap_bits_past_committee_size() {
+        use crate::{Ed25519PublicKey, Ed25519Signature};
+
+        let pk0 = Ed25519PublicKey::new([1; 32]);
+        let pk1 = Ed25519PublicKey::new([2; 32]);
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(pk0, 1), MultisigMember::new(pk1, 1)],
+            2,
+        )
+        .unwrap();
+
+        // 2 sigs, but bitmap bits are at positions 8 and 9 — outside the
+        // committee. count_ones() still matches, so validate() succeeds today.
+        let agg = MultisigAggregatedSignature::insecure_new(
+            vec![
+                MultisigMemberSignature::Ed25519(Ed25519Signature::new([0; 64])),
+                MultisigMemberSignature::Ed25519(Ed25519Signature::new([0; 64])),
+            ],
+            0b1100000000,
+            committee,
+        );
+
+        let result = agg.validate();
+        assert!(
+            result.is_err(),
+            "validate() must reject bitmap bits outside committee.members.len(), got Ok"
+        );
+    }
+
+    /// `MultisigAggregatedSignature::new` labels non-adjacent duplicates as
+    /// `SignaturesOutOfOrder` because the `prev_index` ordering check fires
+    /// before the equality check ever runs against a non-adjacent earlier
+    /// signer. The user-facing error variant is therefore misleading.
+    #[test]
+    fn new_labels_non_adjacent_duplicates_as_duplicates() {
+        use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
+
+        let pk0 = Ed25519PublicKey::new([1; 32]);
+        let pk1 = Ed25519PublicKey::new([2; 32]);
+        let pk2 = Ed25519PublicKey::new([3; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(pk0, 1),
+                MultisigMember::new(pk1, 1),
+                MultisigMember::new(pk2, 1),
+            ],
+            2,
+        )
+        .unwrap();
+
+        let dummy = Ed25519Signature::new([0; 64]);
+        let sig = |pk| {
+            UserSignature::Simple(SimpleSignature::Ed25519 {
+                signature: dummy,
+                public_key: pk,
+            })
+        };
+
+        // pk0, pk1, pk0 — pk0 reappears non-adjacently. Conceptually this is
+        // a duplicate, but the implementation reports it as out-of-order.
+        let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1), sig(pk0)], committee)
+            .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::DuplicatePublicKey),
+            "non-adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
+        );
+    }
+
+    /// `MultisigCommittee::validate` collapses six distinct failure modes
+    /// (zero threshold, empty members, oversized member list, zero-weight
+    /// member, threshold > sum of weights, duplicate public keys) into a
+    /// single `InvalidCommittee` variant. The enum already defines
+    /// `DuplicatePublicKey` (used elsewhere); validate should likewise
+    /// surface the specific cause so binding users can debug setup.
+    #[test]
+    fn validate_surfaces_specific_committee_error() {
+        use crate::Ed25519PublicKey;
+
+        let pk = Ed25519PublicKey::new([1; 32]);
+        // Duplicate public key, otherwise valid.
+        let committee = MultisigCommittee::insecure_new(
+            vec![MultisigMember::new(pk, 1), MultisigMember::new(pk, 1)],
+            1,
+        );
+        let err = committee.validate().unwrap_err();
+        assert!(
+            matches!(err, MultisigError::DuplicatePublicKey),
+            "expected DuplicatePublicKey for duplicate-member committee, got {err:?}"
+        );
+    }
 }
