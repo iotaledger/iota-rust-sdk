@@ -27,14 +27,12 @@ use crate::{
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature-deprecated /
 ///                             passkey-multisig-member-signature
 ///
 /// ed25519-multisig-member-signature               = %d00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// zklogin-multisig-member-signature-deprecated    = %d05
-/// passkey-multisig-member-signature               = %d06 passkey-authenticator
+/// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]

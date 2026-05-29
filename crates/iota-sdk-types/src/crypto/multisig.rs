@@ -436,14 +436,12 @@ impl Eq for MultisigAggregatedSignature {}
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature-deprecated /
 ///                             passkey-multisig-member-signature
 ///
 /// ed25519-multisig-member-signature               = %d00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// zklogin-multisig-member-signature-deprecated    = %d05
-/// passkey-multisig-member-signature               = %d06 passkey-authenticator
+/// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -452,7 +450,6 @@ pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
-    ZkLoginDeprecated,
     Passkey(PasskeyAuthenticator),
 }
 
@@ -469,7 +466,6 @@ impl MultisigMemberSignature {
             Self::Ed25519(_) => SignatureScheme::Ed25519,
             Self::Secp256k1(_) => SignatureScheme::Secp256k1,
             Self::Secp256r1(_) => SignatureScheme::Secp256r1,
-            Self::ZkLoginDeprecated => SignatureScheme::ZkLoginAuthenticatorDeprecated,
             Self::Passkey(_) => SignatureScheme::PasskeyAuthenticator,
         }
     }
@@ -481,7 +477,6 @@ impl AsRef<[u8]> for MultisigMemberSignature {
             Self::Ed25519(s) => s.as_ref(),
             Self::Secp256k1(s) => s.as_ref(),
             Self::Secp256r1(s) => s.as_ref(),
-            Self::ZkLoginDeprecated => &[],
             Self::Passkey(s) => s.signature.as_ref(),
         }
     }
@@ -494,7 +489,9 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
         match signature {
             UserSignature::Simple(simple) => Ok(simple.into()),
             UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
-            UserSignature::ZkLoginAuthenticatorDeprecated => Ok(Self::ZkLoginDeprecated),
+            UserSignature::ZkLoginAuthenticatorDeprecated => {
+                Err(MultisigError::UnallowedSignatureType)
+            }
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
             UserSignature::MoveAuthenticator(_) => Err(MultisigError::UnallowedSignatureType),
         }
@@ -837,9 +834,6 @@ mod serialization {
                             signature: *signature,
                         }
                     }
-                    MultisigMemberSignature::ZkLoginDeprecated => {
-                        ReadableMemberSignature::ZkLoginDeprecated
-                    }
                     MultisigMemberSignature::Passkey(authenticator) => {
                         ReadableMemberSignature::Passkey(authenticator.clone())
                     }
@@ -855,9 +849,6 @@ mod serialization {
                     }
                     MultisigMemberSignature::Secp256r1(signature) => {
                         MemberSignature::Secp256r1(*signature)
-                    }
-                    MultisigMemberSignature::ZkLoginDeprecated => {
-                        MemberSignature::ZkLoginDeprecated
                     }
                     MultisigMemberSignature::Passkey(authenticator) => {
                         MemberSignature::Passkey(authenticator.clone())
@@ -879,7 +870,11 @@ mod serialization {
                     ReadableMemberSignature::Ed25519 { signature } => Self::Ed25519(signature),
                     ReadableMemberSignature::Secp256k1 { signature } => Self::Secp256k1(signature),
                     ReadableMemberSignature::Secp256r1 { signature } => Self::Secp256r1(signature),
-                    ReadableMemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    ReadableMemberSignature::ZkLoginDeprecated => {
+                        return Err(serde::de::Error::custom(
+                            "zkLoginDeprecated is not supported",
+                        ));
+                    }
                     ReadableMemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             } else {
@@ -888,7 +883,11 @@ mod serialization {
                     MemberSignature::Ed25519(signature) => Self::Ed25519(signature),
                     MemberSignature::Secp256k1(signature) => Self::Secp256k1(signature),
                     MemberSignature::Secp256r1(signature) => Self::Secp256r1(signature),
-                    MemberSignature::ZkLoginDeprecated => Self::ZkLoginDeprecated,
+                    MemberSignature::ZkLoginDeprecated => {
+                        return Err(serde::de::Error::custom(
+                            "zkLoginDeprecated is not supported",
+                        ));
+                    }
                     MemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             }
@@ -947,8 +946,6 @@ mod serialization {
                     } else if x == &(SignatureScheme::Secp256r1 as u8) {
                         let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
                         Ok(Self::Secp256r1(signature))
-                    } else if x == &(SignatureScheme::ZkLoginAuthenticatorDeprecated as u8) {
-                        Ok(Self::ZkLoginDeprecated)
                     } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
                         let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
                         Ok(Self::Passkey(signature))
