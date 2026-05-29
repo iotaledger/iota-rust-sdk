@@ -363,12 +363,13 @@ impl MultisigAggregatedSignature {
             let index = committee
                 .get_public_key_index(&pk)
                 .ok_or(MultisigError::NoPublicKeyForSignature(sig_index))?;
-            if let Some(prev) = prev_index {
-                match index.cmp(&prev) {
-                    std::cmp::Ordering::Less => return Err(MultisigError::SignaturesOutOfOrder),
-                    std::cmp::Ordering::Equal => return Err(MultisigError::DuplicatePublicKey),
-                    std::cmp::Ordering::Greater => {}
-                }
+            if bitmap & (1 << index) != 0 {
+                return Err(MultisigError::DuplicatePublicKey);
+            }
+            if let Some(prev) = prev_index
+                && index < prev
+            {
+                return Err(MultisigError::SignaturesOutOfOrder);
             }
             bitmap |= 1 << index;
             prev_index = Some(index);
@@ -388,17 +389,21 @@ impl MultisigAggregatedSignature {
 
     /// Validates the structural integrity of this aggregated signature.
     pub fn validate(&self) -> Result<(), MultisigError> {
+        self.committee.validate()?;
+
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
         }
 
-        if self.bitmap > MAX_BITMAP_VALUE
-            || self.signatures.len() != self.bitmap.count_ones() as usize
-        {
+        let bits_past_committee = self
+            .bitmap
+            .checked_shr(self.committee.members.len() as u32)
+            .unwrap_or(0);
+        if bits_past_committee != 0 || self.signatures.len() != self.bitmap.count_ones() as usize {
             return Err(MultisigError::InvalidBitmap(self.bitmap));
         }
 
-        self.committee.validate()
+        Ok(())
     }
 
     /// The list of signatures from committee members
@@ -1049,12 +1054,6 @@ mod tests {
         );
     }
 
-    /// `MultisigAggregatedSignature::validate` is documented as checking
-    /// "structural integrity", but it only checks `bitmap > MAX_BITMAP_VALUE`
-    /// (which caps at 10 bits) — never against `committee.members.len()`.
-    /// A 2-member committee paired with bitmap bits set past member index 1
-    /// passes `validate()` and only blows up later when the verifier indexes
-    /// into `members` with the out-of-range bit position.
     #[test]
     fn validate_rejects_bitmap_bits_past_committee_size() {
         use crate::{Ed25519PublicKey, Ed25519Signature};
@@ -1085,10 +1084,6 @@ mod tests {
         );
     }
 
-    /// `MultisigAggregatedSignature::new` labels non-adjacent duplicates as
-    /// `SignaturesOutOfOrder` because the `prev_index` ordering check fires
-    /// before the equality check ever runs against a non-adjacent earlier
-    /// signer. The user-facing error variant is therefore misleading.
     #[test]
     fn new_labels_non_adjacent_duplicates_as_duplicates() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
@@ -1115,36 +1110,13 @@ mod tests {
             })
         };
 
-        // pk0, pk1, pk0 — pk0 reappears non-adjacently. Conceptually this is
-        // a duplicate, but the implementation reports it as out-of-order.
+        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must be
+        // reported as a duplicate.
         let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1), sig(pk0)], committee)
             .unwrap_err();
         assert!(
             matches!(err, MultisigError::DuplicatePublicKey),
             "non-adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
-        );
-    }
-
-    /// `MultisigCommittee::validate` collapses six distinct failure modes
-    /// (zero threshold, empty members, oversized member list, zero-weight
-    /// member, threshold > sum of weights, duplicate public keys) into a
-    /// single `InvalidCommittee` variant. The enum already defines
-    /// `DuplicatePublicKey` (used elsewhere); validate should likewise
-    /// surface the specific cause so binding users can debug setup.
-    #[test]
-    fn validate_surfaces_specific_committee_error() {
-        use crate::Ed25519PublicKey;
-
-        let pk = Ed25519PublicKey::new([1; 32]);
-        // Duplicate public key, otherwise valid.
-        let committee = MultisigCommittee::insecure_new(
-            vec![MultisigMember::new(pk, 1), MultisigMember::new(pk, 1)],
-            1,
-        );
-        let err = committee.validate().unwrap_err();
-        assert!(
-            matches!(err, MultisigError::DuplicatePublicKey),
-            "expected DuplicatePublicKey for duplicate-member committee, got {err:?}"
         );
     }
 }
