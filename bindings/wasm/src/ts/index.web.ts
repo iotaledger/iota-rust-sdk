@@ -7,14 +7,22 @@ import * as bg from './wasm-bindgen/index_bg.js';
 /**
  * Load and initialise the WASM module.
  *
- * @param wasmUrl - URL to the .wasm binary.  When omitted the file
- *                  `index_bg.wasm` is resolved relative to this JS module
- *                  (works when both files sit in the same directory).
+ * @param input - One of:
+ *   - `string` or `URL`: location of the `.wasm` binary to fetch (browser).
+ *   - `ArrayBuffer` or `Uint8Array`: raw `.wasm` bytes (Node.js, where
+ *     `fetch('file://…')` isn't reliably supported — pass
+ *     `fs.readFileSync(...)` instead).
+ *   - omitted: defaults to `index_bg.wasm` resolved relative to this JS module.
  */
-export async function uniffiInitAsync(wasmUrl?: string | URL) {
-  const url = wasmUrl ?? new URL('./index_bg.wasm', import.meta.url);
-  const response = await fetch(url);
-  const bytes = await response.arrayBuffer();
+export async function uniffiInitAsync(input?: string | URL | ArrayBuffer | Uint8Array) {
+  let bytes: ArrayBuffer | Uint8Array;
+  if (input instanceof ArrayBuffer || input instanceof Uint8Array) {
+    bytes = input;
+  } else {
+    const url = input ?? new URL('./index_bg.wasm', import.meta.url);
+    const response = await fetch(url);
+    bytes = await response.arrayBuffer();
+  }
 
   // The WASM binary imports ~400 UniFFI scaffold functions from an "env"
   // module.  These are checksum validators and function stubs that return 0.
