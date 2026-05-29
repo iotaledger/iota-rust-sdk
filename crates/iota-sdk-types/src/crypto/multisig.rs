@@ -32,6 +32,16 @@ pub enum MultisigError {
     SignatureFromBytes(#[from] SignatureFromBytesError),
     #[error("Invalid multisig committee")]
     InvalidCommittee,
+    #[error("Multisig threshold must be non-zero")]
+    ZeroThreshold,
+    #[error("Multisig committee must have at least one member")]
+    EmptyCommittee,
+    #[error("Multisig committee size {0} exceeds maximum size of {MAX_COMMITTEE_SIZE} members")]
+    CommitteeTooLarge(usize),
+    #[error("Multisig committee contains a member with zero weight")]
+    ZeroWeightMember,
+    #[error("Insufficient total weight {0} for threshold {1}")]
+    InsufficientWeight(ThresholdUnit, ThresholdUnit),
     #[error("UnallowedSignatureType")]
     UnallowedSignatureType,
     #[error("Invalid input")]
@@ -202,27 +212,41 @@ impl MultisigCommittee {
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
     pub fn validate(&self) -> Result<(), MultisigError> {
-        if self.threshold != 0
-            && !self.members.is_empty()
-            && self.members.len() <= MAX_COMMITTEE_SIZE
-            && !self.members.iter().any(|member| member.weight == 0)
-            && self
+        if self.threshold == 0 {
+            return Err(MultisigError::ZeroThreshold);
+        }
+        if self.members.is_empty() {
+            return Err(MultisigError::EmptyCommittee);
+        }
+        if self.members.len() > MAX_COMMITTEE_SIZE {
+            return Err(MultisigError::CommitteeTooLarge(self.members.len()));
+        }
+        if self.members.iter().any(|member| member.weight == 0) {
+            return Err(MultisigError::ZeroWeightMember);
+        }
+        let total_weight: ThresholdUnit = self
+            .members
+            .iter()
+            .map(|member| member.weight as ThresholdUnit)
+            .sum();
+        if total_weight < self.threshold {
+            return Err(MultisigError::InsufficientWeight(
+                total_weight,
+                self.threshold,
+            ));
+        }
+        for (i, member) in self.members.iter().enumerate() {
+            if self
                 .members
                 .iter()
-                .map(|member| member.weight as ThresholdUnit)
-                .sum::<ThresholdUnit>()
-                >= self.threshold
-            && !self.members.iter().enumerate().any(|(i, member)| {
-                self.members
-                    .iter()
-                    .skip(i + 1)
-                    .any(|m| member.public_key == m.public_key)
-            })
-        {
-            return Ok(());
+                .skip(i + 1)
+                .any(|m| m.public_key == member.public_key)
+            {
+                return Err(MultisigError::DuplicatePublicKey);
+            }
         }
 
-        Err(MultisigError::InvalidCommittee)
+        Ok(())
     }
 }
 
