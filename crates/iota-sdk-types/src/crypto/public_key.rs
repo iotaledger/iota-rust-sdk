@@ -32,7 +32,7 @@ pub enum PublicKeyError {
 /// public-key = %d00 ed25519-public-key /
 ///              %d01 secp256k1-public-key /
 ///              %d02 secp256r1-public-key /
-///              %d06 passkey-public-key
+///              %d04 passkey-public-key
 /// ```
 ///
 /// The gap in the flag values is intentional, as not all signature scheme
