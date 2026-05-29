@@ -858,7 +858,12 @@ mod serialization {
 
     impl MultisigMemberSignature {
         pub fn to_base64(&self) -> String {
-            base64ct::Base64::encode_string(self.as_ref())
+            let mut bytes: Vec<u8> = Vec::new();
+
+            bytes.extend_from_slice(&[self.scheme() as u8]);
+            bytes.extend_from_slice(self.as_ref());
+
+            Base64::encode_string(&bytes)
         }
 
         pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
@@ -997,11 +1002,6 @@ mod tests {
         );
     }
 
-    /// `MultisigMemberSignature::to_base64` is supposed to be the inverse of
-    /// `from_base64`, but `to_base64` encodes `self.as_ref()` (the *raw*
-    /// signature bytes, no scheme flag) while `from_base64` reads the first
-    /// byte as a scheme flag. The round-trip therefore corrupts data on
-    /// every variant.
     #[test]
     fn member_signature_base64_roundtrip() {
         use crate::Ed25519Signature;
