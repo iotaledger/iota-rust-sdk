@@ -116,8 +116,6 @@ impl PublicKey {
             },
             None => Err(PublicKeyError::InvalidInput),
         }
-
-        // Self::from_bytes()
     }
 }
 

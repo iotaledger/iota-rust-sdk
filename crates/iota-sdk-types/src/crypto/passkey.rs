@@ -53,7 +53,7 @@ pub struct PasskeyAuthenticator {
 }
 
 impl PasskeyAuthenticator {
-    /// The passkey public key
+    /// The passkey public key.
     pub fn public_key(&self) -> PasskeyPublicKey {
         PasskeyPublicKey::new(self.public_key)
     }

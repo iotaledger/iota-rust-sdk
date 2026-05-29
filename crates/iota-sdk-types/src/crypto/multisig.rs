@@ -84,7 +84,7 @@ pub struct MultisigMember {
 }
 
 impl MultisigMember {
-    /// Construct a new member from a `PublicKey` and a `weight`.
+    /// Construct a new member from a [`PublicKey`] and a [`WeightUnit`].
     pub fn new(public_key: impl Into<PublicKey>, weight: WeightUnit) -> Self {
         Self {
             public_key: public_key.into(),
@@ -1050,7 +1050,7 @@ mod tests {
             .expect("from_base64 should accept what to_base64 produced");
         assert_eq!(
             sig, decoded,
-            "passkey to_base64/from_base64 must round-trip"
+            "to_base64/from_base64 must be inverses of each other"
         );
     }
 
@@ -1066,8 +1066,6 @@ mod tests {
         )
         .unwrap();
 
-        // 2 sigs, but bitmap bits are at positions 8 and 9 — outside the
-        // committee. count_ones() still matches, so validate() succeeds today.
         let agg = MultisigAggregatedSignature::insecure_new(
             vec![
                 MultisigMemberSignature::Ed25519(Ed25519Signature::new([0; 64])),
