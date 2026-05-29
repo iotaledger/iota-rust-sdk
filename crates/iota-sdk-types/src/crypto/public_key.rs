@@ -78,18 +78,21 @@ impl PublicKey {
         }
     }
 
-    /// Encode this public key as the scheme flag byte followed by the raw key
-    /// bytes
-    pub fn to_bytes(&self) -> Vec<u8> {
+    /// Encode this public key as a base64 string of its scheme-flagged byte
+    /// representation
+    pub fn to_base64(&self) -> String {
         let mut bytes: Vec<u8> = Vec::new();
+
         bytes.extend_from_slice(&[self.scheme() as u8]);
         bytes.extend_from_slice(self.as_ref());
-        bytes
+
+        Base64::encode_string(&bytes)
     }
 
-    /// Decode a public key from its scheme-flagged byte representation
-    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, PublicKeyError> {
-        let bytes = bytes.as_ref();
+    /// Decode a public key from a base64 string of its scheme-flagged byte
+    /// representation
+    pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
+        let bytes = Base64::decode_vec(s)?;
 
         match bytes.split_first() {
             Some((flag, tail)) => match SignatureScheme::from_byte(*flag)? {
@@ -113,18 +116,8 @@ impl PublicKey {
             },
             None => Err(PublicKeyError::InvalidInput),
         }
-    }
 
-    /// Encode this public key as a base64 string of its scheme-flagged byte
-    /// representation
-    pub fn to_base64(&self) -> String {
-        Base64::encode_string(&self.to_bytes())
-    }
-
-    /// Decode a public key from a base64 string of its scheme-flagged byte
-    /// representation
-    pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
-        Self::from_bytes(&Base64::decode_vec(s)?)
+        // Self::from_bytes()
     }
 }
 

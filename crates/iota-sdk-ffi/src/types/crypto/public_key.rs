@@ -113,18 +113,6 @@ impl PublicKey {
         self.0.scheme()
     }
 
-    /// Encode this public key as the scheme flag byte followed by the raw key
-    /// bytes
-    pub fn to_bytes(&self) -> Vec<u8> {
-        self.0.to_bytes()
-    }
-
-    /// Decode a public key from its scheme-flagged byte representation
-    #[uniffi::constructor]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        Ok(Self(iota_sdk::types::PublicKey::from_bytes(bytes)?))
-    }
-
     /// Encode this public key as a base64 string of its scheme-flagged byte
     /// representation
     pub fn to_base64(&self) -> String {
