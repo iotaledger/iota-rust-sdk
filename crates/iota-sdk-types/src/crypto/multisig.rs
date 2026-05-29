@@ -860,8 +860,23 @@ mod serialization {
         pub fn to_base64(&self) -> String {
             let mut bytes: Vec<u8> = Vec::new();
 
-            bytes.extend_from_slice(&[self.scheme() as u8]);
-            bytes.extend_from_slice(self.as_ref());
+            match self {
+                MultisigMemberSignature::Ed25519(signature) => {
+                    bytes.extend_from_slice(&[self.scheme() as u8]);
+                    bytes.extend_from_slice(signature.as_ref());
+                }
+                MultisigMemberSignature::Secp256k1(signature) => {
+                    bytes.extend_from_slice(&[self.scheme() as u8]);
+                    bytes.extend_from_slice(signature.as_ref());
+                }
+                MultisigMemberSignature::Secp256r1(signature) => {
+                    bytes.extend_from_slice(&[self.scheme() as u8]);
+                    bytes.extend_from_slice(signature.as_ref());
+                }
+                MultisigMemberSignature::Passkey(authenticator) => {
+                    bytes.extend_from_slice(&authenticator.to_bytes());
+                }
+            }
 
             Base64::encode_string(&bytes)
         }
@@ -881,7 +896,7 @@ mod serialization {
                         let signature = Secp256r1Signature::from_bytes(&bytes[1..])?;
                         Ok(Self::Secp256r1(signature))
                     } else if x == &(SignatureScheme::PasskeyAuthenticator as u8) {
-                        let signature = PasskeyAuthenticator::from_bytes(&bytes[1..])?;
+                        let signature = PasskeyAuthenticator::from_bytes(&bytes[..])?;
                         Ok(Self::Passkey(signature))
                     } else {
                         Err(MultisigError::UnallowedSignatureType)
@@ -1016,10 +1031,6 @@ mod tests {
         );
     }
 
-    /// Same round-trip bug, exercised on the Passkey variant. Here
-    /// `from_base64` strips the leading byte and then `PasskeyAuthenticator::
-    /// from_bytes` expects a leading flag byte itself, so the decoder
-    /// double-strips and the round-trip is doubly broken.
     #[test]
     fn member_signature_base64_roundtrip_passkey() {
         let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
