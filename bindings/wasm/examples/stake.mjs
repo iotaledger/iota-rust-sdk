@@ -6,7 +6,10 @@ import {
   GraphQlClient,
   PtbArgument,
   TransactionBuilder,
-} from "./_iota_sdk.mjs";
+  uniffiInitAsync,
+} from "iota-sdk-wasm";
+
+await uniffiInitAsync();
 
 const client = GraphQlClient.newTestnet();
 

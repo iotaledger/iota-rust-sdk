@@ -6,7 +6,10 @@ import {
   Ed25519PrivateKey,
   Secp256k1PrivateKey,
   Secp256r1PrivateKey,
-} from "./_iota_sdk.mjs";
+  uniffiInitAsync,
+} from "iota-sdk-wasm";
+
+await uniffiInitAsync();
 
 const MNEMONIC =
   "round attack kitchen wink winter music trip tiny nephew hire orange what";
