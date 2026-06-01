@@ -6,10 +6,28 @@ use std::num::{ParseIntError, TryFromIntError};
 
 use cynic::GraphQlError;
 use iota_types::{AddressParseError, DigestParseError, TypeParseError};
+use reqwest::{StatusCode, Url};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
+
+/// Maximum number of body bytes retained in an HTTP/decode error. Load
+/// balancer and gateway pages can be hundreds of KB, so the body is truncated
+/// before being stored in the error.
+const MAX_ERROR_BODY_BYTES: usize = 512;
+
+/// Render a response body as a truncated, UTF-8-lossy string suitable for
+/// inclusion in an error message.
+fn truncated_body(bytes: &[u8]) -> String {
+    let truncated = bytes.len() > MAX_ERROR_BODY_BYTES;
+    let slice = &bytes[..bytes.len().min(MAX_ERROR_BODY_BYTES)];
+    let mut body = String::from_utf8_lossy(slice).into_owned();
+    if truncated {
+        body.push_str("… (truncated)");
+    }
+    body
+}
 
 /// General error type for the client. It is used to wrap all the possible
 /// errors that can occur.
@@ -38,6 +56,7 @@ pub enum Kind {
     Parse,
     Query,
     Missing,
+    Http,
     Other,
 }
 
@@ -87,6 +106,33 @@ impl Error {
         }
     }
 
+    /// Create an error for a non-success HTTP response, capturing the request
+    /// URL, the HTTP status (code + reason phrase) and a truncated, UTF-8-lossy
+    /// snapshot of the response body.
+    pub fn http(url: Url, status: StatusCode, body: &[u8]) -> Self {
+        Self::from_message(
+            Kind::Http,
+            format!(
+                "GraphQL request to {url} failed: HTTP {status}, body={:?}",
+                truncated_body(body)
+            ),
+        )
+    }
+
+    /// Create an error for a response whose body could not be parsed as JSON,
+    /// capturing the request URL, the HTTP status, a truncated, UTF-8-lossy
+    /// snapshot of the body and the underlying `serde_json` error.
+    pub fn decode(url: Url, status: StatusCode, body: &[u8], source: serde_json::Error) -> Self {
+        Self::from_message(
+            Kind::Deserialization,
+            format!(
+                "GraphQL request to {url} returned HTTP {status} but the body could not be parsed \
+                 as JSON (body={:?}): {source}",
+                truncated_body(body)
+            ),
+        )
+    }
+
     /// Create a Query kind of error with the original graphql errors.
     pub fn graphql_error(errors: Vec<GraphQlError>) -> Self {
         Self {
@@ -106,6 +152,7 @@ impl std::fmt::Display for Kind {
             Kind::Parse => write!(f, "Parse error:"),
             Kind::Query => write!(f, "Query error:"),
             Kind::Missing => write!(f, "Missing:"),
+            Kind::Http => write!(f, "HTTP error:"),
             Kind::Other => write!(f, "Error:"),
         }
     }
@@ -191,5 +238,41 @@ impl From<TryFromIntError> for Error {
 impl From<TypeParseError> for Error {
     fn from(error: TypeParseError) -> Self {
         Self::from_error(Kind::Parse, error)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn http_error_surfaces_status_and_body() {
+        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
+        let error = Error::http(url, StatusCode::TOO_MANY_REQUESTS, b"Too Many Requests");
+        let message = error.to_string();
+        assert!(message.contains("https://graphql.devnet.iota.cafe"));
+        assert!(message.contains("HTTP 429 Too Many Requests"));
+        assert!(message.contains("Too Many Requests"));
+    }
+
+    #[test]
+    fn decode_error_surfaces_status_body_and_source() {
+        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
+        let serde_error = serde_json::from_slice::<serde_json::Value>(b"not json").unwrap_err();
+        let error = Error::decode(url, StatusCode::OK, b"not json", serde_error);
+        let message = error.to_string();
+        assert!(message.contains("https://graphql.devnet.iota.cafe"));
+        assert!(message.contains("HTTP 200 OK"));
+        assert!(message.contains("not json"));
+        // The underlying serde_json error text is included.
+        assert!(message.contains("expected"));
+    }
+
+    #[test]
+    fn body_is_truncated() {
+        let body = vec![b'a'; MAX_ERROR_BODY_BYTES + 100];
+        let rendered = truncated_body(&body);
+        assert!(rendered.contains("… (truncated)"));
+        assert_eq!(rendered.len(), MAX_ERROR_BODY_BYTES + "… (truncated)".len());
     }
 }
