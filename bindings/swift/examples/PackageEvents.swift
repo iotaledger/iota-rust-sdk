@@ -17,9 +17,11 @@ struct PackageEventsExample {
     )
 
     for event in events.data {
+      // Sender and module are optional: system events (e.g.
+      // 0x3::validator::StakingRequestEvent) have neither.
       print("Type: \(event.type)")
-      print("Sender: \(event.sender.toHex())")
-      print("Module: \(event.module)")
+      print("Sender: \(event.sender?.toHex() ?? "none")")
+      print("Module: \(event.module ?? "none")")
       print("JSON: \(event.json)")
     }
   }

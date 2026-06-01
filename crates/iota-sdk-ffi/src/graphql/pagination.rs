@@ -8,7 +8,7 @@ use crate::{
     types::{
         checkpoint::CheckpointSummary,
         coin::Coin,
-        events::Event,
+        events::GraphQlEvent,
         iota_names::NameRegistration,
         object::{MovePackage, Object},
         transaction::{SignedTransaction, TransactionEffects},
@@ -41,7 +41,7 @@ macro_rules! define_paged_record {
 define_paged_record!(SignedTransactionPage, SignedTransaction);
 define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
-define_paged_record!(EventPage, Event);
+define_paged_record!(EventPage, GraphQlEvent);
 define_paged_record!(EpochPage, Epoch);
 define_paged_record!(ValidatorPage, Validator);
 

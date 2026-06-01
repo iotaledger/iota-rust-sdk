@@ -22,9 +22,11 @@ fun main() = runBlocking {
             )
 
         for (event in events.data) {
+            // Sender and module are optional: system events (e.g.
+            // 0x3::validator::StakingRequestEvent) have neither.
             println("Type: ${event.type}")
-            println("Sender: ${event.sender}")
-            println("Module: ${event.module}")
+            println("Sender: ${event.sender?.toHex() ?: "none"}")
+            println("Module: ${event.module ?: "none"}")
             println("JSON: ${event.json}")
         }
     } catch (e: Exception) {
