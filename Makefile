@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-move-types check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
