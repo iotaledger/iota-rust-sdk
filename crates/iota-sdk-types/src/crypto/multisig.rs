@@ -425,7 +425,7 @@ impl MultisigAggregatedSignature {
         &self.committee
     }
 
-    pub fn has_scheme_signatures(&self, scheme: SignatureScheme) -> bool {
+    pub fn contains_signature_scheme(&self, scheme: SignatureScheme) -> bool {
         self.signatures.iter().any(|s| s.scheme() == scheme)
     }
 }
