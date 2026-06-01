@@ -16,8 +16,8 @@ class Program
 
         foreach (var evt in events.data)
         {
-            // Sender and module are optional: system events (e.g.
-            // 0x3::validator::StakingRequestEvent) have neither.
+            // Sender and module are optional: events emitted by the system or at
+            // genesis (sender 0x0, e.g. the genesis StakingRequestEvents) have neither.
             Console.WriteLine($"Type: {evt.@type}");
             Console.WriteLine($"Sender: {evt.sender?.ToHex() ?? "none"}");
             Console.WriteLine($"Module: {evt.module ?? "none"}");

@@ -18,8 +18,8 @@ async def main():
     )
 
     for event in events.data:
-        # Sender and module are optional: system events (e.g.
-        # 0x3::validator::StakingRequestEvent) have neither.
+        # Sender and module are optional: events emitted by the system or at
+        # genesis (sender 0x0, e.g. the genesis StakingRequestEvents) have neither.
         sender = event.sender.to_hex() if event.sender is not None else "none"
         module = event.module if event.module is not None else "none"
         print(f"Type: {event.type}")

@@ -17,8 +17,8 @@ struct PackageEventsExample {
     )
 
     for event in events.data {
-      // Sender and module are optional: system events (e.g.
-      // 0x3::validator::StakingRequestEvent) have neither.
+      // Sender and module are optional: events emitted by the system or at
+      // genesis (sender 0x0, e.g. the genesis StakingRequestEvents) have neither.
       print("Type: \(event.type)")
       print("Sender: \(event.sender?.toHex() ?? "none")")
       print("Module: \(event.module ?? "none")")
