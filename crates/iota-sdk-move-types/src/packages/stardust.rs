@@ -15,8 +15,8 @@ pub mod irc27 {
     /// Rust version of the Move `stardust::irc27::Irc27Metadata` type.
     ///
     /// The IRC27 NFT metadata standard schema.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Irc27Metadata {
         /// Version of the metadata standard.
@@ -67,8 +67,8 @@ pub mod nft {
     /// One-time witness marker. The Move struct is empty; the Rust mirror
     /// carries a `dummy_field` to preserve the BCS wire format.
     #[allow(non_camel_case_types)]
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct NFT {
@@ -78,8 +78,8 @@ pub mod nft {
     /// Rust version of the Move `stardust::nft::Nft` type.
     ///
     /// The Stardust NFT representation.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Nft {
         /// The Nft's ID is inherited from Stardust.
@@ -133,8 +133,8 @@ pub mod nft_output {
     /// Rust version of the Move `stardust::nft_output::NftOutput<T>` type.
     ///
     /// The Stardust NFT output representation.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct NftOutput<T> {
         /// A fresh UID — not the NFTID from Stardust.
@@ -208,8 +208,8 @@ pub mod stardust_upgrade_label {
     /// The Move struct is empty; the Rust mirror carries a `dummy_field`
     /// to preserve the BCS wire format.
     #[allow(non_camel_case_types)]
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct STARDUST_UPGRADE_LABEL {
@@ -237,8 +237,8 @@ pub mod basic_output {
     /// that can unlock the output. Note that the Move type has no `store`
     /// ability and no custom transfer function: callers either invoke
     /// `extract_assets` or call `receive` to obtain a `BasicOutput`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BasicOutput<T> {
         /// Hash of the `outputId` that was migrated.
@@ -329,8 +329,8 @@ pub mod alias {
     /// Outputs owned by the AliasID/Address in Stardust will be sent to
     /// this object and have to be received via it once extracted from
     /// `AliasOutput`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Alias {
@@ -386,8 +386,8 @@ pub mod alias_output {
     /// type.
     ///
     /// Owned object controlled by the Governor Address.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AliasOutput<T> {
         /// A fresh UID — not the AliasID from Stardust.
@@ -441,8 +441,8 @@ pub mod alias_output {
 pub mod timelock_unlock_condition {
     /// Rust version of the Move
     /// `stardust::timelock_unlock_condition::TimelockUnlockCondition` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimelockUnlockCondition {
@@ -465,8 +465,8 @@ pub mod expiration_unlock_condition {
     /// Rust version of the Move
     /// `stardust::expiration_unlock_condition::ExpirationUnlockCondition`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ExpirationUnlockCondition {
@@ -497,8 +497,8 @@ pub mod storage_deposit_return_unlock_condition {
     /// Rust version of the Move
     /// `stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StorageDepositReturnUnlockCondition {

@@ -42,7 +42,7 @@ impl MoveShape for iota_types::Address {
 /// diff is human-readable and so we can express things the Move side doesn't
 /// have (e.g. `Phantom` for `PhantomData<T>` fields the Rust mirror carries
 /// but Move treats as a phantom type parameter, not a field).
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Shape {
     Bool,
     U8,
@@ -84,13 +84,13 @@ pub enum Shape {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Field {
     pub name: &'static str,
     pub shape: Shape,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Variant {
     pub name: &'static str,
     pub fields: Vec<Field>,

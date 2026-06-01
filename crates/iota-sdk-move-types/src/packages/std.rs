@@ -9,8 +9,8 @@ pub mod fixed_point32 {
     ///
     /// A fixed-point numeric type with 32 fractional bits, represented by an
     /// underlying `u64`.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct FixedPoint32 {
@@ -31,8 +31,8 @@ pub mod ascii {
     /// The Move type guarantees that all bytes are valid ASCII. This Rust
     /// mirror does **not** enforce that invariant — it is up to the caller.
     /// Wire format: a length-prefixed byte vector.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct String {
@@ -46,8 +46,8 @@ pub mod ascii {
     }
 
     /// Rust version of the Move `std::ascii::Char` type.
-    #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Char {
@@ -68,8 +68,8 @@ pub mod string {
     /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror
     /// does **not** enforce that invariant. Wire format: a length-prefixed
     /// byte vector — identical to Rust's [`struct@String`].
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct String {
@@ -90,8 +90,8 @@ pub mod uq32_32 {
     /// An unsigned fixed-point numeric type with 32 integer bits and 32
     /// fractional bits, represented by an underlying `u64`.
     #[allow(non_camel_case_types)]
-    #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UQ32_32(pub u64);
@@ -110,8 +110,8 @@ pub mod uq64_64 {
     /// An unsigned fixed-point numeric type with 64 integer bits and 64
     /// fractional bits, represented by an underlying `u128`.
     #[allow(non_camel_case_types)]
-    #[derive(Debug, Default, Clone, Copy, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UQ64_64(pub u128);
@@ -126,8 +126,8 @@ pub mod uq64_64 {
 /// Types from `0x1::bit_vector`.
 pub mod bit_vector {
     /// Rust version of the Move `std::bit_vector::BitVector` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BitVector {
@@ -152,8 +152,8 @@ pub mod type_name {
     /// example: `00000000000000000000000000000001::string::String`, or
     /// for nested generics:
     /// `0a::module_name1::type_name1<0a::module_name2::type_name2<u64>>`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TypeName {
@@ -175,8 +175,8 @@ pub mod option {
     /// format is identical to Rust's prelude [`struct@Option`], so most code
     /// can use that instead — this mirror is provided for parity with the
     /// Move source.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Option<Element> {
         pub vec: Vec<Element>,

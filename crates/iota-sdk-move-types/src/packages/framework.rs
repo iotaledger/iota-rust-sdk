@@ -10,8 +10,8 @@ pub mod object {
     use iota_types::ObjectId;
 
     /// Rust version of the Move `iota::object::ID` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
@@ -44,8 +44,8 @@ pub mod object {
     }
 
     /// Rust version of the Move `iota::object::UID` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UID {
@@ -92,8 +92,8 @@ pub mod iota {
     // defines it as a true empty struct (`{}`), while the Rust mirror
     // carries a `dummy_field: bool` to preserve the BCS wire format. The
     // comparator would flag that as a 0-vs-1 field-count mismatch.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IOTA {
@@ -103,8 +103,8 @@ pub mod iota {
     /// Rust version of the Move `iota::iota::IotaTreasuryCap` type.
     ///
     /// The non-generic IOTA treasury cap, wrapping a [`TreasuryCap<IOTA>`].
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaTreasuryCap {
         pub inner: TreasuryCap<IOTA>,
@@ -125,8 +125,8 @@ pub mod system_admin_cap {
     /// Capability allowing the bearer to perform privileged IOTA system
     /// operations. The Move struct is empty; the Rust mirror carries a
     /// `dummy_field` to preserve the BCS wire format.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemAdminCap {
@@ -142,8 +142,8 @@ pub mod balance {
     ///
     /// A `Supply` of `T`; used for minting and burning. Wrapped into a
     /// `TreasuryCap` in the `coin` module.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Supply<T> {
         pub value: u64,
@@ -168,8 +168,8 @@ pub mod balance {
     ///
     /// A storable balance — the inner struct of a `Coin` type. Can be used
     /// to store coins which don't need the `key` ability.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Balance<T> {
         pub value: u64,
@@ -200,8 +200,8 @@ pub mod bag {
     /// A heterogeneous map-like collection. Keys and values are stored as
     /// dynamic fields off the bag's UID; the struct itself just carries the
     /// handle and an entry count.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Bag {
@@ -232,8 +232,8 @@ pub mod coin {
     /// Rust version of the Move `iota::coin::Coin<T>` type.
     ///
     /// A coin of type `T` worth `balance`. Transferable and storable.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Coin<T> {
         pub id: UID,
@@ -250,8 +250,8 @@ pub mod coin {
     ///
     /// Each `Coin<T>` created through `create_currency` has a unique
     /// `CoinMetadata<T>` storing display metadata for the coin type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinMetadata<T> {
         pub id: UID,
@@ -322,8 +322,8 @@ pub mod coin {
     ///
     /// Similar to [`CoinMetadata`], but created only for regulated coins
     /// that use the DenyList. Always immutable.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RegulatedCoinMetadata<T> {
         pub id: UID,
@@ -349,8 +349,8 @@ pub mod coin {
     /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
     ///
     /// Capability allowing the bearer to mint and burn coins of type `T`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TreasuryCap<T> {
         pub id: UID,
@@ -368,8 +368,8 @@ pub mod coin {
     /// Capability allowing the bearer to deny addresses from using the
     /// currency's coins. If `allow_global_pause` is `true`, the bearer can
     /// also enable a global pause.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DenyCapV1<T> {
         pub id: UID,
@@ -399,8 +399,8 @@ pub mod table {
     ///
     /// A map-like collection. Keys and values are stored as dynamic fields
     /// off the table's `UID`, not inside the struct itself.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Table<K, V> {
         /// The ID of this table.
@@ -434,8 +434,8 @@ pub mod url {
     /// A standard URL string. The Move type stores ASCII bytes only; this
     /// Rust mirror does **not** enforce that invariant on construction. Use
     /// [`Url::try_from_ascii`] for a validating constructor.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Url {
@@ -465,7 +465,7 @@ pub mod url {
     ///
     /// This is a Rust-side error type, not a mirror of a Move struct, so it
     /// has no Move counterpart and no `MoveShape` derive.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     pub struct NonAsciiUrl;
 
     impl core::fmt::Display for NonAsciiUrl {
@@ -493,8 +493,8 @@ pub mod url {
 /// Types from `0x2::vec_map`.
 pub mod vec_map {
     /// Rust version of the Move `iota::vec_map::Entry<K, V>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Entry<K, V> {
         pub key: K,
@@ -512,8 +512,8 @@ pub mod vec_map {
     /// A map backed by a vector; guaranteed to contain no duplicate keys.
     /// Entries are *not* sorted; they are stored in insertion order. All
     /// operations are O(N).
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VecMap<K, V> {
         pub contents: Vec<Entry<K, V>>,
@@ -540,8 +540,8 @@ pub mod vec_set {
     ///
     /// A set backed by a vector; guaranteed to contain no duplicate keys.
     /// All operations are O(N).
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VecSet<K> {
         pub contents: Vec<K>,
@@ -570,8 +570,8 @@ pub mod table_vec {
     ///
     /// A vector-like collection whose elements are stored as dynamic fields
     /// off an inner [`Table<u64, Element>`].
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TableVec<Element> {
         /// The contents of the table vector.
@@ -594,8 +594,8 @@ pub mod versioned {
     /// A wrapper that supports versioning of an inner type stored as a
     /// dynamic field keyed by `version`. Consumers load the inner object
     /// using the type corresponding to the current `version`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Versioned {
@@ -613,8 +613,8 @@ pub mod versioned {
     ///
     /// A hot-potato object generated when the inner dynamic field is taken
     /// out, ensuring a new value is always put back.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VersionChangeCap {
@@ -638,8 +638,8 @@ pub mod bcs {
     ///
     /// A helper struct used by the Move-side BCS deserializer; stores
     /// reversed bytes so `vector::pop_back` can be used efficiently.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct BCS {
@@ -662,8 +662,8 @@ pub mod clock {
     /// Singleton shared object at `0x6` that exposes the current time to
     /// Move calls. Entry functions can only accept it by immutable
     /// reference.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Clock {
@@ -689,8 +689,8 @@ pub mod tx_context {
     /// Information about the transaction currently being executed. Not
     /// constructible from user code — created by the VM and passed to the
     /// transaction entrypoint as `&mut TxContext`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TxContext {
@@ -714,8 +714,8 @@ pub mod intent {
     ///
     /// Compact 3-byte struct prepended to a message before signing as a
     /// domain separator.
-    #[derive(Debug, Clone, Copy, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Intent {
@@ -741,8 +741,8 @@ pub mod ecdsa_k1 {
     // The Move-side `KeyPair` struct is `#[test_only]`, so it's absent
     // from the compiled package and cannot participate in the
     // `move_shape_compare` cross-check. No `MoveShape` derive here.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub struct KeyPair {
         pub private_key: Vec<u8>,
@@ -762,8 +762,8 @@ pub mod zklogin_verified_id {
     ///
     /// Possession proves that the user's address was created using zkLogin
     /// with the given parameters.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VerifiedID {
@@ -790,8 +790,8 @@ pub mod zklogin_verified_issuer {
 
     /// Rust version of the Move
     /// `iota::zklogin_verified_issuer::VerifiedIssuer` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VerifiedIssuer {
@@ -811,8 +811,8 @@ pub mod transfer {
     ///
     /// Represents the ability to `receive` an object of type `T`.
     /// Ephemeral per-transaction; cannot be stored on-chain.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Receiving<T> {
         pub id: ID,
@@ -840,8 +840,8 @@ pub mod timelock {
     /// Rust version of the Move `iota::timelock::TimeLock<T>` type.
     ///
     /// A `TimeLock` that holds a locked object until `expiration_timestamp_ms`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimeLock<T> {
         pub id: UID,
@@ -879,8 +879,8 @@ pub mod borrow {
     /// Rust version of the Move `iota::borrow::Referent<T>` type.
     ///
     /// An object wrapping a `T` and providing the borrow API.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Referent<T> {
         pub id: Address,
@@ -898,8 +898,8 @@ pub mod borrow {
     /// A hot potato making sure the object is put back once borrowed. The
     /// Move field name `ref` is a Rust keyword, so it is stored on the
     /// raw identifier `r#ref`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Borrow {
@@ -912,8 +912,8 @@ pub mod borrow {
     /// The Move-side `Test` struct is `#[test_only]`, so it doesn't ship
     /// in the compiled package and can't participate in the
     /// `move_shape_compare` cross-check. No `MoveShape` derive here.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub struct Test {
         pub id: UID,
@@ -929,8 +929,8 @@ pub mod dynamic_field {
     ///
     /// Internal object used for storing the field and value. The object's
     /// ID is determined by `hash(parent.id || name || Name)`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Field<Name, Value> {
         pub id: UID,
@@ -951,8 +951,8 @@ pub mod dynamic_field {
 pub mod dynamic_object_field {
     /// Rust version of the Move
     /// `iota::dynamic_object_field::Wrapper<Name>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Wrapper<Name> {
         pub name: Name,
@@ -975,8 +975,8 @@ pub mod labeler {
     ///
     /// Allows creating labels of the specific type `L`. Can be publicly
     /// transferred like any other object.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct LabelerCap<L> {
         pub id: UID,
@@ -1006,8 +1006,8 @@ pub mod linked_table {
     /// A map-like collection with ordered insertion and removal. Like a
     /// `Table`, keys and values are stored as dynamic fields off the
     /// table's UID, not inside the struct.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct LinkedTable<K, V> {
         pub id: UID,
@@ -1034,8 +1034,8 @@ pub mod linked_table {
     }
 
     /// Rust version of the Move `iota::linked_table::Node<K, V>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Node<K, V> {
         pub prev: Option<K>,
@@ -1061,8 +1061,8 @@ pub mod object_table {
     ///
     /// Similar to `Table`, but the values bound as dynamic fields *must*
     /// be objects themselves.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectTable<K, V> {
         pub id: UID,
@@ -1090,8 +1090,8 @@ pub mod object_bag {
     use super::object::UID;
 
     /// Rust version of the Move `iota::object_bag::ObjectBag` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectBag {
@@ -1103,8 +1103,8 @@ pub mod object_bag {
 /// Types from `0x2::priority_queue`.
 pub mod priority_queue {
     /// Rust version of the Move `iota::priority_queue::Entry<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Entry<T> {
         pub priority: u64,
@@ -1122,8 +1122,8 @@ pub mod priority_queue {
     ///
     /// A priority queue implemented as a max-heap. `entries[0]` is the
     /// root; children of `entries[i]` are at `i * 2 + 1` and `i * 2 + 2`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PriorityQueue<T> {
         pub entries: Vec<Entry<T>>,
@@ -1142,8 +1142,8 @@ pub mod derived_object {
     /// type.
     ///
     /// An internal key to protect from generating the same UID twice.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DerivedObjectKey<K>(pub K);
 
@@ -1161,8 +1161,8 @@ pub mod authenticator_state {
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorState` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorState {
@@ -1172,8 +1172,8 @@ pub mod authenticator_state {
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorStateInner {
@@ -1185,8 +1185,8 @@ pub mod authenticator_state {
     /// Rust version of the Move `iota::authenticator_state::JWK` type.
     ///
     /// Must match the `JWK` struct in fastcrypto-zkp.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JWK {
@@ -1199,8 +1199,8 @@ pub mod authenticator_state {
     /// Rust version of the Move `iota::authenticator_state::JwkId` type.
     ///
     /// Must match the `JwkId` struct in fastcrypto-zkp.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JwkId {
@@ -1210,8 +1210,8 @@ pub mod authenticator_state {
 
     /// Rust version of the Move `iota::authenticator_state::ActiveJwk`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ActiveJwk {
@@ -1236,8 +1236,8 @@ pub mod display {
     /// Defines the way a `T` instance should be displayed. Uses `String`
     /// types throughout because display rules are external-facing and the
     /// property names take priority over their types.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Display<T> {
         pub id: UID,
@@ -1267,8 +1267,8 @@ pub mod display {
 
     /// Rust version of the Move `iota::display::DisplayCreated<T>` event
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DisplayCreated<T> {
         pub id: ID,
@@ -1287,8 +1287,8 @@ pub mod display {
 
     /// Rust version of the Move `iota::display::VersionUpdated<T>` event
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VersionUpdated<T> {
         pub id: ID,
@@ -1324,8 +1324,8 @@ pub mod package {
     /// Can only be created in the transaction that creates a module, by
     /// consuming its one-time witness, so it can be used to identify the
     /// publishing address.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Publisher {
@@ -1337,8 +1337,8 @@ pub mod package {
     /// Rust version of the Move `iota::package::UpgradeCap` type.
     ///
     /// Capability controlling the ability to upgrade a package.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeCap {
@@ -1356,8 +1356,8 @@ pub mod package {
     ///
     /// Permission to perform a particular upgrade. An `UpgradeCap` can
     /// only issue one ticket at a time — the ticket is a hot potato.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeTicket {
@@ -1374,8 +1374,8 @@ pub mod package {
     /// Issued as a result of a successful upgrade, containing info to be
     /// used to update the `UpgradeCap`. A hot potato to ensure that the
     /// upgrade is recorded before the transaction ends.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeReceipt {
@@ -1390,8 +1390,8 @@ pub mod package {
 /// `dummy_field` to preserve the BCS wire format (1 byte).
 pub mod bls12381 {
     /// Rust version of the Move `iota::bls12381::Scalar` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Scalar {
@@ -1399,8 +1399,8 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::G1` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct G1 {
@@ -1408,8 +1408,8 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::G2` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct G2 {
@@ -1417,8 +1417,8 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::GT` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GT {
@@ -1426,8 +1426,8 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::UncompressedG1` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UncompressedG1 {
@@ -1441,8 +1441,8 @@ pub mod groth16 {
     ///
     /// Represents an elliptic-curve construction to be used in the
     /// verifier. Currently BLS12-381 and BN254 are supported.
-    #[derive(Debug, Clone, Copy, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Curve {
@@ -1450,8 +1450,8 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::PreparedVerifyingKey` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PreparedVerifyingKey {
@@ -1462,8 +1462,8 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::PublicProofInputs` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PublicProofInputs {
@@ -1471,8 +1471,8 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::ProofPoints` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProofPoints {
@@ -1485,8 +1485,8 @@ pub mod group_ops {
     use core::marker::PhantomData;
 
     /// Rust version of the Move `iota::group_ops::Element<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Element<T> {
         pub bytes: Vec<u8>,
@@ -1516,8 +1516,8 @@ pub mod authenticator_function {
     /// type.
     ///
     /// Represents a validated authenticate function.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1<Account> {
         pub package: ID,
@@ -1549,8 +1549,8 @@ pub mod account {
 
     /// Rust version of the Move `iota::account::ImmutableAccountCreated`
     /// event type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ImmutableAccountCreated<Account> {
         pub account_id: ID,
@@ -1559,8 +1559,8 @@ pub mod account {
 
     /// Rust version of the Move `iota::account::MutableAccountCreated`
     /// event type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MutableAccountCreated<Account> {
         pub account_id: ID,
@@ -1569,8 +1569,8 @@ pub mod account {
 
     /// Rust version of the Move
     /// `iota::account::AuthenticatorFunctionRefV1Rotated` event type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1Rotated<Account> {
         pub account_id: ID,
@@ -1584,8 +1584,8 @@ pub mod account {
     /// Dynamic-field key used to locate a potential authenticate function.
     /// The Move struct is empty; the Rust mirror carries a `dummy_field`
     /// to preserve the BCS wire format.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1Key {
@@ -1608,8 +1608,8 @@ pub mod coin_manager {
     ///
     /// Holds all the related objects to the coin of type `T` in a single
     /// shared object.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManager<T> {
         pub id: UID,
@@ -1632,8 +1632,8 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManagerTreasuryCap<T> {
         pub id: UID,
@@ -1652,8 +1652,8 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManagerMetadataCap<T> {
         pub id: UID,
@@ -1672,8 +1672,8 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ImmutableCoinMetadata<T> {
         pub decimals: u8,
@@ -1705,8 +1705,8 @@ pub mod coin_manager {
     }
 
     /// Rust version of the Move `iota::coin_manager::CoinManaged` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManaged {
@@ -1715,8 +1715,8 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::TreasuryOwnershipRenounced` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TreasuryOwnershipRenounced {
@@ -1725,8 +1725,8 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::MetadataOwnershipRenounced` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MetadataOwnershipRenounced {
@@ -1752,8 +1752,8 @@ pub mod token {
     ///
     /// A single `Token` with a `Balance` inside. Can only be owned by an
     /// address; actions on it must be confirmed in a matching `TokenPolicy`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Token<T> {
         pub id: UID,
@@ -1767,8 +1767,8 @@ pub mod token {
     }
 
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicyCap<T> {
         pub id: UID,
@@ -1788,8 +1788,8 @@ pub mod token {
     }
 
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicy<T> {
         pub id: UID,
@@ -1816,8 +1816,8 @@ pub mod token {
     }
 
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ActionRequest<T> {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
@@ -1837,8 +1837,8 @@ pub mod token {
     /// Rust version of the Move `iota::token::RuleKey<T>` type.
     ///
     /// Dynamic-field key for storing a `Config` for a specific action rule.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RuleKey<T> {
         pub is_protected: bool,
@@ -1856,8 +1856,8 @@ pub mod token {
     }
 
     /// Rust version of the Move `iota::token::TokenPolicyCreated<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenPolicyCreated<T> {
         pub id: ID,
@@ -1892,8 +1892,8 @@ pub mod test_scenario {
     ///
     /// Mocks a multi-transaction IOTA execution in a single Move test
     /// procedure.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub struct Scenario {
         pub txn_number: u64,
@@ -1901,8 +1901,8 @@ pub mod test_scenario {
     }
 
     /// Rust version of the Move `iota::test_scenario::TxContextBuilder` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub struct TxContextBuilder {
         pub sender: Address,
@@ -1916,8 +1916,8 @@ pub mod test_scenario {
     }
 
     /// Rust version of the Move `iota::test_scenario::TransactionEffects` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     pub struct TransactionEffects {
         pub created: Vec<ID>,
         pub written: Vec<ID>,
@@ -1943,8 +1943,8 @@ pub mod package_metadata {
     ///
     /// Key type for deriving the package metadata object address. Empty in
     /// Move; the Rust mirror carries a `dummy_field` for BCS shape.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PackageMetadataKey {
@@ -1956,8 +1956,8 @@ pub mod package_metadata {
     ///
     /// Represents the metadata of a Move package, including storage ID,
     /// runtime ID, version, and per-module metadata.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PackageMetadataV1 {
         pub id: UID,
@@ -1973,8 +1973,8 @@ pub mod package_metadata {
     /// `iota::package_metadata::ModuleMetadataV1` type.
     ///
     /// V1 includes only the authenticator function information.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ModuleMetadataV1 {
@@ -1983,8 +1983,8 @@ pub mod package_metadata {
 
     /// Rust version of the Move
     /// `iota::package_metadata::AuthenticatorMetadataV1` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorMetadataV1 {
@@ -2005,8 +2005,8 @@ pub mod deny_list {
     /// Rust version of the Move `iota::deny_list::DenyList` type.
     ///
     /// Shared object storing addresses blocked for a given core type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct DenyList {
@@ -2021,8 +2021,8 @@ pub mod deny_list {
     /// the compiler injects a `dummy_field: bool` into the bytecode, so
     /// the Rust mirror carries the same named field to preserve the BCS
     /// wire format.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ConfigWriteCap {
@@ -2030,8 +2030,8 @@ pub mod deny_list {
     }
 
     /// Rust version of the Move `iota::deny_list::ConfigKey` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ConfigKey {
@@ -2040,8 +2040,8 @@ pub mod deny_list {
     }
 
     /// Rust version of the Move `iota::deny_list::AddressKey` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AddressKey(pub Address);
@@ -2050,8 +2050,8 @@ pub mod deny_list {
     ///
     /// Move's source declares `GlobalPauseKey()` (positional empty) but
     /// the compiler injects a `dummy_field: bool` into the bytecode.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GlobalPauseKey {
@@ -2060,8 +2060,8 @@ pub mod deny_list {
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
     /// event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PerTypeConfigCreated {
@@ -2078,8 +2078,8 @@ pub mod random {
     ///
     /// Singleton shared object storing the global randomness state. The
     /// actual state lives in a versioned inner field.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Random {
@@ -2088,8 +2088,8 @@ pub mod random {
     }
 
     /// Rust version of the Move `iota::random::RandomInner` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RandomInner {
@@ -2102,8 +2102,8 @@ pub mod random {
     /// Rust version of the Move `iota::random::RandomGenerator` type.
     ///
     /// Unique randomness generator derived from the global randomness.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RandomGenerator {
@@ -2120,8 +2120,8 @@ pub mod config {
     use super::object::UID;
 
     /// Rust version of the Move `iota::config::Config<WriteCap>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Config<WriteCap> {
         pub id: UID,
@@ -2139,8 +2139,8 @@ pub mod config {
     }
 
     /// Rust version of the Move `iota::config::Setting<Value>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Setting<Value> {
         pub data: Option<SettingData<Value>>,
@@ -2153,8 +2153,8 @@ pub mod config {
     }
 
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SettingData<Value> {
         pub newer_value_epoch: u64,
@@ -2169,8 +2169,8 @@ pub mod ptb_command {
     use crate::std::{ascii, type_name::TypeName};
 
     /// Rust version of the Move `iota::ptb_command::Argument` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum Argument {
         GasCoin,
@@ -2181,8 +2181,8 @@ pub mod ptb_command {
 
     /// Rust version of the Move
     /// `iota::ptb_command::ProgrammableMoveCall` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProgrammableMoveCall {
         pub package: ID,
@@ -2194,8 +2194,8 @@ pub mod ptb_command {
 
     /// Rust version of the Move
     /// `iota::ptb_command::TransferObjectsData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferObjectsData {
         pub objects: Vec<Argument>,
@@ -2203,8 +2203,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::SplitCoinsData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SplitCoinsData {
         pub coin: Argument,
@@ -2212,8 +2212,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::MergeCoinsData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MergeCoinsData {
         pub target_coin: Argument,
@@ -2221,8 +2221,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::PublishData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PublishData {
         pub modules: Vec<Vec<u8>>,
@@ -2230,8 +2230,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::MakeMoveVecData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MakeMoveVecData {
         pub type_arg: Option<TypeName>,
@@ -2239,8 +2239,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::UpgradeData` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UpgradeData {
         pub modules: Vec<Vec<u8>>,
@@ -2250,8 +2250,8 @@ pub mod ptb_command {
     }
 
     /// Rust version of the Move `iota::ptb_command::Command` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum Command {
         MoveCall(ProgrammableMoveCall),
@@ -2269,8 +2269,8 @@ pub mod ptb_call_arg {
     use super::object::ID;
 
     /// Rust version of the Move `iota::ptb_call_arg::ObjectRef` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ObjectRef {
         pub object_id: ID,
@@ -2279,8 +2279,8 @@ pub mod ptb_call_arg {
     }
 
     /// Rust version of the Move `iota::ptb_call_arg::ObjectArg` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum ObjectArg {
         ImmOrOwnedObject(ObjectRef),
@@ -2293,8 +2293,8 @@ pub mod ptb_call_arg {
     }
 
     /// Rust version of the Move `iota::ptb_call_arg::CallArg` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub enum CallArg {
         PureData(Vec<u8>),
@@ -2307,8 +2307,8 @@ pub mod ptb {
     use super::{ptb_call_arg::CallArg, ptb_command::Command};
 
     /// Rust version of the Move `iota::ptb::ProgrammableTransaction` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProgrammableTransaction {
         pub inputs: Vec<CallArg>,
@@ -2321,8 +2321,8 @@ pub mod auth_context {
     use super::{ptb_call_arg::CallArg, ptb_command::Command};
 
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthContext {
         /// Digest of the `MoveAuthenticator`.
@@ -2350,8 +2350,8 @@ pub mod kiosk {
     ///
     /// An object which allows selling collectibles within the kiosk
     /// ecosystem.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Kiosk {
         pub id: UID,
@@ -2365,8 +2365,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::KioskOwnerCap` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct KioskOwnerCap {
@@ -2375,8 +2375,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::PurchaseCap<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PurchaseCap<T> {
         pub id: UID,
@@ -2404,8 +2404,8 @@ pub mod kiosk {
     /// Hot potato ensuring an item was returned after being taken with
     /// `borrow_val`. Schema named `kiosk-borrow` to disambiguate from
     /// [`super::borrow::Borrow`].
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
         feature = "bcs-schema",
         derive(iota_bcs_schema::BcsSchema),
@@ -2420,8 +2420,8 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::Item` type.
     ///
     /// Dynamic-field key for an item placed into the kiosk.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Item {
@@ -2429,8 +2429,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::Listing` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Listing {
@@ -2439,8 +2439,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::Lock` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Lock {
@@ -2448,8 +2448,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::ItemListed<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemListed<T> {
         pub kiosk: ID,
@@ -2471,8 +2471,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::ItemPurchased<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemPurchased<T> {
         pub kiosk: ID,
@@ -2494,8 +2494,8 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::ItemDelisted<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ItemDelisted<T> {
         pub kiosk: ID,
@@ -2525,8 +2525,8 @@ pub mod kiosk_extension {
     ///
     /// Configuration and storage for a kiosk extension; stored under the
     /// [`ExtensionKey`] dynamic field.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Extension {
@@ -2540,8 +2540,8 @@ pub mod kiosk_extension {
 
     /// Rust version of the Move
     /// `iota::kiosk_extension::ExtensionKey<Ext>` type.
-    #[derive(Debug, Default, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ExtensionKey<Ext> {
         dummy_field: bool,
@@ -2567,8 +2567,8 @@ pub mod transfer_policy {
     ///
     /// A hot potato forcing the buyer to get a transfer permission from
     /// the item type's owner on purchase.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferRequest<T> {
         pub item: ID,
@@ -2597,8 +2597,8 @@ pub mod transfer_policy {
 
     /// Rust version of the Move `iota::transfer_policy::TransferPolicy<T>`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicy<T> {
         pub id: UID,
@@ -2623,8 +2623,8 @@ pub mod transfer_policy {
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyCap<T> {
         pub id: UID,
@@ -2645,8 +2645,8 @@ pub mod transfer_policy {
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyCreated<T> {
         pub id: ID,
@@ -2665,8 +2665,8 @@ pub mod transfer_policy {
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyDestroyed<T>` event.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TransferPolicyDestroyed<T> {
         pub id: ID,
@@ -2684,8 +2684,8 @@ pub mod transfer_policy {
     }
 
     /// Rust version of the Move `iota::transfer_policy::RuleKey<T>` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct RuleKey<T> {
         dummy_field: bool,

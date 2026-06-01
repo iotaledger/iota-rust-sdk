@@ -19,8 +19,8 @@ pub mod staking_pool {
     /// `iota_system::staking_pool::PoolTokenExchangeRate` type.
     ///
     /// Represents the exchange rate of the stake pool token to IOTA.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct PoolTokenExchangeRate {
@@ -40,8 +40,8 @@ pub mod staking_pool {
     /// Rust version of the Move `iota_system::staking_pool::StakedIota` type.
     ///
     /// A self-custodial object holding the staked IOTA tokens.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakedIota {
@@ -115,8 +115,8 @@ pub mod staking_pool {
     ///
     /// A staking pool embedded in each validator struct in the system state
     /// object.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakingPoolV1 {
         pub id: UID,
@@ -188,8 +188,8 @@ pub mod staking_pool {
 pub mod voting_power {
     /// Rust version of the Move `iota_system::voting_power::VotingPowerInfoV1`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct VotingPowerInfoV1 {
@@ -222,8 +222,8 @@ pub mod validator_cap {
     /// validator explicitly creates a new capability object for rotation or
     /// revocation. Verification is required before this can be converted
     /// into a [`ValidatorOperationCap`].
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UnverifiedValidatorOperationCap {
@@ -245,8 +245,8 @@ pub mod validator_cap {
     ///
     /// Privileged operations require this cap. Only constructed after
     /// successful verification of an [`UnverifiedValidatorOperationCap`].
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorOperationCap {
@@ -271,8 +271,8 @@ pub mod validator_wrapper {
     ///
     /// A thin wrapper carrying the on-chain inner `Validator` as a dynamic
     /// field keyed by version.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Validator {
@@ -298,8 +298,8 @@ pub mod validator {
 
     /// Rust version of the Move
     /// `iota_system::validator::ValidatorMetadataV1` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorMetadataV1 {
@@ -340,8 +340,8 @@ pub mod validator {
     }
 
     /// Rust version of the Move `iota_system::validator::ValidatorV1` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorV1 {
         /// Summary of the validator.
@@ -371,8 +371,8 @@ pub mod validator {
 
     /// Rust version of the Move `iota_system::validator::StakingRequestEvent`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StakingRequestEvent {
@@ -385,8 +385,8 @@ pub mod validator {
 
     /// Rust version of the Move
     /// `iota_system::validator::UnstakingRequestEvent` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct UnstakingRequestEvent {
@@ -413,8 +413,8 @@ pub mod validator_set {
 
     /// Rust version of the Move `iota_system::validator_set::ValidatorSetV1`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorSetV1 {
         /// Total stake from all active validators at the beginning of the
@@ -447,8 +447,8 @@ pub mod validator_set {
     /// Extends [`ValidatorSetV1`] with a `committee_members` vector listing
     /// the subset of `active_validators` that take part in consensus for the
     /// current epoch.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorSetV2 {
         /// Total stake from all committee validators at the beginning of the
@@ -479,8 +479,8 @@ pub mod validator_set {
 
     /// Rust version of the Move
     /// `iota_system::validator_set::ValidatorEpochInfoEventV1` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorEpochInfoEventV1 {
@@ -498,8 +498,8 @@ pub mod validator_set {
 
     /// Rust version of the Move
     /// `iota_system::validator_set::ValidatorJoinEvent` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorJoinEvent {
@@ -510,8 +510,8 @@ pub mod validator_set {
 
     /// Rust version of the Move
     /// `iota_system::validator_set::ValidatorLeaveEvent` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ValidatorLeaveEvent {
@@ -523,8 +523,8 @@ pub mod validator_set {
 
     /// Rust version of the Move
     /// `iota_system::validator_set::CommitteeValidatorJoinEvent` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CommitteeValidatorJoinEvent {
@@ -535,8 +535,8 @@ pub mod validator_set {
 
     /// Rust version of the Move
     /// `iota_system::validator_set::CommitteeValidatorLeaveEvent` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CommitteeValidatorLeaveEvent {
@@ -567,8 +567,8 @@ pub mod iota_system_state_inner {
     /// `iota_system::iota_system_state_inner::SystemParametersV1` type.
     ///
     /// A list of system config parameters.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemParametersV1 {
@@ -597,8 +597,8 @@ pub mod iota_system_state_inner {
     /// `iota_system::iota_system_state_inner::IotaSystemStateV1` type.
     ///
     /// The top-level object containing all information of the IOTA system.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemStateV1 {
         /// The current epoch ID, starting from 0.
@@ -640,8 +640,8 @@ pub mod iota_system_state_inner {
     /// Adds `safe_mode_computation_charges_burned` over [`IotaSystemStateV1`]
     /// to support burning base fees in safe mode when
     /// `protocol_defined_base_fee` is enabled.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemStateV2 {
         pub epoch: u64,
@@ -666,8 +666,8 @@ pub mod iota_system_state_inner {
 
     /// Rust version of the Move
     /// `iota_system::iota_system_state_inner::SystemEpochInfoEventV1` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemEpochInfoEventV1 {
@@ -689,8 +689,8 @@ pub mod iota_system_state_inner {
     ///
     /// Adds `tips_amount` over V1 to show how much of the total gas fees
     /// were paid to validators as tips rather than burned.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct SystemEpochInfoEventV2 {
@@ -720,8 +720,8 @@ pub mod iota_system {
     /// [`IotaSystemStateV1`](super::iota_system_state_inner::IotaSystemStateV1))
     /// stored as a dynamic field keyed by `version`. The wrapper object
     /// itself has a fixed ID of `0x5`.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct IotaSystemState {
@@ -747,8 +747,8 @@ pub mod storage_fund {
     /// the sum of `storage_rebate` of all on-chain objects.
     /// `non_refundable_balance` holds the storage-fund inflow that should
     /// not be paid back out.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct StorageFundV1 {
         pub total_object_storage_rebates: Balance<IOTA>,
@@ -777,8 +777,8 @@ pub mod timelocked_staking {
 
     /// Rust version of the Move
     /// `iota_system::timelocked_staking::TimelockedStakedIota` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TimelockedStakedIota {
@@ -833,8 +833,8 @@ pub mod genesis {
 
     /// Rust version of the Move
     /// `iota_system::genesis::GenesisValidatorMetadata` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GenesisValidatorMetadata {
@@ -856,8 +856,8 @@ pub mod genesis {
 
     /// Rust version of the Move `iota_system::genesis::GenesisChainParameters`
     /// type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct GenesisChainParameters {
@@ -872,8 +872,8 @@ pub mod genesis {
     }
 
     /// Rust version of the Move `iota_system::genesis::TokenAllocation` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenAllocation {
@@ -889,8 +889,8 @@ pub mod genesis {
 
     /// Rust version of the Move
     /// `iota_system::genesis::TokenDistributionSchedule` type.
-    #[derive(Debug, Clone, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TokenDistributionSchedule {

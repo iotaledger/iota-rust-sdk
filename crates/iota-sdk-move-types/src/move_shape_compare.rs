@@ -46,7 +46,7 @@ struct Entry {
     rust_shape: Shape,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 enum Package {
     MoveStdlib,
     IotaFramework,
