@@ -2,6 +2,45 @@
 
 Rust representations of Move types used by the IOTA blockchain.
 
+Each top-level module mirrors one on-chain system package, with every Move
+source module mirrored 1:1 as a Rust `pub mod`:
+
+| Module        | Package ID | Move package                        |
+| ------------- | ---------- | ----------------------------------- |
+| `std`         | `0x1`      | Move standard library (move-stdlib) |
+| `framework`   | `0x2`      | IOTA framework (iota-framework)     |
+| `iota_system` | `0x3`      | IOTA system (iota-system)           |
+| `stardust`    | `0x107a`   | Stardust migration (stardust)       |
+
+The Move sources these mirror live in the [iota monorepo] under
+`crates/iota-framework`.
+
+[iota monorepo]: https://github.com/iotaledger/iota/tree/develop/crates/iota-framework
+
+## Vendored Move packages (`src/packages_compiled/`)
+
+`src/packages_compiled/` holds the compiled bytecode blobs for the four
+packages above (`move-stdlib`, `iota-framework`, `iota-system`, `stardust`)
+plus `published_api.txt`, the upstream public-API manifest. They are copied
+verbatim from `crates/iota-framework/packages_compiled/` in the
+[iota monorepo].
+
+The blobs are read by the `move_shape_compare` test, which parses each Move
+struct/enum out of the bytecode and verifies that the corresponding Rust
+mirror's wire layout matches. `published_api.txt` (filtered to `public
+struct` / `public enum` records) is diffed against upstream by the nightly
+drift workflow (`.github/workflows/move_drift_nightly.yml`) to flag types
+that were added, removed, or moved.
+
+To refresh them against upstream (`develop` by default, or any branch):
+
+```bash
+make update-compiled-packages              # develop
+make update-compiled-packages BRANCH=main  # a different branch
+```
+
+This is a manual step — no CI job regenerates these files.
+
 ## Refreshing the BCS test fixtures
 
 The roundtrip tests in `tests/fixture_roundtrip.rs` decode real on-chain
