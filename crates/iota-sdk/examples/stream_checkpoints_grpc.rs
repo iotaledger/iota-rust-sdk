@@ -15,7 +15,7 @@ const HOW_MANY: u64 = 5;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet().await?;
+    let client = Client::new_testnet()?;
 
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.
