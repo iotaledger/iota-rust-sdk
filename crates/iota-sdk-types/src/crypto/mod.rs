@@ -22,7 +22,8 @@ pub use intent::{
 };
 pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1};
 pub use multisig::{
-    BitmapUnit, MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
+    BitmapUnit, MULTISIG_BITMAP_VALUE_MAX, MULTISIG_COMMITTEE_SIZE_MAX,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
     MultisigMemberSignature, ThresholdUnit, WeightUnit,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};

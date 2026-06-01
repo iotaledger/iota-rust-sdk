@@ -17,8 +17,8 @@ pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
 pub type BitmapUnit = u16;
 
-const MAX_COMMITTEE_SIZE: usize = 10;
-const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
+pub const MULTISIG_COMMITTEE_SIZE_MAX: usize = 10;
+pub const MULTISIG_BITMAP_VALUE_MAX: BitmapUnit = 0b1111111111;
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -36,7 +36,9 @@ pub enum MultisigError {
     ZeroThreshold,
     #[error("Multisig committee must have at least one member")]
     EmptyCommittee,
-    #[error("Multisig committee size {0} exceeds maximum size of {MAX_COMMITTEE_SIZE} members")]
+    #[error(
+        "Multisig committee size {0} exceeds maximum size of {MULTISIG_COMMITTEE_SIZE_MAX} members"
+    )]
     CommitteeTooLarge(usize),
     #[error("Multisig committee contains a member with zero weight")]
     ZeroWeightMember,
@@ -218,7 +220,7 @@ impl MultisigCommittee {
         if self.members.is_empty() {
             return Err(MultisigError::EmptyCommittee);
         }
-        if self.members.len() > MAX_COMMITTEE_SIZE {
+        if self.members.len() > MULTISIG_COMMITTEE_SIZE_MAX {
             return Err(MultisigError::CommitteeTooLarge(self.members.len()));
         }
         if self.members.iter().any(|member| member.weight == 0) {
@@ -433,11 +435,11 @@ impl MultisigAggregatedSignature {
 /// Interpret a bitmap of 01s as a list of indices that is set to 1s.
 /// e.g. 22 = 0b10110, then the result is [1, 2, 4].
 fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
-    if bitmap > MAX_BITMAP_VALUE {
+    if bitmap > MULTISIG_BITMAP_VALUE_MAX {
         return Err(MultisigError::InvalidBitmap(bitmap));
     }
     let mut res = Vec::new();
-    for i in 0..MAX_COMMITTEE_SIZE {
+    for i in 0..MULTISIG_COMMITTEE_SIZE_MAX {
         if bitmap & (1 << i) != 0 {
             res.push(i as u8);
         }
@@ -547,7 +549,7 @@ impl proptest::arbitrary::Arbitrary for MultisigCommittee {
 
         vec(
             (any::<PublicKey>(), 1u8..=WeightUnit::MAX),
-            1..=MAX_COMMITTEE_SIZE,
+            1..=MULTISIG_COMMITTEE_SIZE_MAX,
         )
         .prop_flat_map(|raw_members| {
             let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
