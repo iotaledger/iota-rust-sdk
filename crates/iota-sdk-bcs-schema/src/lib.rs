@@ -278,11 +278,21 @@ fn to_kebab_case(s: &str) -> String {
     let mut result = String::with_capacity(s.len() + 4);
     let chars: Vec<char> = s.chars().collect();
     for (i, &ch) in chars.iter().enumerate() {
+        if ch == '_' {
+            // Treat an underscore as an explicit word boundary. ABNF rule names
+            // can't contain underscores, and Move type names like
+            // `STARDUST_UPGRADE_LABEL` or `UQ32_32` reach here.
+            result.push('-');
+            continue;
+        }
         if ch.is_uppercase() {
             if i > 0 {
-                let prev_upper = chars[i - 1].is_uppercase();
+                let prev = chars[i - 1];
+                let prev_upper = prev.is_uppercase();
                 let next_lower = i + 1 < chars.len() && chars[i + 1].is_lowercase();
-                if !prev_upper || next_lower {
+                // Skip the boundary dash when the previous char was already a
+                // separator (the `_` arm above pushed one), to avoid `_-`.
+                if prev != '_' && (!prev_upper || next_lower) {
                     result.push('-');
                 }
             }
@@ -600,5 +610,13 @@ mod tests {
         assert_eq!(to_kebab_case("TransactionV1"), "transaction-v1");
         assert_eq!(to_kebab_case("ObjectID"), "object-id");
         assert_eq!(to_kebab_case("BTreeMap"), "b-tree-map");
+        // Underscores are word boundaries, not literal characters (invalid in
+        // ABNF rule names). No spurious `_-` before an uppercase letter.
+        assert_eq!(
+            to_kebab_case("STARDUST_UPGRADE_LABEL"),
+            "stardust-upgrade-label"
+        );
+        assert_eq!(to_kebab_case("UQ32_32"), "uq32-32");
+        assert_eq!(to_kebab_case("UQ64_64"), "uq64-64");
     }
 }

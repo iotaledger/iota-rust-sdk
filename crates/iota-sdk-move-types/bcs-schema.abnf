@@ -209,7 +209,7 @@ staking-request-event = id        ; pool-id
                         u64       ; epoch
                         u64       ; amount
 
-stardust_-upgrade_-label = bool   ; dummy-field
+stardust-upgrade-label = bool   ; dummy-field
 
 storage-deposit-return-unlock-condition = address   ; return-address
                                           u64       ; return-amount
@@ -325,9 +325,9 @@ upgrade-ticket = id      ; cap
                  u8      ; policy
                  bytes   ; digest
 
-uq32_32 = u64
+uq32-32 = u64
 
-uq64_64 = u128
+uq64-64 = u128
 
 url = string   ; url
 
