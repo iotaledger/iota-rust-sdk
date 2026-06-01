@@ -9,7 +9,7 @@ pub mod irc27 {
 
     use crate::{
         framework::{url::Url, vec_map::VecMap},
-        std::{fixed_point32::FixedPoint32, string::String as MoveString},
+        std::{fixed_point32::FixedPoint32, string},
     };
 
     /// Rust version of the Move `stardust::irc27::Irc27Metadata` type.
@@ -20,28 +20,28 @@ pub mod irc27 {
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Irc27Metadata {
         /// Version of the metadata standard.
-        pub version: MoveString,
+        pub version: string::String,
         /// The media type (MIME) of the asset.
-        pub media_type: MoveString,
+        pub media_type: string::String,
         /// URL pointing to the NFT file location.
         pub uri: Url,
         /// Alphanumeric text string defining the human identifiable name for
         /// the NFT.
-        pub name: MoveString,
+        pub name: string::String,
         /// The human-readable collection name of the NFT.
-        pub collection_name: Option<MoveString>,
+        pub collection_name: Option<string::String>,
         /// Royalty payment addresses mapped to the payout percentage.
         pub royalties: VecMap<Address, FixedPoint32>,
         /// The human-readable name of the NFT creator.
-        pub issuer_name: Option<MoveString>,
+        pub issuer_name: Option<string::String>,
         /// The human-readable description of the NFT.
-        pub description: Option<MoveString>,
+        pub description: Option<string::String>,
         /// Additional attributes following [OpenSea metadata standards].
         ///
         /// [OpenSea metadata standards]: https://docs.opensea.io/docs/metadata-standards
-        pub attributes: VecMap<MoveString, MoveString>,
+        pub attributes: VecMap<string::String, string::String>,
         /// Legacy non-standard metadata fields.
-        pub non_standard_fields: VecMap<MoveString, MoveString>,
+        pub non_standard_fields: VecMap<string::String, string::String>,
     }
 
     #[cfg(feature = "serde")]

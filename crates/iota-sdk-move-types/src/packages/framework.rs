@@ -752,7 +752,7 @@ pub mod zklogin_verified_id {
     use iota_types::Address;
 
     use super::object::UID;
-    use crate::std::string::String as MoveString;
+    use crate::std::string;
 
     /// Rust version of the Move `iota::zklogin_verified_id::VerifiedID`
     /// type.
@@ -768,13 +768,13 @@ pub mod zklogin_verified_id {
         /// The address this `VerifiedID` is associated with.
         pub owner: Address,
         /// The name of the key claim.
-        pub key_claim_name: MoveString,
+        pub key_claim_name: string::String,
         /// The value of the key claim.
-        pub key_claim_value: MoveString,
+        pub key_claim_value: string::String,
         /// The issuer.
-        pub issuer: MoveString,
+        pub issuer: string::String,
         /// The audience (wallet).
-        pub audience: MoveString,
+        pub audience: string::String,
     }
 }
 
@@ -783,7 +783,7 @@ pub mod zklogin_verified_issuer {
     use iota_types::Address;
 
     use super::object::UID;
-    use crate::std::string::String as MoveString;
+    use crate::std::string;
 
     /// Rust version of the Move
     /// `iota::zklogin_verified_issuer::VerifiedIssuer` type.
@@ -794,7 +794,7 @@ pub mod zklogin_verified_issuer {
     pub struct VerifiedIssuer {
         pub id: UID,
         pub owner: Address,
-        pub issuer: MoveString,
+        pub issuer: string::String,
     }
 }
 
@@ -832,7 +832,7 @@ pub mod transfer {
 /// Types from `0x2::timelock`.
 pub mod timelock {
     use super::object::UID;
-    use crate::std::string::String as MoveString;
+    use crate::std::string;
 
     /// Rust version of the Move `iota::timelock::TimeLock<T>` type.
     ///
@@ -847,7 +847,7 @@ pub mod timelock {
         /// Epoch timestamp (ms) of when the lock expires.
         pub expiration_timestamp_ms: u64,
         /// Optional timelock-related label.
-        pub label: Option<MoveString>,
+        pub label: Option<string::String>,
     }
 
     impl<T> TimeLock<T> {
@@ -855,7 +855,7 @@ pub mod timelock {
             id: UID,
             locked: T,
             expiration_timestamp_ms: u64,
-            label: Option<MoveString>,
+            label: Option<string::String>,
         ) -> Self {
             Self {
                 id,
@@ -1154,7 +1154,7 @@ pub mod derived_object {
 /// Types from `0x2::authenticator_state`.
 pub mod authenticator_state {
     use super::object::UID;
-    use crate::std::string::String as MoveString;
+    use crate::std::string;
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorState` type.
@@ -1187,10 +1187,10 @@ pub mod authenticator_state {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JWK {
-        pub kty: MoveString,
-        pub e: MoveString,
-        pub n: MoveString,
-        pub alg: MoveString,
+        pub kty: string::String,
+        pub e: string::String,
+        pub n: string::String,
+        pub alg: string::String,
     }
 
     /// Rust version of the Move `iota::authenticator_state::JwkId` type.
@@ -1201,8 +1201,8 @@ pub mod authenticator_state {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct JwkId {
-        pub iss: MoveString,
-        pub kid: MoveString,
+        pub iss: string::String,
+        pub kid: string::String,
     }
 
     /// Rust version of the Move `iota::authenticator_state::ActiveJwk`
@@ -1226,7 +1226,7 @@ pub mod display {
         object::{ID, UID},
         vec_map::VecMap,
     };
-    use crate::std::string::String as MoveString;
+    use crate::std::string;
 
     /// Rust version of the Move `iota::display::Display<T>` type.
     ///
@@ -1240,7 +1240,7 @@ pub mod display {
         pub id: UID,
         /// Fields for display. Currently supported field names are `name`,
         /// `link`, `image`, `description`.
-        pub fields: VecMap<MoveString, MoveString>,
+        pub fields: VecMap<string::String, string::String>,
         /// Version that can only be updated manually by the publisher.
         pub version: u16,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1248,7 +1248,7 @@ pub mod display {
     }
 
     impl<T> Display<T> {
-        pub const fn new(id: UID, fields: VecMap<MoveString, MoveString>, version: u16) -> Self {
+        pub const fn new(id: UID, fields: VecMap<string::String, string::String>, version: u16) -> Self {
             Self {
                 id,
                 fields,
@@ -1286,13 +1286,13 @@ pub mod display {
     pub struct VersionUpdated<T> {
         pub id: ID,
         pub version: u16,
-        pub fields: VecMap<MoveString, MoveString>,
+        pub fields: VecMap<string::String, string::String>,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
     }
 
     impl<T> VersionUpdated<T> {
-        pub const fn new(id: ID, version: u16, fields: VecMap<MoveString, MoveString>) -> Self {
+        pub const fn new(id: ID, version: u16, fields: VecMap<string::String, string::String>) -> Self {
             Self {
                 id,
                 version,
@@ -1306,7 +1306,7 @@ pub mod display {
 /// Types from `0x2::package`.
 pub mod package {
     use super::object::{ID, UID};
-    use crate::std::ascii::String as AsciiString;
+    use crate::std::ascii;
 
     /// Rust version of the Move `iota::package::Publisher` type.
     ///
@@ -1319,8 +1319,8 @@ pub mod package {
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct Publisher {
         pub id: UID,
-        pub package: AsciiString,
-        pub module_name: AsciiString,
+        pub package: ascii::String,
+        pub module_name: ascii::String,
     }
 
     /// Rust version of the Move `iota::package::UpgradeCap` type.
@@ -1498,7 +1498,7 @@ pub mod authenticator_function {
     use core::marker::PhantomData;
 
     use super::object::ID;
-    use crate::std::ascii::String as AsciiString;
+    use crate::std::ascii;
 
     /// Rust version of the Move
     /// `iota::authenticator_function::AuthenticatorFunctionRefV1<Account>`
@@ -1510,8 +1510,8 @@ pub mod authenticator_function {
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionRefV1<Account> {
         pub package: ID,
-        pub module_name: AsciiString,
-        pub function_name: AsciiString,
+        pub module_name: ascii::String,
+        pub function_name: ascii::String,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<Account>,
     }
@@ -1519,8 +1519,8 @@ pub mod authenticator_function {
     impl<Account> AuthenticatorFunctionRefV1<Account> {
         pub const fn new(
             package: ID,
-            module_name: AsciiString,
-            function_name: AsciiString,
+            module_name: ascii::String,
+            function_name: ascii::String,
         ) -> Self {
             Self {
                 package,
@@ -1591,7 +1591,7 @@ pub mod coin_manager {
         object::UID,
         url::Url,
     };
-    use crate::std::{ascii::String as AsciiString, string::String as MoveString};
+    use crate::std::{ascii, string};
 
     /// Rust version of the Move `iota::coin_manager::CoinManager<T>` type.
     ///
@@ -1666,9 +1666,9 @@ pub mod coin_manager {
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ImmutableCoinMetadata<T> {
         pub decimals: u8,
-        pub name: MoveString,
-        pub symbol: AsciiString,
-        pub description: MoveString,
+        pub name: string::String,
+        pub symbol: ascii::String,
+        pub description: string::String,
         pub icon_url: Option<Url>,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -1677,9 +1677,9 @@ pub mod coin_manager {
     impl<T> ImmutableCoinMetadata<T> {
         pub const fn new(
             decimals: u8,
-            name: MoveString,
-            symbol: AsciiString,
-            description: MoveString,
+            name: string::String,
+            symbol: ascii::String,
+            description: string::String,
             icon_url: Option<Url>,
         ) -> Self {
             Self {
@@ -1699,7 +1699,7 @@ pub mod coin_manager {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct CoinManaged {
-        pub coin_name: AsciiString,
+        pub coin_name: ascii::String,
     }
 
     /// Rust version of the Move
@@ -1709,7 +1709,7 @@ pub mod coin_manager {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct TreasuryOwnershipRenounced {
-        pub coin_name: AsciiString,
+        pub coin_name: ascii::String,
     }
 
     /// Rust version of the Move
@@ -1719,7 +1719,7 @@ pub mod coin_manager {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct MetadataOwnershipRenounced {
-        pub coin_name: AsciiString,
+        pub coin_name: ascii::String,
     }
 }
 
@@ -1735,7 +1735,7 @@ pub mod token {
         vec_map::VecMap,
         vec_set::VecSet,
     };
-    use crate::std::{string::String as MoveString, type_name::TypeName};
+    use crate::std::{string, type_name::TypeName};
 
     /// Rust version of the Move `iota::token::Token<T>` type.
     ///
@@ -1787,14 +1787,14 @@ pub mod token {
         pub spent_balance: Balance<T>,
         /// Rules that define what actions can be performed on the token,
         /// keyed by action name.
-        pub rules: VecMap<MoveString, VecSet<TypeName>>,
+        pub rules: VecMap<string::String, VecSet<TypeName>>,
     }
 
     impl<T> TokenPolicy<T> {
         pub const fn new(
             id: UID,
             spent_balance: Balance<T>,
-            rules: VecMap<MoveString, VecSet<TypeName>>,
+            rules: VecMap<string::String, VecSet<TypeName>>,
         ) -> Self {
             Self {
                 id,
@@ -1811,7 +1811,7 @@ pub mod token {
     pub struct ActionRequest<T> {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
-        pub name: MoveString,
+        pub name: string::String,
         pub amount: u64,
         pub sender: Address,
         /// Only present for the `transfer` action.
@@ -1925,7 +1925,7 @@ pub mod package_metadata {
         object::{ID, UID},
         vec_map::VecMap,
     };
-    use crate::std::{ascii::String as AsciiString, type_name::TypeName};
+    use crate::std::{ascii, type_name::TypeName};
 
     /// Rust version of the Move
     /// `iota::package_metadata::PackageMetadataKey` type.
@@ -1955,7 +1955,7 @@ pub mod package_metadata {
         /// Runtime ID of the package — the storage ID of the first version.
         pub runtime_id: ID,
         pub package_version: u64,
-        pub modules_metadata: VecMap<AsciiString, ModuleMetadataV1>,
+        pub modules_metadata: VecMap<ascii::String, ModuleMetadataV1>,
     }
 
     /// Rust version of the Move
@@ -1977,7 +1977,7 @@ pub mod package_metadata {
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorMetadataV1 {
-        pub function_name: AsciiString,
+        pub function_name: ascii::String,
         pub account_type: TypeName,
     }
 }
@@ -2155,7 +2155,7 @@ pub mod config {
 /// Types from `0x2::ptb_command`.
 pub mod ptb_command {
     use super::object::ID;
-    use crate::std::{ascii::String as AsciiString, type_name::TypeName};
+    use crate::std::{ascii, type_name::TypeName};
 
     /// Rust version of the Move `iota::ptb_command::Argument` type.
     #[derive(Debug, Clone, Eq, PartialEq)]
@@ -2175,8 +2175,8 @@ pub mod ptb_command {
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct ProgrammableMoveCall {
         pub package: ID,
-        pub module_name: AsciiString,
-        pub function: AsciiString,
+        pub module_name: ascii::String,
+        pub function: ascii::String,
         pub type_arguments: Vec<TypeName>,
         pub arguments: Vec<Argument>,
     }

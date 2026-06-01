@@ -293,7 +293,7 @@ pub mod validator {
     use super::staking_pool::StakingPoolV1;
     use crate::{
         framework::{bag::Bag, object::ID, url::Url},
-        std::string::String as MoveString,
+        std::string,
     };
 
     /// Rust version of the Move
@@ -315,26 +315,26 @@ pub mod validator {
         /// Proof that the validator owns the private key.
         pub proof_of_possession: Vec<u8>,
         /// A unique human-readable validator name.
-        pub name: MoveString,
-        pub description: MoveString,
+        pub name: string::String,
+        pub description: string::String,
         pub image_url: Url,
         pub project_url: Url,
         /// Network address of the validator.
-        pub net_address: MoveString,
+        pub net_address: string::String,
         /// Address of the validator used for p2p activities such as state
         /// sync.
-        pub p2p_address: MoveString,
+        pub p2p_address: string::String,
         /// Primary address of the consensus.
-        pub primary_address: MoveString,
+        pub primary_address: string::String,
         /// `next_epoch_*` metadata only takes effect in the next epoch. If
         /// `None`, the current value stays unchanged.
         pub next_epoch_authority_pubkey_bytes: Option<Vec<u8>>,
         pub next_epoch_proof_of_possession: Option<Vec<u8>>,
         pub next_epoch_network_pubkey_bytes: Option<Vec<u8>>,
         pub next_epoch_protocol_pubkey_bytes: Option<Vec<u8>>,
-        pub next_epoch_net_address: Option<MoveString>,
-        pub next_epoch_p2p_address: Option<MoveString>,
-        pub next_epoch_primary_address: Option<MoveString>,
+        pub next_epoch_net_address: Option<string::String>,
+        pub next_epoch_p2p_address: Option<string::String>,
+        pub next_epoch_primary_address: Option<string::String>,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
     }
@@ -773,7 +773,7 @@ pub mod timelocked_staking {
     use iota_types::ObjectId;
 
     use super::staking_pool::StakedIota;
-    use crate::{framework::object::UID, std::string::String as MoveString};
+    use crate::{framework::object::UID, std::string};
 
     /// Rust version of the Move
     /// `iota_system::timelocked_staking::TimelockedStakedIota` type.
@@ -788,7 +788,7 @@ pub mod timelocked_staking {
         /// Epoch timestamp (ms) of when the lock expires.
         pub expiration_timestamp_ms: u64,
         /// Optional timelock-related label.
-        pub label: Option<MoveString>,
+        pub label: Option<string::String>,
     }
 
     impl TimelockedStakedIota {

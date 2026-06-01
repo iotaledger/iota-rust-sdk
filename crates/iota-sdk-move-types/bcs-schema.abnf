@@ -18,8 +18,8 @@ alias = uid                     ; id
 
 authenticator-function-ref-v1-key = bool   ; dummy-field
 
-authenticator-metadata-v1 = ascii-string   ; function-name
-                            type-name      ; account-type
+authenticator-metadata-v1 = string      ; function-name
+                            type-name   ; account-type
 
 authenticator-state = uid   ; id
                       u64   ; version
@@ -48,7 +48,7 @@ char = u8   ; byte
 clock = uid   ; id
         u64   ; timestamp-ms
 
-coin-managed = ascii-string   ; coin-name
+coin-managed = string   ; coin-name
 
 committee-validator-join-event = u64       ; epoch
                                  address   ; validator-address
@@ -61,7 +61,7 @@ committee-validator-leave-event = u64       ; epoch
 config-key = u64     ; per-type-index
              bytes   ; per-type-key
 
-config-write-cap = bool
+config-write-cap = bool   ; dummy-field
 
 curve = u8   ; id
 
@@ -106,7 +106,7 @@ genesis-validator-metadata = bytes     ; name
                              bytes     ; p2p-address
                              bytes     ; primary-address
 
-global-pause-key = bool
+global-pause-key = bool   ; dummy-field
 
 gt = bool   ; dummy-field
 
@@ -127,13 +127,13 @@ iota-system-state = uid   ; id
 
 item = id   ; id
 
-jwk = move-string   ; kty
-      move-string   ; e
-      move-string   ; n
-      move-string   ; alg
+jwk = string   ; kty
+      string   ; e
+      string   ; n
+      string   ; alg
 
-jwk-id = move-string   ; iss
-         move-string   ; kid
+jwk-id = string   ; iss
+         string   ; kid
 
 key-pair = bytes   ; private-key
            bytes   ; public-key
@@ -149,7 +149,7 @@ listing = id     ; id
 
 lock = id   ; id
 
-metadata-ownership-renounced = ascii-string   ; coin-name
+metadata-ownership-renounced = string   ; coin-name
 
 module-metadata-v1 = (size *authenticator-metadata-v1)   ; authenticator-metadata
 
@@ -175,9 +175,9 @@ proof-points = bytes   ; bytes
 
 public-proof-inputs = bytes   ; bytes
 
-publisher = uid            ; id
-            ascii-string   ; package
-            ascii-string   ; module-name
+publisher = uid      ; id
+            string   ; package
+            string   ; module-name
 
 random = uid         ; id
          versioned   ; inner
@@ -253,10 +253,10 @@ test = uid   ; id
 
 timelock-unlock-condition = u32   ; unix-time
 
-timelocked-staked-iota = uid                         ; id
-                         staked-iota                 ; staked-iota
-                         u64                         ; expiration-timestamp-ms
-                         (%d00 / %d01 move-string)   ; label
+timelocked-staked-iota = uid                    ; id
+                         staked-iota            ; staked-iota
+                         u64                    ; expiration-timestamp-ms
+                         (%d00 / %d01 string)   ; label
 
 token-allocation = address                 ; recipient-address
                    u64                     ; amount-nanos
@@ -266,7 +266,7 @@ token-allocation = address                 ; recipient-address
 token-distribution-schedule = u64                        ; pre-minted-supply
                               (size *token-allocation)   ; allocations
 
-treasury-ownership-renounced = ascii-string   ; coin-name
+treasury-ownership-renounced = string   ; coin-name
 
 tx-context = address   ; sender
              bytes     ; tx-hash
@@ -283,7 +283,7 @@ tx-context-builder = address                 ; sender
                      u64                     ; gas-budget
                      (%d00 / %d01 address)   ; sponsor
 
-type-name = ascii-string   ; name
+type-name = string   ; name
 
 u128    = 16OCTET
 
@@ -353,39 +353,39 @@ validator-leave-event = u64       ; epoch
                         id        ; staking-pool-id
                         bool      ; is-voluntary
 
-validator-metadata-v1 = address                     ; iota-address
-                        bytes                       ; authority-pubkey-bytes
-                        bytes                       ; network-pubkey-bytes
-                        bytes                       ; protocol-pubkey-bytes
-                        bytes                       ; proof-of-possession
-                        move-string                 ; name
-                        move-string                 ; description
-                        url                         ; image-url
-                        url                         ; project-url
-                        move-string                 ; net-address
-                        move-string                 ; p2p-address
-                        move-string                 ; primary-address
-                        (%d00 / %d01 bytes)         ; next-epoch-authority-pubkey-bytes
-                        (%d00 / %d01 bytes)         ; next-epoch-proof-of-possession
-                        (%d00 / %d01 bytes)         ; next-epoch-network-pubkey-bytes
-                        (%d00 / %d01 bytes)         ; next-epoch-protocol-pubkey-bytes
-                        (%d00 / %d01 move-string)   ; next-epoch-net-address
-                        (%d00 / %d01 move-string)   ; next-epoch-p2p-address
-                        (%d00 / %d01 move-string)   ; next-epoch-primary-address
-                        bag                         ; extra-fields
+validator-metadata-v1 = address                ; iota-address
+                        bytes                  ; authority-pubkey-bytes
+                        bytes                  ; network-pubkey-bytes
+                        bytes                  ; protocol-pubkey-bytes
+                        bytes                  ; proof-of-possession
+                        string                 ; name
+                        string                 ; description
+                        url                    ; image-url
+                        url                    ; project-url
+                        string                 ; net-address
+                        string                 ; p2p-address
+                        string                 ; primary-address
+                        (%d00 / %d01 bytes)    ; next-epoch-authority-pubkey-bytes
+                        (%d00 / %d01 bytes)    ; next-epoch-proof-of-possession
+                        (%d00 / %d01 bytes)    ; next-epoch-network-pubkey-bytes
+                        (%d00 / %d01 bytes)    ; next-epoch-protocol-pubkey-bytes
+                        (%d00 / %d01 string)   ; next-epoch-net-address
+                        (%d00 / %d01 string)   ; next-epoch-p2p-address
+                        (%d00 / %d01 string)   ; next-epoch-primary-address
+                        bag                    ; extra-fields
 
 validator-operation-cap = address   ; authorizer-validator-address
 
-verified-id = uid           ; id
-              address       ; owner
-              move-string   ; key-claim-name
-              move-string   ; key-claim-value
-              move-string   ; issuer
-              move-string   ; audience
+verified-id = uid       ; id
+              address   ; owner
+              string    ; key-claim-name
+              string    ; key-claim-value
+              string    ; issuer
+              string    ; audience
 
-verified-issuer = uid           ; id
-                  address       ; owner
-                  move-string   ; issuer
+verified-issuer = uid       ; id
+                  address   ; owner
+                  string    ; issuer
 
 version-change-cap = id    ; versioned-id
                      u64   ; old-version
