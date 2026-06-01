@@ -62,7 +62,11 @@ pub enum Kind {
 
 impl std::error::Error for Error {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        self.inner.source.as_deref().map(|e| e as _)
+        // `Display` already renders the inner error's own message inline, so we
+        // expose only its *underlying* cause here. Returning the inner error
+        // directly would make cause-chain formatters (e.g. `anyhow`/`eyre`
+        // `{:?}`) repeat that message verbatim under "Caused by".
+        self.inner.source.as_deref()?.source()
     }
 }
 
@@ -266,6 +270,53 @@ mod tests {
         assert!(message.contains("not json"));
         // The underlying serde_json error text is included.
         assert!(message.contains("expected"));
+    }
+
+    #[test]
+    fn http_error_has_no_duplicate_cause() {
+        // The full message lives in `Display`; there is no underlying cause, so
+        // `source()` must be `None` to avoid cause-chain formatters repeating
+        // the message under "Caused by".
+        use std::error::Error as _;
+
+        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
+        let error = Error::http(url, StatusCode::TOO_MANY_REQUESTS, b"Too Many Requests");
+        assert!(error.source().is_none());
+    }
+
+    #[test]
+    fn wrapped_error_exposes_underlying_cause_not_its_own_message() {
+        use std::error::Error as _;
+
+        #[derive(Debug)]
+        struct Inner;
+        impl std::fmt::Display for Inner {
+            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                write!(f, "inner cause")
+            }
+        }
+        impl std::error::Error for Inner {}
+
+        #[derive(Debug)]
+        struct Outer(Inner);
+        impl std::fmt::Display for Outer {
+            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                write!(f, "outer message")
+            }
+        }
+        impl std::error::Error for Outer {
+            fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+                Some(&self.0)
+            }
+        }
+
+        let error = Error::from_error(Kind::Other, Outer(Inner));
+        // `Display` carries the wrapped error's own message exactly once.
+        assert!(error.to_string().contains("outer message"));
+        // `source()` skips that already-rendered message and exposes the
+        // deeper cause, so the chain does not repeat "outer message".
+        let source = error.source().expect("expected an underlying cause");
+        assert_eq!(source.to_string(), "inner cause");
     }
 
     #[test]
