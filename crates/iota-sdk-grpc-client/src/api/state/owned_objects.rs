@@ -64,7 +64,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client.list_owned_objects(owner, None, None, None).await?;
@@ -80,7 +80,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client

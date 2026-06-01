@@ -85,12 +85,12 @@ mod keypair {
 
     use crate::SignatureError;
 
-    #[derive(Debug, Clone)]
+    #[derive(Clone, Debug)]
     pub struct SimpleKeypair {
         inner: InnerKeypair,
     }
 
-    #[derive(Debug, Clone)]
+    #[derive(Clone, Debug)]
     enum InnerKeypair {
         #[cfg(feature = "ed25519")]
         Ed25519(crate::ed25519::Ed25519PrivateKey),
@@ -163,13 +163,14 @@ mod keypair {
         }
 
         /// Decode a SimpleKeypair from `flag || privkey` bytes
-        pub fn from_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureError> {
+            let bytes = bytes.as_ref();
             if bytes.is_empty() {
                 return Err(SignatureError::from_source("empty bytes"));
             }
 
             let flag = SignatureScheme::from_byte(bytes[0]).map_err(|e| {
-                SignatureError::from_source(format!("invalid signature scheme: {:?}", e))
+                SignatureError::from_source(format!("invalid signature scheme: {e:?}"))
             })?;
             let key_bytes = &bytes[1..];
 
@@ -350,12 +351,12 @@ mod keypair {
         }
     }
 
-    #[derive(Debug, Clone, Eq, PartialEq)]
+    #[derive(Clone, Debug, Eq, PartialEq)]
     pub struct SimpleVerifyingKey {
         inner: InnerVerifyingKey,
     }
 
-    #[derive(Debug, Clone, Eq, PartialEq)]
+    #[derive(Clone, Debug, Eq, PartialEq)]
     enum InnerVerifyingKey {
         #[cfg(feature = "ed25519")]
         Ed25519(crate::ed25519::Ed25519VerifyingKey),

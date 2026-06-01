@@ -26,7 +26,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     ///
     /// let info = client.get_service_info().await?;
     /// println!("Chain ID: {:?}", info.body().chain_id);
@@ -50,7 +50,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_sdk_grpc_client::read_mask_fields::ServiceInfoField;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     ///
     /// let info = client
     ///     .get_service_info_masked([ServiceInfoField::CHAIN_ID, ServiceInfoField::EPOCH])

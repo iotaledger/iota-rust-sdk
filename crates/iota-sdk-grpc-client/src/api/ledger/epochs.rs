@@ -32,7 +32,9 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
+    ///
+    /// // Get current epoch
     /// let epoch = client.get_epoch(None).await?;
     /// println!("Epoch: {:?}", epoch.body().epoch);
     /// # Ok(())
@@ -67,7 +69,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_sdk_grpc_client::read_mask_fields::EpochField;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     ///
     /// // Specific epoch with selected fields.
     /// let epoch = client
@@ -139,7 +141,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let gas_price = client.get_reference_gas_price().await?.into_inner();
     /// println!("Reference gas price: {gas_price} NANOS");
     /// # Ok(())

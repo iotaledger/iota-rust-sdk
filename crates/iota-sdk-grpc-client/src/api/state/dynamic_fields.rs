@@ -64,7 +64,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let page = client.list_dynamic_fields(parent, None, None).await?;
@@ -80,7 +80,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client

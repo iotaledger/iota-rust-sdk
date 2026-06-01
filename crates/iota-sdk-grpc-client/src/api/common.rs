@@ -160,7 +160,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// let mask = ReadMask::from("effects,checkpoint");
 /// assert_eq!(mask.as_str(), "effects,checkpoint");
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct ReadMask<'a>(Cow<'a, str>);
 
 impl<'a> ReadMask<'a> {
@@ -329,7 +329,7 @@ where
 ///
 /// Returned when awaiting a list query builder directly (single-page mode).
 /// Contains the items from this page plus an optional continuation token.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Page<T> {
     /// The items returned in this page.
     pub items: Vec<T>,

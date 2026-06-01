@@ -13,7 +13,7 @@ use iota_sdk::grpc_client::{Client, ResponseExt};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet().await?;
+    let client = Client::new_testnet()?;
 
     // Option 1: explicit service info RPC.
     let info = client.get_service_info().await?;

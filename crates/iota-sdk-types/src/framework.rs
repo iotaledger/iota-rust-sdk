@@ -6,7 +6,7 @@
 
 use super::{Object, ObjectId, TypeTag};
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Coin {
     coin_type: TypeTag,
     id: ObjectId,
@@ -53,7 +53,7 @@ impl Coin {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum CoinFromObjectError {
     NotACoin,

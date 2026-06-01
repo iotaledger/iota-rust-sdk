@@ -50,13 +50,17 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let digest: Digest = Digest::random();
     ///
     /// let txs = client.get_transactions([digest]).await?;
     /// for tx in txs.body() {
     ///     let effects = tx.effects()?.effects()?;
-    ///     println!("Status: {:?}", effects.status());
+    ///     println!("Status: {:?}", effects.as_v1().status);
+    ///
+    ///     // Access checkpoint number
+    ///     let checkpoint = tx.checkpoint_sequence_number()?;
+    ///     println!("Checkpoint: {}", checkpoint);
     /// }
     /// # Ok(())
     /// # }
@@ -85,7 +89,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let digest: Digest = Digest::random();
     ///
     /// let txs = client

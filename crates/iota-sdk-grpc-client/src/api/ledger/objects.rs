@@ -41,7 +41,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Get objects
@@ -97,7 +97,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Single field
@@ -153,7 +153,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Get objects with default mask
@@ -215,7 +215,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// let objs = client

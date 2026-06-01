@@ -10,7 +10,7 @@ use iota_types::{Identifier, ObjectId, ObjectReference, SharedObjectReference, T
 /// An identifier indicating the unresolved index of an input.
 pub type InputId = usize;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Input {
     pub kind: InputKind,
     pub is_gas: bool,
@@ -35,7 +35,7 @@ impl Input {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum InputKind {
     ImmutableOrOwned(ObjectId),
@@ -62,7 +62,7 @@ impl InputKind {
     }
 }
 
-#[derive(Debug, Clone, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From)]
 #[non_exhaustive]
 pub enum Command {
     MoveCall(MoveCall),
@@ -139,7 +139,7 @@ impl From<iota_types::Command> for Command {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MoveCall {
     pub package: ObjectId,
     pub module: Identifier,
@@ -164,7 +164,7 @@ impl MoveCall {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Upgrade {
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
@@ -183,7 +183,7 @@ impl Upgrade {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MakeMoveVector {
     pub type_: Option<TypeTag>,
     pub elements: Vec<Argument>,
@@ -202,7 +202,7 @@ impl MakeMoveVector {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct TransferObjects {
     pub objects: Vec<Argument>,
     pub address: Argument,
@@ -221,7 +221,7 @@ impl TransferObjects {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct SplitCoins {
     pub coin: Argument,
     pub amounts: Vec<Argument>,
@@ -240,7 +240,7 @@ impl SplitCoins {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MergeCoins {
     pub coin: Argument,
     pub coins_to_merge: Vec<Argument>,
@@ -259,7 +259,7 @@ impl MergeCoins {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Publish {
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
@@ -274,7 +274,7 @@ impl Publish {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub enum Argument {
     Gas,

@@ -17,7 +17,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet().await?;
+    let client = Client::new_testnet()?;
 
     let object_id: ObjectId =
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;

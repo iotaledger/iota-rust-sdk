@@ -9,7 +9,7 @@ use iota_types::{
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct MultisigVerifier {
     #[cfg(feature = "passkey")]
     passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
@@ -194,7 +194,7 @@ impl Iterator for BitmapIndices {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
 }
@@ -247,7 +247,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MultisigAggregator {
     committee: MultisigCommittee,
     signatures: std::collections::BTreeMap<usize, MultisigMemberSignature>,

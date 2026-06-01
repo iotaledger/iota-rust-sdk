@@ -55,7 +55,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let checkpoint = client.get_checkpoint_latest(None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
@@ -114,7 +114,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let checkpoint = client
     ///     .get_checkpoint_by_sequence_number(100, None, None)
     ///     .await?;
@@ -179,7 +179,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let digest: Digest = todo!();
     /// let checkpoint = client.get_checkpoint_by_digest(digest, None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
@@ -320,7 +320,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// let mut stream = client
     ///     .stream_checkpoints(Some(0), Some(10), None, None)
     ///     .await?;
@@ -453,7 +453,7 @@ impl Client {
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new_localnet()?;
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client

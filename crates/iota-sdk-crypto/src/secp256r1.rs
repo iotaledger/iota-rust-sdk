@@ -125,7 +125,8 @@ impl crate::ToFromBytes for Secp256r1PrivateKey {
         self.0.to_bytes().into()
     }
 
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
+        let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid secp256r1 key length".to_string(),
@@ -179,7 +180,7 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
         let child_xprv =
             bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
-        Self::from_bytes(&child_xprv.private_key().to_bytes())
+        Self::from_bytes(child_xprv.private_key().to_bytes())
     }
 }
 
@@ -207,7 +208,7 @@ impl Signer<UserSignature> for Secp256r1PrivateKey {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Secp256r1VerifyingKey(VerifyingKey);
 
 impl Secp256r1VerifyingKey {
@@ -303,7 +304,7 @@ impl Verifier<UserSignature> for Secp256r1VerifyingKey {
     }
 }
 
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Secp256r1Verifier {}
 
 impl Secp256r1Verifier {

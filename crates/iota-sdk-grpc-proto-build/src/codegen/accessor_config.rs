@@ -8,7 +8,7 @@ use prost_types::FieldDescriptorProto;
 
 bitflags! {
     /// Flags for different types of accessor methods to generate
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     pub struct AccessorTypes: u8 {
         /// Generate `field()` getter returning value or default
         const GETTER = 0b0000_0001;
@@ -93,8 +93,7 @@ impl AccessorTypes {
                 }
                 _ => {
                     panic!(
-                        "Unknown accessor type '{}'. Valid types are: getter, getter_opt, set, with, mut, mut_opt, all, default",
-                        part
+                        "Unknown accessor type '{part}'. Valid types are: getter, getter_opt, set, with, mut, mut_opt, all, default"
                     );
                 }
             }
@@ -102,8 +101,7 @@ impl AccessorTypes {
 
         if has_all && has_other_accessors {
             panic!(
-                "Cannot combine 'all' with other accessor types in '{}'. Use 'all' alone, or list specific types.",
-                s
+                "Cannot combine 'all' with other accessor types in '{s}'. Use 'all' alone, or list specific types."
             );
         }
 
@@ -111,8 +109,7 @@ impl AccessorTypes {
         // already includes default)
         if result.contains(AccessorTypes::DEFAULT) && result.contains(AccessorTypes::GETTER) {
             panic!(
-                "Cannot combine 'default' with 'getter' or 'all' in '{}'. The 'getter' accessor already generates default helpers. Use 'default' only with non-getter accessors like 'set,with,default'.",
-                s
+                "Cannot combine 'default' with 'getter' or 'all' in '{s}'. The 'getter' accessor already generates default helpers. Use 'default' only with non-getter accessors like 'set,with,default'."
             );
         }
 
@@ -194,7 +191,7 @@ pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> 
             };
 
             if let Some(accessor_types) = accessor_types {
-                let key = format!("{}.{}", message_name, field_name);
+                let key = format!("{message_name}.{field_name}");
                 map.insert(key, accessor_types);
             }
         }
