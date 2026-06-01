@@ -120,7 +120,7 @@ impl Client {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(self.post_query::<GraphQlResponse<T>>(operation).await?)
+        response_to_err(self.post_query(operation).await?)
     }
 
     /// POST a JSON-serializable GraphQL request body and decode the JSON
@@ -155,8 +155,7 @@ impl Client {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
-        self.post_query::<GraphQlResponse<serde_json::Value>>(&json)
-            .await
+        self.post_query(&json).await
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
