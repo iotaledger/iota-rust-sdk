@@ -86,8 +86,8 @@ impl StakedIota {
         (*self.0.pool_id()).into()
     }
 
-    pub fn activation_epoch(&self) -> u64 {
-        self.0.activation_epoch()
+    pub fn stake_activation_epoch(&self) -> u64 {
+        self.0.stake_activation_epoch()
     }
 
     /// Staked principal in nanos.

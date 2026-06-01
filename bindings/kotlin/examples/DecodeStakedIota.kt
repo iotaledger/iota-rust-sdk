@@ -31,7 +31,7 @@ fun main() = runBlocking {
             totalPrincipal += staked.principal()
             println("- id:               ${staked.id().toHex()}")
             println("  pool_id:          ${staked.poolId().toHex()}")
-            println("  activation_epoch: ${staked.activationEpoch()}")
+            println("  stake_activation_epoch: ${staked.stakeActivationEpoch()}")
             println("  principal (nanos):${staked.principal()}")
             println()
         }

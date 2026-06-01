@@ -78,7 +78,7 @@ pub mod staking_pool {
             &self.pool_id.bytes
         }
 
-        pub fn activation_epoch(&self) -> u64 {
+        pub fn stake_activation_epoch(&self) -> u64 {
             self.stake_activation_epoch
         }
 

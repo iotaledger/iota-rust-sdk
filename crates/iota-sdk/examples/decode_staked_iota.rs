@@ -17,7 +17,7 @@
 //!
 //! - `staked.id()` — the staked object's [`ObjectId`]
 //! - `staked.pool_id()` — the staking pool the stake belongs to
-//! - `staked.activation_epoch()` — the epoch the stake activates at
+//! - `staked.stake_activation_epoch()` — the epoch the stake activates at
 //! - `staked.principal()` — the staked amount in nanos
 //!
 //! [`ObjectId`]: iota_types::ObjectId
@@ -56,7 +56,10 @@ async fn main() -> Result<()> {
 
         println!("- id:               {}", staked.id());
         println!("  pool_id:          {}", staked.pool_id());
-        println!("  activation_epoch: {}", staked.activation_epoch());
+        println!(
+            "  stake_activation_epoch: {}",
+            staked.stake_activation_epoch()
+        );
         println!("  principal (nanos):{}", staked.principal());
         println!();
     }
