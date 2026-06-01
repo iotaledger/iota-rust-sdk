@@ -11,8 +11,9 @@
 //! principal — and you'd be on the hook for keeping that decoder in sync
 //! with every Move-side change.
 //!
-//! With the move-types crate, a single `bcs::from_bytes::<StakedIota>`
-//! gives you typed, named-field access:
+//! With the move-types crate, a single `StakedIota::try_from_object`
+//! validates the on-chain type tag and gives you typed, named-field
+//! access:
 //!
 //! - `staked.id()` — the staked object's [`ObjectId`]
 //! - `staked.pool_id()` — the staking pool the stake belongs to
@@ -50,7 +51,7 @@ async fn main() -> Result<()> {
 
     let mut total_principal: u64 = 0;
     for object in page.data() {
-        let staked: StakedIota = bcs::from_bytes(object.as_struct().contents())?;
+        let staked = StakedIota::try_from_object(object)?;
         total_principal += staked.principal();
 
         println!("- id:               {}", staked.id());

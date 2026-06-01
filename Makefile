@@ -21,7 +21,7 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-move-types
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
