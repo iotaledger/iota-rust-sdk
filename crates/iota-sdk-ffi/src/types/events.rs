@@ -71,11 +71,13 @@ impl From<iota_sdk::types::Event> for Event {
 
 /// An event as returned by the GraphQL `events` query.
 ///
-/// Unlike the core chain [`Event`], events emitted by system transactions
-/// (e.g. `0x3::validator::StakingRequestEvent`) have no sender or emitting
-/// module, so `package_id`, `module`, `sender` and `timestamp` are optional.
-/// This type is a faithful, non-lossy view of the GraphQL response and is not
-/// BCS/JSON-serializable as a chain event.
+/// Unlike the core chain [`Event`], events emitted by the system or at genesis
+/// have a zero (`0x0`) sender and an unresolvable emitting module — the GraphQL
+/// server returns `null` for both (e.g. the genesis validator
+/// `0x3::validator::StakingRequestEvent`s) — so `package_id`, `module`,
+/// `sender` and `timestamp` are optional. This type is a faithful, non-lossy
+/// view of the GraphQL response and is not BCS/JSON-serializable as a chain
+/// event.
 #[derive(uniffi::Record)]
 pub struct GraphQlEvent {
     /// Package id of the top-level function invoked by a MoveCall command which
