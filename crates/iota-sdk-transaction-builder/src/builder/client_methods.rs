@@ -71,7 +71,7 @@ pub trait ClientMethods {
     /// attributes; callers look up the keys they care about.
     ///
     /// The default impl returns an empty [`ProtocolConfig`] so existing
-    /// implementors do not have to grow protocol-config plumbing.
+    /// implementors don't need to add protocol-config plumbing.
     fn protocol_config(
         &self,
     ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
