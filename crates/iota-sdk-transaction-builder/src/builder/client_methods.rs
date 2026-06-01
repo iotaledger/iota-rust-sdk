@@ -15,7 +15,15 @@ use iota_types::{
 
 /// One page of objects plus an optional cursor for the next page. See
 /// [`ClientMethods::objects`].
-pub type ObjectsPage = (Vec<Object>, Option<Vec<u8>>);
+#[derive(Clone, Debug)]
+pub struct ObjectsPage {
+    /// The objects in this page.
+    pub data: Vec<Object>,
+    /// Opaque continuation cursor for fetching the next page; `None` when no
+    /// further pages exist. Pass it back as the `cursor` argument to
+    /// [`ClientMethods::objects`] to advance.
+    pub next_cursor: Option<Vec<u8>>,
+}
 
 /// Transport-neutral view of the chain's protocol configuration: a flat
 /// map of attribute name to value, parsed by callers as needed.
@@ -251,12 +259,12 @@ impl ClientMethods for iota_graphql_client::Client {
             )
             .await?;
         let (page_info, data) = page.into_parts();
-        let next = page_info
+        let next_cursor = page_info
             .has_next_page
             .then_some(page_info.end_cursor)
             .flatten()
             .map(String::into_bytes);
-        Ok((data, next))
+        Ok(ObjectsPage { data, next_cursor })
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {

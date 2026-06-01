@@ -1120,7 +1120,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
             let mut cursor: Option<Vec<u8>> = None;
             loop {
-                let (page, next_cursor) = self
+                let page = self
                     .client
                     .objects(
                         Some(StructTag::new_gas_coin().into()),
@@ -1132,7 +1132,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     )
                     .await
                     .map_err(Error::client)?;
-                for obj in page {
+                for obj in page.data {
                     if unusable_object_ids.contains(&obj.object_id()) {
                         continue;
                     }
@@ -1151,10 +1151,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                         .fold(0u64, u64::saturating_add)
                         >= budget
                 });
-                if covers_budget || next_cursor.is_none() {
+                if covers_budget || page.next_cursor.is_none() {
                     break;
                 }
-                cursor = next_cursor;
+                cursor = page.next_cursor;
             }
 
             // Add all selected coins as gas inputs (without early break): the
