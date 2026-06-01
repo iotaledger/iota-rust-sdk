@@ -402,7 +402,7 @@ grpc: ## Regenerate gRPC protobuf types
 
 .PHONY: update-compiled-packages
 update-compiled-packages: ## Fetch compiled system packages from iota monorepo (BRANCH=develop by default)
-	@bash scripts/update_compiled_packages.sh $(BRANCH)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh $(BRANCH)
 
 .PHONY: help
 help: ## Show this help

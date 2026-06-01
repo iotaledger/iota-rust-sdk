@@ -53,7 +53,6 @@ struct Fixture {
     source: Source,
 }
 
-#[allow(dead_code)]
 enum Source {
     /// Fetch the singleton object at the given address.
     ObjectId(&'static str),
@@ -198,6 +197,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
             .into());
         }
     };
+
+    // Discovery mode: when `IOTA_DISCOVER_TYPE` is set to a fully-qualified
+    // Move type tag, find one live object of that type and print its ID so it
+    // can be pinned in FIXTURES as a `Source::ObjectId`. This is a local,
+    // ad-hoc workflow that writes no fixture file.
+    if let Ok(type_str) = std::env::var("IOTA_DISCOVER_TYPE") {
+        // The process exits right after, so leaking the single string that the
+        // `Source::TypeFilter` borrow needs is harmless.
+        let type_str: &'static str = Box::leak(type_str.into_boxed_str());
+        let bytes = capture(&client, &Source::TypeFilter(type_str)).await?;
+        eprintln!(
+            "  ({} bytes; not written — pin the discovered ID above)",
+            bytes.len()
+        );
+        return Ok(());
+    }
 
     let crate_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let out_dir = crate_root.join("tests").join("fixtures");

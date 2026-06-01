@@ -22,8 +22,10 @@
 //! [`ObjectId`]: iota_types::ObjectId
 
 use eyre::Result;
-use iota_move_types::iota_system::staking_pool::StakedIota;
-use iota_sdk::graphql_client::{Client, query_types::ObjectFilter};
+use iota_sdk::{
+    graphql_client::{Client, query_types::ObjectFilter},
+    move_types::iota_system::staking_pool::StakedIota,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -46,10 +48,10 @@ async fn main() -> Result<()> {
 
     println!("Decoded {} StakedIota object(s):\n", page.data().len());
 
-    let mut total_principal: u128 = 0;
+    let mut total_principal: u64 = 0;
     for object in page.data() {
         let staked: StakedIota = bcs::from_bytes(object.as_struct().contents())?;
-        total_principal += u128::from(staked.principal());
+        total_principal += staked.principal();
 
         println!("- id:               {}", staked.id());
         println!("  pool_id:          {}", staked.pool_id());

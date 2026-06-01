@@ -32,6 +32,7 @@ mod move_shape_compare;
 /// expected type, or whose BCS contents fail to decode.
 #[cfg(feature = "serde")]
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum FromObjectError {
     /// The object is a package, not a Move struct.
     NotAMoveStruct,

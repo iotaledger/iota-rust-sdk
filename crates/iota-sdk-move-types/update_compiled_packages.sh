@@ -22,7 +22,7 @@ set -euo pipefail
 BRANCH="${1:-develop}"
 REPO="iotaledger/iota"
 SRC_BASE="crates/iota-framework"
-TARGET_DIR="$(cd "$(dirname "$0")/.." && pwd)/crates/iota-sdk-move-types/src/packages_compiled"
+TARGET_DIR="$(cd "$(dirname "$0")" && pwd)/src/packages_compiled"
 
 # Each entry: <source-path-under-$SRC_BASE>:<dest-filename-under-$TARGET_DIR>
 ARTIFACTS=(
