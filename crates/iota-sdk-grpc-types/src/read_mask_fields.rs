@@ -44,7 +44,7 @@ macro_rules! define_field_paths {
         }
     ) => {
         $(#[$attr])*
-        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+        #[derive(Clone, Debug, Eq, Hash, PartialEq)]
         pub struct $name(Cow<'static, str>);
 
         impl $name {
@@ -97,7 +97,7 @@ macro_rules! define_scoped_read_mask {
         pub struct $mask:ident from $field:ident;
     ) => {
         $(#[$attr])*
-        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+        #[derive(Clone, Debug, Eq, Hash, PartialEq)]
         pub struct $mask(Cow<'static, str>);
 
         impl $mask {
