@@ -264,7 +264,7 @@ mod version_assignments {
 
     #[derive(serde::Serialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
+    enum ConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
@@ -272,19 +272,7 @@ mod version_assignments {
     /// ConsensusDeterminedVersionAssignments.
     #[derive(serde::Deserialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions(Vec<CancelledTransaction>),
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions(&'a Vec<CancelledTransaction>),
-    }
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum BinaryConsensusDeterminedVersionAssignments {
+    enum ConsensusDeterminedVersionAssignmentsOwned {
         CancelledTransactions(Vec<CancelledTransaction>),
     }
 
@@ -293,25 +281,14 @@ mod version_assignments {
         where
             S: Serializer,
         {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
-                        cancelled_transactions,
-                    ),
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
-                        cancelled_transactions,
-                    ),
-                };
-                binary.serialize(serializer)
+            match self {
+                Self::CancelledTransactions {
+                    cancelled_transactions,
+                } => ConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
+                    cancelled_transactions,
+                ),
             }
+            .serialize(serializer)
         }
     }
 
@@ -320,27 +297,15 @@ mod version_assignments {
         where
             D: Deserializer<'de>,
         {
-            if deserializer.is_human_readable() {
-                ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions(
-                            cancelled_transactions,
-                        ) => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
+            ConsensusDeterminedVersionAssignmentsOwned::deserialize(deserializer).map(|owned| {
+                match owned {
+                    ConsensusDeterminedVersionAssignmentsOwned::CancelledTransactions(
+                        cancelled_transactions,
+                    ) => Self::CancelledTransactions {
+                        cancelled_transactions,
                     },
-                )
-            } else {
-                BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions(
-                            cancelled_transactions,
-                        ) => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
-                    },
-                )
-            }
+                }
+            })
         }
     }
 

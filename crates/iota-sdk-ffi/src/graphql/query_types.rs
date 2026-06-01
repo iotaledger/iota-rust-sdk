@@ -113,7 +113,7 @@ pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub before_checkpoint: Option<u64>,
     #[uniffi(default = None)]
-    pub sign_address: Option<Arc<Address>>,
+    pub sent_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
     pub recv_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
@@ -134,7 +134,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(Into::into).map(Arc::new),
+            sent_address: value.sent_address.map(Into::into).map(Arc::new),
             recv_address: value.recv_address.map(Into::into).map(Arc::new),
             input_object: value.input_object.map(Into::into).map(Arc::new),
             changed_object: value.changed_object.map(Into::into).map(Arc::new),
@@ -155,7 +155,7 @@ impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(|v| **v),
+            sent_address: value.sent_address.map(|v| **v),
             recv_address: value.recv_address.map(|v| **v),
             input_object: value.input_object.map(|v| **v),
             changed_object: value.changed_object.map(|v| **v),
