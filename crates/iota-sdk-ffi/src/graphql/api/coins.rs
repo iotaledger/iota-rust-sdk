@@ -10,7 +10,7 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, pagination::CoinPage, query_types::CoinMetadata},
-    types::{address::Address, struct_tag::StructTag},
+    types::{address::Address, move_core::StructTag},
 };
 
 #[uniffi::export(async_runtime = "tokio")]

@@ -17,9 +17,9 @@ use iota_sdk::graphql_client::{
 
 use crate::types::{
     address::Address,
+    move_core::TypeTag,
     object::ObjectId,
     transaction::{SignedTransaction, TransactionEffects},
-    type_tag::TypeTag,
 };
 
 uniffi::custom_type!(Base64, String, {
@@ -113,7 +113,7 @@ pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub before_checkpoint: Option<u64>,
     #[uniffi(default = None)]
-    pub sign_address: Option<Arc<Address>>,
+    pub sent_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
     pub recv_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
@@ -134,7 +134,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(Into::into).map(Arc::new),
+            sent_address: value.sent_address.map(Into::into).map(Arc::new),
             recv_address: value.recv_address.map(Into::into).map(Arc::new),
             input_object: value.input_object.map(Into::into).map(Arc::new),
             changed_object: value.changed_object.map(Into::into).map(Arc::new),
@@ -155,7 +155,7 @@ impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(|v| **v),
+            sent_address: value.sent_address.map(|v| **v),
             recv_address: value.recv_address.map(|v| **v),
             input_object: value.input_object.map(|v| **v),
             changed_object: value.changed_object.map(|v| **v),
@@ -226,12 +226,13 @@ pub struct Epoch {
     /// a transaction for.
     #[uniffi(default = None)]
     pub reference_gas_price: Option<String>,
-    /// The epoch's starting timestamp.
-    pub start_timestamp: u64,
+    /// The epoch's starting timestamp. RFC3339 in UTC with format:
+    /// YYYY-MM-DDTHH:MM:SS.mmmZ
+    pub start_timestamp: String,
     /// The epoch's ending timestamp. Note that this is available only on epochs
-    /// that have ended.
+    /// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     #[uniffi(default = None)]
-    pub end_timestamp: Option<u64>,
+    pub end_timestamp: Option<String>,
     /// The value of the `version` field of `0x5`, the
     /// `0x3::iota::IotaSystemState` object.  This version changes whenever
     /// the fields contained in the system state object (held in a dynamic
@@ -269,8 +270,8 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
             net_inflow: value.net_inflow.map(|v| v.0),
             protocol_configs: value.protocol_configs,
             reference_gas_price: value.reference_gas_price.map(|v| v.0),
-            start_timestamp: value.start_timestamp.0.parse().unwrap_or(0),
-            end_timestamp: value.end_timestamp.map(|dt| dt.0.parse().unwrap_or(0)),
+            start_timestamp: value.start_timestamp.0,
+            end_timestamp: value.end_timestamp.map(|dt| dt.0),
             system_state_version: value.system_state_version,
             total_checkpoints: value.total_checkpoints,
             total_gas_fees: value.total_gas_fees.map(|v| v.0),
@@ -306,12 +307,10 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
             net_inflow: value.net_inflow.map(|v| v.into()),
             protocol_configs: value.protocol_configs,
             reference_gas_price: value.reference_gas_price.map(|v| v.into()),
-            start_timestamp: iota_sdk::graphql_client::query_types::DateTime(
-                value.start_timestamp.to_string(),
-            ),
+            start_timestamp: iota_sdk::graphql_client::query_types::DateTime(value.start_timestamp),
             end_timestamp: value
                 .end_timestamp
-                .map(|ts| iota_sdk::graphql_client::query_types::DateTime(ts.to_string())),
+                .map(iota_sdk::graphql_client::query_types::DateTime),
             system_state_version: value.system_state_version,
             total_checkpoints: value.total_checkpoints,
             total_gas_fees: value.total_gas_fees.map(|v| v.into()),
@@ -750,7 +749,6 @@ pub enum TransactionBlockKindInput {
     ProgrammableTx,
     Genesis,
     ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
 }
@@ -938,7 +936,7 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
     }
 }
 
-#[derive(Debug, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Display)]
 pub struct MoveFunction(iota_sdk::graphql_client::query_types::MoveFunction);
 
@@ -1268,7 +1266,7 @@ pub struct ServiceConfig {
     /// layout of a single Move Type.
     pub max_type_nodes: i32,
     /// Maximum time in milliseconds spent waiting for a response from fullnode
-    /// after issuing a a transaction to execute. Note that the transaction
+    /// after issuing a transaction to execute. Note that the transaction
     /// may still succeed even in the case of a timeout. Transactions are
     /// idempotent, so a transaction that times out should be resubmitted
     /// until the network returns a definite response (success or failure, not

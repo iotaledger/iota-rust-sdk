@@ -11,7 +11,11 @@ description = "Transaction API for the IOTA Blockchain Rust SDK"
 default = []
 test-client = []
 
+[lints]
+workspace = true
+
 [dependencies]
+# external dependencies
 base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
@@ -22,6 +26,7 @@ serde_json.workspace = true
 thiserror.workspace = true
 variadics_please.workspace = true
 
+# internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
@@ -32,10 +37,12 @@ tokio = { workspace = true, features = ["macros", "rt"] }
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
+# external dependencies
 eyre.workspace = true
 rand.workspace = true
 serde_json.workspace = true
 
+# internal dependencies
 iota-types = { workspace = true, features = ["rand"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]

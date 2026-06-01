@@ -31,7 +31,7 @@
 //! # async fn main() -> eyre::Result<()> {
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
@@ -39,7 +39,7 @@
 //! let mut builder = TransactionBuilder::new(sender).with_client(client);
 //!
 //! let coin =
-//!     ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+//!     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
 //!
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
@@ -53,10 +53,10 @@
 //! ```
 //! # use std::str::FromStr;
 //! use iota_sdk_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
@@ -64,17 +64,17 @@
 //!
 //! let coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+//!         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
 //!     )?,
-//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-//!     version: 435090179,
+//!     digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+//!     version: Version::from_u64(545110774),
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+//!         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
 //!     )?,
 //!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-//!     version: 473053810,
+//!     version: Version::from_u64(473053810),
 //! };
 //!
 //! builder
@@ -299,7 +299,7 @@ pub use self::{
 
 #[cfg(test)]
 mod tests {
-    use iota_types::{Address, ObjectReference};
+    use iota_types::{Address, ObjectReference, Transaction, Version};
 
     use crate::TransactionBuilder;
 
@@ -312,7 +312,7 @@ mod tests {
         );
         let coin_obj_id = "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4";
         let coin_digest = "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9";
-        let coin_version = 2;
+        let coin_version = Version::from_u64(2);
         let coin = ObjectReference::new(
             coin_obj_id.parse().unwrap(),
             coin_version,
@@ -329,7 +329,7 @@ mod tests {
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
                 .unwrap(),
-            2,
+            Version::from_u64(2),
             "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
                 .parse()
                 .unwrap(),
@@ -337,5 +337,72 @@ mod tests {
         tx.gas_price(1000);
 
         tx.finish().unwrap();
+    }
+
+    #[test]
+    fn test_transaction_to_builder_roundtrip() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+            .parse()
+            .unwrap();
+        let recipient = Address::generate(rand::thread_rng());
+        let coin = ObjectReference::new(
+            "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                .parse()
+                .unwrap(),
+            Version::from_u64(2),
+            "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9"
+                .parse()
+                .unwrap(),
+        );
+        let gas_coin = ObjectReference::new(
+            "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
+                .parse()
+                .unwrap(),
+            Version::from_u64(2),
+            "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
+                .parse()
+                .unwrap(),
+        );
+
+        // Build a transaction with multiple commands and a sponsor to exercise
+        // inputs, gas, and the various builder fields.
+        let mut tx = TransactionBuilder::new(sender);
+        tx.transfer_objects(recipient, vec![coin]);
+        tx.split_coins(crate::unresolved::Argument::Gas, [42u64]);
+        tx.gas([gas_coin]);
+        tx.gas_price(1000);
+        tx.gas_budget(5_000_000);
+        tx.sponsor(sponsor);
+        tx.expiration(123);
+
+        let original = tx.finish().unwrap();
+
+        let rebuilt: TransactionBuilder = TransactionBuilder::try_from(original.clone()).unwrap();
+        let roundtrip = rebuilt.finish().unwrap();
+
+        assert_eq!(original, roundtrip);
+    }
+
+    #[test]
+    fn test_transaction_to_builder_rejects_non_ptb() {
+        // A non-programmable Transaction kind should not be accepted.
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
+            sender: Address::generate(rand::thread_rng()),
+            gas_payment: iota_types::GasPayment {
+                objects: vec![],
+                owner: Address::generate(rand::thread_rng()),
+                price: 0,
+                budget: 0,
+            },
+            expiration: Default::default(),
+        });
+        assert!(matches!(
+            TransactionBuilder::try_from(txn),
+            Err(crate::error::Error::UnsupportedTransactionKind)
+        ));
     }
 }

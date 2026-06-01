@@ -115,7 +115,7 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     }
 }
 
-#[derive(cynic::Enum, Debug, Clone, Copy)]
+#[derive(Clone, Copy, cynic::Enum, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "NameFormat",

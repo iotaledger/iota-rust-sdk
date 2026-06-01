@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -64,9 +63,6 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     var effects = builder.execute(signer, WaitForTx.FINALIZED)
 
     println("Publishing package: ${effects.asV1().status}\n")
-
-    // Wait some time for the indexer to process the tx
-    delay(3000)
 
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId? = null
@@ -135,38 +131,5 @@ const val PRECOMPILED_AA_PACKAGE =
 const val PACKAGE =
     """
 module account::account;
-
-use iota::package_metadata::PackageMetadataV1;
-use iota::account;
-use iota::authenticator_function;
-
-public struct Account has key, store {
-    id: UID,
-}
-
-public struct ACCOUNT has drop {}
-
-fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
-    // Shares the account object, anyone can claim it by calling the link_auth function
-    transfer::public_share_object(Account {
-        id: object::new(ctx),
-    });
-}
-
-public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
-    let authenticator = authenticator_function::create_auth_function_ref_v1<Account>(package, module_name, function_name);
-    account::create_account_v1<Account>(account, authenticator);
-}
-
-/// An unsecure example authenticator function that checks if the provided message is "hello".
-#[authenticator]
-public fun authenticate(
-    _account: &Account,
-    msg: std::ascii::String,
-    _clock: &iota::clock::Clock,
-    _auth_ctx: &iota::auth_context::AuthContext,
-    _ctx: &TxContext,
-) {
-    assert!(msg == std::ascii::string(b"hello"), 0);
-}
+...
 """

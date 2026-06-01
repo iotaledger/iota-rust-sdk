@@ -6,7 +6,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
@@ -27,7 +26,7 @@ func main() {
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(fromAddress, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 
@@ -42,14 +41,14 @@ func main() {
 		},
 		[]*iota_sdk.TypeTag{},
 	).Finish(client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to finish move authenticator: %v", err)
 	}
 
 	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to execute transaction: %v", err)
 	}
 
@@ -70,7 +69,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(sender, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to request coins from faucet: %w", err)
 	}
 
@@ -85,14 +84,11 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 
 	fmt.Printf("Publishing package: %v\n\n", (*effects).AsV1().Status)
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Get package, package metadata and account IDs from the effects
 	var packageId *iota_sdk.ObjectId
@@ -105,7 +101,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 		} else if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
-			if err.(*iota_sdk.SdkFfiError) != nil {
+			if err != nil {
 				return nil, fmt.Errorf("failed to get object: %w", err)
 			}
 
@@ -159,7 +155,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 	// Sign and execute the transaction (link the authenticator)
 	effects, err = builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 
@@ -174,38 +170,5 @@ const PRECOMPILED_PACKAGE = `{"modules":["oRzrCwYAAAALAQAUAhQmAzorBGUGBWtPB7oBwA
 //nolint:unused
 const PACKAGE = `
 module account::account;
-
-use iota::package_metadata::PackageMetadataV1;
-use iota::account;
-use iota::authenticator_function;
-
-public struct Account has key, store {
-    id: UID,
-}
-
-public struct ACCOUNT has drop {}
-
-fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
-    // Shares the account object, anyone can claim it by calling the link_auth function
-    transfer::public_share_object(Account {
-        id: object::new(ctx),
-    });
-}
-
-public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
-    let authenticator = authenticator_function::create_auth_function_ref_v1<Account>(package, module_name, function_name);
-    account::create_account_v1<Account>(account, authenticator);
-}
-
-/// An unsecure example authenticator function that checks if the provided message is "hello".
-#[authenticator]
-public fun authenticate(
-    _account: &Account,
-    msg: std::ascii::String,
-    _clock: &iota::clock::Clock,
-    _auth_ctx: &iota::auth_context::AuthContext,
-    _ctx: &TxContext,
-) {
-    assert!(msg == std::ascii::string(b"hello"), 0);
-}
+...
 `

@@ -5,12 +5,12 @@
 
 use std::collections::HashMap;
 
-use iota_types::{Identifier, ObjectId, ObjectReference, TypeTag};
+use iota_types::{Identifier, ObjectId, ObjectReference, SharedObjectReference, TypeTag};
 
 /// An identifier indicating the unresolved index of an input.
 pub type InputId = usize;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Input {
     pub kind: InputKind,
     pub is_gas: bool,
@@ -23,9 +23,9 @@ impl Input {
             | InputKind::Shared { object_id, .. }
             | InputKind::Receiving(object_id) => Some(object_id),
             InputKind::Input(input) => match input {
-                iota_types::Input::Pure { .. } => None,
+                iota_types::Input::Pure(..) => None,
                 iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-                | iota_types::Input::Shared { object_id, .. }
+                | iota_types::Input::Shared(SharedObjectReference { object_id, .. })
                 | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
                     Some(object_id)
                 }
@@ -35,7 +35,7 @@ impl Input {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum InputKind {
     ImmutableOrOwned(ObjectId),
@@ -52,7 +52,7 @@ impl InputKind {
         | Self::Input(
             iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
             | iota_types::Input::Receiving(ObjectReference { object_id, .. })
-            | iota_types::Input::Shared { object_id, .. },
+            | iota_types::Input::Shared(SharedObjectReference { object_id, .. }),
         ) = self
         {
             Some(*object_id)
@@ -62,7 +62,7 @@ impl InputKind {
     }
 }
 
-#[derive(Debug, Clone, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From)]
 #[non_exhaustive]
 pub enum Command {
     MoveCall(MoveCall),
@@ -98,7 +98,48 @@ impl Command {
     }
 }
 
-#[derive(Debug, Clone)]
+impl From<iota_types::Command> for Command {
+    fn from(cmd: iota_types::Command) -> Self {
+        match cmd {
+            iota_types::Command::MoveCall(c) => Self::MoveCall(MoveCall {
+                package: c.package,
+                module: c.module,
+                function: c.function,
+                type_arguments: c.type_arguments,
+                arguments: c.arguments.into_iter().map(Into::into).collect(),
+            }),
+            iota_types::Command::TransferObjects(c) => Self::TransferObjects(TransferObjects {
+                objects: c.objects.into_iter().map(Into::into).collect(),
+                address: c.address.into(),
+            }),
+            iota_types::Command::SplitCoins(c) => Self::SplitCoins(SplitCoins {
+                coin: c.coin.into(),
+                amounts: c.amounts.into_iter().map(Into::into).collect(),
+            }),
+            iota_types::Command::MergeCoins(c) => Self::MergeCoins(MergeCoins {
+                coin: c.coin.into(),
+                coins_to_merge: c.coins_to_merge.into_iter().map(Into::into).collect(),
+            }),
+            iota_types::Command::Publish(c) => Self::Publish(Publish {
+                modules: c.modules,
+                dependencies: c.dependencies,
+            }),
+            iota_types::Command::MakeMoveVector(c) => Self::MakeMoveVector(MakeMoveVector {
+                type_: c.type_,
+                elements: c.elements.into_iter().map(Into::into).collect(),
+            }),
+            iota_types::Command::Upgrade(c) => Self::Upgrade(Upgrade {
+                modules: c.modules,
+                dependencies: c.dependencies,
+                package: c.package,
+                ticket: c.ticket.into(),
+            }),
+            _ => unimplemented!("a new Command enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct MoveCall {
     pub package: ObjectId,
     pub module: Identifier,
@@ -123,7 +164,7 @@ impl MoveCall {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Upgrade {
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
@@ -142,7 +183,7 @@ impl Upgrade {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MakeMoveVector {
     pub type_: Option<TypeTag>,
     pub elements: Vec<Argument>,
@@ -161,7 +202,7 @@ impl MakeMoveVector {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct TransferObjects {
     pub objects: Vec<Argument>,
     pub address: Argument,
@@ -180,7 +221,7 @@ impl TransferObjects {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct SplitCoins {
     pub coin: Argument,
     pub amounts: Vec<Argument>,
@@ -199,7 +240,7 @@ impl SplitCoins {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MergeCoins {
     pub coin: Argument,
     pub coins_to_merge: Vec<Argument>,
@@ -218,7 +259,7 @@ impl MergeCoins {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Publish {
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
@@ -233,7 +274,7 @@ impl Publish {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub enum Argument {
     Gas,
@@ -252,6 +293,18 @@ impl Argument {
                 .unwrap_or(iota_types::Argument::Gas),
             Argument::Result(i) => iota_types::Argument::Result(i),
             Argument::NestedResult(i1, i2) => iota_types::Argument::NestedResult(i1, i2),
+        }
+    }
+}
+
+impl From<iota_types::Argument> for Argument {
+    fn from(arg: iota_types::Argument) -> Self {
+        match arg {
+            iota_types::Argument::Gas => Self::Gas,
+            iota_types::Argument::Input(i) => Self::Input(i as InputId),
+            iota_types::Argument::Result(i) => Self::Result(i),
+            iota_types::Argument::NestedResult(i1, i2) => Self::NestedResult(i1, i2),
+            _ => unimplemented!("a new Argument enum variant was added and needs to be handled"),
         }
     }
 }

@@ -52,7 +52,7 @@ impl From<ValidatorCommittee> for iota_sdk::types::ValidatorCommittee {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-committee-member = bls-public-key
+/// validator-committee-member = bls12381-public-key
 ///                              u64 ; stake
 /// ```
 #[derive(Clone, uniffi::Record)]
@@ -86,11 +86,11 @@ impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMembe
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-signature = u64               ; epoch
-///                       bls-public-key
-///                       bls-signature
+/// validator-signature = u64                  ; epoch
+///                       bls12381-public-key
+///                       bls12381-signature
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
 
@@ -129,12 +129,11 @@ impl ValidatorSignature {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-aggregated-signature = u64               ; epoch
-///                                  bls-signature
-///                                  roaring-bitmap
-/// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-///                         ; according to the serialized spec for
-///                         ; roaring bitmaps
+/// validator-aggregated-signature = u64                  ; epoch
+///                                  bls12381-signature   ; signature
+///                                  bytes                ; bitmap — contents of the bytes are
+///                                                       ; valid according to the serialized
+///                                                       ; spec for roaring bitmaps
 /// ```
 ///
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the

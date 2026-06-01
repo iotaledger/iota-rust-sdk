@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	queryStr := `
 		query getLatestIotaSystemState {
@@ -143,7 +143,7 @@ func main() {
 		Query: queryStr,
 	}
 	res, err := client.RunQuery(query)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to run query: %v", err)
 	}
 	fmt.Println(res)

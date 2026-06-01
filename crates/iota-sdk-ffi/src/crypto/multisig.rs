@@ -1,12 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{borrow::Cow, sync::Arc};
+use std::borrow::Cow;
 
 use iota_sdk::crypto::Verifier;
 
 use crate::{
-    crypto::zklogin::ZkloginVerifier,
     error::Result,
     types::{
         crypto::multisig::{MultisigAggregatedSignature, MultisigCommittee},
@@ -26,20 +25,6 @@ impl MultisigVerifier {
         Self(iota_sdk::crypto::multisig::MultisigVerifier::new())
     }
 
-    pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
-        let mut verifier = self.0.clone();
-        verifier.with_zklogin_verifier(zklogin_verifier.0.clone());
-        Self(verifier)
-    }
-
-    pub fn zklogin_verifier(&self) -> Option<Arc<ZkloginVerifier>> {
-        self.0
-            .zklogin_verifier()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
     pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
         Ok(self.0.verify(message, &signature.0)?)
     }
@@ -55,20 +40,6 @@ impl UserSignatureVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
         Self(iota_sdk::crypto::multisig::UserSignatureVerifier::new())
-    }
-
-    pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
-        let mut verifier = self.0.clone();
-        verifier.with_zklogin_verifier(zklogin_verifier.0.clone());
-        Self(verifier)
-    }
-
-    pub fn zklogin_verifier(&self) -> Option<Arc<ZkloginVerifier>> {
-        self.0
-            .zklogin_verifier()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
     }
 
     pub fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<()> {

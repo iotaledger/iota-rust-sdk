@@ -20,7 +20,7 @@ impl FaucetClient {
     /// endpoint, just the top level service endpoint.
     ///
     /// - /v1/gas is used to request gas
-    /// - /v1/status/taks-uuid is used to check the status of the request
+    /// - /v1/status/task-uuid is used to check the status of the request
     #[uniffi::constructor]
     pub fn new(faucet_url: String) -> Self {
         Self(iota_sdk::graphql_client::faucet::FaucetClient::new(

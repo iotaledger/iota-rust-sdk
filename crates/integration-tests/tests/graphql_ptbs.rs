@@ -84,14 +84,19 @@ async fn wait_for_tx(client: &Client, digest: Digest) {
     }
 }
 
-/// Wait for the transaction to be finalized and indexed, and check the
-/// effects' to ensure the transaction was successfully executed.
-async fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
+/// Check the effects to ensure the transaction was successfully executed.
+fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
     assert!(effects.is_ok(), "Execution failed. Effects: {effects:?}");
+
     // check that it succeeded
-    let status = effects.unwrap();
-    let expected_status = ExecutionStatus::Success;
-    assert_eq!(&expected_status, status.status());
+    match effects.unwrap() {
+        TransactionEffects::V1(v1) => {
+            assert_eq!(ExecutionStatus::Success, v1.status);
+        }
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    };
 }
 
 #[tokio::test]
@@ -105,7 +110,7 @@ async fn test_transfer_obj_execution() {
     tx.transfer_objects(recipient, [coin]);
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-    check_effects_status_success(effects).await;
+    check_effects_status_success(effects);
 
     // check that recipient has 1 coin
     let recipient_coins = client
@@ -125,8 +130,8 @@ async fn test_move_call() {
         .generics::<u64>()
         .arguments([Some(1u64)]);
 
-    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
-    check_effects_status_success(effects).await;
+    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    check_effects_status_success(effects);
 }
 
 #[tokio::test]
@@ -141,7 +146,7 @@ async fn test_split_transfer() {
     tx.transfer_objects(recipient, [assigned("coin")]);
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-    check_effects_status_success(effects).await;
+    check_effects_status_success(effects);
 
     // check that recipient has 1 coin
     let recipient_coins = client
@@ -160,11 +165,15 @@ async fn test_split_without_transfer_should_fail() {
     // transfer 1 IOTA
     tx.split_coins(coin, [1_000_000_000u64]);
 
-    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await.unwrap();
-
-    let expected_status = ExecutionStatus::Success;
-    // The tx failed, so we expect Failure instead of Success
-    assert_ne!(&expected_status, effects.status());
+    match tx.execute(&pk, WaitForTx::Finalized).await.unwrap() {
+        TransactionEffects::V1(v1) => {
+            // The tx failed, so we expect Failure instead of Success
+            assert_ne!(ExecutionStatus::Success, v1.status);
+        }
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    };
 }
 
 #[tokio::test]
@@ -183,7 +192,7 @@ async fn test_merge_coins() {
     let client = tx.get_client().clone();
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
-    check_effects_status_success(effects).await;
+    check_effects_status_success(effects);
 
     // check that there are two coins
     let coins_after = client
@@ -199,28 +208,28 @@ async fn test_make_move_vec() {
 
     tx.make_move_vec([1u64]);
 
-    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
-    check_effects_status_success(effects).await;
+    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    check_effects_status_success(effects);
 }
 
 #[tokio::test]
 async fn test_publish() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
-    let package = move_package_data("../package_test_example_v1.json");
+    let package = move_package_data("package_test_example_v1.json");
     tx.publish(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
-    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
-    check_effects_status_success(effects).await;
+    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    check_effects_status_success(effects);
 }
 
 #[tokio::test]
 async fn test_upgrade() {
     let (mut tx, address, pk, coins) = helper_setup().await;
 
-    let package = move_package_data("../package_test_example_v2.json");
+    let package = move_package_data("package_test_example_v2.json");
     tx.publish(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
@@ -249,7 +258,7 @@ async fn test_upgrade() {
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
-    check_effects_status_success(effects).await;
+    check_effects_status_success(effects);
 
     let client = Client::new_localnet();
     let mut tx = TransactionBuilder::new(address).with_client(&client);
@@ -265,7 +274,7 @@ async fn test_upgrade() {
         };
     }
 
-    let updated_package = move_package_data("../package_test_example_v2.json");
+    let updated_package = move_package_data("package_test_example_v2.json");
 
     // we need this ticket to authorize the upgrade
     tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
@@ -286,6 +295,6 @@ async fn test_upgrade() {
 
     tx.gas([coins.last().unwrap().id]);
 
-    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
-    check_effects_status_success(effects).await;
+    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    check_effects_status_success(effects);
 }

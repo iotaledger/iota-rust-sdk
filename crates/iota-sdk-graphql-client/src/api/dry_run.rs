@@ -11,7 +11,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 use crate::{
     Client, DryRunEffect, DryRunResult,
     error::Result,
-    query_types::{DryRunArgs, DryRunQuery, TransactionMetadata},
+    query_types::{DryRunArgs, DryRunQuery, ObjectRef, TransactionMetadata},
 };
 
 impl Client {
@@ -23,8 +23,31 @@ impl Client {
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks.
     pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
-        self.dry_run(tx_bytes, skip_checks, None).await
+        let Transaction::V1(v1) = tx else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let gas_objects = v1
+            .gas_payment
+            .objects
+            .iter()
+            .map(|r| ObjectRef {
+                address: *r.object_id(),
+                version: r.version().as_u64(),
+                digest: r.digest().to_base58(),
+            })
+            .collect::<Vec<_>>();
+        self.dry_run_tx_kind(
+            &v1.kind,
+            skip_checks,
+            TransactionMetadata {
+                gas_budget: (v1.gas_payment.budget > 0).then_some(v1.gas_payment.budget),
+                gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
+                gas_price: Some(v1.gas_payment.price),
+                gas_sponsor: Some(v1.gas_payment.owner),
+                sender: Some(v1.sender),
+            },
+        )
+        .await
     }
 
     /// Dry run a [`TransactionKind`] and return the transaction effects and dry

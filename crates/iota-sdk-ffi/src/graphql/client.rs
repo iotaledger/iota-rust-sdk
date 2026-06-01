@@ -20,7 +20,7 @@ impl GraphQLClient {
     }
 }
 
-#[derive(Debug, uniffi::Record, serde::Serialize)]
+#[derive(Debug, serde::Serialize, uniffi::Record)]
 pub struct Query {
     pub query: String,
     #[uniffi(default = None)]
@@ -71,7 +71,7 @@ impl GraphQLClient {
         Ok(self.0.read().await.max_page_size().await?)
     }
 
-    /// Set the server address for the GraphQL GraphQL client. It should be a
+    /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
     pub async fn set_rpc_server(&self, server: String) -> Result<()> {
         Ok(self.0.write().await.set_rpc_server(&server)?)

@@ -9,7 +9,7 @@ use iota_types::{Digest, ObjectId};
 
 use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
 
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
 pub enum Error {
@@ -47,6 +47,8 @@ pub enum Error {
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
     UnsupportedLiteral,
+    #[error("only programmable transactions can be converted into a TransactionBuilder")]
+    UnsupportedTransactionKind,
     #[error("Invalid account for move authenticator: {0}")]
     InvalidMoveAuthAccount(String),
     #[error("Invalid argument for move authenticator: {0}")]

@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of ed25519 public-key cryptogrophy.
+//! Implementation of ed25519 public-key cryptography.
 
 use crate::crypto::{PublicKeyExt, SignatureScheme};
 
@@ -13,18 +13,16 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// ed25519-public-key = 32OCTECT
+/// ed25519-public-key = 32OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519PublicKey(
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array32>>")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 
@@ -66,7 +64,7 @@ impl PublicKeyExt for Ed25519PublicKey {
     }
 
     /// Tries to create an Ed25519PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
@@ -129,11 +127,10 @@ impl std::fmt::Debug for Ed25519PublicKey {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// ed25519-signature = 64OCTECT
+/// ed25519-signature = 64OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519Signature(
     #[cfg_attr(
@@ -142,7 +139,6 @@ pub struct Ed25519Signature(
             with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array64, [::serde_with::Same; 64]>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 
@@ -178,7 +174,7 @@ impl Ed25519Signature {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }

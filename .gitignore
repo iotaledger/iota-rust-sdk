@@ -1,6 +1,7 @@
 target/
 *.lock
 .idea
+.DS_Store
 *.dylib
 *.so
 *.dll

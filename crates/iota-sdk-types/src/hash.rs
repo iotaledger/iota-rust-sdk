@@ -155,66 +155,6 @@ impl crate::Secp256r1PublicKey {
     }
 }
 
-impl crate::ZkLoginPublicIdentifier {
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the full 32 byte `address_seed` value, all prefixed with the zklogin
-    /// `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
-    pub fn derive_address_padded(&self) -> Address {
-        let mut hasher = Hasher::new();
-        self.write_into_hasher_padded(&mut hasher);
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
-    }
-
-    fn write_into_hasher_padded(&self, hasher: &mut Hasher) {
-        hasher.update([self.scheme().to_u8()]);
-        hasher.update([self.iss().len() as u8]); // TODO enforce iss is less than 255 bytes
-        hasher.update(self.iss());
-        hasher.update(self.address_seed().padded());
-    }
-
-    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
-    /// byte length of the `iss` followed by the `iss` bytes themselves and
-    /// the `address_seed` bytes with any leading zero-bytes stripped, all
-    /// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
-    ///
-    /// `hash( 0x05 || iss_bytes_len || iss_bytes ||
-    /// unpadded_32_byte_address_seed )`
-    pub fn derive_address_unpadded(&self) -> Address {
-        let mut hasher = Hasher::new();
-        hasher.update([self.scheme().to_u8()]);
-        hasher.update([self.iss().len() as u8]); // TODO enforce iss is less than 255 bytes
-        hasher.update(self.iss());
-        hasher.update(self.address_seed().unpadded());
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
-    }
-
-    /// Provides an iterator over the addresses that correspond to this zklogin
-    /// authenticator.
-    ///
-    /// In the majority of instances this will only yield a single address,
-    /// except for the instances where the `address_seed` value has a
-    /// leading zero-byte, in such cases the returned iterator will yield
-    /// two addresses.
-    pub fn derive_address(&self) -> impl Iterator<Item = Address> {
-        let main_address = self.derive_address_padded();
-        let mut addresses = [Some(main_address), None];
-        // If address_seed starts with a zero byte then we know that this zklogin
-        // authenticator has two addresses
-        if self.address_seed().padded()[0] == 0 {
-            let secondary_address = self.derive_address_unpadded();
-
-            addresses[1] = Some(secondary_address);
-        }
-
-        addresses.into_iter().flatten()
-    }
-}
-
 impl crate::PasskeyPublicKey {
     /// Derive an `Address` from this Passkey Public Key
     ///
@@ -246,14 +186,6 @@ impl crate::MultisigCommittee {
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
-    ///
-    /// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
-    /// refers to the same input used when deriving the address using the
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
-    /// full 32-byte `address_seed` value).
-    ///
-    /// [`ZkLoginPublicIdentifier`]: crate::ZkLoginPublicIdentifier
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::ZkLoginPublicIdentifier::derive_address_padded
     pub fn derive_address(&self) -> Address {
         use crate::MultisigMemberPublicKey::*;
 
@@ -266,7 +198,10 @@ impl crate::MultisigCommittee {
                 Ed25519(p) => p.write_into_hasher(&mut hasher),
                 Secp256k1(p) => p.write_into_hasher(&mut hasher),
                 Secp256r1(p) => p.write_into_hasher(&mut hasher),
-                ZkLogin(p) => p.write_into_hasher_padded(&mut hasher),
+                ZkLoginDeprecated => {
+                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
+                }
+                Passkey(p) => p.write_into_hasher(&mut hasher),
             }
 
             hasher.update(member.weight().to_le_bytes());
@@ -464,7 +399,7 @@ mod signing_message {
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
 /// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
-#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 enum HashingIntent {
@@ -510,7 +445,7 @@ impl crate::ObjectId {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "proptest"))]
 mod tests {
     use test_strategy::proptest;
 

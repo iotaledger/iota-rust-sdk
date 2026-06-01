@@ -5,9 +5,10 @@ use std::sync::Arc;
 
 use crate::types::{
     address::Address,
+    move_core::TypeTag,
     object::{ObjectId, ObjectReference},
     transaction::Input,
-    type_tag::TypeTag,
+    version::Version,
 };
 
 /// MoveAuthenticator is a signature variant that enables a method of
@@ -19,6 +20,26 @@ pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 
 #[uniffi::export]
 impl MoveAuthenticator {
+    #[uniffi::constructor]
+    pub fn new_v1(move_authenticator_v1: &MoveAuthenticatorV1) -> Self {
+        Self(iota_sdk::types::MoveAuthenticator::V1(
+            move_authenticator_v1.0.clone(),
+        ))
+    }
+
+    /// Convert this move authenticator into a version 1 move authenticator if
+    /// it is one, or panic otherwise
+    pub fn as_v1(&self) -> Arc<MoveAuthenticatorV1> {
+        Arc::new(MoveAuthenticatorV1(self.0.as_v1().clone()))
+    }
+}
+
+/// Version 1 of the [`MoveAuthenticator`].
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
+
+#[uniffi::export]
+impl MoveAuthenticatorV1 {
     /// Create a new move authenticator from an immutable object.
     #[uniffi::constructor]
     pub fn new_immutable(
@@ -26,7 +47,7 @@ impl MoveAuthenticator {
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: ObjectReference,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_immutable(
+        Self(iota_sdk::types::MoveAuthenticatorV1::new_immutable(
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             object_to_authenticate.into(),
@@ -39,13 +60,13 @@ impl MoveAuthenticator {
         call_args: Vec<Arc<Input>>,
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: &ObjectId,
-        initial_shared_version: u64,
+        initial_shared_version: &Version,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_shared(
+        Self(iota_sdk::types::MoveAuthenticatorV1::new_shared(
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,
-            initial_shared_version,
+            **initial_shared_version,
         ))
     }
 

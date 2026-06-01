@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId,
-    execution_status::ExecutionStatus,
-    object::{Owner, Version},
+    Digest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectId, Owner, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -15,30 +13,29 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
+/// transaction-effects-v1 = execution-status                   ; status
+///                          u64                                ; epoch
+///                          gas-cost-summary                   ; gas-used
+///                          digest                             ; transaction-digest
+///                          (option u32)                       ; gas-object-index
+///                          (option digest)                    ; events-digest
+///                          (vector digest)                    ; dependencies
+///                          u64                                ; lamport-version
+///                          (vector changed-object)            ; changed-objects
+///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
+///                          (option digest)                    ; auxiliary-data-digest
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
-    #[cfg_attr(feature = "schemars", schemars(flatten))]
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Digest,
     /// The updated gas object reference, as an index into the `changed_objects`
@@ -52,7 +49,6 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -71,23 +67,6 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Digest>,
 }
 
-impl TransactionEffectsV1 {
-    /// The status of the execution
-    pub fn status(&self) -> &ExecutionStatus {
-        &self.status
-    }
-
-    /// The epoch when this transaction was executed.
-    pub fn epoch(&self) -> EpochId {
-        self.epoch
-    }
-
-    /// The gas used in this transaction.
-    pub fn gas_summary(&self) -> &GasCostSummary {
-        &self.gas_used
-    }
-}
-
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -97,14 +76,14 @@ impl TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
+    derive(serde::Deserialize, serde::Serialize),
+    serde(rename = "EffectsObjectChange")
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: ObjectId,
@@ -125,16 +104,13 @@ pub struct ChangedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
+/// unchanged-shared-object = object-id               ; object-id
+///                           unchanged-shared-kind   ; kind
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnchangedSharedObject {
     pub object_id: ObjectId,
     pub kind: UnchangedSharedKind,
@@ -147,51 +123,28 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ cancelled
-///                              =/ per-epoch-config
-///
-/// read-only-root      = %x00 u64 digest
-/// mutate-deleted      = %x01 u64
-/// read-deleted        = %x02 u64
-/// cancelled           = %x03 u64
-/// per-epoch-config    = %x04
+/// unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
+///                       / %d01 u64           ; MutateDeleted
+///                       / %d02 u64           ; ReadDeleted
+///                       / %d03 u64           ; Cancelled
+///                       / %d04               ; PerEpochConfig
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-        digest: Digest,
-    },
+    ReadOnlyRoot { version: Version, digest: Digest },
     /// Deleted shared objects that appear mutably/owned in the input.
-    MutateDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
-    ReadDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    ReadDeleted { version: Version },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    Cancelled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -218,24 +171,17 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-missing / object-in-data
-///
-/// object-in-missing = %x00
-/// object-in-data    = %x01 u64 digest owner
+/// object-in = %d00           ; Missing
+///           / %d01 u64 digest owner   ; Data
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "state", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         digest: Digest,
         owner: Owner,
@@ -289,22 +235,13 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-missing
-///             =/ object-out-object-write
-///             =/ object-out-package-write
-///
-///
-/// object-out-missing        = %x00
-/// object-out-object-write   = %x01 digest owner
-/// object-out-package-write  = %x02 version digest
+/// object-out = %d00                ; Missing
+///            / %d01 digest owner   ; ObjectWrite
+///            / %d02 u64 digest     ; PackageWrite
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "state", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
@@ -313,11 +250,7 @@ pub enum ObjectOut {
     ObjectWrite { digest: Digest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-        digest: Digest,
-    },
+    PackageWrite { version: Version, digest: Digest },
 }
 
 impl ObjectOut {
@@ -372,40 +305,6 @@ impl ObjectOut {
     }
 }
 
-/// Defines what happened to an ObjectId during execution
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation =  id-operation-none
-///              =/ id-operation-created
-///              =/ id-operation-deleted
-///
-/// id-operation-none       = %x00
-/// id-operation-created    = %x01
-/// id-operation-deleted    = %x02
-/// ```
-#[derive(Eq, PartialEq, Copy, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[non_exhaustive]
-pub enum IdOperation {
-    None,
-    Created,
-    Deleted,
-}
-
-impl IdOperation {
-    crate::def_is!(None, Created, Deleted);
-}
-
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
@@ -414,12 +313,14 @@ mod serialization {
     use super::*;
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1Ref<'a> {
         #[serde(flatten)]
         status: &'a ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -432,12 +333,14 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct ReadableTransactionEffectsV1 {
         #[serde(flatten)]
         status: ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        #[serde(rename = "gas_used")]
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -450,10 +353,11 @@ mod serialization {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1Ref<'a> {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
+        gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
         events_digest: &'a Option<Digest>,
@@ -465,10 +369,11 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionEffectsV1")]
     struct BinaryTransactionEffectsV1 {
         status: ExecutionStatus,
         epoch: EpochId,
-        gas_used: GasCostSummary,
+        gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
@@ -487,7 +392,7 @@ mod serialization {
             let Self {
                 status,
                 epoch,
-                gas_used,
+                gas_cost_summary,
                 transaction_digest,
                 gas_object_index,
                 events_digest,
@@ -501,7 +406,7 @@ mod serialization {
                 let readable = ReadableTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -516,7 +421,7 @@ mod serialization {
                 let binary = BinaryTransactionEffectsV1Ref {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -540,7 +445,7 @@ mod serialization {
                 let ReadableTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -553,7 +458,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -567,7 +472,7 @@ mod serialization {
                 let BinaryTransactionEffectsV1 {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -580,7 +485,7 @@ mod serialization {
                 Ok(Self {
                     status,
                     epoch,
-                    gas_used,
+                    gas_cost_summary,
                     transaction_digest,
                     gas_object_index,
                     events_digest,
@@ -594,8 +499,9 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "UnchangedSharedKind")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -617,7 +523,8 @@ mod serialization {
         PerEpochConfig,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "UnchangedSharedKind")]
     enum BinaryUnchangedSharedKind {
         ReadOnlyRoot { version: Version, digest: Digest },
         MutateDeleted { version: Version },
@@ -714,8 +621,9 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectIn")]
     enum ReadableObjectIn {
         Missing,
         Data {
@@ -726,7 +634,8 @@ mod serialization {
         },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectIn")]
     enum BinaryObjectIn {
         Missing,
         Data {
@@ -808,8 +717,9 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
+    #[serde(rename = "ObjectOut")]
     enum ReadableObjectOut {
         Missing,
         ObjectWrite {
@@ -823,7 +733,8 @@ mod serialization {
         },
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ObjectOut")]
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {

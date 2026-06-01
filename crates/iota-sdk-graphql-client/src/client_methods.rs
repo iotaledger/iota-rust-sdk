@@ -6,7 +6,7 @@
 use iota_transaction_builder::{ClientMethods, WaitForTx};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature,
+    UserSignature, Version,
 };
 
 use crate::{
@@ -22,7 +22,7 @@ impl ClientMethods for Client {
     async fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
         self.object(object_id, version).await
     }
@@ -77,7 +77,12 @@ impl ClientMethods for Client {
 
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         let res = self.dry_run_tx(tx, true).await?;
-        Ok(res.effects.map(|e| e.gas_summary().gas_used()))
+        Ok(res.effects.map(|e| match e {
+            TransactionEffects::V1(e) => e.gas_cost_summary.gas_used(),
+            _ => {
+                unimplemented!("a new TransactionEffects variant was added and needs to be handled")
+            }
+        }))
     }
 
     async fn dry_run_tx(
@@ -95,7 +100,7 @@ impl ClientMethods for Client {
             .map(|r| crate::query_types::ObjectRef {
                 address: r.object_id,
                 digest: r.digest.to_base58(),
-                version: r.version,
+                version: r.version.as_u64(),
             })
             .collect::<Vec<_>>();
         self.dry_run_tx_kind(

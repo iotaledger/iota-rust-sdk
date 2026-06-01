@@ -11,7 +11,6 @@ use crate::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
         multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
-        zklogin::ZkLoginAuthenticator,
     },
 };
 
@@ -23,16 +22,16 @@ use crate::{
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+///                    multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
 ///                    move-auth-flag
-/// ed25519-flag        = %x00
-/// secp256k1-flag      = %x01
-/// secp256r1-flag      = %x02
-/// multisig-flag       = %x03
-/// bls-flag            = %x04
-/// zklogin-auth-flag   = %x05
-/// passkey-auth-flag   = %x06
-/// move-auth-flag      = %x07
+/// ed25519-flag                    = %d00
+/// secp256k1-flag                  = %d01
+/// secp256r1-flag                  = %d02
+/// multisig-flag                   = %d03
+/// bls-flag                        = %d04
+/// zklogin-auth-flag-deprecated    = %d05
+/// passkey-auth-flag               = %d06
+/// move-auth-flag                  = %d07
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
@@ -43,7 +42,7 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04,
-    ZkLoginAuthenticator = 0x05,
+    ZkLoginAuthenticatorDeprecated = 0x05,
     PasskeyAuthenticator = 0x06,
     MoveAuthenticator = 0x07,
 }
@@ -59,7 +58,7 @@ pub enum SignatureScheme {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -67,7 +66,7 @@ pub enum SignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct UserSignature(pub iota_sdk::types::UserSignature);
 
@@ -82,13 +81,6 @@ impl UserSignature {
     pub fn new_multisig(signature: &MultisigAggregatedSignature) -> Self {
         Self(iota_sdk::types::UserSignature::Multisig(
             signature.0.clone(),
-        ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_zklogin_authenticator(authenticator: &ZkLoginAuthenticator) -> Self {
-        Self(iota_sdk::types::UserSignature::ZkLoginAuthenticator(
-            Box::new(authenticator.0.clone()),
         ))
     }
 
@@ -129,10 +121,13 @@ impl UserSignature {
         Ok(iota_sdk::types::UserSignature::from_base64(&base64).map(Self)?)
     }
 
+    /// Check if this signature is a simple signature
     pub fn is_simple(&self) -> bool {
         self.0.is_simple()
     }
 
+    /// Convert this signature into a simple signature if it is one, or return
+    /// `None` otherwise
     pub fn as_simple_opt(&self) -> Option<Arc<SimpleSignature>> {
         self.0
             .as_simple_opt()
@@ -141,14 +136,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a simple signature if it is one, or panic
+    /// otherwise
     pub fn as_simple(&self) -> SimpleSignature {
         self.0.as_simple().clone().into()
     }
 
+    /// Check if this signature is a multisig aggregated signature
     pub fn is_multisig(&self) -> bool {
         self.0.is_multisig()
     }
 
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or return `None` otherwise
     pub fn as_multisig_opt(&self) -> Option<Arc<MultisigAggregatedSignature>> {
         self.0
             .as_multisig_opt()
@@ -157,30 +157,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a multisig aggregated signature if it is
+    /// one, or panic otherwise
     pub fn as_multisig(&self) -> MultisigAggregatedSignature {
         self.0.as_multisig().clone().into()
     }
 
-    pub fn is_zklogin_authenticator(&self) -> bool {
-        self.0.is_zklogin_authenticator()
-    }
-
-    pub fn as_zklogin_authenticator_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
-        self.0
-            .as_zklogin_authenticator_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_zklogin_authenticator(&self) -> ZkLoginAuthenticator {
-        self.0.as_zklogin_authenticator().clone().into()
-    }
-
+    /// Check if this signature is a passkey authenticator
     pub fn is_passkey_authenticator(&self) -> bool {
         self.0.is_passkey_authenticator()
     }
 
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// return `None` otherwise
     pub fn as_passkey_authenticator_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
             .as_passkey_authenticator_opt()
@@ -189,14 +178,19 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a passkey authenticator if it is one, or
+    /// panic otherwise
     pub fn as_passkey_authenticator(&self) -> PasskeyAuthenticator {
         self.0.as_passkey_authenticator().clone().into()
     }
 
+    /// Check if this signature is a move authenticator
     pub fn is_move_authenticator(&self) -> bool {
         self.0.is_move_authenticator()
     }
 
+    /// Convert this signature into a move authenticator if it is one, or return
+    /// `None` otherwise
     pub fn as_move_authenticator_opt(&self) -> Option<Arc<MoveAuthenticator>> {
         self.0
             .as_move_authenticator_opt()
@@ -205,6 +199,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
+    /// Convert this signature into a move authenticator if it is one, or panic
+    /// otherwise
     pub fn as_move_authenticator(&self) -> MoveAuthenticator {
         self.0.as_move_authenticator().clone().into()
     }
@@ -232,7 +228,7 @@ impl UserSignature {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct SimpleSignature(pub iota_sdk::types::SimpleSignature);
 

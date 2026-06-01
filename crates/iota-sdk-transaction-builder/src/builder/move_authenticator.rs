@@ -5,14 +5,17 @@
 //! authenticator function in move which can authorize a transaction as part of
 //! Account Abstraction.
 
-use iota_types::{MoveAuthenticator, ObjectId, ObjectReference, Owner, TypeTag};
+use iota_types::{
+    Input, MoveAuthenticator, MoveAuthenticatorV1, ObjectId, ObjectReference, Owner,
+    SharedObjectReference, TypeTag,
+};
 
 use crate::{
     ClientMethods, PTBArgumentList, error::Error, types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MoveAuthenticatorBuilder {
     /// Input objects or primitive values
     call_args: Vec<InputKind>,
@@ -64,9 +67,8 @@ impl MoveAuthenticatorBuilder {
         for input in self.call_args {
             call_args.push(match input {
                 InputKind::ImmutableOrOwned(object_id)
-                | InputKind::Input(iota_types::Input::ImmutableOrOwned(ObjectReference {
-                    object_id,
-                    ..
+                | InputKind::Input(Input::ImmutableOrOwned(ObjectReference {
+                    object_id, ..
                 })) => {
                     let obj = client
                         .object(object_id, None)
@@ -80,12 +82,14 @@ impl MoveAuthenticatorBuilder {
                             "call arguments must not be owned".to_owned(),
                         ));
                     }
-                    iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                    Input::ImmutableOrOwned(obj.object_ref())
                 }
                 InputKind::Shared { object_id, mutable }
-                | InputKind::Input(iota_types::Input::Shared {
-                    object_id, mutable, ..
-                }) => {
+                | InputKind::Input(Input::Shared(SharedObjectReference {
+                    object_id,
+                    mutable,
+                    ..
+                })) => {
                     let obj = client
                         .object(object_id, None)
                         .await
@@ -100,13 +104,13 @@ impl MoveAuthenticatorBuilder {
                         )));
                     };
 
-                    iota_types::Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version: *version,
                         mutable,
-                    }
+                    })
                 }
-                InputKind::Receiving(_) | InputKind::Input(iota_types::Input::Receiving(_)) => {
+                InputKind::Receiving(_) | InputKind::Input(Input::Receiving(_)) => {
                     return Err(Error::InvalidMoveAuthArg(
                         "call arguments must not be receiving".to_owned(),
                     ));
@@ -115,15 +119,17 @@ impl MoveAuthenticatorBuilder {
             })
         }
         Ok(match account.owner() {
-            Owner::Immutable => {
-                MoveAuthenticator::new_immutable(call_args, self.type_args, account.object_ref())
-            }
-            Owner::Shared(version) => MoveAuthenticator::new_shared(
+            Owner::Immutable => MoveAuthenticator::V1(MoveAuthenticatorV1::new_immutable(
+                call_args,
+                self.type_args,
+                account.object_ref(),
+            )),
+            Owner::Shared(version) => MoveAuthenticator::V1(MoveAuthenticatorV1::new_shared(
                 call_args,
                 self.type_args,
                 account.object_id(),
                 *version,
-            ),
+            )),
             _ => {
                 return Err(Error::InvalidMoveAuthAccount(
                     "account must be immutable or shared".to_owned(),

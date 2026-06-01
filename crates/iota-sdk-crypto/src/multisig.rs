@@ -9,10 +9,10 @@ use iota_types::{
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct MultisigVerifier {
-    #[cfg(feature = "zklogin")]
-    zklogin_verifier: Option<crate::zklogin::ZkloginVerifier>,
+    #[cfg(feature = "passkey")]
+    passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
 }
 
 impl MultisigVerifier {
@@ -57,29 +57,30 @@ impl MultisigVerifier {
                 MultisigMemberSignature::Secp256r1(r1_signature),
             ) => crate::secp256r1::Secp256r1VerifyingKey::new(r1_public_key)?
                 .verify(message, r1_signature),
-            #[cfg(not(feature = "zklogin"))]
-            (MultisigMemberPublicKey::ZkLogin(_), MultisigMemberSignature::ZkLogin(_)) => Err(
-                SignatureError::from_source("support for zklogin is not enabled"),
-            ),
-            #[cfg(feature = "zklogin")]
             (
-                MultisigMemberPublicKey::ZkLogin(zklogin_identifier),
-                MultisigMemberSignature::ZkLogin(zklogin_authenticator),
+                MultisigMemberPublicKey::ZkLoginDeprecated,
+                MultisigMemberSignature::ZkLoginDeprecated,
+            ) => Err(SignatureError::from_source("zklogin is not supported")),
+            #[cfg(not(feature = "passkey"))]
+            (MultisigMemberPublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
+                SignatureError::from_source("support for passkey is not enabled"),
+            ),
+            #[cfg(feature = "passkey")]
+            (
+                MultisigMemberPublicKey::Passkey(passkey_public_key),
+                MultisigMemberSignature::Passkey(passkey_authenticator),
             ) => {
-                let zklogin_verifier = self
-                    .zklogin_verifier()
-                    .ok_or_else(|| SignatureError::from_source("no zklogin verifier provided"))?;
+                let passkey_verifier = self.passkey_verifier().cloned().unwrap_or_default();
 
-                // verify that the member identifier and the authenticator match
-                if zklogin_identifier != zklogin_authenticator.inputs.public_identifier() {
+                // verify that the member public key and the authenticator's key match
+                if passkey_public_key != &passkey_authenticator.public_key() {
                     return Err(SignatureError::from_source(
-                        "member zklogin identifier does not match signature",
+                        "member passkey public key does not match signature",
                     ));
                 }
 
-                zklogin_verifier.verify(message, zklogin_authenticator.as_ref())
+                passkey_verifier.verify(message, passkey_authenticator)
             }
-
             _ => Err(SignatureError::from_source(
                 "member and signature scheme do not match",
             )),
@@ -87,19 +88,19 @@ impl MultisigVerifier {
     }
 }
 
-#[cfg(feature = "zklogin")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "zklogin")))]
+#[cfg(feature = "passkey")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl MultisigVerifier {
-    pub fn with_zklogin_verifier(&mut self, zklogin_verifier: crate::zklogin::ZkloginVerifier) {
-        self.zklogin_verifier = Some(zklogin_verifier);
+    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
+        self.passkey_verifier = Some(passkey_verifier);
     }
 
-    pub fn zklogin_verifier(&self) -> Option<&crate::zklogin::ZkloginVerifier> {
-        self.zklogin_verifier.as_ref()
+    pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
+        self.passkey_verifier.as_ref()
     }
 
-    pub fn zklogin_verifier_mut(&mut self) -> Option<&mut crate::zklogin::ZkloginVerifier> {
-        self.zklogin_verifier.as_mut()
+    pub fn passkey_verifier_mut(&mut self) -> Option<&mut crate::passkey::PasskeyVerifier> {
+        self.passkey_verifier.as_mut()
     }
 }
 
@@ -193,7 +194,7 @@ impl Iterator for BitmapIndices {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
 }
@@ -204,19 +205,19 @@ impl UserSignatureVerifier {
     }
 }
 
-#[cfg(feature = "zklogin")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "zklogin")))]
+#[cfg(feature = "passkey")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl UserSignatureVerifier {
-    pub fn with_zklogin_verifier(&mut self, zklogin_verifier: crate::zklogin::ZkloginVerifier) {
-        self.inner.with_zklogin_verifier(zklogin_verifier);
+    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
+        self.inner.with_passkey_verifier(passkey_verifier);
     }
 
-    pub fn zklogin_verifier(&self) -> Option<&crate::zklogin::ZkloginVerifier> {
-        self.inner.zklogin_verifier()
+    pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
+        self.inner.passkey_verifier()
     }
 
-    pub fn zklogin_verifier_mut(&mut self) -> Option<&mut crate::zklogin::ZkloginVerifier> {
-        self.inner.zklogin_verifier_mut()
+    pub fn passkey_verifier_mut(&mut self) -> Option<&mut crate::passkey::PasskeyVerifier> {
+        self.inner.passkey_verifier_mut()
     }
 }
 
@@ -227,17 +228,8 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 crate::simple::SimpleVerifier.verify(message, signature)
             }
             UserSignature::Multisig(signature) => self.inner.verify(message, signature),
-            #[cfg(not(feature = "zklogin"))]
-            UserSignature::ZkLoginAuthenticator(_) => Err(SignatureError::from_source(
-                "support for zklogin is not enabled",
-            )),
-            #[cfg(feature = "zklogin")]
-            UserSignature::ZkLoginAuthenticator(authenticator) => {
-                let zklogin_verifier = self
-                    .zklogin_verifier()
-                    .ok_or_else(|| SignatureError::from_source("no zklogin verifier provided"))?;
-
-                zklogin_verifier.verify(message, authenticator.as_ref())
+            UserSignature::ZkLoginAuthenticatorDeprecated => {
+                Err(SignatureError::from_source("zklogin is not supported"))
             }
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
@@ -255,7 +247,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MultisigAggregator {
     committee: MultisigCommittee,
     signatures: std::collections::BTreeMap<usize, MultisigMemberSignature>,
@@ -383,22 +375,14 @@ fn multisig_pubkey_and_signature_from_user_signature(
             MultisigMemberPublicKey::Secp256r1(public_key),
             MultisigMemberSignature::Secp256r1(signature),
         )),
-        #[cfg(not(feature = "zklogin"))]
-        UserSignature::ZkLoginAuthenticator(_) => Err(SignatureError::from_source(
-            "support for zklogin is not enabled",
-        )),
-        #[cfg(feature = "zklogin")]
-        UserSignature::ZkLoginAuthenticator(zklogin_authenticator) => {
-            let zklogin_identifier = zklogin_authenticator.inputs.public_identifier().to_owned();
-            Ok((
-                MultisigMemberPublicKey::ZkLogin(zklogin_identifier),
-                MultisigMemberSignature::ZkLogin(zklogin_authenticator),
-            ))
+        UserSignature::ZkLoginAuthenticatorDeprecated => {
+            Err(SignatureError::from_source("zklogin is not supported"))
         }
-
-        UserSignature::Multisig(_)
-        | UserSignature::PasskeyAuthenticator(_)
-        | UserSignature::MoveAuthenticator(_) => {
+        UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
+            MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key()),
+            MultisigMemberSignature::Passkey(passkey_authenticator),
+        )),
+        UserSignature::Multisig(_) | UserSignature::MoveAuthenticator(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))
         }
         _ => Err(SignatureError::from_source("unknown signature scheme")),

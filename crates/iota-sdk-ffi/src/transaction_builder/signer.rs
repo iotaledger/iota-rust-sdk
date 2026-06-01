@@ -3,13 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::crypto::IotaSigner;
-
 use crate::{
-    crypto::{
-        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
-        simple::SimpleKeypair,
-    },
     error::Result,
     types::{
         crypto::move_authenticator::MoveAuthenticator, signature::UserSignature,
@@ -34,47 +28,58 @@ pub trait TransactionSignerFn: Send + Sync + std::fmt::Debug {
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput>;
 }
 
-#[async_trait::async_trait]
-impl TransactionSignerFn for Ed25519PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let signature = self.0.sign_transaction(&transaction.0)?;
+#[cfg(feature = "crypto")]
+mod crypto_signers {
+    use iota_sdk::crypto::IotaSigner;
 
-        Ok(TransactionSignerFnOutput {
-            signature: Arc::new(signature.into()),
-        })
+    use super::*;
+    use crate::crypto::{
+        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
+        simple::SimpleKeypair,
+    };
+
+    #[async_trait::async_trait]
+    impl TransactionSignerFn for Ed25519PrivateKey {
+        async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+            let signature = self.0.sign_transaction(&transaction.0)?;
+
+            Ok(TransactionSignerFnOutput {
+                signature: Arc::new(signature.into()),
+            })
+        }
     }
-}
 
-#[async_trait::async_trait]
-impl TransactionSignerFn for Secp256k1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let signature = self.0.sign_transaction(&transaction.0)?;
+    #[async_trait::async_trait]
+    impl TransactionSignerFn for Secp256k1PrivateKey {
+        async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+            let signature = self.0.sign_transaction(&transaction.0)?;
 
-        Ok(TransactionSignerFnOutput {
-            signature: Arc::new(signature.into()),
-        })
+            Ok(TransactionSignerFnOutput {
+                signature: Arc::new(signature.into()),
+            })
+        }
     }
-}
 
-#[async_trait::async_trait]
-impl TransactionSignerFn for Secp256r1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let signature = self.0.sign_transaction(&transaction.0)?;
+    #[async_trait::async_trait]
+    impl TransactionSignerFn for Secp256r1PrivateKey {
+        async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+            let signature = self.0.sign_transaction(&transaction.0)?;
 
-        Ok(TransactionSignerFnOutput {
-            signature: Arc::new(signature.into()),
-        })
+            Ok(TransactionSignerFnOutput {
+                signature: Arc::new(signature.into()),
+            })
+        }
     }
-}
 
-#[async_trait::async_trait]
-impl TransactionSignerFn for SimpleKeypair {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let signature = self.0.sign_transaction(&transaction.0)?;
+    #[async_trait::async_trait]
+    impl TransactionSignerFn for SimpleKeypair {
+        async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+            let signature = self.0.sign_transaction(&transaction.0)?;
 
-        Ok(TransactionSignerFnOutput {
-            signature: Arc::new(signature.into()),
-        })
+            Ok(TransactionSignerFnOutput {
+                signature: Arc::new(signature.into()),
+            })
+        }
     }
 }
 
@@ -102,32 +107,36 @@ impl TransactionSigner {
     }
 
     #[uniffi::constructor]
-    pub fn from_ed25519(key: Arc<Ed25519PrivateKey>) -> Self {
-        Self(key as Arc<_>)
-    }
-
-    #[uniffi::constructor]
-    pub fn from_secp256k1(key: Arc<Secp256k1PrivateKey>) -> Self {
-        Self(key as Arc<_>)
-    }
-
-    #[uniffi::constructor]
-    pub fn from_secp256r1(key: Arc<Secp256r1PrivateKey>) -> Self {
-        Self(key as Arc<_>)
-    }
-
-    #[uniffi::constructor]
-    pub fn from_keypair(key: Arc<SimpleKeypair>) -> Self {
-        Self(key as Arc<_>)
-    }
-
-    #[uniffi::constructor]
     pub fn from_move_authenticator(auth: Arc<MoveAuthenticator>) -> Self {
         Self(auth as Arc<_>)
     }
 
     pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {
         Ok(self.0.sign(txn).await?.signature)
+    }
+}
+
+#[cfg(feature = "crypto")]
+#[uniffi::export]
+impl TransactionSigner {
+    #[uniffi::constructor]
+    pub fn from_ed25519(key: Arc<crate::crypto::ed25519::Ed25519PrivateKey>) -> Self {
+        Self(key as Arc<_>)
+    }
+
+    #[uniffi::constructor]
+    pub fn from_secp256k1(key: Arc<crate::crypto::secp256k1::Secp256k1PrivateKey>) -> Self {
+        Self(key as Arc<_>)
+    }
+
+    #[uniffi::constructor]
+    pub fn from_secp256r1(key: Arc<crate::crypto::secp256r1::Secp256r1PrivateKey>) -> Self {
+        Self(key as Arc<_>)
+    }
+
+    #[uniffi::constructor]
+    pub fn from_keypair(key: Arc<crate::crypto::simple::SimpleKeypair>) -> Self {
+        Self(key as Arc<_>)
     }
 }
 

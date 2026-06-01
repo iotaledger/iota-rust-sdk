@@ -72,6 +72,15 @@ jobs:
       - name: Run the release example
         run: make rust-release-example
 
+      - name: Run the polling-indexer example
+        run: |
+          docker exec postgres psql -U postgres -c "CREATE DATABASE polling_indexer;"
+          cargo run -p polling-indexer -- \
+            --graphql-url http://localhost:9125/graphql \
+            --db-url postgres://postgres:postgrespw@localhost:5432/polling_indexer \
+            --start-checkpoint 0 \
+            --end-checkpoint 5
+
   doctests:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest

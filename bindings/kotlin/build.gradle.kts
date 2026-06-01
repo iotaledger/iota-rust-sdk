@@ -67,7 +67,10 @@ tasks.register<JavaExec>("example") {
 
 sourceSets {
     main {
-        kotlin { srcDirs("lib", "examples") }
+        kotlin {
+            srcDirs("lib", "examples")
+            exclude("android-demo/**")
+        }
         resources {
             srcDir("lib")
             exclude("**/*.kt")

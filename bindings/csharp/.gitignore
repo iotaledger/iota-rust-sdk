@@ -1,0 +1,12 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+
+# C# generated bindings
+libiota_sdk_ffi.*
+
+src/IotaSdk/*.cs

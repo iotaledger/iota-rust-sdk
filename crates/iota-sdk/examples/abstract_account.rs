@@ -10,7 +10,7 @@ use iota_sdk::{
     transaction_builder::{
         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
     },
-    types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
+    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut},
 };
 use rand::rngs::OsRng;
 
@@ -41,8 +41,10 @@ async fn main() -> Result<()> {
     let effects = builder
         .execute(&move_authenticator, WaitForTx::Finalized)
         .await?;
-
-    println!("Sending IOTA via abstract account: {:?}", effects.status());
+    println!(
+        "Sending IOTA via abstract account: {:?}",
+        effects.as_v1().status
+    );
 
     Ok(())
 }
@@ -75,11 +77,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (publish the package)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
-    println!("Publishing package: {:?}\n", effects.status());
-
-    // Wait some time for the indexer to process the tx
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+    println!("Publishing package: {:?}\n", effects.as_v1().status);
 
     // Get package, package metadata and account IDs from the effects
     let mut package_id = None::<ObjectId>;
@@ -96,12 +94,14 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
                 let object = client.object(object_id, None).await?;
 
                 if let Some(object) = object {
-                    if object.as_struct().type_.name()
-                        == IdentifierRef::const_new("PackageMetadataV1")
+                    if object.as_struct().object_type().name()
+                        == &Identifier::from_static("PackageMetadataV1")
                     {
                         package_metadata_id.replace(object_id);
                     }
-                    if object.as_struct().type_.name() == IdentifierRef::const_new("Account") {
+                    if object.as_struct().object_type().name()
+                        == &Identifier::from_static("Account")
+                    {
                         account_id.replace(object_id);
                     }
                 }
@@ -131,10 +131,9 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (link the authenticator)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
     println!(
         "Linking account to authenticate method: {:?}\n",
-        effects.status()
+        effects.as_v1().status
     );
 
     Ok(account_id)

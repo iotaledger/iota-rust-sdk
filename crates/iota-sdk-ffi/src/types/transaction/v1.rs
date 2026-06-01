@@ -9,6 +9,7 @@ use crate::types::{
     digest::Digest,
     execution_status::ExecutionStatus,
     object::{ObjectId, Owner},
+    version::Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -37,7 +38,7 @@ pub struct TransactionEffectsV1 {
     /// The epoch when this transaction was executed.
     pub epoch: u64,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Arc<Digest>,
     /// The updated gas object reference, as an index into the `changed_objects`
@@ -52,7 +53,7 @@ pub struct TransactionEffectsV1 {
     /// The set of transaction digests this transaction depends on.
     pub dependencies: Vec<Arc<Digest>>,
     /// The version number of all the written Move objects by this transaction.
-    pub lamport_version: u64,
+    pub lamport_version: Arc<Version>,
     /// Objects whose state are changed in the object store.
     pub changed_objects: Vec<ChangedObject>,
     /// Shared objects that are not mutated in this transaction. Unlike owned
@@ -74,7 +75,7 @@ impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
         Self {
             status: value.status.into(),
             epoch: value.epoch,
-            gas_used: value.gas_used,
+            gas_cost_summary: value.gas_cost_summary,
             transaction_digest: Arc::new(value.transaction_digest.into()),
             gas_object_index: value.gas_object_index,
             events_digest: value.events_digest.map(Into::into).map(Arc::new),
@@ -84,7 +85,7 @@ impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
                 .map(Into::into)
                 .map(Arc::new)
                 .collect(),
-            lamport_version: value.lamport_version,
+            lamport_version: Arc::new(value.lamport_version.into()),
             changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
             unchanged_shared_objects: value
                 .unchanged_shared_objects
@@ -101,12 +102,12 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
         Self {
             status: value.status.into(),
             epoch: value.epoch,
-            gas_used: value.gas_used,
+            gas_cost_summary: value.gas_cost_summary,
             transaction_digest: **value.transaction_digest,
             gas_object_index: value.gas_object_index,
             events_digest: value.events_digest.map(|v| **v),
             dependencies: value.dependencies.into_iter().map(|v| **v).collect(),
-            lamport_version: value.lamport_version,
+            lamport_version: **value.lamport_version,
             changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
             unchanged_shared_objects: value
                 .unchanged_shared_objects
@@ -209,25 +210,28 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 ///                              =/ cancelled
 ///                              =/ per-epoch-config
 ///
-/// read-only-root      = %x00 u64 digest
-/// mutate-deleted      = %x01 u64
-/// read-deleted        = %x02 u64
-/// cancelled           = %x03 u64
-/// per-epoch-config    = %x04
+/// read-only-root      = %d00 u64 digest
+/// mutate-deleted      = %d01 u64
+/// read-deleted        = %d02 u64
+/// cancelled           = %d03 u64
+/// per-epoch-config    = %d04
 /// ```
 #[derive(uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot { version: u64, digest: Arc<Digest> },
+    ReadOnlyRoot {
+        version: Arc<Version>,
+        digest: Arc<Digest>,
+    },
     /// Deleted shared objects that appear mutably/owned in the input.
-    MutateDeleted { version: u64 },
+    MutateDeleted { version: Arc<Version> },
     /// Deleted shared objects that appear as read-only in the input.
-    ReadDeleted { version: u64 },
+    ReadDeleted { version: Arc<Version> },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled { version: u64 },
+    Cancelled { version: Arc<Version> },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -238,19 +242,21 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
         match value {
             iota_sdk::types::UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
                 Self::ReadOnlyRoot {
-                    version,
+                    version: Arc::new(version.into()),
                     digest: Arc::new(digest.into()),
                 }
             }
             iota_sdk::types::UnchangedSharedKind::MutateDeleted { version } => {
-                Self::MutateDeleted { version }
+                Self::MutateDeleted {
+                    version: Arc::new(version.into()),
+                }
             }
-            iota_sdk::types::UnchangedSharedKind::ReadDeleted { version } => {
-                Self::ReadDeleted { version }
-            }
-            iota_sdk::types::UnchangedSharedKind::Cancelled { version } => {
-                Self::Cancelled { version }
-            }
+            iota_sdk::types::UnchangedSharedKind::ReadDeleted { version } => Self::ReadDeleted {
+                version: Arc::new(version.into()),
+            },
+            iota_sdk::types::UnchangedSharedKind::Cancelled { version } => Self::Cancelled {
+                version: Arc::new(version.into()),
+            },
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
@@ -261,12 +267,16 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
     fn from(value: UnchangedSharedKind) -> Self {
         match value {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => Self::ReadOnlyRoot {
-                version,
+                version: **version,
                 digest: **digest,
             },
-            UnchangedSharedKind::MutateDeleted { version } => Self::MutateDeleted { version },
-            UnchangedSharedKind::ReadDeleted { version } => Self::ReadDeleted { version },
-            UnchangedSharedKind::Cancelled { version } => Self::Cancelled { version },
+            UnchangedSharedKind::MutateDeleted { version } => {
+                Self::MutateDeleted { version: **version }
+            }
+            UnchangedSharedKind::ReadDeleted { version } => {
+                Self::ReadDeleted { version: **version }
+            }
+            UnchangedSharedKind::Cancelled { version } => Self::Cancelled { version: **version },
             UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
         }
     }
@@ -285,15 +295,15 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 /// ```text
 /// object-in = object-in-missing / object-in-data
 ///
-/// object-in-missing = %x00
-/// object-in-data    = %x01 u64 digest owner
+/// object-in-missing = %d00
+/// object-in-data    = %d01 u64 digest owner
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        version: u64,
+        version: Arc<Version>,
         digest: Arc<Digest>,
         owner: Arc<Owner>,
     },
@@ -308,7 +318,7 @@ impl From<iota_sdk::types::ObjectIn> for ObjectIn {
                 digest,
                 owner,
             } => Self::Data {
-                version,
+                version: Arc::new(version.into()),
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
@@ -326,7 +336,7 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
                 digest,
                 owner,
             } => Self::Data {
-                version,
+                version: **version,
                 digest: **digest,
                 owner: **owner,
             },
@@ -346,9 +356,9 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 ///             =/ object-out-package-write
 ///
 ///
-/// object-out-missing        = %x00
-/// object-out-object-write   = %x01 digest owner
-/// object-out-package-write  = %x02 version digest
+/// object-out-missing        = %d00
+/// object-out-object-write   = %d01 digest owner
+/// object-out-package-write  = %d02 version digest
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ObjectOut {
@@ -361,7 +371,10 @@ pub enum ObjectOut {
     },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite { version: u64, digest: Arc<Digest> },
+    PackageWrite {
+        version: Arc<Version>,
+        digest: Arc<Digest>,
+    },
 }
 
 impl From<iota_sdk::types::ObjectOut> for ObjectOut {
@@ -373,7 +386,7 @@ impl From<iota_sdk::types::ObjectOut> for ObjectOut {
                 owner: Arc::new(owner.into()),
             },
             iota_sdk::types::ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
-                version,
+                version: Arc::new(version.into()),
                 digest: Arc::new(digest.into()),
             },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
@@ -390,7 +403,7 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
                 owner: **owner,
             },
             ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
-                version,
+                version: **version,
                 digest: **digest,
             },
         }
@@ -408,9 +421,9 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 ///              =/ id-operation-created
 ///              =/ id-operation-deleted
 ///
-/// id-operation-none       = %x00
-/// id-operation-created    = %x01
-/// id-operation-deleted    = %x02
+/// id-operation-none       = %d00
+/// id-operation-created    = %d01
+/// id-operation-deleted    = %d02
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]

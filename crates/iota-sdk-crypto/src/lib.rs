@@ -8,7 +8,7 @@ use iota_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PrivateKeyError {
     /// Empty input data
@@ -59,58 +59,24 @@ pub mod secp256r1;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 pub mod passkey;
 
-#[cfg(feature = "zklogin")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "zklogin")))]
-pub mod zklogin;
-
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod simple;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod multisig;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
@@ -220,7 +186,7 @@ pub trait ToFromBytes {
     fn to_bytes(&self) -> Self::ByteArray;
 
     /// Create an instance from raw bytes
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error>
     where
         Self: Sized;
 }
@@ -361,14 +327,12 @@ pub trait FromMnemonic {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::{
-        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
-    };
-
-    #[cfg(feature = "mnemonic")]
+    #[cfg(all(feature = "mnemonic", feature = "ed25519", feature = "bech32"))]
     #[test]
     fn test_mnemonics_ed25519() {
+        use super::*;
+        use crate::ed25519::Ed25519PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
@@ -394,9 +358,12 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "mnemonic")]
+    #[cfg(all(feature = "mnemonic", feature = "secp256k1", feature = "bech32"))]
     #[test]
     fn test_mnemonics_secp256k1() {
+        use super::*;
+        use crate::secp256k1::Secp256k1PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
@@ -422,9 +389,12 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "mnemonic")]
+    #[cfg(all(feature = "mnemonic", feature = "secp256r1", feature = "bech32"))]
     #[test]
     fn test_mnemonics_secp256r1() {
+        use super::*;
+        use crate::secp256r1::Secp256r1PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "act wing dilemma glory episode region allow mad tourist humble muffin oblige",

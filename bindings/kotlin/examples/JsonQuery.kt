@@ -6,7 +6,7 @@ import iota_sdk.Query
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-    val client = GraphQlClient.newDevnet()
+    val client = GraphQlClient.newTestnet()
 
     val queryStr =
         """

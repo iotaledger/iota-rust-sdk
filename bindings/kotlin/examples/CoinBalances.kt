@@ -7,9 +7,9 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
         val address =
-            Address.fromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
+            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
         val coins = client.coins(address)
         for (coin in coins.data) {
@@ -18,7 +18,7 @@ fun main() = runBlocking {
             )
         }
 
-        val balance = client.balance(address)
+        val balance = client.balance(address) ?: 0uL
         println("Total Balance = $balance")
     } catch (e: Exception) {
         e.printStackTrace()

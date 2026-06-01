@@ -11,15 +11,15 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
-	packageAddress, err := iota_sdk.AddressFromHex("0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")
+	packageAddress, err := iota_sdk.AddressFromHex("0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
 	packageOpt, err := client.Package(packageAddress, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get package: %v", err)
 	}
 	if packageOpt == nil {
@@ -37,7 +37,7 @@ func main() {
 			nil,
 			nil,
 		)
-		if err.(*iota_sdk.SdkFfiError) != nil {
+		if err != nil {
 			log.Fatalf("Failed to get module: %v", err)
 		}
 		if moduleOpt == nil {

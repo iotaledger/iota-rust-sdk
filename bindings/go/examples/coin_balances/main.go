@@ -11,15 +11,15 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
-	address, err := iota_sdk.AddressFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
+	address, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
 	coins, err := client.Coins(address, nil, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
 
@@ -28,8 +28,12 @@ func main() {
 	}
 
 	balance, err := client.Balance(address, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
-	fmt.Printf("Total Balance = %d\n", *balance)
+	var totalBalance uint64
+	if balance != nil {
+		totalBalance = *balance
+	}
+	fmt.Printf("Total Balance = %d\n", totalBalance)
 }

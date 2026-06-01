@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	address := iota_sdk.AddressZero()
 
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	objectsPage, err := client.Objects(&objectFilter, &paginationFilter)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get owned objects: %v", err)
 	}
 	fmt.Printf("Owned objects (%d):\n", len(objectsPage.Data))

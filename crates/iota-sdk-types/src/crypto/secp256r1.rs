@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of secp256r1 public-key cryptogrophy.
+//! Implementation of secp256r1 public-key cryptography.
 
 use crate::crypto::{PublicKeyExt, SignatureScheme};
 
@@ -13,11 +13,10 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// secp256r1-public-key = 33OCTECT
+/// secp256r1-public-key = 33OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Secp256r1PublicKey(
     #[cfg_attr(
@@ -26,7 +25,6 @@ pub struct Secp256r1PublicKey(
             with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array33, [::serde_with::Same; 33]>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 
@@ -68,7 +66,7 @@ impl PublicKeyExt for Secp256r1PublicKey {
     }
 
     /// Tries to create a Secp256r1PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
@@ -131,11 +129,10 @@ impl std::fmt::Debug for Secp256r1PublicKey {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// secp256r1-signature = 64OCTECT
+/// secp256r1-signature = 64OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Secp256r1Signature(
     #[cfg_attr(
@@ -144,7 +141,6 @@ pub struct Secp256r1Signature(
             with = "::serde_with::As::<::serde_with::IfIsHumanReadable<super::Base64Array64, [::serde_with::Same; 64]>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
 
@@ -180,7 +176,7 @@ impl Secp256r1Signature {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 }

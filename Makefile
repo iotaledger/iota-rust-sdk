@@ -22,6 +22,7 @@ clippy: ## Run Clippy linter
 .PHONY: test
 test: ## Run unit tests
 	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder
+	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
 test-docs: ## Run doc tests
@@ -59,10 +60,22 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt test wasm ## Run the full CI process
+ci: check-features check-fmt check-sort-derives test wasm ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
+
+.PHONY: cargo-sort
+cargo-sort: ## Sort, consolidate, and format Cargo.toml dependencies
+	cd scripts/cargo_sort && ./run_consolidate.sh
+
+.PHONY: sort-derives
+sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the workspace
+	python3 scripts/sort_derives/sort_derives.py
+
+.PHONY: check-sort-derives
+check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
+	python3 scripts/sort_derives/sort_derives.py --check
 
 .PHONY: clean
 clean: ## Clean build artifacts
@@ -72,35 +85,53 @@ clean: ## Clean build artifacts
 clean-all: clean ## Clean all generated files, including those ignored by Git. Force removal.
 	git clean -dXf
 
+.PHONY: install-uniffi-bindgen-go
+install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
+	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
+
+.PHONY: install-uniffi-bindgen-cs
+install-uniffi-bindgen-cs: ## Install uniffi-bindgen-cs
+	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+
 .PHONY: bindings
 bindings: ## Build all bindings
 	@$(MAKE) go
 	@$(MAKE) kotlin
 	@$(MAKE) python
+	@$(MAKE) csharp
+	@$(MAKE) swift
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
 	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) csharp-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
+	@$(MAKE) csharp-examples
+	@$(MAKE) swift-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) go-examples-format-check
 	@$(MAKE) kotlin-examples-format-check
 	@$(MAKE) python-examples-format-check
+	@$(MAKE) csharp-examples-format-check
+	@$(MAKE) swift-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) go-examples-format
 	@$(MAKE) kotlin-examples-format
 	@$(MAKE) python-examples-format
+	@$(MAKE) csharp-examples-format
+	@$(MAKE) swift-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
@@ -128,7 +159,7 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
+	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 1000 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -138,6 +169,26 @@ python: ## Build Python bindings
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
+
+.PHONY: csharp
+csharp: ## Build C# bindings
+	@printf "Building C# bindings...\n"
+	@$(build_binding) \
+	uniffi-bindgen-cs --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/csharp/src/IotaSdk --no-format --config bindings/csharp/uniffi.toml || exit $$?; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/csharp/src/IotaSdk/; \
+	mv bindings/csharp/src/IotaSdk/iota_sdk_ffi.cs bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# Fix common compilation issues in generated bindings
+	@# byte[][length] -> byte[length][]: NordSecurity/uniffi-bindgen-cs#147
+	sed -i.bak 's/new byte\[\]\[(length)\]/new byte[(length)][]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak '/class Validator.*: IDisposable/,/^}/ { s/FFIObjectUtil\.DisposeAll(/\/\/ FFIObjectUtil.DisposeAll(/; }' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# Object? / Object -> object? / object: NordSecurity/uniffi-bindgen-cs#169
+	sed -i.bak 's/params Object?\[\]/params object?[]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/void Dispose(Object?/void Dispose(object?/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/Object lock_ = new Object();/object lock_ = new object();/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# String.Format -> string.Format: NordSecurity/uniffi-bindgen-cs#170
+	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	rm bindings/csharp/src/IotaSdk/IotaSdk.cs.bak
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
@@ -174,9 +225,22 @@ kotlin-example:
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
 	cd -
 
+.PHONY: kotlin-android
+kotlin-android: ## Build Android native libraries for all ABIs
+	@printf "Building Android native libraries...\n"
+	@for target_abi in "aarch64-linux-android android-aarch64" "armv7-linux-androideabi android-arm" "x86_64-linux-android android-x86-64" "i686-linux-android android-x86"; do \
+		set -- $$target_abi; \
+		target=$$1; folder=$$2; \
+		printf "Building for $$target...\n"; \
+		cargo ndk -t $$target -P 21 build -p iota-sdk-ffi --lib --release || exit $$?; \
+		mkdir -p bindings/kotlin/lib/$$folder; \
+		cp target/$$target/release/libiota_sdk_ffi.so bindings/kotlin/lib/$$folder/ || exit $$?; \
+	done
+	@printf "Android native libraries built successfully.\n"
+
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -exec basename {} .kt \;); do \
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
@@ -214,6 +278,64 @@ python-examples-format-check: ## Check format of all Python bindings examples
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
 
+.PHONY: csharp-example
+csharp-example: ## Run a specific C# example. Usage: make csharp-example ExampleName (e.g. ChainId)
+%:
+	@true
+csharp-example:
+	@printf "\nRunning C# example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cd bindings/csharp/examples; \
+	dotnet run --project $(word 2,$(MAKECMDGOALS)) || exit $$?; \
+	cd -
+
+.PHONY: csharp-examples
+csharp-examples: ## Run all C# bindings examples
+	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -exec dirname {} \; | xargs -n 1 basename); do \
+		$(MAKE) csharp-example "$$example" || exit $$?; \
+	done
+
+.PHONY: csharp-examples-format-check
+csharp-examples-format-check: ## Check format of all C# bindings examples
+	@dotnet restore bindings/csharp/examples/Examples.sln && dotnet format --verify-no-changes bindings/csharp/examples/Examples.sln || exit $$?
+
+.PHONY: csharp-examples-format
+csharp-examples-format: ## Format all C# bindings examples
+	@dotnet restore bindings/csharp/examples/Examples.sln && dotnet format bindings/csharp/examples/Examples.sln || exit $$?
+
+.PHONY: swift
+swift: ## Build Swift bindings
+	@printf "Building Swift bindings...\n"
+	@$(build_binding) \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/Sources/IotaSDK --no-format -c bindings/swift/uniffi.toml || exit $$?; \
+	mkdir -p bindings/swift/Sources/CIotaSDK; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.h bindings/swift/Sources/CIotaSDK/CIotaSDK.h; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.modulemap bindings/swift/Sources/CIotaSDK/module.modulemap; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/Sources/CIotaSDK/
+
+.PHONY: swift-example
+swift-example: ## Run a specific Swift example. Usage: make swift-example example
+%:
+	@true
+swift-example:
+	@printf "\nRunning Swift example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cd bindings/swift; \
+	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" swift run $(word 2,$(MAKECMDGOALS)) || exit $$?; \
+	cd -
+
+.PHONY: swift-examples
+swift-examples: ## Run all Swift bindings examples
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
+		$(MAKE) swift-example "$$example" || exit $$?; \
+	done
+
+.PHONY: swift-examples-format-check
+swift-examples-format-check: ## Check format of all Swift bindings examples
+	@swift-format lint --recursive bindings/swift/examples --strict 2>&1 | grep -v "^$$" && exit 1 || true
+
+.PHONY: swift-examples-format
+swift-examples-format: ## Format all Swift bindings examples
+	@swift-format format --recursive bindings/swift/examples --in-place
+
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
 %:
@@ -224,7 +346,9 @@ example:
 
 .PHONY: examples
 examples: ## Run all Rust examples
-	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -not -path "*/release/*" -exec basename {} .rs \;); do \
+	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
+	@# that require external services (e.g. PostgreSQL). Run those separately.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
@@ -248,12 +372,33 @@ python-release-example: ## Run the Python release example
 	@printf "\nRunning Python release example\n"
 	@cd bindings/python/examples/release && python3 -m venv .venv && . .venv/bin/activate && pip install --pre --upgrade -r requirements.txt && python example.py || exit $$?;
 
+.PHONY: csharp-release-example
+csharp-release-example: ## Run the C# release example
+	@printf "\nRunning C# release example\n"
+	@cd bindings/csharp/examples/Release && dotnet run
+
+.PHONY: swift-release-example
+swift-release-example: ## Run the Swift release example
+	@printf "\nRunning Swift release example\n"
+	@cd bindings/swift/examples/release && swift run || exit $$?
+
 .PHONY: release-examples
 release-examples: ## Run all release examples
 	@$(MAKE) rust-release-example
 	@$(MAKE) go-release-example
 	@$(MAKE) kotlin-release-example
 	@$(MAKE) python-release-example
+	@$(MAKE) csharp-release-example
+	@$(MAKE) swift-release-example
+
+.PHONY: bcs-schema
+bcs-schema: ## Regenerate bcs-schema.abnf
+	@printf "Regenerating bcs-schema.abnf...\n"
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
+
+.PHONY: grpc
+grpc: ## Regenerate gRPC protobuf types
+	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
 
 .PHONY: help
 help: ## Show this help

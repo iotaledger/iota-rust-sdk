@@ -11,8 +11,8 @@ use std::{
 
 use iota_types::{
     Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
-    TransactionV1, TypeTag,
+    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
+    TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -41,12 +41,11 @@ pub mod move_authenticator;
 pub mod ptb_arguments;
 pub mod signer;
 
-const IOTA_SYSTEM_MODULE: &str = "iota_system";
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
@@ -55,7 +54,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 }
 
 /// Transaction data used to build a [`Transaction`].
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.
@@ -157,10 +156,7 @@ impl TransactionBuildData {
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.set_input(
-            InputKind::Input(iota_types::Input::Pure { value: bytes }),
-            false,
-        )
+        self.set_input(InputKind::Input(iota_types::Input::Pure(bytes)), false)
     }
 
     /// Add a pure input
@@ -216,6 +212,107 @@ impl TransactionBuilder {
             client,
             last_command: self.last_command,
         }
+    }
+}
+
+impl From<ProgrammableTransaction> for TransactionBuilder {
+    /// Create a [`TransactionBuilder`] from a [`ProgrammableTransaction`].
+    ///
+    /// The returned builder has the original inputs and commands but no
+    /// sender, gas payment, sponsor, or expiration; the sender defaults to
+    /// [`Address::ZERO`] and must be set with
+    /// [`set_sender`](TransactionBuilder::set_sender) before
+    /// [`finish`](TransactionBuilder::finish) is called.
+    fn from(ptb: ProgrammableTransaction) -> Self {
+        let ProgrammableTransaction {
+            inputs: tx_inputs,
+            commands: tx_commands,
+        } = ptb;
+
+        // Inputs are inserted with keys 0..n preserving their original index,
+        // so that `Argument::Input(i)` referenced from the commands remains
+        // valid without remapping.
+        let inputs = tx_inputs
+            .into_iter()
+            .enumerate()
+            .map(|(i, input)| {
+                (
+                    i,
+                    Input {
+                        kind: InputKind::Input(input),
+                        is_gas: false,
+                    },
+                )
+            })
+            .collect();
+
+        let commands = tx_commands.into_iter().map(Command::from).collect();
+
+        TransactionBuilder {
+            data: TransactionBuildData {
+                inputs,
+                commands,
+                gas_budget: Default::default(),
+                gas_price: Default::default(),
+                sender: Address::ZERO,
+                sponsor: Default::default(),
+                expiration: Default::default(),
+                assigned_results: Default::default(),
+                gas_station_data: Default::default(),
+            },
+            client: (),
+            last_command: PhantomData,
+        }
+    }
+}
+
+impl TryFrom<Transaction> for TransactionBuilder {
+    type Error = Error;
+
+    /// Reconstruct a [`TransactionBuilder`] from a finalized [`Transaction`].
+    ///
+    /// Calling [`finish`](TransactionBuilder::finish) on the returned builder
+    /// produces a [`Transaction`] equal to the input.
+    ///
+    /// Only [`TransactionKind::Programmable`]s are supported; any
+    /// other variant returns an error.
+    fn try_from(tx: Transaction) -> Result<Self, Self::Error> {
+        let Transaction::V1(TransactionV1 {
+            kind,
+            sender,
+            gas_payment,
+            expiration,
+        }) = tx
+        else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let TransactionKind::Programmable(ptb) = kind else {
+            return Err(Error::UnsupportedTransactionKind);
+        };
+
+        let mut builder = TransactionBuilder::from(ptb);
+
+        // Gas inputs follow the programmable inputs with subsequent keys;
+        // BTreeMap ordering ensures `finish` re-emits the inputs and gas
+        // vectors in the original order.
+        let gas_offset = builder.data.inputs.len();
+        for (i, obj_ref) in gas_payment.objects.into_iter().enumerate() {
+            builder.data.inputs.insert(
+                gas_offset + i,
+                Input {
+                    kind: InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    is_gas: true,
+                },
+            );
+        }
+
+        builder.data.sender = sender;
+        builder.data.sponsor = (gas_payment.owner != sender).then_some(gas_payment.owner);
+        builder.data.gas_budget = Some(gas_payment.budget);
+        builder.data.gas_price = Some(gas_payment.price);
+        builder.data.expiration = expiration;
+
+        Ok(builder)
     }
 }
 
@@ -348,21 +445,21 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     ///
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
     /// # builder
     /// #     .split_coins(
     /// #         ObjectId::from_str(
-    /// #             "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    /// #             "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
     /// #         )?,
     /// #         [1000u64],
     /// #     )
@@ -373,15 +470,15 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     (
     ///         // ObjectIds can be passed when a client is provided
     ///         ObjectId::from_str(
-    ///             "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///             "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
     ///         )?,
     ///         // ObjectReferences are always allowed, though they must be correct
     ///         ObjectReference {
     ///             object_id: ObjectId::from_str(
-    ///                 "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+    ///                 "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
     ///             )?,
-    ///             digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-    ///             version: 435090179,
+    ///             digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+    ///             version: Version::from_u64(545110774),
     ///         },
     ///         // The result of a previous command can also be used
     ///         assigned("coin"),
@@ -423,7 +520,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let from_address =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
@@ -478,14 +575,14 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let from_address =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
     /// // This is a coin of type
-    /// // 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
+    /// // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
     /// let coin =
-    ///     ObjectId::from_hex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+    ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
     /// builder.send_coins([coin], to_address, 50000000000u64);
@@ -554,12 +651,12 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
     /// let coin_0 =
-    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
     /// let coin_1 =
-    ///     ObjectId::from_hex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
+    ///     ObjectId::from_hex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.merge_coins(coin_0, [coin_1]);
@@ -594,9 +691,9 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let coin =
-    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder
@@ -663,9 +760,16 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let validator_address =
-    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let validator_address = client
+    ///     .active_validators(None, Default::default())
+    ///     .await?
+    ///     .data
+    ///     .into_iter()
+    ///     .next()
+    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
+    ///     .address
+    ///     .address;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);
@@ -679,9 +783,13 @@ impl<C, L> TransactionBuilder<C, L> {
         validator_address: Address,
     ) -> &mut Self {
         let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
-        self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
-            .arguments((SharedMut(ObjectId::SYSTEM), coin, validator_address))
-            .state_change()
+        self.move_call(
+            Address::SYSTEM,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
+            REQUEST_ADD_STAKE_FN,
+        )
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), coin, validator_address))
+        .state_change()
     }
 
     /// Withdraw stake from a validator's staking pool.
@@ -697,10 +805,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
     /// let staked_iota =
-    ///     ObjectId::from_hex("0x00030af99878926cd11f8bdf4d2f67c4aa753a4afc249d776c8ed2cc88d7b8d5")?;
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.unstake(staked_iota);
@@ -711,10 +819,10 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn unstake<S: PTBArgument>(&mut self, staked_iota: S) -> &mut Self {
         self.move_call(
             Address::SYSTEM,
-            IOTA_SYSTEM_MODULE,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
             REQUEST_WITHDRAW_STAKE_FN,
         )
-        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota))
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), staked_iota))
         .state_change()
     }
 
@@ -780,26 +888,26 @@ impl<L> TransactionBuilder<(), L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// let sender =
-    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender);
     ///
     /// let gas_coin1 = ObjectReference {
     ///     object_id: ObjectId::from_str(
-    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
     ///     )?,
     ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
-    ///     version: 473053811,
+    ///     version: Version::from_u64(473053811),
     /// };
     /// let gas_coin2 = ObjectReference {
     ///     object_id: ObjectId::from_str(
-    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
     ///     )?,
     ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-    ///     version: 473053810,
+    ///     version: Version::from_u64(473053810),
     /// };
     ///
     /// builder
@@ -860,7 +968,7 @@ impl<L> TransactionBuilder<(), L> {
             .map(|c| c.resolve(&input_map))
             .collect();
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
                 inputs,
                 commands,
             }),
@@ -921,14 +1029,14 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
     /// let sender =
-    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
     /// let gas_coin1 =
-    ///     ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///     ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
     /// let gas_coin2 =
-    ///     ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
+    ///     ObjectId::from_str("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])
@@ -1023,11 +1131,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                     obj.digest(),
                                 ))
                             }
-                            Owner::Shared(v) => iota_types::Input::Shared {
+                            Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
                                 object_id,
                                 initial_shared_version: *v,
                                 mutable: false,
-                            },
+                            }),
                             _ => unimplemented!(
                                 "a new enum variant was added and needs to be handled"
                             ),
@@ -1046,11 +1154,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                         .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
                     let input = match obj.owner() {
-                        Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id,
-                            initial_shared_version: *version,
-                            mutable,
-                        },
+                        Owner::Shared(version) => {
+                            iota_types::Input::Shared(SharedObjectReference {
+                                object_id,
+                                initial_shared_version: *version,
+                                mutable,
+                            })
+                        }
                         _ => {
                             return Err(Error::Input(format!(
                                 "object {object_id} was passed as shared, but is not"
@@ -1092,7 +1202,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
                 inputs,
                 commands,
             }),
@@ -1120,7 +1230,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             let Transaction::V1(txn) = &mut txn else {
                 unimplemented!("a new enum variant was added and needs to be handled")
             };
-            txn.gas_payment.budget = budget
+            // The network enforces a minimum gas budget of base_tx_cost_fixed
+            // (1000) * gas_price. The dry-run estimate can return a value below
+            // this minimum, so we clamp it.
+            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            txn.gas_payment.budget = budget.max(min_budget);
         }
 
         Ok(txn)
@@ -1307,5 +1421,101 @@ impl<C> TransactionBuilder<C, GasStationData> {
             data.add_header(name, value);
         }
         self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_types::{Digest, Version};
+
+    use super::*;
+
+    /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
+    /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,
+    /// gas inputs follow with keys `n..n+m`, and `Argument::Input(i)` indices
+    /// in commands continue to point at the same input.
+    #[test]
+    fn try_from_preserves_input_indices() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let object_ref = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectReference::new(
+                ObjectId::new(id_bytes),
+                Version::from_u64(seed as u64 + 1),
+                Digest::new([seed; 32]),
+            )
+        };
+
+        // Three distinct inputs; commands deliberately reference them out of
+        // order so a re-numbering bug would surface.
+        let original_inputs = vec![
+            iota_types::Input::Pure(bcs::to_bytes(&42u64).unwrap()),
+            iota_types::Input::ImmutableOrOwned(object_ref(1)),
+            iota_types::Input::Pure(bcs::to_bytes(&7u64).unwrap()),
+        ];
+        let original_commands = vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+            coin: iota_types::Argument::Input(1),
+            amounts: vec![
+                iota_types::Argument::Input(2),
+                iota_types::Argument::Input(0),
+            ],
+        })];
+        let gas_coins = vec![object_ref(98), object_ref(99)];
+
+        let txn = Transaction::V1(TransactionV1 {
+            kind: TransactionKind::Programmable(ProgrammableTransaction {
+                inputs: original_inputs.clone(),
+                commands: original_commands,
+            }),
+            sender,
+            gas_payment: GasPayment {
+                objects: gas_coins.clone(),
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: TransactionExpiration::None,
+        });
+
+        let rebuilt = TransactionBuilder::try_from(txn).unwrap();
+
+        // Keys are 0..n+m in order; non-gas first, gas appended.
+        let keys: Vec<_> = rebuilt.data.inputs.keys().copied().collect();
+        let n = original_inputs.len();
+        let m = gas_coins.len();
+        assert_eq!(keys, (0..n + m).collect::<Vec<_>>());
+
+        // Non-gas inputs at keys 0..n match the originals byte-for-byte.
+        for (i, expected) in original_inputs.iter().enumerate() {
+            let stored = &rebuilt.data.inputs[&i];
+            assert!(!stored.is_gas, "input {i} should not be flagged as gas");
+            let InputKind::Input(actual) = &stored.kind else {
+                panic!("input {i}: expected InputKind::Input");
+            };
+            assert_eq!(actual, expected);
+        }
+
+        // Gas inputs at keys n..n+m are flagged is_gas and round-trip through
+        // InputKind::Input(ImmutableOrOwned).
+        for (offset, expected) in gas_coins.iter().enumerate() {
+            let key = n + offset;
+            let stored = &rebuilt.data.inputs[&key];
+            assert!(stored.is_gas, "input {key} should be flagged as gas");
+            let InputKind::Input(iota_types::Input::ImmutableOrOwned(actual)) = &stored.kind else {
+                panic!("gas input {key}: expected ImmutableOrOwned");
+            };
+            assert_eq!(actual, expected);
+        }
+
+        // Argument::Input indices in commands are untouched.
+        let Command::SplitCoins(split) = &rebuilt.data.commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Input(1)));
+        assert!(matches!(split.amounts[0], Argument::Input(2)));
+        assert!(matches!(split.amounts[1], Argument::Input(0)));
     }
 }

@@ -3,7 +3,7 @@
 
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature,
+    UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -44,7 +44,7 @@ pub trait ClientMethods {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
     /// Fetch objects
@@ -112,7 +112,7 @@ impl<T: ClientMethods> ClientMethods for &T {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>> {
         (*self).object(object_id, version)
     }
@@ -190,7 +190,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>> {
         self.as_ref().object(object_id, version)
     }
@@ -268,7 +268,7 @@ pub(crate) mod test_client {
 
     use iota_types::{
         Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects,
-        TypeTag, UserSignature,
+        TypeTag, UserSignature, Version,
     };
 
     use super::{ClientMethods, WaitForTx};
@@ -301,7 +301,7 @@ pub(crate) mod test_client {
         async fn object(
             &self,
             _object_id: ObjectId,
-            _version: impl Into<Option<u64>>,
+            _version: impl Into<Option<Version>>,
         ) -> Result<Option<Object>, Self::Error> {
             Ok(None)
         }
