@@ -11,8 +11,11 @@ type mirrors and re-encode to assert byte-for-byte equality.
 To refresh those fixtures against current chain state:
 
 ```bash
-cargo run -p iota-sdk-move-types --example capture_fixtures
+cargo run -p iota-sdk --example capture_move_type_fixtures
 ```
+
+The capture binary lives in the `iota-sdk` crate (it needs the GraphQL
+client), but it writes back into this crate's `tests/fixtures/`.
 
 This queries the IOTA mainnet GraphQL endpoint, re-fetches each pinned
 object (and dynamic field), and overwrites `tests/fixtures/*.bcs`. Use
@@ -26,7 +29,8 @@ boundary).
 
 ### Adding a new fixture
 
-1. Add an entry to `FIXTURES` in `examples/capture_fixtures.rs`. Use
+1. Add an entry to `FIXTURES` in
+   `crates/iota-sdk/examples/capture_move_type_fixtures.rs`. Use
    `Source::TypeFilter("0x…::module::Type")` if you don't have an
    ObjectId yet.
 2. Run the capture binary. For `Source::TypeFilter` entries, it prints

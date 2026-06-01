@@ -44,6 +44,7 @@ wasm: ## Build WASM modules
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
 

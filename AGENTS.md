@@ -203,7 +203,7 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 
 ## WASM Considerations
 
-The `make wasm` target builds the following crates for `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The gRPC client/types and FFI crate are not built for WASM. When adding dependencies to any of the WASM-built crates:
+The `make wasm` target builds the following crates for `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-move-types`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The gRPC client/types and FFI crate are not built for WASM. When adding dependencies to any of the WASM-built crates:
 
 - Ensure they support `wasm32-unknown-unknown`
 - Use `getrandom` with the `js` / `wasm_js` feature for randomness

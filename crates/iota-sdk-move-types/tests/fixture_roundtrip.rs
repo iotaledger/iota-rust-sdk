@@ -3,16 +3,17 @@
 
 //! BCS roundtrip tests against real on-chain bytes.
 //!
-//! Each test loads a fixture captured from mainnet by
-//! `examples/capture_fixtures.rs`, decodes it into the corresponding
-//! hand-curated Move-mirror type, re-encodes, and asserts the bytes
-//! are bit-identical. A wire-shape mismatch (renamed field, wrong
-//! type, reordered fields, missing variant) fails the assertion.
+//! Each test loads a fixture captured from mainnet by the
+//! `capture_move_type_fixtures` example in the `iota-sdk` crate, decodes
+//! it into the corresponding hand-curated Move-mirror type, re-encodes,
+//! and asserts the bytes are bit-identical. A wire-shape mismatch
+//! (renamed field, wrong type, reordered fields, missing variant) fails
+//! the assertion.
 //!
 //! To refresh the fixtures against current chain state, run:
 //!
 //! ```bash
-//! cargo run -p iota-sdk-move-types --example capture_fixtures
+//! cargo run -p iota-sdk --example capture_move_type_fixtures
 //! ```
 
 #![cfg(feature = "serde")]
@@ -35,6 +36,8 @@ use iota_sdk_move_types::{
         nft_output::NftOutput,
     },
 };
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen_test::wasm_bindgen_test as test;
 
 fn roundtrip<T>(bytes: &[u8])
 where

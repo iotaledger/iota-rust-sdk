@@ -1223,6 +1223,9 @@ fn check_type(
 // Tests
 // ---------------------------------------------------------------------------
 
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen_test::wasm_bindgen_test as test;
+
 #[test]
 fn shapes_match() {
     // Load each package once, keyed by its `Package` variant — every entry

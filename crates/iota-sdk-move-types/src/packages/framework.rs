@@ -478,6 +478,9 @@ pub mod url {
 
     #[cfg(test)]
     mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
         use super::*;
 
         #[test]
@@ -1248,7 +1251,11 @@ pub mod display {
     }
 
     impl<T> Display<T> {
-        pub const fn new(id: UID, fields: VecMap<string::String, string::String>, version: u16) -> Self {
+        pub const fn new(
+            id: UID,
+            fields: VecMap<string::String, string::String>,
+            version: u16,
+        ) -> Self {
             Self {
                 id,
                 fields,
@@ -1292,7 +1299,11 @@ pub mod display {
     }
 
     impl<T> VersionUpdated<T> {
-        pub const fn new(id: ID, version: u16, fields: VecMap<string::String, string::String>) -> Self {
+        pub const fn new(
+            id: ID,
+            version: u16,
+            fields: VecMap<string::String, string::String>,
+        ) -> Self {
             Self {
                 id,
                 version,

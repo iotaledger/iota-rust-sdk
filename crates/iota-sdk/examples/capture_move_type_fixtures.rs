@@ -1,18 +1,23 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Capture real on-chain BCS fixtures for the Move types this crate
-//! mirrors.
+//! Capture real on-chain BCS fixtures for the Move types mirrored by
+//! `iota-sdk-move-types`.
 //!
 //! For each entry in [`FIXTURES`], the script queries a live IOTA
 //! GraphQL endpoint, fetches the pinned object, extracts the raw BCS
 //! bytes of the inner Move struct, and writes them to
-//! `tests/fixtures/<name>.bcs`.
+//! `crates/iota-sdk-move-types/tests/fixtures/<name>.bcs`.
+//!
+//! This lives in `iota-sdk` (not `iota-sdk-move-types`) because it only
+//! needs the GraphQL client and core types — keeping the GraphQL/`tokio`
+//! dependencies out of `iota-sdk-move-types` lets that crate run its tests
+//! under wasm.
 //!
 //! Invocation:
 //!
 //! ```bash
-//! cargo run -p iota-sdk-move-types --example capture_fixtures
+//! cargo run -p iota-sdk --example capture_move_type_fixtures
 //! # optional: pick a different network (defaults to mainnet)
 //! IOTA_NETWORK=testnet cargo run …
 //! IOTA_NETWORK=devnet cargo run …
@@ -41,13 +46,15 @@
 
 use std::path::PathBuf;
 
-use iota_graphql_client::Client;
-use iota_types::{Address, ObjectId, TypeTag};
+use iota_sdk::{
+    graphql_client::Client,
+    types::{Address, ObjectId, TypeTag},
+};
 
 /// What to capture and where to put it.
 struct Fixture {
     /// Output file name (without extension). Written to
-    /// `tests/fixtures/<file>.bcs`.
+    /// `crates/iota-sdk-move-types/tests/fixtures/<file>.bcs`.
     file: &'static str,
     /// How to find an instance.
     source: Source,
@@ -214,8 +221,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         return Ok(());
     }
 
-    let crate_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let out_dir = crate_root.join("tests").join("fixtures");
+    // The fixtures belong to the sibling `iota-sdk-move-types` crate; this
+    // example only lives in `iota-sdk` for its GraphQL/`tokio` dependencies.
+    let out_dir =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../iota-sdk-move-types/tests/fixtures");
     std::fs::create_dir_all(&out_dir)?;
 
     eprintln!("network: {network}");
@@ -264,13 +273,16 @@ async fn capture(
 ) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync + 'static>> {
     match source {
         Source::TypeFilter(type_str) => {
-            let filter = iota_graphql_client::query_types::ObjectFilter {
+            let filter = iota_sdk::graphql_client::query_types::ObjectFilter {
                 type_: Some((*type_str).to_string()),
                 owner: None,
                 object_ids: None,
             };
             let page = client
-                .objects(filter, iota_graphql_client::PaginationFilter::default())
+                .objects(
+                    filter,
+                    iota_sdk::graphql_client::PaginationFilter::default(),
+                )
                 .await?;
             let object = page
                 .data()
@@ -306,7 +318,7 @@ async fn capture(
                 .dynamic_field(
                     parent_addr,
                     type_tag,
-                    iota_graphql_client::BcsName(name_bcs.to_vec()),
+                    iota_sdk::graphql_client::BcsName(name_bcs.to_vec()),
                 )
                 .await?
                 .ok_or_else(|| format!("dynamic field `{name_type}` on `{parent}` not found"))?;
