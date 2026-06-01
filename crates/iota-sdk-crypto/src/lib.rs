@@ -8,7 +8,7 @@ use iota_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PrivateKeyError {
     /// Empty input data
@@ -186,7 +186,7 @@ pub trait ToFromBytes {
     fn to_bytes(&self) -> Self::ByteArray;
 
     /// Create an instance from raw bytes
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error>
     where
         Self: Sized;
 }

@@ -66,6 +66,15 @@ jobs:
             exit 1
           fi
 
+  sort-derives:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Check derive trait ordering
+        run: make check-sort-derives
+
   cargo-deny:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
@@ -105,12 +114,12 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Regenerate gRPC types
-        run: ./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+        run: make grpc
 
       - name: Check for uncommitted changes
         run: |
           if ! git diff --quiet -- crates/iota-sdk-grpc-types/src/proto/generated/; then
-            echo "Generated gRPC types are out of date! Please run './crates/iota-sdk-grpc-proto-build/update_grpc_types.sh' and commit the changes."
+            echo "Generated gRPC types are out of date! Please run 'make grpc' and commit the changes."
             git diff -- crates/iota-sdk-grpc-types/src/proto/generated/
             exit 1
           fi

@@ -52,7 +52,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let digest: Digest = todo!();
     ///
     /// // Get transactions with default mask
@@ -72,7 +72,7 @@ impl Client {
     /// for tx in txs.body() {
     ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
-    ///     println!("Status: {:?}", effects.status());
+    ///     println!("Status: {:?}", effects.as_v1().status);
     ///
     ///     // Access checkpoint number
     ///     let checkpoint = tx.checkpoint_sequence_number()?;

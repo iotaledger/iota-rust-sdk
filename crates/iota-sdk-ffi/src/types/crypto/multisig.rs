@@ -33,7 +33,7 @@ use crate::types::{
 /// zklogin-multisig-member-signature-deprecated    = %d03
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberSignature(pub iota_sdk::types::MultisigMemberSignature);
 
@@ -134,7 +134,7 @@ impl MultisigMemberSignature {
 ///                     (secp256k1-flag secp256k1-public-key) /
 ///                     (secp256r1-flag secp256r1-public-key)
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
 
@@ -234,7 +234,7 @@ impl MultisigMemberPublicKey {
 ///
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSignature);
 
@@ -304,7 +304,7 @@ impl MultisigAggregatedSignature {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 
@@ -390,7 +390,7 @@ impl MultisigCommittee {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 

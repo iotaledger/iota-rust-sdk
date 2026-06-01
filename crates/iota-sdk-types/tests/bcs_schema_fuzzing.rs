@@ -20,7 +20,7 @@ use serde::{Serialize, de::DeserializeOwned};
 
 // ─── Grammar AST ─────────────────────────────────────────────────────────────
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 enum Expr {
     Empty,
     Concat(Vec<Expr>),
@@ -37,7 +37,7 @@ enum Expr {
     FixedBytes(usize),
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Clone, Copy, Debug)]
 enum PrimKind {
     U8,
     U16,

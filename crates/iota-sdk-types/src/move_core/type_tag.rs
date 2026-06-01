@@ -23,7 +23,7 @@ use crate::{StructTag, TypeParseError};
 ///          / %d09            ; U32
 ///          / %d10            ; U256
 /// ```
-#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
     U8,

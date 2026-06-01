@@ -15,7 +15,7 @@ const DEFAULT_BATCH_RANGE: u64 = 100_000;
 const DEFAULT_POLL_INTERVAL_MS: u64 = 2000;
 const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
 
-#[derive(Debug, Clone, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 struct FileConfig {
     /// Network preset name.
@@ -60,7 +60,7 @@ struct FileConfig {
     event_package_id: Option<String>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct FilterConfig {
     pub include_failed_txs: bool,
     pub tx_function: Option<String>,
@@ -109,7 +109,7 @@ impl FilterConfig {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct AppConfig {
     pub graphql_url: String,
     pub db_url: String,

@@ -20,7 +20,7 @@ use crate::types::{
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
 

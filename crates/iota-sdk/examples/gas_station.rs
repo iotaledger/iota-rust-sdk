@@ -28,7 +28,6 @@ async fn main() -> Result<()> {
         );
 
     let effects = builder.execute(&keypair, None).await?;
-
     println!("{effects:#?}");
 
     println!("Sponsored transaction was successful!");
