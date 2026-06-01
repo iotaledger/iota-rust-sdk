@@ -1199,8 +1199,7 @@ fn check_type(
             let move_name: &str = d.name.as_ref().as_str();
             if *name != move_name {
                 return Err(format!(
-                    "{module}::{struct_name}.{field}: datatype name mismatch — Rust `{}` vs Move `{}`",
-                    name, move_name
+                    "{module}::{struct_name}.{field}: datatype name mismatch — Rust `{name}` vs Move `{move_name}`"
                 ));
             }
             if args.len() != d.type_arguments.len() {
