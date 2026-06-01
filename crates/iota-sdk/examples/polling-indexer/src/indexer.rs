@@ -193,7 +193,7 @@ impl Indexer {
 
         let tx_filter = TransactionsFilter {
             function: self.config.filters.derived_tx_function(),
-            sign_address: self.config.filters.tx_sender,
+            sent_address: self.config.filters.tx_sender,
             after_checkpoint: range_start.checked_sub(1),
             before_checkpoint: Some(range_end.saturating_add(1)),
             ..Default::default()
@@ -323,7 +323,7 @@ impl Indexer {
 
         let tx_filter = TransactionsFilter {
             function: self.config.filters.tx_function.clone(),
-            sign_address: self.config.filters.tx_sender,
+            sent_address: self.config.filters.tx_sender,
             after_checkpoint: sequence.checked_sub(1),
             before_checkpoint: Some(sequence.saturating_add(1)),
             ..Default::default()
