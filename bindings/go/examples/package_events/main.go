@@ -36,7 +36,7 @@ func main() {
 		// genesis-emitted ones) carry neither.
 		sender := "none"
 		if event.Sender != nil {
-			sender = event.Sender.ToHex()
+			sender = (*event.Sender).ToHex()
 		}
 		module := "none"
 		if event.Module != nil {
