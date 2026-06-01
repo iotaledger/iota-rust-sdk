@@ -150,13 +150,13 @@ impl MultisigCommittee {
     /// paths and tests where the inputs are already known to be well-formed.
     ///
     /// [`Address`]: crate::Address
-    pub fn insecure_new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
+    pub fn new_unchecked(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
         Self { members, threshold }
     }
 
     /// Construct a [`MultisigCommittee`] and verify it via [`Self::validate`].
     ///
-    /// Compared to [`Self::insecure_new`], this rejects committees that:
+    /// Compared to [`Self::new_unchecked`], this rejects committees that:
     ///  - have a zero `threshold`;
     ///  - contain zero or more than ten members;
     ///  - contain a member with weight 0;
@@ -171,7 +171,7 @@ impl MultisigCommittee {
         members: Vec<MultisigMember>,
         threshold: ThresholdUnit,
     ) -> Result<Self, MultisigError> {
-        let committee = Self::insecure_new(members, threshold);
+        let committee = Self::new_unchecked(members, threshold);
 
         committee.validate()?;
 
@@ -314,7 +314,7 @@ impl MultisigAggregatedSignature {
     /// Prefer [`Self::new`] when starting from [`UserSignature`]s; this
     /// constructor is intended for deserialization paths and tests where the
     /// inputs are already known to be well-formed.
-    pub fn insecure_new(
+    pub fn new_unchecked(
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
         committee: MultisigCommittee,
@@ -331,7 +331,7 @@ impl MultisigAggregatedSignature {
     /// Construct a [`MultisigAggregatedSignature`] from a list of
     /// [`UserSignature`]s and a [`MultisigCommittee`].
     ///
-    /// Compared to [`Self::insecure_new`], this:
+    /// Compared to [`Self::new_unchecked`], this:
     ///  - validates `committee` via [`MultisigCommittee::validate`];
     ///  - converts each [`UserSignature`] into a [`MultisigMemberSignature`];
     ///  - derives the `bitmap` by locating each signature's public key in the
@@ -945,7 +945,7 @@ mod tests {
         .unwrap();
         assert!(committee.validate().is_ok());
 
-        let aggregated = MultisigAggregatedSignature::insecure_new(
+        let aggregated = MultisigAggregatedSignature::new_unchecked(
             vec![MultisigMemberSignature::Passkey(passkey_authenticator)],
             0b1,
             committee,
@@ -1066,7 +1066,7 @@ mod tests {
         )
         .unwrap();
 
-        let agg = MultisigAggregatedSignature::insecure_new(
+        let agg = MultisigAggregatedSignature::new_unchecked(
             vec![
                 MultisigMemberSignature::Ed25519(Ed25519Signature::new([0; 64])),
                 MultisigMemberSignature::Ed25519(Ed25519Signature::new([0; 64])),

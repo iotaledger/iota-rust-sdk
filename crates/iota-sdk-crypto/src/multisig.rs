@@ -328,7 +328,7 @@ impl MultisigAggregator {
             },
         );
 
-        Ok(MultisigAggregatedSignature::insecure_new(
+        Ok(MultisigAggregatedSignature::new_unchecked(
             signatures,
             bitmap,
             self.committee.clone(),
