@@ -32,8 +32,8 @@ func main() {
 	}
 
 	for _, event := range events.Data {
-		// Sender and Module are optional: events emitted by the system or at
-		// genesis (sender 0x0, e.g. the genesis StakingRequestEvents) have neither.
+		// Sender and Module are optional: some events (such as system- or
+		// genesis-emitted ones) carry neither.
 		sender := "none"
 		if event.Sender != nil {
 			sender = event.Sender.ToHex()

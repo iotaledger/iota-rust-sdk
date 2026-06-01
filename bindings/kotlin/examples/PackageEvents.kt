@@ -22,8 +22,8 @@ fun main() = runBlocking {
             )
 
         for (event in events.data) {
-            // Sender and module are optional: events emitted by the system or at
-            // genesis (sender 0x0, e.g. the genesis StakingRequestEvents) have neither.
+            // Sender and module are optional: some events (such as system- or
+            // genesis-emitted ones) carry neither.
             println("Type: ${event.type}")
             println("Sender: ${event.sender?.toHex() ?: "none"}")
             println("Module: ${event.module ?: "none"}")
