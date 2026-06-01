@@ -20,6 +20,7 @@ default = [
   "crypto",
   "ed25519",
   "graphql",
+  "grpc",
   "hash",
   "mnemonic",
   "passkey",

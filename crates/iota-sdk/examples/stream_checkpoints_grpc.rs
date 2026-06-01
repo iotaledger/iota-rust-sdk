@@ -46,9 +46,9 @@ async fn main() -> Result<()> {
         println!(
             "  cp {:>6}  epoch {:>3}  txs {:>4}  ts {}",
             checkpoint.sequence_number(),
-            summary.epoch,
-            summary.network_total_transactions,
-            summary.timestamp_ms,
+            summary.summary()?.epoch,
+            summary.summary()?.network_total_transactions,
+            summary.summary()?.timestamp_ms,
         );
     }
 
