@@ -4,11 +4,12 @@
 use iota_sdk::graphql_client::query_types::PageInfo;
 
 use crate::{
-    graphql::query_types::{DynamicFieldOutput, Epoch, TransactionDataEffects, Validator},
+    graphql::query_types::{
+        DynamicFieldOutput, Epoch, GraphQlEvent, TransactionDataEffects, Validator,
+    },
     types::{
         checkpoint::CheckpointSummary,
         coin::Coin,
-        events::GraphQlEvent,
         iota_names::NameRegistration,
         object::{MovePackage, Object},
         transaction::{SignedTransaction, TransactionEffects},

@@ -3,7 +3,6 @@
 
 use std::{str::FromStr, sync::Arc};
 
-use base64ct::Encoding;
 use iota_sdk::types::{Identifier, StructTag};
 
 use crate::{
@@ -17,7 +16,7 @@ use crate::{
 /// field is required and the type round-trips through BCS/JSON. For events
 /// returned by the GraphQL `events` query — which may originate from system
 /// transactions and therefore lack a sender or emitting module — see
-/// [`GraphQlEvent`].
+/// [`GraphQlEvent`](crate::graphql::query_types::GraphQlEvent).
 ///
 /// # BCS
 ///
@@ -65,62 +64,6 @@ impl From<iota_sdk::types::Event> for Event {
             sender: Arc::new(value.sender.into()),
             type_: value.type_.to_string(),
             contents: value.contents,
-        }
-    }
-}
-
-/// An event as returned by the GraphQL `events` query.
-///
-/// Unlike the core chain [`Event`], events emitted by the system or at genesis
-/// have a zero (`0x0`) sender and an unresolvable emitting module — the GraphQL
-/// server returns `null` for both (e.g. the genesis validator
-/// `0x3::validator::StakingRequestEvent`s) — so `package_id`, `module`,
-/// `sender` and `timestamp` are optional. This type is a faithful, non-lossy
-/// view of the GraphQL response and is not BCS/JSON-serializable as a chain
-/// event.
-#[derive(uniffi::Record)]
-pub struct GraphQlEvent {
-    /// Package id of the top-level function invoked by a MoveCall command which
-    /// triggered this event to be emitted. `None` for system events.
-    pub package_id: Option<Arc<ObjectId>>,
-    /// Module name of the top-level function invoked by a MoveCall command
-    /// which triggered this event to be emitted. `None` for system events.
-    pub module: Option<String>,
-    /// Address of the account that sent the transaction where this event was
-    /// emitted. `None` for system events.
-    pub sender: Option<Arc<Address>>,
-    /// The type of the event emitted
-    pub type_: String,
-    /// BCS serialized bytes of the event
-    pub contents: Vec<u8>,
-    /// UTC timestamp in milliseconds since epoch (1/1/1970)
-    pub timestamp: Option<String>,
-    /// Structured contents of a Move value
-    pub data: String,
-    /// Representation of a Move value in JSON
-    pub json: String,
-}
-
-impl From<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
-    fn from(value: iota_sdk::graphql_client::query_types::Event) -> Self {
-        let (package_id, module) = match value.sending_module {
-            Some(sending_module) => (
-                Some(Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
-                    sending_module.package.address,
-                )))),
-                Some(sending_module.name),
-            ),
-            None => (None, None),
-        };
-        Self {
-            package_id,
-            module,
-            sender: value.sender.map(|s| Arc::new(Address(s.address))),
-            type_: value.type_.repr,
-            contents: base64ct::Base64::decode_vec(&value.bcs.0).unwrap_or_default(),
-            timestamp: value.timestamp.map(|t| t.0),
-            data: value.data.0.to_string(),
-            json: value.json.to_string(),
         }
     }
 }

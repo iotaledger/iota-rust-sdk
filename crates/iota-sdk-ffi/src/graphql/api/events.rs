@@ -20,7 +20,7 @@ impl GraphQLClient {
         filter: Option<EventFilter>,
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<EventPage> {
-        Ok(self
+        let (page_info, events) = self
             .0
             .read()
             .await
@@ -29,7 +29,11 @@ impl GraphQLClient {
                 pagination_filter.unwrap_or_default(),
             )
             .await?
-            .map(Into::into)
-            .into())
+            .into_parts();
+        let events = events
+            .into_iter()
+            .map(crate::graphql::query_types::GraphQlEvent::try_from)
+            .collect::<Result<Vec<_>>>()?;
+        Ok(iota_sdk::graphql_client::pagination::Page::new(page_info, events).into())
     }
 }
