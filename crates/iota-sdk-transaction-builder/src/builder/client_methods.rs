@@ -66,12 +66,9 @@ pub trait ClientMethods {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
-    /// Fetch the chain's protocol configuration. Implementations should
-    /// populate [`ProtocolConfig::attributes`] with the protocol config
-    /// attributes; callers look up the keys they care about.
+    /// Fetch the chain's protocol configuration.
     ///
-    /// The default impl returns an empty [`ProtocolConfig`] so existing
-    /// implementors don't need to add protocol-config plumbing.
+    /// The default impl returns a default [`ProtocolConfig`].
     fn protocol_config(
         &self,
     ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
