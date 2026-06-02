@@ -51,7 +51,7 @@ impl Client {
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let digest: Digest = Digest::random();
+    /// let digest: Digest = Digest::ZERO;
     ///
     /// let txs = client.get_transactions([digest]).await?;
     /// for tx in txs.body() {
@@ -90,7 +90,7 @@ impl Client {
     /// # use iota_types::Digest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let digest: Digest = Digest::random();
+    /// let digest: Digest = Digest::ZERO;
     ///
     /// let txs = client
     ///     .get_transactions_masked(
