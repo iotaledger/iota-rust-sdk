@@ -29,10 +29,10 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
         message: &[u8],
         authenticator: &PasskeyAuthenticator,
     ) -> Result<(), SignatureError> {
-        if let Some(address) = &self.address {
-            if authenticator.public_key().derive_address() != *address {
-                return Err(SignatureError::from_source("Invalid author"));
-            }
+        if let Some(address) = &self.address
+            && authenticator.public_key().derive_address() != *address
+        {
+            return Err(SignatureError::from_source("Invalid author"));
         }
 
         let SimpleSignature::Secp256r1 {

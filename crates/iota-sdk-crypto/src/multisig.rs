@@ -128,12 +128,12 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
             .validate()
             .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
 
-        if let Some(address) = &self.address {
-            if signature.committee().derive_address() != *address {
-                return Err(SignatureError::from_source(
-                    "Invalid address derived from pks",
-                ));
-            }
+        if let Some(address) = &self.address
+            && signature.committee().derive_address() != *address
+        {
+            return Err(SignatureError::from_source(
+                "Invalid address derived from pks",
+            ));
         }
 
         if !self.accept_passkey_in_multisig
