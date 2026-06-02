@@ -108,6 +108,7 @@ cargo test --doc                 # Direct doc test invocation
 - **Naming**: crates `iota-sdk-*`, modules `snake_case`, types `PascalCase`, constants `UPPER_SNAKE_CASE`
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
 - **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]` and `#[cfg_attr(doc_cfg, doc(cfg(feature = "…")))]` for docs.rs visibility
+- **Comments**: Write comments for a future reader of the code — document what the code does and the invariants it relies on. Do not narrate the change being made, nor explain why a problem was fixed when that problem was only introduced within the same change. Keep comments concise and durable, not a changelog of in-session edits.
 
 ## Important Files
 
