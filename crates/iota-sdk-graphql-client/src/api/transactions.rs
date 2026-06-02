@@ -290,6 +290,9 @@ impl Client {
                     if match wait_for {
                         WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
+                        _ => unimplemented!(
+                            "a new WaitForTx enum variant was added and needs to be handled"
+                        ),
                     } {
                         break Ok(());
                     }

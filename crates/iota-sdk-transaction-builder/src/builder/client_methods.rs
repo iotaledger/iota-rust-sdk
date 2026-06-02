@@ -16,6 +16,7 @@ use iota_types::{
 /// transaction ID can still fail until the transaction is indexed on the
 /// indexer.
 #[derive(Default)]
+#[non_exhaustive]
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions (you can reference objects created by this transaction),
