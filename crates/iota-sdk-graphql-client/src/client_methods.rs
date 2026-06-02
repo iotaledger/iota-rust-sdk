@@ -91,7 +91,7 @@ impl ClientMethods for Client {
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         let Transaction::V1(tx) = &tx else {
-            unimplemented!("a new enum variant was added and needs to be handled")
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let gas_objects = tx
             .gas_payment

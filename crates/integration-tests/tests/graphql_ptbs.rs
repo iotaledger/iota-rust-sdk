@@ -1,6 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::time::Duration;
+
 use eyre::Context;
 use iota_crypto::ed25519::Ed25519PrivateKey;
 use iota_graphql_client::{
@@ -10,7 +12,7 @@ use iota_graphql_client::{
 };
 use iota_transaction_builder::{TransactionBuilder, WaitForTx, assigned, error::Error};
 use iota_types::{
-    Address, Digest, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType,
+    Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType,
     TransactionEffects, UpgradePolicy,
 };
 
@@ -68,20 +70,15 @@ async fn helper_setup() -> (
         .unwrap()
         .sent;
     let tx_digest = coins.first().unwrap().transfer_tx_digest;
-    wait_for_tx(&client, tx_digest).await;
+    client
+        .wait_for_tx(tx_digest, WaitForTx::Finalized, Duration::from_secs(60))
+        .await
+        .unwrap();
 
     let gas = coins.last().unwrap().id;
     tx.gas([gas]);
 
     (tx, address, pk, coins)
-}
-
-/// Wait for the transaction to be finalized and indexed. This queries the
-/// GraphQL server until it retrieves the requested transaction.
-async fn wait_for_tx(client: &Client, digest: Digest) {
-    while !client.is_tx_finalized(digest).await.unwrap() {
-        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-    }
 }
 
 /// Check the effects to ensure the transaction was successfully executed.

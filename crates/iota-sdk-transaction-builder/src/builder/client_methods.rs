@@ -283,16 +283,9 @@ pub(crate) mod test_client {
     pub struct TestClient;
 
     /// Error type for [`TestClient`].
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, thiserror::Error)]
+    #[error("TestClientError: {0}")]
     pub struct TestClientError(pub String);
-
-    impl std::fmt::Display for TestClientError {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "TestClientError: {}", self.0)
-        }
-    }
-
-    impl std::error::Error for TestClientError {}
 
     impl ClientMethods for TestClient {
         type Error = TestClientError;
