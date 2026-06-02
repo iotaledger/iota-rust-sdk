@@ -57,39 +57,31 @@ impl<T: Future> Future for Compat<T> {
     type Output = T::Output;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let _guard = TOKIO1.handle.enter();
+        let _guard = TOKIO1.enter();
         self.project().inner.poll(cx)
     }
 }
 
-static TOKIO1: Lazy<GlobalRuntime> = Lazy::new(|| {
-    let mut fallback_rt = None;
-    let handle = tokio::runtime::Handle::try_current().unwrap_or_else(|_| {
-        let rt = tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-            .expect("cannot start tokio-1 runtime");
-        let handle = rt.handle().clone();
-        fallback_rt = Some(rt);
-
-        thread::Builder::new()
-            .name("async-compat/tokio-1".into())
-            .spawn(move || TOKIO1.fallback_rt.as_ref().unwrap().block_on(Pending))
-            .unwrap();
-
-        handle
-    });
-
-    GlobalRuntime {
-        handle,
-        fallback_rt,
+static TOKIO1: Lazy<tokio::runtime::Handle> = Lazy::new(|| {
+    if let Ok(handle) = tokio::runtime::Handle::try_current() {
+        return handle;
     }
-});
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .expect("cannot start tokio-1 runtime");
+    let handle = rt.handle().clone();
 
-struct GlobalRuntime {
-    handle: tokio::runtime::Handle,
-    fallback_rt: Option<tokio::runtime::Runtime>,
-}
+    // Move the runtime into the worker thread so it lives as long as the
+    // thread does — and so the thread never has to reach back into TOKIO1
+    // while TOKIO1 itself is still being initialized.
+    thread::Builder::new()
+        .name("async-compat/tokio-1".into())
+        .spawn(move || rt.block_on(Pending))
+        .unwrap();
+
+    handle
+});
 
 struct Pending;
 

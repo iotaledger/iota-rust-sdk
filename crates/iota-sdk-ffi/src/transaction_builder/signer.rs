@@ -3,7 +3,11 @@
 
 use std::sync::Arc;
 
-// Platform-conditional thread-safety helper.
+// Platform-conditional thread-safety helper used as a supertrait of
+// [`TransactionSignerFn`]. Exposed publicly because the lint
+// `private_bounds` would otherwise fire — and because the blanket impl
+// makes it transparent to downstream callers anyway.
+//
 // uniffi's `wasm-unstable-single-threaded` feature does not generate Send+Sync
 // impls for callback handler types, so the trait itself can't require Send+Sync
 // on wasm32 or the generated `impl TransactionSignerFn for UniFFICallback…`
@@ -11,11 +15,11 @@ use std::sync::Arc;
 // On all other targets uniffi expects Arc<dyn Trait> to be Send+Sync, so the
 // supertrait must carry those bounds.
 #[cfg(not(target_arch = "wasm32"))]
-pub(crate) trait ThreadSafety: Send + Sync {}
+pub trait ThreadSafety: Send + Sync {}
 #[cfg(not(target_arch = "wasm32"))]
 impl<T: Send + Sync> ThreadSafety for T {}
 #[cfg(target_arch = "wasm32")]
-pub(crate) trait ThreadSafety {}
+pub trait ThreadSafety {}
 #[cfg(target_arch = "wasm32")]
 impl<T> ThreadSafety for T {}
 
@@ -37,7 +41,6 @@ pub struct TransactionSignerFnOutput {
 ///
 /// This trait can be implemented downstream to enable signing when using the
 /// `TransactionBuilder::execute` function.
-#[allow(private_bounds)]
 #[uniffi::export(with_foreign)]
 #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
 #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]

@@ -18,8 +18,8 @@ env:
   RUSTFLAGS: -Dwarnings
 
 jobs:
-  build-and-publish:
-    name: Build and publish WASM SDK
+  build:
+    name: Build WASM bindings
     if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-wasm-sdk')) || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -51,9 +51,34 @@ jobs:
       - name: Build WASM bindings
         run: make wasm
 
+      - name: Upload built package
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: wasm-package
+          path: |
+            bindings/wasm/dist
+            bindings/wasm/package.json
+            bindings/wasm/README.md
+          retention-days: 1
+
+  publish:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    # Isolated from the build step so a compromised cargo/pnpm dependency in
+    # `make wasm` cannot reach the NPM_TOKEN. This job only runs trusted
+    # actions (checkout, download-artifact) plus `npm publish --ignore-scripts`
+    # against pre-built artifacts.
+    steps:
+      - name: Stage package
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: wasm-package
+          path: package
+
       - name: Set package version from release tag
         if: github.event_name == 'release'
-        working-directory: bindings/wasm
+        working-directory: package
         run: |
           version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-wasm-sdk-v(.*)|\1|p')
           echo "Publishing version $version"
@@ -64,10 +89,10 @@ jobs:
 
       - name: Publish to npm (dry-run)
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
-        working-directory: bindings/wasm
-        run: npm publish --access public --dry-run
+        working-directory: package
+        run: npm publish --access public --ignore-scripts --dry-run
 
       - name: Publish to npm
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
-        working-directory: bindings/wasm
-        run: npm publish --access public
+        working-directory: package
+        run: npm publish --access public --ignore-scripts
