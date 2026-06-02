@@ -256,8 +256,7 @@ impl MultisigCommittee {
     ///  - Has at least one member
     ///  - Has at most ten members
     ///  - No member has weight 0
-    ///  - the sum of the weights of all members must be larger than the
-    ///    threshold
+    ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
     pub fn validate(&self) -> Result<()> {
         Ok(self.0.validate()?)

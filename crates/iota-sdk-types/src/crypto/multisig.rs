@@ -30,8 +30,6 @@ pub enum MultisigError {
     #[cfg(feature = "serde")]
     #[error("{0}")]
     SignatureFromBytes(#[from] SignatureFromBytesError),
-    #[error("Invalid multisig committee")]
-    InvalidCommittee,
     #[error("Multisig threshold must be non-zero")]
     ZeroThreshold,
     #[error("Multisig committee must have at least one member")]
@@ -419,14 +417,23 @@ impl MultisigAggregatedSignature {
         self.bitmap
     }
 
-    pub fn get_indices(&self) -> Result<Vec<u8>, MultisigError> {
+    /// The indices of the committee members that provided their signature,
+    /// derived from the [`bitmap`](Self::bitmap).
+    ///
+    /// For example, a bitmap of `0b10110` yields `[1, 2, 4]`. Returns
+    /// [`MultisigError::InvalidBitmap`] if the bitmap has bits set beyond the
+    /// maximum committee size.
+    pub fn indices(&self) -> Result<Vec<u8>, MultisigError> {
         as_indices(self.bitmap)
     }
 
+    /// The committee that authorizes this aggregated signature.
     pub fn committee(&self) -> &MultisigCommittee {
         &self.committee
     }
 
+    /// Returns `true` if any of the member signatures uses the given signature
+    /// scheme.
     pub fn contains_signature_scheme(&self, scheme: SignatureScheme) -> bool {
         self.signatures.iter().any(|s| s.scheme() == scheme)
     }
