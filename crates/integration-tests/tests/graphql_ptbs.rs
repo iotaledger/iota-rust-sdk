@@ -216,7 +216,7 @@ async fn test_make_move_vec() {
 async fn test_publish() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
-    let package = move_package_data("package_test_example_v1.json");
+    let package = move_package_data("../package_test_example_v1.json");
     tx.publish(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
@@ -229,7 +229,7 @@ async fn test_publish() {
 async fn test_upgrade() {
     let (mut tx, address, pk, coins) = helper_setup().await;
 
-    let package = move_package_data("package_test_example_v2.json");
+    let package = move_package_data("../package_test_example_v2.json");
     tx.publish(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
@@ -274,7 +274,7 @@ async fn test_upgrade() {
         };
     }
 
-    let updated_package = move_package_data("package_test_example_v2.json");
+    let updated_package = move_package_data("../package_test_example_v2.json");
 
     // we need this ticket to authorize the upgrade
     tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
