@@ -3,11 +3,15 @@
 
 //! Events API implementation.
 
-use iota_sdk::graphql_client::pagination::PaginationFilter;
+use iota_sdk::graphql_client::pagination::{Page, PaginationFilter};
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::EventPage, query_types::EventFilter},
+    graphql::{
+        client::GraphQLClient,
+        pagination::EventPage,
+        query_types::{EventFilter, GraphQlEvent},
+    },
 };
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -32,8 +36,8 @@ impl GraphQLClient {
             .into_parts();
         let events = events
             .into_iter()
-            .map(crate::graphql::query_types::GraphQlEvent::try_from)
+            .map(GraphQlEvent::try_from)
             .collect::<Result<Vec<_>>>()?;
-        Ok(iota_sdk::graphql_client::pagination::Page::new(page_info, events).into())
+        Ok(Page::new(page_info, events).into())
     }
 }
