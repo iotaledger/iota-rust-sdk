@@ -388,6 +388,24 @@ define_field_paths! {
         EFFECTS_DIGEST = "executed_transaction.effects.digest",
         /// The full BCS-encoded effects.
         EFFECTS_BCS = "executed_transaction.effects.bcs",
+        /// Transaction events (all sub-fields).
+        EVENTS = "executed_transaction.events",
+        /// The events digest.
+        EVENTS_DIGEST = "executed_transaction.events.digest",
+        /// Individual events — full BCS-encoded.
+        EVENTS_EVENTS_BCS = "executed_transaction.events.events.bcs",
+        /// Checkpoint sequence number.
+        CHECKPOINT = "executed_transaction.checkpoint",
+        /// Timestamp.
+        TIMESTAMP = "executed_transaction.timestamp",
+        /// Input objects (all sub-fields).
+        INPUT_OBJECTS = "executed_transaction.input_objects",
+        /// The full BCS-encoded input object.
+        INPUT_OBJECTS_BCS = "executed_transaction.input_objects.bcs",
+        /// Output objects (all sub-fields).
+        OUTPUT_OBJECTS = "executed_transaction.output_objects",
+        /// The full BCS-encoded output object.
+        OUTPUT_OBJECTS_BCS = "executed_transaction.output_objects.bcs",
     }
 }
 
