@@ -288,7 +288,7 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
-    /// A bytes representation of [struct MultiSig]. This helps with
+    /// A bytes representation of this aggregated signature. This helps with
     /// implementing [trait AsRef<[u8]>].
     #[cfg(feature = "serde")]
     bytes: OnceLock<Vec<u8>>,
@@ -844,9 +844,11 @@ mod serialization {
         }
     }
 
-    /// This initialize the underlying bytes representation of MultiSig.
-    /// It encodes [struct MultiSig] as the MultiSig flag (0x03) concat with the
-    /// bcs bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
+    /// This initialize the underlying bytes representation of
+    /// [`MultisigAggregatedSignature`].
+    /// It encodes [`MultisigAggregatedSignature`] as the MultiSig flag (0x03)
+    /// concat with the bcs bytes of [`MultisigAggregatedSignature`] i.e. `flag
+    /// || bcs_bytes(multiSig)`.
     impl AsRef<[u8]> for MultisigAggregatedSignature {
         fn as_ref(&self) -> &[u8] {
             self.bytes.get_or_init(|| self.to_bytes())
@@ -1092,7 +1094,7 @@ mod tests {
     }
 
     #[test]
-    fn new_labels_non_adjacent_duplicates_as_duplicates() {
+    fn new_rejects_duplicates() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
 
         let pk0 = Ed25519PublicKey::new([1; 32]);
@@ -1117,7 +1119,15 @@ mod tests {
             })
         };
 
-        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must be
+        // pk0, pk0 — the same key appears twice in adjacent positions.
+        let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk0)], committee.clone())
+            .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::DuplicatePublicKey),
+            "adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
+        );
+
+        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must also be
         // reported as a duplicate.
         let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1), sig(pk0)], committee)
             .unwrap_err();
