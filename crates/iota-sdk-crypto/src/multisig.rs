@@ -130,42 +130,54 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
 
         if let Some(address) = &self.address {
             if signature.committee().derive_address() != *address {
-                // return Err(IotaError::InvalidSignature {
-                //     error: "Invalid address derived from pks".to_string(),
-                // });
+                return Err(SignatureError::from_source(
+                    "Invalid address derived from pks",
+                ));
             }
         }
 
         if !self.accept_passkey_in_multisig
             && signature.contains_signature_scheme(SignatureScheme::PasskeyAuthenticator)
         {
-            // return Err(SignatureError::from_source(
-            //     "Passkey sig not supported inside multisig",
-            // ));
+            return Err(SignatureError::from_source(
+                "Passkey sig not supported inside multisig",
+            ));
         }
 
-        let weight = BitmapIndices::new(signature.bitmap())
-            .map(|member_idx| {
-                signature
-                    .committee()
-                    .members()
-                    .get(member_idx as usize)
-                    .ok_or_else(|| SignatureError::from_source("invalid bitmap"))
-            })
-            .zip(signature.signatures())
-            .map(|(maybe_member, signature)| {
-                let member = maybe_member?;
-                self.verify_member_signature(message, member.public_key(), signature)
-                    .map(|()| member.weight() as ThresholdUnit)
-            })
-            .sum::<Result<u16, SignatureError>>()?;
+        let mut weight: ThresholdUnit = 0;
+        for (member_idx, member_signature) in
+            BitmapIndices::new(signature.bitmap()).zip(signature.signatures())
+        {
+            let member = signature
+                .committee()
+                .members()
+                .get(member_idx as usize)
+                .ok_or_else(|| SignatureError::from_source("Invalid public keys index"))?;
+
+            if self.additional_multisig_checks
+                && member.public_key().scheme() != member_signature.scheme()
+            {
+                return Err(SignatureError::from_source(format!(
+                    "Invalid sig for pk={} address={:?} error=signature/pubkey type mismatch",
+                    member.public_key().to_base64(),
+                    member.public_key().derive_address(),
+                )));
+            }
+
+            self.verify_member_signature(message, member.public_key(), member_signature)?;
+
+            weight = weight
+                .checked_add(member.weight() as ThresholdUnit)
+                .ok_or(SignatureError::from_source("Weight overflow"))?;
+        }
 
         if weight >= signature.committee().threshold() {
             Ok(())
         } else {
-            Err(SignatureError::from_source(
-                "signature weight does not exceed threshold",
-            ))
+            Err(SignatureError::from_source(format!(
+                "Insufficient weight={weight:?} threshold={:?}",
+                signature.committee().threshold()
+            )))
         }
     }
 }
