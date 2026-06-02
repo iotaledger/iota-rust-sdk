@@ -164,7 +164,14 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
                 )));
             }
 
-            self.verify_member_signature(message, member.public_key(), member_signature)?;
+            self.verify_member_signature(message, member.public_key(), member_signature)
+                .map_err(|e| {
+                    SignatureError::from_source(format!(
+                        "Invalid sig for pk={} address={:?} error={e}",
+                        member.public_key().to_base64(),
+                        member.public_key().derive_address(),
+                    ))
+                })?;
 
             weight = weight
                 .checked_add(member.weight() as ThresholdUnit)
