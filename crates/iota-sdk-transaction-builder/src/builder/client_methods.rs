@@ -279,11 +279,11 @@ pub(crate) mod test_client {
     /// This client is useful for testing scenarios where a real client
     /// connection is not needed. All methods return default or empty
     /// values.
-    #[derive(Debug, Clone, Copy, Default)]
+    #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
     /// Error type for [`TestClient`].
-    #[derive(Debug, Clone)]
+    #[derive(Clone, Debug)]
     pub struct TestClientError(pub String);
 
     impl std::fmt::Display for TestClientError {
