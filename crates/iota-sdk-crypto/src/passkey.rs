@@ -22,6 +22,13 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
         message: &[u8],
         authenticator: &PasskeyAuthenticator,
     ) -> Result<(), SignatureError> {
+        // // Check if author is derived from the public key.
+        // if author != IotaAddress::from(&self.get_pk()?) {
+        //     return Err(IotaError::InvalidSignature {
+        //         error: "Invalid author".to_string(),
+        //     });
+        // };
+
         let SimpleSignature::Secp256r1 {
             signature,
             public_key,

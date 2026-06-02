@@ -3,21 +3,39 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
-    UserSignature, crypto::ThresholdUnit,
+    Address, MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
+    SignatureScheme, UserSignature, crypto::ThresholdUnit,
 };
 
 use crate::{SignatureError, Verifier};
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MultisigVerifier {
+    address: Option<Address>,
     #[cfg(feature = "passkey")]
     passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
+    accept_passkey_in_multisig: bool,
+    additional_multisig_checks: bool,
 }
 
 impl MultisigVerifier {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    pub fn with_address(mut self, address: Address) -> Self {
+        self.address = Some(address);
+        self
+    }
+
+    pub fn with_accept_passkey_in_multisig(mut self, accept: bool) -> Self {
+        self.accept_passkey_in_multisig = accept;
+        self
+    }
+
+    pub fn with_additional_multisig_checks(mut self, additional_checks: bool) -> Self {
+        self.additional_multisig_checks = additional_checks;
+        self
     }
 
     pub fn verify_member_signature(
@@ -109,6 +127,22 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         signature
             .validate()
             .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
+
+        if let Some(address) = &self.address {
+            if signature.committee().derive_address() != *address {
+                // return Err(IotaError::InvalidSignature {
+                //     error: "Invalid address derived from pks".to_string(),
+                // });
+            }
+        }
+
+        if !self.accept_passkey_in_multisig
+            && signature.contains_signature_scheme(SignatureScheme::PasskeyAuthenticator)
+        {
+            // return Err(SignatureError::from_source(
+            //     "Passkey sig not supported inside multisig",
+            // ));
+        }
 
         let weight = BitmapIndices::new(signature.bitmap())
             .map(|member_idx| {
