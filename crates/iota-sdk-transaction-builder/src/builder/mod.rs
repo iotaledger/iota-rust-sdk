@@ -1109,14 +1109,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             loop {
                 let page = self
                     .client
-                    .objects(
-                        Some(StructTag::new_gas_coin().into()),
-                        Some(owner),
-                        None,
-                        true,
-                        cursor,
-                        None,
-                    )
+                    .objects(StructTag::new_gas_coin(), owner, cursor, None)
                     .await
                     .map_err(Error::client)?;
                 for obj in page.data {

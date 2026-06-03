@@ -34,6 +34,7 @@
 //! ```
 
 pub mod api;
+mod client_methods;
 
 // Re-export all read mask constants (per-method fields)
 pub use api::{

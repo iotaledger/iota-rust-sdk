@@ -5,8 +5,8 @@
 
 use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature, Version,
+    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, UserSignature, Version,
 };
 
 use crate::{
@@ -29,10 +29,8 @@ impl ClientMethods for Client {
 
     async fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: StructTag,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
@@ -47,16 +45,12 @@ impl ClientMethods for Client {
         let page = self
             .objects(
                 ObjectFilter {
-                    type_: type_tag.as_ref().map(ToString::to_string),
-                    owner,
-                    object_ids,
+                    type_: Some(struct_tag.to_string()),
+                    owner: Some(owner),
+                    object_ids: None,
                 },
                 PaginationFilter {
-                    direction: if ascending {
-                        Direction::Forward
-                    } else {
-                        Direction::Backward
-                    },
+                    direction: Direction::Forward,
                     cursor,
                     limit: limit.map(|v| v as _),
                 },

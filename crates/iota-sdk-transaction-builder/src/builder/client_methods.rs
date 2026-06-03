@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature, Version,
+    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -80,10 +80,8 @@ pub trait ClientMethods {
     /// pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: StructTag,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
@@ -158,14 +156,12 @@ impl<T: ClientMethods> ClientMethods for &T {
 
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: StructTag,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
-        (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
+        (*self).objects(struct_tag, owner, cursor, limit)
     }
 
     fn protocol_config(
@@ -242,15 +238,12 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
 
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: StructTag,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
-        self.as_ref()
-            .objects(type_tag, owner, object_ids, ascending, cursor, limit)
+        self.as_ref().objects(struct_tag, owner, cursor, limit)
     }
 
     fn protocol_config(
@@ -319,7 +312,7 @@ pub(crate) mod test_client {
 
     use iota_types::{
         Address, Digest, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction,
-        StructTag, Transaction, TransactionEffects, TypeTag, UserSignature, Version,
+        StructTag, Transaction, TransactionEffects, UserSignature, Version,
     };
 
     use super::{ClientMethods, WaitForTx};
@@ -391,10 +384,8 @@ pub(crate) mod test_client {
 
         async fn objects(
             &self,
-            _type_tag: Option<TypeTag>,
-            owner: Option<Address>,
-            _object_ids: Option<Vec<ObjectId>>,
-            _ascending: bool,
+            _struct_tag: StructTag,
+            owner: Address,
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,
         ) -> Result<ObjectsPage, Self::Error> {
@@ -403,7 +394,7 @@ pub(crate) mod test_client {
             // that won't collide with the object ids used in examples.
             let gas_coin_id = ObjectId::from_bytes([0xee; ObjectId::LENGTH])
                 .expect("32 bytes is a valid object id");
-            let owner = Owner::Address(owner.unwrap_or(Address::ZERO));
+            let owner = Owner::Address(owner);
             Ok(ObjectsPage {
                 data: vec![fabricated_coin(gas_coin_id, owner, FABRICATED_COIN_BALANCE)],
                 next_cursor: None,
