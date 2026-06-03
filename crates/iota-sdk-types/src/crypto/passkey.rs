@@ -45,7 +45,6 @@ pub struct PasskeyAuthenticator {
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`, which is expected to be the signing
     /// message `hash(Intent | bcs_message)`
-    // TODO  challenge: [u8; DefaultHash::OUTPUT_SIZE] ?
     pub(crate) challenge: Vec<u8>,
     /// Opaque authenticator data for this passkey signature.
     ///
