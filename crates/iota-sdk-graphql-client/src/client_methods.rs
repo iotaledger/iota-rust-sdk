@@ -77,11 +77,11 @@ impl ClientMethods for Client {
 
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         let res = self.dry_run_tx(tx, true).await?;
-        Ok(res.effects.map(|e| match e {
-            TransactionEffects::V1(e) => e.gas_cost_summary.gas_used(),
-            _ => {
-                unimplemented!("a new TransactionEffects variant was added and needs to be handled")
-            }
+        Ok(res.effects.map(|effects| match effects {
+            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
         }))
     }
 
@@ -90,31 +90,7 @@ impl ClientMethods for Client {
         tx: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        let Transaction::V1(tx) = &tx else {
-            unimplemented!("a new Transaction enum variant was added and needs to be handled")
-        };
-        let gas_objects = tx
-            .gas_payment
-            .objects
-            .iter()
-            .map(|r| crate::query_types::ObjectRef {
-                address: r.object_id,
-                digest: r.digest.to_base58(),
-                version: r.version.as_u64(),
-            })
-            .collect::<Vec<_>>();
-        self.dry_run_tx_kind(
-            &tx.kind,
-            skip_checks,
-            TransactionMetadata {
-                gas_budget: (tx.gas_payment.budget > 0).then_some(tx.gas_payment.budget),
-                gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                gas_price: Some(tx.gas_payment.price),
-                gas_sponsor: Some(tx.gas_payment.owner),
-                sender: Some(tx.sender),
-            },
-        )
-        .await
+        (*self).dry_run_tx(tx, skip_checks).await
     }
 
     async fn execute_tx(
