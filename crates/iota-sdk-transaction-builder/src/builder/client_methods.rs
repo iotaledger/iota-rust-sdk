@@ -318,19 +318,46 @@ pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
     use iota_types::{
-        Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects,
-        TypeTag, UserSignature, Version,
+        Address, Digest, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction,
+        StructTag, Transaction, TransactionEffects, TypeTag, UserSignature, Version,
     };
 
     use super::{ClientMethods, WaitForTx};
     use crate::ObjectsPage;
 
-    /// A test client that implements [`ClientMethods`] with stub
-    /// implementations.
+    /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
+    /// gas budget the builder might estimate in a doc test or example.
+    const FABRICATED_COIN_BALANCE: u64 = 1_000_000_000_000;
+
+    /// Build a fabricated gas coin (`0x2::coin::Coin<0x2::iota::IOTA>`) with
+    /// the given id, owner and balance.
     ///
-    /// This client is useful for testing scenarios where a real client
-    /// connection is not needed. All methods return default or empty
-    /// values.
+    /// The contents are the BCS layout the coin resolution code expects: the
+    /// 32-byte object id followed by the little-endian `u64` balance.
+    fn fabricated_coin(object_id: ObjectId, owner: Owner, balance: u64) -> Object {
+        let mut contents = Vec::with_capacity(ObjectId::LENGTH + std::mem::size_of::<u64>());
+        contents.extend_from_slice(object_id.as_ref());
+        contents.extend_from_slice(&balance.to_le_bytes());
+        let move_struct = MoveStruct::new(
+            StructTag::new_gas_coin().into(),
+            Version::from_u64(1),
+            contents,
+        )
+        .expect("contents always contain a full object id");
+        Object::new(ObjectData::Struct(move_struct), owner, Digest::ZERO, 0)
+    }
+
+    /// A test client that implements [`ClientMethods`] by fabricating objects
+    /// on demand.
+    ///
+    /// It is useful for building transactions in tests, examples, and doc tests
+    /// where a live network connection is not available. Object lookups resolve
+    /// to a synthesized gas coin owned by an address (shared system objects
+    /// such as the system state object resolve as shared), and gas
+    /// selection always finds a single funded coin. This is enough to drive
+    /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
+    /// resulting transaction references made-up objects and cannot be executed
+    /// — [`execute_tx`](ClientMethods::execute_tx) returns an error.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
@@ -345,23 +372,40 @@ pub(crate) mod test_client {
 
         async fn object(
             &self,
-            _object_id: ObjectId,
+            object_id: ObjectId,
             _version: impl Into<Option<Version>>,
         ) -> Result<Option<Object>, Self::Error> {
-            Ok(None)
+            // System objects (e.g. the system state object used by staking) are
+            // shared; everything else resolves as an address-owned coin.
+            let owner = if object_id == ObjectId::SYSTEM_STATE || object_id == ObjectId::CLOCK {
+                Owner::Shared(Version::from_u64(1))
+            } else {
+                Owner::Address(Address::ZERO)
+            };
+            Ok(Some(fabricated_coin(
+                object_id,
+                owner,
+                FABRICATED_COIN_BALANCE,
+            )))
         }
 
         async fn objects(
             &self,
             _type_tag: Option<TypeTag>,
-            _owner: Option<Address>,
+            owner: Option<Address>,
             _object_ids: Option<Vec<ObjectId>>,
             _ascending: bool,
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,
         ) -> Result<ObjectsPage, Self::Error> {
+            // A single funded gas coin owned by the requested owner is enough for
+            // the builder's automatic gas selection. Its id is a fixed sentinel
+            // that won't collide with the object ids used in examples.
+            let gas_coin_id = ObjectId::from_bytes([0xee; ObjectId::LENGTH])
+                .expect("32 bytes is a valid object id");
+            let owner = Owner::Address(owner.unwrap_or(Address::ZERO));
             Ok(ObjectsPage {
-                data: Vec::new(),
+                data: vec![fabricated_coin(gas_coin_id, owner, FABRICATED_COIN_BALANCE)],
                 next_cursor: None,
             })
         }

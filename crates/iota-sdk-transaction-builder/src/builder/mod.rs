@@ -451,7 +451,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
@@ -522,7 +522,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
@@ -577,7 +577,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -653,7 +653,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -693,7 +693,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
@@ -762,7 +762,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -799,7 +799,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -837,7 +837,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
@@ -1021,7 +1021,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
