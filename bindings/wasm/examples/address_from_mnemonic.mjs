@@ -27,7 +27,7 @@ function printKey(label, privateKey) {
 
 printKey("Ed25519", Ed25519PrivateKey.fromMnemonic(MNEMONIC));
 console.log();
-printKey("Secp256k1", Secp256k1PrivateKey.fromMnemonic(MNEMONIC, 1));
+printKey("Secp256k1", Secp256k1PrivateKey.fromMnemonic(MNEMONIC, 1n));
 console.log();
 printKey(
   "Secp256r1",

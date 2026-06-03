@@ -68,7 +68,7 @@ console.log("Success");
 
 console.log("> Publishing package:");
 let sig = privateKey.signTransaction(tx);
-let effects = await client.executeTx([sig], tx, WaitForTx.FINALIZED);
+let effects = await client.executeTx([sig], tx, WaitForTx.Finalized);
 console.log("Success");
 
 let upgradeCap = null;

@@ -9,5 +9,5 @@ import {
 
 await uniffiInitAsync();
 
-console.log("24 word mnemonic:", generateMnemonic(null));
-console.log("12 word mnemonic:", generateMnemonic(MnemonicLength.WORDS12));
+console.log("24 word mnemonic:", generateMnemonic(undefined));
+console.log("12 word mnemonic:", generateMnemonic(MnemonicLength.Words12));

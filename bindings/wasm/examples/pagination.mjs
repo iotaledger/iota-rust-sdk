@@ -25,7 +25,7 @@ while (true) {
     new ObjectFilter({ owner: address }),
     // Limit to 1 to demonstrate pagination
     new PaginationFilter({
-      direction: Direction.FORWARD,
+      direction: Direction.Forward,
       cursor: nextCursor,
       limit: 1,
     }),

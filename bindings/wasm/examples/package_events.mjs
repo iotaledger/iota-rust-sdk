@@ -18,7 +18,7 @@ const events = await client.events(
     eventType:
       "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent",
   }),
-  new PaginationFilter({ direction: Direction.FORWARD, limit: 10 }),
+  new PaginationFilter({ direction: Direction.Forward, limit: 10 }),
 );
 
 for (const event of events.data) {

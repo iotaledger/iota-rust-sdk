@@ -24,7 +24,7 @@ const FRAMEWORK_PACKAGE_ID = Address.framework().toHex();
 const HEX_DIGITS = new Set("0123456789abcdefABCDEF");
 
 function forwardPage(cursor = null) {
-  return new PaginationFilter({ direction: Direction.FORWARD, cursor });
+  return new PaginationFilter({ direction: Direction.Forward, cursor });
 }
 
 function shortenPackageIds(signature) {
@@ -86,7 +86,7 @@ async function printObjectSamples(client, typeTag, hasKeyAbility, isGeneric) {
   }
   const objects = await client.objects(
     new ObjectFilter({ typeTag }),
-    new PaginationFilter({ direction: Direction.FORWARD, limit: 3 }),
+    new PaginationFilter({ direction: Direction.Forward, limit: 3 }),
   );
   if (objects.data.length === 0) {
     console.log("    sample objects: none found");
@@ -125,7 +125,7 @@ function extractPolicy(contents) {
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
     new TransactionsFilter({ changedObject: packageId }),
-    new PaginationFilter({ direction: Direction.FORWARD, limit: 1 }),
+    new PaginationFilter({ direction: Direction.Forward, limit: 1 }),
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
@@ -374,7 +374,7 @@ for (const moduleName of moduleNames) {
       console.log(`    - ${typeTag}`);
       const hasKeyAbility =
         struct_.abilities !== null &&
-        struct_.abilities.includes(MoveAbility.KEY);
+        struct_.abilities.includes(MoveAbility.Key);
       const isGeneric =
         struct_.typeParameters !== null && struct_.typeParameters.length > 0;
       await printObjectSamples(client, typeTag, hasKeyAbility, isGeneric);

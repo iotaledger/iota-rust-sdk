@@ -53,13 +53,23 @@ Runs the TypeScript fixer script, bundles everything into `dist/iota-sdk.js` via
 
 ## Run the examples
 
-From the workspace root:
+The scripts under [`examples/`](examples) are Node programs (`.mjs`) that import
+the package exactly as an npm consumer would (resolved to this package via the
+pnpm workspace). From the workspace root:
 
 ```bash
-make wasm-example chain_id
+make wasm-example chain_id   # run a single example with Node
+make wasm-examples           # run every example
 ```
 
-This starts a local dev server and serves the example at `http://localhost:5173/examples/chain_id.html`. List all available examples with `make wasm-examples`.
+Most examples expect a running localnet (see `run_localnet.sh` at the repo
+root); `chain_id` and a few read-only examples run against the public testnet.
+
+To open the browser (HTML) examples instead, start the dev server:
+
+```bash
+make wasm-serve              # serves http://localhost:5173/examples/chain_id.html
+```
 
 ## Using the bindings
 
@@ -81,9 +91,13 @@ See [`examples/chain_id.html`](examples/chain_id.html) for a complete browser ex
 bindings/wasm/
   examples/
     chain_id.html          # browser example
+    *.mjs                  # Node examples (run via `make wasm-example NAME`)
+    package.json           # pnpm workspace member that resolves `iota-sdk-wasm`
   dist/                    # build output (gitignored)
-    iota-sdk.js            # bundled ES module
+    iota-sdk.js            # bundled ES module (browser / default entry)
+    node.js                # Node entry (loads index_bg.wasm from disk)
     index_bg.wasm          # WASM binary
+    types/                 # generated TypeScript declarations
   src/
     ts/
       iota_sdk_ffi.ts      # generated TypeScript API

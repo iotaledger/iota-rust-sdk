@@ -27,12 +27,23 @@ fixed = fixed.replace(
 );
 
 // Skip checksum validation in uniffiEnsureInitialized().
-// The WASM "env" imports return stub values, so checksum calls return 0
-// instead of the real checksum.  Since the TS bindings and WASM are always
-// built together from the same source, the validation is redundant.
-// Remove all ApiChecksumMismatch if-blocks (they span 3 lines each).
+// Checksum functions that are gated out on wasm32 (e.g. Address::random)
+// resolve to "env" stubs returning 0, so their validation throws an
+// ApiChecksumMismatch even though the TS bindings and WASM are always built
+// together from the same source. Remove every checksum if-block.
+//
+// The generated blocks are prettier-wrapped across several lines, e.g.:
+//   if (
+//     nativeModule().ubrn_uniffi_..._checksum_...() !==
+//     12345
+//   ) {
+//     throw new UniffiInternalError.ApiChecksumMismatch(
+//       "uniffi_..._...",
+//     );
+//   }
+// so the match must span newlines ([\s\S]) rather than assume one line.
 fixed = fixed.replace(
-  /\s*if \(nativeModule\(\)\.ubrn_uniffi_.*?checksum.*?\n.*?ApiChecksumMismatch.*?\n\s*\}/g,
+  /\s*if \(\s*nativeModule\(\)\.ubrn_uniffi_[\s\S]*?checksum[\s\S]*?ApiChecksumMismatch\([\s\S]*?\);\s*\}/g,
   ''
 );
 

@@ -1,8 +1,8 @@
-export * from './iota_sdk_ffi';
-import * as iota_sdk_ffi from './iota_sdk_ffi';
+export * from "./iota_sdk_ffi";
+import * as iota_sdk_ffi from "./iota_sdk_ffi";
 // Import the JS glue from wasm-bindgen (--target bundler).
 // The __wbg_set_wasm function wires WASM exports into the JS glue.
-import * as bg from './wasm-bindgen/index_bg.js';
+import * as bg from "./wasm-bindgen/index_bg.js";
 
 /**
  * Load and initialise the WASM module.
@@ -14,12 +14,14 @@ import * as bg from './wasm-bindgen/index_bg.js';
  *     `fs.readFileSync(...)` instead).
  *   - omitted: defaults to `index_bg.wasm` resolved relative to this JS module.
  */
-export async function uniffiInitAsync(input?: string | URL | ArrayBuffer | Uint8Array) {
+export async function uniffiInitAsync(
+  input?: string | URL | ArrayBuffer | Uint8Array,
+) {
   let bytes: ArrayBuffer | Uint8Array;
   if (input instanceof ArrayBuffer || input instanceof Uint8Array) {
     bytes = input;
   } else {
-    const url = input ?? new URL('./index_bg.wasm', import.meta.url);
+    const url = input ?? new URL("./index_bg.wasm", import.meta.url);
     const response = await fetch(url);
     bytes = await response.arrayBuffer();
   }
@@ -27,18 +29,23 @@ export async function uniffiInitAsync(input?: string | URL | ArrayBuffer | Uint8
   // The WASM binary imports ~400 UniFFI scaffold functions from an "env"
   // module.  These are checksum validators and function stubs that return 0.
   // The actual work is done through the ubrn_ wrappers in the JS glue.
-  const envProxy = new Proxy({}, {
-    get() { return () => 0; },
-  });
+  const envProxy = new Proxy(
+    {},
+    {
+      get() {
+        return () => 0;
+      },
+    },
+  );
 
   const { instance } = await WebAssembly.instantiate(bytes, {
-    './index_bg.js': bg as any,
-    'env': envProxy,
+    "./index_bg.js": bg as any,
+    env: envProxy,
   });
 
   (bg as any).__wbg_set_wasm(instance.exports);
   // Run the WASM start function if present (some wasm-bindgen versions export it).
-  if (typeof (instance.exports as any).__wbindgen_start === 'function') {
+  if (typeof (instance.exports as any).__wbindgen_start === "function") {
     (instance.exports as any).__wbindgen_start();
   }
   iota_sdk_ffi.default.initialize();

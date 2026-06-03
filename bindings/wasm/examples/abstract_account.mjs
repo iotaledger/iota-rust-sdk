@@ -41,7 +41,7 @@ async function setupAccount(client) {
   builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 
   const signer = TransactionSigner.fromEd25519(privateKey);
-  let effects = await builder.execute(signer, WaitForTx.FINALIZED);
+  let effects = await builder.execute(signer, WaitForTx.Finalized);
 
   console.log(`Publishing package: ${effects.asV1().status}\n`);
 
@@ -89,7 +89,7 @@ async function setupAccount(client) {
     ],
   );
 
-  effects = await builder.execute(signer, WaitForTx.FINALIZED);
+  effects = await builder.execute(signer, WaitForTx.Finalized);
   console.log(
     `Linking account to authenticate method: ${effects.asV1().status}\n`,
   );
@@ -123,6 +123,6 @@ const moveAuthenticator = await new MoveAuthenticatorBuilder(
 ).finish(client);
 
 const signer = TransactionSigner.fromMoveAuthenticator(moveAuthenticator);
-const effects = await builder.execute(signer, WaitForTx.FINALIZED);
+const effects = await builder.execute(signer, WaitForTx.Finalized);
 
 console.log(`Sending IOTA via abstract account: ${effects.asV1().status}`);
