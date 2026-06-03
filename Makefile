@@ -342,7 +342,7 @@ example: ## Run a specific Rust example. Usage: make example example
 	@true
 example:
 	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
-	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+	@cargo run --features grpc --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
 .PHONY: examples
 examples: ## Run all Rust examples

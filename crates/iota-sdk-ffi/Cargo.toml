@@ -44,7 +44,7 @@ rand.workspace = true
 roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-tokio = { workspace = true, features = ["time"] }
+tokio = { workspace = true, features = ["time", "sync"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
 # internal dependencies
