@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+  "crates/integration-tests",
   "crates/iota-sdk",
   "crates/iota-sdk-bcs-schema",
   "crates/iota-sdk-crypto",
