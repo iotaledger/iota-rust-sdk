@@ -9,4 +9,5 @@ $PYTHON_CMD cargo_sort.py --consolidate-deps \
   --strict-ignore "getrandom" \
   --strict-ignore "tracing:crates/iota-sdk/examples/polling-indexer" \
   --strict-ignore "tokio:patches/async-compat" \
+  --ignore "node_modules" \
   "$@"

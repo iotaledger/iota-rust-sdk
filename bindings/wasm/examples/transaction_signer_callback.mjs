@@ -23,7 +23,7 @@ class AsyncSigner {
   }
 
   async sign(transaction) {
-    return new TransactionSignerFnOutput({
+    return TransactionSignerFnOutput.new({
       signature: this.key.signTransaction(transaction),
     });
   }

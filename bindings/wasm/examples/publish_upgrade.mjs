@@ -74,21 +74,21 @@ console.log("Success");
 let upgradeCap = null;
 let packageId = null;
 for (const changedObj of effects.asV1().changedObjects) {
-  if (changedObj.outputState.isObjectWrite()) {
+  if (changedObj.outputState.tag === "ObjectWrite") {
     const objectId = changedObj.objectId;
-    const obj = await client.object(objectId, null);
+    const obj = await client.object(objectId);
     if (obj === null) throw new Error(`Missing object ${objectId.toHex()}`);
-    if (obj.asStruct().structType.eq?.(StructTag.newUpgradeCap()) ?? false) {
+    if (obj.asStruct().structType.equals(StructTag.newUpgradeCap())) {
       console.log(`UpgradeCap: ${objectId.toHex()}`);
       console.log(
-        `UpgradeCapOwner: ${changedObj.outputState.owner.asAddress().toHex()}`,
+        `UpgradeCapOwner: ${changedObj.outputState.inner.owner.asAddress().toHex()}`,
       );
       upgradeCap = objectId;
     }
-  } else if (changedObj.outputState.isPackageWrite()) {
+  } else if (changedObj.outputState.tag === "PackageWrite") {
     packageId = changedObj.objectId;
     console.log(`Package ID: ${packageId.toHex()}`);
-    console.log(`Package version: ${changedObj.outputState.version}`);
+    console.log(`Package version: ${changedObj.outputState.inner.version}`);
   }
 }
 
@@ -136,8 +136,8 @@ effects = await client.executeTx([sig], tx);
 console.log("Success");
 
 for (const changedObj of effects.asV1().changedObjects) {
-  if (changedObj.outputState.isPackageWrite()) {
+  if (changedObj.outputState.tag === "PackageWrite") {
     console.log(`New Package ID: ${changedObj.objectId.toHex()}`);
-    console.log(`New Package version: ${changedObj.outputState.version}`);
+    console.log(`New Package version: ${changedObj.outputState.inner.version}`);
   }
 }

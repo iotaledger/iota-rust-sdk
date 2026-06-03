@@ -50,11 +50,11 @@ async function setupAccount(client) {
   let accountId = null;
 
   for (const changedObj of effects.asV1().changedObjects) {
-    if (changedObj.outputState.isPackageWrite()) {
+    if (changedObj.outputState.tag === "PackageWrite") {
       packageId = changedObj.objectId;
-    } else if (changedObj.outputState.isObjectWrite()) {
+    } else if (changedObj.outputState.tag === "ObjectWrite") {
       const objectId = changedObj.objectId;
-      const obj = await client.object(objectId, null);
+      const obj = await client.object(objectId);
       if (obj !== null) {
         const typeName = obj.asStruct().structType.name().asStr();
         if (typeName === "PackageMetadataV1") {
