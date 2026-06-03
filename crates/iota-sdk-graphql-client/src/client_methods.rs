@@ -12,7 +12,7 @@ use iota_types::{
 use crate::{
     Client, DryRunResult,
     pagination::{Direction, PaginationFilter},
-    query_types::{ObjectFilter, TransactionMetadata},
+    query_types::ObjectFilter,
 };
 
 impl ClientMethods for Client {
