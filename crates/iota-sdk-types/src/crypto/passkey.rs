@@ -63,11 +63,13 @@ pub struct PasskeyAuthenticator {
 
 impl PasskeyAuthenticator {
     /// The passkey public key.
+    // TODO maybe split this in public_key and passkey_public_key?
     pub fn public_key(&self) -> PasskeyPublicKey {
         PasskeyPublicKey::new(self.public_key)
     }
 
     /// The passkey signature.
+    // TODO maybe split this in secp256r1_signature and simple signature?
     pub fn signature(&self) -> SimpleSignature {
         SimpleSignature::Secp256r1 {
             signature: self.signature,
@@ -250,6 +252,12 @@ mod serialization {
                 origin: _,
             } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
+            // if client_data_json_parsed.ty != ClientDataType::Get {
+            //     return Err(IotaError::InvalidSignature {
+            //         error: "Invalid client data type".to_string(),
+            //     });
+            // };
+
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
             let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(
@@ -273,17 +281,16 @@ mod serialization {
 
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag =
-                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                    SignatureFromBytesError::new("missing signature scheme flag")
-                })?)
-                .map_err(SignatureFromBytesError::new)?;
-            if flag != SignatureScheme::PasskeyAuthenticator {
+            let (flag, tail) = bytes.split_first().ok_or(SignatureFromBytesError::new(
+                "missing signature scheme flag",
+            ))?;
+            let scheme = SignatureScheme::from_byte(*flag).map_err(SignatureFromBytesError::new)?;
+
+            if scheme != SignatureScheme::PasskeyAuthenticator {
                 return Err(SignatureFromBytesError::new("invalid passkey flag"));
             }
-            let bcs_bytes = &bytes[1..];
 
-            let authenticator = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
+            let authenticator = bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
 
             Self::try_from_raw(authenticator)
         }
