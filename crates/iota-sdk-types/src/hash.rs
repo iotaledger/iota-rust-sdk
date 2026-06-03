@@ -442,14 +442,9 @@ mod signing_message {
         T: serde::Serialize,
     {
         pub fn signing_digest(&self) -> Digest {
-            // TODO avoid allocation
-            //             let mut hasher = DefaultHash::default();
-            //     bcs::serialize_into(&mut hasher, intent_msg).expect(
-            //         "Message
-            // serialization should not fail",
-            //     );
-            //     hasher.finalize().digest
-            Hasher::digest(bcs::to_bytes(&self).unwrap())
+            let mut hasher = Hasher::default();
+            bcs::serialize_into(&mut hasher, self).unwrap();
+            hasher.finalize()
         }
     }
 }
