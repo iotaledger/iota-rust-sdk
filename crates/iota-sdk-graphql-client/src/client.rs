@@ -48,9 +48,19 @@ impl Client {
     pub fn new(server: &str) -> Result<Self> {
         let rpc = reqwest::Url::parse(server)?;
 
+        let builder = reqwest::Client::builder().user_agent(USER_AGENT);
+        // The GraphQL load balancers apply a per-connection rate limit and
+        // return HTTP 429 once a burst of requests reuses the same pooled
+        // keep-alive connection. Disabling the idle connection pool makes every
+        // request use a fresh connection, so no connection accumulates enough
+        // requests to trip the limit. `pool_max_idle_per_host` is not available
+        // on the wasm32 reqwest backend, where the browser manages connections.
+        #[cfg(not(target_arch = "wasm32"))]
+        let builder = builder.pool_max_idle_per_host(0);
+
         let client = Client {
             rpc,
-            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
+            inner: builder.build()?,
             service_config: Default::default(),
         };
         Ok(client)
