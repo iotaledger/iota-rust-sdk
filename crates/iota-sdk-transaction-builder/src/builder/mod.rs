@@ -1319,7 +1319,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Execute the transaction and optionally wait for finalization. The
-    /// GraphQL client will be used unless a gas station was configured, in
+    /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,

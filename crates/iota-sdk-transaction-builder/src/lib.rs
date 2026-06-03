@@ -196,7 +196,7 @@
 //!
 //! When this data has been set, calling [execute](TransactionBuilder::execute)
 //! will request gas from and send the resulting transaction to this endpoint
-//! instead of using the GraphQL client.
+//! instead of using the client.
 //!
 //! ## Traits and Helpers
 //!
