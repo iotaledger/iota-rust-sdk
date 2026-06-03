@@ -1,13 +1,11 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// Decode `StakedIota` objects into typed Kotlin values via the Rust mirror in
-// `iota-sdk-move-types`.
+// Decode `StakedIota` objects into typed Kotlin values.
 //
-// The GraphQL client returns each object's contents as raw BCS bytes. With the
-// move-types crate exposed through the bindings, a single
-// `StakedIota.tryFromObject(obj)` gives typed, named-field access to id /
-// poolId / activationEpoch / principal.
+// The GraphQL client returns each object's contents as raw BCS bytes. A single
+// `StakedIota.tryFromObject(obj)` call gives typed, named-field access to
+// id / poolId / stakeActivationEpoch / principal.
 
 import iota_sdk.GraphQlClient
 import iota_sdk.ObjectFilter

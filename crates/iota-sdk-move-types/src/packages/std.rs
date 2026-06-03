@@ -89,7 +89,6 @@ pub mod uq32_32 {
     ///
     /// An unsigned fixed-point numeric type with 32 integer bits and 32
     /// fractional bits, represented by an underlying `u64`.
-    #[allow(non_camel_case_types)]
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -109,7 +108,6 @@ pub mod uq64_64 {
     ///
     /// An unsigned fixed-point numeric type with 64 integer bits and 64
     /// fractional bits, represented by an underlying `u128`.
-    #[allow(non_camel_case_types)]
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
