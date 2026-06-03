@@ -3,7 +3,7 @@
 
 use iota_sdk::{
     graphql_client::{Client, DryRunResult, WaitForTx},
-    transaction_builder::ClientMethods,
+    transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig},
     types::{Address, Digest, Object, ObjectId, Transaction, TransactionEffects, TypeTag, Version},
 };
 
@@ -27,9 +27,9 @@ impl ClientMethods for GraphQLClient {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
+    ) -> Result<ObjectsPage, Self::Error> {
         ClientMethods::objects(
             &*self.0.read().await,
             type_tag,
@@ -40,6 +40,10 @@ impl ClientMethods for GraphQLClient {
             limit,
         )
         .await
+    }
+
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        ClientMethods::protocol_config(&*self.0.read().await).await
     }
 
     async fn transaction(

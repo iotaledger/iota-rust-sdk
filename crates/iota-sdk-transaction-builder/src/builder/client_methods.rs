@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::collections::BTreeMap;
+
 use iota_graphql_client::{
     DryRunResult, WaitForTx,
     pagination::{Direction, PaginationFilter},
@@ -10,6 +12,27 @@ use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
     UserSignature, Version,
 };
+
+/// One page of objects plus an optional cursor for the next page. See
+/// [`ClientMethods::objects`].
+#[derive(Clone, Debug)]
+pub struct ObjectsPage {
+    /// The objects in this page.
+    pub data: Vec<Object>,
+    /// Opaque continuation cursor for fetching the next page; `None` when no
+    /// further pages exist. Pass it back as the `cursor` argument to
+    /// [`ClientMethods::objects`] to advance.
+    pub next_cursor: Option<Vec<u8>>,
+}
+
+/// Transport-neutral view of the chain's protocol configuration: a flat
+/// map of attribute name to value, parsed by callers as needed.
+#[derive(Clone, Debug, Default)]
+pub struct ProtocolConfig {
+    /// All available configuration attributes, keyed by their canonical
+    /// protocol name (e.g. `"max_gas_payment_objects"`).
+    pub attributes: BTreeMap<String, String>,
+}
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
@@ -26,16 +49,31 @@ pub trait ClientMethods {
         version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
-    /// Fetch objects
+    /// Fetch one page of objects matching the filter, returning the page
+    /// contents and a continuation cursor (when more pages exist).
+    ///
+    /// The cursor is opaque to callers — both GraphQL (base64-encoded
+    /// JSON/BCS) and gRPC (`prost::bytes::Bytes` page token) formats fit
+    /// into `Option<Vec<u8>>`. Pass `None` to start from the beginning;
+    /// pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
         type_tag: Option<TypeTag>,
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>>;
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
+
+    /// Fetch the chain's protocol configuration.
+    ///
+    /// The default impl returns a default [`ProtocolConfig`].
+    fn protocol_config(
+        &self,
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        std::future::ready(Ok(ProtocolConfig::default()))
+    }
 
     /// Fetch a transaction
     fn transaction(
@@ -102,10 +140,16 @@ impl<T: ClientMethods> ClientMethods for &T {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn protocol_config(
+        &self,
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        (*self).protocol_config()
     }
 
     fn transaction(
@@ -180,10 +224,20 @@ impl ClientMethods for iota_graphql_client::Client {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
-        Ok(self
+    ) -> Result<ObjectsPage, Self::Error> {
+        // GraphQL cursors are base64 ASCII, so round-tripping through
+        // Vec<u8> is lossless. Caller-supplied cursors must come from a
+        // prior call to this method; anything else is rejected here
+        // rather than panicked on.
+        let cursor = cursor.map(String::from_utf8).transpose().map_err(|e| {
+            iota_graphql_client::error::Error::from_error(
+                iota_graphql_client::error::Kind::Parse,
+                e,
+            )
+        })?;
+        let page = self
             .objects(
                 ObjectFilter {
                     type_: type_tag.as_ref().map(ToString::to_string),
@@ -200,8 +254,24 @@ impl ClientMethods for iota_graphql_client::Client {
                     limit: limit.map(|v| v as _),
                 },
             )
-            .await?
-            .data)
+            .await?;
+        let (page_info, data) = page.into_parts();
+        let next_cursor = page_info
+            .has_next_page
+            .then_some(page_info.end_cursor)
+            .flatten()
+            .map(String::into_bytes);
+        Ok(ObjectsPage { data, next_cursor })
+    }
+
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        let cfg = iota_graphql_client::Client::protocol_config(self, None).await?;
+        let attributes = cfg
+            .configs
+            .into_iter()
+            .filter_map(|attr| attr.value.map(|v| (attr.key, v)))
+            .collect();
+        Ok(ProtocolConfig { attributes })
     }
 
     async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
@@ -272,11 +342,17 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> impl std::future::Future<Output = Result<Vec<Object>, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
         self.as_ref()
             .objects(type_tag, owner, object_ids, ascending, cursor, limit)
+    }
+
+    fn protocol_config(
+        &self,
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
+        self.as_ref().protocol_config()
     }
 
     fn transaction(
