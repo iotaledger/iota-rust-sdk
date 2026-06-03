@@ -20,7 +20,7 @@ base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
-reqwest.workspace = true
+reqwest = { workspace = true, features = ["json"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
