@@ -29,7 +29,7 @@ const builder = new TransactionBuilder(myAddress).withClient(client);
 builder.stake(PtbArgument.u64(1000000000n), validator.address);
 
 const res = await builder.dryRun();
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to stake: ${res.error}`);
 }
 

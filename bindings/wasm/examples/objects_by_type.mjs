@@ -8,7 +8,7 @@ await uniffiInitAsync();
 const client = GraphQlClient.newTestnet();
 
 const stakedIotas = await client.objects(
-  new ObjectFilter({ typeTag: "0x3::staking_pool::StakedIota" }),
+  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota" }),
 );
 
 if (stakedIotas.data.length === 0) {

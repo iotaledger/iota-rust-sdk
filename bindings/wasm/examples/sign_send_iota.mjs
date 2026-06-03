@@ -36,7 +36,7 @@ builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 const txn = await builder.finish();
 
 const dryRunResult = await client.dryRunTx(txn);
-if (dryRunResult.error !== null) {
+if (dryRunResult.error) {
   throw new Error(`Dry run failed: ${dryRunResult.error}`);
 }
 

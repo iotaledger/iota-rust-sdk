@@ -27,9 +27,11 @@ builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
   PtbArgument.u64(64n),
 ]);
 
-builder.gasStationSponsor(gasStationUrl, {
-  headers: { Authorization: [`Bearer ${gasStationAuthToken}`] },
-});
+builder.gasStationSponsor(
+  gasStationUrl,
+  undefined,
+  new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
+);
 
 const res = await builder.execute(signer);
 

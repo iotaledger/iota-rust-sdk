@@ -11,12 +11,12 @@ const packageAddress = Address.fromHex(
   "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d",
 );
 
-const pkg = await client.package(packageAddress);
+const pkg = await client.package_(packageAddress);
 if (pkg === null) {
   throw new Error("missing package");
 }
 
-for (const moduleId of pkg.modules()) {
+for (const moduleId of pkg.modules().keys()) {
   const module = await client.normalizedMoveModule(
     packageAddress,
     moduleId.asStr(),

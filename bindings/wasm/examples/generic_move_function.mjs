@@ -40,7 +40,7 @@ builder.moveCall(
 );
 
 const res = await builder.dryRun();
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to call generic Move function: ${res.error}`);
 }
 

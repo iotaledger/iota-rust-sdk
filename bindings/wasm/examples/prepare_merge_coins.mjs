@@ -31,7 +31,7 @@ console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
 const res = await builder.dryRun();
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to merge coins: ${res.error}`);
 }
 console.log("Merge coins dry run was successful!");

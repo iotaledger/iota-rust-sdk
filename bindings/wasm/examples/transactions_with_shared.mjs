@@ -17,7 +17,7 @@ const sharedObjId = ObjectId.fromHex(
 );
 
 const transactions = await client.transactions(
-  new TransactionsFilter({ inputObject: sharedObjId }),
+  TransactionsFilter.new({ inputObject: sharedObjId }),
 );
 
 for (const transaction of transactions.data) {

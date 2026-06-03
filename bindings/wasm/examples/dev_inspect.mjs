@@ -108,7 +108,7 @@ builder.moveCall(
 );
 
 const res = await builder.dryRun(true);
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to lookup name: ${res.error}`);
 }
 

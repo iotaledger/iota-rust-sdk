@@ -23,8 +23,8 @@ await uniffiInitAsync();
 const FRAMEWORK_PACKAGE_ID = Address.framework().toHex();
 const HEX_DIGITS = new Set("0123456789abcdefABCDEF");
 
-function forwardPage(cursor = null) {
-  return new PaginationFilter({ direction: Direction.Forward, cursor });
+function forwardPage(cursor = undefined) {
+  return PaginationFilter.new({ direction: Direction.Forward, cursor });
 }
 
 function shortenPackageIds(signature) {
@@ -61,10 +61,12 @@ function formatFunctionSignature(signature, packagePrefix) {
 
 async function fetchPackageVersions(client, packageAddress) {
   const versions = [];
-  let cursor = null;
+  let cursor = undefined;
   while (true) {
     const page = await client.packageVersions(
       packageAddress,
+      undefined,
+      undefined,
       forwardPage(cursor),
     );
     versions.push(...page.data);
@@ -85,8 +87,8 @@ async function printObjectSamples(client, typeTag, hasKeyAbility, isGeneric) {
     return;
   }
   const objects = await client.objects(
-    new ObjectFilter({ typeTag }),
-    new PaginationFilter({ direction: Direction.Forward, limit: 3 }),
+    ObjectFilter.new({ typeTag }),
+    PaginationFilter.new({ direction: Direction.Forward, limit: 3 }),
   );
   if (objects.data.length === 0) {
     console.log("    sample objects: none found");
@@ -124,8 +126,8 @@ function extractPolicy(contents) {
 
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
-    new TransactionsFilter({ changedObject: packageId }),
-    new PaginationFilter({ direction: Direction.Forward, limit: 1 }),
+    TransactionsFilter.new({ changedObject: packageId }),
+    PaginationFilter.new({ direction: Direction.Forward, limit: 1 }),
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
@@ -242,10 +244,10 @@ function usesUpgradeCapForMakeImmutable(tx, upgradeCapId) {
 }
 
 async function wasPackagePublishedAsImmutable(client, packageId) {
-  let cursor = null;
+  let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      new TransactionsFilter({ changedObject: packageId }),
+      TransactionsFilter.new({ changedObject: packageId }),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -257,10 +259,10 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
 }
 
 async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
-  let cursor = null;
+  let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      new TransactionsFilter({ inputObject: upgradeCapId }),
+      TransactionsFilter.new({ inputObject: upgradeCapId }),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -294,7 +296,7 @@ const packageId =
 const packageAddress = Address.fromHex(packageId);
 const client = GraphQlClient.newTestnet();
 
-const pkg = await client.package(packageAddress);
+const pkg = await client.package_(packageAddress);
 if (pkg === null) throw new Error("missing package");
 
 const latestPackage = await client.packageLatest(packageAddress);
@@ -344,7 +346,7 @@ for (const moduleName of moduleNames) {
   const module = await client.normalizedMoveModule(
     packageAddress,
     moduleName,
-    null,
+    undefined,
     forwardPage(),
     forwardPage(),
     forwardPage(),

@@ -15,7 +15,7 @@ await uniffiInitAsync();
 const client = GraphQlClient.newTestnet();
 
 const stakedIotas = await client.objects(
-  new ObjectFilter({ typeTag: String(StructTag.newStakedIota()) }),
+  ObjectFilter.new({ typeTag: String(StructTag.newStakedIota()) }),
 );
 if (stakedIotas.data.length === 0) {
   throw new Error("no staked iotas found");
@@ -29,7 +29,7 @@ const builder = new TransactionBuilder(
 builder.unstake(PtbArgument.objectId(stakedIota.objectId()));
 
 const res = await builder.dryRun();
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to unstake: ${res.error}`);
 }
 

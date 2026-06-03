@@ -62,7 +62,7 @@ let tx = await builder.finish();
 
 console.log("> Publishing package (dry run):");
 let result = await client.dryRunTx(tx, false);
-if (result.error !== null) throw new Error(`Dry run failed: ${result.error}`);
+if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
 
@@ -126,7 +126,7 @@ tx = await builder.finish();
 
 console.log("> Upgrading package (dry run):");
 result = await client.dryRunTx(tx, false);
-if (result.error !== null) throw new Error(`Dry run failed: ${result.error}`);
+if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
 

@@ -12,7 +12,7 @@ const txBytesBase64 =
 const transaction = Transaction.fromBase64(txBytesBase64);
 
 const res = await client.dryRunTx(transaction);
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Dry run failed: ${res.error}`);
 }
 

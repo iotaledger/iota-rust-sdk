@@ -28,7 +28,7 @@ console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
 const res = await client.dryRunTx(txn);
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to send IOTA: ${res.error}`);
 }
 console.log("Send IOTA dry run was successful!");

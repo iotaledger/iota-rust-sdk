@@ -39,7 +39,7 @@ console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
 const res = await client.dryRunTx(txn);
-if (res.error !== null) {
+if (res.error) {
   throw new Error(`Failed to transfer objects: ${res.error}`);
 }
 console.log("Transfer objects dry run was successful!");

@@ -19,14 +19,14 @@ const queryEpochDataStr = `
   }
 `;
 
-const queryEpochData = new Query({ query: queryEpochDataStr });
+const queryEpochData = Query.new({ query: queryEpochDataStr });
 console.log(await client.runQuery(queryEpochData));
 
-const queryEpochDataWithVariables = new Query({
+const queryEpochDataWithVariables = Query.new({
   query: queryEpochDataStr,
   variables: JSON.stringify({ id: 1 }),
 });
 console.log(await client.runQuery(queryEpochDataWithVariables));
 
-const queryChainId = new Query({ query: "query MyQuery { chainIdentifier }" });
+const queryChainId = Query.new({ query: "query MyQuery { chainIdentifier }" });
 console.log(await client.runQuery(queryChainId));

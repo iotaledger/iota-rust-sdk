@@ -37,9 +37,9 @@ const recipientAddress = Address.fromHex(
 );
 
 // 1. Derive 3 Ed25519 keypairs from mnemonic at indices 0, 1, 2.
-const key0 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 0);
-const key1 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 1);
-const key2 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 2);
+const key0 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 0n);
+const key1 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 1n);
+const key2 = Ed25519PrivateKey.fromMnemonic(MNEMONIC, 2n);
 
 // 2. Wrap in SimpleKeypair to access MultisigMemberPublicKey.
 const kp0 = SimpleKeypair.fromEd25519(key0);
@@ -75,7 +75,7 @@ builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 const txn = await builder.finish();
 
 const dryRunResult = await client.dryRunTx(txn);
-if (dryRunResult.error !== null) {
+if (dryRunResult.error) {
   throw new Error(`Dry run failed: ${dryRunResult.error}`);
 }
 

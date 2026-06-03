@@ -18,13 +18,13 @@ const address = Address.fromHex(
 );
 
 const allObjects = [];
-let nextCursor = null;
+let nextCursor = undefined;
 while (true) {
   console.log(`Fetching page with cursor: ${nextCursor}`);
   const page = await client.objects(
-    new ObjectFilter({ owner: address }),
+    ObjectFilter.new({ owner: address }),
     // Limit to 1 to demonstrate pagination
-    new PaginationFilter({
+    PaginationFilter.new({
       direction: Direction.Forward,
       cursor: nextCursor,
       limit: 1,
