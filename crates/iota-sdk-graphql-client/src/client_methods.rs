@@ -3,7 +3,7 @@
 
 //! Implementation of [`ClientMethods`] for the GraphQL [`Client`].
 
-use iota_transaction_builder::{ClientMethods, WaitForTx};
+use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
     UserSignature, Version,
@@ -33,10 +33,18 @@ impl ClientMethods for Client {
         owner: Option<Address>,
         object_ids: Option<Vec<ObjectId>>,
         ascending: bool,
-        cursor: Option<String>,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
-        Ok(self
+    ) -> Result<ObjectsPage, Self::Error> {
+        // GraphQL cursors are base64 ASCII, so round-tripping through
+        // Vec<u8> is lossless. Caller-supplied cursors must come from a
+        // prior call to this method; anything else is rejected here
+        // rather than panicked on.
+        let cursor = cursor
+            .map(String::from_utf8)
+            .transpose()
+            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Parse, e))?;
+        let page = self
             .objects(
                 ObjectFilter {
                     type_: type_tag.as_ref().map(ToString::to_string),
@@ -53,8 +61,24 @@ impl ClientMethods for Client {
                     limit: limit.map(|v| v as _),
                 },
             )
-            .await?
-            .data)
+            .await?;
+        let (page_info, data) = page.into_parts();
+        let next_cursor = page_info
+            .has_next_page
+            .then_some(page_info.end_cursor)
+            .flatten()
+            .map(String::into_bytes);
+        Ok(ObjectsPage { data, next_cursor })
+    }
+
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        let cfg = crate::Client::protocol_config(self, None).await?;
+        let attributes = cfg
+            .configs
+            .into_iter()
+            .filter_map(|attr| attr.value.map(|v| (attr.key, v)))
+            .collect();
+        Ok(ProtocolConfig { attributes })
     }
 
     async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {

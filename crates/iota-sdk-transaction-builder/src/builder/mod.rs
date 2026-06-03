@@ -10,7 +10,7 @@ use std::{
 };
 
 use iota_types::{
-    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
@@ -43,6 +43,17 @@ pub mod signer;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
+
+/// Protocol-config key for the (exclusive) cap on `gas_payment.objects.len()`.
+const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
+
+/// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
+/// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
+/// time of writing, so 255 inclusive). Auto gas selection fetches the live
+/// value via [`ClientMethods::protocol_config`] and falls back to this if the
+/// implementation does not expose protocol config or the value cannot be
+/// parsed.
+const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Clone, Debug)]
@@ -1072,25 +1083,74 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            for coin in self
+            // Auto gas selection: page through the owner's gas coins, keeping a
+            // running top-K by balance (K = the protocol cap). Stop as soon as
+            // the selected coins cover the requested budget, or the pages run
+            // out; with no budget set, walk every page. This deliberately
+            // over-includes — in the common case a wallet owns fewer coins than
+            // the cap, so the whole set is pinned — and gas smashing during
+            // execution consolidates the balances into a single coin.
+            let max_gas_payment_objects = self
                 .client
-                .objects(
-                    Some(StructTag::new_gas_coin().into()),
-                    Some(self.data.sponsor.unwrap_or(self.data.sender)),
-                    None,
-                    true,
-                    None,
-                    None,
-                )
+                .protocol_config()
                 .await
-                .map_err(Error::client)?
-            {
-                if !unusable_object_ids.contains(&coin.object_id()) {
-                    self.set_input(
-                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                .ok()
+                .and_then(|cfg| {
+                    cfg.attributes
+                        .get(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                        .and_then(|v| v.parse::<usize>().ok())
+                })
+                .and_then(|v| v.checked_sub(1))
+                .unwrap_or(DEFAULT_MAX_GAS_PAYMENT_OBJECTS);
+            let owner = self.data.sponsor.unwrap_or(self.data.sender);
+            let target_budget = self.data.gas_budget;
+            let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut cursor: Option<Vec<u8>> = None;
+            loop {
+                let page = self
+                    .client
+                    .objects(
+                        Some(StructTag::new_gas_coin().into()),
+                        Some(owner),
+                        None,
                         true,
-                    );
+                        cursor,
+                        None,
+                    )
+                    .await
+                    .map_err(Error::client)?;
+                for obj in page.data {
+                    if unusable_object_ids.contains(&obj.object_id()) {
+                        continue;
+                    }
+                    let Ok(coin) = Coin::try_from_object(&obj) else {
+                        continue;
+                    };
+                    selected.push((coin.balance(), obj.object_ref()));
                 }
+                selected.sort_by_key(|c| std::cmp::Reverse(c.0));
+                selected.truncate(max_gas_payment_objects);
+
+                let covers_budget = target_budget.is_some_and(|budget| {
+                    selected
+                        .iter()
+                        .map(|(b, _)| *b)
+                        .fold(0u64, u64::saturating_add)
+                        >= budget
+                });
+                if covers_budget || page.next_cursor.is_none() {
+                    break;
+                }
+                cursor = page.next_cursor;
+            }
+
+            // Add all selected coins as gas inputs (without early break): the
+            // extra balance gets consolidated by gas smashing during execution.
+            for (_, obj_ref) in selected {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    true,
+                );
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {

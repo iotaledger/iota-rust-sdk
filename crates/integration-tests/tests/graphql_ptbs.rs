@@ -6,13 +6,15 @@ use std::time::Duration;
 use eyre::Context;
 use iota_crypto::ed25519::Ed25519PrivateKey;
 use iota_graphql_client::{
-    Client,
+    Client, Direction,
     faucet::{CoinInfo, FaucetClient},
     pagination::PaginationFilter,
 };
-use iota_transaction_builder::{TransactionBuilder, WaitForTx, assigned, error::Error};
+use iota_transaction_builder::{
+    TransactionBuilder, WaitForTx, assigned, error::Error, unresolved::Argument,
+};
 use iota_types::{
-    Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType,
+    Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
     TransactionEffects, UpgradePolicy,
 };
 
@@ -294,4 +296,168 @@ async fn test_upgrade() {
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
     check_effects_status_success(effects);
+}
+
+/// Fund the sender with ~2044 coins (via repeated `split_coins` — each
+/// command tops out at 511 amounts, with one slot used by the source
+/// coin), then run a plain `send_iota` and let auto gas selection deal
+/// with the resulting fleet of gas coins.
+#[tokio::test]
+async fn test_auto_gas_selection_with_many_coins() {
+    let (mut tx, sender, pk, coins) = helper_setup().await;
+    let client = tx.get_client().clone();
+    let source = coins.first().unwrap().id;
+
+    const SPLITS_PER_CMD: usize = 511;
+    const NUM_SPLIT_CMDS: usize = 4;
+
+    for round in 0..NUM_SPLIT_CMDS {
+        tx.split_coins(source, vec![1u64; SPLITS_PER_CMD]);
+        let split_cmd = (round * 2) as u16;
+        let outputs: Vec<Argument> = (0..SPLITS_PER_CMD as u16)
+            .map(|i| Argument::NestedResult(split_cmd, i))
+            .collect();
+        tx.transfer_objects(sender, outputs);
+    }
+    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+
+    let mut tx2 = TransactionBuilder::new(sender).with_client(client);
+    let recipient = Address::generate(rand::thread_rng());
+    tx2.send_iota(recipient, 1_000u64);
+    check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
+}
+
+/// Pin all 255 gas coins (the protocol cap, `gas().len() <
+/// max_gas_payment_objects = 256`) and assert the gas-smashing
+/// prologue consolidates them into a single coin during execution.
+#[tokio::test]
+async fn test_manual_gas_pin_consolidates_255_coins() {
+    let (mut tx, sender, pk, coins) = helper_setup().await;
+    let client = tx.get_client().clone();
+
+    // helper_setup pinned coins.last() as gas; split a different
+    // faucet coin so the source isn't already reserved.
+    let source = coins.first().unwrap().id;
+
+    // 255 outputs fits in a single split_coins command (511-arg cap,
+    // minus the source-coin slot). PER_COIN × 255 must fit in the
+    // source coin and exceed the gas budget below.
+    const NUM_GAS_COINS: usize = 255;
+    const PER_COIN: u64 = 10_000_000;
+    const GAS_BUDGET: u64 = 100_000_000;
+
+    tx.split_coins(source, vec![PER_COIN; NUM_GAS_COINS]);
+    tx.transfer_objects(
+        sender,
+        (0..NUM_GAS_COINS as u16)
+            .map(|i| Argument::NestedResult(0, i))
+            .collect::<Vec<_>>(),
+    );
+    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+
+    async fn list_coins(client: &Client, owner: Address) -> Vec<(ObjectId, u64)> {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let page = client
+                .coins(
+                    owner,
+                    None,
+                    PaginationFilter {
+                        direction: Direction::Forward,
+                        cursor: cursor.clone(),
+                        limit: None,
+                    },
+                )
+                .await
+                .unwrap();
+            out.extend(page.data().iter().map(|c| (*c.id(), c.balance())));
+            if !page.page_info().has_next_page {
+                break;
+            }
+            cursor = page.page_info().end_cursor.clone();
+        }
+        out
+    }
+
+    let before = list_coins(&client, sender).await;
+    let split_ids: Vec<ObjectId> = before
+        .iter()
+        .filter(|(_, b)| *b == PER_COIN)
+        .take(NUM_GAS_COINS)
+        .map(|(id, _)| *id)
+        .collect();
+    assert_eq!(
+        split_ids.len(),
+        NUM_GAS_COINS,
+        "expected {NUM_GAS_COINS} split coins; got {}",
+        split_ids.len(),
+    );
+
+    let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
+    let recipient = Address::generate(rand::thread_rng());
+    tx2.gas(split_ids)
+        .gas_budget(GAS_BUDGET)
+        .send_iota(recipient, 1_000u64);
+    check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
+
+    // send_iota's output belongs to `recipient`, so the only delta on
+    // sender's side is the 255 → 1 smashing.
+    let before_count = before.len();
+    let after_count = list_coins(&client, sender).await.len();
+    let expected_drop = NUM_GAS_COINS - 1;
+    assert_eq!(
+        before_count - after_count,
+        expected_drop,
+        "expected sender's coin count to drop by {expected_drop} after smashing; \
+             went from {before_count} to {after_count}",
+    );
+}
+
+/// Mint 50 coins of 1 IOTA each — any single one trivially covers the
+/// gas budget — and let auto gas selection resolve a fresh tx without
+/// pinning gas. It should pin *every* coin from the first page (not just
+/// the one minimally needed), so gas smashing can consolidate them into
+/// a single coin during execution.
+#[tokio::test]
+async fn test_auto_gas_pins_full_first_page_for_consolidation() {
+    let (mut tx, sender, pk, coins) = helper_setup().await;
+    let client = tx.get_client().clone();
+    let source = coins.first().unwrap().id;
+
+    // 50 matches the default IOTA GraphQL `max_page_size`, so all newly
+    // minted coins land on the first page even alongside the few
+    // leftover faucet coins. 1 IOTA per coin is well above any
+    // realistic gas budget for a `send_iota` of 1 nano.
+    const NUM_COINS: usize = 50;
+    const PER_COIN: u64 = 1_000_000_000;
+    const GAS_BUDGET: u64 = 50_000_000;
+
+    tx.split_coins(source, vec![PER_COIN; NUM_COINS]);
+    tx.transfer_objects(
+        sender,
+        (0..NUM_COINS as u16)
+            .map(|i| Argument::NestedResult(0, i))
+            .collect::<Vec<_>>(),
+    );
+    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+
+    // Build (but don't execute) a fresh tx without pinning gas. The
+    // resolved transaction reveals what auto-gas picked.
+    let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
+    let recipient = Address::generate(rand::thread_rng());
+    tx2.gas_budget(GAS_BUDGET);
+    tx2.send_iota(recipient, 1u64);
+    let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
+        panic!("expected TransactionV1");
+    };
+    // First page covers the budget many times over, so every gas coin
+    // from that page (capped at the protocol max) is pinned, including
+    // the 50 newly minted ones.
+    assert!(
+        resolved.gas_payment.objects.len() >= NUM_COINS,
+        "auto-gas should pin every gas coin from the first page \
+             so smashing consolidates them; pinned {}, expected at least {NUM_COINS}",
+        resolved.gas_payment.objects.len(),
+    );
 }

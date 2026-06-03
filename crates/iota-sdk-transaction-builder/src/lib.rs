@@ -289,7 +289,7 @@ pub use self::builder::client_methods::test_client::{TestClient, TestClientError
 pub use self::{
     builder::{
         TransactionBuilder,
-        client_methods::{ClientMethods, WaitForTx},
+        client_methods::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
