@@ -8,7 +8,7 @@
 use iota_sdk_serde_derive::SplitSerde;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 struct Inner {
     x: u16,
 }
@@ -32,7 +32,10 @@ fn tagged_enum_json_is_internally_tagged_and_snake_cased() {
         b: "hi".to_owned(),
     };
     let json = serde_json::to_value(&v).unwrap();
-    assert_eq!(json, serde_json::json!({"kind": "fields", "a": 1, "b": "hi"}));
+    assert_eq!(
+        json,
+        serde_json::json!({"kind": "fields", "a": 1, "b": "hi"})
+    );
     assert_eq!(serde_json::from_value::<Tagged>(json).unwrap(), v);
 
     assert_eq!(
