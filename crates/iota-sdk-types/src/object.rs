@@ -2,12 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "serde")]
-use std::collections::BTreeMap;
-
 use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version};
-#[cfg(feature = "serde")]
-use super::{Identifier, TypeOrigin, UpgradeInfo};
 
 /// Reference to an object
 ///
@@ -88,6 +83,7 @@ impl ObjectReference {
 /// owner-immutable = %d03
 /// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -457,6 +453,7 @@ impl std::fmt::Display for ObjectType {
 /// object = object-data owner digest u64
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Object {
@@ -469,6 +466,7 @@ pub struct Object {
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub storage_rebate: u64,
 }
 
@@ -642,67 +640,10 @@ impl GenesisObject {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use std::{borrow::Cow, str::FromStr};
-
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use serde_with::{DeserializeAs, SerializeAs};
 
     use super::*;
     use crate::TypeTag;
-
-    #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
-    #[serde(rename = "Owner")]
-    enum ReadableOwner {
-        /// Object is exclusively owned by a single address, and is mutable.
-        AddressOwner(Address),
-        /// Object is exclusively owned by a single object, and is mutable.
-        /// The object ID is converted to IotaAddress as IotaAddress is
-        /// universal.
-        ObjectOwner(Address),
-        /// Object is shared, can be used by any address, and is mutable.
-        Shared {
-            /// The version at which the object became shared
-            initial_shared_version: Version,
-        },
-        /// Object is immutable, and hence ownership doesn't matter.
-        Immutable,
-    }
-
-    impl Serialize for Owner {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let readable_owner = match self {
-                Owner::Address(address) => ReadableOwner::AddressOwner(*address),
-                Owner::Object(object_id) => ReadableOwner::ObjectOwner(*object_id.as_address()),
-                Owner::Shared(initial_shared_version) => ReadableOwner::Shared {
-                    initial_shared_version: *initial_shared_version,
-                },
-                Owner::Immutable => ReadableOwner::Immutable,
-            };
-            readable_owner.serialize(serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Owner {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let readable_owner = ReadableOwner::deserialize(deserializer)?;
-            Ok(match readable_owner {
-                ReadableOwner::AddressOwner(address) => Owner::Address(address),
-                ReadableOwner::ObjectOwner(address) => {
-                    Owner::Object(ObjectId::from_address(address))
-                }
-                ReadableOwner::Shared {
-                    initial_shared_version,
-                } => Owner::Shared(initial_shared_version),
-                ReadableOwner::Immutable => Owner::Immutable,
-            })
-        }
-    }
 
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so
@@ -820,7 +761,7 @@ mod serialization {
         object_type: &'a MoveObjectType,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         version: Version,
-        #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
         contents: &'a [u8],
     }
 
@@ -830,7 +771,7 @@ mod serialization {
         object_type: MoveObjectType,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         version: Version,
-        #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
         contents: Vec<u8>,
     }
 
@@ -862,215 +803,18 @@ mod serialization {
         }
     }
 
-    struct ReadableObjectType;
-
-    impl SerializeAs<ObjectType> for ReadableObjectType {
-        fn serialize_as<S>(source: &ObjectType, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            match source {
-                ObjectType::Package => "package".serialize(serializer),
-                ObjectType::Struct(s) => s.serialize(serializer),
-            }
-        }
+    #[derive(serde::Serialize)]
+    #[serde(rename = "GenesisObject")]
+    struct ReadableGenesisObjectRef<'a> {
+        data: &'a ObjectData,
+        owner: &'a Owner,
     }
 
-    impl<'de> DeserializeAs<'de, ObjectType> for ReadableObjectType {
-        fn deserialize_as<D>(deserializer: D) -> Result<ObjectType, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let s: Cow<'de, str> = Deserialize::deserialize(deserializer)?;
-            if s == "package" {
-                Ok(ObjectType::Package)
-            } else {
-                let struct_tag = StructTag::from_str(&s)
-                    .map_err(|_| serde::de::Error::custom("invalid object type"))?;
-                Ok(ObjectType::Struct(struct_tag))
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "Object")]
-    struct ReadableObject {
-        object_id: ObjectId,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        version: Version,
-        owner: Owner,
-        #[serde(with = "::serde_with::As::<ReadableObjectType>")]
-        #[serde(rename = "type")]
-        type_: ObjectType,
-        #[serde(flatten)]
-        data: ReadableObjectData,
-        previous_transaction: Digest,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        storage_rebate: u64,
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(untagged)]
-    enum ReadableObjectData {
-        Move(ReadableMoveStruct),
-        Package(ReadablePackage),
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "Package")]
-    struct ReadablePackage {
-        #[serde(
-            with = "::serde_with::As::<BTreeMap<::serde_with::Same, crate::_serde::Base64Encoded>>"
-        )]
-        modules: BTreeMap<Identifier, Vec<u8>>,
-        type_origin_table: Vec<TypeOrigin>,
-        linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "MoveStruct")]
-    struct ReadableMoveStruct {
-        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-        contents: Vec<u8>,
-    }
-
-    impl Object {
-        fn readable_object_data(&self) -> ReadableObjectData {
-            match &self.data {
-                ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
-                    contents: struct_.contents().to_vec(),
-                }),
-                ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
-                    modules: package.modules.clone(),
-                    type_origin_table: package.type_origin_table.clone(),
-                    linkage_table: package.linkage_table.clone(),
-                }),
-            }
-        }
-    }
-
-    impl Serialize for Object {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = ReadableObject {
-                    object_id: self.object_id(),
-                    version: self.version(),
-                    // digest: todo!(),
-                    owner: self.owner,
-                    previous_transaction: self.previous_transaction,
-                    storage_rebate: self.storage_rebate,
-                    type_: self.object_type(),
-                    data: self.readable_object_data(),
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = BinaryObject {
-                    data: self.data.clone(),
-                    owner: self.owner,
-                    previous_transaction: self.previous_transaction,
-                    storage_rebate: self.storage_rebate,
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Object {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let ReadableObject {
-                    object_id,
-                    version,
-                    owner,
-                    previous_transaction,
-                    storage_rebate,
-                    type_,
-                    data,
-                } = Deserialize::deserialize(deserializer)?;
-
-                // check if package or struct
-                let data = match (type_, data) {
-                    (
-                        ObjectType::Package,
-                        ReadableObjectData::Package(ReadablePackage {
-                            modules,
-                            type_origin_table,
-                            linkage_table,
-                        }),
-                    ) => ObjectData::Package(MovePackage {
-                        id: object_id,
-                        version,
-                        modules,
-                        type_origin_table,
-                        linkage_table,
-                    }),
-                    (
-                        ObjectType::Struct(tag),
-                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
-                    ) => {
-                        let move_struct = MoveStruct::new(tag.into(), version, contents)
-                            .map_err(serde::de::Error::custom)?;
-
-                        if move_struct.id() != object_id {
-                            return Err(serde::de::Error::custom("id from contents doesn't match"));
-                        }
-
-                        ObjectData::Struct(move_struct)
-                    }
-                    _ => return Err(serde::de::Error::custom("type and data don't match")),
-                };
-
-                Ok(Object {
-                    data,
-                    owner,
-                    previous_transaction,
-                    storage_rebate,
-                })
-            } else {
-                let BinaryObject {
-                    data,
-                    owner,
-                    previous_transaction,
-                    storage_rebate,
-                } = Deserialize::deserialize(deserializer)?;
-
-                Ok(Object {
-                    data,
-                    owner,
-                    previous_transaction,
-                    storage_rebate,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "Object")]
-    struct BinaryObject {
-        data: ObjectData,
-        owner: Owner,
-        previous_transaction: Digest,
-        storage_rebate: u64,
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
+    #[derive(serde::Deserialize)]
     #[serde(rename = "GenesisObject")]
     struct ReadableGenesisObject {
-        object_id: ObjectId,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        version: Version,
+        data: ObjectData,
         owner: Owner,
-        #[serde(with = "::serde_with::As::<ReadableObjectType>")]
-        #[serde(rename = "type")]
-        type_: ObjectType,
-        #[serde(flatten)]
-        data: ReadableObjectData,
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -1084,41 +828,23 @@ mod serialization {
         RawObject { data: ObjectData, owner: Owner },
     }
 
-    impl GenesisObject {
-        fn readable_object_data(&self) -> ReadableObjectData {
-            match &self.data {
-                ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
-                    contents: struct_.contents().to_vec(),
-                }),
-                ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
-                    modules: package.modules.clone(),
-                    type_origin_table: package.type_origin_table.clone(),
-                    linkage_table: package.linkage_table.clone(),
-                }),
-            }
-        }
-    }
-
     impl Serialize for GenesisObject {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
             if serializer.is_human_readable() {
-                let readable = ReadableGenesisObject {
-                    object_id: self.object_id(),
-                    version: self.version(),
-                    owner: self.owner,
-                    type_: self.object_type(),
-                    data: self.readable_object_data(),
-                };
-                readable.serialize(serializer)
+                ReadableGenesisObjectRef {
+                    data: &self.data,
+                    owner: &self.owner,
+                }
+                .serialize(serializer)
             } else {
-                let binary = BinaryGenesisObject::RawObject {
+                BinaryGenesisObject::RawObject {
                     data: self.data.clone(),
                     owner: self.owner,
-                };
-                binary.serialize(serializer)
+                }
+                .serialize(serializer)
             }
         }
     }
@@ -1129,45 +855,7 @@ mod serialization {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                let ReadableGenesisObject {
-                    object_id,
-                    version,
-                    owner,
-                    type_,
-                    data,
-                } = Deserialize::deserialize(deserializer)?;
-
-                // check if package or struct
-                let data = match (type_, data) {
-                    (
-                        ObjectType::Package,
-                        ReadableObjectData::Package(ReadablePackage {
-                            modules,
-                            type_origin_table,
-                            linkage_table,
-                        }),
-                    ) => ObjectData::Package(MovePackage {
-                        id: object_id,
-                        version,
-                        modules,
-                        type_origin_table,
-                        linkage_table,
-                    }),
-                    (
-                        ObjectType::Struct(tag),
-                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
-                    ) => {
-                        let move_struct = MoveStruct::new(tag.into(), version, contents)
-                            .map_err(serde::de::Error::custom)?;
-
-                        if move_struct.id() != object_id {
-                            return Err(serde::de::Error::custom("id from contents doesn't match"));
-                        }
-
-                        ObjectData::Struct(move_struct)
-                    }
-                    _ => return Err(serde::de::Error::custom("type and data don't match")),
-                };
+                let ReadableGenesisObject { data, owner } = Deserialize::deserialize(deserializer)?;
 
                 Ok(GenesisObject { data, owner })
             } else {
@@ -1214,7 +902,7 @@ mod serialization {
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
         use super::*;
-        use crate::object::Object;
+        use crate::{Identifier, object::Object};
 
         #[test]
         fn obj() {

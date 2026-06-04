@@ -319,7 +319,6 @@ mod serialization {
         status: &'a ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
-        #[serde(rename = "gas_used")]
         gas_cost_summary: &'a GasCostSummary,
         transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
@@ -339,7 +338,6 @@ mod serialization {
         status: ExecutionStatus,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
-        #[serde(rename = "gas_used")]
         gas_cost_summary: GasCostSummary,
         transaction_digest: Digest,
         gas_object_index: Option<u32>,
@@ -737,15 +735,8 @@ mod serialization {
     #[serde(rename = "ObjectOut")]
     enum BinaryObjectOut {
         Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
+        ObjectWrite { digest: Digest, owner: Owner },
+        PackageWrite { version: Version, digest: Digest },
     }
 
     impl Serialize for ObjectOut {
