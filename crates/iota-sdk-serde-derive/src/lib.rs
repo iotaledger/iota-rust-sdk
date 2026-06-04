@@ -143,14 +143,14 @@ fn expand_struct(
     }
 
     let defs = quote! {
-        #[derive(serde::Serialize, serde::Deserialize)]
+        #[derive(serde::Deserialize, serde::Serialize)]
         #[serde(rename = #name)]
         #type_serde
         struct Readable {
             #(#readable_fields,)*
         }
 
-        #[derive(serde::Serialize, serde::Deserialize)]
+        #[derive(serde::Deserialize, serde::Serialize)]
         #[serde(rename = #name)]
         struct Binary {
             #(#binary_fields,)*
@@ -284,14 +284,14 @@ fn expand_enum(
     }
 
     let defs = quote! {
-        #[derive(serde::Serialize, serde::Deserialize)]
+        #[derive(serde::Deserialize, serde::Serialize)]
         #[serde(rename = #name)]
         #type_serde
         enum Readable {
             #(#readable_variants,)*
         }
 
-        #[derive(serde::Serialize, serde::Deserialize)]
+        #[derive(serde::Deserialize, serde::Serialize)]
         #[serde(rename = #name)]
         enum Binary {
             #(#binary_variants,)*
