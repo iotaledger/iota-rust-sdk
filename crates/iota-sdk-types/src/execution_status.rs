@@ -207,11 +207,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 // New variants MUST be added at the end.
 // The `execution_error_bcs_discriminants` snapshot test enforces this.
 #[derive(Clone, Debug, Eq, Error, PartialEq, strum::AsRefStr)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "error", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ExecutionError {
@@ -232,15 +228,7 @@ pub enum ExecutionError {
         "Move object with size {object_size} is larger than the maximum object size {max_object_size}"
     )]
     ObjectTooBig {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         object_size: u64,
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
@@ -248,15 +236,7 @@ pub enum ExecutionError {
         "Move package with size {object_size} is larger than the maximum object size {max_object_size}"
     )]
     PackageTooBig {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         object_size: u64,
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         max_object_size: u64,
     },
     /// Circular Object Ownership
@@ -289,14 +269,7 @@ pub enum ExecutionError {
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
     #[error("Move Runtime Abort. Location: {location}, Abort Code: {code}")]
-    MoveAbort {
-        location: MoveLocation,
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        code: u64,
-    },
+    MoveAbort { location: MoveLocation, code: u64 },
     /// Bytecode verification error.
     #[error(
         "Move Bytecode Verification Error. Please run the Bytecode Verifier for more information."
@@ -352,18 +325,7 @@ pub enum ExecutionError {
     InvalidTransferObject,
     /// Effects from the transaction are too large
     #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
-    EffectsTooLarge {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        current_size: u64,
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        max_size: u64,
-    },
+    EffectsTooLarge { current_size: u64, max_size: u64 },
     /// Publish or Upgrade is missing dependency
     #[error(
         "Publish/Upgrade Error, Missing dependency. A dependency of a published or upgraded package has not been assigned an on-chain address."
@@ -384,15 +346,7 @@ pub enum ExecutionError {
     /// Indicates the transaction tried to write objects too large to storage
     #[error("Written objects of {object_size} bytes too large. Limit is {max_object_size} bytes")]
     WrittenObjectsTooLarge {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         object_size: u64,
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         max_object_size: u64,
     },
     /// Certificate is on the deny list
@@ -570,11 +524,7 @@ impl core::fmt::Display for MoveLocation {
 /// shared-object-operation-not-allowed         = %d11
 /// ```
 #[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "kind", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -690,11 +640,7 @@ impl CommandArgumentError {
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
 #[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "kind", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]

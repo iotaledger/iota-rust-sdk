@@ -26,22 +26,16 @@ use crate::{
 ///                          (option digest)                    ; auxiliary-data-digest
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(iota_serde_derive::SplitSerde))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
-    #[cfg_attr(feature = "serde", split_serde(json(flatten)))]
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
-    #[cfg_attr(feature = "serde", split_serde(json(rename = "gas_used")))]
     pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Digest,
@@ -56,10 +50,6 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -141,11 +131,7 @@ pub struct UnchangedSharedObject {
 ///                       / %d04               ; PerEpochConfig
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "kind", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -153,39 +139,14 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        version: Version,
-        digest: Digest,
-    },
+    ReadOnlyRoot { version: Version, digest: Digest },
     /// Deleted shared objects that appear mutably/owned in the input.
-    MutateDeleted {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        version: Version,
-    },
+    MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
-    ReadDeleted {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        version: Version,
-    },
+    ReadDeleted { version: Version },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        version: Version,
-    },
+    Cancelled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -216,11 +177,7 @@ impl UnchangedSharedKind {
 ///           / %d01 u64 digest owner   ; Data
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "state", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -228,10 +185,6 @@ pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
         version: Version,
         digest: Digest,
         owner: Owner,
@@ -290,11 +243,7 @@ impl ObjectIn {
 ///            / %d02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "state", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -305,14 +254,7 @@ pub enum ObjectOut {
     ObjectWrite { digest: Digest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite {
-        #[cfg_attr(
-            feature = "serde",
-            split_serde(with = "crate::_serde::ReadableDisplay")
-        )]
-        version: Version,
-        digest: Digest,
-    },
+    PackageWrite { version: Version, digest: Digest },
 }
 
 impl ObjectOut {

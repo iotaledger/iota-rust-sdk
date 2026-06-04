@@ -25,11 +25,7 @@ pub type ProtocolVersion = u64;
 /// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "type", rename_all = "snake_case"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -126,25 +122,13 @@ pub struct EndOfEpochData {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The height of this checkpoint.
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub sequence_number: CheckpointSequenceNumber,
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
     pub content_digest: Digest,
@@ -163,10 +147,6 @@ pub struct CheckpointSummary {
     /// Checkpoint timestamps are monotonic, but not strongly monotonic -
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
-    #[cfg_attr(
-        feature = "serde",
-        split_serde(with = "crate::_serde::ReadableDisplay")
-    )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub timestamp_ms: CheckpointTimestamp,
     /// Commitments to checkpoint-specific state.

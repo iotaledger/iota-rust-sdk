@@ -19,16 +19,11 @@ pub use v1::{
 /// transaction-effects = %d00 transaction-effects-v1   ; V1
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(iota_serde_derive::SplitSerde),
-    split_serde(json(tag = "version"))
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TransactionEffects {
-    #[cfg_attr(feature = "serde", split_serde(json(rename = "1")))]
     V1(Box<TransactionEffectsV1>),
 }
 
