@@ -8,7 +8,7 @@
 //! protocol and must stay stable. Their JSON form, however, is free to be a
 //! plain mirror of the Rust type. `serde`'s `#[derive]` can't express "this
 //! representation only in JSON" / "that one only in BCS" because it has no
-//! access to [`serde::Serializer::is_human_readable`]. Hand-written
+//! access to `serde::Serializer::is_human_readable`. Hand-written
 //! `Serialize`/`Deserialize` impls that branch on `is_human_readable()` fill
 //! that gap today, at the cost of a lot of boilerplate.
 //!
