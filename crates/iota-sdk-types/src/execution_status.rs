@@ -638,6 +638,11 @@ impl CommandArgumentError {
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
 #[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(iota_serde_derive::SplitSerde),
+    split_serde(json(tag = "kind", rename_all = "snake_case"))
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -1672,167 +1677,6 @@ mod serialization {
                         Self::SharedObjectOperationNotAllowed
                     }
                     BinaryCommandArgumentError::InvalidArgumentArity => Self::InvalidArgumentArity,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    #[serde(rename = "PackageUpgradeError")]
-    enum ReadablePackageUpgradeError {
-        UnableToFetchPackage {
-            package_id: ObjectId,
-        },
-        NotAPackage {
-            object_id: ObjectId,
-        },
-        IncompatibleUpgrade,
-        DigestDoesNotMatch {
-            digest: Digest,
-        },
-        UnknownUpgradePolicy {
-            policy: u8,
-        },
-        PackageIdDoesNotMatch {
-            package_id: ObjectId,
-            ticket_id: ObjectId,
-        },
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "PackageUpgradeError")]
-    enum BinaryPackageUpgradeError {
-        UnableToFetchPackage {
-            package_id: ObjectId,
-        },
-        NotAPackage {
-            object_id: ObjectId,
-        },
-        IncompatibleUpgrade,
-        DigestDoesNotMatch {
-            digest: Digest,
-        },
-        UnknownUpgradePolicy {
-            policy: u8,
-        },
-        PackageIdDoesNotMatch {
-            package_id: ObjectId,
-            ticket_id: ObjectId,
-        },
-    }
-
-    impl Serialize for PackageUpgradeError {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    Self::UnableToFetchPackage { package_id } => {
-                        ReadablePackageUpgradeError::UnableToFetchPackage { package_id }
-                    }
-                    Self::NotAPackage { object_id } => {
-                        ReadablePackageUpgradeError::NotAPackage { object_id }
-                    }
-                    Self::IncompatibleUpgrade => ReadablePackageUpgradeError::IncompatibleUpgrade,
-                    Self::DigestDoesNotMatch { digest } => {
-                        ReadablePackageUpgradeError::DigestDoesNotMatch { digest }
-                    }
-                    Self::UnknownUpgradePolicy { policy } => {
-                        ReadablePackageUpgradeError::UnknownUpgradePolicy { policy }
-                    }
-                    Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => ReadablePackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    Self::UnableToFetchPackage { package_id } => {
-                        BinaryPackageUpgradeError::UnableToFetchPackage { package_id }
-                    }
-                    Self::NotAPackage { object_id } => {
-                        BinaryPackageUpgradeError::NotAPackage { object_id }
-                    }
-                    Self::IncompatibleUpgrade => BinaryPackageUpgradeError::IncompatibleUpgrade,
-                    Self::DigestDoesNotMatch { digest } => {
-                        BinaryPackageUpgradeError::DigestDoesNotMatch { digest }
-                    }
-                    Self::UnknownUpgradePolicy { policy } => {
-                        BinaryPackageUpgradeError::UnknownUpgradePolicy { policy }
-                    }
-                    Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => BinaryPackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for PackageUpgradeError {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadablePackageUpgradeError::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadablePackageUpgradeError::UnableToFetchPackage { package_id } => {
-                            Self::UnableToFetchPackage { package_id }
-                        }
-                        ReadablePackageUpgradeError::NotAPackage { object_id } => {
-                            Self::NotAPackage { object_id }
-                        }
-                        ReadablePackageUpgradeError::IncompatibleUpgrade => {
-                            Self::IncompatibleUpgrade
-                        }
-                        ReadablePackageUpgradeError::DigestDoesNotMatch { digest } => {
-                            Self::DigestDoesNotMatch { digest }
-                        }
-                        ReadablePackageUpgradeError::UnknownUpgradePolicy { policy } => {
-                            Self::UnknownUpgradePolicy { policy }
-                        }
-                        ReadablePackageUpgradeError::PackageIdDoesNotMatch {
-                            package_id,
-                            ticket_id,
-                        } => Self::PackageIdDoesNotMatch {
-                            package_id,
-                            ticket_id,
-                        },
-                    },
-                )
-            } else {
-                BinaryPackageUpgradeError::deserialize(deserializer).map(|binary| match binary {
-                    BinaryPackageUpgradeError::UnableToFetchPackage { package_id } => {
-                        Self::UnableToFetchPackage { package_id }
-                    }
-                    BinaryPackageUpgradeError::NotAPackage { object_id } => {
-                        Self::NotAPackage { object_id }
-                    }
-                    BinaryPackageUpgradeError::IncompatibleUpgrade => Self::IncompatibleUpgrade,
-                    BinaryPackageUpgradeError::DigestDoesNotMatch { digest } => {
-                        Self::DigestDoesNotMatch { digest }
-                    }
-                    BinaryPackageUpgradeError::UnknownUpgradePolicy { policy } => {
-                        Self::UnknownUpgradePolicy { policy }
-                    }
-                    BinaryPackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
                 })
             }
         }
