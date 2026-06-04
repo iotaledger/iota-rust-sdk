@@ -78,11 +78,7 @@ pub struct TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename = "EffectsObjectChange")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -131,6 +127,7 @@ pub struct UnchangedSharedObject {
 ///                       / %d04               ; PerEpochConfig
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -176,6 +173,7 @@ impl UnchangedSharedKind {
 ///           / %d01 u64 digest owner   ; Data
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -241,6 +239,7 @@ impl ObjectIn {
 ///            / %d02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -303,315 +302,5 @@ impl ObjectOut {
 
     pub fn package_digest(&self) -> Digest {
         self.package_digest_opt().expect("package does not exist")
-    }
-}
-
-#[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-mod serialization {
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-    use super::*;
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    #[serde(rename = "UnchangedSharedKind")]
-    enum ReadableUnchangedSharedKind {
-        ReadOnlyRoot {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-        MutateDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        ReadDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        Cancelled {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        PerEpochConfig,
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "UnchangedSharedKind")]
-    enum BinaryUnchangedSharedKind {
-        ReadOnlyRoot { version: Version, digest: Digest },
-        MutateDeleted { version: Version },
-        ReadDeleted { version: Version },
-        Cancelled { version: Version },
-        PerEpochConfig,
-    }
-
-    impl Serialize for UnchangedSharedKind {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest }
-                    }
-                    UnchangedSharedKind::MutateDeleted { version } => {
-                        ReadableUnchangedSharedKind::MutateDeleted { version }
-                    }
-                    UnchangedSharedKind::ReadDeleted { version } => {
-                        ReadableUnchangedSharedKind::ReadDeleted { version }
-                    }
-                    UnchangedSharedKind::Cancelled { version } => {
-                        ReadableUnchangedSharedKind::Cancelled { version }
-                    }
-                    UnchangedSharedKind::PerEpochConfig => {
-                        ReadableUnchangedSharedKind::PerEpochConfig
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest }
-                    }
-                    UnchangedSharedKind::MutateDeleted { version } => {
-                        BinaryUnchangedSharedKind::MutateDeleted { version }
-                    }
-                    UnchangedSharedKind::ReadDeleted { version } => {
-                        BinaryUnchangedSharedKind::ReadDeleted { version }
-                    }
-                    UnchangedSharedKind::Cancelled { version } => {
-                        BinaryUnchangedSharedKind::Cancelled { version }
-                    }
-                    UnchangedSharedKind::PerEpochConfig => {
-                        BinaryUnchangedSharedKind::PerEpochConfig
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for UnchangedSharedKind {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableUnchangedSharedKind::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                            Self::ReadOnlyRoot { version, digest }
-                        }
-                        ReadableUnchangedSharedKind::MutateDeleted { version } => {
-                            Self::MutateDeleted { version }
-                        }
-                        ReadableUnchangedSharedKind::ReadDeleted { version } => {
-                            Self::ReadDeleted { version }
-                        }
-                        ReadableUnchangedSharedKind::Cancelled { version } => {
-                            Self::Cancelled { version }
-                        }
-                        ReadableUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-                    },
-                )
-            } else {
-                BinaryUnchangedSharedKind::deserialize(deserializer).map(|binary| match binary {
-                    BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        Self::ReadOnlyRoot { version, digest }
-                    }
-                    BinaryUnchangedSharedKind::MutateDeleted { version } => {
-                        Self::MutateDeleted { version }
-                    }
-                    BinaryUnchangedSharedKind::ReadDeleted { version } => {
-                        Self::ReadDeleted { version }
-                    }
-                    BinaryUnchangedSharedKind::Cancelled { version } => Self::Cancelled { version },
-                    BinaryUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "state", rename_all = "snake_case")]
-    #[serde(rename = "ObjectIn")]
-    enum ReadableObjectIn {
-        Missing,
-        Data {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-            owner: Owner,
-        },
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "ObjectIn")]
-    enum BinaryObjectIn {
-        Missing,
-        Data {
-            version: Version,
-            digest: Digest,
-            owner: Owner,
-        },
-    }
-
-    impl Serialize for ObjectIn {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    ObjectIn::Missing => ReadableObjectIn::Missing,
-                    ObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => ReadableObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    ObjectIn::Missing => BinaryObjectIn::Missing,
-                    ObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => BinaryObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ObjectIn {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableObjectIn::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectIn::Missing => Self::Missing,
-                    ReadableObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => Self::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                })
-            } else {
-                BinaryObjectIn::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectIn::Missing => Self::Missing,
-                    BinaryObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => Self::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "state", rename_all = "snake_case")]
-    #[serde(rename = "ObjectOut")]
-    enum ReadableObjectOut {
-        Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "ObjectOut")]
-    enum BinaryObjectOut {
-        Missing,
-        ObjectWrite { digest: Digest, owner: Owner },
-        PackageWrite { version: Version, digest: Digest },
-    }
-
-    impl Serialize for ObjectOut {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    ObjectOut::Missing => ReadableObjectOut::Missing,
-                    ObjectOut::ObjectWrite { digest, owner } => {
-                        ReadableObjectOut::ObjectWrite { digest, owner }
-                    }
-                    ObjectOut::PackageWrite { version, digest } => {
-                        ReadableObjectOut::PackageWrite { version, digest }
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    ObjectOut::Missing => BinaryObjectOut::Missing,
-                    ObjectOut::ObjectWrite { digest, owner } => {
-                        BinaryObjectOut::ObjectWrite { digest, owner }
-                    }
-                    ObjectOut::PackageWrite { version, digest } => {
-                        BinaryObjectOut::PackageWrite { version, digest }
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ObjectOut {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableObjectOut::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectOut::Missing => Self::Missing,
-                    ReadableObjectOut::ObjectWrite { digest, owner } => {
-                        Self::ObjectWrite { digest, owner }
-                    }
-                    ReadableObjectOut::PackageWrite { version, digest } => {
-                        Self::PackageWrite { version, digest }
-                    }
-                })
-            } else {
-                BinaryObjectOut::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectOut::Missing => Self::Missing,
-                    BinaryObjectOut::ObjectWrite { digest, owner } => {
-                        Self::ObjectWrite { digest, owner }
-                    }
-                    BinaryObjectOut::PackageWrite { version, digest } => {
-                        Self::PackageWrite { version, digest }
-                    }
-                })
-            }
-        }
     }
 }
