@@ -25,6 +25,7 @@ pub type ProtocolVersion = u64;
 /// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -403,63 +404,6 @@ mod serialization {
                         )
                         .collect(),
                 ))
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
-    #[serde(rename = "CheckpointCommitment")]
-    enum ReadableCommitment {
-        EcmhLiveObjectSet { digest: Digest },
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "CheckpointCommitment")]
-    enum BinaryCommitment {
-        EcmhLiveObjectSet { digest: Digest },
-    }
-
-    impl Serialize for CheckpointCommitment {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match *self {
-                    CheckpointCommitment::EcmhLiveObjectSet { digest } => {
-                        ReadableCommitment::EcmhLiveObjectSet { digest }
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match *self {
-                    CheckpointCommitment::EcmhLiveObjectSet { digest } => {
-                        BinaryCommitment::EcmhLiveObjectSet { digest }
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CheckpointCommitment {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                Ok(match ReadableCommitment::deserialize(deserializer)? {
-                    ReadableCommitment::EcmhLiveObjectSet { digest } => {
-                        Self::EcmhLiveObjectSet { digest }
-                    }
-                })
-            } else {
-                Ok(match BinaryCommitment::deserialize(deserializer)? {
-                    BinaryCommitment::EcmhLiveObjectSet { digest } => {
-                        Self::EcmhLiveObjectSet { digest }
-                    }
-                })
             }
         }
     }
