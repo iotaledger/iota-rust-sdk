@@ -60,7 +60,7 @@ impl ClientMethods for Client {
 
     async fn objects(
         &self,
-        struct_tag: StructTag,
+        struct_tag: Option<StructTag>,
         owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
@@ -68,7 +68,7 @@ impl ClientMethods for Client {
         let page = self
             .list_owned_objects(
                 owner,
-                Some(struct_tag),
+                struct_tag,
                 limit.map(saturating_usize_to_u32),
                 cursor.map(prost::bytes::Bytes::from),
                 None,

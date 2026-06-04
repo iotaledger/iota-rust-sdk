@@ -80,7 +80,7 @@ pub trait ClientMethods {
     /// pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
-        struct_tag: StructTag,
+        struct_tag: Option<StructTag>,
         owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
@@ -156,7 +156,7 @@ impl<T: ClientMethods> ClientMethods for &T {
 
     fn objects(
         &self,
-        struct_tag: StructTag,
+        struct_tag: Option<StructTag>,
         owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
@@ -238,7 +238,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
 
     fn objects(
         &self,
-        struct_tag: StructTag,
+        struct_tag: Option<StructTag>,
         owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
@@ -384,7 +384,7 @@ pub(crate) mod test_client {
 
         async fn objects(
             &self,
-            _struct_tag: StructTag,
+            _struct_tag: Option<StructTag>,
             owner: Address,
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,

@@ -29,7 +29,7 @@ impl ClientMethods for Client {
 
     async fn objects(
         &self,
-        struct_tag: StructTag,
+        struct_tag: Option<StructTag>,
         owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
@@ -45,7 +45,7 @@ impl ClientMethods for Client {
         let page = self
             .objects(
                 ObjectFilter {
-                    type_: Some(struct_tag.to_string()),
+                    type_: struct_tag.map(|tag| tag.to_string()),
                     owner: Some(owner),
                     object_ids: None,
                 },
