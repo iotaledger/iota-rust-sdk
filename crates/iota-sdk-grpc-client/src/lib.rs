@@ -14,7 +14,7 @@
 //! use iota_types::{Digest, ObjectId};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = Client::new("http://localhost:9000").await?;
+//! let client = Client::new("http://localhost:9000")?;
 //!
 //! // Get a transaction with full details (None = use default field mask)
 //! let digest: Digest = todo!();

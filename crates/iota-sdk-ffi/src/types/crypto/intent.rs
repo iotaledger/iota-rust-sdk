@@ -125,7 +125,7 @@ pub enum IntentAppId {
 /// ```text
 /// intent = intent-scope intent-version intent-app-id
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, uniffi::Object, derive_more::From)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct Intent(pub iota_sdk::types::Intent);
 
@@ -214,7 +214,7 @@ pub enum HashingIntentScope {
 }
 
 /// A personal message that wraps around a byte array.
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct PersonalMessage(pub(crate) iota_sdk::types::PersonalMessage<'static>);
 

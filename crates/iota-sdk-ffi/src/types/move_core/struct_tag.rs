@@ -20,7 +20,7 @@ use crate::types::{
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
 
@@ -175,7 +175,6 @@ export_struct_tag_ctors!(
     AsciiString,
     AuthenticatorState,
     Clock,
-    Config,
     DenyListAddressKey,
     DenyListConfigKey,
     DenyListGlobalPauseKey,
@@ -193,7 +192,6 @@ export_struct_tag_ctors!(
     String,
     SystemEpochInfoEvent,
     TimelockedStakedIota,
-    TransferReceiving,
     Uid,
     Url,
     Bag,
@@ -202,11 +200,13 @@ export_struct_tag_ctors!(
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
+    Config,
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
     TimeLock,
-    Option
+    Option,
+    TransferReceiving,
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,

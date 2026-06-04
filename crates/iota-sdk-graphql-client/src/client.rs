@@ -34,7 +34,7 @@ pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Erro
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Client {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
@@ -120,15 +120,29 @@ impl Client {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(
-            self.inner
-                .post(self.rpc_server().clone())
-                .json(&operation)
-                .send()
-                .await?
-                .json::<GraphQlResponse<T>>()
-                .await?,
-        )
+        response_to_err(self.post_query(operation).await?)
+    }
+
+    /// POST a JSON-serializable GraphQL request body and decode the JSON
+    /// response, surfacing the HTTP status and a truncated body on any non-2xx
+    /// response or on a decode failure.
+    async fn post_query<R>(&self, body: &impl serde::Serialize) -> Result<R>
+    where
+        R: serde::de::DeserializeOwned,
+    {
+        let resp = self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(body)
+            .send()
+            .await?;
+        let status = resp.status();
+        let url = resp.url().clone();
+        let bytes = resp.bytes().await?;
+        if !status.is_success() {
+            return Err(Error::http(url, status, &bytes));
+        }
+        serde_json::from_slice::<R>(&bytes).map_err(|e| Error::decode(url, status, &bytes, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -141,15 +155,7 @@ impl Client {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
-        let res = self
-            .inner
-            .post(self.rpc_server().clone())
-            .json(&json)
-            .send()
-            .await?
-            .json::<GraphQlResponse<serde_json::Value>>()
-            .await?;
-        Ok(res)
+        self.post_query(&json).await
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is

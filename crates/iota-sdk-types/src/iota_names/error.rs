@@ -3,7 +3,7 @@
 
 use crate::{ObjectId, address::AddressParseError};
 
-#[derive(thiserror::Error, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum IotaNamesError {
     #[error("Name length {0} exceeds maximum length {1}")]

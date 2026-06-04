@@ -21,7 +21,7 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
@@ -32,12 +32,12 @@ test-docs: ## Run doc tests
 build-docs: ## Build docs
 	cargo doc --all-features --workspace --no-deps
 
-package_%.json: crates/iota-sdk-transaction-builder/tests/%/Move.toml crates/iota-sdk-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/iota-sdk-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/sources/*.move ## Generate JSON files for tests
+	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p iota-sdk-graphql-client -p iota-sdk-transaction-builder
+	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 
 .PHONY: wasm
 wasm: ## Build WASM modules
@@ -60,7 +60,7 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt test wasm ## Run the full CI process
+ci: check-features check-fmt check-sort-derives test wasm ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
@@ -68,6 +68,14 @@ ci-full: ci doc ## Run the full CI process and generate documentation
 .PHONY: cargo-sort
 cargo-sort: ## Sort, consolidate, and format Cargo.toml dependencies
 	cd scripts/cargo_sort && ./run_consolidate.sh
+
+.PHONY: sort-derives
+sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the workspace
+	python3 scripts/sort_derives/sort_derives.py
+
+.PHONY: check-sort-derives
+check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
+	python3 scripts/sort_derives/sort_derives.py --check
 
 .PHONY: clean
 clean: ## Clean build artifacts
@@ -387,6 +395,10 @@ release-examples: ## Run all release examples
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
+
+.PHONY: grpc
+grpc: ## Regenerate gRPC protobuf types
+	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
 
 .PHONY: help
 help: ## Show this help

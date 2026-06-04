@@ -5,6 +5,7 @@ pub mod intent;
 pub mod move_authenticator;
 pub mod multisig;
 pub mod passkey;
+pub mod public_key;
 
 use iota_sdk::types::{PublicKeyExt, SignatureScheme};
 
@@ -13,7 +14,7 @@ use crate::{error::Result, types::address::Address};
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
         $(#[$meta])*
-        #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::From, derive_more::Deref, uniffi::Object)]
+        #[derive(derive_more::Deref, derive_more::From, Eq, Hash, Ord, PartialEq, PartialOrd, uniffi::Object)]
         #[uniffi::export(Eq, Hash)]
         pub struct $t(pub iota_sdk::types::$t);
 

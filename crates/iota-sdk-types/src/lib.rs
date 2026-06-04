@@ -19,7 +19,8 @@
 //! Below is a list of the available feature flags.
 //!
 //! - `serde`: Enables support for serializing and deserializing types to/from
-//!   BCS utilizing [serde] library.
+//!   BCS utilizing [serde] library. Note: JSON serialization is NOT guaranteed
+//!   to match the IOTA monorepo's JSON-RPC format.
 //! - `rand`: Enables support for generating random instances of a number of
 //!   types via the [rand] library.
 //! - `hash`: Enables support for hashing, which is required for deriving
@@ -140,8 +141,8 @@ pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
     INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
+    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
     RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };

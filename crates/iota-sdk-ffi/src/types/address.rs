@@ -47,14 +47,14 @@ use crate::error::Result;
 /// ```
 #[derive(
     Debug,
-    Hash,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
+    derive_more::Deref,
     derive_more::Display,
     derive_more::From,
-    derive_more::Deref,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]

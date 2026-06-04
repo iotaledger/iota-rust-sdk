@@ -155,6 +155,7 @@ mod end_of_epoch {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum ReadableEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
@@ -164,6 +165,7 @@ mod end_of_epoch {
 
     #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "EndOfEpochTransactionKind")]
     enum ReadableEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
@@ -262,7 +264,7 @@ mod version_assignments {
 
     #[derive(serde::Serialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
+    enum ConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
@@ -270,19 +272,7 @@ mod version_assignments {
     /// ConsensusDeterminedVersionAssignments.
     #[derive(serde::Deserialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions(Vec<CancelledTransaction>),
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions(&'a Vec<CancelledTransaction>),
-    }
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum BinaryConsensusDeterminedVersionAssignments {
+    enum ConsensusDeterminedVersionAssignmentsOwned {
         CancelledTransactions(Vec<CancelledTransaction>),
     }
 
@@ -291,25 +281,14 @@ mod version_assignments {
         where
             S: Serializer,
         {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
-                        cancelled_transactions,
-                    ),
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
-                        cancelled_transactions,
-                    ),
-                };
-                binary.serialize(serializer)
+            match self {
+                Self::CancelledTransactions {
+                    cancelled_transactions,
+                } => ConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
+                    cancelled_transactions,
+                ),
             }
+            .serialize(serializer)
         }
     }
 
@@ -318,27 +297,15 @@ mod version_assignments {
         where
             D: Deserializer<'de>,
         {
-            if deserializer.is_human_readable() {
-                ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions(
-                            cancelled_transactions,
-                        ) => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
+            ConsensusDeterminedVersionAssignmentsOwned::deserialize(deserializer).map(|owned| {
+                match owned {
+                    ConsensusDeterminedVersionAssignmentsOwned::CancelledTransactions(
+                        cancelled_transactions,
+                    ) => Self::CancelledTransactions {
+                        cancelled_transactions,
                     },
-                )
-            } else {
-                BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions(
-                            cancelled_transactions,
-                        ) => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
-                    },
-                )
-            }
+                }
+            })
         }
     }
 
@@ -445,14 +412,15 @@ mod input_argument {
         transaction::{Input, SharedObjectReference},
     };
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct PureInput {
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
         value: Vec<u8>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename_all = "snake_case")]
+    #[serde(rename = "Input")]
     enum ReadableInput {
         /// A move value serialized as BCS.
         ///
@@ -472,14 +440,14 @@ mod input_argument {
         Receiving(ObjectReference),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
@@ -587,7 +555,7 @@ mod input_argument {
 mod argument {
     use super::*;
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Argument")]
     enum ReadableArgument {
         /// # Gas
@@ -600,7 +568,7 @@ mod argument {
         NestedResult(u16, u16),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Argument")]
     enum BinaryArgument {
         Gas,
@@ -675,6 +643,7 @@ mod command {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
+    #[serde(rename = "Command")]
     enum ReadableCommandRef<'a> {
         MoveCall(&'a MoveCall),
         TransferObjects(&'a TransferObjects),
@@ -687,6 +656,7 @@ mod command {
 
     #[derive(serde::Deserialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
+    #[serde(rename = "Command")]
     enum ReadableCommand {
         MoveCall(MoveCall),
         TransferObjects(TransferObjects),
@@ -796,6 +766,7 @@ mod signed_transaction {
     pub(crate) struct SignedTransactionWithIntentMessage;
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "SignedTransaction")]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
         intent: &'a Intent,
         transaction: &'a Transaction,
@@ -808,6 +779,7 @@ mod signed_transaction {
         derive(iota_bcs_schema::BcsSchema),
         bcs_schema(name = "intent-signed-transaction")
     )]
+    #[serde(rename = "SignedTransaction")]
     struct BinarySignedTransactionWithIntentMessage {
         intent: Intent,
         transaction: Transaction,
@@ -906,7 +878,7 @@ mod transaction_expiration {
 
     use crate::{EpochId, TransactionExpiration};
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "TransactionExpiration")]
     enum ReadableTransactionExpiration {
         None,
@@ -917,7 +889,7 @@ mod transaction_expiration {
         ),
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration

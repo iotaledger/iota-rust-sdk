@@ -83,13 +83,13 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
@@ -154,13 +154,13 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client.execute_tx(&[sig], &tx, None).await?;
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Print the new package version (should now be 2)
     for changed_obj in effects.as_v1().changed_objects.iter() {
