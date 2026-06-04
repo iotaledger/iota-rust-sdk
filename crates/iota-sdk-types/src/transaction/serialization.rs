@@ -5,7 +5,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
-use super::Argument;
 use crate::{Identifier, ObjectId, ObjectReference};
 
 mod transaction_kind {
@@ -436,88 +435,6 @@ mod input_argument {
                     }),
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
-                    }
-                })
-            }
-        }
-    }
-}
-
-mod argument {
-    use super::*;
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "Argument")]
-    enum ReadableArgument {
-        /// # Gas
-        Gas,
-        /// # Input
-        Input(u16),
-        /// # Result
-        Result(u16),
-        /// # NestedResult
-        NestedResult(u16, u16),
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "Argument")]
-    enum BinaryArgument {
-        Gas,
-        Input(u16),
-        Result(u16),
-        NestedResult(u16, u16),
-    }
-
-    impl Serialize for Argument {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match *self {
-                    Argument::Gas => ReadableArgument::Gas,
-                    Argument::Input(input) => ReadableArgument::Input(input),
-                    Argument::Result(result) => ReadableArgument::Result(result),
-                    Argument::NestedResult(result, subresult) => {
-                        ReadableArgument::NestedResult(result, subresult)
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match *self {
-                    Argument::Gas => BinaryArgument::Gas,
-                    Argument::Input(input) => BinaryArgument::Input(input),
-                    Argument::Result(result) => BinaryArgument::Result(result),
-                    Argument::NestedResult(result, subresult) => {
-                        BinaryArgument::NestedResult(result, subresult)
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Argument {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableArgument::deserialize(deserializer).map(|readable| match readable {
-                    ReadableArgument::Gas => Argument::Gas,
-                    ReadableArgument::Input(input) => Argument::Input(input),
-                    ReadableArgument::Result(result) => Argument::Result(result),
-                    ReadableArgument::NestedResult(result, subresult) => {
-                        Argument::NestedResult(result, subresult)
-                    }
-                })
-            } else {
-                BinaryArgument::deserialize(deserializer).map(|binary| match binary {
-                    BinaryArgument::Gas => Argument::Gas,
-                    BinaryArgument::Input(input) => Argument::Input(input),
-                    BinaryArgument::Result(result) => Argument::Result(result),
-                    BinaryArgument::NestedResult(result, subresult) => {
-                        Argument::NestedResult(result, subresult)
                     }
                 })
             }
