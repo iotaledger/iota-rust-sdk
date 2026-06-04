@@ -3,17 +3,9 @@
 
 use std::sync::Arc;
 
-// Platform-conditional thread-safety helper used as a supertrait of
-// [`TransactionSignerFn`]. Exposed publicly because the lint
-// `private_bounds` would otherwise fire — and because the blanket impl
-// makes it transparent to downstream callers anyway.
-//
-// uniffi's `wasm-unstable-single-threaded` feature does not generate Send+Sync
-// impls for callback handler types, so the trait itself can't require Send+Sync
-// on wasm32 or the generated `impl TransactionSignerFn for UniFFICallback…`
-// won't satisfy the supertrait bounds.
-// On all other targets uniffi expects Arc<dyn Trait> to be Send+Sync, so the
-// supertrait must carry those bounds.
+// Supertrait of [`TransactionSignerFn`] that conditionally drops Send+Sync on
+// wasm32, where uniffi's `wasm-unstable-single-threaded` feature doesn't
+// generate them for callback handlers.
 #[cfg(not(target_arch = "wasm32"))]
 pub trait ThreadSafety: Send + Sync {}
 #[cfg(not(target_arch = "wasm32"))]

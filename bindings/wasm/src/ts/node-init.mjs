@@ -1,11 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 //
-// Node entry point — copied to dist/node.js by the build. Wraps
-// `uniffiInitAsync` so it can default to reading the bundled
-// `index_bg.wasm` from disk (Node's `fetch` doesn't support `file://`
-// URLs). Selected automatically by the `node` condition in `package.json`
-// `exports`. The relative import resolves once this file sits in dist/.
+// Node entry (selected by `exports`/`node`): defaults `uniffiInitAsync` to
+// reading the bundled wasm via `fs`, since Node's `fetch` doesn't take
+// `file://` URLs. Copied to dist/node.js by the build.
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";

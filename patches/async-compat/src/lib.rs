@@ -1,13 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// Patched async-compat for iota-rust-sdk.
-//
-// On wasm32-unknown-unknown there are no threads and std::time::Instant is
-// unavailable, so the original crate's global TOKIO1 runtime setup panics.
-// This patch replaces the Compat wrapper with a transparent pass-through on
-// wasm32 (the futures already run in the correct wasm-bindgen executor) while
-// keeping the original tokio-compat behaviour on all other targets.
+// async-compat patched for iota-rust-sdk: pass-through `Compat` on wasm32
+// (no threads / no Instant), original tokio-compat behaviour elsewhere.
 
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
@@ -27,12 +22,8 @@ mod wasm {
     use pin_project_lite::pin_project;
 
     pin_project! {
-        /// Transparent pass-through wrapper (wasm32 only).
-        ///
-        /// On native targets this adapter enters a tokio runtime context so that
-        /// tokio-based futures work from any executor.  On wasm32 the futures are
-        /// already driven by the wasm-bindgen executor and reqwest uses the
-        /// browser Fetch API, so no tokio context is needed.
+        /// Pass-through on wasm32 — futures already run in the wasm-bindgen
+        /// executor and reqwest uses Fetch, so no tokio context is needed.
         pub struct Compat<T> {
             #[pin]
             inner: T,

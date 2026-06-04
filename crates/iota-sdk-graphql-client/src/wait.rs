@@ -1,11 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Async sleep / timeout primitives that work on both native targets (via
-//! `tokio::time`) and `wasm32-unknown-unknown` (via the JS host's
-//! `setTimeout`). Tokio's time driver is not available on wasm32 — calling
-//! `tokio::time::sleep` / `interval` / `timeout` there traps with
-//! `RuntimeError: unreachable`.
+//! Async `sleep` / `timeout`. Tokio's time driver isn't available on wasm32,
+//! so on that target we drive a cancellable `setTimeout`-backed future
+//! instead.
 
 use std::{future::Future, time::Duration};
 
@@ -75,11 +73,8 @@ mod wasm_time {
         waker: Cell<Option<Waker>>,
     }
 
-    /// A cancellable sleep future backed by `setTimeout` / `clearTimeout`.
-    ///
-    /// Dropping the future before it resolves calls `clearTimeout`, which
-    /// matters in Node: an outstanding timer keeps the event loop alive
-    /// and prevents the process from exiting cleanly.
+    /// Cancellable sleep — `clearTimeout` on drop so Node's event loop
+    /// doesn't stay alive past a future that's been raced out.
     pub(super) struct Sleep {
         state: Rc<State>,
         handle: Option<JsValue>,
@@ -114,7 +109,6 @@ mod wasm_time {
 
         fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
             if self.state.fired.get() {
-                // Timer already fired; clear our handle so Drop is a no-op.
                 self.handle = None;
                 Poll::Ready(())
             } else {

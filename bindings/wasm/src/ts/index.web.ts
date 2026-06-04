@@ -26,9 +26,8 @@ export async function uniffiInitAsync(
     bytes = await response.arrayBuffer();
   }
 
-  // The WASM binary imports ~400 UniFFI scaffold functions from an "env"
-  // module.  These are checksum validators and function stubs that return 0.
-  // The actual work is done through the ubrn_ wrappers in the JS glue.
+  // The WASM module imports UniFFI checksum/stub fns from "env"; stub them
+  // out (the real work goes through the ubrn_ wrappers in the JS glue).
   const envProxy = new Proxy(
     {},
     {

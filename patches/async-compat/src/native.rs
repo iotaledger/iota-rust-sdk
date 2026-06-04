@@ -1,11 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// Minimal async-compat for native targets.
-//
-// UniFFI only uses `Compat::new(future)` to enter a tokio runtime context
-// when polling async futures.  The I/O trait adapters (AsyncRead, AsyncWrite,
-// AsyncBufRead, AsyncSeek) from the original crate are unused and omitted.
+// Minimal async-compat for native targets — UniFFI only uses `Compat::new`
+// to enter a tokio runtime context, so the I/O trait adapters are omitted.
 
 use std::future::Future;
 use std::pin::Pin;
@@ -72,9 +69,8 @@ static TOKIO1: Lazy<tokio::runtime::Handle> = Lazy::new(|| {
         .expect("cannot start tokio-1 runtime");
     let handle = rt.handle().clone();
 
-    // Move the runtime into the worker thread so it lives as long as the
-    // thread does — and so the thread never has to reach back into TOKIO1
-    // while TOKIO1 itself is still being initialized.
+    // Move `rt` into the worker thread so it lives as long as the thread —
+    // and so the thread never re-enters TOKIO1 while it's still initializing.
     thread::Builder::new()
         .name("async-compat/tokio-1".into())
         .spawn(move || rt.block_on(Pending))
