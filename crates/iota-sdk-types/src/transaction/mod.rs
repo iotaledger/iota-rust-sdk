@@ -87,6 +87,7 @@ pub struct SignedTransaction {
 ///                        =/ %d01 u64  ; epoch
 /// ```
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(iota_serde_derive::SplitSerde))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -96,7 +97,14 @@ pub enum TransactionExpiration {
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
-    Epoch(#[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))] EpochId),
+    Epoch(
+        #[cfg_attr(
+            feature = "serde",
+            split_serde(with = "crate::_serde::ReadableDisplay")
+        )]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
+        EpochId,
+    ),
 }
 
 impl TransactionExpiration {
@@ -314,6 +322,11 @@ impl core::fmt::Display for TransactionKind {
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(iota_serde_derive::SplitSerde),
+    split_serde(json(tag = "kind", rename_all = "snake_case"))
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -1010,6 +1023,11 @@ impl SharedObjectReference {
 /// command-upgrade             = %d06 upgrade
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(iota_serde_derive::SplitSerde),
+    split_serde(json(tag = "command", rename_all = "snake_case"))
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
