@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "iota-sdk-wasm": "workspace:*"
+    "@iota/sdk-wasm": "workspace:*"
   }
 }

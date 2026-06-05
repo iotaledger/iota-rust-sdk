@@ -1,6 +1,6 @@
 {
-  "name": "iota-sdk-wasm",
-  "version": "0.0.0",
+  "name": "@iota/sdk-wasm",
+  "version": "3.0.0-alpha.1",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

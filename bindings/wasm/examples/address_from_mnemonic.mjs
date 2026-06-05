@@ -7,7 +7,7 @@ import {
   Secp256k1PrivateKey,
   Secp256r1PrivateKey,
   uniffiInitAsync,
-} from "iota-sdk-wasm";
+} from "@iota/sdk-wasm";
 
 await uniffiInitAsync();
 

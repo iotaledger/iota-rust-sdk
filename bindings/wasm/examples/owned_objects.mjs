@@ -6,7 +6,7 @@ import {
   GraphQlClient,
   ObjectFilter,
   uniffiInitAsync,
-} from "iota-sdk-wasm";
+} from "@iota/sdk-wasm";
 
 await uniffiInitAsync();
 

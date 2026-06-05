@@ -92,7 +92,7 @@ bindings/wasm/
   examples/
     chain_id.html          # browser example
     *.mjs                  # Node examples (run via `make wasm-example NAME`)
-    package.json           # pnpm workspace member that resolves `iota-sdk-wasm`
+    package.json           # pnpm workspace member that resolves `@iota/sdk-wasm`
   dist/                    # build output (gitignored)
     iota-sdk.js            # bundled ES module (browser / default entry)
     node.js                # Node entry (loads index_bg.wasm from disk)

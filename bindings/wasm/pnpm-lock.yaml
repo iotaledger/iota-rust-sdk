@@ -24,7 +24,7 @@ importers:
 
   examples:
     dependencies:
-      iota-sdk-wasm:
+      '@iota/sdk-wasm':
         specifier: workspace:*
         version: link:..
 
