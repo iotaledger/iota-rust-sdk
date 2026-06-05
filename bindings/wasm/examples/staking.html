@@ -23,6 +23,7 @@
       *::after {
         box-sizing: border-box;
       }
+
       body {
         font-family:
           system-ui,
@@ -35,20 +36,24 @@
         color: #c9d1d9;
         line-height: 1.5;
       }
+
       h1 {
         color: #58a6ff;
         margin-bottom: 0.25rem;
       }
+
       h1 + p {
         color: #8b949e;
         margin-top: 0;
       }
+
       label {
         display: block;
         font-weight: 600;
         margin-top: 1rem;
         margin-bottom: 0.25rem;
       }
+
       select,
       input,
       button {
@@ -60,11 +65,13 @@
         color: #c9d1d9;
         font-size: 0.95rem;
       }
+
       select:focus,
       input:focus {
         outline: none;
         border-color: #58a6ff;
       }
+
       button {
         cursor: pointer;
         background: #238636;
@@ -74,20 +81,25 @@
         margin-top: 1rem;
         transition: background 0.15s;
       }
+
       button:hover:not(:disabled) {
         background: #2ea043;
       }
+
       button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
       }
+
       button.secondary {
         background: #21262d;
         border-color: #30363d;
       }
+
       button.secondary:hover:not(:disabled) {
         background: #30363d;
       }
+
       .info-box {
         background: #161b22;
         border: 1px solid #30363d;
@@ -96,15 +108,18 @@
         margin-top: 0.75rem;
         word-break: break-all;
       }
+
       .info-box .label {
         color: #8b949e;
         font-size: 0.85rem;
       }
+
       .info-box .value {
         color: #c9d1d9;
         font-size: 1.1rem;
         font-weight: 600;
       }
+
       .success {
         background: #0d1f0d;
         border-color: #238636;
@@ -112,14 +127,17 @@
         padding: 1rem;
         border-radius: 6px;
       }
+
       .success a {
         color: #58a6ff;
       }
+
       .error {
         color: #f85149;
         margin-top: 0.5rem;
         font-size: 0.9rem;
       }
+
       .spinner {
         display: inline-block;
         width: 14px;
@@ -131,16 +149,19 @@
         vertical-align: middle;
         margin-right: 0.4rem;
       }
+
       @keyframes spin {
         to {
           transform: rotate(360deg);
         }
       }
+
       .validator-list {
         max-height: 300px;
         overflow-y: auto;
         margin-top: 0.5rem;
       }
+
       .validator-item {
         display: flex;
         align-items: center;
@@ -152,33 +173,41 @@
         cursor: pointer;
         transition: border-color 0.15s;
       }
+
       .validator-item:hover {
         border-color: #58a6ff;
       }
+
       .validator-item.selected {
         border-color: #58a6ff;
         background: #161b22;
       }
+
       .validator-item .v-name {
         font-weight: 600;
       }
+
       .validator-item .v-addr {
         font-size: 0.8rem;
         color: #8b949e;
         font-family: monospace;
       }
+
       .validator-item .v-apy {
         margin-left: auto;
         color: #3fb950;
         font-weight: 600;
       }
+
       .validator-item .v-stake {
         font-size: 0.8rem;
         color: #8b949e;
       }
+
       .hidden {
         display: none;
       }
+
       #status {
         color: #8b949e;
         font-style: italic;
@@ -186,6 +215,7 @@
       }
     </style>
   </head>
+
   <body>
     <h1>IOTA Staking</h1>
     <p>Stake IOTA tokens to a validator using the WASM SDK</p>
