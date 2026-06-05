@@ -47,6 +47,11 @@ jobs:
           npm install -g pnpm@10
 
       - name: Build WASM bindings
+        # `ubrn build` compiles its own bindgen tool from source on first run;
+        # don't impose our `-Dwarnings` on that third-party build. The wasm crate
+        # itself is built with the rustflags from ubrn.config.yaml.
         run: make wasm
+        env:
+          RUSTFLAGS: ""
 
       - run: make is-dirty
