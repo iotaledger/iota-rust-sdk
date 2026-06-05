@@ -55,9 +55,6 @@ const committee = new MultisigCommittee(
   ],
   2,
 );
-if (!committee.isValid()) {
-  throw new Error("committee must be valid");
-}
 
 // 4. Derive multisig address.
 const multisigAddress = committee.deriveAddress();
