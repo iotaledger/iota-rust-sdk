@@ -432,6 +432,73 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
     }
 }
 
+/// An event as returned by the GraphQL `events` query.
+///
+/// This is a faithful view of the GraphQL response, distinct from the chain
+/// [`Event`](crate::types::events::Event). Three fields are optional, for two
+/// different reasons:
+///
+/// - `package_id`, `module` and `sender` are absent for events emitted by the
+///   system or at genesis (e.g. the genesis validator
+///   `0x3::validator::StakingRequestEvent`s): on chain their sender is the zero
+///   address and their emitting module can't be resolved, both of which the
+///   GraphQL server reports as `null`.
+/// - `timestamp` is absent for events not yet included in a checkpoint (e.g.
+///   from a dry run or a just-executed transaction).
+///
+/// `type_`, `contents`, `data` and `json` are always present (non-null in the
+/// GraphQL schema). Unlike the chain `Event`, this type is not
+/// BCS/JSON-serializable as a chain event.
+#[derive(uniffi::Record)]
+pub struct GraphQlEvent {
+    /// Package id of the top-level function invoked by a MoveCall command which
+    /// triggered this event to be emitted. `None` for system events.
+    pub package_id: Option<Arc<ObjectId>>,
+    /// Module name of the top-level function invoked by a MoveCall command
+    /// which triggered this event to be emitted. `None` for system events.
+    pub module: Option<String>,
+    /// Address of the account that sent the transaction where this event was
+    /// emitted. `None` for system events.
+    pub sender: Option<Arc<Address>>,
+    /// The type of the event emitted
+    pub type_: String,
+    /// BCS serialized bytes of the event
+    pub contents: Vec<u8>,
+    /// UTC timestamp in milliseconds since epoch (1/1/1970)
+    pub timestamp: Option<String>,
+    /// Structured contents of a Move value
+    pub data: String,
+    /// Representation of a Move value in JSON
+    pub json: String,
+}
+
+impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
+    type Error = crate::error::SdkFfiError;
+
+    fn try_from(value: iota_sdk::graphql_client::query_types::Event) -> crate::error::Result<Self> {
+        let (package_id, module) = match value.sending_module {
+            Some(sending_module) => (
+                Some(Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
+                    sending_module.package.address,
+                )))),
+                Some(sending_module.name),
+            ),
+            None => (None, None),
+        };
+        Ok(Self {
+            package_id,
+            module,
+            sender: value.sender.map(|s| Arc::new(Address(s.address))),
+            type_: value.type_.repr,
+            contents: base64ct::Base64::decode_vec(&value.bcs.0)
+                .map_err(crate::error::SdkFfiError::custom)?,
+            timestamp: value.timestamp.map(|t| t.0),
+            data: value.data.0.to_string(),
+            json: value.json.to_string(),
+        })
+    }
+}
+
 #[derive(uniffi::Record)]
 pub struct ObjectFilter {
     #[uniffi(default = None)]
