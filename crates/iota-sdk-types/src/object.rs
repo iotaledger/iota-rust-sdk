@@ -897,48 +897,83 @@ mod serialization {
 
     #[cfg(test)]
     mod tests {
+        use std::collections::BTreeMap;
+
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
         use super::*;
-        use crate::{Identifier, object::Object};
+        use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
 
         #[test]
-        fn obj() {
-            let o = Object {
-                data: ObjectData::Struct(
-                    MoveStruct::new(
-                        MoveObjectType::new(StructTag::new(
-                            Address::FRAMEWORK,
-                            Identifier::new("bar").unwrap(),
-                            Identifier::new("foo").unwrap(),
-                            Vec::new(),
-                        )),
-                        Version::from_u64(12),
-                        ObjectId::ZERO.into(),
-                    )
-                    .unwrap(),
-                ),
-                // owner: Owner::Address(Address::ZERO),
+        fn package_object_json_snapshot() {
+            let package = MovePackage {
+                id: ObjectId::ZERO,
+                version: Version::from_u64(12),
+                modules: BTreeMap::from([(
+                    Identifier::new("my_module").unwrap(),
+                    vec![1, 2, 3, 4],
+                )]),
+                type_origin_table: vec![TypeOrigin {
+                    module_name: Identifier::new("my_module").unwrap(),
+                    datatype_name: Identifier::new("MyType").unwrap(),
+                    package: ObjectId::ZERO,
+                }],
+                linkage_table: BTreeMap::from([(
+                    ObjectId::ZERO,
+                    UpgradeInfo {
+                        upgraded_id: ObjectId::ZERO,
+                        upgraded_version: Version::from_u64(13),
+                    },
+                )]),
+            };
+            let object = Object {
+                data: ObjectData::Package(package),
                 owner: Owner::Object(ObjectId::ZERO),
-                // owner: Owner::Immutable,
-                // owner: Owner::Shared {
-                //     initial_shared_version: 14,
-                // },
                 previous_transaction: Digest::ZERO,
                 storage_rebate: 100,
             };
 
-            println!("{}", serde_json::to_string_pretty(&o).unwrap());
-            println!(
-                "{}",
-                serde_json::to_string_pretty(&ObjectReference {
-                    object_id: ObjectId::ZERO,
-                    version: Version::from_u64(1),
-                    digest: Digest::ZERO,
-                })
+            let json = serde_json::to_string_pretty(&object)
                 .unwrap()
+                // Re-indent to match the indented literal below.
+                .replace('\n', "\n                ");
+            assert_eq!(
+                json,
+                r#"{
+                  "data": {
+                    "Package": {
+                      "id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                      "version": 12,
+                      "modules": {
+                        "my_module": "AQIDBA=="
+                      },
+                      "type_origin_table": [
+                        {
+                          "module_name": "my_module",
+                          "datatype_name": "MyType",
+                          "package": "0x0000000000000000000000000000000000000000000000000000000000000000"
+                        }
+                      ],
+                      "linkage_table": {
+                        "0x0000000000000000000000000000000000000000000000000000000000000000": {
+                          "upgraded_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                          "upgraded_version": 13
+                        }
+                      }
+                    }
+                  },
+                  "owner": {
+                    "Object": "0x0000000000000000000000000000000000000000000000000000000000000000"
+                  },
+                  "previous_transaction": "11111111111111111111111111111111",
+                  "storage_rebate": 100
+                }"#
             );
+
+            // The shape must survive a JSON round-trip unchanged.
+            let roundtrip: Object = serde_json::from_str(&json).unwrap();
+            assert_eq!(object, roundtrip);
         }
 
         #[test]
