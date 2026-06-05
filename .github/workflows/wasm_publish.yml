@@ -68,15 +68,29 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # Isolated from the build step so a compromised cargo/pnpm dependency in
-    # `make wasm` cannot reach the NPM_TOKEN. This job only runs trusted
-    # actions (checkout, download-artifact) plus `npm publish --ignore-scripts`
-    # against pre-built artifacts.
+    # `make wasm` cannot reach the publish credentials: only this job is granted
+    # `id-token: write`, and it runs nothing but trusted actions plus
+    # `npm publish --ignore-scripts` against the pre-built artifact.
+    permissions:
+      contents: read
+      id-token: write # mint the OIDC token for npm trusted publishing + provenance
     steps:
       - name: Stage package
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: wasm-package
           path: package
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Ensure OIDC-capable npm
+        # Trusted publishing needs npm >= 11.5.1, newer than the version bundled
+        # with the runner's Node.
+        run: npm install -g npm@latest
 
       - name: Set package version from release tag
         if: github.event_name == 'release'
@@ -86,9 +100,6 @@ jobs:
           echo "Publishing version $version"
           npm version "$version" --no-git-tag-version --allow-same-version
 
-      - name: Configure npm authentication
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
       - name: Publish to npm (dry-run)
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
         working-directory: package
@@ -97,4 +108,6 @@ jobs:
       - name: Publish to npm
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
         working-directory: package
-        run: npm publish --access public --ignore-scripts
+        # Authenticates via npm OIDC trusted publishing (no NPM_TOKEN). The repo
+        # is public, so --provenance attaches a verifiable build attestation.
+        run: npm publish --access public --ignore-scripts --provenance
