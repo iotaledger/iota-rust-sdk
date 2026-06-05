@@ -246,7 +246,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
             }
             Err(e) => {
                 failures += 1;
-                eprintln!("  {:32} FAILED: {}", fixture.file, e);
+                eprintln!("  {:32} FAILED: {e}", fixture.file);
             }
         }
     }
