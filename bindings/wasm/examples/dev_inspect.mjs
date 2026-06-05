@@ -112,6 +112,7 @@ if (res.error) {
   throw new Error(`Failed to lookup name: ${res.error}`);
 }
 
+// Extract the resolved address from the last result
 if (res.results.length > 0) {
   const lastEffect = res.results[res.results.length - 1];
   if (lastEffect.returnValues.length > 0) {

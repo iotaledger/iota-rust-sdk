@@ -19,14 +19,18 @@ const queryEpochDataStr = `
   }
 `;
 
+// Query the data for the last known epoch. Note that id variable is not set, so
+// last epoch data will be returned.
 const queryEpochData = Query.new({ query: queryEpochDataStr });
 console.log(await client.runQuery(queryEpochData));
 
+// Query the data for epoch 1.
 const queryEpochDataWithVariables = Query.new({
   query: queryEpochDataStr,
   variables: JSON.stringify({ id: 1 }),
 });
 console.log(await client.runQuery(queryEpochDataWithVariables));
 
+// When the query has no variables, just omit them.
 const queryChainId = Query.new({ query: "query MyQuery { chainIdentifier }" });
 console.log(await client.runQuery(queryChainId));

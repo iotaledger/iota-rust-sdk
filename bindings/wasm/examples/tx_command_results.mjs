@@ -29,6 +29,7 @@ builder.moveCall(
   functionName,
   [PtbArgument.u64(0n), PtbArgument.u64(1000n)],
   [],
+  // Assign a name to the result of this command
   ["res0"],
 );
 
@@ -43,10 +44,13 @@ builder.moveCall(
 
 builder.splitCoins(
   PtbArgument.gas(),
+  // Use the assigned results of previous commands to use as arguments
   [PtbArgument.assigned("res0"), PtbArgument.assigned("res1")],
+  // For nested results, an array can be used to name them
   ["coin0", "coin1"],
 );
 
+// Use assigned results as arguments
 builder.transferObjects(sender, [
   PtbArgument.assigned("coin0"),
   PtbArgument.assigned("coin1"),

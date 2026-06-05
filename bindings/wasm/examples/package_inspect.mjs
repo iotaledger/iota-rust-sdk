@@ -296,6 +296,7 @@ const packageId =
 const packageAddress = Address.fromHex(packageId);
 const client = GraphQlClient.newTestnet();
 
+// Fetch package metadata and version history.
 const pkg = await client.package_(packageAddress);
 if (pkg === null) throw new Error("missing package");
 
@@ -307,10 +308,12 @@ const packagePrefix = pkg.id().toHex();
 console.log(
   `Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})`,
 );
+// Resolve the current upgrade policy.
 console.log(
   `Current package policy: ${await currentPackagePolicy(client, pkg.id())}\n`,
 );
 
+// Print the package version history.
 console.log("Versions:");
 for (const version of versions) {
   const labels = [];
@@ -322,6 +325,7 @@ for (const version of versions) {
 }
 console.log();
 
+// Print package dependencies and their linked versions.
 console.log("Dependencies:");
 const linkageTable = pkg.linkageTable();
 if (linkageTable.size === 0) {
@@ -338,6 +342,7 @@ if (linkageTable.size === 0) {
 }
 console.log();
 
+// Inspect normalized modules, functions, types, and sample key objects.
 console.log("Package contents:");
 const moduleNames = [...pkg.modules().keys()].map((m) => m.asStr()).sort();
 

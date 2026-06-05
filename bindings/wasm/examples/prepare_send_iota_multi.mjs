@@ -20,6 +20,7 @@ const coinId = ObjectId.fromHex(
   "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
 );
 
+// Recipients and amounts
 const recipients = [
   [
     "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
@@ -31,12 +32,14 @@ const recipients = [
   ],
 ];
 
+// Extract amounts from recipients
 const amounts = recipients.map(([, amount]) => PtbArgument.u64(amount));
 const labels = recipients.map((_, i) => `coin${i}`);
 
 const builder = new TransactionBuilder(sender).withClient(client);
 
 builder.splitCoins(PtbArgument.objectId(coinId), amounts, labels);
+// Transfer each split coin to the corresponding recipient
 for (let i = 0; i < recipients.length; i++) {
   builder.transferObjects(Address.fromHex(recipients[i][0]), [
     PtbArgument.assigned(labels[i]),

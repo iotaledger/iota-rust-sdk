@@ -28,6 +28,7 @@ console.log(`Sender address: ${senderAddress.toHex()}`);
 
 const client = GraphQlClient.newLocalnet();
 
+// Request funds from faucet
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(senderAddress, client);
 
