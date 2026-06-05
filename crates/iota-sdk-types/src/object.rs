@@ -278,6 +278,7 @@ impl std::str::FromStr for MoveObjectType {
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
@@ -292,6 +293,10 @@ pub struct MoveStruct {
     ///
     /// The first [`ObjectId::LENGTH`] bytes are always the object's
     /// [`ObjectId`].
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::_serde::ReadableBase64Encoded")
+    )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     contents: Vec<u8>,
 }
@@ -466,6 +471,7 @@ pub struct Object {
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub storage_rebate: u64,
 }
 
@@ -751,54 +757,6 @@ mod serialization {
             } else {
                 MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
             }
-        }
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "MoveStruct")]
-    struct ReadableMoveStructRef<'a> {
-        object_type: &'a MoveObjectType,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        version: Version,
-        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
-        contents: &'a [u8],
-    }
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "MoveStruct")]
-    struct ReadableMoveStructOwned {
-        object_type: MoveObjectType,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        version: Version,
-        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
-        contents: Vec<u8>,
-    }
-
-    impl Serialize for MoveStruct {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            ReadableMoveStructRef {
-                object_type: &self.object_type,
-                version: self.version,
-                contents: &self.contents,
-            }
-            .serialize(serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for MoveStruct {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let ReadableMoveStructOwned {
-                object_type,
-                version,
-                contents,
-            } = ReadableMoveStructOwned::deserialize(deserializer)?;
-            MoveStruct::new(object_type, version, contents).map_err(serde::de::Error::custom)
         }
     }
 
