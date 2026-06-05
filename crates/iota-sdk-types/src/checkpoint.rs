@@ -161,10 +161,9 @@ pub struct CheckpointSummary {
     /// be added to CheckpointSummary, we allow opaque data to be added to
     /// checkpoints which can be deserialized based on the current
     /// protocol version.
-    #[cfg_attr(feature = "serde", serde(default))]
     #[cfg_attr(
         feature = "serde",
-        serde(with = "crate::_serde::ReadableBase64Encoded")
+        serde(default, with = "crate::_serde::ReadableBase64Encoded")
     )]
     pub version_specific_data: Vec<u8>,
 }
