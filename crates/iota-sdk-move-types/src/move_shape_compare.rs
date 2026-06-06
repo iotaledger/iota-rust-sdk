@@ -1291,3 +1291,86 @@ fn shapes_match() {
         );
     }
 }
+
+/// The vendored manifest of every public `struct`/`enum` across the four
+/// system packages. `move_drift_nightly` keeps it in sync with the upstream
+/// monorepo; [`registry_matches_published_api`] in turn keeps
+/// [`expected_entries`] in sync with it — so every published type has a
+/// registered mirror that [`shapes_match`] then cross-checks.
+const PUBLISHED_API: &str = include_str!("packages_compiled/published_api.txt");
+
+/// Parse `published_api.txt` into the set of `(address, module, name)` keys.
+///
+/// The file stores one record per three lines: the type name, its kind
+/// (`public struct` / `public enum`), and its `address::module` path.
+fn published_api_types() -> std::collections::BTreeSet<(String, String, String)> {
+    let mut types = std::collections::BTreeSet::new();
+    for record in PUBLISHED_API.lines().collect::<Vec<_>>().chunks(3) {
+        let [name, kind, path] = record else { continue };
+        if !(kind.trim().ends_with("struct") || kind.trim().ends_with("enum")) {
+            continue;
+        }
+        let (address, module) = path
+            .trim()
+            .split_once("::")
+            .expect("published_api path is `address::module`");
+        types.insert((
+            address.to_owned(),
+            module.to_owned(),
+            name.trim().to_owned(),
+        ));
+    }
+    types
+}
+
+/// The `(address, module, name)` keys currently registered in
+/// [`expected_entries`].
+fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
+    expected_entries()
+        .iter()
+        .map(|e| {
+            (
+                e.package.label().to_owned(),
+                e.module.to_owned(),
+                e.struct_name.to_owned(),
+            )
+        })
+        .collect()
+}
+
+/// Every published Move type must have a registered mirror, and every
+/// registered entry must correspond to a real published type. Without this
+/// guard a new mirror could be added but left out of [`expected_entries`] —
+/// silently skipping its shape check — or an upstream type could go unmirrored
+/// entirely, leaving [`shapes_match`]'s "exhaustive" claim unenforced.
+#[test]
+fn registry_matches_published_api() {
+    let published = published_api_types();
+    let registered = registered_types();
+
+    let render = |keys: Vec<&(String, String, String)>| {
+        keys.iter()
+            .map(|(a, m, n)| format!("{a}::{m}::{n}"))
+            .collect::<Vec<_>>()
+            .join("\n  - ")
+    };
+
+    let unmirrored: Vec<_> = published.difference(&registered).collect();
+    let stale: Vec<_> = registered.difference(&published).collect();
+
+    let mut errors = Vec::new();
+    if !unmirrored.is_empty() {
+        errors.push(format!(
+            "published Move types with no registered mirror (add an `entry!` + `MoveShape` \
+             mirror, or refresh published_api.txt):\n  - {}",
+            render(unmirrored)
+        ));
+    }
+    if !stale.is_empty() {
+        errors.push(format!(
+            "registered entries absent from published_api.txt (stale registration or typo):\n  - {}",
+            render(stale)
+        ));
+    }
+    assert!(errors.is_empty(), "{}", errors.join("\n\n"));
+}
