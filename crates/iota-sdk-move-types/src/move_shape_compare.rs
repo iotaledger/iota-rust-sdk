@@ -16,7 +16,7 @@ use move_binary_format::{
 
 use crate::{
     framework, iota_system,
-    move_shape::{Field, MoveShape, Shape},
+    move_shape::{Field, MoveShape, Shape, Variant},
     stardust,
 };
 
@@ -1373,4 +1373,262 @@ fn registry_matches_published_api() {
         ));
     }
     assert!(errors.is_empty(), "{}", errors.join("\n\n"));
+}
+
+// ---------------------------------------------------------------------------
+// Negative tests
+// ---------------------------------------------------------------------------
+//
+// `shapes_match` only ever feeds the comparator *correct* shapes, so a
+// comparator that regressed to always returning `Ok(())` would still pass it.
+// Each test below starts from a real Move definition and the mirror's
+// known-good `move_shape()`, mutates exactly one thing, and asserts the
+// comparator now rejects it — one case per branch the comparator protects.
+
+fn struct_fields(shape: Shape) -> Vec<Field> {
+    match shape {
+        Shape::Struct { fields } => fields,
+        other => panic!("expected a struct shape, got {other:?}"),
+    }
+}
+
+fn enum_variants(shape: Shape) -> Vec<Variant> {
+    match shape {
+        Shape::Enum { variants } => variants,
+        other => panic!("expected an enum shape, got {other:?}"),
+    }
+}
+
+fn field_mut<'a>(fields: &'a mut [Field], name: &str) -> &'a mut Field {
+    fields
+        .iter_mut()
+        .find(|f| f.name == name)
+        .unwrap_or_else(|| panic!("no field named `{name}`"))
+}
+
+#[track_caller]
+fn reject_struct(move_def: &normalized::Struct<RcIdentifier>, shape: &Shape, needle: &str) {
+    let err = check_struct("module", "Type", shape, move_def)
+        .expect_err("comparator accepted a deliberately invalid shape");
+    assert!(
+        err.contains(needle),
+        "error `{err}`\n  should contain `{needle}`"
+    );
+}
+
+#[track_caller]
+fn reject_enum(move_def: &normalized::Enum<RcIdentifier>, shape: &Shape, needle: &str) {
+    let err = check_enum("module", "Type", shape, move_def)
+        .expect_err("comparator accepted a deliberately invalid shape");
+    assert!(
+        err.contains(needle),
+        "error `{err}`\n  should contain `{needle}`"
+    );
+}
+
+fn staked_iota_shape() -> Shape {
+    <iota_system::staking_pool::StakedIota as MoveShape>::move_shape()
+}
+
+// -- struct-level branches --------------------------------------------------
+
+#[test]
+fn rejects_non_struct_root() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    // A Rust enum shape where Move declares a struct.
+    let shape = Shape::Enum { variants: vec![] };
+    reject_struct(def, &shape, "expected Shape::Struct");
+}
+
+#[test]
+fn rejects_struct_field_count_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    fields.push(Field {
+        name: "extra",
+        shape: Shape::U8,
+    });
+    reject_struct(def, &Shape::Struct { fields }, "field count mismatch");
+}
+
+#[test]
+fn rejects_struct_field_name_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    field_mut(&mut fields, "principal").name = "definitely_wrong";
+    reject_struct(def, &Shape::Struct { fields }, "field name mismatch");
+}
+
+#[test]
+fn rejects_struct_field_primitive_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    // `stake_activation_epoch` is a `u64`; claim it is a `bool`.
+    field_mut(&mut fields, "stake_activation_epoch").shape = Shape::Bool;
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+// -- type-recursion branches ------------------------------------------------
+
+#[test]
+fn rejects_datatype_name_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    // `pool_id` is an `ID`; rename the referenced datatype.
+    let Shape::Datatype { name, .. } = &mut field_mut(&mut fields, "pool_id").shape else {
+        panic!("pool_id should be a datatype");
+    };
+    *name = "Wrong";
+    reject_struct(def, &Shape::Struct { fields }, "datatype name mismatch");
+}
+
+#[test]
+fn rejects_datatype_arity_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    // `principal` is a `Balance<IOTA>`; drop its type argument.
+    let Shape::Datatype { args, .. } = &mut field_mut(&mut fields, "principal").shape else {
+        panic!("principal should be a datatype");
+    };
+    assert_eq!(args.len(), 1, "expected Balance<_> with one type arg");
+    args.clear();
+    reject_struct(def, &Shape::Struct { fields }, "type-arg arity mismatch");
+}
+
+#[test]
+fn rejects_datatype_type_arg_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    // Keep `Balance<_>`'s arity but corrupt the inner type argument.
+    let Shape::Datatype { args, .. } = &mut field_mut(&mut fields, "principal").shape else {
+        panic!("principal should be a datatype");
+    };
+    args[0] = Shape::Bool;
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+#[test]
+fn rejects_vector_inner_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["random"].structs.get("RandomInner").unwrap();
+    let mut fields = struct_fields(<framework::random::RandomInner as MoveShape>::move_shape());
+    // `random_bytes` is a `vector<u8>`; claim a `vector<bool>`.
+    let Shape::Vector(inner) = &mut field_mut(&mut fields, "random_bytes").shape else {
+        panic!("random_bytes should be a vector");
+    };
+    **inner = Shape::Bool;
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+#[test]
+fn rejects_option_inner_mismatch() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakingPoolV1").unwrap();
+    let mut fields =
+        struct_fields(<iota_system::staking_pool::StakingPoolV1 as MoveShape>::move_shape());
+    // `activation_epoch` is an `Option<u64>`; corrupt the inner type so the
+    // Option normalisation can't paper over it.
+    let Shape::Option(inner) = &mut field_mut(&mut fields, "activation_epoch").shape else {
+        panic!("activation_epoch should be an option");
+    };
+    **inner = Shape::Bool;
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+#[test]
+fn rejects_type_parameter_index_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["dynamic_field"].structs.get("Field").unwrap();
+    let mut fields =
+        struct_fields(<framework::dynamic_field::Field<(), ()> as MoveShape>::move_shape());
+    // `name` is type parameter #0; claim #1.
+    assert_eq!(
+        field_mut(&mut fields, "name").shape,
+        Shape::TypeParameter(0)
+    );
+    field_mut(&mut fields, "name").shape = Shape::TypeParameter(1);
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+#[test]
+fn rejects_objectid_normalization_off_a_non_address() {
+    let pkgs = load_package(Package::IotaSystem.blob());
+    let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
+    let mut fields = struct_fields(staked_iota_shape());
+    // The ObjectId/Address → Address shortcut must only fire against a Move
+    // `address`; here the Move field is a `u64`, so it must be rejected.
+    field_mut(&mut fields, "stake_activation_epoch").shape = Shape::Datatype {
+        name: "ObjectId",
+        args: vec![],
+    };
+    reject_struct(def, &Shape::Struct { fields }, "shape mismatch");
+}
+
+// -- enum-level branches ----------------------------------------------------
+
+fn argument_shape() -> Shape {
+    <framework::ptb_command::Argument as MoveShape>::move_shape()
+}
+
+#[test]
+fn rejects_non_enum_root() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
+    // A Rust struct shape where Move declares an enum.
+    let shape = Shape::Struct { fields: vec![] };
+    reject_enum(def, &shape, "expected Shape::Enum");
+}
+
+#[test]
+fn rejects_enum_variant_count_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
+    let mut variants = enum_variants(argument_shape());
+    variants.pop();
+    reject_enum(def, &Shape::Enum { variants }, "variant count mismatch");
+}
+
+#[test]
+fn rejects_enum_variant_name_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
+    let mut variants = enum_variants(argument_shape());
+    variants[0].name = "definitely_wrong";
+    reject_enum(def, &Shape::Enum { variants }, "variant name mismatch");
+}
+
+#[test]
+fn rejects_enum_variant_field_count_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
+    let mut variants = enum_variants(argument_shape());
+    let i = variants
+        .iter()
+        .position(|v| !v.fields.is_empty())
+        .expect("a variant with at least one field");
+    variants[i].fields.push(Field {
+        name: "extra",
+        shape: Shape::U8,
+    });
+    reject_enum(def, &Shape::Enum { variants }, "field count mismatch");
+}
+
+#[test]
+fn rejects_enum_variant_field_name_mismatch() {
+    let pkgs = load_package(Package::IotaFramework.blob());
+    let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
+    let mut variants = enum_variants(argument_shape());
+    let i = variants
+        .iter()
+        .position(|v| !v.fields.is_empty())
+        .expect("a variant with at least one field");
+    variants[i].fields[0].name = "definitely_wrong";
+    reject_enum(def, &Shape::Enum { variants }, "field name mismatch");
 }
