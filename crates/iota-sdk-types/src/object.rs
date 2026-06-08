@@ -611,7 +611,7 @@ impl Object {
 
     /// Returns the object's owner and id together, if it is owned by a single
     /// owner.
-    pub fn get_owner_and_id(&self) -> Option<(Owner, ObjectId)> {
+    pub fn owner_and_id(&self) -> Option<(Owner, ObjectId)> {
         Some((self.owner, self.object_id()))
     }
 
@@ -634,12 +634,12 @@ impl Object {
 
     /// Returns the address of the single owner of this object (address- or
     /// object-owned), or `None` if it is shared or immutable.
-    pub fn get_single_owner(&self) -> Option<Address> {
+    pub fn single_owner(&self) -> Option<Address> {
         self.owner.address_or_object().copied()
     }
 
-    /// Changes the owner of this object to `new_owner`.
-    pub fn transfer(&mut self, new_owner: Address) {
+    /// Sets the owner of this object to `new_owner`.
+    pub fn set_owner(&mut self, new_owner: Address) {
         self.owner = Owner::Address(new_owner);
     }
 }
