@@ -39,5 +39,5 @@ while (true) {
 }
 console.log(`${allObjects.length} objects fetched:`);
 for (const obj of allObjects) {
-  console.log(obj.objectId().toHex());
+  console.log(obj.id().toHex());
 }

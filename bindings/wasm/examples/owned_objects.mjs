@@ -15,5 +15,5 @@ const address = Address.zero();
 const objectsPage = await client.objects(ObjectFilter.new({ owner: address }));
 console.log(`Owned objects(${objectsPage.data.length}):`);
 for (const obj of objectsPage.data) {
-  console.log(obj.objectId().toHex());
+  console.log(obj.id().toHex());
 }

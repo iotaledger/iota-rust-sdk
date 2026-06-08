@@ -26,7 +26,7 @@ const builder = new TransactionBuilder(
   stakedIota.owner().asAddress(),
 ).withClient(client);
 
-builder.unstake(PtbArgument.objectId(stakedIota.objectId()));
+builder.unstake(PtbArgument.objectId(stakedIota.id()));
 
 const res = await builder.dryRun();
 if (res.error) {

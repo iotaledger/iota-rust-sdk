@@ -21,7 +21,7 @@ if (obj === null) {
   throw new Error("missing object");
 }
 
-console.log("Object ID:", obj.objectId().toHex());
+console.log("Object ID:", obj.id().toHex());
 console.log("Version:", obj.version());
 console.log("Previous transaction:", obj.previousTransaction().toBase58());
 console.log("Owner:", obj.owner());

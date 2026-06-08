@@ -97,7 +97,7 @@ async function printObjectSamples(client, typeTag, hasKeyAbility, isGeneric) {
   console.log("    sample objects:");
   for (const obj of objects.data) {
     console.log(
-      `      - ${obj.objectId().toHex()} (version ${obj.version().asU64()})`,
+      `      - ${obj.id().toHex()} (version ${obj.version().asU64()})`,
     );
   }
   if (objects.pageInfo.hasNextPage) console.log("      - ...");

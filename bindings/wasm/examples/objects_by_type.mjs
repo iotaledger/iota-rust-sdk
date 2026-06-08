@@ -16,6 +16,6 @@ if (stakedIotas.data.length === 0) {
 } else {
   console.log("StakedIota object IDs:");
   for (const stakedIota of stakedIotas.data) {
-    console.log(stakedIota.objectId().toHex());
+    console.log(stakedIota.id().toHex());
   }
 }
