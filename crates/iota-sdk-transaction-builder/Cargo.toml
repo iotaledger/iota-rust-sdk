@@ -44,6 +44,3 @@ serde_json.workspace = true
 
 # internal dependencies
 iota-types = { workspace = true, features = ["rand"] }
-
-[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-getrandom = { version = "0.2", features = ["js"] }
