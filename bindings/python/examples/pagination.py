@@ -29,7 +29,7 @@ async def main():
             break
     print(f"{len(all_objects)} objects fetched:")
     for obj_id in all_objects:
-        print(obj_id.object_id().to_hex())
+        print(obj_id.id().to_hex())
 
 
 if __name__ == "__main__":

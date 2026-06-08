@@ -196,7 +196,7 @@ async def print_object_samples(client, type_tag, has_key_ability, is_generic):
     print("    sample objects:")
     for obj in objects.data:
         print(
-            f"      - {obj.object_id().to_hex()} (version {obj.version().as_u64()})"
+            f"      - {obj.id().to_hex()} (version {obj.version().as_u64()})"
         )
     if objects.page_info.has_next_page:
         print("      - ...")

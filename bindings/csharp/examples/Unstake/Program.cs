@@ -18,7 +18,7 @@ class Program
 
         var builder = new TransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client);
 
-        builder.Unstake(PtbArgument.ObjectId(stakedIota.ObjectId()));
+        builder.Unstake(PtbArgument.ObjectId(stakedIota.Id()));
 
         var res = await builder.DryRun(false);
 
