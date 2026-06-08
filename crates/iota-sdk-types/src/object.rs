@@ -902,7 +902,7 @@ mod serialization {
                   "data": {
                     "Package": {
                       "id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                      "version": 12,
+                      "version": "12",
                       "modules": {
                         "my_module": "AQIDBA=="
                       },
@@ -916,7 +916,7 @@ mod serialization {
                       "linkage_table": {
                         "0x0000000000000000000000000000000000000000000000000000000000000000": {
                           "upgraded_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                          "upgraded_version": 13
+                          "upgraded_version": "13"
                         }
                       }
                     }
@@ -925,7 +925,7 @@ mod serialization {
                     "Object": "0x0000000000000000000000000000000000000000000000000000000000000000"
                   },
                   "previous_transaction": "11111111111111111111111111111111",
-                  "storage_rebate": 100
+                  "storage_rebate": "100"
                 }"#
             );
 
@@ -936,7 +936,7 @@ mod serialization {
 
         #[test]
         fn object_reference_tuple_format() {
-            let json = r#"["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]"#;
+            let json = r#"["0x0000000000000000000000000000000000000000000000000000000000000000","0","11111111111111111111111111111111"]"#;
             let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
             assert_eq!(obj_ref.object_id, ObjectId::ZERO);
             assert_eq!(obj_ref.version, Version::from_u64(0));
