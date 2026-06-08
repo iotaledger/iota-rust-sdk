@@ -192,19 +192,6 @@ impl Client {
         Ok(Page::new(page_info, transactions))
     }
 
-    /// Get a stream of transactions based on the (optional) transaction filter.
-    pub fn transactions_stream(
-        &self,
-        filter: impl Into<Option<TransactionsFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| self.transactions(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
     /// Get a stream of transactions' effects based on the (optional)
     /// transaction filter.
     pub fn transactions_effects_stream(

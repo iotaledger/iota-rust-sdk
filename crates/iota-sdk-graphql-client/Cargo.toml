@@ -33,6 +33,13 @@ variadics_please.workspace = true
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
+# Subscriptions are delivered over a WebSocket and are only built for non-wasm
+# targets.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+async-stream.workspace = true
+graphql-ws-client.workspace = true
+tokio-tungstenite.workspace = true
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom_2.workspace = true
 js-sys.workspace = true

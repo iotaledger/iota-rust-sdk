@@ -461,3 +461,36 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
         resolved.gas_payment.objects.len(),
     );
 }
+
+/// Open a live transactions subscription and assert it delivers a transaction.
+/// A transfer is executed on a background task once the subscription has had a
+/// moment to connect, so the live stream observes it (localnet also produces
+/// system transactions continuously). This exercises the WebSocket transport,
+/// payload decoding, and resume-cursor tracking shared by `events_stream`.
+#[tokio::test]
+async fn test_transactions_subscription() {
+    use futures::StreamExt;
+
+    let client = Client::new_localnet();
+    let stream = client.transactions_stream(None, None);
+    futures::pin_mut!(stream);
+
+    tokio::spawn(async move {
+        // Give the subscription time to connect before generating activity.
+        tokio::time::sleep(Duration::from_secs(2)).await;
+        let (mut tx, _, pk, _) = helper_setup().await;
+        let gas = tx.get_gas()[0];
+        tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
+        let recipient = Address::generate(rand::thread_rng());
+        tx.transfer_objects(recipient, [assigned("coin")]);
+        let _ = tx.execute(&pk, WaitForTx::Finalized).await;
+    });
+
+    let item = tokio::time::timeout(Duration::from_secs(120), stream.next())
+        .await
+        .expect("timed out waiting for a transaction from the subscription");
+    assert!(
+        matches!(item, Some(Ok(_))),
+        "expected a transaction from the subscription, got {item:?}"
+    );
+}
