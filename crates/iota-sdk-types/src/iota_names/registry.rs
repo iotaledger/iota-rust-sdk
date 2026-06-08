@@ -124,9 +124,7 @@ impl TryFrom<crate::Object> for NameRecord {
         object
             .to_rust::<Field<Name, Self>>()
             .map(|record| record.value)
-            .map_err(|_| {
-                crate::iota_names::error::IotaNamesError::MalformedObject(object.object_id())
-            })
+            .map_err(|_| crate::iota_names::error::IotaNamesError::MalformedObject(object.id()))
     }
 }
 

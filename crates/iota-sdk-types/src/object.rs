@@ -489,7 +489,7 @@ impl Object {
     }
 
     /// Return this object's id
-    pub fn object_id(&self) -> ObjectId {
+    pub fn id(&self) -> ObjectId {
         match &self.data {
             ObjectData::Struct(struct_) => struct_.id(),
             ObjectData::Package(package) => package.id,
@@ -500,7 +500,7 @@ impl Object {
     #[cfg(all(feature = "hash", feature = "serde"))]
     pub fn object_ref(&self) -> ObjectReference {
         ObjectReference {
-            object_id: self.object_id(),
+            object_id: self.id(),
             version: self.version(),
             digest: self.digest(),
         }
@@ -606,7 +606,7 @@ impl Object {
 
     /// Returns true if the object is a system package.
     pub fn is_system_package(&self) -> bool {
-        self.is_package() && self.object_id().is_system_package()
+        self.is_package() && self.id().is_system_package()
     }
 
     /// Returns the struct tag of this object if it is a Move struct.
@@ -1014,7 +1014,7 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = ReadableObject {
-                    object_id: self.object_id(),
+                    object_id: self.id(),
                     version: self.version(),
                     // digest: todo!(),
                     owner: self.owner,
