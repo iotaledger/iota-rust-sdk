@@ -279,7 +279,7 @@ class Program
         Console.WriteLine("    sample objects:");
         foreach (var obj in objects.data)
         {
-            Console.WriteLine($"      - {obj.ObjectId().ToHex()} (version {obj.Version().AsU64()})");
+            Console.WriteLine($"      - {obj.Id().ToHex()} (version {obj.Version().AsU64()})");
         }
         if (objects.pageInfo.hasNextPage)
         {

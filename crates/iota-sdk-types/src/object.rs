@@ -457,7 +457,7 @@ impl std::fmt::Display for ObjectType {
 /// ```text
 /// object = object-data owner digest u64
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -492,7 +492,7 @@ impl Object {
     }
 
     /// Return this object's id
-    pub fn object_id(&self) -> ObjectId {
+    pub fn id(&self) -> ObjectId {
         match &self.data {
             ObjectData::Struct(struct_) => struct_.id(),
             ObjectData::Package(package) => package.id,
@@ -503,7 +503,7 @@ impl Object {
     #[cfg(all(feature = "hash", feature = "serde"))]
     pub fn object_ref(&self) -> ObjectReference {
         ObjectReference {
-            object_id: self.object_id(),
+            object_id: self.id(),
             version: self.version(),
             digest: self.digest(),
         }
@@ -580,6 +580,64 @@ impl Object {
     ) -> Result<T, Box<dyn std::error::Error + Send + Sync>> {
         let contents = self.as_struct_opt().ok_or("not a struct")?.contents();
         Ok(bcs::from_bytes::<T>(contents)?)
+    }
+
+    /// Returns true if the object is immutable.
+    pub fn is_immutable(&self) -> bool {
+        self.owner.is_immutable()
+    }
+
+    /// Returns true if the object is owned by an address.
+    pub fn is_address_owned(&self) -> bool {
+        self.owner.is_address()
+    }
+
+    /// Returns true if the object is owned by another object.
+    pub fn is_child_object(&self) -> bool {
+        self.owner.is_object()
+    }
+
+    /// Returns true if the object is shared.
+    pub fn is_shared(&self) -> bool {
+        self.owner.is_shared()
+    }
+
+    /// Returns true if this object is a Move package rather than a Move value.
+    pub fn is_package(&self) -> bool {
+        self.data.is_package()
+    }
+
+    /// Returns true if the object is a system package.
+    pub fn is_system_package(&self) -> bool {
+        self.is_package() && self.id().is_system_package()
+    }
+
+    /// Returns the struct tag of this object if it is a Move struct.
+    pub fn struct_tag(&self) -> Option<StructTag> {
+        self.data.struct_tag()
+    }
+
+    /// Returns true if this object is a gas coin.
+    pub fn is_gas_coin(&self) -> bool {
+        self.as_struct_opt()
+            .is_some_and(|move_object| move_object.struct_tag().is_gas_coin())
+    }
+
+    /// Returns the coin's type parameter if this object is a coin.
+    pub fn coin_type_opt(&self) -> Option<&TypeTag> {
+        self.as_struct_opt()
+            .and_then(|move_object| move_object.struct_tag().coin_type_opt())
+    }
+
+    /// Returns the address of the single owner of this object (address- or
+    /// object-owned), or `None` if it is shared or immutable.
+    pub fn single_owner(&self) -> Option<Address> {
+        self.owner.address_or_object().copied()
+    }
+
+    /// Sets the owner of this object to `new_owner`.
+    pub fn set_owner(&mut self, new_owner: Address) {
+        self.owner = Owner::Address(new_owner);
     }
 }
 

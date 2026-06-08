@@ -266,7 +266,7 @@ async fn test_upgrade() {
         let obj = client.object(o, None).await.unwrap().unwrap();
         match obj.object_type() {
             ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
-                upgrade_cap = Some(obj.object_id());
+                upgrade_cap = Some(obj.id());
                 break;
             }
             _ => {}
