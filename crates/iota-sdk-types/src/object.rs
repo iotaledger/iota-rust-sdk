@@ -609,12 +609,6 @@ impl Object {
         self.is_package() && self.object_id().is_system_package()
     }
 
-    /// Returns the object's owner and id together, if it is owned by a single
-    /// owner.
-    pub fn owner_and_id(&self) -> Option<(Owner, ObjectId)> {
-        Some((self.owner, self.object_id()))
-    }
-
     /// Returns the struct tag of this object if it is a Move struct.
     pub fn struct_tag(&self) -> Option<StructTag> {
         self.data.struct_tag()
