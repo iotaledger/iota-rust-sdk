@@ -4,7 +4,7 @@
 
 use blake2::Digest as DigestTrait;
 
-use crate::{Address, Digest, PublicKeyExt};
+use crate::{Address, Digest, PublicKeyExt, crypto::PublicKey};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -176,6 +176,17 @@ impl crate::PasskeyPublicKey {
     }
 }
 
+impl crate::PublicKey {
+    pub fn derive_address(&self) -> Address {
+        match self {
+            Self::Ed25519(pk) => pk.derive_address(),
+            Self::Secp256k1(pk) => pk.derive_address(),
+            Self::Secp256r1(pk) => pk.derive_address(),
+            Self::Passkey(pk) => pk.derive_address(),
+        }
+    }
+}
+
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
@@ -187,21 +198,16 @@ impl crate::MultisigCommittee {
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
     pub fn derive_address(&self) -> Address {
-        use crate::MultisigMemberPublicKey::*;
-
         let mut hasher = Hasher::new();
         hasher.update([self.scheme().to_u8()]);
         hasher.update(self.threshold().to_le_bytes());
 
         for member in self.members() {
             match member.public_key() {
-                Ed25519(p) => p.write_into_hasher(&mut hasher),
-                Secp256k1(p) => p.write_into_hasher(&mut hasher),
-                Secp256r1(p) => p.write_into_hasher(&mut hasher),
-                ZkLoginDeprecated => {
-                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
-                }
-                Passkey(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Ed25519(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Secp256k1(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Secp256r1(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Passkey(p) => p.write_into_hasher(&mut hasher),
             }
 
             hasher.update(member.weight().to_le_bytes());
@@ -329,8 +335,8 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage, SigningDigest,
-        Transaction, TransactionV1, hash::Hasher,
+        Digest, Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion, PersonalMessage,
+        SigningDigest, Transaction, TransactionV1, hash::Hasher,
     };
 
     impl Transaction {
@@ -392,6 +398,15 @@ mod signing_message {
 
         pub fn signing_message_hex(&self) -> String {
             hex::encode(self.signing_message())
+        }
+    }
+
+    impl<T> IntentMessage<T>
+    where
+        T: serde::Serialize,
+    {
+        pub fn signing_digest(&self) -> Digest {
+            Hasher::digest(bcs::to_bytes(&self).unwrap())
         }
     }
 }

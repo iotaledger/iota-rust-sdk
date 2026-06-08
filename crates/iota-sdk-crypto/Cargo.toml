@@ -88,9 +88,8 @@ test-strategy.workspace = true
 iota-types = { workspace = true, features = ["proptest"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-# `getrandom` renamed the WebAssembly support feature from "js" to "wasm_js"
-# Since both versions are in our dependency tree, we need to overwrite them with the proper feature
-getrandom_2.workspace = true
+# getrandom 0.2's "js" feature is inherited from iota-types (a real wasm dep there).
+# getrandom 0.3 needs the `getrandom_backend="wasm_js"` rustflag too (.cargo/config.toml); proptest pulls it into our tests.
 getrandom_3.workspace = true
 wasm-bindgen-test.workspace = true
 
