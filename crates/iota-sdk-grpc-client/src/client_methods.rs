@@ -5,7 +5,9 @@
 
 use std::time::Duration;
 
-use iota_grpc_types::v1::transaction_execution_service::SimulatedTransaction;
+use iota_grpc_types::{
+    read_mask_fields::EpochField, v1::transaction_execution_service::SimulatedTransaction,
+};
 use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
@@ -86,7 +88,10 @@ impl ClientMethods for Client {
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
-            .get_epoch(None, Some(ReadMask::from("protocol_config.attributes")))
+            .get_epoch(
+                None,
+                Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
+            )
             .await?
             .into_inner();
         let attributes = epoch
@@ -146,7 +151,10 @@ impl ClientMethods for Client {
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         let epoch = self
-            .get_epoch(epoch.into(), Some(ReadMask::from("reference_gas_price")))
+            .get_epoch(
+                epoch.into(),
+                Some(ReadMask::from(EpochField::REFERENCE_GAS_PRICE)),
+            )
             .await?
             .into_inner();
         Ok(epoch.reference_gas_price)
@@ -154,7 +162,7 @@ impl ClientMethods for Client {
 
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
-        // effects, mirroring the GraphQL client's estimate.
+        // effects.
         let simulated = self.simulate_transaction(tx.clone(), true, None).await?;
         let effects = simulated
             .into_inner()
