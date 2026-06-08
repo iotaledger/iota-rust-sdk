@@ -44,14 +44,92 @@ const queryStr = `
         protocolVersion
       }
       validatorSet {
+        activeValidators {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            ...RPC_VALIDATOR_FIELDS
+          }
+        }
+        committeeMembers {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            ...RPC_VALIDATOR_FIELDS
+          }
+        }
         inactivePoolsSize
         pendingActiveValidatorsSize
         stakingPoolMappingsSize
         validatorCandidatesSize
         pendingRemovals
         totalStake
+        stakingPoolMappingsId
+        pendingActiveValidatorsId
+        validatorCandidatesId
+        inactivePoolsId
       }
     }
+  }
+
+  fragment RPC_VALIDATOR_FIELDS on Validator {
+    address {
+      address
+    }
+    credentials {
+      authorityPubKey
+      networkPubKey
+      protocolPubKey
+      proofOfPossession
+      netAddress
+      p2PAddress
+      primaryAddress
+    }
+    nextEpochCredentials {
+      authorityPubKey
+      networkPubKey
+      protocolPubKey
+      proofOfPossession
+      netAddress
+      p2PAddress
+      primaryAddress
+    }
+    name
+    description
+    imageUrl
+    projectUrl
+    operationCap {
+      address
+    }
+    stakingPoolId
+    exchangeRatesTable {
+      address
+    }
+    exchangeRatesSize
+    stakingPoolActivationEpoch
+    stakingPoolIotaBalance
+    rewardsPool
+    poolTokenBalance
+    pendingStake
+    pendingTotalIotaWithdraw
+    pendingPoolTokenWithdraw
+    votingPower
+    gasPrice
+    commissionRate
+    nextEpochStake
+    nextEpochGasPrice
+    nextEpochCommissionRate
+    atRisk
+    reportRecords {
+      nodes {
+        address
+      }
+    }
+    apy
   }
 `;
 
