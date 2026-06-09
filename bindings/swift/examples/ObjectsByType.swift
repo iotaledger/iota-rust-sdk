@@ -16,7 +16,7 @@ struct ObjectsByTypeExample {
     } else {
       print("StakedIota object IDs:")
       for stakedIota in stakedIotas.data {
-        print(stakedIota.objectId().toHex())
+        print(stakedIota.id().toHex())
       }
     }
   }

@@ -65,7 +65,7 @@ impl PasskeyAuthenticator {
         self.0.signature().into()
     }
 
-    /// The passkey public key
+    /// The passkey public key.
     pub fn public_key(&self) -> PasskeyPublicKey {
         self.0.public_key().into()
     }

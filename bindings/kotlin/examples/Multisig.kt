@@ -42,7 +42,6 @@ fun main() = runBlocking {
                 ),
                 2u,
             )
-        require(committee.isValid()) { "committee must be valid" }
 
         // 4. Derive multisig address
         val multisigAddress = committee.deriveAddress()

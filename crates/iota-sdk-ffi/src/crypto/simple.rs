@@ -12,7 +12,7 @@ use crate::{
     },
     error::Result,
     types::{
-        crypto::{intent::PersonalMessage, multisig::MultisigMemberPublicKey},
+        crypto::{intent::PersonalMessage, public_key::PublicKey},
         signature::SimpleSignature,
     },
 };
@@ -66,7 +66,7 @@ impl SimpleKeypair {
         self.0.verifying_key().into()
     }
 
-    pub fn public_key(&self) -> MultisigMemberPublicKey {
+    pub fn public_key(&self) -> PublicKey {
         self.verifying_key().public_key()
     }
 
@@ -153,7 +153,7 @@ impl SimpleVerifyingKey {
         self.0.scheme()
     }
 
-    pub fn public_key(&self) -> MultisigMemberPublicKey {
+    pub fn public_key(&self) -> PublicKey {
         self.0.public_key().into()
     }
 

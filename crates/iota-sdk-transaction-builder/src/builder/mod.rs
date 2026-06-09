@@ -9,7 +9,6 @@ use std::{
     time::Duration,
 };
 
-use iota_graphql_client::Client;
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
@@ -453,6 +452,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -461,7 +461,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     ///
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -522,14 +522,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
@@ -577,14 +577,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
@@ -653,14 +653,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -693,14 +693,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let coin =
@@ -762,25 +762,17 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
-    /// let validator_address = client
-    ///     .active_validators(None, Default::default())
-    ///     .await?
-    ///     .data
-    ///     .into_iter()
-    ///     .next()
-    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
-    ///     .address
-    ///     .address;
+    /// # let validator_address = Address::ZERO;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);
@@ -807,14 +799,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
@@ -846,6 +838,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -853,7 +846,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
@@ -1015,16 +1008,9 @@ impl<L> TransactionBuilder<(), L> {
     }
 }
 
-impl<L> TransactionBuilder<&Client, L> {
+impl<C, L> TransactionBuilder<C, L> {
     /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
-        self.client
-    }
-}
-
-impl<L> TransactionBuilder<Client, L> {
-    /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
+    pub fn get_client(&self) -> &C {
         &self.client
     }
 }
@@ -1036,6 +1022,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
@@ -1043,7 +1030,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -1133,7 +1120,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     .await
                     .map_err(Error::client)?;
                 for obj in page.data {
-                    if unusable_object_ids.contains(&obj.object_id()) {
+                    if unusable_object_ids.contains(&obj.id()) {
                         continue;
                     }
                     let Ok(coin) = Coin::try_from_object(&obj) else {
@@ -1332,7 +1319,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Execute the transaction and optionally wait for finalization. The
-    /// GraphQL client will be used unless a gas station was configured, in
+    /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,

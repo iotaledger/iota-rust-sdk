@@ -266,11 +266,7 @@ async fn print_object_samples(
     } else {
         println!("    sample objects:");
         for object in &objects.data {
-            println!(
-                "      - {} (version {})",
-                object.object_id(),
-                object.version()
-            );
+            println!("      - {} (version {})", object.id(), object.version());
         }
         if objects.page_info.has_next_page {
             println!("      - ...");
