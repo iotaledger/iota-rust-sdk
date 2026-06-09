@@ -1,14 +1,14 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`ClientMethods`] for the GRPC [`Client`].
+//! Implementation of [`TransactionBuilderClient`] for the GRPC [`Client`].
 
 use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::EpochField, v1::transaction_execution_service::SimulatedTransaction,
 };
-use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
+use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
     TransactionEffects, UserSignature, Version,
@@ -23,9 +23,9 @@ use crate::{
     },
 };
 
-/// How long [`ClientMethods::wait_for_tx`] polls before giving up.
+/// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
 const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in [`ClientMethods::wait_for_tx`].
+/// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
 const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Returns `true` if the error represents a "not found" response from the
@@ -39,7 +39,7 @@ fn is_not_found(err: &Error) -> bool {
     }
 }
 
-impl ClientMethods for Client {
+impl TransactionBuilderClient for Client {
     type Error = crate::api::Error;
     type DryRunResult = SimulatedTransaction;
 
