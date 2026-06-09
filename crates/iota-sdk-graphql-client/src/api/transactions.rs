@@ -285,7 +285,6 @@ impl Client {
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
                 loop {
-                    crate::wait::sleep(Duration::from_millis(100)).await;
                     if match wait_for {
                         WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
@@ -295,6 +294,7 @@ impl Client {
                     } {
                         break Ok(());
                     }
+                    crate::wait::sleep(Duration::from_millis(100)).await;
                 }
             },
         )
