@@ -18,7 +18,7 @@ struct GetObjectExample {
         userInfo: [NSLocalizedDescriptionKey: "missing object"])
     }
 
-    print("Object ID:", obj.objectId().toHex())
+    print("Object ID:", obj.id().toHex())
     print("Version:", obj.version())
     print("Previous transaction:", obj.previousTransaction().toBase58())
     print("Owner:", obj.owner())

@@ -161,7 +161,9 @@ pub struct MovePackage {
     /// Set of modules defined by this package
     #[cfg_attr(
         feature = "serde",
-        serde(with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::Bytes>>")
+        serde(
+            with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
+        )
     )]
     #[cfg_attr(
         feature = "proptest",

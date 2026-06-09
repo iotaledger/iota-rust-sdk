@@ -21,7 +21,7 @@ struct UnstakeExample {
     let builder = TransactionBuilder(sender: stakedIota.owner().asAddress()).withClient(
       client: client)
 
-    _ = builder.unstake(stakedIota: PtbArgument.objectId(id: stakedIota.objectId()))
+    _ = builder.unstake(stakedIota: PtbArgument.objectId(id: stakedIota.id()))
 
     let res = try await builder.dryRun()
     if res.error != nil {

@@ -3,8 +3,10 @@
 
 use iota_sdk::{
     graphql_client::{Client, DryRunResult, WaitForTx},
-    transaction_builder::ClientMethods,
-    types::{Address, Digest, Object, ObjectId, Transaction, TransactionEffects, TypeTag, Version},
+    transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig},
+    types::{
+        Address, Digest, Object, ObjectId, StructTag, Transaction, TransactionEffects, Version,
+    },
 };
 
 use crate::graphql::client::GraphQLClient;
@@ -23,23 +25,16 @@ impl ClientMethods for GraphQLClient {
 
     async fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
-        cursor: Option<String>,
+        struct_tag: Option<StructTag>,
+        owner: Address,
+        cursor: Option<Vec<u8>>,
         limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
-        ClientMethods::objects(
-            &*self.0.read().await,
-            type_tag,
-            owner,
-            object_ids,
-            ascending,
-            cursor,
-            limit,
-        )
-        .await
+    ) -> Result<ObjectsPage, Self::Error> {
+        ClientMethods::objects(&*self.0.read().await, struct_tag, owner, cursor, limit).await
+    }
+
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        ClientMethods::protocol_config(&*self.0.read().await).await
     }
 
     async fn transaction(

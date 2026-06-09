@@ -232,7 +232,7 @@ private func printObjectSamples(
 
   print("    sample objects:")
   for object in objects.data {
-    print("      - \(object.objectId().toHex()) (version \(object.version().asU64()))")
+    print("      - \(object.id().toHex()) (version \(object.version().asU64()))")
   }
   if objects.pageInfo.hasNextPage {
     print("      - ...")
