@@ -145,17 +145,7 @@ impl Address {
     pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
         self.0.next_lexicographical_opt().map(Self).map(Arc::new)
     }
-}
 
-// `iota_sdk::types::Address::random` is itself gated on
-// `not(target_arch = "wasm32")`, so the wrapper must be too. Lifting this
-// constructor into its own impl block lets the `#[cfg]` strip it before
-// `#[uniffi::export]` ever sees it (a `#[cfg]` on a single method inside a
-// `#[uniffi::export]` impl is processed too late and the macro still emits
-// a call site for the missing inner method).
-#[cfg(not(target_arch = "wasm32"))]
-#[uniffi::export]
-impl Address {
     #[uniffi::constructor]
     pub fn random() -> Self {
         Self(iota_sdk::types::Address::random())
