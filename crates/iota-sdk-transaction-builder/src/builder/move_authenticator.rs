@@ -127,7 +127,7 @@ impl MoveAuthenticatorBuilder {
             Owner::Shared(version) => MoveAuthenticator::V1(MoveAuthenticatorV1::new_shared(
                 call_args,
                 self.type_args,
-                account.object_id(),
+                account.id(),
                 *version,
             )),
             _ => {
