@@ -32,9 +32,19 @@ func main() {
 	}
 
 	for _, event := range events.Data {
+		// Sender and Module are optional: some events (such as system- or
+		// genesis-emitted ones) carry neither.
+		sender := "none"
+		if event.Sender != nil {
+			sender = (*event.Sender).ToHex()
+		}
+		module := "none"
+		if event.Module != nil {
+			module = *event.Module
+		}
 		fmt.Println("Type: ", event.Type)
-		fmt.Println("Sender: ", event.Sender.ToHex())
-		fmt.Println("Module: ", event.Module)
+		fmt.Println("Sender: ", sender)
+		fmt.Println("Module: ", module)
 		fmt.Println("JSON: ", event.Json)
 	}
 }

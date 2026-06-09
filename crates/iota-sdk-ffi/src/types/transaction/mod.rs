@@ -914,11 +914,14 @@ pub struct GenesisTransaction(iota_sdk::types::GenesisTransaction);
 #[uniffi::export]
 impl GenesisTransaction {
     #[uniffi::constructor]
-    pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> Self {
-        Self(iota_sdk::types::GenesisTransaction {
+    pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> crate::error::Result<Self> {
+        Ok(Self(iota_sdk::types::GenesisTransaction {
             objects: objects.iter().map(|object| object.0.clone()).collect(),
-            events: events.into_iter().map(Into::into).collect(),
-        })
+            events: events
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<crate::error::Result<_>>()?,
+        }))
     }
 
     pub fn objects(&self) -> Vec<Arc<GenesisObject>> {

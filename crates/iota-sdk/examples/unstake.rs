@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
     let mut builder =
         TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
 
-    builder.unstake(staked_iota.object_id());
+    builder.unstake(staked_iota.id());
 
     let res = builder.dry_run(false).await?;
 

@@ -17,7 +17,7 @@ async def main():
     else:
         print("StakedIota object IDs:")
         for staked_iota in staked_iotas.data:
-            print(staked_iota.object_id().to_hex())
+            print(staked_iota.id().to_hex())
 
 
 if __name__ == "__main__":
