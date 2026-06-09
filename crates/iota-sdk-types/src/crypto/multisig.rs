@@ -527,9 +527,6 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
         match signature {
             UserSignature::Simple(simple) => Ok(simple.into()),
             UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                Err(MultisigError::UnallowedSignatureType)
-            }
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
             UserSignature::MoveAuthenticator(_) => Err(MultisigError::UnallowedSignatureType),
         }
