@@ -856,6 +856,64 @@ mod serialization {
             assert_eq!(Ok(scheme), SignatureScheme::from_byte(scheme.to_u8()));
         }
 
+        /// The `SignatureScheme` flag bytes are part of the on-chain wire
+        /// format and must never change. They are pinned here against
+        /// hardcoded values; a round-trip (`roundtrip_signature_scheme`)
+        /// cannot catch a shifted value because it would move in lockstep.
+        /// `0x05` is reserved for the removed zklogin authenticator (never
+        /// enabled on chain) and must be rejected rather than mapped.
+        #[test]
+        fn signature_scheme_flag_values() {
+            assert_eq!(SignatureScheme::Ed25519.to_u8(), 0x00);
+            assert_eq!(SignatureScheme::Secp256k1.to_u8(), 0x01);
+            assert_eq!(SignatureScheme::Secp256r1.to_u8(), 0x02);
+            assert_eq!(SignatureScheme::Multisig.to_u8(), 0x03);
+            assert_eq!(SignatureScheme::Bls12381.to_u8(), 0x04);
+            assert_eq!(SignatureScheme::PasskeyAuthenticator.to_u8(), 0x06);
+            assert_eq!(SignatureScheme::MoveAuthenticator.to_u8(), 0x07);
+
+            assert_eq!(
+                SignatureScheme::from_byte(0x00),
+                Ok(SignatureScheme::Ed25519)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x01),
+                Ok(SignatureScheme::Secp256k1)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x02),
+                Ok(SignatureScheme::Secp256r1)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x03),
+                Ok(SignatureScheme::Multisig)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x04),
+                Ok(SignatureScheme::Bls12381)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x06),
+                Ok(SignatureScheme::PasskeyAuthenticator)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x07),
+                Ok(SignatureScheme::MoveAuthenticator)
+            );
+
+            assert!(
+                SignatureScheme::from_byte(0x05).is_err(),
+                "0x05 (deprecated zklogin) must be rejected"
+            );
+        }
+
+        /// A bare `0x05` flag previously decoded to the (removed) zklogin
+        /// variant; it must now fail to decode.
+        #[test]
+        fn user_signature_rejects_zklogin_flag() {
+            assert!(UserSignature::from_bytes([0x05]).is_err());
+        }
+
         #[test]
         fn simple_fixtures() {
             const FIXTURES: &[(SignatureScheme, &str)] = &[
