@@ -89,6 +89,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multisig", "Multisig\Multis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressTransactions", "AddressTransactions\AddressTransactions.csproj", "{042B80AD-AD76-4608-AFA7-4D65CD70DD93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcServiceInfo", "GrpcServiceInfo\GrpcServiceInfo.csproj", "{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -270,5 +272,9 @@ Global
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

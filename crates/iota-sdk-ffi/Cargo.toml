@@ -15,7 +15,8 @@ name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
 [features]
-default = ["crypto", "bls12381"]
+default = ["crypto", "bls12381", "grpc"]
+grpc = ["iota-sdk/grpc"]
 crypto = [
   "iota-sdk/bech32",
   "iota-sdk/crypto",
