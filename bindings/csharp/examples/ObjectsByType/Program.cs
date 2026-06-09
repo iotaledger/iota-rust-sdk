@@ -21,7 +21,7 @@ class Program
             Console.WriteLine("StakedIota object IDs:");
             foreach (var stakedIota in stakedIotas.data)
             {
-                Console.WriteLine(stakedIota.ObjectId().ToHex());
+                Console.WriteLine(stakedIota.Id().ToHex());
             }
         }
     }
