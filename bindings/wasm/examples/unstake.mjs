@@ -7,10 +7,10 @@ import {
   PtbArgument,
   StructTag,
   TransactionBuilder,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 

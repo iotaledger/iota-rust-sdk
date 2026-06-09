@@ -10,10 +10,10 @@ import {
   StructTag,
   TransactionBuilder,
   TypeTag,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 const sender = Address.zero();

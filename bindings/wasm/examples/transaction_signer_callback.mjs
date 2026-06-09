@@ -11,11 +11,11 @@ import {
   TransactionBuilder,
   TransactionSigner,
   TransactionSignerFnOutput,
-  uniffiInitAsync,
+  initAsync,
   WaitForTx,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 class AsyncSigner {
   constructor(key) {

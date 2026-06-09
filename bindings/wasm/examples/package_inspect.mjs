@@ -15,10 +15,10 @@ import {
   StructTag,
   transactionToJson,
   TransactionsFilter,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const FRAMEWORK_PACKAGE_ID = Address.framework().toHex();
 const HEX_DIGITS = new Set("0123456789abcdefABCDEF");

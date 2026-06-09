@@ -295,7 +295,7 @@
 
     <script type="module">
       import {
-        uniffiInitAsync,
+        initAsync,
         GraphQlClient,
         TransactionBuilder,
         PtbArgument,
@@ -820,7 +820,7 @@
 
       // --------------- Init ---------------
       async function main() {
-        await uniffiInitAsync();
+        await initAsync();
         client = await createClient($("network").value);
         hide("init-status");
         show("app");

@@ -22,11 +22,11 @@ import {
   PtbArgument,
   SimpleKeypair,
   TransactionBuilder,
-  uniffiInitAsync,
+  initAsync,
   UserSignature,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const MNEMONIC =
   "round attack kitchen wink winter music trip tiny nephew hire orange what";

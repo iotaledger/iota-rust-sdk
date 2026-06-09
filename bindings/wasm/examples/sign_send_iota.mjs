@@ -9,11 +9,11 @@ import {
   hexEncode,
   PtbArgument,
   TransactionBuilder,
-  uniffiInitAsync,
+  initAsync,
   UserSignature,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 // Amount to send in nanos
 const amount = 1000n;

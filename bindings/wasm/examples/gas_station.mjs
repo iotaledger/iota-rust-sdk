@@ -9,10 +9,10 @@ import {
   PtbArgument,
   TransactionBuilder,
   TransactionSigner,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newLocalnet();
 const gasStationUrl = "http://0.0.0.0:9527";

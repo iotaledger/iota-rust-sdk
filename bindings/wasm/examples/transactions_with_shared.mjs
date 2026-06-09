@@ -5,10 +5,10 @@ import {
   GraphQlClient,
   ObjectId,
   TransactionsFilter,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 

@@ -5,10 +5,10 @@ import {
   Address,
   GraphQlClient,
   ObjectFilter,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 const address = Address.zero();

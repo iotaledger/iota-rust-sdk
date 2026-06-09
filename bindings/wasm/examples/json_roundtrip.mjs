@@ -7,10 +7,10 @@ import {
   Transaction,
   transactionFromJson,
   transactionToJson,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 // A sample transaction in base64 format
 const txBytesBase64 =

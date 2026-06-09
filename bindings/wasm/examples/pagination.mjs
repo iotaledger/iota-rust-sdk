@@ -7,10 +7,10 @@ import {
   GraphQlClient,
   ObjectFilter,
   PaginationFilter,
-  uniffiInitAsync,
+  initAsync,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 const address = Address.fromHex(

@@ -1,9 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import { GraphQlClient, Query, uniffiInitAsync } from "@iota/sdk-wasm";
+import { GraphQlClient, Query, initAsync } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newTestnet();
 

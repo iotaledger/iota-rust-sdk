@@ -13,11 +13,11 @@ import {
   PtbArgument,
   TransactionBuilder,
   TransactionSigner,
-  uniffiInitAsync,
+  initAsync,
   WaitForTx,
 } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 // The package below, compiled and exported using
 // `iota move build --dump-bytecode-as-base64`.

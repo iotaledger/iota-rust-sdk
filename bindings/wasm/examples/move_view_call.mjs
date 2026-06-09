@@ -3,9 +3,9 @@
 
 // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
 
-import { GraphQlClient, MoveViewArg, uniffiInitAsync } from "@iota/sdk-wasm";
+import { GraphQlClient, MoveViewArg, initAsync } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const client = GraphQlClient.newDevnet();
 

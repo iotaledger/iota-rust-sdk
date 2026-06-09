@@ -24,10 +24,10 @@
     <pre id="error-detail"></pre>
 
     <script type="module">
-      import { uniffiInitAsync, GraphQlClient } from "../dist/iota-sdk.js";
+      import { initAsync, GraphQlClient } from "../dist/iota-sdk.js";
 
       async function main() {
-        await uniffiInitAsync();
+        await initAsync();
 
         const client = GraphQlClient.newTestnet();
 

@@ -14,7 +14,7 @@ import * as bg from "./wasm-bindgen/index_bg.js";
  *     `fs.readFileSync(...)` instead).
  *   - omitted: defaults to `index_bg.wasm` resolved relative to this JS module.
  */
-export async function uniffiInitAsync(
+export async function initAsync(
   input?: string | URL | ArrayBuffer | Uint8Array,
 ) {
   let bytes: ArrayBuffer | Uint8Array;

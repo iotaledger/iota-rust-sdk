@@ -1,13 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  base64Encode,
-  Ed25519PrivateKey,
-  uniffiInitAsync,
-} from "@iota/sdk-wasm";
+import { base64Encode, Ed25519PrivateKey, initAsync } from "@iota/sdk-wasm";
 
-await uniffiInitAsync();
+await initAsync();
 
 const privateKey = Ed25519PrivateKey.generate();
 const privateKeyBech32 = privateKey.toBech32();
