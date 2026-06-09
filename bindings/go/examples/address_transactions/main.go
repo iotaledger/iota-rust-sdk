@@ -24,7 +24,7 @@ func main() {
 	}
 
 	outgoing, err := client.Transactions(&iota_sdk.TransactionsFilter{
-		SignAddress: &address,
+		SentAddress: &address,
 	}, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch outgoing transactions: %v", err)

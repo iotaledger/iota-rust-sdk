@@ -17,7 +17,7 @@ struct AddressTransactionsExample {
       hex: "0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
     let outgoing = try await client.transactions(
-      filter: TransactionsFilter(signAddress: address))
+      filter: TransactionsFilter(sentAddress: address))
     let incoming = try await client.transactions(
       filter: TransactionsFilter(recvAddress: address))
 

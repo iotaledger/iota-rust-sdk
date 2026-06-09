@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let outgoing = client
         .transactions(
             TransactionsFilter {
-                sign_address: Some(address),
+                sent_address: Some(address),
                 ..Default::default()
             },
             PaginationFilter::default(),
