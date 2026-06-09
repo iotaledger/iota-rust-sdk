@@ -13,7 +13,7 @@ The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes
 
 Instantiate a client with one of the predefined network constructors or `Client::new(url)` for a custom endpoint:
 
-```rust,ignore
+```rust
 use iota_sdk_grpc_client::Client;
 
 #[tokio::main]
@@ -39,7 +39,7 @@ The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_local
 
 Customize headers and message size limits:
 
-```rust,ignore
+```rust
 use iota_sdk_grpc_client::Client;
 
 #[tokio::main]
