@@ -16,6 +16,7 @@ use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version}
 /// object-reference = object-id u64 digest
 /// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectReference {
@@ -879,35 +880,6 @@ mod serialization {
 
                 Ok(GenesisObject { data, owner })
             }
-        }
-    }
-
-    // Custom serialization to be backwards compatible with the JSON RPC
-    #[derive(serde::Deserialize, serde::Serialize)]
-    struct TupleObjectReference(ObjectId, Version, Digest);
-
-    impl Serialize for ObjectReference {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            TupleObjectReference(self.object_id, self.version, self.digest).serialize(serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ObjectReference {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let TupleObjectReference(object_id, version, digest) =
-                TupleObjectReference::deserialize(deserializer)?;
-
-            Ok(ObjectReference {
-                object_id,
-                version,
-                digest,
-            })
         }
     }
 
