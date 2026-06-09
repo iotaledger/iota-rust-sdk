@@ -5,11 +5,11 @@ use serde_json::Value;
 
 pub mod api;
 pub mod client;
-pub mod client_methods;
 pub mod faucet;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
+pub mod transaction_builder_client;
 
 uniffi::custom_type!(Value, String, {
     remote,

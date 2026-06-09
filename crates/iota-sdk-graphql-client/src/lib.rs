@@ -6,13 +6,13 @@
 
 mod api;
 mod client;
-mod client_methods;
 pub mod error;
 pub mod faucet;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
 pub mod streams;
+mod transaction_builder_client;
 
 #[cfg(test)]
 mod test_utils;

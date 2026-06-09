@@ -15,7 +15,7 @@
 //! ## Online vs. Offline Builder
 //!
 //! The Transaction Builder can be used with or without a client implementing
-//! [ClientMethods]. When one is provided via the
+//! [TransactionBuilderClient]. When one is provided via the
 //! [with_client](TransactionBuilder::with_client) method, the resulting builder
 //! will use it to find and validate provided IDs.
 //!
@@ -285,11 +285,11 @@ pub mod types;
 pub mod unresolved;
 
 #[cfg(feature = "test-client")]
-pub use self::builder::client_methods::test_client::{TestClient, TestClientError};
+pub use self::builder::client::test_client::{TestClient, TestClientError};
 pub use self::{
     builder::{
         TransactionBuilder,
-        client_methods::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx},
+        client::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
