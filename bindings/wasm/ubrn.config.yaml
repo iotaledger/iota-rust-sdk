@@ -5,7 +5,7 @@ rust:
 web:
   # Use our existing wasm crate (already a Cargo workspace member).
   workspace: true
-  manifestPath: ../../crates/iota-sdk-wasm/Cargo.toml
+  manifestPath: iota-sdk-wasm/Cargo.toml
   # ubrn defaults the generated crate name to the package.json name, which is the
   # scoped npm name "@iota/sdk-wasm" — not a valid Rust crate name. Pin it.
   wasmCrateName: iota-sdk-wasm

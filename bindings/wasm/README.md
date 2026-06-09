@@ -4,8 +4,8 @@ TypeScript/WASM bindings for the IOTA SDK, generated from the [`iota-sdk-ffi`](.
 
 The pipeline has two steps:
 
-1. **Generate TS + Rust bridge** – `uniffi-bindgen-react-native` reads the native `.so` and emits `src/ts/iota_sdk_ffi.ts` (TypeScript API) and `crates/iota-sdk-wasm/src/iota_sdk_ffi_module.rs` (wasm-bindgen Rust bridge).
-2. **Compile to WASM + generate JS glue** – `crates/iota-sdk-wasm` statically links `iota-sdk-ffi` and compiles to `wasm32-unknown-unknown`, then `wasm-bindgen` emits the browser JS glue.
+1. **Generate TS + Rust bridge** – `uniffi-bindgen-react-native` reads the native `.so` and emits `src/ts/iota_sdk_ffi.ts` (TypeScript API) and `iota-sdk-wasm/src/iota_sdk_ffi_module.rs` (wasm-bindgen Rust bridge).
+2. **Compile to WASM + generate JS glue** – `iota-sdk-wasm` statically links `iota-sdk-ffi` and compiles to `wasm32-unknown-unknown`, then `wasm-bindgen` emits the browser JS glue.
 
 > **Why a separate `iota-sdk-wasm` crate?** The generated bridge uses `extern "C" { fn uniffi_iota_sdk_ffi_fn_*... }` to reference UniFFI symbols. These must come from an external crate; they cannot be placed inside `iota-sdk-ffi` itself.
 
@@ -39,7 +39,7 @@ This single command performs all three stages (generate bindings, compile to WAS
 Builds `iota-sdk-ffi` for the native target, then runs `uniffi-bindgen-react-native` to extract UniFFI metadata and emit:
 
 - `bindings/wasm/src/ts/iota_sdk_ffi.ts` – full TypeScript API (~45 k lines)
-- `crates/iota-sdk-wasm/src/iota_sdk_ffi_module.rs` – wasm-bindgen bridge
+- `iota-sdk-wasm/src/iota_sdk_ffi_module.rs` – wasm-bindgen bridge
 
 ### Step 2 – Compile to WASM and generate JS glue
 
@@ -113,8 +113,7 @@ bindings/wasm/
   scripts/
     fix-generated-typescript.mjs  # normalizes generated TS (auto-run by build)
     serve.mjs                     # dev server for browser examples (make wasm-serve)
-crates/
-  iota-sdk-wasm/           # thin crate compiled to wasm32
+  iota-sdk-wasm/           # thin crate compiled to wasm32 (placeholder; ubrn regenerates it)
     Cargo.toml
     src/
       lib.rs

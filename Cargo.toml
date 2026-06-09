@@ -13,7 +13,7 @@ members = [
   "crates/iota-sdk-grpc-types",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
-  "crates/iota-sdk-wasm",
+  "bindings/wasm/iota-sdk-wasm",
   "crates/iota-sdk/examples/polling-indexer",
 ]
 
