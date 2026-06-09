@@ -50,7 +50,7 @@ impl Client {
     /// for obj in objs.body() {
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
-    ///     println!("Got object ID: {:?}", sdk_obj.object_id());
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }
@@ -112,7 +112,7 @@ impl Client {
     ///
     /// for obj in objs.body() {
     ///     let sdk_obj = obj.object()?;
-    ///     println!("Got object ID: {:?}", sdk_obj.object_id());
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
     /// }
     /// # Ok(())
     /// # }
@@ -164,7 +164,7 @@ impl Client {
     /// for obj in objs.body() {
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
-    ///     println!("Got object ID: {:?}", sdk_obj.object_id());
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }

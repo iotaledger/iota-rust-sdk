@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
     // Deserialize the proto Object into the SDK Object type.
     let obj = proto_obj.object()?;
 
-    println!("Object ID: {}", obj.object_id());
+    println!("Object ID: {}", obj.id());
     println!("Version: {}", obj.version());
     println!(
         "Previous transaction: {}",
