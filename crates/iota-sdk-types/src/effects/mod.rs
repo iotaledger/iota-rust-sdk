@@ -41,7 +41,7 @@ impl TransactionEffects {
     }
 }
 
-#[cfg(all(test, feature = "serde"))]
+#[cfg(all(feature = "serde", test))]
 mod tests {
     use base64ct::{Base64, Encoding};
     #[cfg(target_arch = "wasm32")]

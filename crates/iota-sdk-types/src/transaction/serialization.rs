@@ -7,155 +7,6 @@ use serde_with::{DeserializeAs, SerializeAs};
 
 use crate::{Identifier, ObjectId, ObjectReference};
 
-mod version_assignments {
-    use super::*;
-    use crate::transaction::{
-        CancelledTransaction, ConsensusDeterminedVersionAssignments, VersionAssignment,
-    };
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions(&'a Vec<CancelledTransaction>),
-    }
-
-    /// Uses an enum to allow for future expansion of the
-    /// ConsensusDeterminedVersionAssignments.
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
-    enum ConsensusDeterminedVersionAssignmentsOwned {
-        CancelledTransactions(Vec<CancelledTransaction>),
-    }
-
-    impl Serialize for ConsensusDeterminedVersionAssignments {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            match self {
-                Self::CancelledTransactions {
-                    cancelled_transactions,
-                } => ConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
-                    cancelled_transactions,
-                ),
-            }
-            .serialize(serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ConsensusDeterminedVersionAssignments {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            ConsensusDeterminedVersionAssignmentsOwned::deserialize(deserializer).map(|owned| {
-                match owned {
-                    ConsensusDeterminedVersionAssignmentsOwned::CancelledTransactions(
-                        cancelled_transactions,
-                    ) => Self::CancelledTransactions {
-                        cancelled_transactions,
-                    },
-                }
-            })
-        }
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "VersionAssignment")]
-    struct BinaryVersionAssignmentRef<'a>(&'a ObjectId, &'a crate::Version);
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "VersionAssignment")]
-    struct BinaryVersionAssignment(ObjectId, crate::Version);
-
-    impl Serialize for VersionAssignment {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                use serde::ser::SerializeTuple;
-                let mut tuple = serializer.serialize_tuple(2)?;
-                tuple.serialize_element(&self.object_id)?;
-                tuple.serialize_element(&self.version)?;
-                tuple.end()
-            } else {
-                let binary = BinaryVersionAssignmentRef(&self.object_id, &self.version);
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for VersionAssignment {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let (object_id, version): (ObjectId, u64) = Deserialize::deserialize(deserializer)?;
-                Ok(VersionAssignment {
-                    object_id,
-                    version: version.into(),
-                })
-            } else {
-                BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
-                    object_id: b.0,
-                    version: b.1,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "CancelledTransaction")]
-    struct BinaryCancelledTransactionRef<'a>(&'a crate::Digest, &'a Vec<VersionAssignment>);
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "CancelledTransaction")]
-    struct BinaryCancelledTransaction(crate::Digest, Vec<VersionAssignment>);
-
-    impl Serialize for CancelledTransaction {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                use serde::ser::SerializeTuple;
-                let mut tuple = serializer.serialize_tuple(2)?;
-                tuple.serialize_element(&self.digest)?;
-                tuple.serialize_element(&self.version_assignments)?;
-                tuple.end()
-            } else {
-                let binary = BinaryCancelledTransactionRef(&self.digest, &self.version_assignments);
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CancelledTransaction {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let (digest, version_assignments): (crate::Digest, Vec<VersionAssignment>) =
-                    Deserialize::deserialize(deserializer)?;
-                Ok(CancelledTransaction {
-                    digest,
-                    version_assignments,
-                })
-            } else {
-                BinaryCancelledTransaction::deserialize(deserializer).map(|b| {
-                    CancelledTransaction {
-                        digest: b.0,
-                        version_assignments: b.1,
-                    }
-                })
-            }
-        }
-    }
-}
-
 mod input_argument {
     use super::*;
     use crate::{
@@ -494,7 +345,7 @@ mod tests {
                 serde_json::json!({
                   "immutable_or_owned": [
                     "0x0000000000000000000000000000000000000000000000000000000000000000",
-                    1,
+                    "1",
                     "11111111111111111111111111111111"
                   ]
                 }),
@@ -522,7 +373,7 @@ mod tests {
                 serde_json::json!({
                   "receiving": [
                     "0x0000000000000000000000000000000000000000000000000000000000000000",
-                    1,
+                    "1",
                     "11111111111111111111111111111111"
                   ]
                 }),

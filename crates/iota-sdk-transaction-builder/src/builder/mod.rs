@@ -1120,7 +1120,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     .await
                     .map_err(Error::client)?;
                 for obj in page.data {
-                    if unusable_object_ids.contains(&obj.object_id()) {
+                    if unusable_object_ids.contains(&obj.id()) {
                         continue;
                     }
                     let Ok(coin) = Coin::try_from_object(&obj) else {

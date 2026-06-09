@@ -33,6 +33,7 @@ pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
@@ -78,11 +79,7 @@ pub struct TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename = "EffectsObjectChange")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {

@@ -320,7 +320,7 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAb
 
 	fmt.Println("    sample objects:")
 	for _, object := range objects.Data {
-		fmt.Printf("      - %s (version %d)\n", object.ObjectId().ToHex(), object.Version().AsU64())
+		fmt.Printf("      - %s (version %d)\n", object.Id().ToHex(), object.Version().AsU64())
 	}
 	if objects.PageInfo.HasNextPage {
 		fmt.Println("      - ...")
