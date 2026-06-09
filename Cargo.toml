@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+  "bindings/wasm/iota-sdk-wasm",
   "crates/integration-tests",
   "crates/iota-sdk",
   "crates/iota-sdk-bcs-schema",
@@ -13,7 +14,6 @@ members = [
   "crates/iota-sdk-grpc-types",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
-  "bindings/wasm/iota-sdk-wasm",
   "crates/iota-sdk/examples/polling-indexer",
 ]
 
