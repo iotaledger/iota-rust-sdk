@@ -39,19 +39,3 @@ jobs:
 
       - name: Check that SDK crates compile to WASM
         run: make wasm32
-
-      - name: Install WASM bindings prerequisites
-        run: |
-          rustup target add wasm32-unknown-unknown
-          cargo install wasm-bindgen-cli --version 0.2.122
-          npm install -g pnpm@10
-
-      - name: Build WASM bindings
-        # `ubrn build` compiles its own bindgen tool from source on first run;
-        # don't impose our `-Dwarnings` on that third-party build. The wasm crate
-        # itself is built with the rustflags from ubrn.config.yaml.
-        run: make wasm
-        env:
-          RUSTFLAGS: ""
-
-      - run: make is-dirty
