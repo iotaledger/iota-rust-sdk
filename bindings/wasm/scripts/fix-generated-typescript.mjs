@@ -40,27 +40,6 @@ fixed = fixed.replace(
   'from "./wasm-bindgen/index_bg.js"'
 );
 
-// Skip checksum validation in uniffiEnsureInitialized().
-// Checksum functions that are gated out on wasm32 (e.g. Address::random)
-// resolve to "env" stubs returning 0, so their validation throws an
-// ApiChecksumMismatch even though the TS bindings and WASM are always built
-// together from the same source. Remove every checksum if-block.
-//
-// The generated blocks are prettier-wrapped across several lines, e.g.:
-//   if (
-//     nativeModule().ubrn_uniffi_..._checksum_...() !==
-//     12345
-//   ) {
-//     throw new UniffiInternalError.ApiChecksumMismatch(
-//       "uniffi_..._...",
-//     );
-//   }
-// so the match must span newlines ([\s\S]) rather than assume one line.
-fixed = fixed.replace(
-  /\s*if \(\s*nativeModule\(\)\.ubrn_uniffi_[\s\S]*?checksum[\s\S]*?ApiChecksumMismatch\([\s\S]*?\);\s*\}/g,
-  ''
-);
-
 if (source !== fixed) {
   writeFileSync(bindingsFile, fixed);
   console.log('Normalized generated TypeScript bindings.');
