@@ -17,10 +17,12 @@ http = "1.4"
 prost.workspace = true
 serde.workspace = true
 thiserror.workspace = true
+tokio = { workspace = true, features = ["time"] }
 tonic = { workspace = true, features = ["zstd"] }
 
 # internal dependencies
 iota-grpc-types.workspace = true
+iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [features]

@@ -144,6 +144,12 @@ case "$$(uname -s)" in \
 esac;
 endef
 
+# Convert a snake_case example name (used by Go/Python, and accepted by Kotlin) to the
+# PascalCase form used for C# project and Swift target names. Idempotent for names that
+# are already PascalCase, so both `make csharp-example chain_id` and
+# `make csharp-example ChainId` resolve to the same example.
+snake_to_pascal = $(shell printf '%s' "$(1)" | awk -F_ '{ s=""; for (i=1; i<=NF; i++) s = s toupper(substr($$i,1,1)) substr($$i,2); print s }')
+
 .PHONY: go
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
@@ -285,7 +291,7 @@ csharp-example: ## Run a specific C# example. Usage: make csharp-example Example
 csharp-example:
 	@printf "\nRunning C# example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/csharp/examples; \
-	dotnet run --project $(word 2,$(MAKECMDGOALS)) || exit $$?; \
+	dotnet run --project $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
 	cd -
 
 .PHONY: csharp-examples
@@ -319,7 +325,7 @@ swift-example: ## Run a specific Swift example. Usage: make swift-example exampl
 swift-example:
 	@printf "\nRunning Swift example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/swift; \
-	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" swift run $(word 2,$(MAKECMDGOALS)) || exit $$?; \
+	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" swift run $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
 	cd -
 
 .PHONY: swift-examples
