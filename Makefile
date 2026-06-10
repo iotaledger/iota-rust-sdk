@@ -41,8 +41,8 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
-.PHONY: wasm-check
-wasm-check: ## Check that SDK crates compile to WASM
+.PHONY: wasm32
+wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
@@ -85,7 +85,7 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt check-sort-derives test wasm-check ## Run the full CI process
+ci: check-features check-fmt check-sort-derives test wasm32 ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation

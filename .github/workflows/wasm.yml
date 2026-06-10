@@ -38,7 +38,7 @@ jobs:
         run: sudo apt-get install -y clang
 
       - name: Check that SDK crates compile to WASM
-        run: make wasm-check
+        run: make wasm32
 
       - name: Install WASM bindings prerequisites
         run: |

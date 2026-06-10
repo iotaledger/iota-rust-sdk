@@ -34,7 +34,8 @@ bindings/
 ├── go/                             # Go bindings
 ├── kotlin/                         # Kotlin bindings
 ├── python/                         # Python bindings
-└── swift/                          # Swift bindings
+├── swift/                          # Swift bindings
+└── wasm/                           # WASM/TypeScript bindings (browser + Node)
 ```
 
 The `iota-sdk` umbrella crate exposes the other crates via modules gated by feature flags: `crypto`, `graphql` (→ `graphql_client`), `grpc` (→ `grpc_client` + `grpc_types`), `txn-builder` (→ `transaction_builder`), and `types`. `grpc` is opt-in (not in `default`); `graphql`, `crypto`, `types`, `txn-builder` are on by default.
@@ -52,7 +53,8 @@ make bindings-examples-format        # Format the examples shipped with each bin
 make bindings-examples-format-check  # Verify formatting of binding examples
 
 # WASM
-make wasm            # Build WASM modules
+make wasm32          # Check that SDK crates compile to wasm32-unknown-unknown
+make wasm            # Build the WASM/TypeScript bindings package
 
 # FFI bindings
 make bindings        # Build all bindings
@@ -74,7 +76,7 @@ make bindings-examples           # Run all binding examples
 make <lang>-example NAME         # Run a single example (lang ∈ {go, kotlin, python, csharp, swift})
 
 # Full CI check
-make ci              # check-features + check-fmt + test + wasm
+make ci              # check-features + check-fmt + check-sort-derives + test + wasm32
 ```
 
 ## Code Conventions
@@ -203,12 +205,12 @@ It defaults to the `iota-localnet` binary on `PATH`; pass an explicit path as th
 
 ## WASM Considerations
 
-The `make wasm` target builds the following crates for `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The gRPC client/types and FFI crate are not built for WASM. When adding dependencies to any of the WASM-built crates:
+The `make wasm32` target checks that the following crates compile to `wasm32-unknown-unknown`: `iota-sdk`, `iota-sdk-crypto`, `iota-sdk-graphql-client`, `iota-sdk-transaction-builder`, and `iota-sdk-types`. The full WASM/TypeScript bindings package (which also builds `iota-sdk-ffi` for wasm32) is built with `make wasm`. The gRPC client/types are not built for WASM. When adding dependencies to any of the WASM-built crates:
 
 - Ensure they support `wasm32-unknown-unknown`
 - Use `getrandom` with the `js` / `wasm_js` feature for randomness
 - Avoid OS-specific functionality
-- Run `make wasm` after changes to verify the SDK crates still build for `wasm32-unknown-unknown`
+- Run `make wasm32` after changes to verify the SDK crates still build for `wasm32-unknown-unknown`
 
 ## Critical development notes
 
