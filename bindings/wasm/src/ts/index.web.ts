@@ -26,20 +26,8 @@ export async function initAsync(
     bytes = await response.arrayBuffer();
   }
 
-  // The WASM module imports UniFFI checksum/stub fns from "env"; stub them
-  // out (the real work goes through the ubrn_ wrappers in the JS glue).
-  const envProxy = new Proxy(
-    {},
-    {
-      get() {
-        return () => 0;
-      },
-    },
-  );
-
   const { instance } = await WebAssembly.instantiate(bytes, {
     "./index_bg.js": bg as any,
-    env: envProxy,
   });
 
   (bg as any).__wbg_set_wasm(instance.exports);

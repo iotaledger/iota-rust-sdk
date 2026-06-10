@@ -4,25 +4,15 @@
 // Minimal async-compat for native targets — UniFFI only uses `Compat::new`
 // to enter a tokio runtime context, so the I/O trait adapters are omitted.
 
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
-use std::thread;
+use std::{
+    future::Future,
+    pin::Pin,
+    sync::LazyLock,
+    task::{Context, Poll},
+    thread,
+};
 
-use once_cell::sync::Lazy;
 use pin_project_lite::pin_project;
-
-/// Extension trait that adds `.compat()` to any value.
-pub trait CompatExt {
-    fn compat(self) -> Compat<Self>
-    where
-        Self: Sized,
-    {
-        Compat::new(self)
-    }
-}
-
-impl<T> CompatExt for T {}
 
 pin_project! {
     /// Compatibility adapter that enters a tokio runtime context when polled.
@@ -36,18 +26,6 @@ impl<T> Compat<T> {
     pub fn new(t: T) -> Compat<T> {
         Compat { inner: t }
     }
-
-    pub fn get_ref(&self) -> &T {
-        &self.inner
-    }
-
-    pub fn get_mut(&mut self) -> &mut T {
-        &mut self.inner
-    }
-
-    pub fn into_inner(self) -> T {
-        self.inner
-    }
 }
 
 impl<T: Future> Future for Compat<T> {
@@ -59,7 +37,7 @@ impl<T: Future> Future for Compat<T> {
     }
 }
 
-static TOKIO1: Lazy<tokio::runtime::Handle> = Lazy::new(|| {
+static TOKIO1: LazyLock<tokio::runtime::Handle> = LazyLock::new(|| {
     if let Ok(handle) = tokio::runtime::Handle::try_current() {
         return handle;
     }

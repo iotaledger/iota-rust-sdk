@@ -3,6 +3,7 @@
 
 // async-compat patched for iota-rust-sdk: pass-through `Compat` on wasm32
 // (no threads / no Instant), original tokio-compat behaviour elsewhere.
+// Only the API surface UniFFI uses is provided: `Compat::new` on a future.
 
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
@@ -19,6 +20,7 @@ mod wasm {
         pin::Pin,
         task::{Context, Poll},
     };
+
     use pin_project_lite::pin_project;
 
     pin_project! {
@@ -35,18 +37,6 @@ mod wasm {
         pub fn new(t: T) -> Compat<T> {
             Compat { inner: t }
         }
-
-        pub fn get_ref(&self) -> &T {
-            &self.inner
-        }
-
-        pub fn get_mut(&mut self) -> &mut T {
-            &mut self.inner
-        }
-
-        pub fn into_inner(self) -> T {
-            self.inner
-        }
     }
 
     impl<T: Future> Future for Compat<T> {
@@ -56,15 +46,6 @@ mod wasm {
             self.project().inner.poll(cx)
         }
     }
-
-    /// Extension trait that adds `.compat()` to any future.
-    pub trait CompatExt: Sized {
-        fn compat(self) -> Compat<Self> {
-            Compat::new(self)
-        }
-    }
-
-    impl<T: Future> CompatExt for T {}
 }
 
 #[cfg(target_arch = "wasm32")]

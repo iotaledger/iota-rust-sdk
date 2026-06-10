@@ -1,7 +1,7 @@
 [package]
 name = "async-compat"
 version = "0.2.5"
-edition = "2021"
+edition = "2024"
 license = "Apache-2.0 OR MIT"
 publish = false
 description = "Compatibility adapter between tokio and futures (patched for wasm32)"
@@ -10,5 +10,4 @@ description = "Compatibility adapter between tokio and futures (patched for wasm
 pin-project-lite = "0.2"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-once_cell = "1"
 tokio = { version = "1", features = ["rt"] }

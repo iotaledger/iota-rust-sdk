@@ -13,8 +13,6 @@ web:
   entrypoint: ./src/ts/index.web.ts
   target: bundler
 
-  cargoExtras: []
-
   # RUSTFLAGS for the wasm32 compilation.
   rustflags:
     - "-C"

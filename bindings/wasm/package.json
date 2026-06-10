@@ -7,7 +7,6 @@
     "url": "https://github.com/iotaledger/iota-rust-sdk"
   },
   "type": "module",
-  "browser": "src/ts/index.web.ts",
   "main": "dist/iota-sdk.js",
   "module": "dist/iota-sdk.js",
   "types": "dist/types/index.web.d.ts",
