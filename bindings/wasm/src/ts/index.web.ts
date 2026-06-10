@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 export * from "./iota_sdk_ffi";
 import * as iota_sdk_ffi from "./iota_sdk_ffi";
 // Import the JS glue from wasm-bindgen (--target bundler).
