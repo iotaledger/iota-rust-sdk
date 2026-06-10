@@ -395,7 +395,7 @@ mod tests {
             64, // desired_size (target number of nodes)
             3,  // expected_branch_size per recursive step
             |inner| {
-                let vector_strat = inner.clone().prop_map(|t| TypeTag::Vector(Box::new(t)));
+                let vector_strategy = inner.clone().prop_map(|t| TypeTag::Vector(Box::new(t)));
 
                 let struct_no_params =
                     arb_struct_tag_base().prop_map(|s| TypeTag::Struct(Box::new(s)));
@@ -410,7 +410,7 @@ mod tests {
                         TypeTag::Struct(Box::new(StructTag::new(addr, module, name, params)))
                     });
 
-                prop_oneof![vector_strat, struct_no_params, struct_with_params,]
+                prop_oneof![vector_strategy, struct_no_params, struct_with_params]
             },
         )
     }
