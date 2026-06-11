@@ -17,7 +17,6 @@
 //! ```
 
 #![cfg(feature = "serde")]
-
 use iota_sdk_move_types::{
     framework::{
         clock::Clock,
