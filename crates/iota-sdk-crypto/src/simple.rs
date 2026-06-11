@@ -88,6 +88,11 @@ mod keypair {
         inner: InnerKeypair,
     }
 
+    // Private enum behind an opaque struct on purpose: the variants are
+    // feature-gated, so exposing them would tie the public API (and any
+    // downstream `match`) to the set of enabled features, and adding a new
+    // scheme would be a breaking change. This way construction only happens
+    // through validated paths (`From` impls, `from_bytes`, `from_der`).
     #[derive(Clone, Debug)]
     enum InnerKeypair {
         #[cfg(feature = "ed25519")]
@@ -354,6 +359,11 @@ mod keypair {
         inner: InnerVerifyingKey,
     }
 
+    // Private enum behind an opaque struct on purpose: the variants are
+    // feature-gated, so exposing them would tie the public API (and any
+    // downstream `match`) to the set of enabled features, and adding a new
+    // scheme would be a breaking change. This way construction only happens
+    // through validated paths (`From` impls, `from_der`).
     #[derive(Clone, Debug, Eq, PartialEq)]
     enum InnerVerifyingKey {
         #[cfg(feature = "ed25519")]
