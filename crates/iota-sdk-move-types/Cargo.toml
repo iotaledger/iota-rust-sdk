@@ -35,7 +35,10 @@ iota-types = { workspace = true }
 
 [dev-dependencies]
 # external dependencies
-move-binary-format = { git = "https://github.com/iotaledger/iota.git", branch = "develop" }
+# Pinned to a rev (not a branch) so test builds stay reproducible; bump the
+# rev together with `make update-compiled-packages` when refreshing the
+# vendored package blobs this crate parses.
+move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "049172b7b25d65925913f47bde83bfe05aef1332" }
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, features = ["move-shape"] }
