@@ -5,7 +5,8 @@
 
 use crate::{error::Result, graphql::client::GraphQLClient, types::address::Address};
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get the balance of all the coins owned by address for the provided coin
     /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`

@@ -83,8 +83,3 @@ lto = true
 opt-level = "z"
 panic = "abort"
 strip = true
-
-# Replace async-compat with a wasm32-compatible version that uses a transparent
-# passthrough on wasm32 (no thread spawning, no Instant::now).
-[patch.crates-io]
-async-compat = { path = "patches/async-compat" }

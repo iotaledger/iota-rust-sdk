@@ -122,7 +122,7 @@ bindings/wasm/
 
 ## Notes
 
-- The `async-compat` patch (`patches/async-compat/`) is required because `uniffi_core` depends on `async-compat`, which panics on wasm32 due to `std::time::Instant` and thread usage. The patch provides a transparent pass-through on wasm32.
+- Async FFI exports use `#[uniffi::export(async_runtime = "tokio")]` only on native targets (via `cfg_attr`); on wasm32 they use a plain `#[uniffi::export]`. The tokio variant wraps every future in `async_compat::Compat`, which panics on wasm32 because it spawns a runtime thread — on wasm32 futures are driven by the JS event loop instead and need no tokio context.
 - The `fix-generated-typescript.mjs` script fixes known issues in the generated TypeScript: wrong `async public` method order, a generated `Object` class that shadows the built-in, a reserved `arguments` parameter name, and redirecting `index.js` imports to `index_bg.js` (avoids WASM loader issues in esbuild).
 - Async operations use Tokio's minimal `macros` + `rt` + `sync` feature set when compiled for WASM.
 - `getrandom` is configured with the `wasm_js` feature for browser-compatible randomness.

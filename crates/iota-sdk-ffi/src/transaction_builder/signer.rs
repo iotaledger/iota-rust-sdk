@@ -117,7 +117,8 @@ impl TransactionSignerFn for MoveAuthenticator {
 #[derive(uniffi::Object)]
 pub struct TransactionSigner(Arc<dyn TransactionSignerFn>);
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl TransactionSigner {
     #[uniffi::constructor]
     pub fn new(signer_fn: Arc<dyn TransactionSignerFn>) -> Self {
