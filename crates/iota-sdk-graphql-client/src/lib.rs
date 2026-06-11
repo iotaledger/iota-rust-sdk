@@ -13,6 +13,7 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 mod transaction_builder_client;
+mod wait;
 
 #[cfg(test)]
 mod test_utils;

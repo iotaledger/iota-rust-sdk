@@ -281,12 +281,10 @@ impl Client {
         wait_for: WaitForTx,
         timeout: impl Into<Option<Duration>>,
     ) -> Result<()> {
-        tokio::time::timeout(
+        crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
-                let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
-                    interval.tick().await;
                     if match wait_for {
                         WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
@@ -296,6 +294,7 @@ impl Client {
                     } {
                         break Ok(());
                     }
+                    crate::wait::sleep(Duration::from_millis(100)).await;
                 }
             },
         )
