@@ -14,9 +14,6 @@ on:
 permissions:
   contents: read
 
-env:
-  RUSTFLAGS: -Dwarnings
-
 jobs:
   build:
     name: Build WASM bindings
@@ -103,14 +100,26 @@ jobs:
           echo "Publishing version $version"
           npm version "$version" --no-git-tag-version --allow-same-version
 
+      - name: Determine npm dist-tag
+        working-directory: package
+        # npm >= 11.6 refuses to publish a prerelease version without an
+        # explicit --tag, so prereleases are published under `next` instead of
+        # the implicit `latest`.
+        run: |
+          version=$(npm pkg get version | tr -d '"')
+          case "$version" in
+            *-*) echo "NPM_DIST_TAG=next" >> "$GITHUB_ENV" ;;
+            *) echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV" ;;
+          esac
+
       - name: Publish to npm (dry-run)
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
         working-directory: package
-        run: npm publish --access public --ignore-scripts --dry-run
+        run: npm publish --access public --ignore-scripts --tag "$NPM_DIST_TAG" --dry-run
 
       - name: Publish to npm
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
         working-directory: package
         # Authenticates via npm OIDC trusted publishing (no NPM_TOKEN). The repo
         # is public, so --provenance attaches a verifiable build attestation.
-        run: npm publish --access public --ignore-scripts --provenance
+        run: npm publish --access public --ignore-scripts --tag "$NPM_DIST_TAG" --provenance
