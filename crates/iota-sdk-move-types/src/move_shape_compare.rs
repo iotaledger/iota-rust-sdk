@@ -2,10 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Structural cross-check: each Rust mirror's `MoveShape` derive output is
-//! compared against the canonical Move definition parsed from a vendored
+//! compared against the canonical Move definition parsed from a compiled
 //! `packages_compiled` blob.
 //!
-//! Extend by vendoring more blobs into `src/packages_compiled/`, deriving
+//! The blobs are not committed — `update_compiled_packages.sh` fetches them
+//! into the gitignored `src/packages_compiled/` directory at the monorepo
+//! rev pinned by the `move-binary-format` dependency (the `make` test
+//! targets do this automatically when the files are missing).
+//!
+//! Extend by adding blobs to the `ARTIFACTS` list in that script, deriving
 //! `MoveShape` on more mirrors, and registering more entries in
 //! [`expected_entries`].
 
@@ -21,7 +26,7 @@ use crate::{
 };
 
 // ---------------------------------------------------------------------------
-// Vendored blobs
+// Compiled package blobs (fetched, not committed — see module docs)
 // ---------------------------------------------------------------------------
 
 const IOTA_FRAMEWORK: &[u8] = include_bytes!("packages_compiled/iota-framework");
@@ -34,7 +39,7 @@ const STARDUST: &[u8] = include_bytes!("packages_compiled/stardust");
 // ---------------------------------------------------------------------------
 
 struct Entry {
-    /// Which vendored package to look the Move struct up in. Needed because
+    /// Which compiled package to look the Move struct up in. Needed because
     /// distinct packages can declare modules of the same short name
     /// (e.g. `0x1::bcs` vs `0x2::bcs`).
     package: Package,
@@ -662,6 +667,12 @@ fn expected_entries() -> Vec<Entry> {
             "AuthContext",
             framework::auth_context::AuthContext
         ),
+        entry!(
+            IotaFramework,
+            "auth_context",
+            "AuthenticatorFunctionInfoV1",
+            framework::auth_context::AuthenticatorFunctionInfoV1
+        ),
         entry!(IotaFramework, "kiosk", "Kiosk", framework::kiosk::Kiosk),
         entry!(
             IotaFramework,
@@ -1013,8 +1024,8 @@ fn expected_entries() -> Vec<Entry> {
 // Package loading
 // ---------------------------------------------------------------------------
 
-/// Parse a vendored `packages_compiled` blob into one normalised module per
-/// inner bytecode payload, keyed by short module name.
+/// Parse a `packages_compiled` blob into one normalised module per inner
+/// bytecode payload, keyed by short module name.
 fn load_package(
     blob: &[u8],
 ) -> std::collections::HashMap<String, normalized::Module<normalized::RcIdentifier>> {
@@ -1300,11 +1311,12 @@ fn shapes_match() {
     }
 }
 
-/// The vendored manifest of every public `struct`/`enum` across the four
-/// system packages. `move_drift_nightly` keeps it in sync with the upstream
-/// monorepo; [`registry_matches_published_api`] in turn keeps
-/// [`expected_entries`] in sync with it — so every published type has a
-/// registered mirror that [`shapes_match`] then cross-checks.
+/// The manifest of every public `struct`/`enum` across the four system
+/// packages, fetched at the pinned monorepo rev. `move_drift_nightly`
+/// flags when upstream `develop` drifts from the pin;
+/// [`registry_matches_published_api`] in turn keeps [`expected_entries`]
+/// in sync with the manifest — so every published type has a registered
+/// mirror that [`shapes_match`] then cross-checks.
 const PUBLISHED_API: &str = include_str!("packages_compiled/published_api.txt");
 
 /// Parse `published_api.txt` into the set of `(address, module, name)` keys.

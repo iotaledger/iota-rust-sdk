@@ -17,43 +17,57 @@ The Move sources these mirror live in the [iota monorepo] under
 
 [iota monorepo]: https://github.com/iotaledger/iota/tree/develop/crates/iota-framework
 
-## Vendored Move packages (`src/packages_compiled/`)
+## Compiled Move packages (`src/packages_compiled/`, not committed)
 
-`src/packages_compiled/` holds the compiled bytecode blobs for the four
-packages above (`move-stdlib`, `iota-framework`, `iota-system`, `stardust`)
-plus `published_api.txt`, the upstream public-API manifest. They are copied
-verbatim from `crates/iota-framework/packages_compiled/` in the
-[iota monorepo].
+The `move_shape_compare` test `include_bytes!`s the compiled bytecode
+blobs of the four packages above (`move-stdlib`, `iota-framework`,
+`iota-system`, `stardust`) plus `published_api.txt`, the upstream
+public-API manifest (filtered to `public struct` / `public enum`
+records). It parses each Move struct/enum out of the bytecode and
+verifies that the corresponding Rust mirror's wire layout matches.
 
-The blobs are read by the `move_shape_compare` test, which parses each Move
-struct/enum out of the bytecode and verifies that the corresponding Rust
-mirror's wire layout matches. `published_api.txt` (filtered to `public
-struct` / `public enum` records) is diffed against upstream by the nightly
-drift workflow (`.github/workflows/move_drift_nightly.yml`) to flag types
-that were added, removed, or moved.
-
-To refresh them against upstream (`develop` by default, or any branch):
+These artifacts are **not committed** — they are fetched from
+`crates/iota-framework/` in the [iota monorepo] into the gitignored
+`src/packages_compiled/` directory, at the monorepo commit pinned by the
+`move-binary-format` dev-dependency rev in this crate's `Cargo.toml` (the
+single source of truth: the parser must match the blobs it parses). The
+`make` targets that compile tests (`test`, `clippy`, `wasm` — both
+crate-level and repo-root) fetch them automatically when missing, so CI
+and local runs always test against the exact same bytes.
+If you bypass `make` (e.g. plain `cargo nextest run`) on a fresh
+checkout, the build fails with a "couldn't read …packages_compiled/…"
+error — fetch first:
 
 ```bash
-make update-compiled-packages              # develop
-make update-compiled-packages BRANCH=main  # a different branch
+make update-compiled-packages              # at the pinned rev (default)
+make update-compiled-packages REF=develop  # a branch, e.g. to preview drift
+make update-compiled-packages REF=<sha>    # a specific commit
 ```
-
-This is a manual step — no CI job regenerates these files.
 
 ### The completeness contract
 
 The `registry_matches_published_api` test enforces that **every** public
-`struct`/`enum` in the vendored `published_api.txt` has a registered Rust
-mirror, and the nightly drift workflow keeps that manifest in sync with
-upstream `develop`. Together they create a standing obligation: when
-upstream publishes a new public type, the nightly turns red and stays red
-until someone vendors the refreshed artifacts and lands the new mirror
-(steps above). A red "Move Drift Nightly" therefore means _the mirror set
-is out of date_, not that the crate is broken — already-released mirrors
-keep decoding on-chain state just fine in the meantime. System packages
-change rarely, so the expected cadence is a small catch-up PR a few times
-a year, with at most one day of detection delay.
+`struct`/`enum` in the fetched `published_api.txt` has a registered Rust
+mirror. The nightly drift workflow
+(`.github/workflows/move_drift_nightly.yml`) diffs the manifest's type
+surface at the pinned rev against upstream `develop` HEAD; a red nightly
+means _upstream types changed and the mirror set is out of date_ — not
+that the crate is broken. Pull requests are deliberately unaffected by
+upstream drift: they keep testing against the pinned rev until the pin
+moves.
+
+The catch-up workflow when the nightly turns red:
+
+1. Review the diff in the workflow log.
+2. Add/update the Rust mirrors (and `entry!` registrations) it points at.
+3. Bump the `move-binary-format` rev in this crate's `Cargo.toml` to the
+   new monorepo SHA — this single rev pins both the parser and the
+   artifact fetch.
+4. Run `make update-compiled-packages` and `make test`, then open a PR —
+   its CI validates the new mirrors against the new rev.
+
+System packages change rarely, so the expected cadence is a small
+catch-up PR a few times a year, with at most one day of detection delay.
 
 ## Refreshing the BCS test fixtures
 

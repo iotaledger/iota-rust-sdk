@@ -2346,7 +2346,8 @@ pub mod ptb {
 
 /// Types from `0x2::auth_context`.
 pub mod auth_context {
-    use super::{ptb_call_arg::CallArg, ptb_command::Command};
+    use super::{object::ID, ptb_call_arg::CallArg, ptb_command::Command};
+    use crate::std::ascii;
 
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2359,6 +2360,20 @@ pub mod auth_context {
         pub tx_inputs: Vec<CallArg>,
         /// Transaction commands to be executed sequentially.
         pub tx_commands: Vec<Command>,
+    }
+
+    /// Rust version of the Move
+    /// `iota::auth_context::AuthenticatorFunctionInfoV1` type.
+    ///
+    /// Identifies the `authenticate` function used by a `MoveAuthenticator`
+    /// signature, without binding to a specific account type.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    pub struct AuthenticatorFunctionInfoV1 {
+        pub package: ID,
+        pub module_name: ascii::String,
+        pub function_name: ascii::String,
     }
 }
 
