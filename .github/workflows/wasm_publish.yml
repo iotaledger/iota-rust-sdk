@@ -95,6 +95,9 @@ jobs:
       - name: Set package version from release tag
         if: github.event_name == 'release'
         working-directory: package
+        # `npm version` rewrites the version field of package.json in the
+        # unpacked artifact dir (`package/`); --no-git-tag-version skips the
+        # git commit/tag it would otherwise create.
         run: |
           version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-wasm-sdk-v(.*)|\1|p')
           echo "Publishing version $version"

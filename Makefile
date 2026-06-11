@@ -54,8 +54,9 @@ wasm32: ## Check that SDK crates compile to wasm32
 # to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
 .PHONY: wasm
 wasm: ## Build WASM bindings for browsers
-	cd bindings/wasm && pnpm install && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
-	@# Optionally run wasm-opt on the wasm-bindgen output for size reduction.
+	cd bindings/wasm && pnpm install --frozen-lockfile && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
+	@# If wasm-opt is installed on PATH, shrink the wasm-bindgen output;
+	@# the build works without it (no flag involved).
 	@if command -v wasm-opt >/dev/null 2>&1; then \
 		printf "Running wasm-opt for size reduction...\n"; \
 		wasm-opt -Oz --vacuum --strip-debug \
@@ -162,9 +163,10 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) swift-examples-format
 	@$(MAKE) wasm-examples-format
 
-# Detect the shared library extension for the current platform.
-# Used by binding targets that need to locate libiota_sdk_ffi.
-define detect_lib_ext
+# Build the FFI crate (release) and detect the shared library extension
+# (sets LIB_EXT, used to locate libiota_sdk_ffi).
+define build_binding
+cargo build -p iota-sdk-ffi --lib --release; \
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
@@ -178,11 +180,6 @@ endef
 # are already PascalCase, so both `make csharp-example chain_id` and
 # `make csharp-example ChainId` resolve to the same example.
 snake_to_pascal = $(shell printf '%s' "$(1)" | awk -F_ '{ s=""; for (i=1; i<=NF; i++) s = s toupper(substr($$i,1,1)) substr($$i,2); print s }')
-# Build the FFI crate (release) and detect the library extension.
-define build_binding
-cargo build -p iota-sdk-ffi --lib --release; \
-$(detect_lib_ext)
-endef
 
 .PHONY: go
 go: ## Build Go bindings

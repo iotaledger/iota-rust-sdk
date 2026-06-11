@@ -164,9 +164,9 @@ jobs:
           npm install -g pnpm@10
       - name: Build the bindings
         run: make wasm
-      - run: make is-dirty
       - name: Check format of the examples
         run: make wasm-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make wasm-examples
+      - run: make is-dirty
