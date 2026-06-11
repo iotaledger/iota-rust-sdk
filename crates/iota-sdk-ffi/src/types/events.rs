@@ -3,17 +3,20 @@
 
 use std::{str::FromStr, sync::Arc};
 
-use base64ct::Encoding;
-use iota_sdk::{
-    graphql_client::query_types::{
-        Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackageQuery, MoveType,
-    },
-    types::{Identifier, StructTag},
+use iota_sdk::types::{Identifier, StructTag};
+
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
 };
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
-
-/// An event
+/// An event emitted during the successful execution of a transaction.
+///
+/// This mirrors the core chain [`iota_sdk::types::Event`] one-to-one: every
+/// field is required and the type round-trips through BCS/JSON. For events
+/// returned by the GraphQL `events` query — which may originate from system
+/// transactions and therefore lack a sender or emitting module — see
+/// [`GraphQlEvent`](crate::graphql::query_types::GraphQlEvent).
 ///
 /// # BCS
 ///
@@ -37,65 +40,19 @@ pub struct Event {
     pub type_: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
-    /// UTC timestamp in milliseconds since epoch (1/1/1970)
-    pub timestamp: String,
-    /// Structured contents of a Move value
-    pub data: String,
-    /// Representation of a Move value in JSON
-    pub json: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::Event> for Event {
-    fn from(value: iota_sdk::graphql_client::query_types::Event) -> Self {
-        let sending_module = value.sending_module.as_ref().unwrap();
-        Self {
-            package_id: Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
-                sending_module.package.address,
-            ))),
-            module: sending_module.name.clone(),
-            sender: Arc::new(Address(value.sender.as_ref().unwrap().address)),
-            type_: value.type_.repr.clone(),
-            contents: base64ct::Base64::decode_vec(&value.bcs.0).unwrap_or_default(),
-            timestamp: value.timestamp.as_ref().unwrap().0.clone(),
-            data: value.data.0.to_string(),
-            json: value.json.to_string(),
-        }
-    }
-}
+impl TryFrom<Event> for iota_sdk::types::Event {
+    type Error = crate::error::SdkFfiError;
 
-impl From<Event> for iota_sdk::types::Event {
-    fn from(value: Event) -> Self {
-        Self {
+    fn try_from(value: Event) -> Result<Self> {
+        Ok(Self {
             package_id: (**value.package_id),
-            module: Identifier::from_str(&value.module).unwrap(),
+            module: Identifier::from_str(&value.module)?,
             sender: (**value.sender),
-            type_: StructTag::from_str(&value.type_).unwrap(),
+            type_: StructTag::from_str(&value.type_)?,
             contents: value.contents,
-        }
-    }
-}
-
-impl From<Event> for iota_sdk::graphql_client::query_types::Event {
-    fn from(value: Event) -> Self {
-        Self {
-            sending_module: Some(MoveModuleQuery {
-                package: MovePackageQuery {
-                    address: iota_sdk::types::Address::from(**value.package_id),
-                    bcs: None,
-                },
-                name: value.module.clone(),
-            }),
-            sender: Some(GQLAddress {
-                address: (**value.sender),
-            }),
-            type_: MoveType {
-                repr: value.type_.clone(),
-            },
-            bcs: Base64(base64ct::Base64::encode_string(&value.contents)),
-            timestamp: Some(DateTime(value.timestamp.clone())),
-            data: MoveData(serde_json::from_str(&value.data).unwrap_or_default()),
-            json: serde_json::Value::from_str(&value.json).unwrap_or_default(),
-        }
+        })
     }
 }
 
@@ -107,9 +64,6 @@ impl From<iota_sdk::types::Event> for Event {
             sender: Arc::new(value.sender.into()),
             type_: value.type_.to_string(),
             contents: value.contents,
-            timestamp: String::new(),
-            data: String::new(),
-            json: String::new(),
         }
     }
 }
@@ -129,10 +83,13 @@ pub struct TransactionEvents(pub iota_sdk::types::TransactionEvents);
 #[uniffi::export]
 impl TransactionEvents {
     #[uniffi::constructor]
-    pub fn new(events: Vec<Event>) -> Self {
-        Self(iota_sdk::types::TransactionEvents(
-            events.into_iter().map(Into::into).collect(),
-        ))
+    pub fn new(events: Vec<Event>) -> Result<Self> {
+        Ok(Self(iota_sdk::types::TransactionEvents(
+            events
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<Result<_>>()?,
+        )))
     }
 
     pub fn events(&self) -> Vec<Event> {
@@ -144,7 +101,31 @@ impl TransactionEvents {
     }
 }
 
-crate::export_iota_types_bcs_conversion!(Event);
+/// Create an [`Event`] from BCS encoded bytes.
+#[uniffi::export]
+pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
+    Ok(bcs::from_bytes::<iota_sdk::types::Event>(&bcs)?.into())
+}
+
+/// Convert an [`Event`] to BCS encoded bytes.
+#[uniffi::export]
+pub fn event_to_bcs(data: Event) -> Result<Vec<u8>> {
+    let data: iota_sdk::types::Event = data.try_into()?;
+    Ok(bcs::to_bytes(&data)?)
+}
+
+/// Create an [`Event`] from a JSON encoded string.
+#[uniffi::export]
+pub fn event_from_json(json: &str) -> Result<Event> {
+    Ok(serde_json::from_str::<iota_sdk::types::Event>(json)?.into())
+}
+
+/// Convert an [`Event`] to a JSON encoded string.
+#[uniffi::export]
+pub fn event_to_json(data: Event) -> Result<String> {
+    let data: iota_sdk::types::Event = data.try_into()?;
+    Ok(serde_json::to_string(&data)?)
+}
+
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
-crate::export_iota_types_json_conversion!(Event);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);

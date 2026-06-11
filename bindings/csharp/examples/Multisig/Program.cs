@@ -39,10 +39,6 @@ class Program
             },
             2
         );
-        if (!committee.IsValid())
-        {
-            throw new Exception("committee must be valid");
-        }
 
         // 4. Derive multisig address
         var multisigAddress = committee.DeriveAddress();

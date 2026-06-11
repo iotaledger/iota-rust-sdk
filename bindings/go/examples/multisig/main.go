@@ -46,7 +46,7 @@ func main() {
 	kp2 := iota_sdk.SimpleKeypairFromEd25519(key2)
 
 	// 3. Build multisig committee: threshold=2, each member weight=1
-	committee := iota_sdk.NewMultisigCommittee(
+	committee, err := iota_sdk.NewMultisigCommittee(
 		[]*iota_sdk.MultisigMember{
 			iota_sdk.NewMultisigMember(kp0.PublicKey(), 1),
 			iota_sdk.NewMultisigMember(kp1.PublicKey(), 1),
@@ -54,8 +54,8 @@ func main() {
 		},
 		2,
 	)
-	if !committee.IsValid() {
-		log.Fatal("committee must be valid")
+	if err != nil {
+		log.Fatalf("Failed to create committee: %v", err)
 	}
 
 	// 4. Derive multisig address

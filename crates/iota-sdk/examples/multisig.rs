@@ -15,7 +15,7 @@ use iota_sdk::{
     crypto::{FromMnemonic, IotaSigner, ed25519::Ed25519PrivateKey, multisig::MultisigAggregator},
     graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::TransactionBuilder,
-    types::{Address, MultisigCommittee, MultisigMember, MultisigMemberPublicKey, UserSignature},
+    types::{Address, MultisigCommittee, MultisigMember, PublicKey, UserSignature},
 };
 
 const MNEMONIC: &str = "round attack kitchen wink winter music trip tiny nephew hire orange what";
@@ -33,12 +33,11 @@ async fn main() -> Result<()> {
 
     // 2. Build multisig committee: threshold=2, each member weight=1
     let members = vec![
-        MultisigMember::new(MultisigMemberPublicKey::Ed25519(key0.public_key()), 1),
-        MultisigMember::new(MultisigMemberPublicKey::Ed25519(key1.public_key()), 1),
-        MultisigMember::new(MultisigMemberPublicKey::Ed25519(key2.public_key()), 1),
+        MultisigMember::new(PublicKey::Ed25519(key0.public_key()), 1),
+        MultisigMember::new(PublicKey::Ed25519(key1.public_key()), 1),
+        MultisigMember::new(PublicKey::Ed25519(key2.public_key()), 1),
     ];
-    let committee = MultisigCommittee::new(members, 2);
-    assert!(committee.is_valid(), "committee must be valid");
+    let committee = MultisigCommittee::new(members, 2)?;
 
     // 3. Derive the multisig address
     let multisig_address = committee.derive_address();

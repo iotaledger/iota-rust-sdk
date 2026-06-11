@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
     }
     println!("{} objects fetched:", all_objects.len());
     for obj in &all_objects {
-        println!("{}", obj.object_id());
+        println!("{}", obj.id());
     }
 
     Ok(())

@@ -175,7 +175,6 @@ export_struct_tag_ctors!(
     AsciiString,
     AuthenticatorState,
     Clock,
-    Config,
     DenyListAddressKey,
     DenyListConfigKey,
     DenyListGlobalPauseKey,
@@ -193,7 +192,6 @@ export_struct_tag_ctors!(
     String,
     SystemEpochInfoEvent,
     TimelockedStakedIota,
-    TransferReceiving,
     Uid,
     Url,
     Bag,
@@ -202,11 +200,13 @@ export_struct_tag_ctors!(
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
+    Config,
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
     TimeLock,
-    Option
+    Option,
+    TransferReceiving,
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,

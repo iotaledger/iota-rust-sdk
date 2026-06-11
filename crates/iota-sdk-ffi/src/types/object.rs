@@ -248,8 +248,8 @@ impl Object {
     }
 
     /// Return this object's id
-    pub fn object_id(&self) -> ObjectId {
-        self.0.object_id().into()
+    pub fn id(&self) -> ObjectId {
+        self.0.id().into()
     }
 
     /// Return this object's reference

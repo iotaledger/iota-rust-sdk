@@ -119,8 +119,6 @@ pub struct TypeOrigin {
     pub module_name: Identifier,
     /// The name of the data type. Either refers to an enum or a struct
     /// identifier.
-    // `struct_name` alias to support backwards compatibility with the old name
-    #[cfg_attr(feature = "serde", serde(alias = "struct_name"))]
     pub datatype_name: Identifier,
     /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
@@ -161,7 +159,9 @@ pub struct MovePackage {
     /// Set of modules defined by this package
     #[cfg_attr(
         feature = "serde",
-        serde(with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::Bytes>>")
+        serde(
+            with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
+        )
     )]
     #[cfg_attr(
         feature = "proptest",

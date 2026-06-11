@@ -60,7 +60,7 @@ serialization_test!(Ed25519Signature);
 serialization_test!(MultisigAggregatedSignature);
 serialization_test!(MultisigCommittee);
 serialization_test!(MultisigMember);
-serialization_test!(MultisigMemberPublicKey);
+serialization_test!(PublicKey);
 serialization_test!(MultisigMemberSignature);
 serialization_test!(Secp256k1PublicKey);
 serialization_test!(Secp256k1Signature);

@@ -1,5 +1,5 @@
 target/
-Cargo.lock
+*.lock
 .idea
 .DS_Store
 *.dylib
@@ -9,3 +9,4 @@ __pycache__
 build
 .vscode
 .kotlin
+.vite

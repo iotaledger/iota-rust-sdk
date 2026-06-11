@@ -225,7 +225,7 @@ private suspend fun printObjectSamples(
 
     println("    sample objects:")
     for (obj in objects.data) {
-        println("      - ${obj.objectId().toHex()} (version ${obj.version().asU64()})")
+        println("      - ${obj.id().toHex()} (version ${obj.version().asU64()})")
     }
     if (objects.pageInfo.hasNextPage) {
         println("      - ...")

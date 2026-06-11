@@ -87,6 +87,7 @@ pub struct SignedTransaction {
 ///                        =/ %d01 u64  ; epoch
 /// ```
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -96,7 +97,11 @@ pub enum TransactionExpiration {
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
-    Epoch(#[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))] EpochId),
+    Epoch(
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
+        EpochId,
+    ),
 }
 
 impl TransactionExpiration {
@@ -162,7 +167,6 @@ pub struct RandomnessStateUpdate {
     )]
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub randomness_obj_initial_shared_version: Version,
 }
 
@@ -181,6 +185,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -314,6 +319,7 @@ impl core::fmt::Display for TransactionKind {
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -456,6 +462,7 @@ impl EndOfEpochTransactionKind {
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -488,6 +495,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CancelledTransaction {
@@ -507,6 +515,7 @@ pub struct CancelledTransaction {
 /// version-assignment = object-id u64
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct VersionAssignment {
@@ -769,7 +778,6 @@ pub struct ChangeEpochV4 {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemPackage {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     #[cfg_attr(
         feature = "serde",
@@ -953,15 +961,10 @@ impl Input {
 
 /// A shared object input to a programmable transaction
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename_all = "camelCase")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SharedObjectReference {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub initial_shared_version: Version,
     /// Controls whether the caller asks for a mutable reference to the
     /// shared object.
@@ -1010,6 +1013,7 @@ impl SharedObjectReference {
 /// command-upgrade             = %d06 upgrade
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -1397,6 +1401,7 @@ pub struct Upgrade {
 /// argument-nested-result  = %d03 u16 u16
 /// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]

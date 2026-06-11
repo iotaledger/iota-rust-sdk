@@ -41,6 +41,7 @@ on:
           - iota-kotlin-sdk
           - iota-python-sdk
           - iota-swift-sdk
+          - iota-wasm-sdk
 
 jobs:
   publish:
@@ -179,6 +180,26 @@ jobs:
           # Generate changelog for Swift
           ./.github/gen_changelog.sh iota-swift-sdk bindings/swift ${{ github.sha }} "$NEW_VERSION" true
 
+      - name: Bump WASM version
+        if: inputs.package == 'iota-wasm-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-wasm-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-wasm-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Update the version in package.json
+          (cd bindings/wasm && npm version "$NEW_VERSION" --no-git-tag-version --allow-same-version)
+          echo "Updated package.json with new version: $NEW_VERSION"
+
+          # Generate changelog for WASM
+          ./.github/gen_changelog.sh iota-wasm-sdk bindings/wasm ${{ github.sha }} "$NEW_VERSION" true
+
       - name: Set COMMIT_TO environment variable
         if: startsWith(inputs.package, 'iota-sdk')
         run: echo "COMMIT_TO=${{ github.sha }}" >> $GITHUB_ENV
@@ -197,7 +218,7 @@ jobs:
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
-        if: inputs.package == 'iota-csharp-sdk' || inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk'
+        if: inputs.package == 'iota-csharp-sdk' || inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk' || inputs.package == 'iota-wasm-sdk'
         id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
@@ -247,6 +268,13 @@ jobs:
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "PKG_ROOT=bindings/swift" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (WASM)
+        if: inputs.package == 'iota-wasm-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/wasm" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes

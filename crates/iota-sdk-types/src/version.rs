@@ -49,7 +49,9 @@ pub enum VersionError {
 )]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[repr(transparent)]
-pub struct Version(u64);
+pub struct Version(
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] u64,
+);
 
 impl Version {
     /// An inclusive lower limit on a valid version.

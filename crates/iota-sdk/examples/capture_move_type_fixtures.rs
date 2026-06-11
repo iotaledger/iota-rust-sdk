@@ -290,7 +290,7 @@ async fn capture(
                 .ok_or_else(|| format!("no objects of type `{type_str}` on this network"))?;
             // Print the discovered ID so an operator can copy-paste it
             // into FIXTURES as a `Source::ObjectId` pin.
-            eprintln!("    └─ discovered: {}", object.object_id());
+            eprintln!("    └─ discovered: {}", object.id());
             let move_struct = object
                 .as_struct_opt()
                 .ok_or("object is not a Move struct")?;

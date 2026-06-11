@@ -13,7 +13,8 @@ use crate::{
     types::{address::Address, iota_names::Name},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {

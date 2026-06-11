@@ -17,9 +17,11 @@ struct PackageEventsExample {
     )
 
     for event in events.data {
+      // Sender and module are optional: some events (such as system- or
+      // genesis-emitted ones) carry neither.
       print("Type: \(event.type)")
-      print("Sender: \(event.sender.toHex())")
-      print("Module: \(event.module)")
+      print("Sender: \(event.sender?.toHex() ?? "none")")
+      print("Module: \(event.module ?? "none")")
       print("JSON: \(event.json)")
     }
   }

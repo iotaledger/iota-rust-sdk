@@ -14,7 +14,7 @@ fun main() = runBlocking {
         val objectsPage = client.objects(objectFilter)
         println("Owned objects (${objectsPage.data.size}):")
         for (obj in objectsPage.data) {
-            println(obj.objectId().toHex())
+            println(obj.id().toHex())
         }
     } catch (e: Exception) {
         e.printStackTrace()

@@ -123,9 +123,7 @@ mod serialization {
     }
 
     impl MoveAuthenticator {
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
@@ -184,7 +182,7 @@ mod serialization {
                 Ok(authenticator.into())
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
