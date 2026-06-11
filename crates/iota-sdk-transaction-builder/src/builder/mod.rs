@@ -18,7 +18,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    ClientMethods, PTBArgument, SharedMut, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -34,7 +34,7 @@ use crate::{
 };
 
 mod assigned_results;
-pub(crate) mod client_methods;
+pub(crate) mod client;
 pub(crate) mod gas_station;
 pub mod move_authenticator;
 /// Argument types for PTBs
@@ -50,9 +50,9 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`ClientMethods::protocol_config`] and falls back to this if the
-/// implementation does not expose protocol config or the value cannot be
-/// parsed.
+/// value via [`TransactionBuilderClient::protocol_config`] and falls back to
+/// this if the implementation does not expose protocol config or the value
+/// cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -1015,7 +1015,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: ClientMethods, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1109,14 +1109,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             loop {
                 let page = self
                     .client
-                    .objects(
-                        Some(StructTag::new_gas_coin().into()),
-                        Some(owner),
-                        None,
-                        true,
-                        cursor,
-                        None,
-                    )
+                    .objects(Some(StructTag::new_gas_coin()), owner, cursor, None)
                     .await
                     .map_err(Error::client)?;
                 for obj in page.data {
@@ -1420,7 +1413,7 @@ impl TransactionBuilder<(), Publish> {
     }
 }
 
-impl<C: ClientMethods> TransactionBuilder<C, Publish> {
+impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {

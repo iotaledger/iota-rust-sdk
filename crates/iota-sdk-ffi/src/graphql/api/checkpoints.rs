@@ -13,7 +13,8 @@ use crate::{
     types::{checkpoint::CheckpointSummary, digest::Digest},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get the `CheckpointSummary` for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known

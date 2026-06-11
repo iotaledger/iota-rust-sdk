@@ -13,7 +13,8 @@ use crate::{
     types::{address::Address, move_core::StructTag},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get the list of coins for the specified address.
     ///
