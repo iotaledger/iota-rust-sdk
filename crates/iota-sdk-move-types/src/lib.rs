@@ -25,6 +25,40 @@ mod move_shape;
 #[cfg(all(test, feature = "serde"))]
 mod move_shape_compare;
 
+/// A Rust type that knows the Move type tag it represents.
+///
+/// Generic mirrors like [`framework::coin::CoinMetadata`] or
+/// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
+/// [`framework::iota::IOTA`]) as their phantom type argument. Implementing
+/// this trait declares which on-chain type the marker represents, which
+/// lets the `try_from_object` constructors verify the object's type tag
+/// against `T`. The marker is phantom, so the BCS bytes of e.g. a
+/// `BasicOutput<IOTA>` and a `BasicOutput<OTHER>` are identical — the type
+/// tag is the only place the coin type is recorded, and without this check
+/// one would silently decode as the other.
+///
+/// To decode objects holding your own coin type, define an empty marker
+/// struct and implement this trait for it:
+///
+/// ```
+/// struct FOO;
+///
+/// impl iota_sdk_move_types::MoveType for FOO {
+///     fn type_tag() -> iota_types::TypeTag {
+///         "0x123::foo::FOO".parse().unwrap()
+///     }
+/// }
+/// ```
+///
+/// For coin types only known at runtime, use the
+/// `try_from_object_with_type` constructors instead, which take the
+/// expected [`TypeTag`](iota_types::TypeTag) as a value.
+#[cfg(feature = "serde")]
+pub trait MoveType {
+    /// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
+    fn type_tag() -> iota_types::TypeTag;
+}
+
 /// Error returned by the `try_from_object` constructors on type mirrors.
 ///
 /// All Tier 1 types share this error shape: the caller passed an `Object`

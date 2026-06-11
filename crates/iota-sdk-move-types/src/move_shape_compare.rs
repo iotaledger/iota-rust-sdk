@@ -1195,6 +1195,14 @@ fn check_type(
         (Shape::Address, Type::Address) => Ok(()),
         (Shape::Vector(a), Type::Vector(b)) => check_type(module, struct_name, field, a, b),
         (Shape::TypeParameter(n), Type::TypeParameter(m)) if *n == *m => Ok(()),
+        // Named types are matched by name + type-arg arity only — the derive
+        // can't see Move module paths, so two same-named, same-arity types in
+        // different modules (e.g. `vec_map::Entry<K, V>` vs a hypothetical
+        // two-param `Entry` elsewhere) would cross-match at a reference site.
+        // Each named type still gets its own registry entry checked against
+        // its own module's definition, and the fixture roundtrips cover the
+        // serde path, so a wrong-module reference with a *different layout*
+        // is still caught there.
         (Shape::Datatype { name, args }, Type::Datatype(d)) => {
             let move_name: &str = d.name.as_ref().as_str();
             if *name != move_name {

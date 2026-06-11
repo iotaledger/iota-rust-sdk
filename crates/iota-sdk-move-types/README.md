@@ -41,6 +41,20 @@ make update-compiled-packages BRANCH=main  # a different branch
 
 This is a manual step — no CI job regenerates these files.
 
+### The completeness contract
+
+The `registry_matches_published_api` test enforces that **every** public
+`struct`/`enum` in the vendored `published_api.txt` has a registered Rust
+mirror, and the nightly drift workflow keeps that manifest in sync with
+upstream `develop`. Together they create a standing obligation: when
+upstream publishes a new public type, the nightly turns red and stays red
+until someone vendors the refreshed artifacts and lands the new mirror
+(steps above). A red "Move Drift Nightly" therefore means _the mirror set
+is out of date_, not that the crate is broken — already-released mirrors
+keep decoding on-chain state just fine in the meantime. System packages
+change rarely, so the expected cadence is a small catch-up PR a few times
+a year, with at most one day of detection delay.
+
 ## Refreshing the BCS test fixtures
 
 The roundtrip tests in `tests/fixture_roundtrip.rs` decode real on-chain

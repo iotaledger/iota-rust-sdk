@@ -17,9 +17,9 @@
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
-//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`). The on-chain
-//! type-tag check verifies the struct's module path but does *not*
-//! re-check the coin marker.
+//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`). The
+//! `try_from_object` constructors validate the full on-chain type tag,
+//! including that the coin marker is `0x2::iota::IOTA`.
 
 use std::sync::Arc;
 

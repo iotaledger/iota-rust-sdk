@@ -183,18 +183,40 @@ pub mod nft_output {
         }
 
         /// Decode a [`NftOutput<T>`] from an on-chain object, validating
-        /// that the object's type tag matches `0x107a::nft_output::NftOutput`
-        /// (the inner coin marker is not checked against `T`).
-        pub fn try_from_object(
+        /// that the object's type tag matches
+        /// `0x107a::nft_output::NftOutput<coin_type>`.
+        ///
+        /// Escape hatch for coin types only known at runtime; nothing ties
+        /// `coin_type` to `T`. When the coin type is known at compile time,
+        /// prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
             object: &iota_types::Object,
+            coin_type: &iota_types::TypeTag,
         ) -> Result<Self, crate::FromObjectError> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_nft_output() {
+            let tag = move_struct.struct_tag();
+            if !tag.is_nft_output() || tag.type_params() != core::slice::from_ref(coin_type) {
                 return Err(crate::FromObjectError::WrongType);
             }
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> NftOutput<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode a [`NftOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x107a::nft_output::NftOutput<T>`, including the coin marker
+        /// `T`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 }
@@ -301,18 +323,39 @@ pub mod basic_output {
 
         /// Decode a [`BasicOutput<T>`] from an on-chain object, validating
         /// that the object's type tag matches
-        /// `0x107a::basic_output::BasicOutput` (the inner coin marker is
-        /// not checked against `T`).
-        pub fn try_from_object(
+        /// `0x107a::basic_output::BasicOutput<coin_type>`.
+        ///
+        /// Escape hatch for coin types only known at runtime; nothing ties
+        /// `coin_type` to `T`. When the coin type is known at compile time,
+        /// prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
             object: &iota_types::Object,
+            coin_type: &iota_types::TypeTag,
         ) -> Result<Self, crate::FromObjectError> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_basic_output() {
+            let tag = move_struct.struct_tag();
+            if !tag.is_basic_output() || tag.type_params() != core::slice::from_ref(coin_type) {
                 return Err(crate::FromObjectError::WrongType);
             }
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> BasicOutput<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode a [`BasicOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x107a::basic_output::BasicOutput<T>`, including the coin
+        /// marker `T`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 }
@@ -421,18 +464,39 @@ pub mod alias_output {
 
         /// Decode an [`AliasOutput<T>`] from an on-chain object, validating
         /// that the object's type tag matches
-        /// `0x107a::alias_output::AliasOutput` (the inner coin marker is
-        /// not checked against `T`).
-        pub fn try_from_object(
+        /// `0x107a::alias_output::AliasOutput<coin_type>`.
+        ///
+        /// Escape hatch for coin types only known at runtime; nothing ties
+        /// `coin_type` to `T`. When the coin type is known at compile time,
+        /// prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
             object: &iota_types::Object,
+            coin_type: &iota_types::TypeTag,
         ) -> Result<Self, crate::FromObjectError> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_alias_output() {
+            let tag = move_struct.struct_tag();
+            if !tag.is_alias_output() || tag.type_params() != core::slice::from_ref(coin_type) {
                 return Err(crate::FromObjectError::WrongType);
             }
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> AliasOutput<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode an [`AliasOutput<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x107a::alias_output::AliasOutput<T>`, including the coin
+        /// marker `T`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 }

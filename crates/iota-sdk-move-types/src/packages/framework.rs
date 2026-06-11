@@ -100,6 +100,14 @@ pub mod iota {
         dummy_field: bool,
     }
 
+    #[cfg(feature = "serde")]
+    impl crate::MoveType for IOTA {
+        /// `0x2::iota::IOTA`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_gas()))
+        }
+    }
+
     /// Rust version of the Move `iota::iota::IotaTreasuryCap` type.
     ///
     /// The non-generic IOTA treasury cap, wrapping a [`TreasuryCap<IOTA>`].
@@ -303,18 +311,38 @@ pub mod coin {
 
         /// Decode a [`CoinMetadata<T>`] from an on-chain object, validating
         /// that the object's type tag matches
-        /// `0x2::coin::CoinMetadata<T>` for *some* `T` (the inner coin
-        /// marker is not checked against `T`).
-        pub fn try_from_object(
+        /// `0x2::coin::CoinMetadata<coin_type>`.
+        ///
+        /// Escape hatch for coin types only known at runtime; nothing ties
+        /// `coin_type` to `T`. When the coin type is known at compile time,
+        /// prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
             object: &iota_types::Object,
+            coin_type: &iota_types::TypeTag,
         ) -> Result<Self, crate::FromObjectError> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_coin_metadata() {
+            let tag = move_struct.struct_tag();
+            if !tag.is_coin_metadata() || tag.type_params() != core::slice::from_ref(coin_type) {
                 return Err(crate::FromObjectError::WrongType);
             }
             bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> CoinMetadata<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode a [`CoinMetadata<T>`] from an on-chain object, validating
+        /// that the object's type tag matches `0x2::coin::CoinMetadata<T>`,
+        /// including the coin marker `T`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
