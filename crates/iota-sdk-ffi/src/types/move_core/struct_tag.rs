@@ -204,6 +204,8 @@ export_struct_tag_from_type_tag_ctors!(
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
+    RegulatedCoinMetadata,
+    DenyCapV1,
     TimeLock,
     Option,
     TransferReceiving,
