@@ -166,7 +166,9 @@ jobs:
         run: make wasm
       - name: Check format of the examples
         run: make wasm-examples-format-check
+      # Verify the build left a clean tree, before start-local-network mutates
+      # its tracked config.yaml (keypair/redis placeholders).
+      - run: make is-dirty
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make wasm-examples
-      - run: make is-dirty
