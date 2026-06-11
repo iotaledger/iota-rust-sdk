@@ -8,6 +8,7 @@ use std::{
 };
 
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
+use crate::SigningDigest;
 
 /// A passkey authenticator.
 ///
@@ -29,7 +30,9 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
 /// currently requires that the `CollectedClientData.type` field is required to
-/// be `webauthn.get`.
+/// be `webauthn.get` and that the `CollectedClientData.challenge` field
+/// decodes to exactly 32 bytes, the length of the signing digest it must
+/// match.
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -45,7 +48,7 @@ pub struct PasskeyAuthenticator {
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`, which is expected to be the signing
     /// message `hash(Intent | bcs_message)`
-    pub(crate) challenge: Vec<u8>,
+    pub(crate) challenge: SigningDigest,
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
@@ -79,7 +82,8 @@ impl PasskeyAuthenticator {
     /// The parsed challenge message for this passkey signature.
     ///
     /// This is parsed by decoding the base64url data from the
-    /// `client_data_json.challenge` field.
+    /// `client_data_json.challenge` field, and is guaranteed to be exactly 32
+    /// bytes, the length of the signing digest it must match.
     pub fn challenge(&self) -> &[u8] {
         &self.challenge
     }
@@ -159,7 +163,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
+    use crate::{Digest, SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -259,11 +263,19 @@ mod serialization {
 
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
-            let challenge =
+            let challenge: SigningDigest =
                 <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(&challenge)
                     .map_err(|e| {
                         SignatureFromBytesError::new(format!(
                             "unable to decode base64urlunpadded challenge {e}"
+                        ))
+                    })?
+                    .try_into()
+                    .map_err(|challenge: Vec<u8>| {
+                        SignatureFromBytesError::new(format!(
+                            "invalid challenge length {}, expected {}",
+                            challenge.len(),
+                            Digest::LENGTH
                         ))
                     })?;
 
@@ -402,7 +414,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
         (
             any::<Secp256r1PublicKey>(),
             any::<Secp256r1Signature>(),
-            vec(any::<u8>(), 32),
+            any::<SigningDigest>(),
             vec(any::<u8>(), 0..32),
         )
             .prop_map(
@@ -434,6 +446,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {
+    use super::*;
     use crate::UserSignature;
 
     #[test]
@@ -442,5 +455,25 @@ mod tests {
 
         let sig = UserSignature::from_base64(b64).unwrap();
         assert!(matches!(sig, UserSignature::PasskeyAuthenticator(_)));
+    }
+
+    #[test]
+    fn challenge_must_decode_to_exactly_32_bytes() {
+        let signature = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; Secp256r1Signature::LENGTH]),
+            public_key: Secp256r1PublicKey::new([0; Secp256r1PublicKey::LENGTH]),
+        };
+
+        for (challenge_length, expect_ok) in [(31, false), (32, true), (33, false)] {
+            let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::encode_string(
+                &vec![0; challenge_length],
+            );
+            let client_data_json = format!(
+                r#"{{"type":"webauthn.get","challenge":"{challenge}","origin":"http://example.com"}}"#
+            );
+
+            let result = PasskeyAuthenticator::new(Vec::new(), client_data_json, signature.clone());
+            assert_eq!(result.is_ok(), expect_ok);
+        }
     }
 }

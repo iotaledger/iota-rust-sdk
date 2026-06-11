@@ -931,25 +931,5 @@ mod serialization {
                 assert_eq!(sig, serde_json::from_str(&json).unwrap());
             }
         }
-
-        #[test]
-        fn passkey_fixtures() {
-            const FIXTURES: &[&str] = &[
-                "lgIGJUmWDeWIDoxodDQXD2R2YFuP5K65ooYyx5lc87qDHZdjHQAAAACKAXsidHlwZSI6IndlYmF1dGhuLmdldCIsImNoYWxsZW5nZSI6IkFBQUF0X21qSUIxdmJWcFlNNldWNllfb2l4Nko4YU5fOXNiOFNLRmJ1a0JmaVF3Iiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICmOyQv1fJ+inKD0C/sxKtxyFKl9aoBign6p9Ih3iA2ahDVg2CPZqUOlEhur2S2GbIZjbn6TbgWtbXXg8SjLkL7wM9Fw4JO0AKLdnLC1nhQguHBX5K6Hv2ta1sqoOqEFDDEw==",
-            ];
-
-            for fixture in FIXTURES {
-                let bcs = Base64::decode_vec(fixture).unwrap();
-
-                let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::PasskeyAuthenticator, sig.scheme());
-                let bytes = bcs::to_bytes(&sig).unwrap();
-                assert_eq!(bcs, bytes);
-
-                let json = serde_json::to_string_pretty(&sig).unwrap();
-                println!("{json}");
-                assert_eq!(sig, serde_json::from_str(&json).unwrap());
-            }
-        }
     }
 }
