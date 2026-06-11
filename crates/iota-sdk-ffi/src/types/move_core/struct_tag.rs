@@ -116,6 +116,36 @@ impl StructTag {
             .collect()
     }
 
+    /// Returns whether the type (excluding the type params) is the same as
+    /// another struct tag.
+    pub fn is_same_type_as(&self, other: &StructTag) -> bool {
+        self.0.is_same_type_as(&other.0)
+    }
+
+    /// Checks if this is an IOTA balance type
+    /// (`0x2::balance::Balance<0x2::iota::IOTA>`)
+    pub fn is_gas_balance(&self) -> bool {
+        self.0.is_gas_balance()
+    }
+
+    /// Checks if this is a timelocked coin balance `TimeLock<Balance<T>>`
+    pub fn is_timelocked_balance(&self) -> bool {
+        self.0.is_timelocked_balance()
+    }
+
+    /// Creates a new timelocked IOTA balance struct tag
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    #[uniffi::constructor]
+    pub fn new_timelocked_gas_balance() -> Self {
+        Self(iota_sdk::types::StructTag::new_timelocked_gas_balance())
+    }
+
+    /// Checks if this is a timelocked IOTA balance type
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    pub fn is_timelocked_gas_balance(&self) -> bool {
+        self.0.is_timelocked_gas_balance()
+    }
+
     /// Returns the string representation of this struct tag using the
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
