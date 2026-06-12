@@ -2,6 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "serde")]
 use std::{
     hash::{Hash, Hasher},
     sync::OnceLock,
@@ -60,6 +61,7 @@ pub struct PasskeyAuthenticator {
     /// for more information on this field.
     pub(crate) client_data_json: String,
     /// Initialization of bytes for passkey in serialized form.
+    #[cfg(feature = "serde")]
     bytes: OnceLock<Vec<u8>>,
 }
 
@@ -116,12 +118,14 @@ impl PartialEq for PasskeyAuthenticator {
     }
 }
 
+#[cfg(feature = "serde")]
 impl Hash for PasskeyAuthenticator {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.as_ref().hash(state);
     }
 }
 
+#[cfg(feature = "serde")]
 impl AsRef<[u8]> for PasskeyAuthenticator {
     fn as_ref(&self) -> &[u8] {
         self.bytes.get_or_init(|| self.to_bytes())
