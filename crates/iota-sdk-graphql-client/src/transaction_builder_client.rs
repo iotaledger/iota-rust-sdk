@@ -1,9 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`ClientMethods`] for the GraphQL [`Client`].
+//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
 
-use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
+use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
     TransactionEffects, UserSignature, Version,
@@ -15,7 +15,7 @@ use crate::{
     query_types::ObjectFilter,
 };
 
-impl ClientMethods for Client {
+impl TransactionBuilderClient for Client {
     type Error = crate::error::Error;
     type DryRunResult = DryRunResult;
 

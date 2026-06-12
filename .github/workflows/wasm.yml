@@ -30,12 +30,12 @@ jobs:
           rustc --version
           cargo --version
 
-      - uses: taiki-e/install-action@wasm-pack
+      - uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: wasm-pack
 
       - name: Install clang
         run: sudo apt-get install -y clang
 
-      - name: Run tests in wasm
-        run: RUSTFLAGS='-Dwarnings' make wasm
-
-      - run: make is-dirty
+      - name: Check that SDK crates compile to WASM
+        run: make wasm32

@@ -28,7 +28,8 @@ pub struct Query {
     pub variables: Option<serde_json::Value>,
 }
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]

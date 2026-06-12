@@ -8,7 +8,8 @@ use crate::{
     graphql::{client::GraphQLClient, query_types::Epoch},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.

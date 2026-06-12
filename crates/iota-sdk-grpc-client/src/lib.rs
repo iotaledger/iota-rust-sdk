@@ -34,7 +34,7 @@
 //! ```
 
 pub mod api;
-mod client_methods;
+mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
 pub use api::{
