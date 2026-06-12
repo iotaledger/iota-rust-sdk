@@ -3,16 +3,13 @@
 all:: check-features clippy test wasm
 
 # The compiled Move package blobs are not committed; the test targets
-# `include_bytes!` them, so fetch them when missing, at the rev pinned by
-# the `move-binary-format` dependency in Cargo.toml. `published_api.txt`
-# is fetched last by the script, so its presence implies a complete
-# download. The no-op recipe (`@:`) keeps the recipe-less target from
-# falling through to the `%` catch-all below.
+# `include_bytes!` them. `--ensure` fetches them only when they are
+# missing or were fetched at a different rev than the pin (the
+# `move-binary-format` rev in Cargo.toml), so repeated runs stay offline
+# while a pin bump re-fetches automatically.
 .PHONY: packages
-packages: src/packages_compiled/published_api.txt
-	@:
-src/packages_compiled/published_api.txt:
-	bash update_compiled_packages.sh
+packages:
+	@bash update_compiled_packages.sh --ensure
 
 .PHONY: check-features
 check-features:

@@ -54,10 +54,26 @@ pinned_rev() {
     echo "$rev"
 }
 
-REF="${1:-$(pinned_rev)}"
 REPO="iotaledger/iota"
 SRC_BASE="crates/iota-framework"
 TARGET_DIR="$SCRIPT_DIR/src/packages_compiled"
+# Records the ref the artifacts were last fetched at, so `--ensure` can
+# skip the download when they already match the pin.
+STAMP="$TARGET_DIR/.fetched-ref"
+
+# `--ensure` (used by the make targets): fetch only when the artifacts are
+# missing or were fetched at a different ref than the current pin. Keeps
+# repeated `make test` runs offline-friendly while still re-fetching
+# automatically after a pin bump (and re-pinning after a REF= override).
+if [[ "${1:-}" == "--ensure" ]]; then
+    REF="$(pinned_rev)"
+    if [[ -f "$TARGET_DIR/published_api.txt" && -f "$STAMP" \
+        && "$(cat "$STAMP")" == "$REF" ]]; then
+        exit 0
+    fi
+else
+    REF="${1:-$(pinned_rev)}"
+fi
 
 # Each entry: <source-path-under-$SRC_BASE>:<dest-filename-under-$TARGET_DIR>
 ARTIFACTS=(
@@ -100,4 +116,5 @@ for entry in "${ARTIFACTS[@]}"; do
     fi
 done
 
+echo "$REF" > "$STAMP"
 echo "Done."

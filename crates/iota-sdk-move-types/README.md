@@ -32,8 +32,9 @@ These artifacts are **not committed** — they are fetched from
 `move-binary-format` dev-dependency rev in this crate's `Cargo.toml` (the
 single source of truth: the parser must match the blobs it parses). The
 `make` targets that compile tests (`test`, `clippy`, `wasm` — both
-crate-level and repo-root) fetch them automatically when missing, so CI
-and local runs always test against the exact same bytes.
+crate-level and repo-root) fetch them automatically when they are missing
+or were fetched at a different rev than the pin, so CI and local runs
+always test against the exact same bytes.
 If you bypass `make` (e.g. plain `cargo nextest run`) on a fresh
 checkout, the build fails with a "couldn't read …packages_compiled/…"
 error — fetch first:
