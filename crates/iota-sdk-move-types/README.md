@@ -44,6 +44,8 @@ make update-compiled-packages REF=develop  # a branch, e.g. to preview drift
 make update-compiled-packages REF=<sha>    # a specific commit
 ```
 
+The script needs `curl`, `cargo`, and `jq`.
+
 ### The completeness contract
 
 The `registry_matches_published_api` test enforces that **every** public

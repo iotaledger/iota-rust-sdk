@@ -41,7 +41,7 @@ func main() {
 		fmt.Printf("- id:               %s\n", staked.Id().ToHex())
 		fmt.Printf("  pool_id:          %s\n", staked.PoolId().ToHex())
 		fmt.Printf("  stake_activation_epoch: %d\n", staked.StakeActivationEpoch())
-		fmt.Printf("  principal (nanos):%d\n\n", staked.Principal())
+		fmt.Printf("  principal (nanos): %d\n\n", staked.Principal())
 	}
 
 	fmt.Printf("Total principal across page: %d nanos\n", totalPrincipal)

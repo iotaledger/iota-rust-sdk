@@ -60,7 +60,7 @@ async fn main() -> Result<()> {
             "  stake_activation_epoch: {}",
             staked.stake_activation_epoch()
         );
-        println!("  principal (nanos):{}", staked.principal());
+        println!("  principal (nanos): {}", staked.principal());
         println!();
     }
 

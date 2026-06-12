@@ -29,7 +29,7 @@ struct DecodeStakedIotaExample {
       print("- id:               \(staked.id().toHex())")
       print("  pool_id:          \(staked.poolId().toHex())")
       print("  stake_activation_epoch: \(staked.stakeActivationEpoch())")
-      print("  principal (nanos):\(staked.principal())\n")
+      print("  principal (nanos): \(staked.principal())\n")
     }
 
     print("Total principal across page: \(totalPrincipal) nanos")

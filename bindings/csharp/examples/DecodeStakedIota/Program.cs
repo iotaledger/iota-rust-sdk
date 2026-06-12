@@ -33,7 +33,7 @@ class Program
             Console.WriteLine($"- id:               {staked.Id().ToHex()}");
             Console.WriteLine($"  pool_id:          {staked.PoolId().ToHex()}");
             Console.WriteLine($"  stake_activation_epoch: {staked.StakeActivationEpoch()}");
-            Console.WriteLine($"  principal (nanos):{staked.Principal()}\n");
+            Console.WriteLine($"  principal (nanos): {staked.Principal()}\n");
         }
 
         Console.WriteLine($"Total principal across page: {totalPrincipal} nanos");

@@ -30,7 +30,7 @@ fun main() = runBlocking {
             println("- id:               ${staked.id().toHex()}")
             println("  pool_id:          ${staked.poolId().toHex()}")
             println("  stake_activation_epoch: ${staked.stakeActivationEpoch()}")
-            println("  principal (nanos):${staked.principal()}")
+            println("  principal (nanos): ${staked.principal()}")
             println()
         }
 

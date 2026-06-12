@@ -30,7 +30,7 @@ async def main():
         print(f"- id:               {staked.id().to_hex()}")
         print(f"  pool_id:          {staked.pool_id().to_hex()}")
         print(f"  stake_activation_epoch: {staked.stake_activation_epoch()}")
-        print(f"  principal (nanos):{staked.principal()}")
+        print(f"  principal (nanos): {staked.principal()}")
         print()
 
     print(f"Total principal across page: {total_principal} nanos")
