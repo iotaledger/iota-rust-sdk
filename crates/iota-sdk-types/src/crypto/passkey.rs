@@ -39,7 +39,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -102,6 +102,17 @@ impl PasskeyAuthenticator {
     /// for more information on this field.
     pub fn client_data_json(&self) -> &str {
         &self.client_data_json
+    }
+}
+
+impl PartialEq for PasskeyAuthenticator {
+    fn eq(&self, other: &Self) -> bool {
+        // The `bytes` cache is excluded as it is derived from the other fields.
+        self.public_key == other.public_key
+            && self.signature == other.signature
+            && self.challenge == other.challenge
+            && self.authenticator_data == other.authenticator_data
+            && self.client_data_json == other.client_data_json
     }
 }
 
