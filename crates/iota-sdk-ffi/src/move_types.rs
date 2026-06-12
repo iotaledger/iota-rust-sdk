@@ -7,9 +7,12 @@
 //! the fields that non-Rust consumers typically need when decoding objects
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
-//! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`].
+//! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`],
+//!   [`IotaSystemState`], [`IotaSystemStateV2`].
 //! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
-//!   disambiguates this from the GraphQL-derived `CoinMetadata` record).
+//!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
+//!   [`Clock`], [`TimelockedIotaBalance`], [`UpgradeCap`], [`Publisher`],
+//!   [`Kiosk`], [`KioskOwnerCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -17,9 +20,14 @@
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
-//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`). The
+//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`, and
+//! [`TimelockedIotaBalance`] wrapping `TimeLock<Balance<IOTA>>`). The
 //! `try_from_object` constructors validate the full on-chain type tag,
 //! including that the coin marker is `0x2::iota::IOTA`.
+//!
+//! `0x2::coin::Coin` deliberately has no shim here: the existing
+//! [`Coin`](crate::types::coin::Coin) binding already decodes coin objects
+//! of any coin type.
 
 use std::sync::Arc;
 
@@ -145,6 +153,106 @@ impl TimelockedStakedIota {
     }
 }
 
+/// A typed view of the on-chain `0x3::iota_system::IotaSystemState` object
+/// (the `0x5` singleton).
+///
+/// This is only the versioned wrapper; the actual state lives in a dynamic
+/// field holding e.g. an `IotaSystemStateV2`.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct IotaSystemState(pub iota_sdk::move_types::iota_system::iota_system::IotaSystemState);
+
+#[uniffi::export]
+impl IotaSystemState {
+    /// Decode an `IotaSystemState` from an on-chain object, validating that
+    /// the object's type tag matches `0x3::iota_system::IotaSystemState`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(
+            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from_object(
+                &object.0,
+            )?
+            .into(),
+        )
+    }
+
+    /// Decode an `IotaSystemState` from raw BCS bytes. Skips type-tag
+    /// validation; prefer [`Self::try_from_object`] when an [`Object`] is
+    /// available.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(
+            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from_bcs(&bytes)?
+                .into(),
+        )
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// Version selecting which inner state layout the dynamic field holds.
+    pub fn version(&self) -> u64 {
+        self.0.version
+    }
+}
+
+/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV2`
+/// inner system state.
+///
+/// Exposes the scalar epoch parameters; the nested validator-set and
+/// treasury data are not surfaced through the FFI yet.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct IotaSystemStateV2(
+    pub iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV2,
+);
+
+#[uniffi::export]
+impl IotaSystemStateV2 {
+    /// Decode an `IotaSystemStateV2` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: the inner state is stored as
+    /// a dynamic field of the `0x5` wrapper, not as a top-level object
+    /// with its own type tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(
+            iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV2::try_from_bcs(
+                &bytes,
+            )?
+            .into(),
+        )
+    }
+
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    pub fn protocol_version(&self) -> u64 {
+        self.0.protocol_version
+    }
+
+    pub fn system_state_version(&self) -> u64 {
+        self.0.system_state_version
+    }
+
+    /// The reference gas price for the current epoch, in nanos.
+    pub fn reference_gas_price(&self) -> u64 {
+        self.0.reference_gas_price
+    }
+
+    /// Whether the system is running in a downgraded safe mode.
+    pub fn safe_mode(&self) -> bool {
+        self.0.safe_mode
+    }
+
+    /// Unix timestamp (ms) of the current epoch start.
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+}
+
 // =====================================================================
 // 0x2 — IOTA framework
 // =====================================================================
@@ -157,8 +265,8 @@ pub struct IotaCoinMetadata(pub iota_sdk::move_types::framework::coin::CoinMetad
 #[uniffi::export]
 impl IotaCoinMetadata {
     /// Decode a `CoinMetadata` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::coin::CoinMetadata`. The inner coin
-    /// marker is not re-checked against `IOTA`.
+    /// object's type tag matches `0x2::coin::CoinMetadata<0x2::iota::IOTA>`,
+    /// including the coin marker.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
@@ -199,6 +307,224 @@ impl IotaCoinMetadata {
 
     pub fn icon_url(&self) -> Option<String> {
         self.0.icon_url.as_ref().map(url_to_string)
+    }
+}
+
+/// A typed view of the on-chain `0x2::clock::Clock` object (the `0x6`
+/// singleton carrying the consensus timestamp).
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct Clock(pub iota_sdk::move_types::framework::clock::Clock);
+
+#[uniffi::export]
+impl Clock {
+    /// Decode a `Clock` from an on-chain object, validating that the
+    /// object's type tag matches `0x2::clock::Clock`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::clock::Clock::try_from_object(&object.0)?.into())
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::clock::Clock::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// The clock's timestamp (ms), set by consensus every commit.
+    pub fn timestamp_ms(&self) -> u64 {
+        self.0.timestamp_ms
+    }
+}
+
+/// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>`
+/// object — a time-locked IOTA balance, e.g. Stardust vested rewards.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct TimelockedIotaBalance(
+    pub  iota_sdk::move_types::framework::timelock::TimeLock<
+        iota_sdk::move_types::framework::balance::Balance<IOTA>,
+    >,
+);
+
+#[uniffi::export]
+impl TimelockedIotaBalance {
+    /// Decode a `TimeLock<Balance<IOTA>>` from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::timelock::TimeLock::try_from_object(&object.0)?.into())
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::timelock::TimeLock::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// The locked IOTA amount in nanos.
+    pub fn locked(&self) -> u64 {
+        self.0.locked.value()
+    }
+
+    /// Epoch timestamp (ms) of when the lock expires.
+    pub fn expiration_timestamp_ms(&self) -> u64 {
+        self.0.expiration_timestamp_ms
+    }
+
+    pub fn label(&self) -> Option<String> {
+        self.0.label.as_ref().map(move_string_to_string)
+    }
+}
+
+/// A typed view of an on-chain `0x2::package::UpgradeCap` object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct UpgradeCap(pub iota_sdk::move_types::framework::package::UpgradeCap);
+
+#[uniffi::export]
+impl UpgradeCap {
+    /// Decode an `UpgradeCap` from an on-chain object, validating that the
+    /// object's type tag matches `0x2::package::UpgradeCap`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(
+            iota_sdk::move_types::framework::package::UpgradeCap::try_from_object(&object.0)?
+                .into(),
+        )
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::package::UpgradeCap::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// ID of the package that can be upgraded.
+    pub fn package(&self) -> ObjectId {
+        self.0.package.bytes.into()
+    }
+
+    /// Number of upgrades applied to the original package.
+    pub fn version(&self) -> u64 {
+        self.0.version
+    }
+
+    /// What kind of upgrades are allowed.
+    pub fn policy(&self) -> u8 {
+        self.0.policy
+    }
+}
+
+/// A typed view of an on-chain `0x2::package::Publisher` object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct Publisher(pub iota_sdk::move_types::framework::package::Publisher);
+
+#[uniffi::export]
+impl Publisher {
+    /// Decode a `Publisher` from an on-chain object, validating that the
+    /// object's type tag matches `0x2::package::Publisher`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::package::Publisher::try_from_object(&object.0)?.into())
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::package::Publisher::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    pub fn package(&self) -> String {
+        ascii_to_string(&self.0.package)
+    }
+
+    pub fn module_name(&self) -> String {
+        ascii_to_string(&self.0.module_name)
+    }
+}
+
+/// A typed view of an on-chain `0x2::kiosk::Kiosk` object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct Kiosk(pub iota_sdk::move_types::framework::kiosk::Kiosk);
+
+#[uniffi::export]
+impl Kiosk {
+    /// Decode a `Kiosk` from an on-chain object, validating that the
+    /// object's type tag matches `0x2::kiosk::Kiosk`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::kiosk::Kiosk::try_from_object(&object.0)?.into())
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::kiosk::Kiosk::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// Accumulated sale profits in nanos.
+    pub fn profits(&self) -> u64 {
+        self.0.profits.value()
+    }
+
+    pub fn owner(&self) -> Arc<Address> {
+        Arc::new(Address(self.0.owner))
+    }
+
+    /// Number of items stored in the kiosk.
+    pub fn item_count(&self) -> u32 {
+        self.0.item_count
+    }
+}
+
+/// A typed view of an on-chain `0x2::kiosk::KioskOwnerCap` object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct KioskOwnerCap(pub iota_sdk::move_types::framework::kiosk::KioskOwnerCap);
+
+#[uniffi::export]
+impl KioskOwnerCap {
+    /// Decode a `KioskOwnerCap` from an on-chain object, validating that
+    /// the object's type tag matches `0x2::kiosk::KioskOwnerCap`.
+    #[uniffi::constructor]
+    pub fn try_from_object(object: &Object) -> Result<Self> {
+        Ok(
+            iota_sdk::move_types::framework::kiosk::KioskOwnerCap::try_from_object(&object.0)?
+                .into(),
+        )
+    }
+
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(iota_sdk::move_types::framework::kiosk::KioskOwnerCap::try_from_bcs(&bytes)?.into())
+    }
+
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// ID of the kiosk this cap controls (the Move `for` field).
+    pub fn kiosk_id(&self) -> ObjectId {
+        self.0.r#for.bytes.into()
     }
 }
 

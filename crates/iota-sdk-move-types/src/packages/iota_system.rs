@@ -664,6 +664,19 @@ pub mod iota_system_state_inner {
         pub extra_fields: Bag,
     }
 
+    #[cfg(feature = "serde")]
+    impl IotaSystemStateV2 {
+        /// Decode an [`IotaSystemStateV2`] from BCS bytes.
+        ///
+        /// There is no `try_from_object` constructor: the inner state is
+        /// stored as a dynamic field of the `0x5`
+        /// [`IotaSystemState`](super::iota_system::IotaSystemState)
+        /// wrapper, not as a top-level object with its own type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+    }
+
     /// Rust version of the Move
     /// `iota_system::iota_system_state_inner::SystemEpochInfoEventV1` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -732,6 +745,34 @@ pub mod iota_system {
     impl IotaSystemState {
         pub const fn new(id: UID, version: u64) -> Self {
             Self { id, version }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl IotaSystemState {
+        /// Decode an [`IotaSystemState`] from BCS bytes without verifying
+        /// the on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode an [`IotaSystemState`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x3::iota_system::IotaSystemState`.
+        ///
+        /// This is only the versioned wrapper (the `0x5` object); the
+        /// actual state lives in a dynamic field holding e.g. an
+        /// [`IotaSystemStateV2`](super::iota_system_state_inner::IotaSystemStateV2).
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_iota_system_state() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
         }
     }
 }

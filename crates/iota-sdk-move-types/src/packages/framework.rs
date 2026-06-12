@@ -197,6 +197,16 @@ pub mod balance {
             self.value
         }
     }
+
+    /// Compositional tag: `Balance<T>` is itself a valid type argument
+    /// (e.g. `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
+    #[cfg(feature = "serde")]
+    impl<T: crate::MoveType> crate::MoveType for Balance<T> {
+        /// `0x2::balance::Balance<T>`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_balance(T::type_tag())))
+        }
+    }
 }
 
 /// Types from `0x2::bag`.
@@ -251,6 +261,53 @@ pub mod coin {
     impl<T> Coin<T> {
         pub const fn new(id: UID, balance: Balance<T>) -> Self {
             Self { id, balance }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> Coin<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`Coin<T>`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`Coin<T>`] from an on-chain object, validating that
+        /// the object's type tag matches `0x2::coin::Coin<coin_type>`.
+        ///
+        /// Escape hatch for coin types only known at runtime; nothing ties
+        /// `coin_type` to `T`. When the coin type is known at compile time,
+        /// prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            coin_type: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_coin() || tag.type_params() != core::slice::from_ref(coin_type) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> Coin<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode a [`Coin<T>`] from an on-chain object, validating that
+        /// the object's type tag matches `0x2::coin::Coin<T>`, including
+        /// the coin marker `T`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -706,6 +763,29 @@ pub mod clock {
             Self { id, timestamp_ms }
         }
     }
+
+    #[cfg(feature = "serde")]
+    impl Clock {
+        /// Decode a [`Clock`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`Clock`] from an on-chain object, validating that the
+        /// object's type tag matches `0x2::clock::Clock`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_clock() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
 }
 
 /// Types from `0x2::tx_context`.
@@ -894,6 +974,55 @@ pub mod timelock {
                 expiration_timestamp_ms,
                 label,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TimeLock<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TimeLock<T>`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`TimeLock<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::timelock::TimeLock<locked_type>`.
+        ///
+        /// Escape hatch for locked types only known at runtime; nothing
+        /// ties `locked_type` to `T`. When the locked type is known at
+        /// compile time, prefer [`Self::try_from_object`].
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            locked_type: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_time_lock() || tag.type_params() != core::slice::from_ref(locked_type) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TimeLock<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        /// Decode a [`TimeLock<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::timelock::TimeLock<T>`, including the locked type `T`
+        /// (e.g. `Balance<IOTA>` for vested-reward timelocks).
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 }
@@ -1362,6 +1491,29 @@ pub mod package {
         pub module_name: ascii::String,
     }
 
+    #[cfg(feature = "serde")]
+    impl Publisher {
+        /// Decode a [`Publisher`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`Publisher`] from an on-chain object, validating that
+        /// the object's type tag matches `0x2::package::Publisher`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_publisher() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move `iota::package::UpgradeCap` type.
     ///
     /// Capability controlling the ability to upgrade a package.
@@ -1378,6 +1530,29 @@ pub mod package {
         pub version: u64,
         /// What kind of upgrades are allowed.
         pub policy: u8,
+    }
+
+    #[cfg(feature = "serde")]
+    impl UpgradeCap {
+        /// Decode an [`UpgradeCap`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode an [`UpgradeCap`] from an on-chain object, validating
+        /// that the object's type tag matches `0x2::package::UpgradeCap`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_upgrade_cap() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
     }
 
     /// Rust version of the Move `iota::package::UpgradeTicket` type.
@@ -2407,6 +2582,29 @@ pub mod kiosk {
         pub item_count: u32,
     }
 
+    #[cfg(feature = "serde")]
+    impl Kiosk {
+        /// Decode a [`Kiosk`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`Kiosk`] from an on-chain object, validating that the
+        /// object's type tag matches `0x2::kiosk::Kiosk`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_kiosk() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move `iota::kiosk::KioskOwnerCap` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2415,6 +2613,29 @@ pub mod kiosk {
     pub struct KioskOwnerCap {
         pub id: UID,
         pub r#for: ID,
+    }
+
+    #[cfg(feature = "serde")]
+    impl KioskOwnerCap {
+        /// Decode a [`KioskOwnerCap`] from BCS bytes without verifying the
+        /// on-chain type tag.
+        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes(bytes)
+        }
+
+        /// Decode a [`KioskOwnerCap`] from an on-chain object, validating
+        /// that the object's type tag matches `0x2::kiosk::KioskOwnerCap`.
+        pub fn try_from_object(
+            object: &iota_types::Object,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_kiosk_owner_cap() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
     }
 
     /// Rust version of the Move `iota::kiosk::PurchaseCap<T>` type.
