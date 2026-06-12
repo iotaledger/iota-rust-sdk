@@ -38,9 +38,13 @@ mod move_shape_compare;
 /// one would silently decode as the other.
 ///
 /// To decode objects holding your own coin type, define an empty marker
-/// struct and implement this trait for it:
+/// struct and implement this trait for it. The `try_from_object`
+/// constructors also require `T: serde::de::DeserializeOwned` (an artifact
+/// of the serde derive on the generic mirrors — the phantom marker itself
+/// is never deserialized), so derive `Deserialize` as well:
 ///
 /// ```
+/// #[derive(serde::Deserialize)]
 /// struct FOO;
 ///
 /// impl iota_sdk_move_types::MoveType for FOO {

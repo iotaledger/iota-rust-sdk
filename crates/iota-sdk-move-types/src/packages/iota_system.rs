@@ -153,7 +153,7 @@ pub mod staking_pool {
     }
 
     impl StakingPoolV1 {
-        #[allow(clippy::too_many_arguments)]
+        #[expect(clippy::too_many_arguments)]
         pub const fn new(
             id: UID,
             activation_epoch: Option<u64>,
@@ -722,7 +722,7 @@ pub mod iota_system_state_inner {
 }
 
 /// Types from `0x3::iota_system`.
-#[allow(clippy::module_inception)]
+#[expect(clippy::module_inception)]
 pub mod iota_system {
     use crate::framework::object::UID;
 

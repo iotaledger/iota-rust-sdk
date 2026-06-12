@@ -66,7 +66,6 @@ pub mod nft {
     ///
     /// One-time witness marker. The Move struct is empty; the Rust mirror
     /// carries a `dummy_field` to preserve the BCS wire format.
-    #[allow(non_camel_case_types)]
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -229,7 +228,7 @@ pub mod stardust_upgrade_label {
     /// Name of the label applied to vested rewards migrated from Stardust.
     /// The Move struct is empty; the Rust mirror carries a `dummy_field`
     /// to preserve the BCS wire format.
-    #[allow(non_camel_case_types)]
+    #[expect(non_camel_case_types)]
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -284,7 +283,7 @@ pub mod basic_output {
     }
 
     impl<T> BasicOutput<T> {
-        #[allow(clippy::too_many_arguments)]
+        #[expect(clippy::too_many_arguments)]
         pub const fn new(
             id: UID,
             balance: Balance<T>,
