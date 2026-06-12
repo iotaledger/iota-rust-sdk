@@ -28,14 +28,27 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Extract the pinned monorepo rev from the `move-binary-format` dependency
-# line. Strictly validated so a Cargo.toml reformat breaks loudly here
-# instead of silently fetching the wrong artifacts.
+# The pinned monorepo rev is the `rev` of the `move-binary-format`
+# dev-dependency in this crate's Cargo.toml. It is resolved through
+# `cargo metadata` (cargo's own manifest parser) rather than by parsing
+# the TOML textually, so manifest reformatting can't break it — and the
+# script can never disagree with the rev the build actually uses.
+# `--no-deps` keeps the call offline (no dependency resolution).
 pinned_rev() {
-    local rev
-    rev="$(sed -n 's/^move-binary-format = .*rev = "\([0-9a-f]\{40\}\)".*/\1/p' "$SCRIPT_DIR/Cargo.toml")"
+    command -v jq >/dev/null || {
+        echo "error: jq is required to resolve the pinned rev from cargo metadata" >&2
+        exit 1
+    }
+    local source rev
+    source="$(cargo metadata --no-deps --format-version 1 --manifest-path "$SCRIPT_DIR/Cargo.toml" \
+        | jq -r '.packages[]
+                 | select(.name == "iota-sdk-move-types")
+                 | .dependencies[]
+                 | select(.name == "move-binary-format")
+                 | .source')"
+    rev="${source##*rev=}"
     if [[ ! "$rev" =~ ^[0-9a-f]{40}$ ]]; then
-        echo "error: could not extract a 40-hex 'rev' from the move-binary-format line in $SCRIPT_DIR/Cargo.toml" >&2
+        echo "error: could not resolve a 40-hex 'rev' for the move-binary-format dependency (source: ${source:-<none>})" >&2
         exit 1
     fi
     echo "$rev"

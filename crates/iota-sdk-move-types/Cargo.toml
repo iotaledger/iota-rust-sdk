@@ -37,9 +37,9 @@ iota-types = { workspace = true }
 # external dependencies
 # Pinned to a rev (not a branch) so test builds stay reproducible. This rev
 # is also the single source of truth for the compiled-package fetch:
-# `update_compiled_packages.sh` extracts it from this line, so the parser
-# always matches the blobs it parses. Bump it to a newer monorepo SHA when
-# the nightly drift workflow reports upstream type changes.
+# `update_compiled_packages.sh` resolves it via `cargo metadata`, so the
+# parser always matches the blobs it parses. Bump it to a newer monorepo
+# SHA when the nightly drift workflow reports upstream type changes.
 move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "433865dc51241ebf738ca127d9fd6b4463e1ec60" }
 
 # internal dependencies
