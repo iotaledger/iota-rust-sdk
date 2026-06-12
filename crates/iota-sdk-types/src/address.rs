@@ -131,8 +131,8 @@ impl Address {
         Self::new(buf)
     }
 
-    #[cfg(all(feature = "rand", not(target_arch = "wasm32")))]
-    #[cfg_attr(doc_cfg, doc(cfg(all(feature = "rand", not(target_arch = "wasm32")))))]
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::generate(rand_core::OsRng)
     }

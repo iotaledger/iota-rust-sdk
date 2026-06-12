@@ -13,7 +13,8 @@ use crate::{
 #[derive(uniffi::Object)]
 pub struct MoveAuthenticatorBuilder(pub iota_sdk::transaction_builder::MoveAuthenticatorBuilder);
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl MoveAuthenticatorBuilder {
     /// Create a new move authenticator call with the account ID, function
     /// inputs, and generic types.
