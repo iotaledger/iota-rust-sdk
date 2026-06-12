@@ -7,8 +7,9 @@
 //!
 //! The blobs are not committed — `update_compiled_packages.sh` fetches them
 //! into the gitignored `src/packages_compiled/` directory at the monorepo
-//! rev pinned by the `move-binary-format` dependency (the `make` test
-//! targets do this automatically when the files are missing).
+//! rev pinned by the `move-binary-format` dependency (`make test` does this
+//! automatically when they are missing or out of date). They are read at
+//! test run time, so the crate compiles without them.
 //!
 //! Extend by adding blobs to the `ARTIFACTS` list in that script, deriving
 //! `MoveShape` on more mirrors, and registering more entries in
@@ -29,10 +30,23 @@ use crate::{
 // Compiled package blobs (fetched, not committed — see module docs)
 // ---------------------------------------------------------------------------
 
-const IOTA_FRAMEWORK: &[u8] = include_bytes!("packages_compiled/iota-framework");
-const MOVE_STDLIB: &[u8] = include_bytes!("packages_compiled/move-stdlib");
-const IOTA_SYSTEM: &[u8] = include_bytes!("packages_compiled/iota-system");
-const STARDUST: &[u8] = include_bytes!("packages_compiled/stardust");
+/// Read a fetched artifact from `src/packages_compiled/`.
+///
+/// Artifacts are loaded at test run time, so the crate compiles without
+/// them; a missing file fails the test with fetch instructions.
+fn read_artifact(name: &str) -> Vec<u8> {
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("src/packages_compiled")
+        .join(name);
+    std::fs::read(&path).unwrap_or_else(|e| {
+        panic!(
+            "could not read compiled package artifact `{}`: {e}\n\
+             fetch the artifacts with `make update-compiled-packages` \
+             (see crates/iota-sdk-move-types/README.md)",
+            path.display()
+        )
+    })
+}
 
 // ---------------------------------------------------------------------------
 // Entries: Rust-mirror → Move-side coordinates
@@ -60,13 +74,13 @@ enum Package {
 }
 
 impl Package {
-    fn blob(self) -> &'static [u8] {
-        match self {
-            Package::MoveStdlib => MOVE_STDLIB,
-            Package::IotaFramework => IOTA_FRAMEWORK,
-            Package::IotaSystem => IOTA_SYSTEM,
-            Package::Stardust => STARDUST,
-        }
+    fn blob(self) -> Vec<u8> {
+        read_artifact(match self {
+            Package::MoveStdlib => "move-stdlib",
+            Package::IotaFramework => "iota-framework",
+            Package::IotaSystem => "iota-system",
+            Package::Stardust => "stardust",
+        })
     }
     fn label(self) -> &'static str {
         match self {
@@ -1027,10 +1041,10 @@ fn expected_entries() -> Vec<Entry> {
 /// Parse a `packages_compiled` blob into one normalised module per inner
 /// bytecode payload, keyed by short module name.
 fn load_package(
-    blob: &[u8],
+    package: Package,
 ) -> std::collections::HashMap<String, normalized::Module<normalized::RcIdentifier>> {
     let module_blobs: Vec<Vec<u8>> =
-        bcs::from_bytes(blob).expect("outer BCS Vec<Vec<u8>> of bytecode payloads");
+        bcs::from_bytes(&package.blob()).expect("outer BCS Vec<Vec<u8>> of bytecode payloads");
     let mut pool = RcPool::new();
     let mut out = std::collections::HashMap::new();
     for bytes in &module_blobs {
@@ -1241,9 +1255,6 @@ fn check_type(
 // Tests
 // ---------------------------------------------------------------------------
 
-#[cfg(target_arch = "wasm32")]
-use wasm_bindgen_test::wasm_bindgen_test as test;
-
 #[test]
 fn shapes_match() {
     // Load each package once, keyed by its `Package` variant — every entry
@@ -1256,7 +1267,7 @@ fn shapes_match() {
     for entry in &entries {
         by_package
             .entry(entry.package)
-            .or_insert_with(|| load_package(entry.package.blob()));
+            .or_insert_with(|| load_package(entry.package));
     }
 
     let mut failures = Vec::new();
@@ -1311,21 +1322,22 @@ fn shapes_match() {
     }
 }
 
-/// The manifest of every public `struct`/`enum` across the four system
-/// packages, fetched at the pinned monorepo rev. `move_drift_nightly`
-/// flags when upstream `develop` drifts from the pin;
+/// Parse `published_api.txt` — the manifest of every public
+/// `struct`/`enum` across the four system packages, fetched at the pinned
+/// monorepo rev — into the set of `(address, module, name)` keys.
+///
+/// `move_drift_nightly` flags when upstream `develop` drifts from the pin;
 /// [`registry_matches_published_api`] in turn keeps [`expected_entries`]
 /// in sync with the manifest — so every published type has a registered
 /// mirror that [`shapes_match`] then cross-checks.
-const PUBLISHED_API: &str = include_str!("packages_compiled/published_api.txt");
-
-/// Parse `published_api.txt` into the set of `(address, module, name)` keys.
 ///
 /// The file stores one record per three lines: the type name, its kind
 /// (`public struct` / `public enum`), and its `address::module` path.
 fn published_api_types() -> std::collections::BTreeSet<(String, String, String)> {
+    let manifest =
+        String::from_utf8(read_artifact("published_api.txt")).expect("manifest is UTF-8");
     let mut types = std::collections::BTreeSet::new();
-    for record in PUBLISHED_API.lines().collect::<Vec<_>>().chunks(3) {
+    for record in manifest.lines().collect::<Vec<_>>().chunks(3) {
         let [name, kind, path] = record else { continue };
         if !(kind.trim().ends_with("struct") || kind.trim().ends_with("enum")) {
             continue;
@@ -1454,7 +1466,7 @@ fn staked_iota_shape() -> Shape {
 
 #[test]
 fn rejects_non_struct_root() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     // A Rust enum shape where Move declares a struct.
     let shape = Shape::Enum { variants: vec![] };
@@ -1463,7 +1475,7 @@ fn rejects_non_struct_root() {
 
 #[test]
 fn rejects_struct_field_count_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     fields.push(Field {
@@ -1475,7 +1487,7 @@ fn rejects_struct_field_count_mismatch() {
 
 #[test]
 fn rejects_struct_field_name_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     field_mut(&mut fields, "principal").name = "definitely_wrong";
@@ -1484,7 +1496,7 @@ fn rejects_struct_field_name_mismatch() {
 
 #[test]
 fn rejects_struct_field_primitive_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     // `stake_activation_epoch` is a `u64`; claim it is a `bool`.
@@ -1496,7 +1508,7 @@ fn rejects_struct_field_primitive_mismatch() {
 
 #[test]
 fn rejects_datatype_name_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     // `pool_id` is an `ID`; rename the referenced datatype.
@@ -1509,7 +1521,7 @@ fn rejects_datatype_name_mismatch() {
 
 #[test]
 fn rejects_datatype_arity_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     // `principal` is a `Balance<IOTA>`; drop its type argument.
@@ -1523,7 +1535,7 @@ fn rejects_datatype_arity_mismatch() {
 
 #[test]
 fn rejects_datatype_type_arg_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     // Keep `Balance<_>`'s arity but corrupt the inner type argument.
@@ -1536,7 +1548,7 @@ fn rejects_datatype_type_arg_mismatch() {
 
 #[test]
 fn rejects_vector_inner_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["random"].structs.get("RandomInner").unwrap();
     let mut fields = struct_fields(<framework::random::RandomInner as MoveShape>::move_shape());
     // `random_bytes` is a `vector<u8>`; claim a `vector<bool>`.
@@ -1549,7 +1561,7 @@ fn rejects_vector_inner_mismatch() {
 
 #[test]
 fn rejects_option_inner_mismatch() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakingPoolV1").unwrap();
     let mut fields =
         struct_fields(<iota_system::staking_pool::StakingPoolV1 as MoveShape>::move_shape());
@@ -1564,7 +1576,7 @@ fn rejects_option_inner_mismatch() {
 
 #[test]
 fn rejects_type_parameter_index_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["dynamic_field"].structs.get("Field").unwrap();
     let mut fields =
         struct_fields(<framework::dynamic_field::Field<(), ()> as MoveShape>::move_shape());
@@ -1579,7 +1591,7 @@ fn rejects_type_parameter_index_mismatch() {
 
 #[test]
 fn rejects_objectid_normalization_off_a_non_address() {
-    let pkgs = load_package(Package::IotaSystem.blob());
+    let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
     // The ObjectId/Address → Address shortcut must only fire against a Move
@@ -1599,7 +1611,7 @@ fn argument_shape() -> Shape {
 
 #[test]
 fn rejects_non_enum_root() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
     // A Rust struct shape where Move declares an enum.
     let shape = Shape::Struct { fields: vec![] };
@@ -1608,7 +1620,7 @@ fn rejects_non_enum_root() {
 
 #[test]
 fn rejects_enum_variant_count_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
     let mut variants = enum_variants(argument_shape());
     variants.pop();
@@ -1617,7 +1629,7 @@ fn rejects_enum_variant_count_mismatch() {
 
 #[test]
 fn rejects_enum_variant_name_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
     let mut variants = enum_variants(argument_shape());
     variants[0].name = "definitely_wrong";
@@ -1626,7 +1638,7 @@ fn rejects_enum_variant_name_mismatch() {
 
 #[test]
 fn rejects_enum_variant_field_count_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
     let mut variants = enum_variants(argument_shape());
     let i = variants
@@ -1642,7 +1654,7 @@ fn rejects_enum_variant_field_count_mismatch() {
 
 #[test]
 fn rejects_enum_variant_field_name_mismatch() {
-    let pkgs = load_package(Package::IotaFramework.blob());
+    let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["ptb_command"].enums.get("Argument").unwrap();
     let mut variants = enum_variants(argument_shape());
     let i = variants

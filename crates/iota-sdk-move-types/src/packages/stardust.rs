@@ -17,7 +17,10 @@ pub mod irc27 {
     /// The IRC27 NFT metadata standard schema.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Irc27Metadata {
         /// Version of the metadata standard.
         pub version: string::String,
@@ -69,7 +72,10 @@ pub mod nft {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct NFT {
         dummy_field: bool,
     }
@@ -79,7 +85,10 @@ pub mod nft {
     /// The Stardust NFT representation.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Nft {
         /// The Nft's ID is inherited from Stardust.
         pub id: UID,
@@ -134,7 +143,10 @@ pub mod nft_output {
     /// The Stardust NFT output representation.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct NftOutput<T> {
         /// A fresh UID — not the NFTID from Stardust.
         pub id: UID,
@@ -232,7 +244,10 @@ pub mod stardust_upgrade_label {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct STARDUST_UPGRADE_LABEL {
         dummy_field: bool,
     }
@@ -260,7 +275,10 @@ pub mod basic_output {
     /// `extract_assets` or call `receive` to obtain a `BasicOutput`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct BasicOutput<T> {
         /// Hash of the `outputId` that was migrated.
         pub id: UID,
@@ -374,7 +392,10 @@ pub mod alias {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Alias {
         /// The ID of the Alias — hash of the Output ID that created the
         /// Alias Output in Stardust.
@@ -430,7 +451,10 @@ pub mod alias_output {
     /// Owned object controlled by the Governor Address.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AliasOutput<T> {
         /// A fresh UID — not the AliasID from Stardust.
         pub id: UID,
@@ -507,7 +531,10 @@ pub mod timelock_unlock_condition {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TimelockUnlockCondition {
         /// Unix time (seconds since the Unix epoch) from which the output
         /// can be consumed.
@@ -531,7 +558,10 @@ pub mod expiration_unlock_condition {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ExpirationUnlockCondition {
         /// The address that owns the output before `unix_time` is reached.
         pub owner: Address,
@@ -563,7 +593,10 @@ pub mod storage_deposit_return_unlock_condition {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct StorageDepositReturnUnlockCondition {
         /// The address to which the consuming transaction should deposit
         /// `return_amount`.

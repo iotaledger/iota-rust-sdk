@@ -2,9 +2,9 @@
 # Fetch the compiled IOTA system-package blobs and `published_api.txt` from
 # the iota monorepo into `crates/iota-sdk-move-types/src/packages_compiled/`.
 #
-# The fetched files are not committed (the directory is gitignored); they
-# are build inputs for the `move_shape_compare` tests, which `include_bytes!`
-# them to cross-check each Rust mirror against its Move-side counterpart.
+# The fetched files are not committed (the directory is gitignored); the
+# `move_shape_compare` tests read them at run time to cross-check each
+# Rust mirror against its Move-side counterpart.
 # `published_api.txt` is the upstream's public-API manifest — only
 # `public struct`/`public enum` records are kept (function-signature churn
 # is irrelevant to this crate). The nightly drift workflow diffs the
@@ -29,11 +29,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # The pinned monorepo rev is the `rev` of the `move-binary-format`
-# dev-dependency in this crate's Cargo.toml. It is resolved through
-# `cargo metadata` (cargo's own manifest parser) rather than by parsing
-# the TOML textually, so manifest reformatting can't break it — and the
-# script can never disagree with the rev the build actually uses.
-# `--no-deps` keeps the call offline (no dependency resolution).
+# dev-dependency in this crate's Cargo.toml, resolved through
+# `cargo metadata` so the value always matches what the build resolves,
+# independent of manifest formatting. `--no-deps` keeps the call offline
+# (no dependency resolution).
 pinned_rev() {
     command -v jq >/dev/null || {
         echo "error: jq is required to resolve the pinned rev from cargo metadata" >&2

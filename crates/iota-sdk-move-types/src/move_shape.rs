@@ -10,8 +10,11 @@
 //! `packages_compiled/*`, so a renamed/reordered/retyped field in either
 //! mirror fails loudly without needing an on-chain instance.
 //!
-//! Gated on `cfg(test)` — neither the trait nor the derive impls exist in
-//! release builds, so the public surface of the crate is unchanged.
+//! Gated on `cfg(all(test, not(target_arch = "wasm32")))` — neither the
+//! trait nor the derive impls exist in release builds (the public surface
+//! of the crate is unchanged), and the shape machinery is native-only:
+//! the comparator reads the fetched artifacts from disk, and its checks
+//! are target-independent.
 
 pub trait MoveShape {
     /// The Move-side struct name for this type. Defaults to the Rust

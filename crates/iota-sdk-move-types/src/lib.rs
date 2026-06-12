@@ -19,10 +19,15 @@
 mod packages;
 pub use packages::{framework, iota_system, stardust, std};
 
-#[cfg(test)]
+// The shape machinery (this module, the `MoveShape` derives on every
+// mirror, and the comparator below) is native-only: the comparator reads
+// the fetched package artifacts from disk at test time (no `std::fs` on
+// wasm32), and its checks are target-independent — running them on one
+// target covers all.
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod move_shape;
 
-#[cfg(all(test, feature = "serde"))]
+#[cfg(all(test, feature = "serde", not(target_arch = "wasm32")))]
 mod move_shape_compare;
 
 /// A Rust type that knows the Move type tag it represents.

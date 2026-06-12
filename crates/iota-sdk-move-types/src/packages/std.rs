@@ -12,7 +12,10 @@ pub mod fixed_point32 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct FixedPoint32 {
         pub value: u64,
     }
@@ -34,7 +37,10 @@ pub mod ascii {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -49,7 +55,10 @@ pub mod ascii {
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Char {
         pub byte: u8,
     }
@@ -71,7 +80,10 @@ pub mod string {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct String {
         pub bytes: Vec<u8>,
     }
@@ -92,7 +104,10 @@ pub mod uq32_32 {
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UQ32_32(pub u64);
 
     impl UQ32_32 {
@@ -111,7 +126,10 @@ pub mod uq64_64 {
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UQ64_64(pub u128);
 
     impl UQ64_64 {
@@ -127,7 +145,10 @@ pub mod bit_vector {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct BitVector {
         pub length: u64,
         pub bit_field: Vec<bool>,
@@ -153,7 +174,10 @@ pub mod type_name {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TypeName {
         pub name: ascii::String,
     }
@@ -175,7 +199,10 @@ pub mod option {
     /// Move source.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Option<Element> {
         pub vec: Vec<Element>,
     }

@@ -22,7 +22,10 @@ pub mod staking_pool {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PoolTokenExchangeRate {
         pub iota_amount: u64,
         pub pool_token_amount: u64,
@@ -43,7 +46,10 @@ pub mod staking_pool {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct StakedIota {
         pub id: UID,
         /// ID of the staking pool we are staking with.
@@ -117,7 +123,10 @@ pub mod staking_pool {
     /// object.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct StakingPoolV1 {
         pub id: UID,
         /// The epoch at which this pool became active.
@@ -191,7 +200,10 @@ pub mod voting_power {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VotingPowerInfoV1 {
         pub validator_index: u64,
         pub voting_power: u64,
@@ -225,7 +237,10 @@ pub mod validator_cap {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UnverifiedValidatorOperationCap {
         pub id: UID,
         pub authorizer_validator_address: Address,
@@ -248,7 +263,10 @@ pub mod validator_cap {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorOperationCap {
         pub authorizer_validator_address: Address,
     }
@@ -274,7 +292,10 @@ pub mod validator_wrapper {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Validator {
         pub inner: Versioned,
     }
@@ -301,7 +322,10 @@ pub mod validator {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorMetadataV1 {
         /// The IOTA Address of the validator.
         pub iota_address: Address,
@@ -342,7 +366,10 @@ pub mod validator {
     /// Rust version of the Move `iota_system::validator::ValidatorV1` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorV1 {
         /// Summary of the validator.
         pub metadata: ValidatorMetadataV1,
@@ -374,7 +401,10 @@ pub mod validator {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct StakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -388,7 +418,10 @@ pub mod validator {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UnstakingRequestEvent {
         pub pool_id: ID,
         pub validator_address: Address,
@@ -415,7 +448,10 @@ pub mod validator_set {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorSetV1 {
         /// Total stake from all active validators at the beginning of the
         /// epoch.
@@ -449,7 +485,10 @@ pub mod validator_set {
     /// current epoch.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorSetV2 {
         /// Total stake from all committee validators at the beginning of the
         /// epoch.
@@ -482,7 +521,10 @@ pub mod validator_set {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorEpochInfoEventV1 {
         pub epoch: u64,
         pub validator_address: Address,
@@ -501,7 +543,10 @@ pub mod validator_set {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -513,7 +558,10 @@ pub mod validator_set {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -526,7 +574,10 @@ pub mod validator_set {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CommitteeValidatorJoinEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -538,7 +589,10 @@ pub mod validator_set {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CommitteeValidatorLeaveEvent {
         pub epoch: u64,
         pub validator_address: Address,
@@ -570,7 +624,10 @@ pub mod iota_system_state_inner {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct SystemParametersV1 {
         /// The duration of an epoch, in milliseconds.
         pub epoch_duration_ms: u64,
@@ -599,7 +656,10 @@ pub mod iota_system_state_inner {
     /// The top-level object containing all information of the IOTA system.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IotaSystemStateV1 {
         /// The current epoch ID, starting from 0.
         pub epoch: u64,
@@ -642,7 +702,10 @@ pub mod iota_system_state_inner {
     /// `protocol_defined_base_fee` is enabled.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IotaSystemStateV2 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -682,7 +745,10 @@ pub mod iota_system_state_inner {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct SystemEpochInfoEventV1 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -705,7 +771,10 @@ pub mod iota_system_state_inner {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct SystemEpochInfoEventV2 {
         pub epoch: u64,
         pub protocol_version: u64,
@@ -736,7 +805,10 @@ pub mod iota_system {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IotaSystemState {
         pub id: UID,
         pub version: u64,
@@ -790,7 +862,10 @@ pub mod storage_fund {
     /// not be paid back out.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct StorageFundV1 {
         pub total_object_storage_rebates: Balance<IOTA>,
         pub non_refundable_balance: Balance<IOTA>,
@@ -821,7 +896,10 @@ pub mod timelocked_staking {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TimelockedStakedIota {
         pub id: UID,
         /// A self-custodial object holding the staked IOTA tokens.
@@ -877,7 +955,10 @@ pub mod genesis {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct GenesisValidatorMetadata {
         pub name: Vec<u8>,
         pub description: Vec<u8>,
@@ -900,7 +981,10 @@ pub mod genesis {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct GenesisChainParameters {
         pub protocol_version: u64,
         pub chain_start_timestamp_ms: u64,
@@ -916,7 +1000,10 @@ pub mod genesis {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TokenAllocation {
         pub recipient_address: Address,
         pub amount_nanos: u64,
@@ -933,7 +1020,10 @@ pub mod genesis {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TokenDistributionSchedule {
         pub pre_minted_supply: u64,
         pub allocations: Vec<TokenAllocation>,

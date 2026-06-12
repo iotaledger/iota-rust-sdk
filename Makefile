@@ -17,11 +17,11 @@ fmt: ## Format code
 	cargo +nightly fmt
 
 .PHONY: ensure-compiled-packages
-ensure-compiled-packages: ## Fetch compiled system packages at the pinned rev if missing
+ensure-compiled-packages: ## Fetch compiled system packages at the pinned rev if missing/stale
 	@$(MAKE) -C crates/iota-sdk-move-types packages
 
 .PHONY: clippy
-clippy: ensure-compiled-packages ## Run Clippy linter
+clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
 .PHONY: test

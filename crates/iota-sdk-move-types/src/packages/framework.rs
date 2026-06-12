@@ -14,7 +14,10 @@ pub mod object {
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ID {
         pub bytes: ObjectId,
     }
@@ -47,7 +50,10 @@ pub mod object {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UID {
         pub id: ID,
     }
@@ -95,7 +101,10 @@ pub mod iota {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IOTA {
         dummy_field: bool,
     }
@@ -113,7 +122,10 @@ pub mod iota {
     /// The non-generic IOTA treasury cap, wrapping a [`TreasuryCap<IOTA>`].
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IotaTreasuryCap {
         pub inner: TreasuryCap<IOTA>,
     }
@@ -136,7 +148,10 @@ pub mod system_admin_cap {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct IotaSystemAdminCap {
         dummy_field: bool,
     }
@@ -152,7 +167,10 @@ pub mod balance {
     /// `TreasuryCap` in the `coin` module.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Supply<T> {
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -178,7 +196,10 @@ pub mod balance {
     /// to store coins which don't need the `key` ability.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Balance<T> {
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -221,7 +242,10 @@ pub mod bag {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Bag {
         /// The ID of this bag.
         pub id: UID,
@@ -252,7 +276,10 @@ pub mod coin {
     /// A coin of type `T` worth `balance`. Transferable and storable.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Coin<T> {
         pub id: UID,
         pub balance: Balance<T>,
@@ -317,7 +344,10 @@ pub mod coin {
     /// `CoinMetadata<T>` storing display metadata for the coin type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CoinMetadata<T> {
         pub id: UID,
         /// Number of decimal places the coin uses.
@@ -409,7 +439,10 @@ pub mod coin {
     /// that use the DenyList. Always immutable.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct RegulatedCoinMetadata<T> {
         pub id: UID,
         /// The ID of the coin's `CoinMetadata` object.
@@ -436,7 +469,10 @@ pub mod coin {
     /// Capability allowing the bearer to mint and burn coins of type `T`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TreasuryCap<T> {
         pub id: UID,
         pub total_supply: Supply<T>,
@@ -455,7 +491,10 @@ pub mod coin {
     /// also enable a global pause.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct DenyCapV1<T> {
         pub id: UID,
         pub allow_global_pause: bool,
@@ -486,7 +525,10 @@ pub mod table {
     /// off the table's `UID`, not inside the struct itself.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Table<K, V> {
         /// The ID of this table.
         pub id: UID,
@@ -522,7 +564,10 @@ pub mod url {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Url {
         pub url: ascii::String,
     }
@@ -580,7 +625,10 @@ pub mod vec_map {
     /// Rust version of the Move `iota::vec_map::Entry<K, V>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Entry<K, V> {
         pub key: K,
         pub value: V,
@@ -599,7 +647,10 @@ pub mod vec_map {
     /// operations are O(N).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VecMap<K, V> {
         pub contents: Vec<Entry<K, V>>,
     }
@@ -627,7 +678,10 @@ pub mod vec_set {
     /// All operations are O(N).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VecSet<K> {
         pub contents: Vec<K>,
     }
@@ -657,7 +711,10 @@ pub mod table_vec {
     /// off an inner [`Table<u64, Element>`].
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TableVec<Element> {
         /// The contents of the table vector.
         pub contents: Table<u64, Element>,
@@ -682,7 +739,10 @@ pub mod versioned {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Versioned {
         pub id: UID,
         pub version: u64,
@@ -701,7 +761,10 @@ pub mod versioned {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
         pub old_version: u64,
@@ -726,7 +789,10 @@ pub mod bcs {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct BCS {
         pub bytes: Vec<u8>,
     }
@@ -750,7 +816,10 @@ pub mod clock {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
@@ -800,7 +869,10 @@ pub mod tx_context {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TxContext {
         /// Address of the user that signed the current transaction.
         pub sender: Address,
@@ -825,7 +897,10 @@ pub mod intent {
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Intent {
         pub scope: u8,
         pub version: u8,
@@ -873,7 +948,10 @@ pub mod zklogin_verified_id {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VerifiedID {
         pub id: UID,
         /// The address this `VerifiedID` is associated with.
@@ -901,7 +979,10 @@ pub mod zklogin_verified_issuer {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VerifiedIssuer {
         pub id: UID,
         pub owner: Address,
@@ -921,7 +1002,10 @@ pub mod transfer {
     /// Ephemeral per-transaction; cannot be stored on-chain.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Receiving<T> {
         pub id: ID,
         pub version: u64,
@@ -950,7 +1034,10 @@ pub mod timelock {
     /// A `TimeLock` that holds a locked object until `expiration_timestamp_ms`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TimeLock<T> {
         pub id: UID,
         /// The locked object.
@@ -1038,7 +1125,10 @@ pub mod borrow {
     /// An object wrapping a `T` and providing the borrow API.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Referent<T> {
         pub id: Address,
         pub value: Option<T>,
@@ -1058,7 +1148,10 @@ pub mod borrow {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
@@ -1088,7 +1181,10 @@ pub mod dynamic_field {
     /// ID is determined by `hash(parent.id || name || Name)`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Field<Name, Value> {
         pub id: UID,
         /// The value for the name of this field.
@@ -1110,7 +1206,10 @@ pub mod dynamic_object_field {
     /// `iota::dynamic_object_field::Wrapper<Name>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Wrapper<Name> {
         pub name: Name,
     }
@@ -1134,7 +1233,10 @@ pub mod labeler {
     /// transferred like any other object.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct LabelerCap<L> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1165,7 +1267,10 @@ pub mod linked_table {
     /// table's UID, not inside the struct.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct LinkedTable<K, V> {
         pub id: UID,
         /// The number of key-value pairs in the table.
@@ -1193,7 +1298,10 @@ pub mod linked_table {
     /// Rust version of the Move `iota::linked_table::Node<K, V>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Node<K, V> {
         pub prev: Option<K>,
         pub next: Option<K>,
@@ -1220,7 +1328,10 @@ pub mod object_table {
     /// be objects themselves.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ObjectTable<K, V> {
         pub id: UID,
         pub size: u64,
@@ -1250,7 +1361,10 @@ pub mod object_bag {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ObjectBag {
         pub id: UID,
         pub size: u64,
@@ -1262,7 +1376,10 @@ pub mod priority_queue {
     /// Rust version of the Move `iota::priority_queue::Entry<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Entry<T> {
         pub priority: u64,
         pub value: T,
@@ -1281,7 +1398,10 @@ pub mod priority_queue {
     /// root; children of `entries[i]` are at `i * 2 + 1` and `i * 2 + 2`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PriorityQueue<T> {
         pub entries: Vec<Entry<T>>,
     }
@@ -1301,7 +1421,10 @@ pub mod derived_object {
     /// An internal key to protect from generating the same UID twice.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct DerivedObjectKey<K>(pub K);
 
     impl<K> DerivedObjectKey<K> {
@@ -1321,7 +1444,10 @@ pub mod authenticator_state {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorState {
         pub id: UID,
         pub version: u64,
@@ -1332,7 +1458,10 @@ pub mod authenticator_state {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorStateInner {
         pub version: u64,
         /// List of currently active JWKs.
@@ -1345,7 +1474,10 @@ pub mod authenticator_state {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct JWK {
         pub kty: string::String,
         pub e: string::String,
@@ -1359,7 +1491,10 @@ pub mod authenticator_state {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct JwkId {
         pub iss: string::String,
         pub kid: string::String,
@@ -1370,7 +1505,10 @@ pub mod authenticator_state {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
@@ -1395,7 +1533,10 @@ pub mod display {
     /// property names take priority over their types.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Display<T> {
         pub id: UID,
         /// Fields for display. Currently supported field names are `name`,
@@ -1426,7 +1567,10 @@ pub mod display {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct DisplayCreated<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1446,7 +1590,10 @@ pub mod display {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct VersionUpdated<T> {
         pub id: ID,
         pub version: u16,
@@ -1484,7 +1631,10 @@ pub mod package {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Publisher {
         pub id: UID,
         pub package: ascii::String,
@@ -1520,7 +1670,10 @@ pub mod package {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UpgradeCap {
         pub id: UID,
         /// (Mutable) ID of the package that can be upgraded.
@@ -1562,7 +1715,10 @@ pub mod package {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UpgradeTicket {
         pub cap: ID,
         pub package: ID,
@@ -1580,7 +1736,10 @@ pub mod package {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
@@ -1596,7 +1755,10 @@ pub mod bls12381 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Scalar {
         dummy_field: bool,
     }
@@ -1605,7 +1767,10 @@ pub mod bls12381 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct G1 {
         dummy_field: bool,
     }
@@ -1614,7 +1779,10 @@ pub mod bls12381 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct G2 {
         dummy_field: bool,
     }
@@ -1623,7 +1791,10 @@ pub mod bls12381 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct GT {
         dummy_field: bool,
     }
@@ -1632,7 +1803,10 @@ pub mod bls12381 {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UncompressedG1 {
         dummy_field: bool,
     }
@@ -1647,7 +1821,10 @@ pub mod groth16 {
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Curve {
         pub id: u8,
     }
@@ -1656,7 +1833,10 @@ pub mod groth16 {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PreparedVerifyingKey {
         pub vk_gamma_abc_g1_bytes: Vec<u8>,
         pub alpha_g1_beta_g2_bytes: Vec<u8>,
@@ -1668,7 +1848,10 @@ pub mod groth16 {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PublicProofInputs {
         pub bytes: Vec<u8>,
     }
@@ -1677,7 +1860,10 @@ pub mod groth16 {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ProofPoints {
         pub bytes: Vec<u8>,
     }
@@ -1690,7 +1876,10 @@ pub mod group_ops {
     /// Rust version of the Move `iota::group_ops::Element<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Element<T> {
         pub bytes: Vec<u8>,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1721,7 +1910,10 @@ pub mod authenticator_function {
     /// Represents a validated authenticate function.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorFunctionRefV1<Account> {
         pub package: ID,
         pub module_name: ascii::String,
@@ -1754,7 +1946,10 @@ pub mod account {
     /// event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ImmutableAccountCreated<Account> {
         pub account_id: ID,
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
@@ -1764,7 +1959,10 @@ pub mod account {
     /// event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct MutableAccountCreated<Account> {
         pub account_id: ID,
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
@@ -1774,7 +1972,10 @@ pub mod account {
     /// `iota::account::AuthenticatorFunctionRefV1Rotated` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorFunctionRefV1Rotated<Account> {
         pub account_id: ID,
         pub from: AuthenticatorFunctionRefV1<Account>,
@@ -1790,7 +1991,10 @@ pub mod account {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorFunctionRefV1Key {
         dummy_field: bool,
     }
@@ -1813,7 +2017,10 @@ pub mod coin_manager {
     /// shared object.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CoinManager<T> {
         pub id: UID,
         /// The original `TreasuryCap` object as returned by
@@ -1837,7 +2044,10 @@ pub mod coin_manager {
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CoinManagerTreasuryCap<T> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1857,7 +2067,10 @@ pub mod coin_manager {
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CoinManagerMetadataCap<T> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -1877,7 +2090,10 @@ pub mod coin_manager {
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ImmutableCoinMetadata<T> {
         pub decimals: u8,
         pub name: string::String,
@@ -1911,7 +2127,10 @@ pub mod coin_manager {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct CoinManaged {
         pub coin_name: ascii::String,
     }
@@ -1921,7 +2140,10 @@ pub mod coin_manager {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TreasuryOwnershipRenounced {
         pub coin_name: ascii::String,
     }
@@ -1931,7 +2153,10 @@ pub mod coin_manager {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct MetadataOwnershipRenounced {
         pub coin_name: ascii::String,
     }
@@ -1957,7 +2182,10 @@ pub mod token {
     /// address; actions on it must be confirmed in a matching `TokenPolicy`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Token<T> {
         pub id: UID,
         pub balance: Balance<T>,
@@ -1972,7 +2200,10 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TokenPolicyCap<T> {
         pub id: UID,
         pub r#for: ID,
@@ -1993,7 +2224,10 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TokenPolicy<T> {
         pub id: UID,
         /// Balance effectively spent on the `spend` action. Cannot be
@@ -2021,7 +2255,10 @@ pub mod token {
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ActionRequest<T> {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
@@ -2042,7 +2279,10 @@ pub mod token {
     /// Dynamic-field key for storing a `Config` for a specific action rule.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct RuleKey<T> {
         pub is_protected: bool,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2061,7 +2301,10 @@ pub mod token {
     /// Rust version of the Move `iota::token::TokenPolicyCreated<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TokenPolicyCreated<T> {
         pub id: ID,
         pub is_mutable: bool,
@@ -2149,7 +2392,10 @@ pub mod package_metadata {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PackageMetadataKey {
         dummy_field: bool,
     }
@@ -2161,7 +2407,10 @@ pub mod package_metadata {
     /// runtime ID, version, and per-module metadata.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PackageMetadataV1 {
         pub id: UID,
         /// Storage ID of the package represented by this metadata.
@@ -2179,7 +2428,10 @@ pub mod package_metadata {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ModuleMetadataV1 {
         pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
     }
@@ -2189,7 +2441,10 @@ pub mod package_metadata {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorMetadataV1 {
         pub function_name: ascii::String,
         pub account_type: TypeName,
@@ -2211,7 +2466,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct DenyList {
         pub id: UID,
         /// The individual deny lists.
@@ -2227,7 +2485,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ConfigWriteCap {
         dummy_field: bool,
     }
@@ -2236,7 +2497,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ConfigKey {
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
@@ -2246,7 +2510,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AddressKey(pub Address);
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
@@ -2256,7 +2523,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct GlobalPauseKey {
         dummy_field: bool,
     }
@@ -2266,7 +2536,10 @@ pub mod deny_list {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PerTypeConfigCreated {
         pub key: ConfigKey,
         pub config_id: ID,
@@ -2284,7 +2557,10 @@ pub mod random {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Random {
         pub id: UID,
         pub inner: Versioned,
@@ -2294,7 +2570,10 @@ pub mod random {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct RandomInner {
         pub version: u64,
         pub epoch: u64,
@@ -2308,7 +2587,10 @@ pub mod random {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct RandomGenerator {
         pub seed: Vec<u8>,
         pub counter: u16,
@@ -2325,7 +2607,10 @@ pub mod config {
     /// Rust version of the Move `iota::config::Config<WriteCap>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Config<WriteCap> {
         pub id: UID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2344,7 +2629,10 @@ pub mod config {
     /// Rust version of the Move `iota::config::Setting<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Setting<Value> {
         pub data: Option<SettingData<Value>>,
     }
@@ -2358,7 +2646,10 @@ pub mod config {
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct SettingData<Value> {
         pub newer_value_epoch: u64,
         pub newer_value: Option<Value>,
@@ -2374,7 +2665,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::Argument` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub enum Argument {
         GasCoin,
         Input(u16),
@@ -2386,7 +2680,10 @@ pub mod ptb_command {
     /// `iota::ptb_command::ProgrammableMoveCall` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ProgrammableMoveCall {
         pub package: ID,
         pub module_name: ascii::String,
@@ -2399,7 +2696,10 @@ pub mod ptb_command {
     /// `iota::ptb_command::TransferObjectsData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferObjectsData {
         pub objects: Vec<Argument>,
         pub recipient: Argument,
@@ -2408,7 +2708,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::SplitCoinsData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct SplitCoinsData {
         pub coin: Argument,
         pub amounts: Vec<Argument>,
@@ -2417,7 +2720,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::MergeCoinsData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct MergeCoinsData {
         pub target_coin: Argument,
         pub source_coins: Vec<Argument>,
@@ -2426,7 +2732,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::PublishData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PublishData {
         pub modules: Vec<Vec<u8>>,
         pub dependencies: Vec<ID>,
@@ -2435,7 +2744,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::MakeMoveVecData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct MakeMoveVecData {
         pub type_arg: Option<TypeName>,
         pub elements: Vec<Argument>,
@@ -2444,7 +2756,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::UpgradeData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct UpgradeData {
         pub modules: Vec<Vec<u8>>,
         pub dependencies: Vec<ID>,
@@ -2455,7 +2770,10 @@ pub mod ptb_command {
     /// Rust version of the Move `iota::ptb_command::Command` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub enum Command {
         MoveCall(ProgrammableMoveCall),
         TransferObjects(TransferObjectsData),
@@ -2474,7 +2792,10 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::ObjectRef` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ObjectRef {
         pub object_id: ID,
         pub sequence_number: u64,
@@ -2484,7 +2805,10 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::ObjectArg` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub enum ObjectArg {
         ImmOrOwnedObject(ObjectRef),
         SharedObject {
@@ -2498,7 +2822,10 @@ pub mod ptb_call_arg {
     /// Rust version of the Move `iota::ptb_call_arg::CallArg` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub enum CallArg {
         PureData(Vec<u8>),
         ObjectData(ObjectArg),
@@ -2512,7 +2839,10 @@ pub mod ptb {
     /// Rust version of the Move `iota::ptb::ProgrammableTransaction` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ProgrammableTransaction {
         pub inputs: Vec<CallArg>,
         pub commands: Vec<Command>,
@@ -2527,7 +2857,10 @@ pub mod auth_context {
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthContext {
         /// Digest of the `MoveAuthenticator`.
         pub auth_digest: Vec<u8>,
@@ -2545,7 +2878,10 @@ pub mod auth_context {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct AuthenticatorFunctionInfoV1 {
         pub package: ID,
         pub module_name: ascii::String,
@@ -2571,7 +2907,10 @@ pub mod kiosk {
     /// ecosystem.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Kiosk {
         pub id: UID,
         /// Balance of the Kiosk — all profits from sales go here.
@@ -2610,7 +2949,10 @@ pub mod kiosk {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct KioskOwnerCap {
         pub id: UID,
         pub r#for: ID,
@@ -2642,7 +2984,10 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::PurchaseCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct PurchaseCap<T> {
         pub id: UID,
         pub kiosk_id: ID,
@@ -2676,7 +3021,10 @@ pub mod kiosk {
         derive(iota_bcs_schema::BcsSchema),
         bcs_schema(name = "kiosk-borrow")
     )]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Borrow {
         pub kiosk_id: ID,
         pub item_id: ID,
@@ -2688,7 +3036,10 @@ pub mod kiosk {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Item {
         pub id: ID,
     }
@@ -2697,7 +3048,10 @@ pub mod kiosk {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Listing {
         pub id: ID,
         pub is_exclusive: bool,
@@ -2707,7 +3061,10 @@ pub mod kiosk {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Lock {
         pub id: ID,
     }
@@ -2715,7 +3072,10 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemListed<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ItemListed<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2738,7 +3098,10 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemPurchased<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ItemPurchased<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2761,7 +3124,10 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::ItemDelisted<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ItemDelisted<T> {
         pub kiosk: ID,
         pub id: ID,
@@ -2793,7 +3159,10 @@ pub mod kiosk_extension {
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct Extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
@@ -2807,7 +3176,10 @@ pub mod kiosk_extension {
     /// `iota::kiosk_extension::ExtensionKey<Ext>` type.
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct ExtensionKey<Ext> {
         dummy_field: bool,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2834,7 +3206,10 @@ pub mod transfer_policy {
     /// the item type's owner on purchase.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferRequest<T> {
         pub item: ID,
         /// Amount of IOTA paid for the item.
@@ -2864,7 +3239,10 @@ pub mod transfer_policy {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferPolicy<T> {
         pub id: UID,
         /// The Balance of the `TransferPolicy` (collected in IOTA).
@@ -2890,7 +3268,10 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferPolicyCap<T> {
         pub id: UID,
         pub policy_id: ID,
@@ -2912,7 +3293,10 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferPolicyCreated<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2932,7 +3316,10 @@ pub mod transfer_policy {
     /// `iota::transfer_policy::TransferPolicyDestroyed<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct TransferPolicyDestroyed<T> {
         pub id: ID,
         #[cfg_attr(feature = "serde", serde(skip))]
@@ -2951,7 +3338,10 @@ pub mod transfer_policy {
     /// Rust version of the Move `iota::transfer_policy::RuleKey<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
     pub struct RuleKey<T> {
         dummy_field: bool,
         #[cfg_attr(feature = "serde", serde(skip))]

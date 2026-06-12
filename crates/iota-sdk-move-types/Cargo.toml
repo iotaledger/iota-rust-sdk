@@ -34,6 +34,13 @@ iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
 [dev-dependencies]
+# internal dependencies
+iota-bcs-schema = { workspace = true, features = ["move-shape"] }
+
+# The bytecode comparator only runs natively (it reads the fetched package
+# artifacts from disk; no `std::fs` on wasm32), so its parser is not built
+# for wasm test runs.
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 # external dependencies
 # Pinned to a rev (not a branch) so test builds stay reproducible. This rev
 # is also the single source of truth for the compiled-package fetch:
@@ -42,15 +49,7 @@ iota-types = { workspace = true }
 # SHA when the nightly drift workflow reports upstream type changes.
 move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "433865dc51241ebf738ca127d9fd6b4463e1ec60" }
 
-# internal dependencies
-iota-bcs-schema = { workspace = true, features = ["move-shape"] }
-
-# `getrandom` needs an explicit wasm backend. `move-binary-format` pulls v0.2 in
-# transitively (move-core-types -> primitive-types -> rand -> rand_core), so the
-# wasm test build needs the js/wasm_js feature override.
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-getrandom_2.workspace = true
-getrandom_3.workspace = true
 wasm-bindgen-test.workspace = true
 
 [build-dependencies]
