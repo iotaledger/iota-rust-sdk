@@ -467,6 +467,7 @@ release-examples: ## Run all release examples
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema || exit $$?
 
 .PHONY: grpc
 grpc: ## Regenerate gRPC protobuf types

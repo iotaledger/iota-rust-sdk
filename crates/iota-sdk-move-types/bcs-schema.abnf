@@ -16,6 +16,10 @@ alias = uid                     ; id
         (%d00 / %d01 address)   ; immutable-issuer
         (%d00 / %d01 bytes)     ; immutable-metadata
 
+authenticator-function-info-v1 = id       ; package
+                                 string   ; module-name
+                                 string   ; function-name
+
 authenticator-function-ref-v1-key = bool   ; dummy-field
 
 authenticator-metadata-v1 = string      ; function-name

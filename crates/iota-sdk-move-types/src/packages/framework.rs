@@ -2544,6 +2544,7 @@ pub mod auth_context {
     /// signature, without binding to a specific account type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(test, derive(iota_bcs_schema::MoveShape))]
     pub struct AuthenticatorFunctionInfoV1 {
         pub package: ID,
