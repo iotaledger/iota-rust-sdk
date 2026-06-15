@@ -28,7 +28,7 @@ use iota_sdk_move_types::{
         display::{Display, DisplayCreated, VersionUpdated},
         dynamic_field::Field,
         iota::IOTA,
-        kiosk::{Kiosk, KioskOwnerCap},
+        kiosk::{Item, Kiosk, KioskOwnerCap, Listing, Lock},
         object::ID,
         package::{Publisher, UpgradeCap},
         random::{Random, RandomInner},
@@ -251,6 +251,24 @@ fn kiosk() {
 #[test]
 fn kiosk_owner_cap() {
     roundtrip::<KioskOwnerCap>(include_bytes!("fixtures/kiosk_owner_cap.bcs"));
+}
+
+// `Item`/`Listing`/`Lock` exist only as dynamic-field name structs on a
+// `Kiosk`; the fixtures hold the real on-chain name bytes.
+
+#[test]
+fn kiosk_item() {
+    roundtrip::<Item>(include_bytes!("fixtures/kiosk_item.bcs"));
+}
+
+#[test]
+fn kiosk_listing() {
+    roundtrip::<Listing>(include_bytes!("fixtures/kiosk_listing.bcs"));
+}
+
+#[test]
+fn kiosk_lock() {
+    roundtrip::<Lock>(include_bytes!("fixtures/kiosk_lock.bcs"));
 }
 
 #[test]

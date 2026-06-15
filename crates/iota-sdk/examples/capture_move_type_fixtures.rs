@@ -43,6 +43,12 @@
 //!   digest of the transaction that emitted it plus its fully-qualified type.
 //!   Events are immutable history, so unlike object pins these can never be
 //!   spent or deleted — re-runs always produce the same bytes.
+//! - [`Source::DynamicFieldName`]: capture the BCS of a dynamic field's *name*
+//!   struct (not its value). Used for the small key types that only ever exist
+//!   as dynamic-field names — e.g. `kiosk::Item`/`Listing`/`Lock`, which key
+//!   the items, listings and locks stored on a `Kiosk`. Takes the first field
+//!   on the parent whose name type matches, so the bytes are stable as long as
+//!   the parent's dynamic fields are unchanged.
 //!
 //! Run this manually whenever you want to refresh the fixtures
 //! against current chain state — there is no automated CI job that
@@ -87,6 +93,13 @@ enum Source {
     Event {
         event_type: &'static str,
         tx_digest: &'static str,
+    },
+    /// Capture the BCS of the *name* of the first dynamic field on `parent`
+    /// whose name type matches `name_type`. Used for key structs that only
+    /// live as dynamic-field names (e.g. `kiosk::Item`).
+    DynamicFieldName {
+        parent: &'static str,
+        name_type: &'static str,
     },
 }
 
@@ -341,6 +354,30 @@ const FIXTURES: &[Fixture] = &[
         source: Source::ObjectId(
             "0x081c9339cc0f8a2a458f85c48d73b57821d6fcfd3037157dacc26120b00f3066",
         ),
+    },
+    // `Item`/`Listing`/`Lock` only exist as dynamic-field *names* on a
+    // `Kiosk`. The parent below is a personal (locked) kiosk holding
+    // several NFTs, so its fields are stable across re-runs.
+    Fixture {
+        file: "kiosk_item",
+        source: Source::DynamicFieldName {
+            parent: "0x150995b23fe7e5126c84698304d71d1069f372dfb9e73547d1b7dc0153eb81f6",
+            name_type: "0x2::kiosk::Item",
+        },
+    },
+    Fixture {
+        file: "kiosk_listing",
+        source: Source::DynamicFieldName {
+            parent: "0x150995b23fe7e5126c84698304d71d1069f372dfb9e73547d1b7dc0153eb81f6",
+            name_type: "0x2::kiosk::Listing",
+        },
+    },
+    Fixture {
+        file: "kiosk_lock",
+        source: Source::DynamicFieldName {
+            parent: "0x150995b23fe7e5126c84698304d71d1069f372dfb9e73547d1b7dc0153eb81f6",
+            name_type: "0x2::kiosk::Lock",
+        },
     },
     Fixture {
         file: "transfer_policy",
@@ -611,6 +648,24 @@ async fn capture(
                 .value
                 .ok_or("dynamic field has no value (was it removed?)")?;
             Ok(value.bcs)
+        }
+        Source::DynamicFieldName { parent, name_type } => {
+            let parent_addr: Address = parent.parse::<ObjectId>()?.into();
+            let want: TypeTag = name_type.parse()?;
+            let page = client
+                .dynamic_fields(
+                    parent_addr,
+                    iota_sdk::graphql_client::PaginationFilter::default(),
+                )
+                .await?;
+            let df = page
+                .data()
+                .iter()
+                .find(|df| df.name.type_ == want)
+                .ok_or_else(|| {
+                    format!("no dynamic field of name type `{name_type}` on `{parent}`")
+                })?;
+            Ok(df.name.bcs.clone())
         }
     }
 }
