@@ -6,8 +6,7 @@ use std::path::Path;
 fn main() {
     // Regenerate bcs-schema.abnf only when explicitly requested via:
     //
-    //   BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features
-    // bcs-schema
+    //   BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema
     //
     // The env var (not just the feature) triggers the forced recompilation so
     // that `--all-features` builds remain incremental during normal development.
