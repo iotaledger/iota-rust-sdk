@@ -114,6 +114,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///                 =/ move-vector-elem-too-big
 ///                 =/ move-raw-value-too-big
+///                 =/ builtin-authenticator-verification-error
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -158,6 +159,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// move-vector-elem-too-big                               = %d41 u64 u64
 /// move-raw-value-too-big                                 = %d42 u64 u64
+/// builtin-authenticator-verification-error               = %d43 string
 /// ```
 #[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
@@ -304,6 +306,11 @@ pub enum ExecutionError {
         value_size: u64,
         max_scaled_size: u64,
     },
+    /// Built-in authenticator verification failed to verify the transaction,
+    /// which could be due to various reasons such as invalid signatures,
+    /// incorrect authentication keys, or other issues related to
+    /// transaction authentication.
+    BuiltinAuthenticatorVerificationError { reason: String },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -485,6 +492,9 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 value_size,
                 max_scaled_size,
             },
+            iota_sdk::types::ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
+                Self::BuiltinAuthenticatorVerificationError { reason }
+            }
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -629,6 +639,9 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 value_size,
                 max_scaled_size,
             },
+            ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
+                Self::BuiltinAuthenticatorVerificationError { reason }
+            }
         }
     }
 }
