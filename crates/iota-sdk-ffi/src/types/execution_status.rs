@@ -272,6 +272,11 @@ pub enum ExecutionError {
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
+    /// Built-in authenticator verification failed to verify the transaction,
+    /// which could be due to various reasons such as invalid signatures,
+    /// incorrect authentication keys, or other issues related to
+    /// transaction authentication.
+    BuiltinAuthenticatorVerificationError { reason: String },
 }
 
 impl From<iota_sdk::types::ExecutionError> for ExecutionError {
@@ -410,6 +415,9 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            iota_sdk::types::ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
+                Self::BuiltinAuthenticatorVerificationError { reason }
+            }
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -529,6 +537,9 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
+                Self::BuiltinAuthenticatorVerificationError { reason }
+            }
         }
     }
 }

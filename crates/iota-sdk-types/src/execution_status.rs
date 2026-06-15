@@ -200,6 +200,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-cancelled-due-to-randomness-unavailable      = %d36
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
+/// builtin-authenticator-verification-error               = %d39 string
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -407,6 +408,12 @@ pub enum ExecutionError {
     /// of its commands.
     #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
+    /// Built-in authenticator verification failed to verify the transaction,
+    /// which could be due to various reasons such as invalid signatures,
+    /// incorrect authentication keys, or other issues related to
+    /// transaction authentication.
+    #[error("Built-in authenticator verification failed: {reason}")]
+    BuiltinAuthenticatorVerificationError { reason: String },
 }
 
 impl ExecutionError {
