@@ -8,8 +8,8 @@ pub mod irc27 {
     use iota_types::Address;
 
     use crate::{
-        framework::{url::Url, vec_map::VecMap},
-        std::{fixed_point32::FixedPoint32, string},
+        iota_framework::{url::Url, vec_map::VecMap},
+        move_stdlib::{fixed_point32::FixedPoint32, string},
     };
 
     /// Rust version of the Move `stardust::irc27::Irc27Metadata` type.
@@ -63,7 +63,7 @@ pub mod nft {
     use iota_types::Address;
 
     use super::irc27::Irc27Metadata;
-    use crate::framework::object::UID;
+    use crate::iota_framework::object::UID;
 
     /// Rust version of the Move `stardust::nft::NFT` type.
     ///
@@ -136,7 +136,7 @@ pub mod nft_output {
         storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
         timelock_unlock_condition::TimelockUnlockCondition,
     };
-    use crate::framework::{bag::Bag, balance::Balance, object::UID};
+    use crate::iota_framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::nft_output::NftOutput<T>` type.
     ///
@@ -262,7 +262,7 @@ pub mod basic_output {
         storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition,
         timelock_unlock_condition::TimelockUnlockCondition,
     };
-    use crate::framework::{bag::Bag, balance::Balance, object::UID};
+    use crate::iota_framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::basic_output::BasicOutput<T>`
     /// type.
@@ -381,7 +381,7 @@ pub mod basic_output {
 pub mod alias {
     use iota_types::Address;
 
-    use crate::framework::object::UID;
+    use crate::iota_framework::object::UID;
 
     /// Rust version of the Move `stardust::alias::Alias` type.
     ///
@@ -443,7 +443,7 @@ pub mod alias {
 
 /// Types from `0x107a::alias_output`.
 pub mod alias_output {
-    use crate::framework::{bag::Bag, balance::Balance, object::UID};
+    use crate::iota_framework::{bag::Bag, balance::Balance, object::UID};
 
     /// Rust version of the Move `stardust::alias_output::AliasOutput<T>`
     /// type.

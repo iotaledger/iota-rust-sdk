@@ -14,7 +14,7 @@
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
     FromObjectError, MoveType,
-    framework::{
+    iota_framework::{
         balance::Balance,
         clock::Clock,
         coin::{Coin, CoinMetadata},
@@ -25,8 +25,8 @@ use iota_sdk_move_types::{
         timelock::TimeLock,
     },
     iota_system::iota_system::IotaSystemState,
+    move_stdlib::ascii,
     stardust::{alias_output::AliasOutput, basic_output::BasicOutput, nft_output::NftOutput},
-    std::ascii,
 };
 use iota_types::{
     Address, Digest, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag,

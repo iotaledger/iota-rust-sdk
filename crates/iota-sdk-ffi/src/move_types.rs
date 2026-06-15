@@ -31,7 +31,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::move_types::framework::iota::IOTA;
+use iota_sdk::move_types::iota_framework::iota::IOTA;
 
 use crate::{
     error::Result,
@@ -41,15 +41,15 @@ use crate::{
     },
 };
 
-fn ascii_to_string(s: &iota_sdk::move_types::std::ascii::String) -> String {
+fn ascii_to_string(s: &iota_sdk::move_types::move_stdlib::ascii::String) -> String {
     String::from_utf8_lossy(&s.bytes).into_owned()
 }
 
-fn move_string_to_string(s: &iota_sdk::move_types::std::string::String) -> String {
+fn move_string_to_string(s: &iota_sdk::move_types::move_stdlib::string::String) -> String {
     String::from_utf8_lossy(&s.bytes).into_owned()
 }
 
-fn url_to_string(u: &iota_sdk::move_types::framework::url::Url) -> String {
+fn url_to_string(u: &iota_sdk::move_types::iota_framework::url::Url) -> String {
     ascii_to_string(&u.url)
 }
 
@@ -260,7 +260,7 @@ impl IotaSystemStateV2 {
 /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct IotaCoinMetadata(pub iota_sdk::move_types::framework::coin::CoinMetadata<IOTA>);
+pub struct IotaCoinMetadata(pub iota_sdk::move_types::iota_framework::coin::CoinMetadata<IOTA>);
 
 #[uniffi::export]
 impl IotaCoinMetadata {
@@ -270,7 +270,7 @@ impl IotaCoinMetadata {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::framework::coin::CoinMetadata::<IOTA>::try_from_object(
+            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from_object(
                 &object.0,
             )?
             .into(),
@@ -280,7 +280,7 @@ impl IotaCoinMetadata {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::framework::coin::CoinMetadata::<IOTA>::try_from_bcs(&bytes)?
+            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from_bcs(&bytes)?
                 .into(),
         )
     }
@@ -314,7 +314,7 @@ impl IotaCoinMetadata {
 /// singleton carrying the consensus timestamp).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Clock(pub iota_sdk::move_types::framework::clock::Clock);
+pub struct Clock(pub iota_sdk::move_types::iota_framework::clock::Clock);
 
 #[uniffi::export]
 impl Clock {
@@ -322,12 +322,12 @@ impl Clock {
     /// object's type tag matches `0x2::clock::Clock`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::clock::Clock::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from_object(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::clock::Clock::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -345,8 +345,8 @@ impl Clock {
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct TimelockedIotaBalance(
-    pub  iota_sdk::move_types::framework::timelock::TimeLock<
-        iota_sdk::move_types::framework::balance::Balance<IOTA>,
+    pub  iota_sdk::move_types::iota_framework::timelock::TimeLock<
+        iota_sdk::move_types::iota_framework::balance::Balance<IOTA>,
     >,
 );
 
@@ -357,12 +357,15 @@ impl TimelockedIotaBalance {
     /// `0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::timelock::TimeLock::try_from_object(&object.0)?.into())
+        Ok(
+            iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from_object(&object.0)?
+                .into(),
+        )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::timelock::TimeLock::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -387,7 +390,7 @@ impl TimelockedIotaBalance {
 /// A typed view of an on-chain `0x2::package::UpgradeCap` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct UpgradeCap(pub iota_sdk::move_types::framework::package::UpgradeCap);
+pub struct UpgradeCap(pub iota_sdk::move_types::iota_framework::package::UpgradeCap);
 
 #[uniffi::export]
 impl UpgradeCap {
@@ -396,14 +399,14 @@ impl UpgradeCap {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::framework::package::UpgradeCap::try_from_object(&object.0)?
+            iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from_object(&object.0)?
                 .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::package::UpgradeCap::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -429,7 +432,7 @@ impl UpgradeCap {
 /// A typed view of an on-chain `0x2::package::Publisher` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Publisher(pub iota_sdk::move_types::framework::package::Publisher);
+pub struct Publisher(pub iota_sdk::move_types::iota_framework::package::Publisher);
 
 #[uniffi::export]
 impl Publisher {
@@ -437,12 +440,15 @@ impl Publisher {
     /// object's type tag matches `0x2::package::Publisher`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::package::Publisher::try_from_object(&object.0)?.into())
+        Ok(
+            iota_sdk::move_types::iota_framework::package::Publisher::try_from_object(&object.0)?
+                .into(),
+        )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::package::Publisher::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::package::Publisher::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -461,7 +467,7 @@ impl Publisher {
 /// A typed view of an on-chain `0x2::kiosk::Kiosk` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct Kiosk(pub iota_sdk::move_types::framework::kiosk::Kiosk);
+pub struct Kiosk(pub iota_sdk::move_types::iota_framework::kiosk::Kiosk);
 
 #[uniffi::export]
 impl Kiosk {
@@ -469,12 +475,12 @@ impl Kiosk {
     /// object's type tag matches `0x2::kiosk::Kiosk`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::kiosk::Kiosk::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from_object(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::kiosk::Kiosk::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -499,7 +505,7 @@ impl Kiosk {
 /// A typed view of an on-chain `0x2::kiosk::KioskOwnerCap` object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct KioskOwnerCap(pub iota_sdk::move_types::framework::kiosk::KioskOwnerCap);
+pub struct KioskOwnerCap(pub iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap);
 
 #[uniffi::export]
 impl KioskOwnerCap {
@@ -508,14 +514,17 @@ impl KioskOwnerCap {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::framework::kiosk::KioskOwnerCap::try_from_object(&object.0)?
+            iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from_object(&object.0)?
                 .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::framework::kiosk::KioskOwnerCap::try_from_bcs(&bytes)?.into())
+        Ok(
+            iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from_bcs(&bytes)?
+                .into(),
+        )
     }
 
     pub fn id(&self) -> ObjectId {

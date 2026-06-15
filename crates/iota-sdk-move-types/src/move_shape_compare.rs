@@ -21,7 +21,7 @@ use move_binary_format::{
 };
 
 use crate::{
-    framework, iota_system,
+    iota_framework, iota_system,
     move_shape::{Field, MoveShape, Shape, Variant},
     stardust,
 };
@@ -118,685 +118,760 @@ fn expected_entries() -> Vec<Entry> {
     use Package::*;
     vec![
         // -- 0x2 iota-framework -----------------------------------------------
-        entry!(IotaFramework, "object", "ID", framework::object::ID),
-        entry!(IotaFramework, "object", "UID", framework::object::UID),
+        entry!(IotaFramework, "object", "ID", iota_framework::object::ID),
+        entry!(IotaFramework, "object", "UID", iota_framework::object::UID),
         entry!(
             IotaFramework,
             "balance",
             "Balance",
-            framework::balance::Balance<()>
+            iota_framework::balance::Balance<()>
         ),
         entry!(
             IotaFramework,
             "balance",
             "Supply",
-            framework::balance::Supply<()>
+            iota_framework::balance::Supply<()>
         ),
-        entry!(IotaFramework, "bag", "Bag", framework::bag::Bag),
-        entry!(IotaFramework, "coin", "Coin", framework::coin::Coin<()>),
+        entry!(IotaFramework, "bag", "Bag", iota_framework::bag::Bag),
+        entry!(
+            IotaFramework,
+            "coin",
+            "Coin",
+            iota_framework::coin::Coin<()>
+        ),
         entry!(
             IotaFramework,
             "coin",
             "CoinMetadata",
-            framework::coin::CoinMetadata<()>
+            iota_framework::coin::CoinMetadata<()>
         ),
         entry!(
             IotaFramework,
             "coin",
             "TreasuryCap",
-            framework::coin::TreasuryCap<()>
+            iota_framework::coin::TreasuryCap<()>
         ),
         entry!(
             IotaFramework,
             "coin",
             "RegulatedCoinMetadata",
-            framework::coin::RegulatedCoinMetadata<()>
+            iota_framework::coin::RegulatedCoinMetadata<()>
         ),
-        entry!(IotaFramework, "bcs", "BCS", framework::bcs::BCS),
-        entry!(IotaFramework, "clock", "Clock", framework::clock::Clock),
+        entry!(IotaFramework, "bcs", "BCS", iota_framework::bcs::BCS),
+        entry!(
+            IotaFramework,
+            "clock",
+            "Clock",
+            iota_framework::clock::Clock
+        ),
         entry!(
             IotaFramework,
             "tx_context",
             "TxContext",
-            framework::tx_context::TxContext
+            iota_framework::tx_context::TxContext
         ),
-        entry!(IotaFramework, "intent", "Intent", framework::intent::Intent),
-        entry!(IotaFramework, "url", "Url", framework::url::Url),
+        entry!(
+            IotaFramework,
+            "intent",
+            "Intent",
+            iota_framework::intent::Intent
+        ),
+        entry!(IotaFramework, "url", "Url", iota_framework::url::Url),
         entry!(
             IotaFramework,
             "versioned",
             "Versioned",
-            framework::versioned::Versioned
+            iota_framework::versioned::Versioned
         ),
         entry!(
             IotaFramework,
             "versioned",
             "VersionChangeCap",
-            framework::versioned::VersionChangeCap
+            iota_framework::versioned::VersionChangeCap
         ),
         entry!(
             IotaFramework,
             "transfer",
             "Receiving",
-            framework::transfer::Receiving<()>
+            iota_framework::transfer::Receiving<()>
         ),
         entry!(
             IotaFramework,
             "borrow",
             "Referent",
-            framework::borrow::Referent<()>
+            iota_framework::borrow::Referent<()>
         ),
-        entry!(IotaFramework, "borrow", "Borrow", framework::borrow::Borrow),
-        entry!(IotaFramework, "iota", "IOTA", framework::iota::IOTA),
+        entry!(
+            IotaFramework,
+            "borrow",
+            "Borrow",
+            iota_framework::borrow::Borrow
+        ),
+        entry!(IotaFramework, "iota", "IOTA", iota_framework::iota::IOTA),
         entry!(
             IotaFramework,
             "iota",
             "IotaTreasuryCap",
-            framework::iota::IotaTreasuryCap
+            iota_framework::iota::IotaTreasuryCap
         ),
         entry!(
             IotaFramework,
             "system_admin_cap",
             "IotaSystemAdminCap",
-            framework::system_admin_cap::IotaSystemAdminCap
+            iota_framework::system_admin_cap::IotaSystemAdminCap
         ),
         entry!(
             IotaFramework,
             "account",
             "AuthenticatorFunctionRefV1Key",
-            framework::account::AuthenticatorFunctionRefV1Key
+            iota_framework::account::AuthenticatorFunctionRefV1Key
         ),
         entry!(
             IotaFramework,
             "package_metadata",
             "PackageMetadataKey",
-            framework::package_metadata::PackageMetadataKey
+            iota_framework::package_metadata::PackageMetadataKey
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "ConfigWriteCap",
-            framework::deny_list::ConfigWriteCap
+            iota_framework::deny_list::ConfigWriteCap
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "GlobalPauseKey",
-            framework::deny_list::GlobalPauseKey
+            iota_framework::deny_list::GlobalPauseKey
         ),
         entry!(
             IotaFramework,
             "bls12381",
             "Scalar",
-            framework::bls12381::Scalar
+            iota_framework::bls12381::Scalar
         ),
-        entry!(IotaFramework, "bls12381", "G1", framework::bls12381::G1),
-        entry!(IotaFramework, "bls12381", "G2", framework::bls12381::G2),
-        entry!(IotaFramework, "bls12381", "GT", framework::bls12381::GT),
+        entry!(
+            IotaFramework,
+            "bls12381",
+            "G1",
+            iota_framework::bls12381::G1
+        ),
+        entry!(
+            IotaFramework,
+            "bls12381",
+            "G2",
+            iota_framework::bls12381::G2
+        ),
+        entry!(
+            IotaFramework,
+            "bls12381",
+            "GT",
+            iota_framework::bls12381::GT
+        ),
         entry!(
             IotaFramework,
             "bls12381",
             "UncompressedG1",
-            framework::bls12381::UncompressedG1
+            iota_framework::bls12381::UncompressedG1
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "RuleKey",
-            framework::transfer_policy::RuleKey<()>
+            iota_framework::transfer_policy::RuleKey<()>
         ),
         entry!(
             IotaFramework,
             "kiosk_extension",
             "ExtensionKey",
-            framework::kiosk_extension::ExtensionKey<()>
+            iota_framework::kiosk_extension::ExtensionKey<()>
         ),
-        entry!(IotaFramework, "table", "Table", framework::table::Table<(), ()>),
+        entry!(IotaFramework, "table", "Table", iota_framework::table::Table<(), ()>),
         entry!(
             IotaFramework,
             "table_vec",
             "TableVec",
-            framework::table_vec::TableVec<()>
+            iota_framework::table_vec::TableVec<()>
         ),
         entry!(
             IotaFramework,
             "coin",
             "DenyCapV1",
-            framework::coin::DenyCapV1<()>
+            iota_framework::coin::DenyCapV1<()>
         ),
-        entry!(IotaFramework, "vec_map", "Entry", framework::vec_map::Entry<(), ()>),
-        entry!(IotaFramework, "vec_map", "VecMap", framework::vec_map::VecMap<(), ()>),
+        entry!(IotaFramework, "vec_map", "Entry", iota_framework::vec_map::Entry<(), ()>),
+        entry!(IotaFramework, "vec_map", "VecMap", iota_framework::vec_map::VecMap<(), ()>),
         entry!(
             IotaFramework,
             "vec_set",
             "VecSet",
-            framework::vec_set::VecSet<()>
+            iota_framework::vec_set::VecSet<()>
         ),
         entry!(
             IotaFramework,
             "priority_queue",
             "Entry",
-            framework::priority_queue::Entry<()>
+            iota_framework::priority_queue::Entry<()>
         ),
         entry!(
             IotaFramework,
             "priority_queue",
             "PriorityQueue",
-            framework::priority_queue::PriorityQueue<()>
+            iota_framework::priority_queue::PriorityQueue<()>
         ),
         entry!(
             IotaFramework,
             "zklogin_verified_id",
             "VerifiedID",
-            framework::zklogin_verified_id::VerifiedID
+            iota_framework::zklogin_verified_id::VerifiedID
         ),
         entry!(
             IotaFramework,
             "zklogin_verified_issuer",
             "VerifiedIssuer",
-            framework::zklogin_verified_issuer::VerifiedIssuer
+            iota_framework::zklogin_verified_issuer::VerifiedIssuer
         ),
         entry!(
             IotaFramework,
             "timelock",
             "TimeLock",
-            framework::timelock::TimeLock<()>
+            iota_framework::timelock::TimeLock<()>
         ),
-        entry!(IotaFramework, "dynamic_field", "Field", framework::dynamic_field::Field<(), ()>),
+        entry!(IotaFramework, "dynamic_field", "Field", iota_framework::dynamic_field::Field<(), ()>),
         entry!(
             IotaFramework,
             "dynamic_object_field",
             "Wrapper",
-            framework::dynamic_object_field::Wrapper<()>
+            iota_framework::dynamic_object_field::Wrapper<()>
         ),
         entry!(
             IotaFramework,
             "labeler",
             "LabelerCap",
-            framework::labeler::LabelerCap<()>
+            iota_framework::labeler::LabelerCap<()>
         ),
-        entry!(IotaFramework, "linked_table", "LinkedTable", framework::linked_table::LinkedTable<(), ()>),
-        entry!(IotaFramework, "linked_table", "Node", framework::linked_table::Node<(), ()>),
-        entry!(IotaFramework, "object_table", "ObjectTable", framework::object_table::ObjectTable<(), ()>),
+        entry!(IotaFramework, "linked_table", "LinkedTable", iota_framework::linked_table::LinkedTable<(), ()>),
+        entry!(IotaFramework, "linked_table", "Node", iota_framework::linked_table::Node<(), ()>),
+        entry!(IotaFramework, "object_table", "ObjectTable", iota_framework::object_table::ObjectTable<(), ()>),
         entry!(
             IotaFramework,
             "object_bag",
             "ObjectBag",
-            framework::object_bag::ObjectBag
+            iota_framework::object_bag::ObjectBag
         ),
         entry!(
             IotaFramework,
             "derived_object",
             "DerivedObjectKey",
-            framework::derived_object::DerivedObjectKey<()>
+            iota_framework::derived_object::DerivedObjectKey<()>
         ),
         entry!(
             IotaFramework,
             "authenticator_state",
             "AuthenticatorState",
-            framework::authenticator_state::AuthenticatorState
+            iota_framework::authenticator_state::AuthenticatorState
         ),
         entry!(
             IotaFramework,
             "authenticator_state",
             "AuthenticatorStateInner",
-            framework::authenticator_state::AuthenticatorStateInner
+            iota_framework::authenticator_state::AuthenticatorStateInner
         ),
         entry!(
             IotaFramework,
             "authenticator_state",
             "JWK",
-            framework::authenticator_state::JWK
+            iota_framework::authenticator_state::JWK
         ),
         entry!(
             IotaFramework,
             "authenticator_state",
             "JwkId",
-            framework::authenticator_state::JwkId
+            iota_framework::authenticator_state::JwkId
         ),
         entry!(
             IotaFramework,
             "authenticator_state",
             "ActiveJwk",
-            framework::authenticator_state::ActiveJwk
+            iota_framework::authenticator_state::ActiveJwk
         ),
         entry!(
             IotaFramework,
             "display",
             "Display",
-            framework::display::Display<()>
+            iota_framework::display::Display<()>
         ),
         entry!(
             IotaFramework,
             "display",
             "DisplayCreated",
-            framework::display::DisplayCreated<()>
+            iota_framework::display::DisplayCreated<()>
         ),
         entry!(
             IotaFramework,
             "display",
             "VersionUpdated",
-            framework::display::VersionUpdated<()>
+            iota_framework::display::VersionUpdated<()>
         ),
         entry!(
             IotaFramework,
             "package",
             "Publisher",
-            framework::package::Publisher
+            iota_framework::package::Publisher
         ),
         entry!(
             IotaFramework,
             "package",
             "UpgradeCap",
-            framework::package::UpgradeCap
+            iota_framework::package::UpgradeCap
         ),
         entry!(
             IotaFramework,
             "package",
             "UpgradeTicket",
-            framework::package::UpgradeTicket
+            iota_framework::package::UpgradeTicket
         ),
         entry!(
             IotaFramework,
             "package",
             "UpgradeReceipt",
-            framework::package::UpgradeReceipt
+            iota_framework::package::UpgradeReceipt
         ),
-        entry!(IotaFramework, "groth16", "Curve", framework::groth16::Curve),
+        entry!(
+            IotaFramework,
+            "groth16",
+            "Curve",
+            iota_framework::groth16::Curve
+        ),
         entry!(
             IotaFramework,
             "groth16",
             "PreparedVerifyingKey",
-            framework::groth16::PreparedVerifyingKey
+            iota_framework::groth16::PreparedVerifyingKey
         ),
         entry!(
             IotaFramework,
             "groth16",
             "PublicProofInputs",
-            framework::groth16::PublicProofInputs
+            iota_framework::groth16::PublicProofInputs
         ),
         entry!(
             IotaFramework,
             "groth16",
             "ProofPoints",
-            framework::groth16::ProofPoints
+            iota_framework::groth16::ProofPoints
         ),
         entry!(
             IotaFramework,
             "group_ops",
             "Element",
-            framework::group_ops::Element<()>
+            iota_framework::group_ops::Element<()>
         ),
         entry!(
             IotaFramework,
             "authenticator_function",
             "AuthenticatorFunctionRefV1",
-            framework::authenticator_function::AuthenticatorFunctionRefV1<()>
+            iota_framework::authenticator_function::AuthenticatorFunctionRefV1<()>
         ),
         entry!(
             IotaFramework,
             "account",
             "ImmutableAccountCreated",
-            framework::account::ImmutableAccountCreated<()>
+            iota_framework::account::ImmutableAccountCreated<()>
         ),
         entry!(
             IotaFramework,
             "account",
             "MutableAccountCreated",
-            framework::account::MutableAccountCreated<()>
+            iota_framework::account::MutableAccountCreated<()>
         ),
         entry!(
             IotaFramework,
             "account",
             "AuthenticatorFunctionRefV1Rotated",
-            framework::account::AuthenticatorFunctionRefV1Rotated<()>
+            iota_framework::account::AuthenticatorFunctionRefV1Rotated<()>
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "CoinManager",
-            framework::coin_manager::CoinManager<()>
+            iota_framework::coin_manager::CoinManager<()>
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "CoinManagerTreasuryCap",
-            framework::coin_manager::CoinManagerTreasuryCap<()>
+            iota_framework::coin_manager::CoinManagerTreasuryCap<()>
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "CoinManagerMetadataCap",
-            framework::coin_manager::CoinManagerMetadataCap<()>
+            iota_framework::coin_manager::CoinManagerMetadataCap<()>
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "ImmutableCoinMetadata",
-            framework::coin_manager::ImmutableCoinMetadata<()>
+            iota_framework::coin_manager::ImmutableCoinMetadata<()>
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "CoinManaged",
-            framework::coin_manager::CoinManaged
+            iota_framework::coin_manager::CoinManaged
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "TreasuryOwnershipRenounced",
-            framework::coin_manager::TreasuryOwnershipRenounced
+            iota_framework::coin_manager::TreasuryOwnershipRenounced
         ),
         entry!(
             IotaFramework,
             "coin_manager",
             "MetadataOwnershipRenounced",
-            framework::coin_manager::MetadataOwnershipRenounced
+            iota_framework::coin_manager::MetadataOwnershipRenounced
         ),
-        entry!(IotaFramework, "token", "Token", framework::token::Token<()>),
+        entry!(
+            IotaFramework,
+            "token",
+            "Token",
+            iota_framework::token::Token<()>
+        ),
         entry!(
             IotaFramework,
             "token",
             "TokenPolicy",
-            framework::token::TokenPolicy<()>
+            iota_framework::token::TokenPolicy<()>
         ),
         entry!(
             IotaFramework,
             "token",
             "ActionRequest",
-            framework::token::ActionRequest<()>
+            iota_framework::token::ActionRequest<()>
         ),
         entry!(
             IotaFramework,
             "token",
             "RuleKey",
-            framework::token::RuleKey<()>
+            iota_framework::token::RuleKey<()>
         ),
         entry!(
             IotaFramework,
             "token",
             "TokenPolicyCreated",
-            framework::token::TokenPolicyCreated<()>
+            iota_framework::token::TokenPolicyCreated<()>
         ),
         entry!(
             IotaFramework,
             "token",
             "TokenPolicyCap",
-            framework::token::TokenPolicyCap<()>
+            iota_framework::token::TokenPolicyCap<()>
         ),
         entry!(
             IotaFramework,
             "package_metadata",
             "PackageMetadataV1",
-            framework::package_metadata::PackageMetadataV1
+            iota_framework::package_metadata::PackageMetadataV1
         ),
         entry!(
             IotaFramework,
             "package_metadata",
             "ModuleMetadataV1",
-            framework::package_metadata::ModuleMetadataV1
+            iota_framework::package_metadata::ModuleMetadataV1
         ),
         entry!(
             IotaFramework,
             "package_metadata",
             "AuthenticatorMetadataV1",
-            framework::package_metadata::AuthenticatorMetadataV1
+            iota_framework::package_metadata::AuthenticatorMetadataV1
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "DenyList",
-            framework::deny_list::DenyList
+            iota_framework::deny_list::DenyList
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "ConfigKey",
-            framework::deny_list::ConfigKey
+            iota_framework::deny_list::ConfigKey
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "AddressKey",
-            framework::deny_list::AddressKey
+            iota_framework::deny_list::AddressKey
         ),
         entry!(
             IotaFramework,
             "deny_list",
             "PerTypeConfigCreated",
-            framework::deny_list::PerTypeConfigCreated
+            iota_framework::deny_list::PerTypeConfigCreated
         ),
-        entry!(IotaFramework, "random", "Random", framework::random::Random),
+        entry!(
+            IotaFramework,
+            "random",
+            "Random",
+            iota_framework::random::Random
+        ),
         entry!(
             IotaFramework,
             "random",
             "RandomInner",
-            framework::random::RandomInner
+            iota_framework::random::RandomInner
         ),
         entry!(
             IotaFramework,
             "random",
             "RandomGenerator",
-            framework::random::RandomGenerator
+            iota_framework::random::RandomGenerator
         ),
         entry!(
             IotaFramework,
             "config",
             "Config",
-            framework::config::Config<()>
+            iota_framework::config::Config<()>
         ),
         entry!(
             IotaFramework,
             "config",
             "Setting",
-            framework::config::Setting<()>
+            iota_framework::config::Setting<()>
         ),
         entry!(
             IotaFramework,
             "config",
             "SettingData",
-            framework::config::SettingData<()>
+            iota_framework::config::SettingData<()>
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "ProgrammableMoveCall",
-            framework::ptb_command::ProgrammableMoveCall
+            iota_framework::ptb_command::ProgrammableMoveCall
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "TransferObjectsData",
-            framework::ptb_command::TransferObjectsData
+            iota_framework::ptb_command::TransferObjectsData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "SplitCoinsData",
-            framework::ptb_command::SplitCoinsData
+            iota_framework::ptb_command::SplitCoinsData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "MergeCoinsData",
-            framework::ptb_command::MergeCoinsData
+            iota_framework::ptb_command::MergeCoinsData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "PublishData",
-            framework::ptb_command::PublishData
+            iota_framework::ptb_command::PublishData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "MakeMoveVecData",
-            framework::ptb_command::MakeMoveVecData
+            iota_framework::ptb_command::MakeMoveVecData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "UpgradeData",
-            framework::ptb_command::UpgradeData
+            iota_framework::ptb_command::UpgradeData
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "Argument",
-            framework::ptb_command::Argument
+            iota_framework::ptb_command::Argument
         ),
         entry!(
             IotaFramework,
             "ptb_command",
             "Command",
-            framework::ptb_command::Command
+            iota_framework::ptb_command::Command
         ),
         entry!(
             IotaFramework,
             "ptb_call_arg",
             "ObjectRef",
-            framework::ptb_call_arg::ObjectRef
+            iota_framework::ptb_call_arg::ObjectRef
         ),
         entry!(
             IotaFramework,
             "ptb_call_arg",
             "ObjectArg",
-            framework::ptb_call_arg::ObjectArg
+            iota_framework::ptb_call_arg::ObjectArg
         ),
         entry!(
             IotaFramework,
             "ptb_call_arg",
             "CallArg",
-            framework::ptb_call_arg::CallArg
+            iota_framework::ptb_call_arg::CallArg
         ),
         entry!(
             IotaFramework,
             "ptb",
             "ProgrammableTransaction",
-            framework::ptb::ProgrammableTransaction
+            iota_framework::ptb::ProgrammableTransaction
         ),
         entry!(
             IotaFramework,
             "auth_context",
             "AuthContext",
-            framework::auth_context::AuthContext
+            iota_framework::auth_context::AuthContext
         ),
         entry!(
             IotaFramework,
             "auth_context",
             "AuthenticatorFunctionInfoV1",
-            framework::auth_context::AuthenticatorFunctionInfoV1
+            iota_framework::auth_context::AuthenticatorFunctionInfoV1
         ),
-        entry!(IotaFramework, "kiosk", "Kiosk", framework::kiosk::Kiosk),
+        entry!(
+            IotaFramework,
+            "kiosk",
+            "Kiosk",
+            iota_framework::kiosk::Kiosk
+        ),
         entry!(
             IotaFramework,
             "kiosk",
             "KioskOwnerCap",
-            framework::kiosk::KioskOwnerCap
+            iota_framework::kiosk::KioskOwnerCap
         ),
         entry!(
             IotaFramework,
             "kiosk",
             "PurchaseCap",
-            framework::kiosk::PurchaseCap<()>
+            iota_framework::kiosk::PurchaseCap<()>
         ),
-        entry!(IotaFramework, "kiosk", "Borrow", framework::kiosk::Borrow),
-        entry!(IotaFramework, "kiosk", "Item", framework::kiosk::Item),
-        entry!(IotaFramework, "kiosk", "Listing", framework::kiosk::Listing),
-        entry!(IotaFramework, "kiosk", "Lock", framework::kiosk::Lock),
+        entry!(
+            IotaFramework,
+            "kiosk",
+            "Borrow",
+            iota_framework::kiosk::Borrow
+        ),
+        entry!(IotaFramework, "kiosk", "Item", iota_framework::kiosk::Item),
+        entry!(
+            IotaFramework,
+            "kiosk",
+            "Listing",
+            iota_framework::kiosk::Listing
+        ),
+        entry!(IotaFramework, "kiosk", "Lock", iota_framework::kiosk::Lock),
         entry!(
             IotaFramework,
             "kiosk",
             "ItemListed",
-            framework::kiosk::ItemListed<()>
+            iota_framework::kiosk::ItemListed<()>
         ),
         entry!(
             IotaFramework,
             "kiosk",
             "ItemPurchased",
-            framework::kiosk::ItemPurchased<()>
+            iota_framework::kiosk::ItemPurchased<()>
         ),
         entry!(
             IotaFramework,
             "kiosk",
             "ItemDelisted",
-            framework::kiosk::ItemDelisted<()>
+            iota_framework::kiosk::ItemDelisted<()>
         ),
         entry!(
             IotaFramework,
             "kiosk_extension",
             "Extension",
-            framework::kiosk_extension::Extension
+            iota_framework::kiosk_extension::Extension
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "TransferRequest",
-            framework::transfer_policy::TransferRequest<()>
+            iota_framework::transfer_policy::TransferRequest<()>
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "TransferPolicy",
-            framework::transfer_policy::TransferPolicy<()>
+            iota_framework::transfer_policy::TransferPolicy<()>
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "TransferPolicyCap",
-            framework::transfer_policy::TransferPolicyCap<()>
+            iota_framework::transfer_policy::TransferPolicyCap<()>
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "TransferPolicyCreated",
-            framework::transfer_policy::TransferPolicyCreated<()>
+            iota_framework::transfer_policy::TransferPolicyCreated<()>
         ),
         entry!(
             IotaFramework,
             "transfer_policy",
             "TransferPolicyDestroyed",
-            framework::transfer_policy::TransferPolicyDestroyed<()>
+            iota_framework::transfer_policy::TransferPolicyDestroyed<()>
         ),
         // -- 0x1 move-stdlib --------------------------------------------------
         entry!(
             MoveStdlib,
             "fixed_point32",
             "FixedPoint32",
-            crate::std::fixed_point32::FixedPoint32
+            crate::move_stdlib::fixed_point32::FixedPoint32
         ),
-        entry!(MoveStdlib, "ascii", "String", crate::std::ascii::String),
-        entry!(MoveStdlib, "ascii", "Char", crate::std::ascii::Char),
-        entry!(MoveStdlib, "string", "String", crate::std::string::String),
+        entry!(
+            MoveStdlib,
+            "ascii",
+            "String",
+            crate::move_stdlib::ascii::String
+        ),
+        entry!(MoveStdlib, "ascii", "Char", crate::move_stdlib::ascii::Char),
+        entry!(
+            MoveStdlib,
+            "string",
+            "String",
+            crate::move_stdlib::string::String
+        ),
         entry!(
             MoveStdlib,
             "bit_vector",
             "BitVector",
-            crate::std::bit_vector::BitVector
+            crate::move_stdlib::bit_vector::BitVector
         ),
         entry!(
             MoveStdlib,
             "type_name",
             "TypeName",
-            crate::std::type_name::TypeName
+            crate::move_stdlib::type_name::TypeName
         ),
         entry!(
             MoveStdlib,
             "option",
             "Option",
-            crate::std::option::Option<()>
+            crate::move_stdlib::option::Option<()>
         ),
         entry!(
             MoveStdlib,
             "uq32_32",
             "UQ32_32",
-            crate::std::uq32_32::UQ32_32
+            crate::move_stdlib::uq32_32::UQ32_32
         ),
         entry!(
             MoveStdlib,
             "uq64_64",
             "UQ64_64",
-            crate::std::uq64_64::UQ64_64
+            crate::move_stdlib::uq64_64::UQ64_64
         ),
         // -- 0x3 iota-system --------------------------------------------------
         entry!(
@@ -1201,7 +1276,7 @@ fn check_type(
     // Rust prelude `Option<T>` is BCS-equivalent to Move's
     // `0x1::option::Option<T>`, which the Move side reports as a Datatype
     // (a struct wrapping `vector<T>`). Recurse on the inner type so callers
-    // don't have to use `crate::std::option::Option` to participate.
+    // don't have to use `crate::move_stdlib::option::Option` to participate.
     if let Shape::Option(rust_inner) = rust
         && let Type::Datatype(d) = move_ty
         && d.name.as_ref().as_str() == "Option"
@@ -1550,7 +1625,8 @@ fn rejects_datatype_type_arg_mismatch() {
 fn rejects_vector_inner_mismatch() {
     let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["random"].structs.get("RandomInner").unwrap();
-    let mut fields = struct_fields(<framework::random::RandomInner as MoveShape>::move_shape());
+    let mut fields =
+        struct_fields(<iota_framework::random::RandomInner as MoveShape>::move_shape());
     // `random_bytes` is a `vector<u8>`; claim a `vector<bool>`.
     let Shape::Vector(inner) = &mut field_mut(&mut fields, "random_bytes").shape else {
         panic!("random_bytes should be a vector");
@@ -1579,7 +1655,7 @@ fn rejects_type_parameter_index_mismatch() {
     let pkgs = load_package(Package::IotaFramework);
     let def = pkgs["dynamic_field"].structs.get("Field").unwrap();
     let mut fields =
-        struct_fields(<framework::dynamic_field::Field<(), ()> as MoveShape>::move_shape());
+        struct_fields(<iota_framework::dynamic_field::Field<(), ()> as MoveShape>::move_shape());
     // `name` is type parameter #0; claim #1.
     assert_eq!(
         field_mut(&mut fields, "name").shape,
@@ -1606,7 +1682,7 @@ fn rejects_objectid_normalization_off_a_non_address() {
 // -- enum-level branches ----------------------------------------------------
 
 fn argument_shape() -> Shape {
-    <framework::ptb_command::Argument as MoveShape>::move_shape()
+    <iota_framework::ptb_command::Argument as MoveShape>::move_shape()
 }
 
 #[test]

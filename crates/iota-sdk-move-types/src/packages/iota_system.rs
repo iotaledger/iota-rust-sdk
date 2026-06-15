@@ -7,7 +7,7 @@
 pub mod staking_pool {
     use iota_types::ObjectId;
 
-    use crate::framework::{
+    use crate::iota_framework::{
         bag::Bag,
         balance::Balance,
         iota::IOTA,
@@ -225,7 +225,7 @@ pub mod voting_power {
 pub mod validator_cap {
     use iota_types::Address;
 
-    use crate::framework::object::UID;
+    use crate::iota_framework::object::UID;
 
     /// Rust version of the Move
     /// `iota_system::validator_cap::UnverifiedValidatorOperationCap` type.
@@ -282,7 +282,7 @@ pub mod validator_cap {
 
 /// Types from `0x3::validator_wrapper`.
 pub mod validator_wrapper {
-    use crate::framework::versioned::Versioned;
+    use crate::iota_framework::versioned::Versioned;
 
     /// Rust version of the Move
     /// `iota_system::validator_wrapper::Validator` type.
@@ -313,8 +313,8 @@ pub mod validator {
 
     use super::staking_pool::StakingPoolV1;
     use crate::{
-        framework::{bag::Bag, object::ID, url::Url},
-        std::string,
+        iota_framework::{bag::Bag, object::ID, url::Url},
+        move_stdlib::string,
     };
 
     /// Rust version of the Move
@@ -440,7 +440,7 @@ pub mod validator_set {
     use super::{
         staking_pool::PoolTokenExchangeRate, validator::ValidatorV1, validator_wrapper::Validator,
     };
-    use crate::framework::{
+    use crate::iota_framework::{
         bag::Bag, object::ID, table::Table, table_vec::TableVec, vec_map::VecMap,
     };
 
@@ -608,7 +608,7 @@ pub mod iota_system_state_inner {
         storage_fund::StorageFundV1,
         validator_set::{ValidatorSetV1, ValidatorSetV2},
     };
-    use crate::framework::{
+    use crate::iota_framework::{
         bag::Bag,
         balance::Balance,
         iota::{IOTA, IotaTreasuryCap},
@@ -793,7 +793,7 @@ pub mod iota_system_state_inner {
 /// Types from `0x3::iota_system`.
 #[expect(clippy::module_inception)]
 pub mod iota_system {
-    use crate::framework::object::UID;
+    use crate::iota_framework::object::UID;
 
     /// Rust version of the Move `iota_system::iota_system::IotaSystemState`
     /// type.
@@ -851,7 +851,7 @@ pub mod iota_system {
 
 /// Types from `0x3::storage_fund`.
 pub mod storage_fund {
-    use crate::framework::{balance::Balance, iota::IOTA};
+    use crate::iota_framework::{balance::Balance, iota::IOTA};
 
     /// Rust version of the Move `iota_system::storage_fund::StorageFundV1`
     /// type.
@@ -889,7 +889,7 @@ pub mod timelocked_staking {
     use iota_types::ObjectId;
 
     use super::staking_pool::StakedIota;
-    use crate::{framework::object::UID, std::string};
+    use crate::{iota_framework::object::UID, move_stdlib::string};
 
     /// Rust version of the Move
     /// `iota_system::timelocked_staking::TimelockedStakedIota` type.

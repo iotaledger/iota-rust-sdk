@@ -18,7 +18,7 @@
 
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
-    framework::{
+    iota_framework::{
         balance::Balance,
         clock::Clock,
         coin::{Coin, CoinMetadata, DenyCapV1, RegulatedCoinMetadata, TreasuryCap},

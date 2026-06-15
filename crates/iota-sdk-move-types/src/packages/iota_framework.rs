@@ -269,7 +269,7 @@ pub mod coin {
         object::{ID, UID},
         url::Url,
     };
-    use crate::std::{ascii, string};
+    use crate::move_stdlib::{ascii, string};
 
     /// Rust version of the Move `iota::coin::Coin<T>` type.
     ///
@@ -554,7 +554,7 @@ pub mod table {
 
 /// Types from `0x2::url`.
 pub mod url {
-    use crate::std::ascii;
+    use crate::move_stdlib::ascii;
 
     /// Rust version of the Move `iota::url::Url` type.
     ///
@@ -938,7 +938,7 @@ pub mod zklogin_verified_id {
     use iota_types::Address;
 
     use super::object::UID;
-    use crate::std::string;
+    use crate::move_stdlib::string;
 
     /// Rust version of the Move `iota::zklogin_verified_id::VerifiedID`
     /// type.
@@ -972,7 +972,7 @@ pub mod zklogin_verified_issuer {
     use iota_types::Address;
 
     use super::object::UID;
-    use crate::std::string;
+    use crate::move_stdlib::string;
 
     /// Rust version of the Move
     /// `iota::zklogin_verified_issuer::VerifiedIssuer` type.
@@ -1027,7 +1027,7 @@ pub mod transfer {
 /// Types from `0x2::timelock`.
 pub mod timelock {
     use super::object::UID;
-    use crate::std::string;
+    use crate::move_stdlib::string;
 
     /// Rust version of the Move `iota::timelock::TimeLock<T>` type.
     ///
@@ -1437,7 +1437,7 @@ pub mod derived_object {
 /// Types from `0x2::authenticator_state`.
 pub mod authenticator_state {
     use super::object::UID;
-    use crate::std::string;
+    use crate::move_stdlib::string;
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorState` type.
@@ -1524,7 +1524,7 @@ pub mod display {
         object::{ID, UID},
         vec_map::VecMap,
     };
-    use crate::std::string;
+    use crate::move_stdlib::string;
 
     /// Rust version of the Move `iota::display::Display<T>` type.
     ///
@@ -1621,7 +1621,7 @@ pub mod display {
 /// Types from `0x2::package`.
 pub mod package {
     use super::object::{ID, UID};
-    use crate::std::ascii;
+    use crate::move_stdlib::ascii;
 
     /// Rust version of the Move `iota::package::Publisher` type.
     ///
@@ -1901,7 +1901,7 @@ pub mod authenticator_function {
     use core::marker::PhantomData;
 
     use super::object::ID;
-    use crate::std::ascii;
+    use crate::move_stdlib::ascii;
 
     /// Rust version of the Move
     /// `iota::authenticator_function::AuthenticatorFunctionRefV1<Account>`
@@ -2009,7 +2009,7 @@ pub mod coin_manager {
         object::UID,
         url::Url,
     };
-    use crate::std::{ascii, string};
+    use crate::move_stdlib::{ascii, string};
 
     /// Rust version of the Move `iota::coin_manager::CoinManager<T>` type.
     ///
@@ -2174,7 +2174,7 @@ pub mod token {
         vec_map::VecMap,
         vec_set::VecSet,
     };
-    use crate::std::{string, type_name::TypeName};
+    use crate::move_stdlib::{string, type_name::TypeName};
 
     /// Rust version of the Move `iota::token::Token<T>` type.
     ///
@@ -2382,7 +2382,7 @@ pub mod package_metadata {
         object::{ID, UID},
         vec_map::VecMap,
     };
-    use crate::std::{ascii, type_name::TypeName};
+    use crate::move_stdlib::{ascii, type_name::TypeName};
 
     /// Rust version of the Move
     /// `iota::package_metadata::PackageMetadataKey` type.
@@ -2660,7 +2660,7 @@ pub mod config {
 /// Types from `0x2::ptb_command`.
 pub mod ptb_command {
     use super::object::ID;
-    use crate::std::{ascii, type_name::TypeName};
+    use crate::move_stdlib::{ascii, type_name::TypeName};
 
     /// Rust version of the Move `iota::ptb_command::Argument` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2852,7 +2852,7 @@ pub mod ptb {
 /// Types from `0x2::auth_context`.
 pub mod auth_context {
     use super::{object::ID, ptb_call_arg::CallArg, ptb_command::Command};
-    use crate::std::ascii;
+    use crate::move_stdlib::ascii;
 
     /// Rust version of the Move `iota::auth_context::AuthContext` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3197,7 +3197,7 @@ pub mod transfer_policy {
         object::{ID, UID},
         vec_set::VecSet,
     };
-    use crate::std::type_name::TypeName;
+    use crate::move_stdlib::type_name::TypeName;
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferRequest<T>` type.

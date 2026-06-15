@@ -5,12 +5,12 @@ Rust representations of Move types used by the IOTA blockchain.
 Each top-level module mirrors one on-chain system package, with every Move
 source module mirrored 1:1 as a Rust `pub mod`:
 
-| Module        | Package ID | Move package                        |
-| ------------- | ---------- | ----------------------------------- |
-| `std`         | `0x1`      | Move standard library (move-stdlib) |
-| `framework`   | `0x2`      | IOTA framework (iota-framework)     |
-| `iota_system` | `0x3`      | IOTA system (iota-system)           |
-| `stardust`    | `0x107a`   | Stardust migration (stardust)       |
+| Module           | Package ID | Move package          |
+| ---------------- | ---------- | --------------------- |
+| `move_stdlib`    | `0x1`      | Move standard library |
+| `iota_framework` | `0x2`      | IOTA framework        |
+| `iota_system`    | `0x3`      | IOTA system           |
+| `stardust`       | `0x107a`   | Stardust migration    |
 
 The Move sources these mirror live in the [iota monorepo] under
 `crates/iota-framework`.

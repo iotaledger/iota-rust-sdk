@@ -7,17 +7,17 @@
 //! Each top-level module corresponds to a system package, identified by the
 //! address constants on [`iota_types::Address`]:
 //!
-//! - [`std`]         — `0x1`, the Move standard library
-//! - [`framework`]   — `0x2`, the IOTA framework
-//! - [`iota_system`] — `0x3`, the IOTA system package
-//! - [`stardust`]    — `0x107a`, the Stardust migration package
+//! - [`move_stdlib`]    — `0x1`, the Move standard library
+//! - [`iota_framework`] — `0x2`, the IOTA framework
+//! - [`iota_system`]    — `0x3`, the IOTA system package
+//! - [`stardust`]       — `0x107a`, the Stardust migration package
 //!
 //! Inside each package, every Move source module is mirrored 1:1 as a Rust
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
 mod packages;
-pub use packages::{framework, iota_system, stardust, std};
+pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
@@ -32,9 +32,9 @@ mod move_shape_compare;
 
 /// A Rust type that knows the Move type tag it represents.
 ///
-/// Generic mirrors like [`framework::coin::CoinMetadata`] or
+/// Generic mirrors like [`iota_framework::coin::CoinMetadata`] or
 /// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
-/// [`framework::iota::IOTA`]) as their phantom type argument. Implementing
+/// [`iota_framework::iota::IOTA`]) as their phantom type argument. Implementing
 /// this trait declares which on-chain type the marker represents, which
 /// lets the `try_from_object` constructors verify the object's type tag
 /// against `T`. The marker is phantom, so the BCS bytes of e.g. a
