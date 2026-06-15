@@ -67,13 +67,11 @@ pub struct PasskeyAuthenticator {
 
 impl PasskeyAuthenticator {
     /// The passkey public key.
-    // TODO maybe split this in public_key and passkey_public_key?
     pub fn public_key(&self) -> PasskeyPublicKey {
         PasskeyPublicKey::new(self.public_key)
     }
 
     /// The passkey signature.
-    // TODO maybe split this in secp256r1_signature and simple signature?
     pub fn signature(&self) -> SimpleSignature {
         SimpleSignature::Secp256r1 {
             signature: self.signature,
