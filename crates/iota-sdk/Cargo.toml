@@ -78,9 +78,6 @@ tokio = { workspace = true, features = ["full"] }
 [build-dependencies]
 iota-graphql-client-build.workspace = true
 
-# `move-types` is not a default feature, so the example is built only when it
-# is enabled. Without this, default-feature example builds would fail to
-# resolve `iota_sdk::move_types`.
 [[example]]
 name = "decode_staked_iota"
 required-features = ["move-types"]

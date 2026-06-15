@@ -254,8 +254,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
     eprintln!();
     if failures > 0 {
         eprintln!(
-            "{} of {} fixtures failed to capture; a pinned object may have been spent/deleted",
-            failures,
+            "{failures} of {} fixtures failed to capture; a pinned object may have been spent/deleted",
             FIXTURES.len()
         );
         std::process::exit(1);
