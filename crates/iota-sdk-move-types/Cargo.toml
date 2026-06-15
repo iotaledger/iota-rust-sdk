@@ -34,19 +34,14 @@ iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
 [dev-dependencies]
-# internal dependencies
 iota-bcs-schema = { workspace = true, features = ["move-shape"] }
 
 # The bytecode comparator only runs natively (it reads the fetched package
 # artifacts from disk; no `std::fs` on wasm32), so its parser is not built
 # for wasm test runs.
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-# external dependencies
-# Pinned to a rev (not a branch) so test builds stay reproducible. This rev
-# is also the single source of truth for the compiled-package fetch:
-# `update_compiled_packages.sh` resolves it via `cargo metadata`, so the
-# parser always matches the blobs it parses. Bump it to a newer monorepo
-# SHA when the nightly drift workflow reports upstream type changes.
+# `update_compiled_packages.sh` reads this rev via `cargo metadata` so the
+# parser matches the fetched blobs.
 move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "433865dc51241ebf738ca127d9fd6b4463e1ec60" }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]

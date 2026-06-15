@@ -51,7 +51,7 @@ bindings/
 └── wasm/                           # WASM/TypeScript bindings (browser + Node)
 ```
 
-The `iota-sdk` umbrella crate exposes the other crates via modules gated by feature flags: `crypto`, `graphql` (→ `graphql_client`), `grpc` (→ `grpc_client` + `grpc_types`), `txn-builder` (→ `transaction_builder`), and `types`. `grpc` is opt-in (not in `default`); `graphql`, `crypto`, `types`, `txn-builder` are on by default.
+The `iota-sdk` umbrella crate exposes the other crates via modules gated by feature flags: `crypto`, `graphql` (→ `graphql_client`), `grpc` (→ `grpc_client` + `grpc_types`), `move-types` (→ `move_types`), `txn-builder` (→ `transaction_builder`), and `types`. `grpc` and `move-types` are opt-in (not in `default`); `graphql`, `crypto`, `types`, `txn-builder` are on by default.
 
 ## Build & Test Commands
 
