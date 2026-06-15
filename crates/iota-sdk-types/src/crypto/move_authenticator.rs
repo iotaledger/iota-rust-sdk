@@ -1,10 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    hash::{Hash, Hasher},
-    sync::OnceLock,
-};
+use std::sync::OnceLock;
 
 use crate::{
     Address, Input, ObjectId, ObjectReference, TypeTag, Version, transaction::SharedObjectReference,
@@ -15,17 +12,20 @@ use crate::{
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MoveAuthenticator {
+    #[serde(flatten)]
     pub(crate) inner: MoveAuthenticatorInner,
     /// A bytes representation of [struct MoveAuthenticator]. This helps with
     /// implementing trait [AsRef](core::convert::AsRef).
+    #[serde(skip)]
     bytes: OnceLock<Vec<u8>>,
 }
 
 /// MoveAuthenticatorInner is an enum that represents the different versions
 /// of MoveAuthenticator.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub enum MoveAuthenticatorInner {
     V1(MoveAuthenticatorV1),
 }
@@ -107,98 +107,97 @@ impl MoveAuthenticatorV1 {
     }
 }
 
-// #[cfg(feature = "serde")]
-// #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-// mod serialization {
-//     use std::borrow::Cow;
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod serialization {
+    use std::borrow::Cow;
 
-//     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-//     use serde_with::{Bytes, DeserializeAs};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{Bytes, DeserializeAs};
 
-//     use super::*;
-//     use crate::{SignatureScheme, crypto::SignatureFromBytesError};
+    use super::*;
+    use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
-//     #[derive(serde::Serialize)]
-//     enum MoveAuthenticatorRef<'a> {
-//         V1(&'a MoveAuthenticatorV1),
-//     }
+    #[derive(serde::Serialize)]
+    enum MoveAuthenticatorRef<'a> {
+        V1(&'a MoveAuthenticatorV1),
+    }
 
-//     #[derive(serde::Deserialize)]
-//     enum MoveAuthenticatorOwned {
-//         V1(MoveAuthenticatorV1),
-//     }
+    #[derive(serde::Deserialize)]
+    enum MoveAuthenticatorOwned {
+        V1(MoveAuthenticatorV1),
+    }
 
-//     impl From<MoveAuthenticatorOwned> for MoveAuthenticator {
-//         fn from(value: MoveAuthenticatorOwned) -> Self {
-//             match value {
-//                 MoveAuthenticatorOwned::V1(v1) => Self::V1(v1),
-//             }
-//         }
-//     }
+    impl From<MoveAuthenticatorOwned> for MoveAuthenticatorInner {
+        fn from(value: MoveAuthenticatorOwned) -> Self {
+            match value {
+                MoveAuthenticatorOwned::V1(v1) => Self::V1(v1),
+            }
+        }
+    }
 
-//     impl MoveAuthenticator {
-//         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self,
-// SignatureFromBytesError> {             let bytes = bytes.as_ref();
-//             let flag =
-//                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-//                     SignatureFromBytesError::new("missing signature scheme
-// flag")                 })?)
-//                 .map_err(SignatureFromBytesError::new)?;
-//             if flag != SignatureScheme::MoveAuthenticator {
-//                 return Err(SignatureFromBytesError::new(
-//                     "invalid move authenticator flag",
-//                 ));
-//             }
-//             let bcs_bytes = &bytes[1..];
+    impl MoveAuthenticatorInner {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
+            let bytes = bytes.as_ref();
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
+            if flag != SignatureScheme::MoveAuthenticator {
+                return Err(SignatureFromBytesError::new(
+                    "invalid move authenticator flag",
+                ));
+            }
+            let bcs_bytes = &bytes[1..];
 
-//             let authenticator =
-// bcs::from_bytes::<MoveAuthenticatorOwned>(bcs_bytes)                 
-// .map_err(SignatureFromBytesError::new)?;
+            let authenticator = bcs::from_bytes::<MoveAuthenticatorOwned>(bcs_bytes)
+                .map_err(SignatureFromBytesError::new)?;
 
-//             Ok(authenticator.into())
-//         }
+            Ok(authenticator.into())
+        }
 
-//         pub fn to_bytes(&self) -> Vec<u8> {
-//             let authenticator = match self {
-//                 Self::V1(v1) => MoveAuthenticatorRef::V1(v1),
-//             };
-//             let as_bytes =
-//                 bcs::to_bytes(&authenticator).expect("BCS serialization
-// should not fail");             let mut bytes = Vec::with_capacity(1 +
-// as_bytes.len());             bytes.push(SignatureScheme::MoveAuthenticator as
-// u8);             bytes.extend(as_bytes);
-//             bytes
-//         }
-//     }
+        pub fn to_bytes(&self) -> Vec<u8> {
+            let authenticator = match self {
+                Self::V1(v1) => MoveAuthenticatorRef::V1(v1),
+            };
+            let as_bytes =
+                bcs::to_bytes(&authenticator).expect("BCS serialization should not fail");
+            let mut bytes = Vec::with_capacity(1 + as_bytes.len());
+            bytes.push(SignatureScheme::MoveAuthenticator as u8);
+            bytes.extend(as_bytes);
+            bytes
+        }
+    }
 
-//     impl Serialize for MoveAuthenticator {
-//         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//         where
-//             S: Serializer,
-//         {
-//             if serializer.is_human_readable() {
-//                 match self {
-//                     Self::V1(v1) =>
-// MoveAuthenticatorRef::V1(v1).serialize(serializer),                 }
-//             } else {
-//                 let bytes = self.to_bytes();
-//                 serializer.serialize_bytes(&bytes)
-//             }
-//         }
-//     }
+    impl Serialize for MoveAuthenticatorInner {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                match self {
+                    Self::V1(v1) => MoveAuthenticatorRef::V1(v1).serialize(serializer),
+                }
+            } else {
+                let bytes = self.to_bytes();
+                serializer.serialize_bytes(&bytes)
+            }
+        }
+    }
 
-//     impl<'de> Deserialize<'de> for MoveAuthenticator {
-//         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-//         where
-//             D: Deserializer<'de>,
-//         {
-//             if deserializer.is_human_readable() {
-//                 let authenticator =
-// MoveAuthenticatorOwned::deserialize(deserializer)?;                 
-// Ok(authenticator.into())             } else {
-//                 let bytes: Cow<'de, [u8]> =
-// Bytes::deserialize_as(deserializer)?;                 
-// Self::from_bytes(bytes).map_err(serde::de::Error::custom)             }
-//         }
-//     }
-// }
+    impl<'de> Deserialize<'de> for MoveAuthenticatorInner {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let authenticator = MoveAuthenticatorOwned::deserialize(deserializer)?;
+                Ok(authenticator.into())
+            } else {
+                let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
+            }
+        }
+    }
+}
