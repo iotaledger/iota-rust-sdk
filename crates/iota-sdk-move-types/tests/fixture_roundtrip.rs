@@ -19,16 +19,35 @@
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
     framework::{
+        balance::Balance,
         clock::Clock,
-        coin::{Coin, CoinMetadata},
-        deny_list::DenyList,
+        coin::{Coin, CoinMetadata, DenyCapV1, RegulatedCoinMetadata, TreasuryCap},
+        coin_manager::{CoinManaged, CoinManager, CoinManagerMetadataCap, CoinManagerTreasuryCap},
+        config::Config,
+        deny_list::{ConfigWriteCap, DenyList},
+        display::{Display, DisplayCreated, VersionUpdated},
+        dynamic_field::Field,
         iota::IOTA,
-        package::UpgradeCap,
-        random::Random,
+        kiosk::{Kiosk, KioskOwnerCap},
+        object::ID,
+        package::{Publisher, UpgradeCap},
+        random::{Random, RandomInner},
+        timelock::TimeLock,
+        token::{Token, TokenPolicy, TokenPolicyCap, TokenPolicyCreated},
+        transfer_policy::{TransferPolicy, TransferPolicyCap, TransferPolicyCreated},
     },
     iota_system::{
-        iota_system::IotaSystemState, iota_system_state_inner::IotaSystemStateV2,
-        staking_pool::StakedIota, timelocked_staking::TimelockedStakedIota,
+        iota_system::IotaSystemState,
+        iota_system_state_inner::{IotaSystemStateV2, SystemEpochInfoEventV2},
+        staking_pool::{PoolTokenExchangeRate, StakedIota},
+        timelocked_staking::TimelockedStakedIota,
+        validator::{StakingRequestEvent, UnstakingRequestEvent},
+        validator_cap::UnverifiedValidatorOperationCap,
+        validator_set::{
+            CommitteeValidatorJoinEvent, CommitteeValidatorLeaveEvent, ValidatorEpochInfoEventV1,
+            ValidatorJoinEvent, ValidatorLeaveEvent,
+        },
+        validator_wrapper,
     },
     stardust::{
         alias::Alias, alias_output::AliasOutput, basic_output::BasicOutput, nft::Nft,
@@ -120,4 +139,201 @@ fn timelocked_staked_iota() {
 #[test]
 fn upgrade_cap() {
     roundtrip::<UpgradeCap>(include_bytes!("fixtures/upgrade_cap.bcs"));
+}
+
+// For the generic mirrors below, the on-chain type parameter is some
+// arbitrary third-party type (recorded only in the object's type tag, the
+// pinned ID of which lives in the capture script). The parameter is
+// phantom — it never affects the BCS bytes — so `IOTA` stands in for it.
+
+#[test]
+fn treasury_cap() {
+    roundtrip::<TreasuryCap<IOTA>>(include_bytes!("fixtures/treasury_cap.bcs"));
+}
+
+#[test]
+fn deny_cap_v1() {
+    roundtrip::<DenyCapV1<IOTA>>(include_bytes!("fixtures/deny_cap_v1.bcs"));
+}
+
+#[test]
+fn regulated_coin_metadata() {
+    roundtrip::<RegulatedCoinMetadata<IOTA>>(include_bytes!(
+        "fixtures/regulated_coin_metadata.bcs"
+    ));
+}
+
+#[test]
+fn coin_manager() {
+    roundtrip::<CoinManager<IOTA>>(include_bytes!("fixtures/coin_manager.bcs"));
+}
+
+#[test]
+fn coin_manager_treasury_cap() {
+    roundtrip::<CoinManagerTreasuryCap<IOTA>>(include_bytes!(
+        "fixtures/coin_manager_treasury_cap.bcs"
+    ));
+}
+
+#[test]
+fn coin_manager_metadata_cap() {
+    roundtrip::<CoinManagerMetadataCap<IOTA>>(include_bytes!(
+        "fixtures/coin_manager_metadata_cap.bcs"
+    ));
+}
+
+#[test]
+fn token() {
+    roundtrip::<Token<IOTA>>(include_bytes!("fixtures/token.bcs"));
+}
+
+#[test]
+fn token_policy() {
+    roundtrip::<TokenPolicy<IOTA>>(include_bytes!("fixtures/token_policy.bcs"));
+}
+
+#[test]
+fn token_policy_cap() {
+    roundtrip::<TokenPolicyCap<IOTA>>(include_bytes!("fixtures/token_policy_cap.bcs"));
+}
+
+#[test]
+fn timelock_balance_iota() {
+    roundtrip::<TimeLock<Balance<IOTA>>>(include_bytes!("fixtures/timelock_balance_iota.bcs"));
+}
+
+#[test]
+fn random_inner() {
+    roundtrip::<RandomInner>(include_bytes!("fixtures/random_inner.bcs"));
+}
+
+#[test]
+fn deny_list_config() {
+    roundtrip::<Config<ConfigWriteCap>>(include_bytes!("fixtures/deny_list_config.bcs"));
+}
+
+#[test]
+fn validator_operation_cap() {
+    roundtrip::<UnverifiedValidatorOperationCap>(include_bytes!(
+        "fixtures/validator_operation_cap.bcs"
+    ));
+}
+
+#[test]
+fn field_pool_token_exchange_rate() {
+    roundtrip::<Field<u64, PoolTokenExchangeRate>>(include_bytes!(
+        "fixtures/field_pool_token_exchange_rate.bcs"
+    ));
+}
+
+#[test]
+fn field_validator_wrapper() {
+    roundtrip::<Field<ID, validator_wrapper::Validator>>(include_bytes!(
+        "fixtures/field_validator_wrapper.bcs"
+    ));
+}
+
+#[test]
+fn publisher() {
+    roundtrip::<Publisher>(include_bytes!("fixtures/publisher.bcs"));
+}
+
+#[test]
+fn display() {
+    roundtrip::<Display<IOTA>>(include_bytes!("fixtures/display.bcs"));
+}
+
+#[test]
+fn kiosk() {
+    roundtrip::<Kiosk>(include_bytes!("fixtures/kiosk.bcs"));
+}
+
+#[test]
+fn kiosk_owner_cap() {
+    roundtrip::<KioskOwnerCap>(include_bytes!("fixtures/kiosk_owner_cap.bcs"));
+}
+
+#[test]
+fn transfer_policy() {
+    roundtrip::<TransferPolicy<IOTA>>(include_bytes!("fixtures/transfer_policy.bcs"));
+}
+
+#[test]
+fn transfer_policy_cap() {
+    roundtrip::<TransferPolicyCap<IOTA>>(include_bytes!("fixtures/transfer_policy_cap.bcs"));
+}
+
+// -- Events ----------------------------------------------------------------
+
+#[test]
+fn staking_request_event() {
+    roundtrip::<StakingRequestEvent>(include_bytes!("fixtures/staking_request_event.bcs"));
+}
+
+#[test]
+fn unstaking_request_event() {
+    roundtrip::<UnstakingRequestEvent>(include_bytes!("fixtures/unstaking_request_event.bcs"));
+}
+
+#[test]
+fn validator_epoch_info_event_v1() {
+    roundtrip::<ValidatorEpochInfoEventV1>(include_bytes!(
+        "fixtures/validator_epoch_info_event_v1.bcs"
+    ));
+}
+
+#[test]
+fn validator_join_event() {
+    roundtrip::<ValidatorJoinEvent>(include_bytes!("fixtures/validator_join_event.bcs"));
+}
+
+#[test]
+fn validator_leave_event() {
+    roundtrip::<ValidatorLeaveEvent>(include_bytes!("fixtures/validator_leave_event.bcs"));
+}
+
+#[test]
+fn committee_validator_join_event() {
+    roundtrip::<CommitteeValidatorJoinEvent>(include_bytes!(
+        "fixtures/committee_validator_join_event.bcs"
+    ));
+}
+
+#[test]
+fn committee_validator_leave_event() {
+    roundtrip::<CommitteeValidatorLeaveEvent>(include_bytes!(
+        "fixtures/committee_validator_leave_event.bcs"
+    ));
+}
+
+#[test]
+fn system_epoch_info_event_v2() {
+    roundtrip::<SystemEpochInfoEventV2>(include_bytes!("fixtures/system_epoch_info_event_v2.bcs"));
+}
+
+#[test]
+fn display_created() {
+    roundtrip::<DisplayCreated<IOTA>>(include_bytes!("fixtures/display_created.bcs"));
+}
+
+#[test]
+fn version_updated() {
+    roundtrip::<VersionUpdated<IOTA>>(include_bytes!("fixtures/version_updated.bcs"));
+}
+
+#[test]
+fn transfer_policy_created() {
+    roundtrip::<TransferPolicyCreated<IOTA>>(include_bytes!(
+        "fixtures/transfer_policy_created.bcs"
+    ));
+}
+
+#[test]
+fn token_policy_created() {
+    roundtrip::<TokenPolicyCreated<IOTA>>(include_bytes!("fixtures/token_policy_created.bcs"));
+}
+
+#[test]
+fn coin_managed() {
+    roundtrip::<CoinManaged>(include_bytes!("fixtures/coin_managed.bcs"));
 }

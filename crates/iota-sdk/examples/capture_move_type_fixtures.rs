@@ -39,6 +39,10 @@
 //! - [`Source::DynamicField`]: walk a dynamic field of a parent object. Used
 //!   for the versioned inner state (`IotaSystemStateInnerV2` sits as a dynamic
 //!   field of the 0x5 wrapper, keyed by version number).
+//! - [`Source::Event`]: fetch the BCS contents of an event, pinned by the
+//!   digest of the transaction that emitted it plus its fully-qualified type.
+//!   Events are immutable history, so unlike object pins these can never be
+//!   spent or deleted — re-runs always produce the same bytes.
 //!
 //! Run this manually whenever you want to refresh the fixtures
 //! against current chain state — there is no automated CI job that
@@ -76,6 +80,13 @@ enum Source {
         parent: &'static str,
         name_type: &'static str,
         name_bcs: &'static [u8],
+    },
+    /// Fetch the first event of the given fully-qualified type emitted by
+    /// the given transaction. Events are immutable once the transaction is
+    /// checkpointed, so this pin is deterministic forever.
+    Event {
+        event_type: &'static str,
+        tx_digest: &'static str,
     },
 }
 
@@ -115,6 +126,69 @@ const FIXTURES: &[Fixture] = &[
             "0xd02db1bb647dfcc94f35b82a14e8bab07661be3e6d4b022bdc7ee63eed0728f8",
         ),
     },
+    Fixture {
+        file: "treasury_cap",
+        // mainnet `0x2::coin::TreasuryCap<…::demo_krill_coin::DEMO_KRILL_COIN>` (shared)
+        source: Source::ObjectId(
+            "0x0262bcf534e9946e6887382abc00e8efb04bb104e47e9ffe642f7ea1e3d0248f",
+        ),
+    },
+    Fixture {
+        file: "deny_cap_v1",
+        // mainnet `0x2::coin::DenyCapV1<…::usdt0::USDT0>`
+        source: Source::ObjectId(
+            "0x1d6a304d5f6349091fc235e63d558477d1b68ccf3aaf28f35d7d3e79fcaeba5c",
+        ),
+    },
+    Fixture {
+        file: "regulated_coin_metadata",
+        // mainnet `0x2::coin::RegulatedCoinMetadata<…::tln_token::TLN_TOKEN>` (frozen)
+        source: Source::ObjectId(
+            "0x3910559ffc302c089e245071442735e481cde5aa62bbfa2557e15385ff5c819f",
+        ),
+    },
+    Fixture {
+        file: "coin_manager",
+        // mainnet `0x2::coin_manager::CoinManager<…::ape::APE>` (shared)
+        source: Source::ObjectId(
+            "0x009e5db7ee421d05fe652305d77e0cc5eee82c994b836ac89b3bcef876cb6159",
+        ),
+    },
+    Fixture {
+        file: "coin_manager_treasury_cap",
+        // mainnet `0x2::coin_manager::CoinManagerTreasuryCap<…::ock::OCK>`
+        source: Source::ObjectId(
+            "0x038eb3a9448aebcb22ed6411f1efb2d2fa84aed4cf413622da921edc136f4571",
+        ),
+    },
+    Fixture {
+        file: "coin_manager_metadata_cap",
+        // mainnet `0x2::coin_manager::CoinManagerMetadataCap<…::spec_coin::SPEC_COIN>`
+        source: Source::ObjectId(
+            "0x44bc7586906f63f7ecf9dc729feae69e79f29631f80eea1045191235f49c67b7",
+        ),
+    },
+    Fixture {
+        file: "token",
+        // mainnet `0x2::token::Token<…::oid_credit::OID_CREDIT>`
+        source: Source::ObjectId(
+            "0x01700f283c9e3a527ef75445d380752f7ab88fefe105238012f1bd1820e150e9",
+        ),
+    },
+    Fixture {
+        file: "token_policy",
+        // mainnet `0x2::token::TokenPolicy<…::oid_credit::OID_CREDIT>` (shared)
+        source: Source::ObjectId(
+            "0x0f5d3e7ff929222c19e164de4116197d67b37e2f8709e6ccc8d68782249c2f26",
+        ),
+    },
+    Fixture {
+        file: "token_policy_cap",
+        // mainnet `0x2::token::TokenPolicyCap<…::oid_credit::OID_CREDIT>`
+        source: Source::ObjectId(
+            "0x059ceb5e5825d97c56965165883476491cd9bfcc7140b11f3e69cd5001a59954",
+        ),
+    },
     // -- Stardust migration objects -----------------------------------------
     Fixture {
         file: "nft",
@@ -146,6 +220,14 @@ const FIXTURES: &[Fixture] = &[
             "0x000b06477ae3642b92f0198760652691d9826fa699abd56ed26dd763fc01e32a",
         ),
     },
+    Fixture {
+        file: "timelock_balance_iota",
+        // mainnet `0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`
+        // (staking-rewards vesting schedule from the Stardust migration)
+        source: Source::ObjectId(
+            "0x000012c0de6d9ac34dbe8f022f3afac57c24f76c6845460e58109ed69c3be22d",
+        ),
+    },
     // -- Versioned inner state (dynamic-field walk) -------------------------
     // The `IotaSystemState` wrapper at 0x5 stores its inner versioned state
     // as a dynamic field keyed by version. V1 was migrated away long ago and
@@ -163,14 +245,33 @@ const FIXTURES: &[Fixture] = &[
     // the zkLogin feature it backs is not activated here, so we skip it.
     Fixture {
         file: "random",
-        // Wraps an inner `Versioned`; `RandomInner` lives off the
-        // `Versioned`'s UID (not the wrapper's), so we skip it for now —
-        // capturing it would need a nested dynamic-field walk.
         source: Source::ObjectId("0x8"),
+    },
+    Fixture {
+        file: "random_inner",
+        // `RandomInner` hangs off the UID of the `Versioned` embedded in
+        // the `Random` wrapper at 0x8, keyed by version. Both the UID and
+        // the version below are read out of the `random` fixture bytes
+        // (offsets 32..64 and 64..72); they only change on a protocol
+        // upgrade of the randomness state, in which case capture fails
+        // loudly and the pin is refreshed the same way.
+        source: Source::DynamicField {
+            parent: "0xf036d71864eb9287330110df7475b5b98ba0564c8c69fd5f844d398560c0b41a",
+            name_type: "u64",
+            name_bcs: &1u64.to_le_bytes(),
+        },
     },
     Fixture {
         file: "deny_list",
         source: Source::ObjectId("0x403"),
+    },
+    Fixture {
+        file: "deny_list_config",
+        // mainnet `0x2::config::Config<0x2::deny_list::ConfigWriteCap>` —
+        // a per-coin-type deny list (v2) config, child object of 0x403.
+        source: Source::ObjectId(
+            "0x1f4ecb57b09ec861ba44832cd3678f2db21a7ea19ee4bed90286068398048a58",
+        ),
     },
     // -- Validator / staking auxiliary -------------------------------------
     Fixture {
@@ -180,6 +281,30 @@ const FIXTURES: &[Fixture] = &[
             "0x000526665a4137147b17cf4ea84d6df809ef28b0586b6c497423ce866b57dabc",
         ),
     },
+    Fixture {
+        file: "validator_operation_cap",
+        // mainnet `0x3::validator_cap::UnverifiedValidatorOperationCap`
+        source: Source::ObjectId(
+            "0x004d0b7c639f711a5f7b34298faaca2ff9e69fdc25c994b282e6c6026c6489d0",
+        ),
+    },
+    Fixture {
+        file: "field_pool_token_exchange_rate",
+        // mainnet `0x2::dynamic_field::Field<u64, 0x3::staking_pool::PoolTokenExchangeRate>`
+        // — an entry of a staking pool's exchange-rate table. Exchange
+        // rates are append-only per epoch, so the entry is never deleted.
+        source: Source::ObjectId(
+            "0x000211cf08b3a4dd4c26992afdb88a535395f297170105880cdb079298a35e3f",
+        ),
+    },
+    Fixture {
+        file: "field_validator_wrapper",
+        // mainnet `0x2::dynamic_field::Field<0x2::object::ID, 0x3::validator_wrapper::Validator>`
+        // — an inactive validator entry in the system state's validator table.
+        source: Source::ObjectId(
+            "0x010634284fa0ffe3061a692e112dcef78f1768bf8631a0a1c1856d42fcf23a4b",
+        ),
+    },
     // -- Packages ---------------------------------------------------------
     Fixture {
         file: "upgrade_cap",
@@ -187,6 +312,145 @@ const FIXTURES: &[Fixture] = &[
         source: Source::ObjectId(
             "0x00339e728b01f73e07c30da31fafc8f72d975cfdd176c5913ff516bd294b47f3",
         ),
+    },
+    Fixture {
+        file: "publisher",
+        // mainnet `0x2::package::Publisher`
+        source: Source::ObjectId(
+            "0x01848d922b4925306197c733766c202c9514b34fa004b1103b5924b4daf9d6b0",
+        ),
+    },
+    Fixture {
+        file: "display",
+        // mainnet `0x2::display::Display<…::nft_minter::SimpleNFT>`
+        source: Source::ObjectId(
+            "0x01bd532ee6ce11dfe8520c1134c56b630b20527e7ebcf779ad44c5824fa52508",
+        ),
+    },
+    // -- Kiosk / transfer policy --------------------------------------------
+    Fixture {
+        file: "kiosk",
+        // mainnet `0x2::kiosk::Kiosk` (shared)
+        source: Source::ObjectId(
+            "0x0020d8bbc4457c230d6aec10ce9113682630fbdeda88bdff6187eaa1b5d6a048",
+        ),
+    },
+    Fixture {
+        file: "kiosk_owner_cap",
+        // mainnet `0x2::kiosk::KioskOwnerCap`
+        source: Source::ObjectId(
+            "0x081c9339cc0f8a2a458f85c48d73b57821d6fcfd3037157dacc26120b00f3066",
+        ),
+    },
+    Fixture {
+        file: "transfer_policy",
+        // mainnet `0x2::transfer_policy::TransferPolicy<…>` (shared)
+        source: Source::ObjectId(
+            "0x012e588fa67529383bc0be142f73dde76a44e1d2bd343574d0fd33acd6a035db",
+        ),
+    },
+    Fixture {
+        file: "transfer_policy_cap",
+        // mainnet `0x2::transfer_policy::TransferPolicyCap<…>`
+        source: Source::ObjectId(
+            "0x001aea5785ec9e93a6587421f38f9fa1a5fb06d3f49f46b23253c80ed50e9953",
+        ),
+    },
+    // -- Events ---------------------------------------------------------
+    // Pinned by (transaction digest, event type); events are immutable
+    // history so these pins can never go stale.
+    Fixture {
+        file: "staking_request_event",
+        source: Source::Event {
+            event_type: "0x3::validator::StakingRequestEvent",
+            tx_digest: "CLaQs7kJ4SXXqaQvp7h6SmQW5skVfWE7KUiTcgHY6GFD",
+        },
+    },
+    Fixture {
+        file: "unstaking_request_event",
+        source: Source::Event {
+            event_type: "0x3::validator::UnstakingRequestEvent",
+            tx_digest: "918HEwyqRizNtEJn6ARNgQVmPXVJh5aJxYQ3TE7fmWg",
+        },
+    },
+    Fixture {
+        file: "validator_epoch_info_event_v1",
+        source: Source::Event {
+            event_type: "0x3::validator_set::ValidatorEpochInfoEventV1",
+            tx_digest: "DvsQrzbjgdK6YYH9AhQkfuSZgDbDS6F16LAi16jXrrmk",
+        },
+    },
+    Fixture {
+        file: "validator_join_event",
+        source: Source::Event {
+            event_type: "0x3::validator_set::ValidatorJoinEvent",
+            tx_digest: "9AQX2nSzubL7MxQnSgXhaymYxC8dM7ZSEKvcmw2mvy6W",
+        },
+    },
+    Fixture {
+        file: "validator_leave_event",
+        source: Source::Event {
+            event_type: "0x3::validator_set::ValidatorLeaveEvent",
+            tx_digest: "DvsQrzbjgdK6YYH9AhQkfuSZgDbDS6F16LAi16jXrrmk",
+        },
+    },
+    Fixture {
+        file: "committee_validator_join_event",
+        source: Source::Event {
+            event_type: "0x3::validator_set::CommitteeValidatorJoinEvent",
+            tx_digest: "3xorGzB5dfkZV2FrQTGGpMkQnsRvSKco6wsoUmtb9pWb",
+        },
+    },
+    Fixture {
+        file: "committee_validator_leave_event",
+        source: Source::Event {
+            event_type: "0x3::validator_set::CommitteeValidatorLeaveEvent",
+            tx_digest: "DvsQrzbjgdK6YYH9AhQkfuSZgDbDS6F16LAi16jXrrmk",
+        },
+    },
+    // `SystemEpochInfoEventV1` predates the indexed history on mainnet —
+    // only V2 (which added `tips_amount`) is emitted on current epochs.
+    Fixture {
+        file: "system_epoch_info_event_v2",
+        source: Source::Event {
+            event_type: "0x3::iota_system_state_inner::SystemEpochInfoEventV2",
+            tx_digest: "DvsQrzbjgdK6YYH9AhQkfuSZgDbDS6F16LAi16jXrrmk",
+        },
+    },
+    Fixture {
+        file: "display_created",
+        source: Source::Event {
+            event_type: "0x2::display::DisplayCreated<0x2e7abccf796c9075298992a98ce7c07b909be253353d79f274ce835034dbb4a9::tangle_therapy::TangleTherapyNft>",
+            tx_digest: "E1ESQfAcq1BsLoe9KYc42eYxsysuWMFAWH99CFAhfszp",
+        },
+    },
+    Fixture {
+        file: "version_updated",
+        source: Source::Event {
+            event_type: "0x2::display::VersionUpdated<0x2e7abccf796c9075298992a98ce7c07b909be253353d79f274ce835034dbb4a9::tangle_therapy::TangleTherapyNft>",
+            tx_digest: "E1ESQfAcq1BsLoe9KYc42eYxsysuWMFAWH99CFAhfszp",
+        },
+    },
+    Fixture {
+        file: "transfer_policy_created",
+        source: Source::Event {
+            event_type: "0x2::transfer_policy::TransferPolicyCreated<0x2e7abccf796c9075298992a98ce7c07b909be253353d79f274ce835034dbb4a9::tangle_therapy::TangleTherapyNft>",
+            tx_digest: "E1ESQfAcq1BsLoe9KYc42eYxsysuWMFAWH99CFAhfszp",
+        },
+    },
+    Fixture {
+        file: "token_policy_created",
+        source: Source::Event {
+            event_type: "0x2::token::TokenPolicyCreated<0x93da2fbb33fb1a947564f527524e8386bb1518585bf95acd147675404461708b::oid_credit::OID_CREDIT>",
+            tx_digest: "2JUVWaHq8bjq2rC6zbnE71brWahZzxx2bKYpZNVDC6oS",
+        },
+    },
+    Fixture {
+        file: "coin_managed",
+        source: Source::Event {
+            event_type: "0x2::coin_manager::CoinManaged",
+            tx_digest: "A4dkiMBnbs2CHGmcQ1kbTqjhbLmEk6zvshx6s64DPd2z",
+        },
     },
 ];
 
@@ -305,6 +569,28 @@ async fn capture(
                 .as_struct_opt()
                 .ok_or("object is not a Move struct")?;
             Ok(move_struct.contents().to_vec())
+        }
+        Source::Event {
+            event_type,
+            tx_digest,
+        } => {
+            use base64ct::Encoding as _;
+            let filter = iota_sdk::graphql_client::query_types::EventFilter {
+                event_type: Some((*event_type).to_string()),
+                transaction_digest: Some((*tx_digest).to_string()),
+                ..Default::default()
+            };
+            let page = client
+                .events(
+                    filter,
+                    iota_sdk::graphql_client::PaginationFilter::default(),
+                )
+                .await?;
+            let event = page
+                .data()
+                .first()
+                .ok_or_else(|| format!("no `{event_type}` event in transaction `{tx_digest}`"))?;
+            Ok(base64ct::Base64::decode_vec(&event.bcs.0)?)
         }
         Source::DynamicField {
             parent,
