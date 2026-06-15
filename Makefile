@@ -141,6 +141,7 @@ bindings-example: ## Run a specific example for all bindings. Usage: make bindin
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) csharp-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) wasm-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
