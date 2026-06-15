@@ -265,16 +265,16 @@ mod serialization {
             };
 
             let CollectedClientData {
-                ty: _,
+                ty,
                 challenge,
                 origin: _,
             } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
-            // if client_data_json_parsed.ty != ClientDataType::Get {
-            //     return Err(IotaError::InvalidSignature {
-            //         error: "Invalid client data type".to_string(),
-            //     });
-            // };
+            if ty != ClientDataType::Get {
+                return Err(SignatureFromBytesError::new(
+                    "Invalid client data type".to_string(),
+                ));
+            };
 
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
