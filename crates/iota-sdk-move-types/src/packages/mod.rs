@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Rust mirrors of the IOTA system packages. Each child module corresponds to
-//! one package.
+//! Rust mirrors of IOTA packages.
+//! Each child module corresponds to one package.
 
 pub mod framework;
 pub mod iota_system;
