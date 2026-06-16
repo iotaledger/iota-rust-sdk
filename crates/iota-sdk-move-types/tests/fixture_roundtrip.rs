@@ -24,7 +24,7 @@ use iota_sdk_move_types::{
         coin::{Coin, CoinMetadata, DenyCapV1, RegulatedCoinMetadata, TreasuryCap},
         coin_manager::{CoinManaged, CoinManager, CoinManagerMetadataCap, CoinManagerTreasuryCap},
         config::Config,
-        deny_list::{ConfigWriteCap, DenyList},
+        deny_list::{ConfigWriteCap, DenyList, PerTypeConfigCreated},
         display::{Display, DisplayCreated, VersionUpdated},
         dynamic_field::Field,
         iota::IOTA,
@@ -33,8 +33,11 @@ use iota_sdk_move_types::{
         package::{Publisher, UpgradeCap},
         random::{Random, RandomInner},
         timelock::TimeLock,
-        token::{Token, TokenPolicy, TokenPolicyCap, TokenPolicyCreated},
-        transfer_policy::{TransferPolicy, TransferPolicyCap, TransferPolicyCreated},
+        token::{RuleKey as TokenRuleKey, Token, TokenPolicy, TokenPolicyCap, TokenPolicyCreated},
+        transfer_policy::{
+            RuleKey as TransferPolicyRuleKey, TransferPolicy, TransferPolicyCap,
+            TransferPolicyCreated,
+        },
     },
     iota_system::{
         iota_system::IotaSystemState,
@@ -137,4 +140,7 @@ fixture_roundtrip! {
     TransferPolicyCreated<IOTA> => transfer_policy_created,
     TokenPolicyCreated<IOTA> => token_policy_created,
     CoinManaged => coin_managed,
+    PerTypeConfigCreated => per_type_config_created,
+    TransferPolicyRuleKey<IOTA> => transfer_policy_rule_key,
+    TokenRuleKey<IOTA> => token_rule_key,
 }

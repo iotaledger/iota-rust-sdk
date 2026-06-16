@@ -489,6 +489,35 @@ const FIXTURES: &[Fixture] = &[
             tx_digest: "A4dkiMBnbs2CHGmcQ1kbTqjhbLmEk6zvshx6s64DPd2z",
         },
     },
+    Fixture {
+        file: "per_type_config_created",
+        source: Source::Event {
+            event_type: "0x2::deny_list::PerTypeConfigCreated",
+            tx_digest: "436dyPHXfLADoyawqM1QZtKir3SykmN4neLcpKMHxQ4V",
+        },
+    },
+    // -- Policy rule keys (dynamic-field names) -----------------------------
+    // `transfer_policy::RuleKey<T>` / `token::RuleKey<T>` only exist as the
+    // *names* of the dynamic fields under which a policy stores its per-rule
+    // config. The parents below are shared policies carrying a stable rule.
+    Fixture {
+        file: "transfer_policy_rule_key",
+        // `0x2::transfer_policy::RuleKey<…::kiosk_lock_rule::Rule>` on a
+        // shared `TransferPolicy` enforcing a kiosk-lock rule.
+        source: Source::DynamicFieldName {
+            parent: "0x012e588fa67529383bc0be142f73dde76a44e1d2bd343574d0fd33acd6a035db",
+            name_type: "0x2::transfer_policy::RuleKey<0xe49f2f23baf6c88a4c18478ac375033eea1f5609f2be6359b417208ea96f555d::kiosk_lock_rule::Rule>",
+        },
+    },
+    Fixture {
+        file: "token_rule_key",
+        // `0x2::token::RuleKey<…::allowlist_rule::Allowlist>` on a shared
+        // `TokenPolicy` enforcing an allowlist rule.
+        source: Source::DynamicFieldName {
+            parent: "0xa10b50fb6e9b582eebb2b7b156a68c48489525f26022d6e877f63732292812af",
+            name_type: "0x2::token::RuleKey<0x229b368f5086b9030778f54dd123bb2e8debb8da559658f21f4a6fd11083e7d7::allowlist_rule::Allowlist>",
+        },
+    },
 ];
 
 #[tokio::main]
