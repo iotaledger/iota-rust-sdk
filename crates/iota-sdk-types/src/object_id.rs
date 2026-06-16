@@ -42,6 +42,7 @@ impl ObjectId {
     pub const AUTHENTICATOR_STATE: Self = Self(Address::AUTHENTICATOR_STATE);
     pub const RANDOMNESS_STATE: Self = Self(Address::RANDOMNESS_STATE);
     pub const GENESIS_IOTA_BRIDGE: Self = Self(Address::GENESIS_IOTA_BRIDGE);
+    pub const CLAIM_REGISTRY: Self = Self(Address::CLAIM_REGISTRY);
     pub const DENY_LIST: Self = Self(Address::DENY_LIST);
 
     /// Generates a new ObjectId from the provided byte array.

@@ -87,6 +87,7 @@ impl Address {
     pub const AUTHENTICATOR_STATE: Self = Self::from_u16(7);
     pub const RANDOMNESS_STATE: Self = Self::from_u16(8);
     pub const GENESIS_IOTA_BRIDGE: Self = Self::from_u16(9);
+    pub const CLAIM_REGISTRY: Self = Self::from_u16(0x10);
     pub const DENY_LIST: Self = Self::from_u16(0x403);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {

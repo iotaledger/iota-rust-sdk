@@ -138,6 +138,7 @@ impl Identifier {
     pub const AUTHENTICATOR_STATE_MODULE: Self = Self::from_static("authenticator_state");
     pub const BAG_MODULE: Self = Self::from_static("bag");
     pub const BALANCE_MODULE: Self = Self::from_static("balance");
+    pub const CLAIM_REGISTRY_MODULE: Self = Self::from_static("claim_registry");
     pub const CLOCK_MODULE: Self = Self::from_static("clock");
     pub const COIN_MODULE: Self = Self::from_static("coin");
     pub const COIN_MANAGER_MODULE: Self = Self::from_static("coin_manager");
