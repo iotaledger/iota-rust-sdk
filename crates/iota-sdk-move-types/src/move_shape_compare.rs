@@ -23,7 +23,7 @@ use move_binary_format::{
 use crate::{
     iota_framework, iota_system,
     move_shape::{Field, MoveShape, Shape, Variant},
-    stardust,
+    move_stdlib, stardust,
 };
 
 // ---------------------------------------------------------------------------
@@ -828,50 +828,40 @@ fn expected_entries() -> Vec<Entry> {
             MoveStdlib,
             "fixed_point32",
             "FixedPoint32",
-            crate::move_stdlib::fixed_point32::FixedPoint32
+            move_stdlib::fixed_point32::FixedPoint32
         ),
-        entry!(
-            MoveStdlib,
-            "ascii",
-            "String",
-            crate::move_stdlib::ascii::String
-        ),
-        entry!(MoveStdlib, "ascii", "Char", crate::move_stdlib::ascii::Char),
-        entry!(
-            MoveStdlib,
-            "string",
-            "String",
-            crate::move_stdlib::string::String
-        ),
+        entry!(MoveStdlib, "ascii", "String", move_stdlib::ascii::String),
+        entry!(MoveStdlib, "ascii", "Char", move_stdlib::ascii::Char),
+        entry!(MoveStdlib, "string", "String", move_stdlib::string::String),
         entry!(
             MoveStdlib,
             "bit_vector",
             "BitVector",
-            crate::move_stdlib::bit_vector::BitVector
+            move_stdlib::bit_vector::BitVector
         ),
         entry!(
             MoveStdlib,
             "type_name",
             "TypeName",
-            crate::move_stdlib::type_name::TypeName
+            move_stdlib::type_name::TypeName
         ),
         entry!(
             MoveStdlib,
             "option",
             "Option",
-            crate::move_stdlib::option::Option<()>
+            move_stdlib::option::Option<()>
         ),
         entry!(
             MoveStdlib,
             "uq32_32",
             "UQ32_32",
-            crate::move_stdlib::uq32_32::UQ32_32
+            move_stdlib::uq32_32::UQ32_32
         ),
         entry!(
             MoveStdlib,
             "uq64_64",
             "UQ64_64",
-            crate::move_stdlib::uq64_64::UQ64_64
+            move_stdlib::uq64_64::UQ64_64
         ),
         // -- 0x3 iota-system --------------------------------------------------
         entry!(
@@ -1276,7 +1266,7 @@ fn check_type(
     // Rust prelude `Option<T>` is BCS-equivalent to Move's
     // `0x1::option::Option<T>`, which the Move side reports as a Datatype
     // (a struct wrapping `vector<T>`). Recurse on the inner type so callers
-    // don't have to use `crate::move_stdlib::option::Option` to participate.
+    // don't have to use `move_stdlib::option::Option` to participate.
     if let Shape::Option(rust_inner) = rust
         && let Type::Datatype(d) = move_ty
         && d.name.as_ref().as_str() == "Option"
