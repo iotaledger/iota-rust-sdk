@@ -226,7 +226,10 @@ export_struct_tag_ctors!(
     Url,
     Bag,
     ObjectBag,
-    TxContext
+    TxContext,
+    Alias,
+    Nft,
+    Irc27Metadata
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
@@ -239,6 +242,9 @@ export_struct_tag_from_type_tag_ctors!(
     TimeLock,
     Option,
     TransferReceiving,
+    BasicOutput,
+    NftOutput,
+    AliasOutput,
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
