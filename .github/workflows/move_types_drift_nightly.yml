@@ -1,4 +1,4 @@
-name: Move Drift Nightly
+name: Move Types Drift Nightly
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: move-drift-nightly-${{ github.ref }}
+  group: move-types-drift-nightly-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

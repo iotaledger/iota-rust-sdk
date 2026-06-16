@@ -1391,8 +1391,8 @@ fn shapes_match() {
 /// `struct`/`enum` across the four system packages, fetched at the pinned
 /// monorepo rev — into the set of `(address, module, name)` keys.
 ///
-/// `move_drift_nightly` flags when upstream `develop` drifts from the pin;
-/// [`registry_matches_published_api`] in turn keeps [`expected_entries`]
+/// `move_types_drift_nightly` flags when upstream `develop` drifts from the
+/// pin; [`registry_matches_published_api`] in turn keeps [`expected_entries`]
 /// in sync with the manifest — so every published type has a registered
 /// mirror that [`shapes_match`] then cross-checks.
 ///

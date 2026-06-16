@@ -1,19 +1,8 @@
-# Set the default target of this Makefile
-.PHONY: all
-all:: check-features clippy test wasm
-
+# Only the crate-specific rules the root Makefile invokes (via `make -C`)
+# live here; everything else (test, clippy, …) falls through to the root.
 .PHONY: check-features
 check-features:
 	cargo hack check --feature-powerset --no-dev-deps
-
-.PHONY: clippy
-clippy:
-	cargo clippy --all-features --all-targets
-
-.PHONY: test
-test:
-	cargo nextest run --all-features
-	cargo test --all-features --doc
 
 .PHONY: wasm
 wasm:

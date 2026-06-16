@@ -82,7 +82,7 @@ macro_rules! coin_marker_validation_tests {
             #[test]
             fn accepts_matching_coin_marker() {
                 let object = object_with_tag(IOTA_TAG, FIXTURE);
-                $ty::<IOTA>::try_from_object(&object).expect("tag matches T");
+                $ty::<IOTA>::try_from(&object).expect("tag matches T");
             }
 
             #[test]
@@ -91,7 +91,7 @@ macro_rules! coin_marker_validation_tests {
                 // type-param check this would silently decode as `<IOTA>`.
                 let object = object_with_tag(FOO_TAG, FIXTURE);
                 assert!(matches!(
-                    $ty::<IOTA>::try_from_object(&object),
+                    $ty::<IOTA>::try_from(&object),
                     Err(FromObjectError::WrongType)
                 ));
             }
@@ -99,7 +99,7 @@ macro_rules! coin_marker_validation_tests {
             #[test]
             fn marker_trait_works_for_custom_coins() {
                 let object = object_with_tag(FOO_TAG, FIXTURE);
-                $ty::<Foo>::try_from_object(&object).expect("tag matches custom T");
+                $ty::<Foo>::try_from(&object).expect("tag matches custom T");
             }
 
             #[test]
@@ -164,14 +164,14 @@ macro_rules! object_tag_validation_tests {
             #[test]
             fn accepts_matching_tag() {
                 let object = object_with_tag($tag, FIXTURE);
-                <$ty>::try_from_object(&object).expect("tag matches");
+                <$ty>::try_from(&object).expect("tag matches");
             }
 
             #[test]
             fn rejects_mismatched_tag() {
                 let object = object_with_tag("0x123::foo::FOO", FIXTURE);
                 assert!(matches!(
-                    <$ty>::try_from_object(&object),
+                    <$ty>::try_from(&object),
                     Err(FromObjectError::WrongType)
                 ));
             }
@@ -216,12 +216,12 @@ mod synthetic {
             module_name: ascii::String::new(b"my_module".to_vec()),
         };
         let object = synthetic_object("0x2::package::Publisher", &value);
-        let decoded = Publisher::try_from_object(&object).expect("tag matches");
+        let decoded = Publisher::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
         let object = synthetic_object("0x2::package::UpgradeCap", &value);
         assert!(matches!(
-            Publisher::try_from_object(&object),
+            Publisher::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
     }
@@ -235,12 +235,12 @@ mod synthetic {
             item_count: 3,
         };
         let object = synthetic_object("0x2::kiosk::Kiosk", &value);
-        let decoded = Kiosk::try_from_object(&object).expect("tag matches");
+        let decoded = Kiosk::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
         let object = synthetic_object("0x2::kiosk::KioskOwnerCap", &value);
         assert!(matches!(
-            Kiosk::try_from_object(&object),
+            Kiosk::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
     }
@@ -252,12 +252,12 @@ mod synthetic {
             r#for: ID::new(ObjectId::ZERO),
         };
         let object = synthetic_object("0x2::kiosk::KioskOwnerCap", &value);
-        let decoded = KioskOwnerCap::try_from_object(&object).expect("tag matches");
+        let decoded = KioskOwnerCap::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
         let object = synthetic_object("0x2::kiosk::Kiosk", &value);
         assert!(matches!(
-            KioskOwnerCap::try_from_object(&object),
+            KioskOwnerCap::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
     }
@@ -275,7 +275,7 @@ mod synthetic {
             "0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>",
             &value,
         );
-        let decoded = TimeLock::<Balance<IOTA>>::try_from_object(&object).expect("tag matches");
+        let decoded = TimeLock::<Balance<IOTA>>::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
         // Same bytes labeled as a different coin's balance must be
@@ -285,12 +285,12 @@ mod synthetic {
             &value,
         );
         assert!(matches!(
-            TimeLock::<Balance<IOTA>>::try_from_object(&object),
+            TimeLock::<Balance<IOTA>>::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
 
         // … while `Balance<Foo>` composes the matching tag through the
         // blanket `MoveType` impl on `Balance<T>`.
-        TimeLock::<Balance<Foo>>::try_from_object(&object).expect("composed tag matches");
+        TimeLock::<Balance<Foo>>::try_from(&object).expect("composed tag matches");
     }
 }

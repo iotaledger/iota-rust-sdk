@@ -11,7 +11,7 @@
 //! principal — and you'd be on the hook for keeping that decoder in sync
 //! with every Move-side change.
 //!
-//! With the move-types crate, a single `StakedIota::try_from_object`
+//! With the move-types crate, a single `StakedIota::try_from`
 //! validates the on-chain type tag and gives you typed, named-field
 //! access:
 //!
@@ -51,7 +51,7 @@ async fn main() -> Result<()> {
 
     let mut total_principal: u64 = 0;
     for object in page.data() {
-        let staked = StakedIota::try_from_object(object)?;
+        let staked = StakedIota::try_from(object)?;
         total_principal += staked.principal();
 
         println!("- id:               {}", staked.id());

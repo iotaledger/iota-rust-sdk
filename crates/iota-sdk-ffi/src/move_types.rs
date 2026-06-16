@@ -69,10 +69,8 @@ impl StakedIota {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::staking_pool::StakedIota::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::iota_system::staking_pool::StakedIota::try_from(&object.0)?
+                .into(),
         )
     }
 
@@ -80,10 +78,7 @@ impl StakedIota {
     /// prefer [`Self::try_from_object`] when an [`Object`] is available.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::staking_pool::StakedIota::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_system::staking_pool::StakedIota::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -117,7 +112,7 @@ impl TimelockedStakedIota {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_object(
+            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from(
                 &object.0,
             )?
             .into(),
@@ -127,7 +122,7 @@ impl TimelockedStakedIota {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from_bcs(
+            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::from_bcs(
                 &bytes,
             )?
             .into(),
@@ -169,10 +164,8 @@ impl IotaSystemState {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from(&object.0)?
+                .into(),
         )
     }
 
@@ -182,7 +175,7 @@ impl IotaSystemState {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from_bcs(&bytes)?
+            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::from_bcs(&bytes)?
                 .into(),
         )
     }
@@ -218,7 +211,7 @@ impl IotaSystemStateV2 {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV2::try_from_bcs(
+            iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV2::from_bcs(
                 &bytes,
             )?
             .into(),
@@ -270,17 +263,15 @@ impl IotaCoinMetadata {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from_bcs(&bytes)?
+            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::from_bcs(&bytes)?
                 .into(),
         )
     }
@@ -322,12 +313,12 @@ impl Clock {
     /// object's type tag matches `0x2::clock::Clock`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::clock::Clock::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -357,15 +348,12 @@ impl TimelockedIotaBalance {
     /// `0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from_object(&object.0)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -398,15 +386,12 @@ impl UpgradeCap {
     /// object's type tag matches `0x2::package::UpgradeCap`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from_object(&object.0)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -440,15 +425,12 @@ impl Publisher {
     /// object's type tag matches `0x2::package::Publisher`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::package::Publisher::try_from_object(&object.0)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_framework::package::Publisher::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::Publisher::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::package::Publisher::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -475,12 +457,12 @@ impl Kiosk {
     /// object's type tag matches `0x2::kiosk::Kiosk`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -513,18 +495,12 @@ impl KioskOwnerCap {
     /// the object's type tag matches `0x2::kiosk::KioskOwnerCap`.
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from_object(&object.0)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -550,12 +526,12 @@ pub struct Nft(pub iota_sdk::move_types::stardust::nft::Nft);
 impl Nft {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::nft::Nft::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::stardust::nft::Nft::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::nft::Nft::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::stardust::nft::Nft::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -597,7 +573,7 @@ pub struct Irc27Metadata(pub iota_sdk::move_types::stardust::irc27::Irc27Metadat
 impl Irc27Metadata {
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::irc27::Irc27Metadata::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::stardust::irc27::Irc27Metadata::from_bcs(&bytes)?.into())
     }
 
     pub fn version(&self) -> String {
@@ -640,20 +616,16 @@ impl BasicOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from_bcs(
-                &bytes,
-            )?
-            .into(),
+            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::from_bcs(&bytes)?
+                .into(),
         )
     }
 
@@ -716,19 +688,14 @@ impl NftOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::try_from(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::try_from_bcs(&bytes)?
-                .into(),
-        )
+        Ok(iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {
@@ -776,20 +743,16 @@ impl AliasOutput {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_object(
-                &object.0,
-            )?
-            .into(),
+            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from(&object.0)?
+                .into(),
         )
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
-            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from_bcs(
-                &bytes,
-            )?
-            .into(),
+            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::from_bcs(&bytes)?
+                .into(),
         )
     }
 
@@ -815,12 +778,12 @@ pub struct Alias(pub iota_sdk::move_types::stardust::alias::Alias);
 impl Alias {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::alias::Alias::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::move_types::stardust::alias::Alias::try_from(&object.0)?.into())
     }
 
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::alias::Alias::try_from_bcs(&bytes)?.into())
+        Ok(iota_sdk::move_types::stardust::alias::Alias::from_bcs(&bytes)?.into())
     }
 
     pub fn id(&self) -> ObjectId {

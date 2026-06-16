@@ -97,15 +97,18 @@ pub mod staking_pool {
     impl StakedIota {
         /// Decode a [`StakedIota`] from BCS bytes (e.g. the `contents` of an
         /// on-chain Move struct) without verifying the on-chain type tag.
-        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
+    }
 
-        /// Decode a [`StakedIota`] from an on-chain object, validating that
-        /// the object's type tag matches `0x3::staking_pool::StakedIota`.
-        pub fn try_from_object(
-            object: &iota_types::Object,
-        ) -> Result<Self, crate::FromObjectError> {
+    /// Decode a [`StakedIota`] from an on-chain object, validating that
+    /// the object's type tag matches `0x3::staking_pool::StakedIota`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for StakedIota {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
@@ -735,7 +738,7 @@ pub mod iota_system_state_inner {
         /// stored as a dynamic field of the `0x5`
         /// [`IotaSystemState`](super::iota_system::IotaSystemState)
         /// wrapper, not as a top-level object with its own type tag.
-        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
     }
@@ -824,20 +827,23 @@ pub mod iota_system {
     impl IotaSystemState {
         /// Decode an [`IotaSystemState`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
+    }
 
-        /// Decode an [`IotaSystemState`] from an on-chain object,
-        /// validating that the object's type tag matches
-        /// `0x3::iota_system::IotaSystemState`.
-        ///
-        /// This is only the versioned wrapper (the `0x5` object); the
-        /// actual state lives in a dynamic field holding e.g. an
-        /// [`IotaSystemStateV2`](super::iota_system_state_inner::IotaSystemStateV2).
-        pub fn try_from_object(
-            object: &iota_types::Object,
-        ) -> Result<Self, crate::FromObjectError> {
+    /// Decode an [`IotaSystemState`] from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x3::iota_system::IotaSystemState`.
+    ///
+    /// This is only the versioned wrapper (the `0x5` object); the
+    /// actual state lives in a dynamic field holding e.g. an
+    /// [`IotaSystemStateV2`](super::iota_system_state_inner::IotaSystemStateV2).
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for IotaSystemState {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;
@@ -925,16 +931,19 @@ pub mod timelocked_staking {
         /// Decode a [`TimelockedStakedIota`] from BCS bytes (e.g. the
         /// `contents` of an on-chain Move struct) without verifying the
         /// on-chain type tag.
-        pub fn try_from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
+    }
 
-        /// Decode a [`TimelockedStakedIota`] from an on-chain object,
-        /// validating that the object's type tag matches
-        /// `0x3::timelocked_staking::TimelockedStakedIota`.
-        pub fn try_from_object(
-            object: &iota_types::Object,
-        ) -> Result<Self, crate::FromObjectError> {
+    /// Decode a [`TimelockedStakedIota`] from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x3::timelocked_staking::TimelockedStakedIota`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for TimelockedStakedIota {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
             let move_struct = object
                 .as_struct_opt()
                 .ok_or(crate::FromObjectError::NotAMoveStruct)?;

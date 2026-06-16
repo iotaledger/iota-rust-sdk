@@ -53,7 +53,7 @@ The script needs `curl`, `cargo`, and `jq`.
 The `registry_matches_published_api` test enforces that **every** public
 `struct`/`enum` in the fetched `published_api.txt` has a registered Rust
 mirror. The nightly drift workflow
-(`.github/workflows/move_drift_nightly.yml`) diffs the manifest's type
+(`.github/workflows/move_types_drift_nightly.yml`) diffs the manifest's type
 surface at the pinned rev against upstream `develop` HEAD; a red nightly
 means _upstream types changed and the mirror set is out of date_ — not
 that the crate is broken. Pull requests are deliberately unaffected by
