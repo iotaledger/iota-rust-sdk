@@ -24,9 +24,15 @@ use iota_sdk_move_types::{
         package::{Publisher, UpgradeCap},
         timelock::TimeLock,
     },
-    iota_system::iota_system::IotaSystemState,
+    iota_system::{
+        iota_system::IotaSystemState, staking_pool::StakedIota,
+        timelocked_staking::TimelockedStakedIota,
+    },
     move_stdlib::ascii,
-    stardust::{alias_output::AliasOutput, basic_output::BasicOutput, nft_output::NftOutput},
+    stardust::{
+        alias::Alias, alias_output::AliasOutput, basic_output::BasicOutput, nft::Nft,
+        nft_output::NftOutput,
+    },
 };
 use iota_types::{
     Address, Digest, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag,
@@ -195,6 +201,24 @@ object_tag_validation_tests!(
     "fixtures/iota_system_state.bcs"
 );
 
+object_tag_validation_tests!(nft, Nft, "0x107a::nft::Nft", "fixtures/nft.bcs");
+
+object_tag_validation_tests!(alias, Alias, "0x107a::alias::Alias", "fixtures/alias.bcs");
+
+object_tag_validation_tests!(
+    staked_iota,
+    StakedIota,
+    "0x3::staking_pool::StakedIota",
+    "fixtures/staked_iota.bcs"
+);
+
+object_tag_validation_tests!(
+    timelocked_staked_iota,
+    TimelockedStakedIota,
+    "0x3::timelocked_staking::TimelockedStakedIota",
+    "fixtures/timelocked_staked_iota.bcs"
+);
+
 /// Mirrors without a committed fixture are exercised with synthetic
 /// values: encode a hand-built value, wrap it in an object with the
 /// matching (or a forged) tag, and decode it back.
@@ -292,5 +316,37 @@ mod synthetic {
         // … while `Balance<Foo>` composes the matching tag through the
         // blanket `MoveType` impl on `Balance<T>`.
         TimeLock::<Balance<Foo>>::try_from(&object).expect("composed tag matches");
+    }
+
+    #[test]
+    fn timelocked_balance_runtime_tag_escape_hatch() {
+        let value = TimeLock::new(
+            UID::new(ObjectId::ZERO),
+            Balance::<IOTA>::new(100),
+            42,
+            None,
+        );
+        let object = synthetic_object(
+            "0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>",
+            &value,
+        );
+
+        // The locked type is validated against the runtime-supplied tag,
+        // not the compile-time `T`: the matching `Balance<IOTA>` tag is
+        // accepted …
+        TimeLock::<Balance<IOTA>>::try_from_object_with_type(
+            &object,
+            &<Balance<IOTA> as MoveType>::type_tag(),
+        )
+        .expect("explicit locked type matches");
+
+        // … and any other locked type is rejected.
+        assert!(matches!(
+            TimeLock::<Balance<IOTA>>::try_from_object_with_type(
+                &object,
+                &<Balance<Foo> as MoveType>::type_tag(),
+            ),
+            Err(FromObjectError::WrongType)
+        ));
     }
 }
