@@ -170,8 +170,8 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments,
-    EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    ClaimRegistryCreate, Command, ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
     SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
     TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,

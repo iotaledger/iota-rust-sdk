@@ -99,6 +99,10 @@ checkpoint-transaction = %d01 intent-signed-transaction     ; transaction
                          (size *object)                     ; input-objects
                          (size *object)                     ; output-objects
 
+claim-registry-create = unit
+
+claim-registry-create-transaction = unit
+
 command = %d00 move-call          ; MoveCall
         / %d01 transfer-objects   ; TransferObjects
         / %d02 split-coins        ; SplitCoins
@@ -142,10 +146,11 @@ end-of-epoch-data = (size *validator-committee-member)   ; next-epoch-committee
                     (size *checkpoint-commitment)        ; epoch-commitments
                     i64                                  ; epoch-supply-change
 
-end-of-epoch-transaction-kind = %d00 change-epoch      ; ChangeEpoch
-                              / %d01 change-epoch-v2   ; ChangeEpochV2
-                              / %d02 change-epoch-v3   ; ChangeEpochV3
-                              / %d03 change-epoch-v4   ; ChangeEpochV4
+end-of-epoch-transaction-kind = %d00 change-epoch            ; ChangeEpoch
+                              / %d01 change-epoch-v2         ; ChangeEpochV2
+                              / %d02 change-epoch-v3         ; ChangeEpochV3
+                              / %d03 change-epoch-v4         ; ChangeEpochV4
+                              / %d04 claim-registry-create   ; ClaimRegistryCreate
 
 event = object-id    ; package-id
         identifier   ; module
