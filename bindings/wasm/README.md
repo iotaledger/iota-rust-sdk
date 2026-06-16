@@ -65,6 +65,14 @@ make wasm-examples           # run every example
 Most examples expect a running localnet (see `run_localnet.sh` at the repo
 root); `chain_id` and a few read-only examples run against the public testnet.
 
+The standalone [`examples/release/`](examples/release) project instead consumes
+the **published** `@iota/sdk-wasm` from npm (rather than the workspace-local
+build), for a minimal smoke test of the released package:
+
+```bash
+make wasm-release-example
+```
+
 To open the browser (HTML) examples instead, start the dev server:
 
 ```bash
@@ -94,6 +102,7 @@ bindings/wasm/
     staking.html           # browser example
     *.mjs                  # Node examples (run via `make wasm-example NAME`)
     package.json           # pnpm workspace member that resolves `@iota/sdk-wasm`
+    release/               # standalone project using the published @iota/sdk-wasm (npm)
   dist/                    # build output (gitignored)
     iota-sdk.js            # bundled ES module (browser / default entry)
     node.js                # Node entry (loads index_bg.wasm from disk)

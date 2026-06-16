@@ -1,0 +1,9 @@
+{
+  "name": "iota-sdk-wasm-release-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@iota/sdk-wasm": "^3.0.0-alpha.1"
+  }
+}
