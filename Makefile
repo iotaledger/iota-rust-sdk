@@ -16,16 +16,16 @@ check-fmt: ## Check code formatting
 fmt: ## Format code
 	cargo +nightly fmt
 
-.PHONY: ensure-compiled-packages
-ensure-compiled-packages: ## Fetch compiled system packages at the pinned rev if missing/stale
-	@$(MAKE) -C crates/iota-sdk-move-types packages
+.PHONY: fetch-compiled-packages
+fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out of date (used by `make test`)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh --ensure
 
 .PHONY: clippy
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
 .PHONY: test
-test: ensure-compiled-packages ## Run unit tests
+test: fetch-compiled-packages ## Run unit tests
 	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder -p iota-sdk-move-types
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
@@ -477,7 +477,7 @@ grpc: ## Regenerate gRPC protobuf types
 	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
 
 .PHONY: update-compiled-packages
-update-compiled-packages: ## Fetch compiled system packages from iota monorepo (REF=branch-or-sha, default: pinned rev)
+update-compiled-packages: ## Force re-fetch the compiled Move packages (REF=branch-or-sha overrides the pinned rev)
 	@bash crates/iota-sdk-move-types/update_compiled_packages.sh $(REF)
 
 .PHONY: help
