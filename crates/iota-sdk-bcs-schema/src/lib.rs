@@ -33,7 +33,7 @@ pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
 }
 
 #[cfg(feature = "move-shape")]
-#[proc_macro_derive(MoveShape, attributes(bcs_schema))]
+#[proc_macro_derive(MoveShape)]
 pub fn derive_move_shape(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     match move_shape::expand(&input) {

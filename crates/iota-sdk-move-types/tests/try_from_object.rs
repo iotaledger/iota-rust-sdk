@@ -302,6 +302,19 @@ mod synthetic {
         let decoded = TimeLock::<Balance<IOTA>>::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
+        // Escape hatch: an explicit locked-type tag, with nothing tying it
+        // to `T`. Accepts the matching tag and rejects a foreign one.
+        let decoded = TimeLock::<Balance<IOTA>>::try_from_object_with_type(
+            &object,
+            &Balance::<IOTA>::type_tag(),
+        )
+        .expect("explicit locked type matches");
+        assert_eq!(decoded, value);
+        assert!(matches!(
+            TimeLock::<Balance<IOTA>>::try_from_object_with_type(&object, &foo_type_tag()),
+            Err(FromObjectError::WrongType)
+        ));
+
         // Same bytes labeled as a different coin's balance must be
         // rejected for `Balance<IOTA>` …
         let object = synthetic_object(

@@ -105,9 +105,6 @@ fn struct_fields_expr(fields: &Fields, type_params: &[&syn::Ident]) -> syn::Resu
     match fields {
         Fields::Named(named) => {
             for field in &named.named {
-                if field_is_skipped(field)? {
-                    continue;
-                }
                 // `Ident::unraw()` drops a `r#` prefix the source may carry
                 // around a Rust keyword (e.g. `r#ref`, `r#for`). Move sees
                 // the bare identifier, so use it for the shape too.
@@ -123,9 +120,6 @@ fn struct_fields_expr(fields: &Fields, type_params: &[&syn::Ident]) -> syn::Resu
         // mirrors like `UQ32_32(pub u64)` against their Move counterparts.
         Fields::Unnamed(unnamed) => {
             for (idx, field) in unnamed.unnamed.iter().enumerate() {
-                if field_is_skipped(field)? {
-                    continue;
-                }
                 let name = format!("pos{idx}");
                 let shape = type_to_shape_expr(&field.ty, type_params);
                 entries.push(quote! {
@@ -142,35 +136,6 @@ fn struct_fields_expr(fields: &Fields, type_params: &[&syn::Ident]) -> syn::Resu
     }
 
     Ok(quote! { ::std::vec![ #( #entries ),* ] })
-}
-
-/// Matches the existing `BcsSchema` macro's field-skip semantics so a
-/// `PhantomData` field tagged this way is excluded from the shape.
-fn field_is_skipped(field: &syn::Field) -> syn::Result<bool> {
-    for attr in &field.attrs {
-        if !attr.path().is_ident("bcs_schema") {
-            continue;
-        }
-        let mut skip = false;
-        attr.parse_nested_meta(|meta| {
-            if meta.path.is_ident("skip") {
-                skip = true;
-                Ok(())
-            } else if meta.path.is_ident("as_type") {
-                // Honor the existing attribute syntax without erroring; the
-                // value is currently ignored by the MoveShape derive.
-                let v = meta.value()?;
-                let _: syn::LitStr = v.parse()?;
-                Ok(())
-            } else {
-                Err(meta.error("expected `skip` or `as_type`"))
-            }
-        })?;
-        if skip {
-            return Ok(true);
-        }
-    }
-    Ok(false)
 }
 
 fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
