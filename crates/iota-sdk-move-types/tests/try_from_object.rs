@@ -32,6 +32,7 @@ use iota_types::{
     Address, Digest, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag,
     TypeTag, Version,
 };
+
 /// Wrap fixture contents in an [`Object`] carrying the given type tag.
 fn object_with_tag(tag: &str, contents: &[u8]) -> Object {
     let tag: StructTag = tag.parse().expect("valid struct tag");
