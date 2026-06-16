@@ -22,11 +22,11 @@ The Move sources these mirror live in the [iota monorepo] under
 The `move_shape_compare` test reads the compiled bytecode blobs of the
 four packages above (`move-stdlib`, `iota-framework`, `iota-system`,
 `stardust`) plus `published_api.txt`, the upstream public-API manifest
-(filtered to `public struct` / `public enum` records), at test run time. It parses each Move struct/enum out of the
-bytecode and verifies that the corresponding Rust mirror's wire layout
-matches. These tests are native-only (no `std::fs` on wasm32, and their
-checks are target-independent); the BCS roundtrip and tag-validation
-tests still run under wasm.
+(filtered to `public struct` / `public enum` records), at test run time.
+It parses each Move struct/enum out of the bytecode and verifies that the
+corresponding Rust mirror's wire layout matches. These tests are native-only
+(no `std::fs` on wasm32, and their checks are target-independent); the BCS
+roundtrip and tag-validation tests still run under wasm.
 
 These artifacts are **not committed** — they are fetched from
 `crates/iota-framework/` in the [iota monorepo] into the gitignored
