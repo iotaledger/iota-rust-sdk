@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@iota/sdk-wasm": "^3.0.0-alpha.1"
+    "@iota/sdk-wasm": "next"
   }
 }
