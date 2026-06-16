@@ -1392,6 +1392,29 @@ impl ChangeEpochV4 {
     }
 }
 
+/// Transaction that creates the singleton ClaimRegistry shared object at address `0x10`.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// claim-registry-create = ; empty
+/// ```
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct ClaimRegistryCreateTransaction(
+    pub iota_sdk::types::ClaimRegistryCreateTransaction,
+);
+
+#[uniffi::export]
+impl ClaimRegistryCreateTransaction {
+    #[uniffi::constructor]
+    pub fn new() -> Self {
+        Self(iota_sdk::types::ClaimRegistryCreateTransaction)
+    }
+}
+
 /// Randomness update
 ///
 /// # BCS
@@ -1448,6 +1471,7 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 ///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
 ///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
+///                               =/ %d04                  ; ClaimRegistryCreate
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1481,6 +1505,11 @@ impl EndOfEpochTransactionKind {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
             tx.0.clone(),
         ))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_claim_registry_create() -> Self {
+        Self(iota_sdk::types::EndOfEpochTransactionKind::new_claim_registry_create())
     }
 }
 

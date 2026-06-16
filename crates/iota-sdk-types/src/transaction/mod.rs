@@ -317,6 +317,7 @@ impl core::fmt::Display for TransactionKind {
 ///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
 ///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
+///                               =/ %d04                  ; ClaimRegistryCreate
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -332,10 +333,18 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
+    /// Create the claim registry singleton at 0x10
+    ClaimRegistryCreate(ClaimRegistryCreateTransaction),
 }
 
 impl EndOfEpochTransactionKind {
-    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,);
+    crate::def_is_as_into_opt!(
+        ChangeEpoch,
+        ChangeEpochV2,
+        ChangeEpochV3,
+        ChangeEpochV4,
+        ClaimRegistryCreate(ClaimRegistryCreateTransaction),
+    );
 
     /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
     #[expect(clippy::too_many_arguments)]
@@ -447,6 +456,11 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates a [`ClaimRegistryCreateTransaction`] end-of-epoch transaction kind.
+    pub fn new_claim_registry_create() -> Self {
+        Self::ClaimRegistryCreate(ClaimRegistryCreateTransaction)
+    }
+
     /// Returns an iterator over the shared input objects required by this
     /// transaction kind.
     pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
@@ -457,6 +471,7 @@ impl EndOfEpochTransactionKind {
             | Self::ChangeEpochV4(_) => {
                 vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter()
             }
+            Self::ClaimRegistryCreate(_) => vec![].into_iter(),
         }
     }
 }
@@ -772,6 +787,24 @@ pub struct ChangeEpochV4 {
     /// Whether to adjust validator rewards based on score.
     pub adjust_rewards_by_score: bool,
 }
+
+/// Transaction that creates the singleton [`ClaimRegistry`] shared object at address `0x10`.
+///
+/// Executed automatically as part of an end-of-epoch transaction when the
+/// `enable_claim_registry` protocol feature is activated.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// claim-registry-create = ; empty
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct ClaimRegistryCreateTransaction;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
