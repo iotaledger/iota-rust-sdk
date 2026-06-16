@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
-use std::sync::OnceLock;
-
-#[cfg(feature = "serde")]
 use super::SignatureFromBytesError;
 use super::{
     Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureScheme,
@@ -288,10 +285,6 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
-    /// A bytes representation of this aggregated signature. This helps with
-    /// implementing [trait AsRef<[u8]>].
-    #[cfg(feature = "serde")]
-    bytes: OnceLock<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -323,8 +316,6 @@ impl MultisigAggregatedSignature {
             signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         }
     }
 
@@ -380,8 +371,6 @@ impl MultisigAggregatedSignature {
             signatures: member_signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         };
 
         Ok(signature)
@@ -602,7 +591,6 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
                 signatures,
                 bitmap,
                 committee,
-                bytes: OnceLock::new(),
             })
             .boxed()
     }
@@ -684,7 +672,6 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
-                    bytes: OnceLock::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
@@ -723,7 +710,6 @@ mod serialization {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
-                    bytes: OnceLock::new(),
                 };
                 multisig
                     .validate()
@@ -844,20 +830,9 @@ mod serialization {
         }
     }
 
-    /// This initialize the underlying bytes representation of
-    /// [`MultisigAggregatedSignature`].
-    /// It encodes [`MultisigAggregatedSignature`] as the MultiSig flag (0x03)
-    /// concat with the bcs bytes of [`MultisigAggregatedSignature`] i.e. `flag
-    /// || bcs_bytes(multiSig)`.
-    impl AsRef<[u8]> for MultisigAggregatedSignature {
-        fn as_ref(&self) -> &[u8] {
-            self.bytes.get_or_init(|| self.to_bytes())
-        }
-    }
-
     impl Hash for MultisigAggregatedSignature {
         fn hash<H: Hasher>(&self, state: &mut H) {
-            self.as_ref().hash(state);
+            self.to_bytes().hash(state);
         }
     }
 
