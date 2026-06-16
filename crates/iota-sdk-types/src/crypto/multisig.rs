@@ -694,7 +694,7 @@ mod serialization {
     }
 
     impl MultisigAggregatedSignature {
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let mut buf = Vec::new();
             buf.push(SignatureScheme::Multisig as u8);
 
