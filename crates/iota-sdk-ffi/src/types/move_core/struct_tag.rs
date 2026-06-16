@@ -229,7 +229,10 @@ export_struct_tag_ctors!(
     TxContext,
     Alias,
     Nft,
-    Irc27Metadata
+    Irc27Metadata,
+    Kiosk,
+    KioskOwnerCap,
+    Publisher
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
