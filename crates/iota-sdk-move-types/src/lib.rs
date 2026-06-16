@@ -73,34 +73,16 @@ pub trait MoveType {
 /// that either isn't a Move struct, has a type tag that doesn't match the
 /// expected type, or whose BCS contents fail to decode.
 #[cfg(feature = "serde")]
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum FromObjectError {
     /// The object is a package, not a Move struct.
+    #[error("object is not a Move struct")]
     NotAMoveStruct,
     /// The Move struct's type tag does not match the expected type.
+    #[error("object's type tag does not match expected type")]
     WrongType,
     /// BCS decoding of the struct contents failed.
-    Bcs(bcs::Error),
-}
-
-#[cfg(feature = "serde")]
-impl core::fmt::Display for FromObjectError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            Self::NotAMoveStruct => f.write_str("object is not a Move struct"),
-            Self::WrongType => f.write_str("object's type tag does not match expected type"),
-            Self::Bcs(e) => write!(f, "bcs decoding failed: {e}"),
-        }
-    }
-}
-
-#[cfg(feature = "serde")]
-impl core::error::Error for FromObjectError {
-    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
-        match self {
-            Self::Bcs(e) => Some(e),
-            _ => None,
-        }
-    }
+    #[error("bcs decoding failed: {0}")]
+    Bcs(#[from] bcs::Error),
 }
