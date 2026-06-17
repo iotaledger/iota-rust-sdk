@@ -13,9 +13,9 @@ members = [
   "crates/iota-sdk-grpc-proto-build",
   "crates/iota-sdk-grpc-types",
   "crates/iota-sdk-move-types",
+  "crates/iota-sdk-move-types/examples/capture_move_type_fixtures",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
-  "crates/iota-sdk/examples/capture_move_type_fixtures",
   "crates/iota-sdk/examples/polling-indexer",
 ]
 

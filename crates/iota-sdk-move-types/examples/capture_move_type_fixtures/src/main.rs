@@ -9,10 +9,10 @@
 //! bytes of the inner Move struct, and writes them to
 //! `crates/iota-sdk-move-types/tests/fixtures/<name>.bcs`.
 //!
-//! This lives in `iota-sdk` (not `iota-sdk-move-types`) because it only
-//! needs the GraphQL client and core types — keeping the GraphQL/`tokio`
-//! dependencies out of `iota-sdk-move-types` lets that crate run its tests
-//! under wasm.
+//! This is a standalone package (rather than an example of
+//! `iota-sdk-move-types`) so its GraphQL/`tokio` dependencies stay out of
+//! `iota-sdk-move-types`' own dependency graph — that crate runs its tests
+//! under wasm, where `tokio`/`reqwest` don't build.
 //!
 //! Invocation:
 //!
@@ -551,11 +551,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         return Ok(());
     }
 
-    // The fixtures belong to the sibling `iota-sdk-move-types` crate; this
-    // example is its own package (under `iota-sdk/examples`) to keep its
-    // GraphQL/`tokio` dependencies out of `iota-sdk-move-types`.
-    let out_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../iota-sdk-move-types/tests/fixtures");
+    // The fixtures belong to `iota-sdk-move-types`; this generator is a
+    // standalone package under that crate's `examples/` to keep its
+    // GraphQL/`tokio` dependencies out of the crate's own graph.
+    let out_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures");
     std::fs::create_dir_all(&out_dir)?;
 
     eprintln!("network: {network}");
