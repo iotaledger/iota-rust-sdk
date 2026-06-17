@@ -278,19 +278,17 @@ mod serialization {
         }
 
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
-            let bytes = bytes.as_ref();
-            let (flag, tail) = bytes.split_first().ok_or(SignatureFromBytesError::new(
-                "missing signature scheme flag",
-            ))?;
-            let scheme = SignatureScheme::from_byte(*flag).map_err(SignatureFromBytesError::new)?;
-
-            if scheme != SignatureScheme::PasskeyAuthenticator {
-                return Err(SignatureFromBytesError::new("invalid passkey flag"));
+            match bytes.as_ref().split_first() {
+                Some((flag, tail)) if flag == &SignatureScheme::PasskeyAuthenticator.to_u8() => {
+                    let authenticator =
+                        bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
+                    Self::try_from_raw(authenticator)
+                }
+                None => Err(SignatureFromBytesError::new(
+                    "missing signature scheme flag",
+                )),
+                _ => Err(SignatureFromBytesError::new("invalid passkey flag")),
             }
-
-            let authenticator = bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
-
-            Self::try_from_raw(authenticator)
         }
 
         pub fn to_bytes(&self) -> Vec<u8> {
@@ -303,9 +301,7 @@ mod serialization {
                 },
             };
 
-            let mut buf = Vec::new();
-            buf.push(SignatureScheme::PasskeyAuthenticator as u8);
-
+            let mut buf = vec![SignatureScheme::PasskeyAuthenticator as u8];
             bcs::serialize_into(&mut buf, &authenticator_ref).expect("serialization cannot fail");
             buf
         }
