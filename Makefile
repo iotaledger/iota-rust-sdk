@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-move-types check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
@@ -15,13 +16,17 @@ check-fmt: ## Check code formatting
 fmt: ## Format code
 	cargo +nightly fmt
 
+.PHONY: fetch-compiled-packages
+fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out of date (used by `make test`)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh --ensure
+
 .PHONY: clippy
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
 .PHONY: test
-test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder
+test: fetch-compiled-packages ## Run unit tests
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder -p iota-sdk-move-types
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
@@ -46,6 +51,7 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
 
@@ -135,6 +141,7 @@ bindings-example: ## Run a specific example for all bindings. Usage: make bindin
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) csharp-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) wasm-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
@@ -408,7 +415,9 @@ example: ## Run a specific Rust example. Usage: make example example
 	@true
 example:
 	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
-	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+	@# --all-features so examples gated behind non-default features (e.g.
+	@# `move-types`) build and run; extra features are additive.
+	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
 .PHONY: examples
 examples: ## Run all Rust examples
@@ -461,10 +470,15 @@ release-examples: ## Run all release examples
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema || exit $$?
 
 .PHONY: grpc
 grpc: ## Regenerate gRPC protobuf types
 	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+
+.PHONY: update-compiled-packages
+update-compiled-packages: ## Force re-fetch the compiled Move packages (REF=branch-or-sha overrides the pinned rev)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh $(REF)
 
 .PHONY: help
 help: ## Show this help
