@@ -272,7 +272,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
