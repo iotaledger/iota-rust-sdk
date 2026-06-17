@@ -17,10 +17,10 @@
 //! Invocation:
 //!
 //! ```bash
-//! cargo run -p iota-sdk --example capture_move_type_fixtures
+//! cargo run -p capture-move-type-fixtures
 //! # optional: pick a different network (defaults to mainnet)
-//! IOTA_NETWORK=testnet cargo run …
-//! IOTA_NETWORK=devnet cargo run …
+//! IOTA_NETWORK=testnet cargo run -p capture-move-type-fixtures
+//! IOTA_NETWORK=devnet cargo run -p capture-move-type-fixtures
 //! ```
 //!
 //! # Capture strategies
@@ -552,9 +552,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
     }
 
     // The fixtures belong to the sibling `iota-sdk-move-types` crate; this
-    // example only lives in `iota-sdk` for its GraphQL/`tokio` dependencies.
-    let out_dir =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../iota-sdk-move-types/tests/fixtures");
+    // example is its own package (under `iota-sdk/examples`) to keep its
+    // GraphQL/`tokio` dependencies out of `iota-sdk-move-types`.
+    let out_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../iota-sdk-move-types/tests/fixtures");
     std::fs::create_dir_all(&out_dir)?;
 
     eprintln!("network: {network}");

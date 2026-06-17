@@ -15,6 +15,7 @@ members = [
   "crates/iota-sdk-move-types",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
+  "crates/iota-sdk/examples/capture_move_type_fixtures",
   "crates/iota-sdk/examples/polling-indexer",
 ]
 
