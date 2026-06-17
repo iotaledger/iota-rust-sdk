@@ -183,15 +183,15 @@ jobs:
       - name: Bump WASM version
         if: inputs.package == 'iota-wasm-sdk'
         run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-wasm-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="iota-wasm-sdk-v0.0.0"
-          fi
-          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          source ./.github/bump_version.sh
+
+          # Read current version from package.json (the npm source of truth)
+          CURRENT_VERSION=$(cd bindings/wasm && npm pkg get version | tr -d '"')
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          echo "New version: $NEW_VERSION"
 
           # Update the version in package.json
           (cd bindings/wasm && npm version "$NEW_VERSION" --no-git-tag-version --allow-same-version)
@@ -199,6 +199,9 @@ jobs:
 
           # Generate changelog for WASM
           ./.github/gen_changelog.sh iota-wasm-sdk bindings/wasm ${{ github.sha }} "$NEW_VERSION" true
+
+          # Set output for the next step
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Set COMMIT_TO environment variable
         if: startsWith(inputs.package, 'iota-sdk')
