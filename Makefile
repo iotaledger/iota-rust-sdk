@@ -451,7 +451,7 @@ swift-release-example: ## Run the Swift release example
 .PHONY: wasm-release-example
 wasm-release-example: ## Run the WASM release example
 	@printf "\nRunning WASM release example\n"
-	@cd bindings/wasm/examples/release && npm install @iota/sdk-wasm@next && node example.mjs || exit $$?
+	@cd bindings/wasm/examples/release && npm install && node example.mjs || exit $$?
 
 .PHONY: release-examples
 release-examples: ## Run all release examples

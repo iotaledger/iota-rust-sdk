@@ -1,10 +1,11 @@
 Full project example using the released package.
 
-`@iota/sdk-wasm` is currently a prerelease, so install the `next` dist-tag
-(the plain `latest` tag still points at an older, unrelated release):
+`@iota/sdk-wasm` is currently a prerelease, so `package.json` depends on the
+`next` dist-tag (the plain `latest` tag still points at an older, unrelated
+release). Install it with:
 
 ```bash
-npm install @iota/sdk-wasm@next
+npm install
 ```
 
 Then run:
