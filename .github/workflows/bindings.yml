@@ -172,3 +172,5 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make wasm-examples
+      - name: Run the release example
+        run: make wasm-release-example
