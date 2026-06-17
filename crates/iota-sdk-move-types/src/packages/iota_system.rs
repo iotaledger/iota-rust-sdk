@@ -700,9 +700,11 @@ pub mod iota_system_state_inner {
     /// Rust version of the Move
     /// `iota_system::iota_system_state_inner::IotaSystemStateV2` type.
     ///
-    /// Adds `safe_mode_computation_charges_burned` over [`IotaSystemStateV1`]
-    /// to support burning base fees in safe mode when
-    /// `protocol_defined_base_fee` is enabled.
+    /// Evolves [`IotaSystemStateV1`]: adds
+    /// `safe_mode_computation_charges_burned` (to support burning base fees in
+    /// safe mode when `protocol_defined_base_fee` is enabled), renames
+    /// `safe_mode_computation_rewards` to `safe_mode_computation_charges`, and
+    /// upgrades `validators` from `ValidatorSetV1` to `ValidatorSetV2`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(

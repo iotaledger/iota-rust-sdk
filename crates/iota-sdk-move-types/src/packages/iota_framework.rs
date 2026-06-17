@@ -92,12 +92,8 @@ pub mod iota {
     /// Name of the coin. The Move struct is empty; Move bytecode requires at
     /// least one field, so this carries a `dummy_field` to preserve the BCS
     /// wire format (1 byte, always `false`).
-    // MoveShape derive enables `Balance<IOTA>` references in mirrors like
-    // `Kiosk` to resolve `<IOTA as MoveShape>::NAME` at macro time. IOTA
-    // itself is NOT registered with the comparator — the Move bytecode
-    // defines it as a true empty struct (`{}`), while the Rust mirror
-    // carries a `dummy_field: bool` to preserve the BCS wire format. The
-    // comparator would flag that as a 0-vs-1 field-count mismatch.
+    // The MoveShape derive lets `Balance<IOTA>` references in mirrors like
+    // `Kiosk` resolve `<IOTA as MoveShape>::NAME` at macro time.
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

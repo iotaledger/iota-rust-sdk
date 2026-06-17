@@ -67,11 +67,12 @@ pub trait MoveType {
     fn type_tag() -> iota_types::TypeTag;
 }
 
-/// Error returned by the `try_from_object` constructors on type mirrors.
+/// Error returned when converting an `Object` into a typed mirror.
 ///
-/// All Tier 1 types share this error shape: the caller passed an `Object`
-/// that either isn't a Move struct, has a type tag that doesn't match the
-/// expected type, or whose BCS contents fail to decode.
+/// Every mirror's `TryFrom<&Object>` (and `try_from_object_with_type`)
+/// conversion returns this on failure: the object either isn't a Move
+/// struct, carries a type tag that doesn't match the expected type, or has
+/// BCS contents that fail to decode.
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
