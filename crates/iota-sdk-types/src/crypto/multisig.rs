@@ -272,7 +272,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
@@ -442,16 +442,6 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
     }
     Ok(res)
 }
-
-impl PartialEq for MultisigAggregatedSignature {
-    fn eq(&self, other: &Self) -> bool {
-        self.bitmap == other.bitmap
-            && self.committee == other.committee
-            && self.signatures == other.signatures
-    }
-}
-
-impl Eq for MultisigAggregatedSignature {}
 
 /// A signature from a member of a multisig committee.
 ///
