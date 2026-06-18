@@ -3,10 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
-use std::{
-    hash::{Hash, Hasher},
-    sync::OnceLock,
-};
+use std::hash::{Hash, Hasher};
 
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 use crate::SigningDigest;
@@ -40,7 +37,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -60,9 +57,6 @@ pub struct PasskeyAuthenticator {
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
     pub(crate) client_data_json: String,
-    /// Initialization of bytes for passkey in serialized form.
-    #[cfg(feature = "serde")]
-    bytes: OnceLock<Vec<u8>>,
 }
 
 impl PasskeyAuthenticator {
@@ -105,28 +99,10 @@ impl PasskeyAuthenticator {
     }
 }
 
-impl PartialEq for PasskeyAuthenticator {
-    fn eq(&self, other: &Self) -> bool {
-        // The `bytes` cache is excluded as it is derived from the other fields.
-        self.public_key == other.public_key
-            && self.signature == other.signature
-            && self.challenge == other.challenge
-            && self.authenticator_data == other.authenticator_data
-            && self.client_data_json == other.client_data_json
-    }
-}
-
 #[cfg(feature = "serde")]
 impl Hash for PasskeyAuthenticator {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.as_ref().hash(state);
-    }
-}
-
-#[cfg(feature = "serde")]
-impl AsRef<[u8]> for PasskeyAuthenticator {
-    fn as_ref(&self) -> &[u8] {
-        self.bytes.get_or_init(|| self.to_bytes())
+        self.to_bytes().hash(state);
     }
 }
 
@@ -298,24 +274,21 @@ mod serialization {
                 challenge,
                 authenticator_data,
                 client_data_json,
-                bytes: OnceLock::new(),
             })
         }
 
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
-            let bytes = bytes.as_ref();
-            let (flag, tail) = bytes.split_first().ok_or(SignatureFromBytesError::new(
-                "missing signature scheme flag",
-            ))?;
-            let scheme = SignatureScheme::from_byte(*flag).map_err(SignatureFromBytesError::new)?;
-
-            if scheme != SignatureScheme::PasskeyAuthenticator {
-                return Err(SignatureFromBytesError::new("invalid passkey flag"));
+            match bytes.as_ref().split_first() {
+                Some((flag, tail)) if flag == &SignatureScheme::PasskeyAuthenticator.to_u8() => {
+                    let authenticator =
+                        bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
+                    Self::try_from_raw(authenticator)
+                }
+                None => Err(SignatureFromBytesError::new(
+                    "missing signature scheme flag",
+                )),
+                _ => Err(SignatureFromBytesError::new("invalid passkey flag")),
             }
-
-            let authenticator = bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
-
-            Self::try_from_raw(authenticator)
         }
 
         pub fn to_bytes(&self) -> Vec<u8> {
@@ -328,9 +301,7 @@ mod serialization {
                 },
             };
 
-            let mut buf = Vec::new();
-            buf.push(SignatureScheme::PasskeyAuthenticator as u8);
-
+            let mut buf = vec![SignatureScheme::PasskeyAuthenticator as u8];
             bcs::serialize_into(&mut buf, &authenticator_ref).expect("serialization cannot fail");
             buf
         }
@@ -449,7 +420,6 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
                         challenge: challenge_bytes,
                         authenticator_data,
                         client_data_json,
-                        bytes: OnceLock::new(),
                     }
                 },
             )
