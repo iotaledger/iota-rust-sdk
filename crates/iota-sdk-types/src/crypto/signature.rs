@@ -935,7 +935,10 @@ mod serialization {
         #[test]
         fn passkey_fixtures() {
             const FIXTURES: &[&str] = &[
-                "lgIGJUmWDeWIDoxodDQXD2R2YFuP5K65ooYyx5lc87qDHZdjHQAAAACKAXsidHlwZSI6IndlYmF1dGhuLmdldCIsImNoYWxsZW5nZSI6IkFBQUF0X21qSUIxdmJWcFlNNldWNllfb2l4Nko4YU5fOXNiOFNLRmJ1a0JmaVF3Iiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICmOyQv1fJ+inKD0C/sxKtxyFKl9aoBign6p9Ih3iA2ahDVg2CPZqUOlEhur2S2GbIZjbn6TbgWtbXXg8SjLkL7wM9Fw4JO0AKLdnLC1nhQguHBX5K6Hv2ta1sqoOqEFDDEw==",
+                // Mainnet transaction 4Q3oszHu1odYYaEAnWjs4Bqr1vGknLyxk2wegNsVpF2F
+                "sAIGJVIGKHem4dhOwiP7NS5lmWKsKzH/Ffw8mln4BnYuS8lRBQAAAs+kAXsidHlwZSI6IndlYmF1dGhuLmdldCIsImNoYWxsZW5nZSI6IjJlempUVXlxSmdVTzVDbTAwejNaVFBoMmJHRjBzSFhmZzZIam1ESU03SlEiLCJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vaWlkamttZGNlb2xnaGVwZWhhYWRkb2ptbmpua2tpamEiLCJjcm9zc09yaWdpbiI6ZmFsc2V9YgJjv47OyCFpQ3B7WydR418Vgr5pwCsaKCUKS7610qe110rI2KKZ/BBQObH7ttlbKidRsopicGpzVgzaH+GO1i4jA/+3nSjF1JbAfNbIuTAgHY58Xt5m0jkaPMfUIohYtwfz",
+                // testnet transaction HPeFPYFLvJqtxrmbifi42zFQgoCRUDyzqksGP6j816sf
+                "nQMGJSHORCNS/1Poy7GQoBF5FEqa+43LJNIjx92KSNEd8LaHHQAAAACRAnsidHlwZSI6IndlYmF1dGhuLmdldCIsImNoYWxsZW5nZSI6InY5QWsyRGFTTm9KSVktTHF6R0R1QTdYZm1vN3NyNTAzMkRWdUJnVTVNSk0iLCJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbmxtbGxwZmxwZWxwYW5ucGlqaGhuYmhla3BicGVqY2giLCJjcm9zc09yaWdpbiI6ZmFsc2UsIm90aGVyX2tleXNfY2FuX2JlX2FkZGVkX2hlcmUiOiJkbyBub3QgY29tcGFyZSBjbGllbnREYXRhSlNPTiBhZ2FpbnN0IGEgdGVtcGxhdGUuIFNlZSBodHRwczovL2dvby5nbC95YWJQZXgifWICYGCmTmyHT8D9ZLWqejm60Joc0Qmrc9xZIVVkCR2kQ1QnZ08GMESPpCJYZ7ssqX023wtD6ekpMguLJenJd+XI0wKaO4p1lN2QJGk50UDzk7/iqYS/MZPM3oH8ywHemq1shg==",
             ];
 
             for fixture in FIXTURES {
