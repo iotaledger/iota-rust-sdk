@@ -11,7 +11,7 @@ use crate::{
 /// authentication through Move code. This type represents the data received
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
-#[derive(Clone, Debug, Eq, PartialEq, derive_more::From)]
+#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MoveAuthenticator {
