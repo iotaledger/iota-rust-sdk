@@ -21,16 +21,47 @@ pub enum MoveAuthenticator {
 impl MoveAuthenticator {
     crate::def_is_as_into_opt!(V1(MoveAuthenticatorV1));
 
-    pub fn new_v1(
-        call_args: Vec<Input>,
-        type_args: Vec<TypeTag>,
-        object_to_authenticate: Input,
-    ) -> Self {
-        Self::V1(MoveAuthenticatorV1::new(
-            call_args,
-            type_args,
-            object_to_authenticate,
-        ))
+    // pub fn new_v1(
+    //     call_args: Vec<Input>,
+    //     type_args: Vec<TypeTag>,
+    //     // TODO
+    //     object_to_authenticate: Input,
+    // ) -> Self {
+    //     Self::V1(MoveAuthenticatorV1::new(
+    //         call_args,
+    //         type_args,
+    //         object_to_authenticate,
+    //     ))
+    // }
+
+    pub fn version(&self) -> u64 {
+        match self {
+            Self::V1(_) => 1,
+        }
+    }
+
+    pub fn address(&self) -> Address {
+        match self {
+            Self::V1(v1) => v1.address(),
+        }
+    }
+
+    pub fn call_args(&self) -> &[Input] {
+        match self {
+            Self::V1(v1) => v1.call_args(),
+        }
+    }
+
+    pub fn type_args(&self) -> &[TypeTag] {
+        match self {
+            Self::V1(v1) => v1.type_args(),
+        }
+    }
+
+    pub fn object_to_authenticate(&self) -> &Input {
+        match self {
+            Self::V1(v1) => v1.object_to_authenticate(),
+        }
     }
 }
 
@@ -56,18 +87,19 @@ pub struct MoveAuthenticatorV1 {
 }
 
 impl MoveAuthenticatorV1 {
-    pub fn new(
-        call_args: Vec<Input>,
-        type_args: Vec<TypeTag>,
-        object_to_authenticate: Input,
-    ) -> Self {
-        Self {
-            call_args,
-            type_args,
-            // TODO should we really accept any Input?
-            object_to_authenticate,
-        }
-    }
+    // pub fn new(
+    //     call_args: Vec<Input>,
+    //     type_args: Vec<TypeTag>,
+    //     object_to_authenticate: Input,
+    // ) -> Self {
+    //     Self {
+    //         call_args,
+    //         type_args,
+    //         // TODO should we really accept any Input?
+    //         object_to_authenticate,
+    //     }
+    // }
+
     /// Create a new move authenticator from an immutable object.
     pub fn new_immutable(
         call_args: Vec<Input>,
@@ -102,11 +134,15 @@ impl MoveAuthenticatorV1 {
     /// Returns the address of the object being authenticated, which acts as the
     /// sender of the transaction.
     pub fn address(&self) -> Address {
+        // TODO may have to change if we end up accepting any Input
         match self.object_to_authenticate {
             Input::ImmutableOrOwned(ObjectReference { object_id, .. })
             | Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
             _ => unreachable!(),
         }
+
+        // let (id, _, _) = self.object_to_authenticate_components()?;
+        // Ok(Address::from(id))
     }
 
     /// Returns the input objects or primitive values passed to the authenticate
