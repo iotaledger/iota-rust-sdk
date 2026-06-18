@@ -1,0 +1,52 @@
+[package]
+name = "iota-sdk-move-types"
+version = "0.0.1-alpha.1"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2024"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "Rust representations of Move types used by the IOTA blockchain"
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+  "--cfg=doc_cfg",
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
+[features]
+default = []
+bcs-schema = ["dep:iota-bcs-schema", "serde"]
+serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
+
+[dependencies]
+# external dependencies
+bcs = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"], optional = true }
+thiserror = { workspace = true, optional = true }
+
+# internal dependencies
+iota-bcs-schema = { workspace = true, optional = true }
+iota-types = { workspace = true }
+
+[dev-dependencies]
+iota-bcs-schema = { workspace = true, features = ["move-shape"] }
+
+# The bytecode comparator only runs natively (it reads the fetched package
+# artifacts from disk; no `std::fs` on wasm32), so its parser is not built
+# for wasm test runs.
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+# `update_compiled_packages.sh` reads this rev via `cargo metadata` so the
+# parser matches the fetched blobs.
+move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "433865dc51241ebf738ca127d9fd6b4463e1ec60" }
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[build-dependencies]
+filetime = "0.2"

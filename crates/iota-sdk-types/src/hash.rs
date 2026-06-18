@@ -85,6 +85,12 @@ impl crate::Ed25519PublicKey {
     }
 }
 
+impl From<crate::Ed25519PublicKey> for Address {
+    fn from(public_key: crate::Ed25519PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::Secp256k1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
@@ -117,6 +123,12 @@ impl crate::Secp256k1PublicKey {
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
         hasher.update(self.inner());
+    }
+}
+
+impl From<crate::Secp256k1PublicKey> for Address {
+    fn from(public_key: crate::Secp256k1PublicKey) -> Self {
+        public_key.derive_address()
     }
 }
 
@@ -155,6 +167,12 @@ impl crate::Secp256r1PublicKey {
     }
 }
 
+impl From<crate::Secp256r1PublicKey> for Address {
+    fn from(public_key: crate::Secp256r1PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::PasskeyPublicKey {
     /// Derive an `Address` from this Passkey Public Key
     ///
@@ -176,6 +194,12 @@ impl crate::PasskeyPublicKey {
     }
 }
 
+impl From<crate::PasskeyPublicKey> for Address {
+    fn from(public_key: crate::PasskeyPublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::PublicKey {
     pub fn derive_address(&self) -> Address {
         match self {
@@ -184,6 +208,12 @@ impl crate::PublicKey {
             Self::Secp256r1(pk) => pk.derive_address(),
             Self::Passkey(pk) => pk.derive_address(),
         }
+    }
+}
+
+impl From<crate::PublicKey> for Address {
+    fn from(public_key: crate::PublicKey) -> Self {
+        public_key.derive_address()
     }
 }
 
@@ -215,6 +245,12 @@ impl crate::MultisigCommittee {
 
         let digest = hasher.finalize();
         Address::new(digest.into_inner())
+    }
+}
+
+impl From<crate::MultisigCommittee> for Address {
+    fn from(public_key: crate::MultisigCommittee) -> Self {
+        public_key.derive_address()
     }
 }
 
@@ -406,7 +442,9 @@ mod signing_message {
         T: serde::Serialize,
     {
         pub fn signing_digest(&self) -> Digest {
-            Hasher::digest(bcs::to_bytes(&self).unwrap())
+            let mut hasher = Hasher::default();
+            bcs::serialize_into(&mut hasher, self).unwrap();
+            hasher.finalize()
         }
     }
 }

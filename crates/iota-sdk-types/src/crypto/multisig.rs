@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
-use std::sync::OnceLock;
-
-#[cfg(feature = "serde")]
 use super::SignatureFromBytesError;
 use super::{
     Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureScheme,
@@ -275,7 +272,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
@@ -288,10 +285,6 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
-    /// A bytes representation of this aggregated signature. This helps with
-    /// implementing [trait AsRef<[u8]>].
-    #[cfg(feature = "serde")]
-    bytes: OnceLock<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -323,8 +316,6 @@ impl MultisigAggregatedSignature {
             signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         }
     }
 
@@ -380,8 +371,6 @@ impl MultisigAggregatedSignature {
             signatures: member_signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         };
 
         Ok(signature)
@@ -453,16 +442,6 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
     }
     Ok(res)
 }
-
-impl PartialEq for MultisigAggregatedSignature {
-    fn eq(&self, other: &Self) -> bool {
-        self.bitmap == other.bitmap
-            && self.committee == other.committee
-            && self.signatures == other.signatures
-    }
-}
-
-impl Eq for MultisigAggregatedSignature {}
 
 /// A signature from a member of a multisig committee.
 ///
@@ -599,7 +578,6 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
                 signatures,
                 bitmap,
                 committee,
-                bytes: OnceLock::new(),
             })
             .boxed()
     }
@@ -681,7 +659,6 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
-                    bytes: OnceLock::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
@@ -691,7 +668,7 @@ mod serialization {
     }
 
     impl MultisigAggregatedSignature {
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let mut buf = Vec::new();
             buf.push(SignatureScheme::Multisig as u8);
 
@@ -720,7 +697,6 @@ mod serialization {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
-                    bytes: OnceLock::new(),
                 };
                 multisig
                     .validate()
@@ -841,20 +817,9 @@ mod serialization {
         }
     }
 
-    /// This initialize the underlying bytes representation of
-    /// [`MultisigAggregatedSignature`].
-    /// It encodes [`MultisigAggregatedSignature`] as the MultiSig flag (0x03)
-    /// concat with the bcs bytes of [`MultisigAggregatedSignature`] i.e. `flag
-    /// || bcs_bytes(multiSig)`.
-    impl AsRef<[u8]> for MultisigAggregatedSignature {
-        fn as_ref(&self) -> &[u8] {
-            self.bytes.get_or_init(|| self.to_bytes())
-        }
-    }
-
     impl Hash for MultisigAggregatedSignature {
         fn hash<H: Hasher>(&self, state: &mut H) {
-            self.as_ref().hash(state);
+            self.to_bytes().hash(state);
         }
     }
 
