@@ -3,9 +3,7 @@
 
 use std::hash::{Hash, Hasher};
 
-use crate::{
-    Address, Input, ObjectId, ObjectReference, TypeTag, Version, transaction::SharedObjectReference,
-};
+use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectReference};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
@@ -92,17 +90,12 @@ impl MoveAuthenticatorV1 {
     pub fn with_shared_account_object(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
-        object_to_authenticate: impl Into<ObjectId>,
-        initial_shared_version: Version,
+        object_to_authenticate: SharedObjectReference,
     ) -> Self {
         Self {
             call_args,
             type_args,
-            object_to_authenticate: Input::Shared(SharedObjectReference {
-                object_id: object_to_authenticate.into(),
-                initial_shared_version,
-                mutable: false,
-            }),
+            object_to_authenticate: Input::Shared(object_to_authenticate),
         }
     }
 
@@ -171,7 +164,7 @@ mod tests {
     use base64ct::{Base64, Encoding};
 
     use super::*;
-    use crate::{Digest, SignatureScheme, StructTag};
+    use crate::{Digest, ObjectId, SignatureScheme, StructTag, Version};
 
     #[cfg(feature = "proptest")]
     #[test_strategy::proptest]
@@ -401,8 +394,7 @@ mod tests {
                         TypeTag::Vector(Box::new(TypeTag::U8)),
                         TypeTag::Struct(Box::new(StructTag::new_gas_coin())),
                     ],
-                    ObjectId::new([0x22; 32]),
-                    Version::from_u64(3),
+                    shared(0x22, 3, false),
                 )
                 .into(),
                 b64: "BwAAAwIGAQcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgRjb2luBENvaW4BBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGlvdGEESU9UQQABASIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAwAAAAAAAAAA",
@@ -413,8 +405,7 @@ mod tests {
                 auth: MoveAuthenticatorV1::with_shared_account_object(
                     vec![Input::ImmutableOrOwned(owned(0x33, 1)), receiving(0x44, 2)],
                     vec![],
-                    ObjectId::new([0x55; 32]),
-                    Version::from_u64(9),
+                    shared(0x55, 9, false),
                 )
                 .into(),
                 b64: "BwACAQAzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMwEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQJERERERERERERERERERERERERERERERERERERERERERAIAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUJAAAAAAAAAAA=",

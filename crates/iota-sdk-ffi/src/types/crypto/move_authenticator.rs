@@ -6,9 +6,8 @@ use std::sync::Arc;
 use crate::types::{
     address::Address,
     move_core::TypeTag,
-    object::{ObjectId, ObjectReference},
-    transaction::Input,
-    version::Version,
+    object::ObjectReference,
+    transaction::{Input, SharedObjectReference},
 };
 
 /// MoveAuthenticator is a signature variant that enables a method of
@@ -61,15 +60,13 @@ impl MoveAuthenticatorV1 {
     pub fn with_shared_account_object(
         call_args: Vec<Arc<Input>>,
         type_args: Vec<Arc<TypeTag>>,
-        object_to_authenticate: &ObjectId,
-        initial_shared_version: &Version,
+        object_to_authenticate: SharedObjectReference,
     ) -> Self {
         Self(
             iota_sdk::types::MoveAuthenticatorV1::with_shared_account_object(
                 call_args.into_iter().map(|v| v.0.clone()).collect(),
                 type_args.into_iter().map(|v| v.0.clone()).collect(),
-                **object_to_authenticate,
-                **initial_shared_version,
+                object_to_authenticate.into(),
             ),
         )
     }

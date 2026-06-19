@@ -1731,6 +1731,34 @@ impl MoveCall {
     }
 }
 
+/// A shared object input to a programmable transaction
+#[derive(uniffi::Record)]
+pub struct SharedObjectReference {
+    object_id: Arc<ObjectId>,
+    initial_shared_version: Arc<Version>,
+    mutable: bool,
+}
+
+impl From<iota_sdk::types::SharedObjectReference> for SharedObjectReference {
+    fn from(value: iota_sdk::types::SharedObjectReference) -> Self {
+        Self {
+            object_id: Arc::new((value.object_id).into()),
+            initial_shared_version: Arc::new(value.initial_shared_version.into()),
+            mutable: value.mutable,
+        }
+    }
+}
+
+impl From<SharedObjectReference> for iota_sdk::types::SharedObjectReference {
+    fn from(value: SharedObjectReference) -> Self {
+        Self::new(
+            **value.object_id,
+            **value.initial_shared_version,
+            value.mutable,
+        )
+    }
+}
+
 crate::export_iota_types_bcs_conversion!(
     SignedTransaction,
     RandomnessStateUpdate,

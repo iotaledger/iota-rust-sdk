@@ -134,8 +134,11 @@ impl MoveAuthenticatorBuilder {
                 MoveAuthenticator::V1(MoveAuthenticatorV1::with_shared_account_object(
                     call_args,
                     self.type_args,
-                    account.id(),
-                    *version,
+                    SharedObjectReference {
+                        object_id: account.id(),
+                        initial_shared_version: *version,
+                        mutable: false,
+                    },
                 ))
             }
             _ => {
