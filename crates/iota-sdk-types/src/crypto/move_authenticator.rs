@@ -12,6 +12,7 @@ use crate::{
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MoveAuthenticator {
@@ -61,8 +62,8 @@ impl Hash for MoveAuthenticator {
 
 /// Version 1 of the [`MoveAuthenticator`].
 #[derive(Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveAuthenticatorV1 {
     /// Input objects or primitive values
     call_args: Vec<Input>,
@@ -135,39 +136,17 @@ impl MoveAuthenticatorV1 {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use std::borrow::Cow;
-
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
     use crate::{SignatureScheme, crypto::SignatureFromBytesError};
-
-    #[derive(serde::Serialize)]
-    enum MoveAuthenticatorRef<'a> {
-        V1(&'a MoveAuthenticatorV1),
-    }
-
-    #[derive(serde::Deserialize)]
-    enum MoveAuthenticatorOwned {
-        V1(MoveAuthenticatorV1),
-    }
-
-    impl From<MoveAuthenticatorOwned> for MoveAuthenticator {
-        fn from(value: MoveAuthenticatorOwned) -> Self {
-            match value {
-                MoveAuthenticatorOwned::V1(v1) => Self::V1(v1),
-            }
-        }
-    }
 
     impl MoveAuthenticator {
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             match bytes.as_ref().split_first() {
                 Some((flag, tail)) if flag == &(SignatureScheme::MoveAuthenticator as u8) => {
-                    let authenticator = bcs::from_bytes::<MoveAuthenticatorOwned>(tail)
-                        .map_err(SignatureFromBytesError::new)?;
-                    Ok(authenticator.into())
+                    let authenticator =
+                        bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
+                    Ok(authenticator)
                 }
                 None => Err(SignatureFromBytesError::new(
                     "missing signature scheme flag",
@@ -179,44 +158,9 @@ mod serialization {
         }
 
         pub fn to_bytes(&self) -> Vec<u8> {
-            let authenticator = match self {
-                Self::V1(v1) => MoveAuthenticatorRef::V1(v1),
-            };
             let mut bytes = vec![SignatureScheme::MoveAuthenticator as u8];
-            bcs::serialize_into(&mut bytes, &authenticator)
-                .expect("BCS serialization should not fail");
+            bcs::serialize_into(&mut bytes, self).expect("BCS serialization should not fail");
             bytes
-        }
-    }
-
-    impl Serialize for MoveAuthenticator {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                match self {
-                    Self::V1(v1) => MoveAuthenticatorRef::V1(v1).serialize(serializer),
-                }
-            } else {
-                let bytes = self.to_bytes();
-                serializer.serialize_bytes(&bytes)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for MoveAuthenticator {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let authenticator = MoveAuthenticatorOwned::deserialize(deserializer)?;
-                Ok(authenticator.into())
-            } else {
-                let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
-            }
         }
     }
 }
@@ -227,7 +171,7 @@ mod tests {
     use base64ct::{Base64, Encoding};
 
     use super::*;
-    use crate::{Digest, SignatureScheme};
+    use crate::{Digest, SignatureScheme, StructTag};
 
     #[cfg(feature = "proptest")]
     #[test_strategy::proptest]
@@ -361,58 +305,216 @@ mod tests {
         assert_eq!(d1, d2, "digest must be deterministic");
     }
 
-    /// Real `MoveAuthenticator` signatures captured from live account
-    /// abstraction transactions, in the network signature form
-    /// (`flag || BCS(authenticator)`, base64-encoded). Each is the sole
-    /// signature of a transaction whose sender is an abstracted account
-    /// object. Labels are `<network>/<tx digest> (<account type>)`.
-    const ONCHAIN_FIXTURES: &[(&str, &str)] = &[
-        (
-            "testnet/ALZRemHMDS7L5hTvNbsqBo3m9ppHdss9fnYBrhg5Goj1 (aa_account::AaAccount)",
-            "BwABAEFAdejeXdVxX1N3uRLMiN0JwVpjv6eHBifT8UArw4pbtWm97VsuumR+8hMtjM2mEjb\
-             Ee/jkfaT56XpJV0z7jkJlCAABAc3u5+O9aBuquT6Im52SkO0kkwEhc7Wrg6ZHdv6fiStAR\
-             CtCLAAAAAAA",
-        ),
-        (
-            "devnet/41oDCfQCGfDzKMfjaU86QYaMBAGzq8bnZNzwsLAtMPk8 (account::Account)",
-            "BwAAAAEB8kJHXl+LL+m/5ObJe9HzZIWcZmfJyMy8lbdwmVs8yj7bEgAAAAAAAAA=",
-        ),
-        (
-            "devnet/DYTjjcdMLU3VNnisMC64WRrVkYKqPWWsL1EnTwoxAJm8 (hello_auth::HelloAccount)",
-            "BwABAAYFaGVsbG8AAQFOFRfoxTE0XBbAomMfZPtKexQDDQSZI+5aR9rxRkLeiQAVAAAAAAAAAA==",
-        ),
-        (
-            "devnet/CEjBf3YYX6hNsZJEaaZPkjWchuEz9MWPc9W5EBuJktNN (account::Account)",
-            "BwACAAYFaGVsbG8BAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAQAAAAAAAAAA\
-             AAEB92KcqQiZnqkHF28wCqvXRn88hVPa40M1sqVvigXR+ScpHAAAAAAAAAA=",
-        ),
-        (
-            "devnet/FQgayuRhjKFqGwkLgvVN4jgH6myPdG7w1e7q1RzscrF1 (aa_account::AaAccount)",
-            "BwABAEFAh64Dfrb0dplbEEzUQLurZmsa+vs3MyztJcWMFHl6cqhE5trBvkD6/ZXiQZc0YtB\
-             rQQz6dT/81A+OvPbjHFoeDAABAQIZcv04vZKmCHTOHBMuF5nxVFvZMhvMBokb8gMb0XHadH\
-             sAAAAAAAAA",
-        ),
+    /// An on-chain `MoveAuthenticator` fixture, decoded along both
+    /// deserialization paths.
+    struct OnchainFixture {
+        /// Human-readable label: `<network>/<object-id> (<module::Type>)`.
+        name: &'static str,
+        /// Base64 of the full serialized authenticator, including the leading
+        /// `0x07` `SignatureScheme::MoveAuthenticator` flag byte.
+        b64: &'static str,
+        /// Base58 `MoveAuthenticator::digest()`, frozen to pin the digest.
+        digest: &'static str,
+    }
+
+    const ONCHAIN_FIXTURES: &[OnchainFixture] = &[
+        OnchainFixture {
+            name: "testnet/ALZRemHMDS7L5hTvNbsqBo3m9ppHdss9fnYBrhg5Goj1 (aa_account::AaAccount)",
+            b64: "BwABAEFAdejeXdVxX1N3uRLMiN0JwVpjv6eHBifT8UArw4pbtWm97VsuumR+8hMtjM2mEjb\
+                  Ee/jkfaT56XpJV0z7jkJlCAABAc3u5+O9aBuquT6Im52SkO0kkwEhc7Wrg6ZHdv6fiStAR\
+                  CtCLAAAAAAA",
+            digest: "AWeraivr6263NnYKJrcjY2VVLK2WxpzaDEF2QgND6HBK",
+        },
+        OnchainFixture {
+            name: "devnet/41oDCfQCGfDzKMfjaU86QYaMBAGzq8bnZNzwsLAtMPk8 (account::Account)",
+            b64: "BwAAAAEB8kJHXl+LL+m/5ObJe9HzZIWcZmfJyMy8lbdwmVs8yj7bEgAAAAAAAAA=",
+            digest: "CRiTQyu66bKqSeJxFQkkfBT6J6Jii3fYsU6PrtR9oyrQ",
+        },
+        OnchainFixture {
+            name: "devnet/DYTjjcdMLU3VNnisMC64WRrVkYKqPWWsL1EnTwoxAJm8 (hello_auth::HelloAccount)",
+            b64: "BwABAAYFaGVsbG8AAQFOFRfoxTE0XBbAomMfZPtKexQDDQSZI+5aR9rxRkLeiQAVAAAAAAAAAA==",
+            digest: "H1Y9d4EwDyHY5NG4UDgapZB3rNKurmR5uBX8K2kLsaqb",
+        },
+        OnchainFixture {
+            name: "devnet/CEjBf3YYX6hNsZJEaaZPkjWchuEz9MWPc9W5EBuJktNN (account::Account)",
+            b64: "BwACAAYFaGVsbG8BAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAQAAAAAAAAAA\
+                  AAEB92KcqQiZnqkHF28wCqvXRn88hVPa40M1sqVvigXR+ScpHAAAAAAAAAA=",
+            digest: "HJkQMWprAUKPb9TrNS1et24E3W14mAj3zhnaMhzvs9xX",
+        },
+        OnchainFixture {
+            name: "devnet/FQgayuRhjKFqGwkLgvVN4jgH6myPdG7w1e7q1RzscrF1 (aa_account::AaAccount)",
+            b64: "BwABAEFAh64Dfrb0dplbEEzUQLurZmsa+vs3MyztJcWMFHl6cqhE5trBvkD6/ZXiQZc0YtB\
+                  rQQz6dT/81A+OvPbjHFoeDAABAQIZcv04vZKmCHTOHBMuF5nxVFvZMhvMBokb8gMb0XHadH\
+                  sAAAAAAAAA",
+            digest: "omshjh4rvYCa26vGEkpAkgNArwSVYYUwFkNczvctAXQ",
+        },
     ];
 
+    /// A synthetic `MoveAuthenticator` fixture: a value built in code together
+    /// with its frozen wire encoding. The builder catches accidental value
+    /// changes; the frozen `b64` catches encoding drift (e.g. a `Input`
+    /// variant being reordered).
+    struct SyntheticFixture {
+        name: &'static str,
+        auth: MoveAuthenticator,
+        b64: &'static str,
+        digest: &'static str,
+    }
+
+    /// Synthetic fixtures exercising structural shapes absent from the on-chain
+    /// fixtures: an owned (`ImmutableOrOwned`) object to authenticate,
+    /// non-empty and nested `type_arguments`, and `call_args` containing
+    /// owned / receiving / mutable-shared inputs.
+    fn synthetic_fixtures() -> Vec<SyntheticFixture> {
+        let owned = |b: u8, v: u64| {
+            ObjectReference::new(ObjectId::new([b; 32]), Version::from_u64(v), Digest::MIN)
+        };
+        let shared = |b: u8, v: u64, mutable: bool| {
+            SharedObjectReference::new(ObjectId::new([b; 32]), Version::from_u64(v), mutable)
+        };
+        let receiving = |b: u8, v: u64| {
+            Input::Receiving(ObjectReference::new(
+                ObjectId::new([b; 32]),
+                Version::from_u64(v),
+                Digest::MIN,
+            ))
+        };
+
+        vec![
+            SyntheticFixture {
+                name: "synthetic/owned-object-to-authenticate",
+                auth: MoveAuthenticatorV1::new_immutable(vec![], vec![], owned(0x11, 7)).into(),
+                b64: "BwAAAAEAEREREREREREREREREREREREREREREREREREREREREREHAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                digest: "C3YqVQTCABN3t2bZqv9vbJfVroEA4Bd1t2EvesuxGiMX",
+            },
+            SyntheticFixture {
+                name: "synthetic/nested-type-arguments",
+                auth: MoveAuthenticatorV1::new_shared(
+                    vec![],
+                    vec![
+                        TypeTag::U64,
+                        TypeTag::Vector(Box::new(TypeTag::U8)),
+                        TypeTag::Struct(Box::new(StructTag::new_gas_coin())),
+                    ],
+                    ObjectId::new([0x22; 32]),
+                    Version::from_u64(3),
+                )
+                .into(),
+                b64: "BwAAAwIGAQcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgRjb2luBENvaW4BBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGlvdGEESU9UQQABASIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAwAAAAAAAAAA",
+                digest: "36UQmS8XFEqLJBDRpMP5WTvgsRu59TFGdr5cxJCviAc4",
+            },
+            SyntheticFixture {
+                name: "synthetic/owned-and-receiving-call-args",
+                auth: MoveAuthenticatorV1::new_shared(
+                    vec![Input::ImmutableOrOwned(owned(0x33, 1)), receiving(0x44, 2)],
+                    vec![],
+                    ObjectId::new([0x55; 32]),
+                    Version::from_u64(9),
+                )
+                .into(),
+                b64: "BwACAQAzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMwEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQJERERERERERERERERERERERERERERERERERERERERERAIAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUJAAAAAAAAAAA=",
+                digest: "FBYGx2eA5qqFPwG6H1aoe4Psrj7w66TF7VnibULUdT9S",
+            },
+            SyntheticFixture {
+                name: "synthetic/mutable-shared-call-arg-owned-target",
+                auth: MoveAuthenticatorV1::new_immutable(
+                    vec![Input::Shared(shared(0x66, 5, true))],
+                    vec![],
+                    owned(0x77, 8),
+                )
+                .into(),
+                b64: "BwABAQFmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZgUAAAAAAAAAAQABAHd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3CAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                digest: "6y4vmN1UG2ncjNwRpoH7xw5fGmRmkRDTduKWLf9VNZXB",
+            },
+            SyntheticFixture {
+                name: "synthetic/kitchen-sink",
+                auth: MoveAuthenticatorV1::new_immutable(
+                    vec![
+                        Input::Pure(vec![1, 2, 3, 4]),
+                        Input::ImmutableOrOwned(owned(0x88, 10)),
+                        Input::Shared(shared(0x99, 11, true)),
+                        receiving(0xaa, 12),
+                    ],
+                    vec![
+                        TypeTag::Address,
+                        TypeTag::Struct(Box::new(StructTag::new_gas_coin())),
+                    ],
+                    owned(0xbb, 13),
+                )
+                .into(),
+                b64: "BwAEAAQBAgMEAQCIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAoAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQGZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmQsAAAAAAAAAAQECqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqoMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGNvaW4EQ29pbgEHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEaW90YQRJT1RBAAEAu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7sNAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                digest: "9btfpDWStq2SBr6FeQuK1WwgPHdgajd3fipwwqr65ce7",
+            },
+        ]
+    }
+
+    /// Asserts the full encode/decode contract for a fixture given its base64
+    /// wire bytes. When `expected` is supplied, the decoded value must equal
+    /// it.
+    fn check_round_trip(name: &str, b64: &str, digest: &str, expected: Option<&MoveAuthenticator>) {
+        let bytes =
+            Base64::decode_vec(b64).unwrap_or_else(|e| panic!("{name}: invalid base64: {e:?}"));
+
+        // Flag-aware decode.
+        let auth_from_bytes = MoveAuthenticator::from_bytes(&bytes)
+            .unwrap_or_else(|e| panic!("{name}: MoveAuthenticator::from_bytes: {e:?}"));
+
+        // Re-encoding reproduces the exact bytes.
+        assert_eq!(
+            auth_from_bytes.to_bytes(),
+            bytes,
+            "{name}: re-serialization mismatch"
+        );
+
+        // Raw BCS of the tail into the inner enum agrees with the flag-aware path.
+        let auth_from_bcs = bcs::from_bytes::<MoveAuthenticator>(&bytes[1..])
+            .unwrap_or_else(|e| panic!("{name}: bcs::from_bytes: {e:?}"));
+
+        // Mirror of the raw-BCS decode path: encoding the inner enum reproduces
+        // the flag-stripped tail (`to_bytes` is just this prefixed with the flag).
+        assert_eq!(
+            bcs::to_bytes(&auth_from_bytes)
+                .expect("BCS serialization should not fail")
+                .as_slice(),
+            &bytes[1..],
+            "{name}: bcs::to_bytes(inner) != flag-stripped tail",
+        );
+
+        assert_eq!(
+            auth_from_bytes, auth_from_bcs,
+            "{name}: the two decode paths disagree",
+        );
+
+        if let Some(expected) = expected {
+            assert_eq!(
+                &auth_from_bytes, expected,
+                "{name}: decoded value differs from the builder"
+            );
+            assert_eq!(
+                &auth_from_bcs, expected,
+                "{name}: decoded value differs from the builder"
+            );
+        }
+
+        // The authenticator's digest matches the frozen value.
+        assert_eq!(
+            auth_from_bytes.digest().to_string(),
+            digest,
+            "{name}: MoveAuthenticator::digest() drifted"
+        );
+    }
+
     #[test]
-    fn deserialize_onchain_fixtures() {
-        for (label, b64) in ONCHAIN_FIXTURES {
-            let bytes = Base64::decode_vec(b64).expect("valid base64");
-            assert_eq!(
-                bytes.first().copied(),
-                Some(SignatureScheme::MoveAuthenticator as u8),
-                "{label}: must start with the MoveAuthenticator flag",
-            );
+    fn onchain_fixtures_round_trip() {
+        for f in ONCHAIN_FIXTURES {
+            check_round_trip(f.name, f.b64, f.digest, None);
+        }
+    }
 
-            let authenticator =
-                MoveAuthenticator::from_bytes(&bytes).unwrap_or_else(|e| panic!("{label}: {e}"));
-
-            // Re-encoding must reproduce the exact on-chain bytes.
-            assert_eq!(
-                authenticator.to_bytes(),
-                bytes,
-                "{label}: re-encoding must match the on-chain signature",
-            );
+    #[test]
+    fn synthetic_fixtures_round_trip() {
+        for f in synthetic_fixtures() {
+            check_round_trip(f.name, f.b64, f.digest, Some(&f.auth));
         }
     }
 }
