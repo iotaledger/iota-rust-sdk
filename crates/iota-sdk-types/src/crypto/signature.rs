@@ -783,7 +783,12 @@ mod serialization {
                     UserSignature::Simple(simple) => simple.serialize(serializer),
                     UserSignature::Multisig(multisig) => multisig.serialize(serializer),
                     UserSignature::PasskeyAuthenticator(passkey) => passkey.serialize(serializer),
-                    UserSignature::MoveAuthenticator(move_auth) => move_auth.serialize(serializer),
+                    // `MoveAuthenticator` derives `Serialize`, so delegating here would emit the
+                    // bare enum instead of the length-prefixed `flag || payload` byte blob every
+                    // other signature scheme uses (and that `from_bytes`/deserialize expect).
+                    UserSignature::MoveAuthenticator(move_auth) => {
+                        serializer.serialize_bytes(&move_auth.to_bytes())
+                    }
                 }
             }
         }
@@ -979,6 +984,34 @@ mod serialization {
 
                 let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
                 assert_eq!(SignatureScheme::PasskeyAuthenticator, sig.scheme());
+                let bytes = bcs::to_bytes(&sig).unwrap();
+                assert_eq!(bcs, bytes);
+
+                let json = serde_json::to_string_pretty(&sig).unwrap();
+                println!("{json}");
+                assert_eq!(sig, serde_json::from_str(&json).unwrap());
+            }
+        }
+
+        #[test]
+        fn move_authenticator_fixtures() {
+            // BCS form of on-chain `MoveAuthenticator` user signatures: the
+            // length-prefixed `flag || payload` byte blob, matching the raw
+            // fixtures in `move_authenticator.rs`. The Move variant derives
+            // `Serialize`, so this pins it to the `bytes` wire form shared by
+            // every other scheme rather than the bare enum encoding.
+            const FIXTURES: &[&str] = &[
+                // testnet/ALZRemHMDS7L5hTvNbsqBo3m9ppHdss9fnYBrhg5Goj1 (aa_account::AaAccount)
+                "cgcAAQBBQHXo3l3VcV9Td7kSzIjdCcFaY7+nhwYn0/FAK8OKW7Vpve1bLrpkfvITLYzNphI2xHv45H2k+el6SVdM+45CZQgAAQHN7ufjvWgbqrk+iJudkpDtJJMBIXO1q4OmR3b+n4krQEQrQiwAAAAAAA==",
+                // devnet/DYTjjcdMLU3VNnisMC64WRrVkYKqPWWsL1EnTwoxAJm8 (hello_auth::HelloAccount)
+                "NwcAAQAGBWhlbGxvAAEBThUX6MUxNFwWwKJjH2T7SnsUAw0EmSPuWkfa8UZC3okAFQAAAAAAAAA=",
+            ];
+
+            for fixture in FIXTURES {
+                let bcs = Base64::decode_vec(fixture).unwrap();
+
+                let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
+                assert_eq!(SignatureScheme::MoveAuthenticator, sig.scheme());
                 let bytes = bcs::to_bytes(&sig).unwrap();
                 assert_eq!(bcs, bytes);
 
