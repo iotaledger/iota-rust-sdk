@@ -220,17 +220,20 @@ impl SimpleSignature {
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
+///                    multisig-flag / bls-flag / passkey-auth-flag /
 ///                    move-auth-flag
 /// ed25519-flag                    = %d00
 /// secp256k1-flag                  = %d01
 /// secp256r1-flag                  = %d02
 /// multisig-flag                   = %d03
 /// bls-flag                        = %d04
-/// zklogin-auth-flag-deprecated    = %d05
 /// passkey-auth-flag               = %d06
 /// move-auth-flag                  = %d07
 /// ```
+///
+/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
+/// authenticator (which was never enabled on chain) and is intentionally
+/// skipped.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display)]
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -242,7 +245,6 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04, // This is currently not supported for user addresses
-    ZkLoginAuthenticatorDeprecated = 0x05,
     PasskeyAuthenticator = 0x06,
     MoveAuthenticator = 0x07,
 }
@@ -266,7 +268,6 @@ impl SignatureScheme {
             0x02 => Ok(Self::Secp256r1),
             0x03 => Ok(Self::Multisig),
             0x04 => Ok(Self::Bls12381),
-            0x05 => Ok(Self::ZkLoginAuthenticatorDeprecated),
             0x06 => Ok(Self::PasskeyAuthenticator),
             0x07 => Ok(Self::MoveAuthenticator),
             invalid => Err(InvalidSignatureScheme(invalid)),
@@ -306,7 +307,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -325,7 +326,6 @@ impl std::fmt::Display for InvalidSignatureScheme {
 pub enum UserSignature {
     Simple(SimpleSignature),
     Multisig(MultisigAggregatedSignature),
-    ZkLoginAuthenticatorDeprecated,
     PasskeyAuthenticator(PasskeyAuthenticator),
     MoveAuthenticator(MoveAuthenticator),
 }
@@ -343,9 +343,6 @@ impl UserSignature {
         match self {
             UserSignature::Simple(simple) => simple.scheme(),
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                SignatureScheme::ZkLoginAuthenticatorDeprecated
-            }
             UserSignature::PasskeyAuthenticator(_) => SignatureScheme::PasskeyAuthenticator,
             UserSignature::MoveAuthenticator(_) => SignatureScheme::MoveAuthenticator,
         }
@@ -366,9 +363,6 @@ impl UserSignature {
             UserSignature::Multisig(_) => {
                 Err(InvalidSignatureScheme(SignatureScheme::Multisig.to_u8()))
             }
-            UserSignature::ZkLoginAuthenticatorDeprecated => Err(InvalidSignatureScheme(
-                SignatureScheme::ZkLoginAuthenticatorDeprecated.to_u8(),
-            )),
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
@@ -486,7 +480,6 @@ mod serialization {
                 }
                 SignatureScheme::Multisig
                 | SignatureScheme::Bls12381
-                | SignatureScheme::ZkLoginAuthenticatorDeprecated
                 | SignatureScheme::PasskeyAuthenticator
                 | SignatureScheme::MoveAuthenticator => {
                     Err(SignatureFromBytesError::new("invalid signature scheme"))
@@ -651,11 +644,6 @@ mod serialization {
             match self {
                 UserSignature::Simple(s) => s.to_bytes(),
                 UserSignature::Multisig(m) => m.to_bytes(),
-                // Scheme flag only: the payload was dropped when zklogin was removed, but the
-                // flag is retained to avoid having to panic or make the whole function fallible.
-                UserSignature::ZkLoginAuthenticatorDeprecated => {
-                    vec![SignatureScheme::ZkLoginAuthenticatorDeprecated as u8]
-                }
                 UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
                 UserSignature::MoveAuthenticator(m) => m.to_bytes(),
             }
@@ -689,9 +677,6 @@ mod serialization {
                 SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
                     "bls not supported for user signatures",
                 )),
-                SignatureScheme::ZkLoginAuthenticatorDeprecated => {
-                    Ok(Self::ZkLoginAuthenticatorDeprecated)
-                }
                 SignatureScheme::PasskeyAuthenticator => {
                     let passkey = PasskeyAuthenticator::from_bytes(bytes)?;
                     Ok(Self::PasskeyAuthenticator(passkey))
@@ -729,7 +714,6 @@ mod serialization {
             public_key: &'a Secp256r1PublicKey,
         },
         Multisig(&'a MultisigAggregatedSignature),
-        ZkLoginDeprecated,
         Passkey(&'a PasskeyAuthenticator),
         Move(&'a MoveAuthenticator),
     }
@@ -751,7 +735,6 @@ mod serialization {
             public_key: Secp256r1PublicKey,
         },
         Multisig(MultisigAggregatedSignature),
-        ZkLoginDeprecated,
         Passkey(PasskeyAuthenticator),
         Move(MoveAuthenticator),
     }
@@ -787,9 +770,6 @@ mod serialization {
                     UserSignature::Multisig(multisig) => {
                         ReadableUserSignatureRef::Multisig(multisig)
                     }
-                    UserSignature::ZkLoginAuthenticatorDeprecated => {
-                        ReadableUserSignatureRef::ZkLoginDeprecated
-                    }
                     UserSignature::PasskeyAuthenticator(passkey) => {
                         ReadableUserSignatureRef::Passkey(passkey)
                     }
@@ -802,8 +782,6 @@ mod serialization {
                 match self {
                     UserSignature::Simple(simple) => simple.serialize(serializer),
                     UserSignature::Multisig(multisig) => multisig.serialize(serializer),
-                    UserSignature::ZkLoginAuthenticatorDeprecated => serializer
-                        .serialize_bytes(&[SignatureScheme::ZkLoginAuthenticatorDeprecated as u8]),
                     UserSignature::PasskeyAuthenticator(passkey) => passkey.serialize(serializer),
                     UserSignature::MoveAuthenticator(move_auth) => move_auth.serialize(serializer),
                 }
@@ -841,9 +819,6 @@ mod serialization {
                         public_key,
                     }),
                     ReadableUserSignature::Multisig(multisig) => Self::Multisig(multisig),
-                    ReadableUserSignature::ZkLoginDeprecated => {
-                        Self::ZkLoginAuthenticatorDeprecated
-                    }
                     ReadableUserSignature::Passkey(passkey) => Self::PasskeyAuthenticator(passkey),
                     ReadableUserSignature::Move(move_auth) => Self::MoveAuthenticator(move_auth),
                 })
@@ -879,6 +854,64 @@ mod serialization {
         #[cfg(feature = "proptest")]
         fn roundtrip_signature_scheme(scheme: SignatureScheme) {
             assert_eq!(Ok(scheme), SignatureScheme::from_byte(scheme.to_u8()));
+        }
+
+        /// The `SignatureScheme` flag bytes are part of the on-chain wire
+        /// format and must never change. They are pinned here against
+        /// hardcoded values; a round-trip (`roundtrip_signature_scheme`)
+        /// cannot catch a shifted value because it would move in lockstep.
+        /// `0x05` is reserved for the removed zklogin authenticator (never
+        /// enabled on chain) and must be rejected rather than mapped.
+        #[test]
+        fn signature_scheme_flag_values() {
+            assert_eq!(SignatureScheme::Ed25519.to_u8(), 0x00);
+            assert_eq!(SignatureScheme::Secp256k1.to_u8(), 0x01);
+            assert_eq!(SignatureScheme::Secp256r1.to_u8(), 0x02);
+            assert_eq!(SignatureScheme::Multisig.to_u8(), 0x03);
+            assert_eq!(SignatureScheme::Bls12381.to_u8(), 0x04);
+            assert_eq!(SignatureScheme::PasskeyAuthenticator.to_u8(), 0x06);
+            assert_eq!(SignatureScheme::MoveAuthenticator.to_u8(), 0x07);
+
+            assert_eq!(
+                SignatureScheme::from_byte(0x00),
+                Ok(SignatureScheme::Ed25519)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x01),
+                Ok(SignatureScheme::Secp256k1)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x02),
+                Ok(SignatureScheme::Secp256r1)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x03),
+                Ok(SignatureScheme::Multisig)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x04),
+                Ok(SignatureScheme::Bls12381)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x06),
+                Ok(SignatureScheme::PasskeyAuthenticator)
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x07),
+                Ok(SignatureScheme::MoveAuthenticator)
+            );
+
+            assert!(
+                SignatureScheme::from_byte(0x05).is_err(),
+                "0x05 (deprecated zklogin) must be rejected"
+            );
+        }
+
+        /// A bare `0x05` flag previously decoded to the (removed) zklogin
+        /// variant; it must now fail to decode.
+        #[test]
+        fn user_signature_rejects_zklogin_flag() {
+            assert!(UserSignature::from_bytes([0x05]).is_err());
         }
 
         #[test]

@@ -265,9 +265,6 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 crate::simple::SimpleVerifier.verify(message, signature)
             }
             UserSignature::Multisig(signature) => self.inner.verify(message, signature),
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                Err(SignatureError::from_source("zklogin is not supported"))
-            }
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
@@ -406,9 +403,6 @@ fn multisig_pubkey_and_signature_from_user_signature(
             signature,
             public_key,
         }) => Ok((public_key.into(), signature.into())),
-        UserSignature::ZkLoginAuthenticatorDeprecated => {
-            Err(SignatureError::from_source("zklogin is not supported"))
-        }
         UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
             passkey_authenticator.clone().into(),
             passkey_authenticator.into(),
