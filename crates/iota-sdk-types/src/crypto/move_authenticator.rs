@@ -300,39 +300,6 @@ mod tests {
         }
     }
 
-    // // ---- Signable / SignableBytes round-trip tests ----
-
-    // use crate::crypto::{Signable, SignableBytes};
-
-    // /// Helper: produce the signable bytes for a MoveAuthenticator (the
-    // /// `"MoveAuthenticator::" ++ BCS(inner)` format).
-    // fn signable_bytes(auth: &MoveAuthenticator) -> Vec<u8> {
-    //     let mut buf = Vec::new();
-    //     auth.write(&mut buf);
-    //     buf
-    // }
-
-    // #[test]
-    // fn signable_bytes_start_with_name_tag() {
-    //     let auth = make_simple_authenticator();
-    //     let bytes = signable_bytes(&auth);
-    //     let tag = b"MoveAuthenticator::";
-    //     assert!(
-    //         bytes.starts_with(tag),
-    //         "signable bytes must start with the hardcoded name tag"
-    //     );
-    // }
-
-    // #[test]
-    // fn signable_bytes_payload_is_bcs_of_inner() {
-    //     let auth = make_simple_authenticator();
-    //     let bytes = signable_bytes(&auth);
-    //     let tag_len = "MoveAuthenticator::".len();
-    //     let payload = &bytes[tag_len..];
-    //     let expected_bcs = bcs::to_bytes(&auth.inner).expect("BCS
-    // serialization should not fail");     assert_eq!(payload,
-    // expected_bcs.as_slice()); }
-
     #[test]
     fn digest_is_stable() {
         let auth = make_simple_authenticator();
