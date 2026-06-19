@@ -506,9 +506,6 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
         match signature {
             UserSignature::Simple(simple) => Ok(simple.into()),
             UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                Err(MultisigError::UnallowedSignatureType)
-            }
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
             UserSignature::MoveAuthenticator(_) => Err(MultisigError::UnallowedSignatureType),
         }
@@ -1027,6 +1024,37 @@ mod tests {
         assert_eq!(
             sig, decoded,
             "to_base64/from_base64 must be inverses of each other"
+        );
+    }
+
+    /// The BCS tag of a multisig `MemberSignature` is the on-chain wire
+    /// format, so the variant indices must stay fixed. A round-trip test
+    /// can't catch a shift (encode and decode move together), so the tag
+    /// values are pinned here against hardcoded expectations. In particular
+    /// this guards the `ZkLoginDeprecated` placeholder kept at index `0x03`:
+    /// removing it would silently shift `Passkey` from `0x04` to `0x03`.
+    #[test]
+    fn member_signature_bcs_tags() {
+        use crate::Ed25519Signature;
+
+        let ed25519 = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0xAB; 64]));
+        assert_eq!(
+            bcs::to_bytes(&ed25519).unwrap()[0],
+            0x00,
+            "ed25519 member must use BCS tag 0x00"
+        );
+
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+        let passkey = MultisigMemberSignature::Passkey(passkey_authenticator);
+        assert_eq!(
+            bcs::to_bytes(&passkey).unwrap()[0],
+            0x04,
+            "passkey member must use BCS tag 0x04"
         );
     }
 
