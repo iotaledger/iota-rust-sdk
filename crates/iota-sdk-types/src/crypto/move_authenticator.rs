@@ -224,6 +224,8 @@ mod serialization {
 #[cfg(test)]
 mod tests {
 
+    use base64ct::{Base64, Encoding};
+
     use super::*;
     use crate::{Digest, SignatureScheme};
 
@@ -357,5 +359,60 @@ mod tests {
         let d1 = auth.digest();
         let d2 = auth.digest();
         assert_eq!(d1, d2, "digest must be deterministic");
+    }
+
+    /// Real `MoveAuthenticator` signatures captured from live account
+    /// abstraction transactions, in the network signature form
+    /// (`flag || BCS(authenticator)`, base64-encoded). Each is the sole
+    /// signature of a transaction whose sender is an abstracted account
+    /// object. Labels are `<network>/<tx digest> (<account type>)`.
+    const ONCHAIN_FIXTURES: &[(&str, &str)] = &[
+        (
+            "testnet/ALZRemHMDS7L5hTvNbsqBo3m9ppHdss9fnYBrhg5Goj1 (aa_account::AaAccount)",
+            "BwABAEFAdejeXdVxX1N3uRLMiN0JwVpjv6eHBifT8UArw4pbtWm97VsuumR+8hMtjM2mEjb\
+             Ee/jkfaT56XpJV0z7jkJlCAABAc3u5+O9aBuquT6Im52SkO0kkwEhc7Wrg6ZHdv6fiStAR\
+             CtCLAAAAAAA",
+        ),
+        (
+            "devnet/41oDCfQCGfDzKMfjaU86QYaMBAGzq8bnZNzwsLAtMPk8 (account::Account)",
+            "BwAAAAEB8kJHXl+LL+m/5ObJe9HzZIWcZmfJyMy8lbdwmVs8yj7bEgAAAAAAAAA=",
+        ),
+        (
+            "devnet/DYTjjcdMLU3VNnisMC64WRrVkYKqPWWsL1EnTwoxAJm8 (hello_auth::HelloAccount)",
+            "BwABAAYFaGVsbG8AAQFOFRfoxTE0XBbAomMfZPtKexQDDQSZI+5aR9rxRkLeiQAVAAAAAAAAAA==",
+        ),
+        (
+            "devnet/CEjBf3YYX6hNsZJEaaZPkjWchuEz9MWPc9W5EBuJktNN (account::Account)",
+            "BwACAAYFaGVsbG8BAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAQAAAAAAAAAA\
+             AAEB92KcqQiZnqkHF28wCqvXRn88hVPa40M1sqVvigXR+ScpHAAAAAAAAAA=",
+        ),
+        (
+            "devnet/FQgayuRhjKFqGwkLgvVN4jgH6myPdG7w1e7q1RzscrF1 (aa_account::AaAccount)",
+            "BwABAEFAh64Dfrb0dplbEEzUQLurZmsa+vs3MyztJcWMFHl6cqhE5trBvkD6/ZXiQZc0YtB\
+             rQQz6dT/81A+OvPbjHFoeDAABAQIZcv04vZKmCHTOHBMuF5nxVFvZMhvMBokb8gMb0XHadH\
+             sAAAAAAAAA",
+        ),
+    ];
+
+    #[test]
+    fn deserialize_onchain_fixtures() {
+        for (label, b64) in ONCHAIN_FIXTURES {
+            let bytes = Base64::decode_vec(b64).expect("valid base64");
+            assert_eq!(
+                bytes.first().copied(),
+                Some(SignatureScheme::MoveAuthenticator as u8),
+                "{label}: must start with the MoveAuthenticator flag",
+            );
+
+            let authenticator =
+                MoveAuthenticator::from_bytes(&bytes).unwrap_or_else(|e| panic!("{label}: {e}"));
+
+            // Re-encoding must reproduce the exact on-chain bytes.
+            assert_eq!(
+                authenticator.to_bytes(),
+                bytes,
+                "{label}: re-encoding must match the on-chain signature",
+            );
+        }
     }
 }
