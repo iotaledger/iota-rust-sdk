@@ -273,13 +273,13 @@ mod tests {
 
     #[test]
     fn from_bytes_rejects_empty_input() {
-        assert!(MoveAuthenticator::from_bytes(&[]).is_err());
+        assert!(MoveAuthenticator::from_bytes([]).is_err());
     }
 
     #[test]
     fn from_bytes_rejects_flag_only() {
         let flag = SignatureScheme::MoveAuthenticator as u8;
-        assert!(MoveAuthenticator::from_bytes(&[flag]).is_err());
+        assert!(MoveAuthenticator::from_bytes([flag]).is_err());
     }
 
     // // ---- Signable / SignableBytes round-trip tests ----
