@@ -69,7 +69,45 @@ pub struct MoveAuthenticatorV1 {
     type_args: Vec<TypeTag>,
     /// The object that is authenticated. Represents the account being the
     /// sender of the transaction.
+    ///
+    /// Only [`Input::ImmutableOrOwned`] and [`Input::Shared`] are valid here;
+    /// deserialization rejects any other [`Input`] variant.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "deserialize_object_to_authenticate")
+    )]
+    #[cfg_attr(feature = "proptest", strategy(arb_object_to_authenticate()))]
     object_to_authenticate: Input,
+}
+
+/// Deserializes [`MoveAuthenticatorV1::object_to_authenticate`], rejecting any
+/// [`Input`] variant other than [`Input::ImmutableOrOwned`] or
+/// [`Input::Shared`].
+#[cfg(feature = "serde")]
+fn deserialize_object_to_authenticate<'de, D>(deserializer: D) -> Result<Input, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let input = <Input as serde::Deserialize>::deserialize(deserializer)?;
+    if !matches!(input, Input::ImmutableOrOwned(_) | Input::Shared(_)) {
+        return Err(serde::de::Error::custom(
+            "object_to_authenticate must be an immutable/owned or shared object",
+        ));
+    }
+    Ok(input)
+}
+
+/// Strategy generating only the [`Input`] variants valid for
+/// [`MoveAuthenticatorV1::object_to_authenticate`], keeping proptest-generated
+/// values in sync with what [`deserialize_object_to_authenticate`] accepts.
+#[cfg(feature = "proptest")]
+fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Input> {
+    use proptest::prelude::*;
+
+    prop_oneof![
+        any::<ObjectReference>().prop_map(Input::ImmutableOrOwned),
+        any::<SharedObjectReference>().prop_map(Input::Shared),
+    ]
 }
 
 impl MoveAuthenticatorV1 {
@@ -219,6 +257,40 @@ mod tests {
     fn from_bytes_rejects_flag_only() {
         let flag = SignatureScheme::MoveAuthenticator as u8;
         assert!(MoveAuthenticator::from_bytes([flag]).is_err());
+    }
+
+    #[test]
+    fn deserialization_rejects_non_object_to_authenticate() {
+        // Serialization is unchecked and the field is private, so craft the
+        // forbidden values directly to confirm only deserialization rejects
+        // them.
+        let bad_inputs = [
+            Input::Pure(vec![1, 2, 3]),
+            Input::Receiving(ObjectReference {
+                object_id: ObjectId::ZERO,
+                version: Version::default(),
+                digest: Digest::MIN,
+            }),
+        ];
+
+        for bad in bad_inputs {
+            let auth: MoveAuthenticator = MoveAuthenticatorV1 {
+                call_args: vec![],
+                type_args: vec![],
+                object_to_authenticate: bad,
+            }
+            .into();
+
+            let bytes = auth.to_bytes();
+            assert!(
+                MoveAuthenticator::from_bytes(&bytes).is_err(),
+                "from_bytes accepted an invalid object_to_authenticate"
+            );
+            assert!(
+                bcs::from_bytes::<MoveAuthenticator>(&bytes[1..]).is_err(),
+                "bcs::from_bytes accepted an invalid object_to_authenticate"
+            );
+        }
     }
 
     // // ---- Signable / SignableBytes round-trip tests ----
