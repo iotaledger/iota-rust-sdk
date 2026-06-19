@@ -393,7 +393,7 @@ wasm-example:
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
-	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -exec basename {} .mjs \;); do \
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
 		$(MAKE) wasm-example "$$example" || exit $$?; \
 	done
 
@@ -457,6 +457,11 @@ swift-release-example: ## Run the Swift release example
 	@printf "\nRunning Swift release example\n"
 	@cd bindings/swift/examples/release && swift run || exit $$?
 
+.PHONY: wasm-release-example
+wasm-release-example: ## Run the WASM release example
+	@printf "\nRunning WASM release example\n"
+	@cd bindings/wasm/examples/release && npm install && node example.mjs || exit $$?
+
 .PHONY: release-examples
 release-examples: ## Run all release examples
 	@$(MAKE) rust-release-example
@@ -465,6 +470,7 @@ release-examples: ## Run all release examples
 	@$(MAKE) python-release-example
 	@$(MAKE) csharp-release-example
 	@$(MAKE) swift-release-example
+	@$(MAKE) wasm-release-example
 
 .PHONY: bcs-schema
 bcs-schema: ## Regenerate bcs-schema.abnf

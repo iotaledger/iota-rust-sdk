@@ -40,6 +40,27 @@ fixed = fixed.replace(
   'from "./wasm-bindgen/index_bg.js"'
 );
 
+// Restore the default for `PaginationFilter.direction`.
+// uniffi record metadata can only encode literal defaults (numbers, strings,
+// bools, None, Some(...), []), never an enum variant, so the `#[default]`
+// `Direction::Forward` on the Rust field cannot be carried into the bindings.
+// As a result ubrn emits `direction` as a required field and omits it from the
+// record's `defaults()`. In TypeScript that surfaces as a type error, but in
+// plain JS the field is silently `undefined`, the enum converter lowers it to a
+// garbage ordinal, and the next call panics ("Invalid Direction enum value").
+// Upgrading does not help: uniffi's bare `#[uniffi(default)]` keyword exists
+// (>=0.30) but ubrn deliberately renders an enum type-default as `undefined`
+// ("no canonical first variant"), reproducing the same bug. So we inject the
+// Rust-side default here, which also makes `direction` optional in `.new({...})`
+// to match the Rust API. Idempotent: skipped if already set.
+fixed = fixed.replace(
+  /(export const PaginationFilter = \(\(\) => \{[\s\S]*?const defaults = \(\) => \(\{)([\s\S]*?)(\}\);)/,
+  (full, head, body, tail) =>
+    /[\s{,]direction\s*:/.test(body)
+      ? full
+      : `${head}\n        direction: Direction.Forward,${body}${tail}`
+);
+
 if (source !== fixed) {
   writeFileSync(bindingsFile, fixed);
   console.log('Normalized generated TypeScript bindings.');
