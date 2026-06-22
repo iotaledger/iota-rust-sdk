@@ -12,13 +12,15 @@ pub mod output_types;
 pub mod pagination;
 pub mod query_types;
 pub mod streams;
+mod transaction_builder_client;
+mod wait;
 
 #[cfg(test)]
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use api::transactions::WaitForTx;
 pub use client::Client;
+pub use iota_transaction_builder::WaitForTx;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};

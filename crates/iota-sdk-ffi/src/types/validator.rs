@@ -90,7 +90,7 @@ impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMembe
 ///                       bls12381-public-key
 ///                       bls12381-signature
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
 

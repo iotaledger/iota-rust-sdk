@@ -22,19 +22,25 @@ pub(crate) static USER_AGENT: &str =
     concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 /// Helper function to convert a GraphQL response to a Result.
+///
+/// A GraphQL response may carry `errors` together with (possibly partial)
+/// `data` — for example when a request exceeds the server's max page size, the
+/// failing field is set to `null` in `data` and the reason is reported in
+/// `errors`. In that case the errors take precedence, so any populated `errors`
+/// list is surfaced as a query error rather than being treated as a
+/// success. A response with neither `data` nor `errors` is reported as an empty
+/// response error instead of panicking.
 pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Error> {
     match (response.data, response.errors) {
-        (Some(data), None) => Ok(data),
-        (None, Some(errors)) => Err(Error::graphql_error(errors)),
-        _ => unreachable!(
-            "Either data or errors must be present in a GraphQL response, but not both"
-        ),
+        (_, Some(errors)) if !errors.is_empty() => Err(Error::graphql_error(errors)),
+        (Some(data), _) => Ok(data),
+        (None, _) => Err(Error::empty_response_error()),
     }
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Client {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
@@ -120,15 +126,29 @@ impl Client {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(
-            self.inner
-                .post(self.rpc_server().clone())
-                .json(&operation)
-                .send()
-                .await?
-                .json::<GraphQlResponse<T>>()
-                .await?,
-        )
+        response_to_err(self.post_query(operation).await?)
+    }
+
+    /// POST a JSON-serializable GraphQL request body and decode the JSON
+    /// response, surfacing the HTTP status and a truncated body on any non-2xx
+    /// response or on a decode failure.
+    async fn post_query<R>(&self, body: &impl serde::Serialize) -> Result<R>
+    where
+        R: serde::de::DeserializeOwned,
+    {
+        let resp = self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(body)
+            .send()
+            .await?;
+        let status = resp.status();
+        let url = resp.url().clone();
+        let bytes = resp.bytes().await?;
+        if !status.is_success() {
+            return Err(Error::http(url, status, &bytes));
+        }
+        serde_json::from_slice::<R>(&bytes).map_err(|e| Error::decode(url, status, &bytes, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -141,15 +161,7 @@ impl Client {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
-        let res = self
-            .inner
-            .post(self.rpc_server().clone())
-            .json(&json)
-            .send()
-            .await?
-            .json::<GraphQlResponse<serde_json::Value>>()
-            .await?;
-        Ok(res)
+        self.post_query(&json).await
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
@@ -182,6 +194,8 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
+    use serde_json::json;
+
     use super::*;
     use crate::test_utils::test_client;
 
@@ -198,6 +212,42 @@ mod tests {
 
         assert!(client.set_rpc_server("localhost:9125/graphql").is_ok());
         assert!(client.set_rpc_server("9125/graphql").is_err());
+    }
+
+    // A response carrying both partial `data` and a populated `errors` list
+    // (e.g. an oversized page request) must surface the errors instead of
+    // panicking on the unreachable arm.
+    #[test]
+    fn test_response_to_err_data_and_errors() {
+        let response: GraphQlResponse<serde_json::Value> = serde_json::from_value(json!({
+            "data": { "epoch": null },
+            "errors": [{ "message": "Page size 75 exceeds the max page size of 50" }],
+        }))
+        .unwrap();
+
+        let err = response_to_err(response).unwrap_err();
+        assert!(err.graphql_errors().is_some());
+    }
+
+    #[test]
+    fn test_response_to_err_data_only() {
+        let response: GraphQlResponse<serde_json::Value> =
+            serde_json::from_value(json!({ "data": { "epoch": 1 } })).unwrap();
+
+        let data = response_to_err(response).unwrap();
+        assert_eq!(data, json!({ "epoch": 1 }));
+    }
+
+    #[test]
+    fn test_response_to_err_errors_only() {
+        let response: GraphQlResponse<serde_json::Value> = serde_json::from_value(json!({
+            "data": null,
+            "errors": [{ "message": "boom" }],
+        }))
+        .unwrap();
+
+        let err = response_to_err(response).unwrap_err();
+        assert!(err.graphql_errors().is_some());
     }
 
     #[tokio::test]

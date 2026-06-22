@@ -14,7 +14,7 @@ pub use module::{
 
 use crate::query_types::schema;
 
-#[derive(cynic::Enum, Copy, Debug, Clone, strum::Display)]
+#[derive(Clone, Copy, cynic::Enum, Debug, strum::Display)]
 #[cynic(schema = "rpc", graphql_type = "MoveAbility")]
 #[strum(serialize_all = "snake_case")]
 #[non_exhaustive]
@@ -25,7 +25,7 @@ pub enum MoveAbility {
     Store,
 }
 
-#[derive(cynic::Enum, Copy, Debug, Clone, strum::Display)]
+#[derive(Clone, Copy, cynic::Enum, Debug, strum::Display)]
 #[cynic(schema = "rpc", graphql_type = "MoveVisibility")]
 #[strum(serialize_all = "snake_case")]
 #[non_exhaustive]
@@ -35,7 +35,7 @@ pub enum MoveVisibility {
     Friend,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunction")]
 pub struct MoveFunction {
     pub is_entry: Option<bool>,
@@ -114,13 +114,13 @@ impl std::fmt::Display for MoveFunction {
     }
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunctionTypeParameter")]
 pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "OpenMoveType")]
 pub struct OpenMoveType {
     pub repr: String,

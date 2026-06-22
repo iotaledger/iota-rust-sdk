@@ -3,16 +3,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMemberPublicKey,
-    MultisigMemberSignature, UserSignature,
+    Address, MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
+    SignatureScheme, UserSignature, crypto::ThresholdUnit,
 };
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct MultisigVerifier {
+    address: Option<Address>,
     #[cfg(feature = "passkey")]
     passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
+    accept_passkey_in_multisig: bool,
+    additional_multisig_checks: bool,
 }
 
 impl MultisigVerifier {
@@ -20,54 +23,65 @@ impl MultisigVerifier {
         Default::default()
     }
 
-    fn verify_member_signature(
+    pub fn with_address(mut self, address: Address) -> Self {
+        self.address = Some(address);
+        self
+    }
+
+    pub fn with_accept_passkey_in_multisig(mut self, accept: bool) -> Self {
+        self.accept_passkey_in_multisig = accept;
+        self
+    }
+
+    pub fn with_additional_multisig_checks(mut self, additional_checks: bool) -> Self {
+        self.additional_multisig_checks = additional_checks;
+        self
+    }
+
+    pub fn verify_member_signature(
         &self,
         message: &[u8],
-        member_public_key: &MultisigMemberPublicKey,
+        member_public_key: &PublicKey,
         signature: &MultisigMemberSignature,
     ) -> Result<(), SignatureError> {
         match (member_public_key, signature) {
             #[cfg(not(feature = "ed25519"))]
-            (MultisigMemberPublicKey::Ed25519(_), MultisigMemberSignature::Ed25519(_)) => Err(
+            (PublicKey::Ed25519(_), MultisigMemberSignature::Ed25519(_)) => Err(
                 SignatureError::from_source("support for ed25519 is not enabled"),
             ),
             #[cfg(feature = "ed25519")]
             (
-                MultisigMemberPublicKey::Ed25519(ed25519_public_key),
+                PublicKey::Ed25519(ed25519_public_key),
                 MultisigMemberSignature::Ed25519(ed25519_signature),
             ) => crate::ed25519::Ed25519VerifyingKey::new(ed25519_public_key)?
                 .verify(message, ed25519_signature),
             #[cfg(not(feature = "secp256k1"))]
-            (MultisigMemberPublicKey::Secp256k1(_), MultisigMemberSignature::Secp256k1(_)) => Err(
+            (PublicKey::Secp256k1(_), MultisigMemberSignature::Secp256k1(_)) => Err(
                 SignatureError::from_source("support for secp256k1 is not enabled"),
             ),
             #[cfg(feature = "secp256k1")]
             (
-                MultisigMemberPublicKey::Secp256k1(k1_public_key),
+                PublicKey::Secp256k1(k1_public_key),
                 MultisigMemberSignature::Secp256k1(k1_signature),
             ) => crate::secp256k1::Secp256k1VerifyingKey::new(k1_public_key)?
                 .verify(message, k1_signature),
             #[cfg(not(feature = "secp256r1"))]
-            (MultisigMemberPublicKey::Secp256r1(_), MultisigMemberSignature::Secp256r1(_)) => Err(
+            (PublicKey::Secp256r1(_), MultisigMemberSignature::Secp256r1(_)) => Err(
                 SignatureError::from_source("support for secp256r1 is not enabled"),
             ),
             #[cfg(feature = "secp256r1")]
             (
-                MultisigMemberPublicKey::Secp256r1(r1_public_key),
+                PublicKey::Secp256r1(r1_public_key),
                 MultisigMemberSignature::Secp256r1(r1_signature),
             ) => crate::secp256r1::Secp256r1VerifyingKey::new(r1_public_key)?
                 .verify(message, r1_signature),
-            (
-                MultisigMemberPublicKey::ZkLoginDeprecated,
-                MultisigMemberSignature::ZkLoginDeprecated,
-            ) => Err(SignatureError::from_source("zklogin is not supported")),
             #[cfg(not(feature = "passkey"))]
-            (MultisigMemberPublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
+            (PublicKey::Passkey(_), MultisigMemberSignature::Passkey(_)) => Err(
                 SignatureError::from_source("support for passkey is not enabled"),
             ),
             #[cfg(feature = "passkey")]
             (
-                MultisigMemberPublicKey::Passkey(passkey_public_key),
+                PublicKey::Passkey(passkey_public_key),
                 MultisigMemberSignature::Passkey(passkey_authenticator),
             ) => {
                 let passkey_verifier = self.passkey_verifier().cloned().unwrap_or_default();
@@ -110,44 +124,67 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         message: &[u8],
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
-        if !signature.committee().is_valid() {
-            return Err(SignatureError::from_source("invalid MultisigCommittee"));
-        }
+        signature
+            .validate()
+            .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
 
-        if signature.signatures().len() != signature.bitmap().count_ones() as usize {
+        if let Some(address) = &self.address
+            && signature.committee().derive_address() != *address
+        {
             return Err(SignatureError::from_source(
-                "number of signatures does not match bitmap",
+                "Invalid address derived from pks",
             ));
         }
 
-        if signature.signatures().len() > signature.committee().members().len() {
+        if !self.accept_passkey_in_multisig
+            && signature.contains_signature_scheme(SignatureScheme::PasskeyAuthenticator)
+        {
             return Err(SignatureError::from_source(
-                "more signatures than committee members",
+                "Passkey sig not supported inside multisig",
             ));
         }
 
-        let weight = BitmapIndices::new(signature.bitmap())
-            .map(|member_idx| {
-                signature
-                    .committee()
-                    .members()
-                    .get(member_idx as usize)
-                    .ok_or_else(|| SignatureError::from_source("invalid bitmap"))
-            })
-            .zip(signature.signatures())
-            .map(|(maybe_member, signature)| {
-                let member = maybe_member?;
-                self.verify_member_signature(message, member.public_key(), signature)
-                    .map(|()| member.weight() as u16)
-            })
-            .sum::<Result<u16, SignatureError>>()?;
+        let mut weight: ThresholdUnit = 0;
+        for (member_idx, member_signature) in
+            BitmapIndices::new(signature.bitmap()).zip(signature.signatures())
+        {
+            let member = signature
+                .committee()
+                .members()
+                .get(member_idx as usize)
+                .ok_or_else(|| SignatureError::from_source("Invalid public keys index"))?;
+
+            if self.additional_multisig_checks
+                && member.public_key().scheme() != member_signature.scheme()
+            {
+                return Err(SignatureError::from_source(format!(
+                    "Invalid sig for pk={} address={:?} error=signature/pubkey type mismatch",
+                    member.public_key().to_base64(),
+                    member.public_key().derive_address(),
+                )));
+            }
+
+            self.verify_member_signature(message, member.public_key(), member_signature)
+                .map_err(|e| {
+                    SignatureError::from_source(format!(
+                        "Invalid sig for pk={} address={:?} error={e}",
+                        member.public_key().to_base64(),
+                        member.public_key().derive_address(),
+                    ))
+                })?;
+
+            weight = weight
+                .checked_add(member.weight() as ThresholdUnit)
+                .ok_or(SignatureError::from_source("Weight overflow"))?;
+        }
 
         if weight >= signature.committee().threshold() {
             Ok(())
         } else {
-            Err(SignatureError::from_source(
-                "signature weight does not exceed threshold",
-            ))
+            Err(SignatureError::from_source(format!(
+                "Insufficient weight={weight:?} threshold={:?}",
+                signature.committee().threshold()
+            )))
         }
     }
 }
@@ -194,7 +231,7 @@ impl Iterator for BitmapIndices {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
 }
@@ -228,9 +265,6 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 crate::simple::SimpleVerifier.verify(message, signature)
             }
             UserSignature::Multisig(signature) => self.inner.verify(message, signature),
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                Err(SignatureError::from_source("zklogin is not supported"))
-            }
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
@@ -247,7 +281,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MultisigAggregator {
     committee: MultisigCommittee,
     signatures: std::collections::BTreeMap<usize, MultisigMemberSignature>,
@@ -320,7 +354,10 @@ impl MultisigAggregator {
             }
         }
 
-        self.signed_weight += self.committee.members()[member_idx].weight() as u16;
+        self.signed_weight = self
+            .signed_weight
+            .checked_add(self.committee.members()[member_idx].weight() as ThresholdUnit)
+            .ok_or_else(|| SignatureError::from_source("signed weight overflow"))?;
 
         Ok(())
     }
@@ -341,46 +378,34 @@ impl MultisigAggregator {
             },
         );
 
-        Ok(MultisigAggregatedSignature::new(
-            self.committee.clone(),
+        Ok(MultisigAggregatedSignature::new_unchecked(
             signatures,
             bitmap,
+            self.committee.clone(),
         ))
     }
 }
 
 fn multisig_pubkey_and_signature_from_user_signature(
     signature: UserSignature,
-) -> Result<(MultisigMemberPublicKey, MultisigMemberSignature), SignatureError> {
+) -> Result<(PublicKey, MultisigMemberSignature), SignatureError> {
     use iota_types::SimpleSignature;
     match signature {
         UserSignature::Simple(SimpleSignature::Ed25519 {
             signature,
             public_key,
-        }) => Ok((
-            MultisigMemberPublicKey::Ed25519(public_key),
-            MultisigMemberSignature::Ed25519(signature),
-        )),
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::Simple(SimpleSignature::Secp256k1 {
             signature,
             public_key,
-        }) => Ok((
-            MultisigMemberPublicKey::Secp256k1(public_key),
-            MultisigMemberSignature::Secp256k1(signature),
-        )),
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::Simple(SimpleSignature::Secp256r1 {
             signature,
             public_key,
-        }) => Ok((
-            MultisigMemberPublicKey::Secp256r1(public_key),
-            MultisigMemberSignature::Secp256r1(signature),
-        )),
-        UserSignature::ZkLoginAuthenticatorDeprecated => {
-            Err(SignatureError::from_source("zklogin is not supported"))
-        }
+        }) => Ok((public_key.into(), signature.into())),
         UserSignature::PasskeyAuthenticator(passkey_authenticator) => Ok((
-            MultisigMemberPublicKey::Passkey(passkey_authenticator.public_key()),
-            MultisigMemberSignature::Passkey(passkey_authenticator),
+            passkey_authenticator.clone().into(),
+            passkey_authenticator.into(),
         )),
         UserSignature::Multisig(_) | UserSignature::MoveAuthenticator(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))

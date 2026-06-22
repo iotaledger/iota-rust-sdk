@@ -4,7 +4,7 @@
 
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
-#[derive(thiserror::Error, Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq, thiserror::Error)]
 pub enum VersionError {
     #[error("cannot increment Version: maximum valid Version has already been reached")]
     InvalidIncrement,
@@ -17,39 +17,41 @@ pub enum VersionError {
 }
 
 #[derive(
-    Copy,
     Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
+    Copy,
     Debug,
-    Hash,
     Default,
-    derive_more::Display,
-    derive_more::FromStr,
-    derive_more::From,
     derive_more::Add,
     derive_more::AddAssign,
-    derive_more::Sub,
-    derive_more::SubAssign,
-    derive_more::Mul,
-    derive_more::MulAssign,
+    derive_more::Display,
     derive_more::Div,
     derive_more::DivAssign,
-    derive_more::Sum,
+    derive_more::From,
+    derive_more::FromStr,
+    derive_more::Mul,
+    derive_more::MulAssign,
     derive_more::Rem,
     derive_more::RemAssign,
+    derive_more::Sub,
+    derive_more::SubAssign,
+    derive_more::Sum,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(transparent)
 )]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[repr(transparent)]
-pub struct Version(u64);
+pub struct Version(
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] u64,
+);
 
 impl Version {
     /// An inclusive lower limit on a valid version.

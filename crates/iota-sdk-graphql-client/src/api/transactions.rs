@@ -9,6 +9,7 @@ use std::time::Duration;
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
 use futures::Stream;
+use iota_transaction_builder::WaitForTx;
 use iota_types::{
     Digest, SenderSignedTransaction, SignedTransaction, Transaction, TransactionEffects,
     UserSignature,
@@ -27,33 +28,6 @@ use crate::{
     },
     streams::stream_paginated_query,
 };
-
-/// Determines what to wait for after executing a transaction.
-///
-/// Users should almost always use [`WaitForTx::Finalized`] (the default).
-/// The GraphQL client interacts with the indexer, not the fullnode directly.
-/// Using [`WaitForTx::IndexedOnNode`] only guarantees the transaction is
-/// indexed on the fullnode (meaning you can submit transactions that reference
-/// objects created by this transaction), but subsequent queries using the
-/// transaction ID can still fail until the transaction is indexed on the
-/// indexer.
-#[non_exhaustive]
-#[derive(Default)]
-pub enum WaitForTx {
-    /// Indicates that the transaction effects will be usable in subsequent
-    /// transactions (you can reference objects created by this transaction),
-    /// and that the transaction itself is indexed on the fullnode.
-    ///
-    /// **Warning:** This does not guarantee the transaction is indexed on the
-    /// indexer. Since the GraphQL client queries the indexer, subsequent
-    /// queries with this transaction ID may still fail. Prefer
-    /// [`WaitForTx::Finalized`] unless you have a specific reason to use this.
-    IndexedOnNode,
-    /// Indicates that the transaction has been included in a checkpoint, and
-    /// all queries may include it.
-    #[default]
-    Finalized,
-}
 
 impl Client {
     /// Get a transaction by its digest.
@@ -307,18 +281,20 @@ impl Client {
         wait_for: WaitForTx,
         timeout: impl Into<Option<Duration>>,
     ) -> Result<()> {
-        tokio::time::timeout(
+        crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
-                let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
-                    interval.tick().await;
                     if match wait_for {
                         WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
+                        _ => unimplemented!(
+                            "a new WaitForTx enum variant was added and needs to be handled"
+                        ),
                     } {
                         break Ok(());
                     }
+                    crate::wait::sleep(Duration::from_millis(100)).await;
                 }
             },
         )

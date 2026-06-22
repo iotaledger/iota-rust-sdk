@@ -38,7 +38,7 @@ pub struct TransactionEffectsV1 {
     /// The epoch when this transaction was executed.
     pub epoch: u64,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: Arc<Digest>,
     /// The updated gas object reference, as an index into the `changed_objects`
@@ -75,7 +75,7 @@ impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
         Self {
             status: value.status.into(),
             epoch: value.epoch,
-            gas_used: value.gas_used,
+            gas_cost_summary: value.gas_cost_summary,
             transaction_digest: Arc::new(value.transaction_digest.into()),
             gas_object_index: value.gas_object_index,
             events_digest: value.events_digest.map(Into::into).map(Arc::new),
@@ -102,7 +102,7 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
         Self {
             status: value.status.into(),
             epoch: value.epoch,
-            gas_used: value.gas_used,
+            gas_cost_summary: value.gas_cost_summary,
             transaction_digest: **value.transaction_digest,
             gas_object_index: value.gas_object_index,
             events_digest: value.events_digest.map(|v| **v),

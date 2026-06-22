@@ -18,9 +18,13 @@ async def main():
     )
 
     for event in events.data:
+        # Sender and module are optional: some events (such as system- or
+        # genesis-emitted ones) carry neither.
+        sender = event.sender.to_hex() if event.sender is not None else "none"
+        module = event.module if event.module is not None else "none"
         print(f"Type: {event.type}")
-        print(f"Sender: {event.sender.to_hex()}")
-        print(f"Module: {event.module}")
+        print(f"Sender: {sender}")
+        print(f"Module: {module}")
         print(f"JSON: {event.json}")
 
 

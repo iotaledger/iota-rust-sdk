@@ -28,6 +28,6 @@ func main() {
 	}
 	fmt.Printf("Owned objects (%d):\n", len(objectsPage.Data))
 	for _, obj := range objectsPage.Data {
-		fmt.Println(obj.ObjectId().ToHex())
+		fmt.Println(obj.Id().ToHex())
 	}
 }

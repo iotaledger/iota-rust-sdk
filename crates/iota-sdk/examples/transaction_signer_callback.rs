@@ -42,9 +42,8 @@ async fn main() -> Result<()> {
 
     let signer = AsyncSigner(private_key);
     let effects = builder.execute(&signer, WaitForTx::Finalized).await?;
-
     println!("Digest: {}", effects.digest());
-    println!("Transaction status: {:?}", effects.status());
+    println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");
 
     Ok(())

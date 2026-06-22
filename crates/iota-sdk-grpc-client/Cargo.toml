@@ -1,0 +1,35 @@
+[package]
+name = "iota-sdk-grpc-client"
+version = "0.0.1-alpha.1"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2024"
+license = "Apache-2.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+# external dependencies
+async-stream = "0.3"
+base64 = "0.22"
+futures.workspace = true
+http = "1.4"
+prost.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["time"] }
+tonic = { workspace = true, features = ["zstd"] }
+
+# internal dependencies
+iota-grpc-types.workspace = true
+iota-transaction-builder.workspace = true
+iota-types = { workspace = true, features = ["serde", "hash"] }
+
+[features]
+default = ["tls-ring", "tls-native-roots"]
+tls-ring = ["tonic/tls-ring"]
+tls-native-roots = ["tonic/tls-native-roots"]
+tls-webpki-roots = ["tonic/tls-webpki-roots"]
+
+[dev-dependencies]
+tokio.workspace = true

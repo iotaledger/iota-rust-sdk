@@ -53,7 +53,6 @@ bip32 = { version = "0.5.3", optional = true }
 bip39 = { version = "2.0.0", features = ["rand"], optional = true }
 # bls12381 support
 blst = { version = "0.3.13", optional = true }
-bnum = { workspace = true, optional = true }
 # ed25519 support
 ed25519-dalek = { version = "2.1.1", optional = true }
 # secp256k1 support
@@ -66,7 +65,6 @@ pkcs8 = { version = "0.10", optional = true, features = ["std"] }
 # RNG support
 rand_core = { workspace = true, optional = true }
 roaring = { workspace = true, optional = true }
-serde_json = { workspace = true, optional = true }
 # passkey verification support
 sha2 = { version = "0.10.8", optional = true }
 signature = "2.2"
@@ -83,7 +81,6 @@ bcs.workspace = true
 hex.workspace = true
 proptest = { workspace = true, features = ["std"] }
 rand.workspace = true
-serde_json.workspace = true
 test-strategy.workspace = true
 
 # internal dependencies
@@ -91,8 +88,10 @@ test-strategy.workspace = true
 iota-types = { workspace = true, features = ["proptest"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-# `getrandom` renamed the WebAssembly support feature from "js" to "wasm_js"
-# Since both versions are in our dependency tree, we need to overwrite them with the proper feature
-getrandom_2.workspace = true
+# getrandom 0.2's "js" feature is inherited from iota-types (a real wasm dep there).
+# getrandom 0.3 needs the `getrandom_backend="wasm_js"` rustflag too (.cargo/config.toml); proptest pulls it into our tests.
 getrandom_3.workspace = true
 wasm-bindgen-test.workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["pem-rfc7468"]

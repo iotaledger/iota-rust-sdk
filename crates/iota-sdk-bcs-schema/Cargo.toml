@@ -11,7 +11,13 @@ description = "A procedural macro to generate BCS schema definitions for Rust ty
 [lib]
 proc-macro = true
 
+[features]
+move-shape = []
+
 [dependencies]
-proc-macro2 = "1"
-quote = "1"
-syn = { version = "2", features = ["full"] }
+proc-macro2.workspace = true
+quote.workspace = true
+syn.workspace = true
+
+[lints]
+workspace = true

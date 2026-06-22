@@ -120,7 +120,8 @@ impl crate::ToFromBytes for Ed25519PrivateKey {
         self.0.to_bytes()
     }
 
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
+        let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid ed25519 key length".to_string(),
@@ -205,7 +206,7 @@ impl Signer<UserSignature> for Ed25519PrivateKey {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Ed25519VerifyingKey(ed25519_dalek::VerifyingKey);
 
 impl Ed25519VerifyingKey {
@@ -301,7 +302,7 @@ impl Verifier<UserSignature> for Ed25519VerifyingKey {
     }
 }
 
-#[derive(Default, Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Ed25519Verifier {}
 
 impl Ed25519Verifier {

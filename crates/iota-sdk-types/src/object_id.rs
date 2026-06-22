@@ -22,8 +22,8 @@ use super::{Address, address::AddressParseError};
 /// ```text
 /// object-id = address
 /// ```
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectId(pub(crate) Address);
@@ -121,7 +121,7 @@ impl ObjectId {
         Self(address)
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, AddressParseError> {
         Address::from_bytes(bytes).map(Self)
     }
 

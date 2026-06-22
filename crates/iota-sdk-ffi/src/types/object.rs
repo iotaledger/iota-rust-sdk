@@ -33,12 +33,12 @@ use crate::{
 /// ```
 #[derive(
     Debug,
-    PartialEq,
-    Eq,
-    Hash,
-    derive_more::From,
     derive_more::Deref,
     derive_more::Display,
+    derive_more::From,
+    Eq,
+    Hash,
+    PartialEq,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -226,7 +226,7 @@ impl From<ObjectReference> for iota_sdk::types::ObjectReference {
 /// ```text
 /// object = object-data owner digest u64
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct Object(pub iota_sdk::types::Object);
 
@@ -248,8 +248,8 @@ impl Object {
     }
 
     /// Return this object's id
-    pub fn object_id(&self) -> ObjectId {
-        self.0.object_id().into()
+    pub fn id(&self) -> ObjectId {
+        self.0.id().into()
     }
 
     /// Return this object's reference
@@ -334,7 +334,7 @@ impl Object {
 /// object-data-struct  = %d00 object-move-struct
 /// object-data-package = %d01 object-move-package
 /// ```
-#[derive(Debug, Eq, Hash, PartialEq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct ObjectData(pub iota_sdk::types::ObjectData);
 
@@ -467,7 +467,7 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
 ///                (vector type-origin)               ; type-origin-table
 ///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
-#[derive(Debug, Eq, Hash, PartialEq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct MovePackage(pub iota_sdk::types::MovePackage);
 
@@ -598,14 +598,14 @@ impl From<MoveStruct> for iota_sdk::types::MoveStruct {
 /// ```
 #[derive(
     Debug,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
-    derive_more::From,
     derive_more::Deref,
     derive_more::Display,
+    derive_more::From,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -712,7 +712,7 @@ impl Owner {
 
 /// Type of an IOTA object
 #[derive(
-    Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::From, derive_more::Display, uniffi::Object,
+    Debug, derive_more::Display, derive_more::From, Eq, Ord, PartialEq, PartialOrd, uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq)]
 pub struct ObjectType(pub iota_sdk::types::ObjectType);
@@ -762,7 +762,7 @@ impl ObjectType {
 /// ```text
 /// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct GenesisObject(pub iota_sdk::types::GenesisObject);
 

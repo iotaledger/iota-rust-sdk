@@ -9,9 +9,8 @@ use std::{
     time::Duration,
 };
 
-use iota_graphql_client::Client;
 use iota_types::{
-    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
     TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
@@ -19,7 +18,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    ClientMethods, PTBArgument, SharedMut, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -35,7 +34,7 @@ use crate::{
 };
 
 mod assigned_results;
-pub(crate) mod client_methods;
+pub(crate) mod client;
 pub(crate) mod gas_station;
 pub mod move_authenticator;
 /// Argument types for PTBs
@@ -45,8 +44,19 @@ pub mod signer;
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
+/// Protocol-config key for the (exclusive) cap on `gas_payment.objects.len()`.
+const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
+
+/// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
+/// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
+/// time of writing, so 255 inclusive). Auto gas selection fetches the live
+/// value via [`TransactionBuilderClient::protocol_config`] and falls back to
+/// this if the implementation does not expose protocol config or the value
+/// cannot be parsed.
+const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
+
 /// A transaction builder which can be used to construct [`Transaction`]s.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
@@ -55,7 +65,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 }
 
 /// Transaction data used to build a [`Transaction`].
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.
@@ -442,6 +452,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -450,7 +461,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     ///
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -511,14 +522,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
@@ -566,14 +577,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let to_address =
@@ -642,14 +653,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -682,14 +693,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// let coin =
@@ -751,25 +762,17 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
-    /// let validator_address = client
-    ///     .active_validators(None, Default::default())
-    ///     .await?
-    ///     .data
-    ///     .into_iter()
-    ///     .next()
-    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
-    ///     .address
-    ///     .address;
+    /// # let validator_address = Address::ZERO;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);
@@ -796,14 +799,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
@@ -835,6 +838,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -842,7 +846,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
@@ -1004,27 +1008,21 @@ impl<L> TransactionBuilder<(), L> {
     }
 }
 
-impl<L> TransactionBuilder<&Client, L> {
+impl<C, L> TransactionBuilder<C, L> {
     /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
-        self.client
-    }
-}
-
-impl<L> TransactionBuilder<Client, L> {
-    /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
+    pub fn get_client(&self) -> &C {
         &self.client
     }
 }
 
-impl<C: ClientMethods, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
     /// # Example
     ///
     /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
@@ -1032,7 +1030,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     ///
@@ -1085,25 +1083,67 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                 }
             }
-            for coin in self
+            // Auto gas selection: page through the owner's gas coins, keeping a
+            // running top-K by balance (K = the protocol cap). Stop as soon as
+            // the selected coins cover the requested budget, or the pages run
+            // out; with no budget set, walk every page. This deliberately
+            // over-includes — in the common case a wallet owns fewer coins than
+            // the cap, so the whole set is pinned — and gas smashing during
+            // execution consolidates the balances into a single coin.
+            let max_gas_payment_objects = self
                 .client
-                .objects(
-                    Some(StructTag::new_gas_coin().into()),
-                    Some(self.data.sponsor.unwrap_or(self.data.sender)),
-                    None,
-                    true,
-                    None,
-                    None,
-                )
+                .protocol_config()
                 .await
-                .map_err(Error::client)?
-            {
-                if !unusable_object_ids.contains(&coin.object_id()) {
-                    self.set_input(
-                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                        true,
-                    );
+                .ok()
+                .and_then(|cfg| {
+                    cfg.attributes
+                        .get(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                        .and_then(|v| v.parse::<usize>().ok())
+                })
+                .and_then(|v| v.checked_sub(1))
+                .unwrap_or(DEFAULT_MAX_GAS_PAYMENT_OBJECTS);
+            let owner = self.data.sponsor.unwrap_or(self.data.sender);
+            let target_budget = self.data.gas_budget;
+            let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut cursor: Option<Vec<u8>> = None;
+            loop {
+                let page = self
+                    .client
+                    .objects(Some(StructTag::new_gas_coin()), owner, cursor, None)
+                    .await
+                    .map_err(Error::client)?;
+                for obj in page.data {
+                    if unusable_object_ids.contains(&obj.id()) {
+                        continue;
+                    }
+                    let Ok(coin) = Coin::try_from_object(&obj) else {
+                        continue;
+                    };
+                    selected.push((coin.balance(), obj.object_ref()));
                 }
+                selected.sort_by_key(|c| std::cmp::Reverse(c.0));
+                selected.truncate(max_gas_payment_objects);
+
+                let covers_budget = target_budget.is_some_and(|budget| {
+                    selected
+                        .iter()
+                        .map(|(b, _)| *b)
+                        .fold(0u64, u64::saturating_add)
+                        >= budget
+                });
+                if covers_budget || page.next_cursor.is_none() {
+                    break;
+                }
+                cursor = page.next_cursor;
+            }
+
+            // Add all selected coins as gas inputs (without early break): the
+            // extra balance gets consolidated by gas smashing during execution.
+            for (_, obj_ref) in selected {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    true,
+                );
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
@@ -1272,7 +1312,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Execute the transaction and optionally wait for finalization. The
-    /// GraphQL client will be used unless a gas station was configured, in
+    /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
@@ -1373,7 +1413,7 @@ impl TransactionBuilder<(), Publish> {
     }
 }
 
-impl<C: ClientMethods> TransactionBuilder<C, Publish> {
+impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {

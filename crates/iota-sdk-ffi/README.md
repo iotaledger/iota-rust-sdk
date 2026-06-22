@@ -113,6 +113,9 @@ By default the request will contain the header `Content-Type: application/json` 
 
 ## Supported languages
 
+- [C#](../../bindings/csharp)
 - [Go](../../bindings/go)
 - [Kotlin](../../bindings/kotlin)
 - [Python](../../bindings/python)
+- [Swift](../../bindings/swift)
+- [WASM](../../bindings/wasm)

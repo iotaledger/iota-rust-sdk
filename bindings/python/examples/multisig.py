@@ -41,7 +41,6 @@ async def main():
         ],
         2,
     )
-    assert committee.is_valid(), "committee must be valid"
 
     # 4. Derive multisig address
     multisig_address = committee.derive_address()

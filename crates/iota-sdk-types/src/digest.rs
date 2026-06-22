@@ -20,8 +20,8 @@ const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
-#[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -109,7 +109,7 @@ impl Digest {
     }
 
     /// Generates a digest from bytes.
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, DigestParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, DigestParseError> {
         let bytes = bytes.as_ref();
         <[u8; Self::LENGTH]>::try_from(bytes)
             .map_err(|_| DigestParseError::InvalidByteLength {
@@ -191,6 +191,18 @@ impl PartialEq<[u8; Self::LENGTH]> for Digest {
 impl PartialEq<Digest> for [u8; Digest::LENGTH] {
     fn eq(&self, other: &Digest) -> bool {
         self == &other.0
+    }
+}
+
+impl PartialEq<Digest> for &[u8] {
+    fn eq(&self, other: &Digest) -> bool {
+        *self == other.0.as_slice()
+    }
+}
+
+impl PartialEq<&[u8]> for Digest {
+    fn eq(&self, other: &&[u8]) -> bool {
+        self.0.as_slice() == *other
     }
 }
 
@@ -291,7 +303,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 pub enum DigestParseError {
     #[error("digest must be Base58 string of length 44")]
     Base58(#[from] bs58::decode::Error),

@@ -1,0 +1,45 @@
+{
+  "name": "@iota/sdk-wasm",
+  "version": "3.0.0-alpha.1",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iotaledger/iota-rust-sdk.git"
+  },
+  "type": "module",
+  "main": "dist/iota-sdk.js",
+  "module": "dist/iota-sdk.js",
+  "types": "dist/types/index.web.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.web.d.ts",
+      "node": "./dist/node.js",
+      "default": "./dist/iota-sdk.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build:node": "cp src/ts/node-init.mjs dist/node.js",
+    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/ && pnpm run build:node && pnpm run build:types",
+    "serve": "pnpm run build && node scripts/serve.mjs 5173",
+    "examples:format": "prettier --write examples",
+    "examples:format-check": "prettier --check examples"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "dependencies": {
+    "uniffi-bindgen-react-native": "0.29.3-1"
+  }
+}

@@ -12,15 +12,15 @@ use crate::{
 };
 
 /// Rust version of the Move `iota::table::Table` type.
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Table {
     pub id: ObjectId,
     pub size: u64,
 }
 
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Registry {
     /// The `registry` table maps `Name` to `NameRecord`.
     /// Added / replaced in the `add_record` function.
@@ -31,7 +31,7 @@ pub struct Registry {
 }
 
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct RegistryEntry {
     pub id: ObjectId,
     pub name: Name,
@@ -39,7 +39,7 @@ pub struct RegistryEntry {
 }
 
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct ReverseRegistryEntry {
     pub id: ObjectId,
     pub address: Address,
@@ -47,8 +47,8 @@ pub struct ReverseRegistryEntry {
 }
 
 /// A single record in the registry.
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct NameRecord {
     /// The ID of the registration NFT assigned to this record.
     ///
@@ -73,12 +73,12 @@ mod serde_vecmap {
 
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq)]
+    #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
     pub struct VecMap<K, V> {
         pub contents: Vec<Entry<K, V>>,
     }
 
-    #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq)]
+    #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
     pub struct Entry<K, V> {
         pub key: K,
         pub value: V,
@@ -114,7 +114,7 @@ impl TryFrom<crate::Object> for NameRecord {
     type Error = crate::iota_names::error::IotaNamesError;
 
     fn try_from(object: crate::Object) -> Result<Self, crate::iota_names::error::IotaNamesError> {
-        #[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
+        #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
         pub struct Field<N, V> {
             pub id: ObjectId,
             pub name: N,
@@ -124,9 +124,7 @@ impl TryFrom<crate::Object> for NameRecord {
         object
             .to_rust::<Field<Name, Self>>()
             .map(|record| record.value)
-            .map_err(|_| {
-                crate::iota_names::error::IotaNamesError::MalformedObject(object.object_id())
-            })
+            .map_err(|_| crate::iota_names::error::IotaNamesError::MalformedObject(object.id()))
     }
 }
 

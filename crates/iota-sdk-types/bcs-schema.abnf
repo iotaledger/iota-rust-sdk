@@ -355,7 +355,7 @@ transaction-effects = %d00 transaction-effects-v1   ; V1
 
 transaction-effects-v1 = execution-status                  ; status
                          u64                               ; epoch
-                         gas-cost-summary                  ; gas-used
+                         gas-cost-summary                  ; gas-cost-summary
                          digest                            ; transaction-digest
                          (%d00 / %d01 u32)                 ; gas-object-index
                          (%d00 / %d01 digest)              ; events-digest

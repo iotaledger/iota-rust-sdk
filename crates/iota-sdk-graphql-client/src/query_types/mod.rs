@@ -95,19 +95,19 @@ impl_scalar!(ObjectId, schema::IotaAddress);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
+#[derive(Clone, cynic::Scalar, Debug, derive_more::From)]
 #[cynic(graphql_type = "Base64")]
 pub struct Base64(pub String);
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
+#[derive(Clone, cynic::Scalar, Debug, derive_more::From)]
 #[cynic(graphql_type = "BigInt")]
 pub struct BigInt(pub String);
 
-#[derive(cynic::Scalar, Debug, Clone)]
+#[derive(Clone, cynic::Scalar, Debug)]
 #[cynic(graphql_type = "DateTime")]
 pub struct DateTime(pub String);
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
+#[derive(Clone, cynic::Scalar, Debug, derive_more::From)]
 #[cynic(graphql_type = "MoveData")]
 pub struct MoveData(pub serde_json::Value);
 
@@ -115,13 +115,13 @@ pub struct MoveData(pub serde_json::Value);
 // Types used in several queries
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug, Clone, Copy)]
+#[derive(Clone, Copy, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Address")]
 pub struct GQLAddress {
     pub address: Address,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveObject")]
 pub struct MoveObject {
     pub bcs: Option<Base64>,
@@ -141,7 +141,7 @@ pub struct MoveValue {
     pub json: Option<JsonValue>,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveType")]
 pub struct MoveType {
     pub repr: String,
@@ -151,7 +151,7 @@ pub struct MoveType {
 // Utility Types
 // ===========================================================================
 
-#[derive(Clone, Default, cynic::QueryFragment, Debug)]
+#[derive(Clone, cynic::QueryFragment, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "PageInfo")]
 /// Information about pagination in a connection.
 pub struct PageInfo {

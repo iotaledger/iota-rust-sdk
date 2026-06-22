@@ -22,17 +22,20 @@ use crate::{
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-auth-flag-deprecated / passkey-auth-flag /
+///                    multisig-flag / bls-flag / passkey-auth-flag /
 ///                    move-auth-flag
 /// ed25519-flag                    = %d00
 /// secp256k1-flag                  = %d01
 /// secp256r1-flag                  = %d02
 /// multisig-flag                   = %d03
 /// bls-flag                        = %d04
-/// zklogin-auth-flag-deprecated    = %d05
 /// passkey-auth-flag               = %d06
 /// move-auth-flag                  = %d07
 /// ```
+///
+/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
+/// authenticator (which was never enabled on chain) and is intentionally
+/// skipped.
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
 #[repr(u8)]
@@ -42,7 +45,6 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04,
-    ZkLoginAuthenticatorDeprecated = 0x05,
     PasskeyAuthenticator = 0x06,
     MoveAuthenticator = 0x07,
 }
@@ -58,7 +60,7 @@ pub enum SignatureScheme {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin-deprecated / passkey / move-authenticator
+/// user-signature = simple-signature / multisig / multisig-legacy / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -66,7 +68,7 @@ pub enum SignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct UserSignature(pub iota_sdk::types::UserSignature);
 
@@ -228,7 +230,7 @@ impl UserSignature {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct SimpleSignature(pub iota_sdk::types::SimpleSignature);
 

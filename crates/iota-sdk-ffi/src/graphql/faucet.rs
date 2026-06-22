@@ -12,7 +12,8 @@ use crate::{
 #[derive(uniffi::Object)]
 pub struct FaucetClient(iota_sdk::graphql_client::faucet::FaucetClient);
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl FaucetClient {
     /// Construct a new `FaucetClient` with the given faucet service URL. This
     /// `FaucetClient` expects that the service provides two endpoints:

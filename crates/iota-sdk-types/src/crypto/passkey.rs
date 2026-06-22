@@ -2,7 +2,11 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "serde")]
+use std::hash::{Hash, Hasher};
+
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
+use crate::SigningDigest;
 
 /// A passkey authenticator.
 ///
@@ -24,35 +28,60 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
 /// currently requires that the `CollectedClientData.type` field is required to
-/// be `webauthn.get`.
+/// be `webauthn.get` and that the `CollectedClientData.challenge` field
+/// decodes to exactly 32 bytes, the length of the signing digest it must
+/// match.
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
-    /// The secp256r1 public key for this passkey.
-    public_key: Secp256r1PublicKey,
-    /// The secp256r1 signature from the passkey.
-    signature: Secp256r1Signature,
+    /// Compact r1 public key for this passkey.
+    pub(crate) public_key: Secp256r1PublicKey,
+    /// Normalized r1 signature from the passkey.
+    pub(crate) signature: Secp256r1Signature,
     /// Parsed base64url decoded challenge bytes from
-    /// `client_data_json.challenge`.
-    challenge: Vec<u8>,
+    /// `client_data_json.challenge`, which is expected to be the signing
+    /// message `hash(Intent | bcs_message)`
+    pub(crate) challenge: SigningDigest,
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
     /// more information on this field.
-    authenticator_data: Vec<u8>,
+    pub(crate) authenticator_data: Vec<u8>,
     /// Structured, unparsed, JSON for this passkey signature.
     ///
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
-    client_data_json: String,
+    pub(crate) client_data_json: String,
 }
 
 impl PasskeyAuthenticator {
+    /// The passkey public key.
+    pub fn public_key(&self) -> PasskeyPublicKey {
+        PasskeyPublicKey::new(self.public_key)
+    }
+
+    /// The passkey signature.
+    pub fn signature(&self) -> SimpleSignature {
+        SimpleSignature::Secp256r1 {
+            signature: self.signature,
+            public_key: self.public_key,
+        }
+    }
+
+    /// The parsed challenge message for this passkey signature.
+    ///
+    /// This is parsed by decoding the base64url data from the
+    /// `client_data_json.challenge` field, and is guaranteed to be exactly 32
+    /// bytes, the length of the signing digest it must match.
+    pub fn challenge(&self) -> &[u8] {
+        &self.challenge
+    }
+
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
@@ -68,26 +97,12 @@ impl PasskeyAuthenticator {
     pub fn client_data_json(&self) -> &str {
         &self.client_data_json
     }
+}
 
-    /// The parsed challenge message for this passkey signature.
-    ///
-    /// This is parsed by decoding the base64url data from the
-    /// `client_data_json.challenge` field.
-    pub fn challenge(&self) -> &[u8] {
-        &self.challenge
-    }
-
-    /// The passkey signature.
-    pub fn signature(&self) -> SimpleSignature {
-        SimpleSignature::Secp256r1 {
-            signature: self.signature,
-            public_key: self.public_key,
-        }
-    }
-
-    /// The passkey public key
-    pub fn public_key(&self) -> PasskeyPublicKey {
-        PasskeyPublicKey::new(self.public_key)
+#[cfg(feature = "serde")]
+impl Hash for PasskeyAuthenticator {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.to_bytes().hash(state);
     }
 }
 
@@ -102,10 +117,10 @@ impl PasskeyAuthenticator {
 /// ```text
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(transparent)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -122,6 +137,12 @@ impl PasskeyPublicKey {
     }
 }
 
+impl AsRef<[u8]> for PasskeyPublicKey {
+    fn as_ref(&self) -> &[u8] {
+        self.0.as_ref()
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
@@ -131,7 +152,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
+    use crate::{Digest, SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -181,7 +202,7 @@ mod serialization {
                 Self::try_from_raw(authenticator)
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_bytes(bytes)
             }
             .map_err(serde::de::Error::custom)
         }
@@ -192,13 +213,12 @@ mod serialization {
             authenticator_data: Vec<u8>,
             client_data_json: String,
             signature: SimpleSignature,
-        ) -> Option<Self> {
+        ) -> Result<Self, SignatureFromBytesError> {
             Self::try_from_raw(Authenticator {
                 authenticator_data,
                 client_data_json,
                 signature,
             })
-            .ok()
         }
 
         fn try_from_raw(
@@ -219,21 +239,34 @@ mod serialization {
             };
 
             let CollectedClientData {
-                ty: _,
+                ty,
                 challenge,
                 origin: _,
             } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
+            if ty != ClientDataType::Get {
+                return Err(SignatureFromBytesError::new(
+                    "Invalid client data type".to_string(),
+                ));
+            };
+
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
-            let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(
-                &challenge,
-            )
-            .map_err(|e| {
-                SignatureFromBytesError::new(format!(
-                    "unable to decode base64urlunpadded into 3-byte intent and 32-byte digest: {e}"
-                ))
-            })?;
+            let challenge: SigningDigest =
+                <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(&challenge)
+                    .map_err(|e| {
+                        SignatureFromBytesError::new(format!(
+                            "unable to decode base64urlunpadded challenge {e}"
+                        ))
+                    })?
+                    .try_into()
+                    .map_err(|challenge: Vec<u8>| {
+                        SignatureFromBytesError::new(format!(
+                            "invalid challenge length {}, expected {}",
+                            challenge.len(),
+                            Digest::LENGTH
+                        ))
+                    })?;
 
             Ok(Self {
                 public_key,
@@ -244,26 +277,21 @@ mod serialization {
             })
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
-            let bytes = bytes.as_ref();
-            let flag =
-                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                    SignatureFromBytesError::new("missing signature scheme flag")
-                })?)
-                .map_err(SignatureFromBytesError::new)?;
-            if flag != SignatureScheme::PasskeyAuthenticator {
-                return Err(SignatureFromBytesError::new("invalid passkey flag"));
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
+            match bytes.as_ref().split_first() {
+                Some((flag, tail)) if flag == &SignatureScheme::PasskeyAuthenticator.to_u8() => {
+                    let authenticator =
+                        bcs::from_bytes(tail).map_err(SignatureFromBytesError::new)?;
+                    Self::try_from_raw(authenticator)
+                }
+                None => Err(SignatureFromBytesError::new(
+                    "missing signature scheme flag",
+                )),
+                _ => Err(SignatureFromBytesError::new("invalid passkey flag")),
             }
-            let bcs_bytes = &bytes[1..];
-
-            let authenticator = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
-
-            Self::try_from_raw(authenticator)
         }
 
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let authenticator_ref = AuthenticatorRef {
                 authenticator_data: &self.authenticator_data,
                 client_data_json: &self.client_data_json,
@@ -273,9 +301,7 @@ mod serialization {
                 },
             };
 
-            let mut buf = Vec::new();
-            buf.push(SignatureScheme::PasskeyAuthenticator as u8);
-
+            let mut buf = vec![SignatureScheme::PasskeyAuthenticator as u8];
             bcs::serialize_into(&mut buf, &authenticator_ref).expect("serialization cannot fail");
             buf
         }
@@ -300,7 +326,7 @@ mod serialization {
     /// <https://w3c.github.io/webauthn/#dictionary-client-data>
     ///
     /// [5.8.1.1 Serialization]: https://w3c.github.io/webauthn/#clientdatajson-serialization
-    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[derive(Clone, Debug, Deserialize, Serialize)]
     #[serde(rename_all = "camelCase")]
     pub(super) struct CollectedClientData {
         /// This member contains the value [`ClientDataType::Create`] when
@@ -340,7 +366,7 @@ mod serialization {
 
     /// Used to limit the values of [`CollectedClientData::ty`] and serializes
     /// to static strings.
-    #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
     pub(super) enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///
@@ -372,7 +398,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
         (
             any::<Secp256r1PublicKey>(),
             any::<Secp256r1Signature>(),
-            vec(any::<u8>(), 32),
+            any::<SigningDigest>(),
             vec(any::<u8>(), 0..32),
         )
             .prop_map(
@@ -403,6 +429,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {
+    use super::*;
     use crate::UserSignature;
 
     #[test]
@@ -411,5 +438,25 @@ mod tests {
 
         let sig = UserSignature::from_base64(b64).unwrap();
         assert!(matches!(sig, UserSignature::PasskeyAuthenticator(_)));
+    }
+
+    #[test]
+    fn challenge_must_decode_to_exactly_32_bytes() {
+        let signature = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; Secp256r1Signature::LENGTH]),
+            public_key: Secp256r1PublicKey::new([0; Secp256r1PublicKey::LENGTH]),
+        };
+
+        for (challenge_length, expect_ok) in [(31, false), (32, true), (33, false)] {
+            let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::encode_string(
+                &vec![0; challenge_length],
+            );
+            let client_data_json = format!(
+                r#"{{"type":"webauthn.get","challenge":"{challenge}","origin":"http://example.com"}}"#
+            );
+
+            let result = PasskeyAuthenticator::new(Vec::new(), client_data_json, signature.clone());
+            assert_eq!(result.is_ok(), expect_ok);
+        }
     }
 }

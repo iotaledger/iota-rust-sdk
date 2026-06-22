@@ -13,8 +13,8 @@ use super::{Address, Identifier, ObjectId, StructTag};
 /// ```text
 /// transaction-events = vector event
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Default, derive_more::Deref, derive_more::DerefMut, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEvents(pub Vec<Event>);
@@ -28,8 +28,8 @@ pub struct TransactionEvents(pub Vec<Event>);
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(PartialEq, Eq, Debug, Clone, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Event {

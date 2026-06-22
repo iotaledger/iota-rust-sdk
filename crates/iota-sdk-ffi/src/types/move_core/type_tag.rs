@@ -26,13 +26,13 @@ use crate::types::move_core::struct_tag::StructTag;
 /// ```
 #[derive(
     Debug,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
     derive_more::Display,
     derive_more::From,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
