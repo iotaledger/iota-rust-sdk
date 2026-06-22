@@ -99,7 +99,10 @@ impl ObjectId {
     /// that have been created during a transactions.
     #[uniffi::constructor]
     pub fn derive_id(digest: &Digest, count: u64) -> Self {
-        Self(iota_sdk::types::ObjectId::derive_id(**digest, count))
+        Self(iota_sdk::types::ObjectId::derive_id(
+            (**digest).into(),
+            count,
+        ))
     }
 
     /// Derive an ObjectId for a Dynamic Child Object.
@@ -213,7 +216,7 @@ impl From<iota_sdk::types::ObjectReference> for ObjectReference {
 
 impl From<ObjectReference> for iota_sdk::types::ObjectReference {
     fn from(value: ObjectReference) -> Self {
-        Self::new(**value.object_id, **value.version, **value.digest)
+        Self::new(**value.object_id, **value.version, (**value.digest).into())
     }
 }
 
@@ -242,7 +245,7 @@ impl Object {
         Self(iota_sdk::types::Object::new(
             data.0.clone(),
             **owner,
-            **previous_transaction,
+            (**previous_transaction).into(),
             storage_rebate,
         ))
     }

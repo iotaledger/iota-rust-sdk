@@ -744,7 +744,7 @@ impl ConsensusCommitPrologueV1 {
             round,
             sub_dag_index,
             commit_timestamp_ms,
-            consensus_commit_digest: consensus_commit_digest.0,
+            consensus_commit_digest: consensus_commit_digest.0.into(),
             consensus_determined_version_assignments: consensus_determined_version_assignments
                 .0
                 .clone(),
@@ -843,7 +843,7 @@ impl CancelledTransaction {
     #[uniffi::constructor]
     pub fn new(digest: &Digest, version_assignments: Vec<Arc<VersionAssignment>>) -> Self {
         Self(iota_sdk::types::CancelledTransaction {
-            digest: digest.0,
+            digest: digest.0.into(),
             version_assignments: version_assignments
                 .into_iter()
                 .map(|v| v.0.clone())

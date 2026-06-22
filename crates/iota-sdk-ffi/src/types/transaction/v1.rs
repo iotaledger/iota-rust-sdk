@@ -103,10 +103,14 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
             status: value.status.into(),
             epoch: value.epoch,
             gas_cost_summary: value.gas_cost_summary,
-            transaction_digest: **value.transaction_digest,
+            transaction_digest: (**value.transaction_digest).into(),
             gas_object_index: value.gas_object_index,
-            events_digest: value.events_digest.map(|v| **v),
-            dependencies: value.dependencies.into_iter().map(|v| **v).collect(),
+            events_digest: value.events_digest.map(|v| (**v).into()),
+            dependencies: value
+                .dependencies
+                .into_iter()
+                .map(|v| (**v).into())
+                .collect(),
             lamport_version: **value.lamport_version,
             changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
             unchanged_shared_objects: value
@@ -114,7 +118,7 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
                 .into_iter()
                 .map(Into::into)
                 .collect(),
-            auxiliary_data_digest: value.auxiliary_data_digest.map(|v| **v),
+            auxiliary_data_digest: value.auxiliary_data_digest.map(|v| (**v).into()),
         }
     }
 }
@@ -268,7 +272,7 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
         match value {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => Self::ReadOnlyRoot {
                 version: **version,
-                digest: **digest,
+                digest: (**digest).into(),
             },
             UnchangedSharedKind::MutateDeleted { version } => {
                 Self::MutateDeleted { version: **version }
@@ -337,7 +341,7 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
                 owner,
             } => Self::Data {
                 version: **version,
-                digest: **digest,
+                digest: (**digest).into(),
                 owner: **owner,
             },
         }
@@ -399,12 +403,12 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
         match value {
             ObjectOut::Missing => Self::Missing,
             ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
-                digest: **digest,
+                digest: (**digest).into(),
                 owner: **owner,
             },
             ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
                 version: **version,
-                digest: **digest,
+                digest: (**digest).into(),
             },
         }
     }

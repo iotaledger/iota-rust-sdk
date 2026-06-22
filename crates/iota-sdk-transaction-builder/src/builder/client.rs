@@ -312,7 +312,7 @@ pub(crate) mod test_client {
 
     use iota_types::{
         Address, Digest, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction,
-        StructTag, Transaction, TransactionEffects, UserSignature, Version,
+        StructTag, Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
     };
 
     use super::{TransactionBuilderClient, WaitForTx};
@@ -337,7 +337,12 @@ pub(crate) mod test_client {
             contents,
         )
         .expect("contents always contain a full object id");
-        Object::new(ObjectData::Struct(move_struct), owner, Digest::ZERO, 0)
+        Object::new(
+            ObjectData::Struct(move_struct),
+            owner,
+            TransactionDigest::ZERO,
+            0,
+        )
     }
 
     /// A test client that implements [`TransactionBuilderClient`] by

@@ -244,7 +244,7 @@ mod tests {
 
         let digest = chckp.content_digest;
         let total_transaction_blocks_by_digest = client
-            .total_transaction_blocks_by_digest(digest)
+            .total_transaction_blocks_by_digest(digest.into())
             .await
             .unwrap()
             .unwrap();

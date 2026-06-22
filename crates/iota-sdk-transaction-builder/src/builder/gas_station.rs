@@ -4,7 +4,7 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+use iota_types::{Address, Digest, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
 use reqwest::{
     Url,
     header::{HeaderMap, HeaderName, HeaderValue},
@@ -196,7 +196,7 @@ struct GasObjectRef {
     #[serde(deserialize_with = "deserialize_readable_u64")]
     pub version: u64,
     /// The digest of this object.
-    pub digest: Digest,
+    pub digest: ObjectDigest,
 }
 
 fn deserialize_readable_u64<'de, D: serde::Deserializer<'de>>(

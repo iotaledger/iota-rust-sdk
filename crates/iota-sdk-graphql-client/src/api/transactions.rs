@@ -233,7 +233,7 @@ impl Client {
         let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
         if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest(), wait_for, None).await?;
+            self.wait_for_tx(tx.digest().into(), wait_for, None).await?;
         }
 
         Ok(effects)
@@ -319,7 +319,7 @@ mod tests {
             .await
             .unwrap();
         let tx_digest = transactions.data()[0].transaction.digest();
-        let effects = client.transaction_effects(tx_digest).await.unwrap();
+        let effects = client.transaction_effects(tx_digest.into()).await.unwrap();
         assert!(
             effects.is_some(),
             "Transaction effects query failed for {} network.",

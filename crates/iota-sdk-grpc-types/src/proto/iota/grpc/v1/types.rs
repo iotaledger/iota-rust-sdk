@@ -25,6 +25,35 @@ impl TryFrom<&Digest> for iota_types::Digest {
     }
 }
 
+/// The domain-specific digest newtypes are transparent wrappers around
+/// [`iota_types::Digest`], so their proto conversions just delegate to it.
+macro_rules! impl_digest_wrapper_conversion {
+    ($wrapper:ty) => {
+        impl From<$wrapper> for Digest {
+            fn from(value: $wrapper) -> Self {
+                iota_types::Digest::from(value).into()
+            }
+        }
+
+        impl TryFrom<&Digest> for $wrapper {
+            type Error = TryFromProtoError;
+
+            fn try_from(value: &Digest) -> Result<Self, Self::Error> {
+                iota_types::Digest::try_from(value).map(Into::into)
+            }
+        }
+    };
+}
+
+impl_digest_wrapper_conversion!(iota_types::CheckpointDigest);
+impl_digest_wrapper_conversion!(iota_types::CheckpointContentsDigest);
+impl_digest_wrapper_conversion!(iota_types::TransactionDigest);
+impl_digest_wrapper_conversion!(iota_types::TransactionEffectsDigest);
+impl_digest_wrapper_conversion!(iota_types::TransactionEventsDigest);
+impl_digest_wrapper_conversion!(iota_types::EffectsAuxDataDigest);
+impl_digest_wrapper_conversion!(iota_types::ObjectDigest);
+impl_digest_wrapper_conversion!(iota_types::ConsensusCommitDigest);
+
 // Address conversions
 impl From<iota_types::Address> for Address {
     fn from(value: iota_types::Address) -> Self {

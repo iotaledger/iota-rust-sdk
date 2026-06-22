@@ -35,8 +35,8 @@ use iota_sdk_move_types::{
     },
 };
 use iota_types::{
-    Address, Digest, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag,
-    TypeTag, Version,
+    Address, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag,
+    TransactionDigest, TypeTag, Version,
 };
 
 /// Wrap fixture contents in an [`Object`] carrying the given type tag.
@@ -51,7 +51,7 @@ fn object_with_tag(tag: &str, contents: &[u8]) -> Object {
     Object::new(
         ObjectData::Struct(move_struct),
         Owner::Immutable,
-        Digest::ZERO,
+        TransactionDigest::ZERO,
         0,
     )
 }

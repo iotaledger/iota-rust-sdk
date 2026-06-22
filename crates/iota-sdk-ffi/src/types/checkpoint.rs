@@ -75,8 +75,8 @@ impl CheckpointSummary {
             epoch,
             sequence_number,
             network_total_transactions,
-            content_digest: **content_digest,
-            previous_digest: previous_digest.map(|v| **v),
+            content_digest: (**content_digest).into(),
+            previous_digest: previous_digest.map(|v| (**v).into()),
             epoch_rolling_gas_cost_summary,
             timestamp_ms,
             checkpoint_commitments: checkpoint_commitments
@@ -228,8 +228,8 @@ impl CheckpointTransactionInfo {
         signatures: Vec<Arc<UserSignature>>,
     ) -> Self {
         Self(iota_sdk::types::CheckpointTransactionInfo {
-            transaction: **transaction,
-            effects: **effects,
+            transaction: (**transaction).into(),
+            effects: (**effects).into(),
             signatures: signatures.into_iter().map(|v| v.0.clone()).collect(),
         })
     }

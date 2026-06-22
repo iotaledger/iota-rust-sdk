@@ -207,7 +207,7 @@ impl TransactionBuilderClient for Client {
         let effects = result.effects()?.effects()?;
 
         if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest(), wait_for).await?;
+            self.wait_for_tx(tx.digest().into(), wait_for).await?;
         }
 
         Ok(effects)
