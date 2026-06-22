@@ -15,6 +15,9 @@ use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectR
 #[non_exhaustive]
 pub enum MoveAuthenticator {
     V1(MoveAuthenticatorV1),
+    // When new variants are introduced, it is important that we consciously gate
+    // version support (e.g. in transaction validity checks based on the protocol
+    // config), as is done for `Transaction`.
 }
 
 impl MoveAuthenticator {
@@ -24,36 +27,6 @@ impl MoveAuthenticator {
     pub fn version(&self) -> u64 {
         match self {
             Self::V1(_) => 1,
-        }
-    }
-
-    /// Returns the address of the object being authenticated, which acts as the
-    /// sender of the transaction.
-    pub fn address(&self) -> Address {
-        match self {
-            Self::V1(v1) => v1.address(),
-        }
-    }
-
-    /// Returns the input objects or primitive values passed to the authenticate
-    /// function.
-    pub fn call_args(&self) -> &[Input] {
-        match self {
-            Self::V1(v1) => v1.call_args(),
-        }
-    }
-
-    /// Returns the type arguments for the Move authenticate function.
-    pub fn type_args(&self) -> &[TypeTag] {
-        match self {
-            Self::V1(v1) => v1.type_args(),
-        }
-    }
-
-    /// Returns the object that is being authenticated (the account/sender).
-    pub fn object_to_authenticate(&self) -> &Input {
-        match self {
-            Self::V1(v1) => v1.object_to_authenticate(),
         }
     }
 }
