@@ -32,9 +32,6 @@ impl Client {
     /// Get the [`CheckpointSummary`] for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
-    ///
-    /// The GraphQL `Checkpoint.digest` identifies the checkpoint *contents*, so
-    /// the digest here is a [`CheckpointContentsDigest`].
     pub async fn checkpoint(
         &self,
         digest: impl Into<Option<CheckpointContentsDigest>>,
@@ -99,9 +96,6 @@ impl Client {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    ///
-    /// The GraphQL `Checkpoint.digest` identifies the checkpoint *contents*, so
-    /// this is a [`CheckpointContentsDigest`] (see [`Self::checkpoint`]).
     pub async fn total_transaction_blocks_by_digest(
         &self,
         digest: CheckpointContentsDigest,
