@@ -5,7 +5,7 @@
 
 use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
 
@@ -75,13 +75,16 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
+    async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>, Self::Error> {
         self.transaction(digest).await
     }
 
     async fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         self.transaction_effects(digest).await
     }
@@ -120,7 +123,11 @@ impl TransactionBuilderClient for Client {
         self.execute_tx(signatures, tx, wait_for).await
     }
 
-    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
+    async fn wait_for_tx(
+        &self,
+        digest: TransactionDigest,
+        wait_for: WaitForTx,
+    ) -> Result<(), Self::Error> {
         self.wait_for_tx(digest, wait_for, None).await
     }
 }

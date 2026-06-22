@@ -8,7 +8,7 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewTestnet();
-        var digest = Digest.FromBase58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh");
+        var digest = TransactionDigest.FromBase58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh");
 
         var signedTransaction = await client.Transaction(digest);
         Console.WriteLine($"Signed Transaction: `{signedTransaction}`\n");

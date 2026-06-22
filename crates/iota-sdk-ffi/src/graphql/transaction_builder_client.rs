@@ -5,7 +5,8 @@ use iota_sdk::{
     graphql_client::{Client, DryRunResult, WaitForTx},
     transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient},
     types::{
-        Address, Digest, Object, ObjectId, StructTag, Transaction, TransactionEffects, Version,
+        Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+        Version,
     },
 };
 
@@ -40,14 +41,14 @@ impl TransactionBuilderClient for GraphQLClient {
 
     async fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<iota_sdk::types::SignedTransaction>, Self::Error> {
         TransactionBuilderClient::transaction(&*self.0.read().await, digest).await
     }
 
     async fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         TransactionBuilderClient::transaction_effects(&*self.0.read().await, digest).await
     }
@@ -80,7 +81,11 @@ impl TransactionBuilderClient for GraphQLClient {
         TransactionBuilderClient::execute_tx(&*self.0.read().await, signatures, tx, wait_for).await
     }
 
-    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
+    async fn wait_for_tx(
+        &self,
+        digest: TransactionDigest,
+        wait_for: WaitForTx,
+    ) -> Result<(), Self::Error> {
         TransactionBuilderClient::wait_for_tx(&*self.0.read().await, digest, wait_for).await
     }
 }

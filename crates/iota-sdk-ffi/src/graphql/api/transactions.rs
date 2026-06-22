@@ -15,7 +15,7 @@ use crate::{
         query_types::{TransactionDataEffects, TransactionsFilter},
     },
     types::{
-        digest::Digest,
+        digest::TransactionDigest,
         signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects},
     },
@@ -52,7 +52,10 @@ pub enum WaitForTx {
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get a transaction by its digest.
-    pub async fn transaction(&self, digest: &Digest) -> Result<Option<SignedTransaction>> {
+    pub async fn transaction(
+        &self,
+        digest: &TransactionDigest,
+    ) -> Result<Option<SignedTransaction>> {
         Ok(self
             .0
             .read()
@@ -65,7 +68,7 @@ impl GraphQLClient {
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(
         &self,
-        digest: &Digest,
+        digest: &TransactionDigest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
@@ -80,7 +83,7 @@ impl GraphQLClient {
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: &Digest,
+        digest: &TransactionDigest,
     ) -> Result<Option<TransactionDataEffects>> {
         Ok(self
             .0
@@ -181,14 +184,14 @@ impl GraphQLClient {
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use `is_tx_finalized`.
     #[uniffi::method]
-    pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
+    pub async fn is_tx_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
     }
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
     #[uniffi::method]
-    pub async fn is_tx_finalized(&self, digest: &Digest) -> Result<bool> {
+    pub async fn is_tx_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self.0.read().await.is_tx_finalized(**digest).await?)
     }
 
@@ -198,7 +201,7 @@ impl GraphQLClient {
     #[uniffi::method(default(timeout = None))]
     pub async fn wait_for_tx(
         &self,
-        digest: &Digest,
+        digest: &TransactionDigest,
         wait_for: WaitForTx,
         timeout: Option<Duration>,
     ) -> Result<()> {

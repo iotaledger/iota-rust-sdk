@@ -4,7 +4,7 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
 
@@ -98,13 +98,13 @@ pub trait TransactionBuilderClient {
     /// Fetch a transaction
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>>;
 
     /// Fetch transaction effects
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>>;
 
     /// Get the reference gas price
@@ -137,7 +137,7 @@ pub trait TransactionBuilderClient {
     /// Wait for the indexing or finalization of a transaction by its digest.
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>>;
 }
@@ -172,14 +172,14 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
 
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
         (*self).transaction(digest)
     }
 
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
         (*self).transaction_effects(digest)
     }
@@ -217,7 +217,7 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
 
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         (*self).wait_for_tx(digest, wait_for)
@@ -254,14 +254,14 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
 
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
         self.as_ref().transaction(digest)
     }
 
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
         self.as_ref().transaction_effects(digest)
     }
@@ -299,7 +299,7 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
 
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         self.as_ref().wait_for_tx(digest, wait_for)
@@ -311,8 +311,8 @@ pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
     use iota_types::{
-        Address, Digest, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction,
-        StructTag, Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
+        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction, StructTag,
+        Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
     };
 
     use super::{TransactionBuilderClient, WaitForTx};
@@ -408,14 +408,14 @@ pub(crate) mod test_client {
 
         async fn transaction(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
         ) -> Result<Option<SignedTransaction>, Self::Error> {
             Ok(None)
         }
 
         async fn transaction_effects(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
         ) -> Result<Option<TransactionEffects>, Self::Error> {
             Ok(None)
         }
@@ -452,7 +452,7 @@ pub(crate) mod test_client {
 
         async fn wait_for_tx(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
             _wait_for: WaitForTx,
         ) -> Result<(), Self::Error> {
             Ok(())

@@ -10,7 +10,7 @@ use iota_grpc_types::{
 };
 use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
 
@@ -102,7 +102,10 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
+    async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>, Self::Error> {
         match self
             .get_transactions(
                 &[digest],
@@ -131,7 +134,7 @@ impl TransactionBuilderClient for Client {
 
     async fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         match self
             .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
@@ -207,13 +210,17 @@ impl TransactionBuilderClient for Client {
         let effects = result.effects()?.effects()?;
 
         if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest().into(), wait_for).await?;
+            self.wait_for_tx(tx.digest(), wait_for).await?;
         }
 
         Ok(effects)
     }
 
-    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
+    async fn wait_for_tx(
+        &self,
+        digest: TransactionDigest,
+        wait_for: WaitForTx,
+    ) -> Result<(), Self::Error> {
         // Request only the field that proves the desired condition: any
         // transaction field confirms it is indexed on the node, while
         // `checkpoint` is only populated once it has been finalized.
