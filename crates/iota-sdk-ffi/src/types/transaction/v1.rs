@@ -6,7 +6,7 @@ use std::sync::Arc;
 use iota_sdk::types::{GasCostSummary, IdOperation};
 
 use crate::types::{
-    digest::Digest,
+    digest::{EffectsAuxDataDigest, ObjectDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
     object::{ObjectId, Owner},
     version::Version,
@@ -40,7 +40,7 @@ pub struct TransactionEffectsV1 {
     /// The gas used by this transaction
     pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
-    pub transaction_digest: Arc<Digest>,
+    pub transaction_digest: Arc<TransactionDigest>,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
@@ -49,9 +49,9 @@ pub struct TransactionEffectsV1 {
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
     #[uniffi(default = None)]
-    pub events_digest: Option<Arc<Digest>>,
+    pub events_digest: Option<Arc<TransactionEventsDigest>>,
     /// The set of transaction digests this transaction depends on.
-    pub dependencies: Vec<Arc<Digest>>,
+    pub dependencies: Vec<Arc<TransactionDigest>>,
     /// The version number of all the written Move objects by this transaction.
     pub lamport_version: Arc<Version>,
     /// Objects whose state are changed in the object store.
@@ -67,7 +67,7 @@ pub struct TransactionEffectsV1 {
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
     #[uniffi(default = None)]
-    pub auxiliary_data_digest: Option<Arc<Digest>>,
+    pub auxiliary_data_digest: Option<Arc<EffectsAuxDataDigest>>,
 }
 
 impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
@@ -103,14 +103,10 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
             status: value.status.into(),
             epoch: value.epoch,
             gas_cost_summary: value.gas_cost_summary,
-            transaction_digest: (**value.transaction_digest).into(),
+            transaction_digest: **value.transaction_digest,
             gas_object_index: value.gas_object_index,
-            events_digest: value.events_digest.map(|v| (**v).into()),
-            dependencies: value
-                .dependencies
-                .into_iter()
-                .map(|v| (**v).into())
-                .collect(),
+            events_digest: value.events_digest.map(|v| **v),
+            dependencies: value.dependencies.into_iter().map(|v| **v).collect(),
             lamport_version: **value.lamport_version,
             changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
             unchanged_shared_objects: value
@@ -118,7 +114,7 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
                 .into_iter()
                 .map(Into::into)
                 .collect(),
-            auxiliary_data_digest: value.auxiliary_data_digest.map(|v| (**v).into()),
+            auxiliary_data_digest: value.auxiliary_data_digest.map(|v| **v),
         }
     }
 }
@@ -227,7 +223,7 @@ pub enum UnchangedSharedKind {
     /// verify untrusted read.
     ReadOnlyRoot {
         version: Arc<Version>,
-        digest: Arc<Digest>,
+        digest: Arc<ObjectDigest>,
     },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted { version: Arc<Version> },
@@ -272,7 +268,7 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
         match value {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => Self::ReadOnlyRoot {
                 version: **version,
-                digest: (**digest).into(),
+                digest: **digest,
             },
             UnchangedSharedKind::MutateDeleted { version } => {
                 Self::MutateDeleted { version: **version }
@@ -308,7 +304,7 @@ pub enum ObjectIn {
     /// The old version, digest and owner.
     Data {
         version: Arc<Version>,
-        digest: Arc<Digest>,
+        digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
     },
 }
@@ -341,7 +337,7 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
                 owner,
             } => Self::Data {
                 version: **version,
-                digest: (**digest).into(),
+                digest: **digest,
                 owner: **owner,
             },
         }
@@ -370,14 +366,14 @@ pub enum ObjectOut {
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite {
-        digest: Arc<Digest>,
+        digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
     },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
         version: Arc<Version>,
-        digest: Arc<Digest>,
+        digest: Arc<ObjectDigest>,
     },
 }
 
@@ -403,12 +399,12 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
         match value {
             ObjectOut::Missing => Self::Missing,
             ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
-                digest: (**digest).into(),
+                digest: **digest,
                 owner: **owner,
             },
             ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
                 version: **version,
-                digest: (**digest).into(),
+                digest: **digest,
             },
         }
     }

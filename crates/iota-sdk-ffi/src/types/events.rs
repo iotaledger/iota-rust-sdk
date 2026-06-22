@@ -7,7 +7,7 @@ use iota_sdk::types::{Identifier, StructTag};
 
 use crate::{
     error::Result,
-    types::{address::Address, digest::Digest, object::ObjectId},
+    types::{address::Address, digest::TransactionEventsDigest, object::ObjectId},
 };
 
 /// An event emitted during the successful execution of a transaction.
@@ -96,7 +96,7 @@ impl TransactionEvents {
         self.0.0.iter().cloned().map(Into::into).collect()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> TransactionEventsDigest {
         self.0.digest().into()
     }
 }

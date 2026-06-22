@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     types::{
         address::Address,
-        digest::Digest,
+        digest::{ObjectDigest, TransactionDigest},
         move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
@@ -98,11 +98,8 @@ impl ObjectId {
     /// Create an ObjectId from a transaction digest and the number of objects
     /// that have been created during a transactions.
     #[uniffi::constructor]
-    pub fn derive_id(digest: &Digest, count: u64) -> Self {
-        Self(iota_sdk::types::ObjectId::derive_id(
-            (**digest).into(),
-            count,
-        ))
+    pub fn derive_id(digest: &TransactionDigest, count: u64) -> Self {
+        Self(iota_sdk::types::ObjectId::derive_id(**digest, count))
     }
 
     /// Derive an ObjectId for a Dynamic Child Object.
@@ -201,7 +198,7 @@ named_object_id!(
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: Arc<Version>,
-    digest: Arc<Digest>,
+    digest: Arc<ObjectDigest>,
 }
 
 impl From<iota_sdk::types::ObjectReference> for ObjectReference {
@@ -216,7 +213,7 @@ impl From<iota_sdk::types::ObjectReference> for ObjectReference {
 
 impl From<ObjectReference> for iota_sdk::types::ObjectReference {
     fn from(value: ObjectReference) -> Self {
-        Self::new(**value.object_id, **value.version, (**value.digest).into())
+        Self::new(**value.object_id, **value.version, **value.digest)
     }
 }
 
@@ -239,13 +236,13 @@ impl Object {
     pub fn new(
         data: &ObjectData,
         owner: &Owner,
-        previous_transaction: &Digest,
+        previous_transaction: &TransactionDigest,
         storage_rebate: u64,
     ) -> Self {
         Self(iota_sdk::types::Object::new(
             data.0.clone(),
             **owner,
-            (**previous_transaction).into(),
+            **previous_transaction,
             storage_rebate,
         ))
     }
@@ -305,7 +302,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> Digest {
+    pub fn previous_transaction(&self) -> TransactionDigest {
         self.0.previous_transaction.into()
     }
 
@@ -320,7 +317,7 @@ impl Object {
     /// Calculate the digest of this `Object`
     ///
     /// This is done by hashing the BCS bytes of this `Object` prefixed
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> ObjectDigest {
         self.0.digest().into()
     }
 }
