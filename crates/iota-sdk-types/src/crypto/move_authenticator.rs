@@ -91,7 +91,7 @@ fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Inp
 }
 
 impl MoveAuthenticatorV1 {
-    /// Create a new move authenticator from an immutable object.
+    /// Create a new move authenticator with an immutable object.
     pub fn new_with_immutable_account_object(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
@@ -104,7 +104,7 @@ impl MoveAuthenticatorV1 {
         }
     }
 
-    /// Create a new move authenticator from a shared object.
+    /// Create a new move authenticator with a shared object.
     pub fn new_with_shared_account_object(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,

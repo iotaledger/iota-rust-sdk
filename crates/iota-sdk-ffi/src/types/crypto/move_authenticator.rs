@@ -39,7 +39,7 @@ pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
 
 #[uniffi::export]
 impl MoveAuthenticatorV1 {
-    /// Create a new move authenticator from an immutable object.
+    /// Create a new move authenticator with an immutable object.
     #[uniffi::constructor]
     pub fn new_with_immutable_account_object(
         call_args: Vec<Arc<Input>>,
@@ -55,7 +55,7 @@ impl MoveAuthenticatorV1 {
         )
     }
 
-    /// Create a new move authenticator from a shared object.
+    /// Create a new move authenticator with a shared object.
     #[uniffi::constructor]
     pub fn new_with_shared_account_object(
         call_args: Vec<Arc<Input>>,
