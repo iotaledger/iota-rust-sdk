@@ -92,7 +92,7 @@ fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Inp
 
 impl MoveAuthenticatorV1 {
     /// Create a new move authenticator from an immutable object.
-    pub fn with_immutable_account_object(
+    pub fn new_with_immutable_account_object(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
         object_to_authenticate: ObjectReference,
@@ -105,7 +105,7 @@ impl MoveAuthenticatorV1 {
     }
 
     /// Create a new move authenticator from a shared object.
-    pub fn with_shared_account_object(
+    pub fn new_with_shared_account_object(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
         object_to_authenticate: SharedObjectReference,
@@ -193,7 +193,7 @@ mod tests {
     }
 
     fn make_simple_authenticator() -> MoveAuthenticator {
-        MoveAuthenticatorV1::with_immutable_account_object(
+        MoveAuthenticatorV1::new_with_immutable_account_object(
             vec![],
             vec![],
             ObjectReference {
@@ -359,7 +359,7 @@ mod tests {
         vec![
             SyntheticFixture {
                 name: "synthetic/owned-object-to-authenticate",
-                auth: MoveAuthenticatorV1::with_immutable_account_object(
+                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
                     vec![],
                     vec![],
                     owned(0x11, 7),
@@ -370,7 +370,7 @@ mod tests {
             },
             SyntheticFixture {
                 name: "synthetic/nested-type-arguments",
-                auth: MoveAuthenticatorV1::with_shared_account_object(
+                auth: MoveAuthenticatorV1::new_with_shared_account_object(
                     vec![],
                     vec![
                         TypeTag::U64,
@@ -385,7 +385,7 @@ mod tests {
             },
             SyntheticFixture {
                 name: "synthetic/owned-and-receiving-call-args",
-                auth: MoveAuthenticatorV1::with_shared_account_object(
+                auth: MoveAuthenticatorV1::new_with_shared_account_object(
                     vec![Input::ImmutableOrOwned(owned(0x33, 1)), receiving(0x44, 2)],
                     vec![],
                     shared(0x55, 9, false),
@@ -396,7 +396,7 @@ mod tests {
             },
             SyntheticFixture {
                 name: "synthetic/mutable-shared-call-arg-owned-target",
-                auth: MoveAuthenticatorV1::with_immutable_account_object(
+                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
                     vec![Input::Shared(shared(0x66, 5, true))],
                     vec![],
                     owned(0x77, 8),
@@ -407,7 +407,7 @@ mod tests {
             },
             SyntheticFixture {
                 name: "synthetic/kitchen-sink",
-                auth: MoveAuthenticatorV1::with_immutable_account_object(
+                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
                     vec![
                         Input::Pure(vec![1, 2, 3, 4]),
                         Input::ImmutableOrOwned(owned(0x88, 10)),

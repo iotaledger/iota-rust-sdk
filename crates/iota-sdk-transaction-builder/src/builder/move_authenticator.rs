@@ -124,14 +124,14 @@ impl MoveAuthenticatorBuilder {
         }
         Ok(match account.owner() {
             Owner::Immutable => {
-                MoveAuthenticator::V1(MoveAuthenticatorV1::with_immutable_account_object(
+                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_immutable_account_object(
                     call_args,
                     self.type_args,
                     account.object_ref(),
                 ))
             }
             Owner::Shared(version) => {
-                MoveAuthenticator::V1(MoveAuthenticatorV1::with_shared_account_object(
+                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_shared_account_object(
                     call_args,
                     self.type_args,
                     SharedObjectReference {
