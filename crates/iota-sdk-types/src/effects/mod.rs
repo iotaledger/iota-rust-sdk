@@ -30,11 +30,19 @@ pub enum TransactionEffects {
 impl TransactionEffects {
     crate::def_is!(V1);
 
+    /// Returns a shared reference to the V1 effects.
     pub fn as_v1(&self) -> &TransactionEffectsV1 {
         let Self::V1(effects) = self;
         effects
     }
 
+    /// Returns a mutable reference to the V1 effects.
+    pub fn as_mut_v1(&mut self) -> &mut TransactionEffectsV1 {
+        let Self::V1(effects) = self;
+        effects
+    }
+
+    /// Consumes the effects, returning the owned V1 effects.
     pub fn into_v1(self) -> TransactionEffectsV1 {
         let Self::V1(effects) = self;
         *effects
@@ -64,6 +72,18 @@ mod tests {
             println!("{json}");
             assert_eq!(fx, serde_json::from_str(&json).unwrap());
         }
+    }
+
+    #[test]
+    fn as_mut_v1_mutates_in_place() {
+        const SPONSOR_TX_EFFECTS: &str = include_str!("fixtures/sponsor-tx-effects");
+        let fixture = Base64::decode_vec(SPONSOR_TX_EFFECTS.trim()).unwrap();
+        let mut fx: TransactionEffects = bcs::from_bytes(&fixture).unwrap();
+
+        let new_epoch = fx.as_v1().epoch + 1;
+        fx.as_mut_v1().epoch = new_epoch;
+
+        assert_eq!(fx.as_v1().epoch, new_epoch);
     }
 }
 
