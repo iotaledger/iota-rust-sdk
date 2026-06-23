@@ -29,7 +29,7 @@ impl Client {
         stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
     }
 
-    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
+    /// Get the [`CheckpointSummary`] for a given checkpoint content digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
     pub async fn checkpoint(
