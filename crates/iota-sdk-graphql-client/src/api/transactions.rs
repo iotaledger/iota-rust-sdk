@@ -374,7 +374,7 @@ mod tests {
 
         client
             .transaction_data_effects(
-                TransactionDigest::from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")
+                TransactionDigest::from_base58("FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj")
                     .unwrap(),
             )
             .await
@@ -390,7 +390,7 @@ mod tests {
             .transactions_data_effects(
                 TransactionsFilter {
                     transaction_ids: Some(vec![
-                        "CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8".to_string(),
+                        "FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj".to_string(),
                     ]),
                     ..Default::default()
                 },
