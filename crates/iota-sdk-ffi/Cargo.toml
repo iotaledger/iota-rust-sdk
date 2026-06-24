@@ -45,7 +45,7 @@ roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 # wasm-unstable-single-threaded relaxes Send+Sync checks on wasm32 targets only
-uniffi = { version = "0.29", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
+uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
 
 # internal dependencies
 iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }

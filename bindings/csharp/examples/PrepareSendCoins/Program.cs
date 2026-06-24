@@ -25,9 +25,9 @@ class Program
 
         var res = await builder.DryRun(false);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to send coins: {res.error}");
+            throw new Exception($"Failed to send coins: {res.Error}");
         }
 
         Console.WriteLine("Send coins dry run was successful!");

@@ -119,11 +119,12 @@ clean-all: clean ## Clean all generated files, including those ignored by Git. F
 
 .PHONY: install-uniffi-bindgen-go
 install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
-	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
+	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.7.1+v0.31.0
 
 .PHONY: install-uniffi-bindgen-cs
 install-uniffi-bindgen-cs: ## Install uniffi-bindgen-cs
-	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+# 	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+	cargo install uniffi-bindgen-cs --git https://github.com/jmbryan4/uniffi-bindgen-cs --rev 6395dea9b1d6006b49707f05da27d8c1650237aa
 
 .PHONY: bindings
 bindings: ## Build all bindings
@@ -203,7 +204,6 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 1000 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -232,6 +232,12 @@ csharp: ## Build C# bindings
 	@# String.Format -> string.Format: NordSecurity/uniffi-bindgen-cs#170
 	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# Rename `Query` field on the `Query` record to avoid CS0542 (member name == enclosing type)
+	@# This is temporary to check if 0.31 works, we should rename the struct or the field
+	sed -i.bak 's/^    string Query, $$/    string QueryText, /' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/^            Query: FfiConverterString\.INSTANCE\.Read(stream),$$/            QueryText: FfiConverterString.INSTANCE.Read(stream),/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/AllocationSize(value\.Query)/AllocationSize(value.QueryText)/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/Write(value\.Query, stream)/Write(value.QueryText, stream)/' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	rm bindings/csharp/src/IotaSdk/IotaSdk.cs.bak
 
 .PHONY: go-example

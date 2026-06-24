@@ -68,7 +68,7 @@ class Program
         var dependencies = package
             .LinkageTable()
             .Select(entry => entry.Value)
-            .OrderBy(upgrade => upgrade.upgradedId.ToHex())
+            .OrderBy(upgrade => upgrade.UpgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
         {
@@ -79,7 +79,7 @@ class Program
             foreach (var dependency in dependencies)
             {
                 Console.WriteLine(
-                    $"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion.AsU64()}"
+                    $"- {dependency.UpgradedId.ToHex()} @ v{dependency.UpgradedVersion.AsU64()}"
                 );
             }
         }
@@ -112,46 +112,46 @@ class Program
                 continue;
             }
 
-            if (module.functions == null || module.functions.nodes.Length == 0)
+            if (module.Functions == null || module.Functions.Nodes.Length == 0)
             {
                 Console.WriteLine("  functions: none");
             }
             else
             {
                 Console.WriteLine("  functions:");
-                foreach (var function in module.functions.nodes)
+                foreach (var function in module.Functions.Nodes)
                 {
                     Console.WriteLine(
                         $"    - {FormatFunctionSignature(function.ToString(), packagePrefix)}"
                     );
                 }
-                if (module.functions.pageInfo.hasNextPage)
+                if (module.Functions.PageInfo.HasNextPage)
                 {
                     Console.WriteLine("    - ...");
                 }
             }
 
-            if (module.structs == null || module.structs.nodes.Length == 0)
+            if (module.Structs == null || module.Structs.Nodes.Length == 0)
             {
                 Console.WriteLine("  types: none");
             }
             else
             {
                 Console.WriteLine("  types:");
-                foreach (var structType in module.structs.nodes)
+                foreach (var structType in module.Structs.Nodes)
                 {
-                    var typeTag = $"{packagePrefix}::{moduleName}::{structType.name}";
+                    var typeTag = $"{packagePrefix}::{moduleName}::{structType.Name}";
                     Console.WriteLine($"    - {typeTag}");
 
                     var hasKeyAbility =
-                        structType.abilities != null
-                        && structType.abilities.Contains(MoveAbility.Key);
+                        structType.Abilities != null
+                        && structType.Abilities.Contains(MoveAbility.Key);
                     var isGeneric =
-                        structType.typeParameters != null
-                        && structType.typeParameters.Length > 0;
+                        structType.TypeParameters != null
+                        && structType.TypeParameters.Length > 0;
                     await PrintObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
                 }
-                if (module.structs.pageInfo.hasNextPage)
+                if (module.Structs.PageInfo.HasNextPage)
                 {
                     Console.WriteLine("    - ...");
                 }
@@ -162,7 +162,7 @@ class Program
     }
 
     static PaginationFilter ForwardPage(string? cursor = null) =>
-        new(Direction.Forward, cursor: cursor);
+        new(Direction.Forward, Cursor: cursor);
 
     static string CreateFrameworkPackageId()
     {
@@ -231,11 +231,11 @@ class Program
                 packageAddress,
                 paginationFilter: ForwardPage(cursor)
             );
-            versions.AddRange(page.data);
+            versions.AddRange(page.Data);
 
-            if (page.pageInfo.hasNextPage)
+            if (page.PageInfo.HasNextPage)
             {
-                cursor = page.pageInfo.endCursor;
+                cursor = page.PageInfo.EndCursor;
             }
             else
             {
@@ -266,22 +266,22 @@ class Program
         }
 
         var objects = await client.Objects(
-            new ObjectFilter(typeTag: typeTag),
-            new PaginationFilter(Direction.Forward, limit: 3)
+            new ObjectFilter(TypeTag: typeTag),
+            new PaginationFilter(Direction.Forward, Limit: 3)
         );
 
-        if (objects.data.Length == 0)
+        if (objects.Data.Length == 0)
         {
             Console.WriteLine("    sample objects: none found");
             return;
         }
 
         Console.WriteLine("    sample objects:");
-        foreach (var obj in objects.data)
+        foreach (var obj in objects.Data)
         {
             Console.WriteLine($"      - {obj.Id().ToHex()} (version {obj.Version().AsU64()})");
         }
-        if (objects.pageInfo.hasNextPage)
+        if (objects.PageInfo.HasNextPage)
         {
             Console.WriteLine("      - ...");
         }
@@ -328,26 +328,26 @@ class Program
     static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
     {
         var page = await client.TransactionsEffects(
-            new TransactionsFilter(changedObject: packageId),
-            new PaginationFilter(Direction.Forward, limit: 1)
+            new TransactionsFilter(ChangedObject: packageId),
+            new PaginationFilter(Direction.Forward, Limit: 1)
         );
 
-        foreach (var effects in page.data)
+        foreach (var effects in page.Data)
         {
             var effectsV1 = effects.AsV1();
-            foreach (var changedObj in effectsV1.changedObjects)
+            foreach (var changedObj in effectsV1.ChangedObjects)
             {
-                if (changedObj.outputState is not ObjectOut.ObjectWrite)
+                if (changedObj.OutputState is not ObjectOut.ObjectWrite)
                 {
                     continue;
                 }
 
-                var obj = await client.Object(changedObj.objectId, effectsV1.lamportVersion);
+                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion);
                 if (
-                    obj?.AsStructOpt()?.structType?.Equals(StructTag.NewUpgradeCap()) == true
+                    obj?.AsStructOpt()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
                 )
                 {
-                    return changedObj.objectId;
+                    return changedObj.ObjectId;
                 }
             }
         }
@@ -528,24 +528,24 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(changedObject: packageId),
+                new TransactionsFilter(ChangedObject: packageId),
                 ForwardPage(cursor)
             );
 
-            foreach (var txData in page.data)
+            foreach (var txData in page.Data)
             {
-                if (PublishesPackageAsImmutable(txData.tx.transaction))
+                if (PublishesPackageAsImmutable(txData.Tx.Transaction))
                 {
                     return true;
                 }
             }
 
-            if (!page.pageInfo.hasNextPage)
+            if (!page.PageInfo.HasNextPage)
             {
                 return false;
             }
 
-            cursor = page.pageInfo.endCursor;
+            cursor = page.PageInfo.EndCursor;
         }
     }
 
@@ -559,24 +559,24 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(inputObject: upgradeCapId),
+                new TransactionsFilter(InputObject: upgradeCapId),
                 ForwardPage(cursor)
             );
 
-            foreach (var txData in page.data)
+            foreach (var txData in page.Data)
             {
-                if (UsesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId))
+                if (UsesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapId))
                 {
                     return true;
                 }
             }
 
-            if (!page.pageInfo.hasNextPage)
+            if (!page.PageInfo.HasNextPage)
             {
                 return false;
             }
 
-            cursor = page.pageInfo.endCursor;
+            cursor = page.PageInfo.EndCursor;
         }
     }
 

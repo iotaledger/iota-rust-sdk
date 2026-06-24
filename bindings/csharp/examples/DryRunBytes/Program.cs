@@ -13,9 +13,9 @@ class Program
         var transaction = Transaction.FromBase64(txBytesBase64);
 
         var res = await client.DryRunTx(transaction);
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Dry run failed: {res.error}");
+            throw new Exception($"Dry run failed: {res.Error}");
         }
 
         Console.WriteLine("Dry run was successful!");

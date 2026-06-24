@@ -89,7 +89,7 @@ If you want to build the C# bindings from the Rust source:
 Install `uniffi-bindgen-cs` via:
 
 ```bash
-cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+make install-uniffi-bindgen-cs
 ```
 
 Verify by running `make --version`, `dotnet --version`, and `uniffi-bindgen-cs --version`.
