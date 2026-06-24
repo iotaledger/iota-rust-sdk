@@ -231,12 +231,6 @@ csharp: ## Build C# bindings
 	@# String.Format -> string.Format: NordSecurity/uniffi-bindgen-cs#170
 	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	@# Rename `Query` field on the `Query` record to avoid CS0542 (member name == enclosing type)
-	@# This is temporary to check if 0.31 works, we should rename the struct or the field
-	sed -i.bak 's/^    string Query, $$/    string QueryText, /' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak 's/^            Query: FfiConverterString\.INSTANCE\.Read(stream),$$/            QueryText: FfiConverterString.INSTANCE.Read(stream),/' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak 's/AllocationSize(value\.Query)/AllocationSize(value.QueryText)/' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak 's/Write(value\.Query, stream)/Write(value.QueryText, stream)/' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	rm bindings/csharp/src/IotaSdk/IotaSdk.cs.bak
 
 .PHONY: go-example

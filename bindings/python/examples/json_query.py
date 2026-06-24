@@ -135,7 +135,7 @@ async def main():
         }
     """
 
-    query = Query(query=query_str)
+    query = Query(query_text=query_str)
     res = await client.run_query(query)
     print(res)
 
