@@ -22,9 +22,9 @@ impl GraphQLClient {
 
 #[derive(Debug, serde::Serialize, uniffi::Record)]
 pub struct Query {
-    // `query_text` avoids C# CS0542 (member == type `Query`); serde keeps the `query` wire key.
+    // `query_string` avoids C# CS0542 (member == type `Query`); serde keeps the `query` wire key.
     #[serde(rename = "query")]
-    pub query_text: String,
+    pub query_string: String,
     #[uniffi(default = None)]
     #[serde(default)]
     pub variables: Option<serde_json::Value>,

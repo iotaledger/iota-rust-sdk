@@ -134,7 +134,7 @@ struct JsonQueryExample {
       }
       """
 
-    let query = Query(queryText: queryStr)
+    let query = Query(queryString: queryStr)
     let res = try await client.runQuery(query: query)
     print(res)
   }
