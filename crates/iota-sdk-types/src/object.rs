@@ -120,13 +120,13 @@ impl Owner {
 
 impl PartialEq<Address> for Owner {
     fn eq(&self, other: &Address) -> bool {
-        self.as_address_opt() == Some(other)
+        self.as_opt_address() == Some(other)
     }
 }
 
 impl PartialEq<ObjectId> for Owner {
     fn eq(&self, other: &ObjectId) -> bool {
-        self.as_object_opt() == Some(other)
+        self.as_opt_object() == Some(other)
     }
 }
 
@@ -170,14 +170,14 @@ pub enum ObjectData {
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 
-    pub fn object_type(&self) -> Option<&MoveObjectType> {
+    pub fn opt_object_type(&self) -> Option<&MoveObjectType> {
         match self {
             Self::Struct(m) => Some(m.object_type()),
             Self::Package(_) => None,
         }
     }
 
-    pub fn struct_tag(&self) -> Option<StructTag> {
+    pub fn opt_struct_tag(&self) -> Option<StructTag> {
         match self {
             Self::Struct(m) => Some(m.struct_tag().clone()),
             Self::Package(_) => None,
@@ -615,7 +615,7 @@ impl Object {
 
     /// Returns the struct tag of this object if it is a Move struct.
     pub fn struct_tag(&self) -> Option<StructTag> {
-        self.data.struct_tag()
+        self.data.opt_struct_tag()
     }
 
     /// Returns true if this object is a gas coin.

@@ -130,9 +130,9 @@ impl UserSignature {
 
     /// Convert this signature into a simple signature if it is one, or return
     /// `None` otherwise
-    pub fn as_simple_opt(&self) -> Option<Arc<SimpleSignature>> {
+    pub fn as_opt_simple(&self) -> Option<Arc<SimpleSignature>> {
         self.0
-            .as_simple_opt()
+            .as_opt_simple()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -151,9 +151,9 @@ impl UserSignature {
 
     /// Convert this signature into a multisig aggregated signature if it is
     /// one, or return `None` otherwise
-    pub fn as_multisig_opt(&self) -> Option<Arc<MultisigAggregatedSignature>> {
+    pub fn as_opt_multisig(&self) -> Option<Arc<MultisigAggregatedSignature>> {
         self.0
-            .as_multisig_opt()
+            .as_opt_multisig()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -172,9 +172,9 @@ impl UserSignature {
 
     /// Convert this signature into a passkey authenticator if it is one, or
     /// return `None` otherwise
-    pub fn as_passkey_authenticator_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
+    pub fn as_opt_passkey_authenticator(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
-            .as_passkey_authenticator_opt()
+            .as_opt_passkey_authenticator()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -193,9 +193,9 @@ impl UserSignature {
 
     /// Convert this signature into a move authenticator if it is one, or return
     /// `None` otherwise
-    pub fn as_move_authenticator_opt(&self) -> Option<Arc<MoveAuthenticator>> {
+    pub fn as_opt_move_authenticator(&self) -> Option<Arc<MoveAuthenticator>> {
         self.0
-            .as_move_authenticator_opt()
+            .as_opt_move_authenticator()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
