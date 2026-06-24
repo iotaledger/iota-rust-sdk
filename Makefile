@@ -123,8 +123,7 @@ install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
 
 .PHONY: install-uniffi-bindgen-cs
 install-uniffi-bindgen-cs: ## Install uniffi-bindgen-cs
-# 	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
-	cargo install uniffi-bindgen-cs --git https://github.com/jmbryan4/uniffi-bindgen-cs --rev 6395dea9b1d6006b49707f05da27d8c1650237aa
+	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.11.0+v0.31.0
 
 .PHONY: bindings
 bindings: ## Build all bindings
