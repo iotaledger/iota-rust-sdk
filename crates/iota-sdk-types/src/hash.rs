@@ -359,6 +359,13 @@ mod type_digest {
         }
     }
 
+    impl crate::MoveAuthenticator {
+        pub fn digest(&self) -> Digest {
+            const SALT: &str = "MoveAuthenticator::";
+            type_digest(SALT, self)
+        }
+    }
+
     fn type_digest<T: serde::Serialize>(salt: &str, ty: &T) -> Digest {
         let mut hasher = Hasher::new();
         hasher.update(salt);
