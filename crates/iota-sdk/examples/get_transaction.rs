@@ -9,7 +9,7 @@ use iota_sdk::{
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_testnet();
-    let digest = TransactionDigest::from_base58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")?;
+    let digest = TransactionDigest::from_base58("FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj")?;
 
     let signed_transaction = client.transaction(digest).await?.expect("tx not found");
     println!("Signed Transaction: {signed_transaction:#?}\n");
