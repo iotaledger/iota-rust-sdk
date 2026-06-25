@@ -183,7 +183,7 @@ mod tests {
     use base64ct::{Base64, Encoding};
 
     use super::*;
-    use crate::{Digest, ObjectId, SignatureScheme, StructTag, Version};
+    use crate::{ObjectDigest, ObjectId, SignatureScheme, StructTag, Version};
 
     #[cfg(feature = "proptest")]
     #[test_strategy::proptest]
@@ -200,7 +200,7 @@ mod tests {
             ObjectReference {
                 object_id: ObjectId::ZERO,
                 version: Version::default(),
-                digest: Digest::MIN,
+                digest: ObjectDigest::MIN,
             },
         )
         .into()
@@ -250,7 +250,7 @@ mod tests {
             Input::Receiving(ObjectReference {
                 object_id: ObjectId::ZERO,
                 version: Version::default(),
-                digest: Digest::MIN,
+                digest: ObjectDigest::MIN,
             }),
         ];
 
@@ -344,7 +344,11 @@ mod tests {
     /// owned / receiving / mutable-shared inputs.
     fn synthetic_fixtures() -> Vec<SyntheticFixture> {
         let owned = |b: u8, v: u64| {
-            ObjectReference::new(ObjectId::new([b; 32]), Version::from_u64(v), Digest::MIN)
+            ObjectReference::new(
+                ObjectId::new([b; 32]),
+                Version::from_u64(v),
+                ObjectDigest::MIN,
+            )
         };
         let shared = |b: u8, v: u64, mutable: bool| {
             SharedObjectReference::new(ObjectId::new([b; 32]), Version::from_u64(v), mutable)
@@ -353,7 +357,7 @@ mod tests {
             Input::Receiving(ObjectReference::new(
                 ObjectId::new([b; 32]),
                 Version::from_u64(v),
-                Digest::MIN,
+                ObjectDigest::MIN,
             ))
         };
 
