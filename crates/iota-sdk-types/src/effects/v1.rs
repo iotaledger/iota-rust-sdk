@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectId, Owner, Version,
+    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
+    ObjectId, Owner, TransactionDigest, TransactionEventsDigest, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -13,17 +14,17 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-effects-v1 = execution-status                   ; status
-///                          u64                                ; epoch
-///                          gas-cost-summary                   ; gas-used
-///                          digest                             ; transaction-digest
-///                          (option u32)                       ; gas-object-index
-///                          (option digest)                    ; events-digest
-///                          (vector digest)                    ; dependencies
-///                          u64                                ; lamport-version
-///                          (vector changed-object)            ; changed-objects
-///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
-///                          (option digest)                    ; auxiliary-data-digest
+/// transaction-effects-v1 = execution-status                    ; status
+///                          u64                                 ; epoch
+///                          gas-cost-summary                    ; gas-used
+///                          transaction-digest                  ; transaction-digest
+///                          (option u32)                        ; gas-object-index
+///                          (option transaction-events-digest)  ; events-digest
+///                          (vector transaction-digest)         ; dependencies
+///                          u64                                 ; lamport-version
+///                          (vector changed-object)             ; changed-objects
+///                          (vector unchanged-shared-object)    ; unchanged-shared-objects
+///                          (option effects-aux-data-digest)    ; auxiliary-data-digest
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -39,17 +40,17 @@ pub struct TransactionEffectsV1 {
     /// The gas used by this transaction
     pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
-    pub transaction_digest: Digest,
+    pub transaction_digest: TransactionDigest,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
-    pub events_digest: Option<Digest>,
+    pub events_digest: Option<TransactionEventsDigest>,
     /// The set of transaction digests this transaction depends on.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
-    pub dependencies: Vec<Digest>,
+    pub dependencies: Vec<TransactionDigest>,
     /// The version number of all the written Move objects by this transaction.
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
@@ -66,7 +67,7 @@ pub struct TransactionEffectsV1 {
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
-    pub auxiliary_data_digest: Option<Digest>,
+    pub auxiliary_data_digest: Option<EffectsAuxDataDigest>,
 }
 
 /// Input/output state of an object that was changed during execution
@@ -121,11 +122,11 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
-///                       / %d01 u64           ; MutateDeleted
-///                       / %d02 u64           ; ReadDeleted
-///                       / %d03 u64           ; Cancelled
-///                       / %d04               ; PerEpochConfig
+/// unchanged-shared-kind = %d00 u64 object-digest   ; ReadOnlyRoot
+///                       / %d01 u64                  ; MutateDeleted
+///                       / %d02 u64                  ; ReadDeleted
+///                       / %d03 u64                  ; Cancelled
+///                       / %d04                       ; PerEpochConfig
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -136,7 +137,10 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot { version: Version, digest: Digest },
+    ReadOnlyRoot {
+        version: Version,
+        digest: ObjectDigest,
+    },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
@@ -170,8 +174,8 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = %d00           ; Missing
-///           / %d01 u64 digest owner   ; Data
+/// object-in = %d00                          ; Missing
+///           / %d01 u64 object-digest owner   ; Data
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -183,7 +187,7 @@ pub enum ObjectIn {
     /// The old version, digest and owner.
     Data {
         version: Version,
-        digest: Digest,
+        digest: ObjectDigest,
         owner: Owner,
     },
 }
@@ -203,7 +207,7 @@ impl ObjectIn {
         self.version_opt().expect("object does not exist")
     }
 
-    pub fn digest_opt(&self) -> Option<Digest> {
+    pub fn digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::Data { digest, .. } = self {
             Some(*digest)
         } else {
@@ -211,7 +215,7 @@ impl ObjectIn {
         }
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> ObjectDigest {
         self.digest_opt().expect("object does not exist")
     }
 
@@ -235,9 +239,9 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out = %d00                ; Missing
-///            / %d01 digest owner   ; ObjectWrite
-///            / %d02 u64 digest     ; PackageWrite
+/// object-out = %d00                       ; Missing
+///            / %d01 object-digest owner   ; ObjectWrite
+///            / %d02 u64 object-digest     ; PackageWrite
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -248,16 +252,19 @@ pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
-    ObjectWrite { digest: Digest, owner: Owner },
+    ObjectWrite { digest: ObjectDigest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite { version: Version, digest: Digest },
+    PackageWrite {
+        version: Version,
+        digest: ObjectDigest,
+    },
 }
 
 impl ObjectOut {
     crate::def_is!(Missing, ObjectWrite, PackageWrite);
 
-    pub fn object_digest_opt(&self) -> Option<Digest> {
+    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::ObjectWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -265,7 +272,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn object_digest(&self) -> Digest {
+    pub fn object_digest(&self) -> ObjectDigest {
         self.object_digest_opt().expect("object does not exist")
     }
 
@@ -293,7 +300,7 @@ impl ObjectOut {
         self.package_version_opt().expect("object does not exist")
     }
 
-    pub fn package_digest_opt(&self) -> Option<Digest> {
+    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::PackageWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -301,7 +308,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn package_digest(&self) -> Digest {
+    pub fn package_digest(&self) -> ObjectDigest {
         self.package_digest_opt().expect("package does not exist")
     }
 }

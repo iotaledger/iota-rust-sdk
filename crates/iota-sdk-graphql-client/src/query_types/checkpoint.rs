@@ -3,7 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use chrono::DateTime as ChronoDT;
-use iota_types::{CheckpointSummary, Digest, GasCostSummary as NativeGasCostSummary};
+use iota_types::{
+    CheckpointContentsDigest, CheckpointDigest, CheckpointSummary,
+    GasCostSummary as NativeGasCostSummary,
+};
 
 use crate::{
     error,
@@ -99,7 +102,7 @@ pub struct GasCostSummary {
 }
 
 // TODO need bcs in GraphQL Checkpoint to avoid this conversion
-// http://github.com/mystenlabs/sui-rust-sdk/issues/62
+// https://github.com/iotaledger/iota-rust-sdk/issues/1211
 impl TryInto<CheckpointSummary> for Checkpoint {
     type Error = error::Error;
 
@@ -120,10 +123,10 @@ impl TryInto<CheckpointSummary> for Checkpoint {
         let timestamp_ms = ChronoDT::parse_from_rfc3339(&self.timestamp.0)?
             .timestamp_millis()
             .try_into()?;
-        let content_digest = Digest::from_base58(&self.digest)?;
+        let content_digest = CheckpointContentsDigest::from_base58(&self.digest)?;
         let previous_digest = self
             .previous_checkpoint_digest
-            .map(|d| Digest::from_base58(&d))
+            .map(|d| CheckpointDigest::from_base58(&d))
             .transpose()?;
         let epoch_rolling_gas_cost_summary = self
             .rolling_gas_summary

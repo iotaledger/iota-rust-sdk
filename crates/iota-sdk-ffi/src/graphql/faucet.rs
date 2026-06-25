@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::{
     error::{Result, SdkFfiError},
     graphql::client::GraphQLClient,
-    types::{address::Address, digest::Digest, object::ObjectId},
+    types::{address::Address, digest::TransactionDigest, object::ObjectId},
 };
 
 #[derive(uniffi::Object)]
@@ -141,7 +141,7 @@ impl From<BatchSendStatusType> for iota_sdk::graphql_client::faucet::BatchSendSt
 pub struct CoinInfo {
     pub amount: u64,
     pub id: Arc<ObjectId>,
-    pub transfer_tx_digest: Arc<Digest>,
+    pub transfer_tx_digest: Arc<TransactionDigest>,
 }
 
 impl From<iota_sdk::graphql_client::faucet::CoinInfo> for CoinInfo {

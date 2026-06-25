@@ -2,7 +2,9 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version};
+use super::{
+    Address, MovePackage, ObjectDigest, ObjectId, StructTag, TransactionDigest, TypeTag, Version,
+};
 
 /// Reference to an object
 ///
@@ -13,7 +15,7 @@ use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version}
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-reference = object-id u64 digest
+/// object-reference = object-id u64 object-digest
 /// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -25,13 +27,13 @@ pub struct ObjectReference {
     /// The version of this object.
     pub version: Version,
     /// The digest of this object.
-    pub digest: Digest,
+    pub digest: ObjectDigest,
 }
 
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: ObjectDigest) -> Self {
         Self {
             object_id,
             version,
@@ -53,12 +55,12 @@ impl ObjectReference {
 
     /// Returns the digest of the object that this ObjectReference is referring
     /// to.
-    pub fn digest(&self) -> &Digest {
+    pub fn digest(&self) -> &ObjectDigest {
         &self.digest
     }
 
     /// Returns a 3-tuple containing the object id, version, and digest.
-    pub fn into_parts(self) -> (ObjectId, Version, Digest) {
+    pub fn into_parts(self) -> (ObjectId, Version, ObjectDigest) {
         let Self {
             object_id,
             version,
@@ -468,7 +470,7 @@ pub struct Object {
     /// The owner that unlocks this object
     pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
-    pub previous_transaction: Digest,
+    pub previous_transaction: TransactionDigest,
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
@@ -481,7 +483,7 @@ impl Object {
     pub fn new(
         data: ObjectData,
         owner: Owner,
-        previous_transaction: Digest,
+        previous_transaction: TransactionDigest,
         storage_rebate: u64,
     ) -> Self {
         Self {
@@ -563,7 +565,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> Digest {
+    pub fn previous_transaction(&self) -> TransactionDigest {
         self.previous_transaction
     }
 
@@ -918,7 +920,7 @@ mod serialization {
             let object = Object {
                 data: ObjectData::Package(package),
                 owner: Owner::Object(ObjectId::ZERO),
-                previous_transaction: Digest::ZERO,
+                previous_transaction: TransactionDigest::ZERO,
                 storage_rebate: 100,
             };
 
@@ -970,7 +972,7 @@ mod serialization {
             let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
             assert_eq!(obj_ref.object_id, ObjectId::ZERO);
             assert_eq!(obj_ref.version, Version::from_u64(0));
-            assert_eq!(obj_ref.digest, Digest::ZERO);
+            assert_eq!(obj_ref.digest, ObjectDigest::ZERO);
 
             // Roundtrip
             let serialized = serde_json::to_string(&obj_ref).unwrap();
@@ -992,7 +994,7 @@ mod serialization {
                 assert_eq!(refs.len(), 1);
                 assert_eq!(refs[0].object_id, ObjectId::ZERO);
                 assert_eq!(refs[0].version, Version::from_u64(0));
-                assert_eq!(refs[0].digest, Digest::ZERO);
+                assert_eq!(refs[0].digest, ObjectDigest::ZERO);
             }
         }
 

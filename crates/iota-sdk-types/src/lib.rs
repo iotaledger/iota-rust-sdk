@@ -146,7 +146,12 @@ pub use crypto::{
     RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
-pub use digest::{Digest, DigestParseError, SigningDigest};
+pub use digest::{
+    CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
+    DigestParseError, EffectsAuxDataDigest, MisbehaviorReportDigest, MoveAuthenticatorDigest,
+    ObjectDigest, SenderSignedDataDigest, SigningDigest, TransactionDigest,
+    TransactionEffectsDigest, TransactionEventsDigest,
+};
 pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,

@@ -3,13 +3,13 @@
 
 use iota_sdk::{
     graphql_client::{Client, error::Result},
-    types::Digest,
+    types::TransactionDigest,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_testnet();
-    let digest = Digest::from_base58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")?;
+    let digest = TransactionDigest::from_base58("3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")?;
 
     let signed_transaction = client.transaction(digest).await?.expect("tx not found");
     println!("Signed Transaction: {signed_transaction:#?}\n");
