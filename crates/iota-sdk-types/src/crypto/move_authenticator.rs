@@ -1,6 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "serde")]
 use std::hash::{Hash, Hasher};
 
 use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectReference};
