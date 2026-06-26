@@ -24,7 +24,7 @@ use iota_grpc_types::{
         types::ObjectId as ProtoObjectId,
     },
 };
-use iota_types::{Digest, ObjectId};
+use iota_types::{ObjectId, TransactionDigest};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
@@ -600,7 +600,10 @@ pub fn proto_object_id(id: ObjectId) -> ProtoObjectId {
 }
 
 /// Build a proto Transaction from serializable transaction data and digest.
-pub fn build_proto_transaction<T: Serialize>(data: &T, digest: Digest) -> Result<ProtoTransaction> {
+pub fn build_proto_transaction<T: Serialize>(
+    data: &T,
+    digest: TransactionDigest,
+) -> Result<ProtoTransaction> {
     let bcs = BcsData::serialize(data)
         .map_err(|e| Error::from(TryFromProtoError::invalid("transaction", e)))?;
 

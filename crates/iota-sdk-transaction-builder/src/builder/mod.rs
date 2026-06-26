@@ -456,7 +456,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -488,7 +488,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///             object_id: ObjectId::from_str(
     ///                 "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
     ///             )?,
-    ///             digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+    ///             digest: ObjectDigest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
     ///             version: Version::from_u64(545110774),
     ///         },
     ///         // The result of a previous command can also be used
@@ -891,7 +891,7 @@ impl<L> TransactionBuilder<(), L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// let sender =
     ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
@@ -902,14 +902,14 @@ impl<L> TransactionBuilder<(), L> {
     ///     object_id: ObjectId::from_str(
     ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
     ///     )?,
-    ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     digest: ObjectDigest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
     ///     version: Version::from_u64(473053811),
     /// };
     /// let gas_coin2 = ObjectReference {
     ///     object_id: ObjectId::from_str(
     ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
     ///     )?,
-    ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     digest: ObjectDigest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
     ///     version: Version::from_u64(473053810),
     /// };
     ///
@@ -1026,7 +1026,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -1471,7 +1471,7 @@ impl<C> TransactionBuilder<C, GasStationData> {
 
 #[cfg(test)]
 mod tests {
-    use iota_types::{Digest, Version};
+    use iota_types::{ObjectDigest, Version};
 
     use super::*;
 
@@ -1490,7 +1490,7 @@ mod tests {
             ObjectReference::new(
                 ObjectId::new(id_bytes),
                 Version::from_u64(seed as u64 + 1),
-                Digest::new([seed; 32]),
+                ObjectDigest::new([seed; 32]),
             )
         };
 

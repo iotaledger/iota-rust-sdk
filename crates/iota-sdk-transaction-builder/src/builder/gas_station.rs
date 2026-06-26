@@ -4,7 +4,9 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+use iota_types::{
+    Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest, Version,
+};
 use reqwest::{
     Url,
     header::{HeaderMap, HeaderName, HeaderValue},
@@ -196,7 +198,7 @@ struct GasObjectRef {
     #[serde(deserialize_with = "deserialize_readable_u64")]
     pub version: u64,
     /// The digest of this object.
-    pub digest: Digest,
+    pub digest: ObjectDigest,
 }
 
 fn deserialize_readable_u64<'de, D: serde::Deserializer<'de>>(
@@ -353,16 +355,18 @@ impl GasStationData {
         self,
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
-    ) -> Result<Digest, Error> {
+    ) -> Result<TransactionDigest, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
         let effects = self.execute_txn_inner(&url, txn, signer).await?;
 
-        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
-            message: Some(e.to_string()),
-            gas_station_url: url,
+        TransactionDigest::deserialize(&effects["transactionDigest"]).map_err(|e| {
+            Error::GasStationResponse {
+                message: Some(e.to_string()),
+                gas_station_url: url,
+            }
         })
     }
 

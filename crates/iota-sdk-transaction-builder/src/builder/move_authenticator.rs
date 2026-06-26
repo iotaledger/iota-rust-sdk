@@ -123,17 +123,24 @@ impl MoveAuthenticatorBuilder {
             })
         }
         Ok(match account.owner() {
-            Owner::Immutable => MoveAuthenticator::V1(MoveAuthenticatorV1::new_immutable(
-                call_args,
-                self.type_args,
-                account.object_ref(),
-            )),
-            Owner::Shared(version) => MoveAuthenticator::V1(MoveAuthenticatorV1::new_shared(
-                call_args,
-                self.type_args,
-                account.id(),
-                *version,
-            )),
+            Owner::Immutable => {
+                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_immutable_account_object(
+                    call_args,
+                    self.type_args,
+                    account.object_ref(),
+                ))
+            }
+            Owner::Shared(version) => {
+                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_shared_account_object(
+                    call_args,
+                    self.type_args,
+                    SharedObjectReference {
+                        object_id: account.id(),
+                        initial_shared_version: *version,
+                        mutable: false,
+                    },
+                ))
+            }
             _ => {
                 return Err(Error::InvalidMoveAuthAccount(
                     "account must be immutable or shared".to_owned(),

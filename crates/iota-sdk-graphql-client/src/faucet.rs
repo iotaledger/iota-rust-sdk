@@ -4,7 +4,7 @@
 
 use std::{collections::HashSet, time::Duration};
 
-use iota_types::{Address, Digest, ObjectId};
+use iota_types::{Address, ObjectId, TransactionDigest};
 use reqwest::{StatusCode, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -82,7 +82,7 @@ pub struct FaucetReceipt {
 pub struct CoinInfo {
     pub amount: u64,
     pub id: ObjectId,
-    pub transfer_tx_digest: Digest,
+    pub transfer_tx_digest: TransactionDigest,
 }
 
 impl FaucetClient {

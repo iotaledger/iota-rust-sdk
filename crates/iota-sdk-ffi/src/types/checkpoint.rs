@@ -5,7 +5,14 @@ use std::sync::Arc;
 
 use iota_sdk::types::GasCostSummary;
 
-use crate::types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember};
+use crate::types::{
+    digest::{
+        CheckpointContentsDigest, CheckpointDigest, Digest, TransactionDigest,
+        TransactionEffectsDigest,
+    },
+    signature::UserSignature,
+    validator::ValidatorCommitteeMember,
+};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -63,8 +70,8 @@ impl CheckpointSummary {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
         network_total_transactions: u64,
-        content_digest: &Digest,
-        previous_digest: Option<Arc<Digest>>,
+        content_digest: &CheckpointContentsDigest,
+        previous_digest: Option<Arc<CheckpointDigest>>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         timestamp_ms: CheckpointTimestamp,
         checkpoint_commitments: Vec<Arc<CheckpointCommitment>>,
@@ -105,14 +112,14 @@ impl CheckpointSummary {
     }
 
     /// The hash of the `CheckpointContents` for this checkpoint.
-    pub fn content_digest(&self) -> Digest {
+    pub fn content_digest(&self) -> CheckpointContentsDigest {
         self.0.content_digest.into()
     }
 
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub fn previous_digest(&self) -> Option<Arc<Digest>> {
+    pub fn previous_digest(&self) -> Option<Arc<CheckpointDigest>> {
         self.0.previous_digest.map(Into::into).map(Arc::new)
     }
 
@@ -155,7 +162,7 @@ impl CheckpointSummary {
         self.0.version_specific_data.clone()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> CheckpointDigest {
         self.0.digest().into()
     }
 
@@ -210,7 +217,7 @@ impl CheckpointContents {
             .collect()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> CheckpointContentsDigest {
         self.0.digest().into()
     }
 }
@@ -223,8 +230,8 @@ pub struct CheckpointTransactionInfo(pub iota_sdk::types::CheckpointTransactionI
 impl CheckpointTransactionInfo {
     #[uniffi::constructor]
     pub fn new(
-        transaction: &Digest,
-        effects: &Digest,
+        transaction: &TransactionDigest,
+        effects: &TransactionEffectsDigest,
         signatures: Vec<Arc<UserSignature>>,
     ) -> Self {
         Self(iota_sdk::types::CheckpointTransactionInfo {
@@ -234,11 +241,11 @@ impl CheckpointTransactionInfo {
         })
     }
 
-    pub fn transaction(&self) -> Digest {
+    pub fn transaction(&self) -> TransactionDigest {
         self.0.transaction.into()
     }
 
-    pub fn effects(&self) -> Digest {
+    pub fn effects(&self) -> TransactionEffectsDigest {
         self.0.effects.into()
     }
 

@@ -11,13 +11,13 @@
 //!
 //! ```no_run
 //! use iota_sdk_grpc_client::Client;
-//! use iota_types::{Digest, ObjectId};
+//! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
 //! let client = Client::new_localnet()?;
 //!
 //! // Get a transaction with the default field mask.
-//! let digest: Digest = todo!();
+//! let digest: TransactionDigest = todo!();
 //! let txs = client.get_transactions([digest]).await?;
 //! if let Some(tx) = txs.body().first() {
 //!     println!("Transaction digest: {:?}", tx.transaction()?.digest()?);

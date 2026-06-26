@@ -53,7 +53,7 @@
 //! ```
 //! # use std::str::FromStr;
 //! use iota_sdk_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+//! use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
 //!
 //! let sender =
 //!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
@@ -66,14 +66,14 @@
 //!     object_id: ObjectId::from_str(
 //!         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
 //!     )?,
-//!     digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+//!     digest: ObjectDigest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
 //!     version: Version::from_u64(545110774),
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
 //!         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
 //!     )?,
-//!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+//!     digest: ObjectDigest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
 //!     version: Version::from_u64(473053810),
 //! };
 //!

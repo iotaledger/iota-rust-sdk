@@ -26,7 +26,7 @@ use iota_grpc_types::{
         transaction::ExecutedTransaction,
     },
 };
-use iota_types::{CheckpointSequenceNumber, Digest};
+use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 
 use crate::{
     Client, Error,
@@ -177,10 +177,10 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_types::Digest;
+    /// # use iota_types::CheckpointDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let digest: Digest = todo!();
+    /// let digest: CheckpointDigest = todo!();
     /// let checkpoint = client.get_checkpoint_by_digest(digest, None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
@@ -188,7 +188,7 @@ impl Client {
     /// ```
     pub async fn get_checkpoint_by_digest(
         &self,
-        digest: Digest,
+        digest: CheckpointDigest,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
     ) -> Result<MetadataEnvelope<CheckpointResponse>> {
@@ -209,7 +209,7 @@ impl Client {
     /// or any slice/array/vec of fields — conversion is automatic.
     pub async fn get_checkpoint_by_digest_masked(
         &self,
-        digest: Digest,
+        digest: CheckpointDigest,
         read_mask: impl Into<CheckpointResponseReadMask>,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,

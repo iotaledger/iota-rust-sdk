@@ -6,7 +6,7 @@
 
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{CheckpointSequenceNumber, CheckpointSummary, Digest};
+use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
     Client,
@@ -34,7 +34,7 @@ impl Client {
     /// checkpoint id.
     pub async fn checkpoint(
         &self,
-        digest: impl Into<Option<Digest>>,
+        digest: impl Into<Option<CheckpointDigest>>,
         seq_num: impl Into<Option<u64>>,
     ) -> Result<Option<CheckpointSummary>> {
         let digest = digest.into();
@@ -96,7 +96,10 @@ impl Client {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(&self, digest: Digest) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_digest(
+        &self,
+        digest: CheckpointDigest,
+    ) -> Result<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
     }
@@ -242,7 +245,8 @@ mod tests {
             .unwrap()
             .unwrap();
 
-        let digest = chckp.content_digest;
+        // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1211
+        let digest = chckp.content_digest.into_inner().into();
         let total_transaction_blocks_by_digest = client
             .total_transaction_blocks_by_digest(digest)
             .await

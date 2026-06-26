@@ -10,7 +10,7 @@ use iota_grpc_types::{
         transaction::ExecutedTransaction,
     },
 };
-use iota_types::Digest;
+use iota_types::TransactionDigest;
 
 use crate::{
     Client,
@@ -48,10 +48,10 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_types::Digest;
+    /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let digest: Digest = Digest::ZERO;
+    /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
     /// let txs = client.get_transactions([digest]).await?;
     /// for tx in txs.body() {
@@ -67,7 +67,7 @@ impl Client {
     /// ```
     pub async fn get_transactions(
         &self,
-        digests: impl IntoIterator<Item = Digest>,
+        digests: impl IntoIterator<Item = TransactionDigest>,
     ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
         let requests = digests
             .into_iter()
@@ -103,7 +103,7 @@ impl Client {
     /// ```
     pub async fn get_transactions_masked(
         &self,
-        digests: impl IntoIterator<Item = Digest>,
+        digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl Into<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
         let requests = digests
