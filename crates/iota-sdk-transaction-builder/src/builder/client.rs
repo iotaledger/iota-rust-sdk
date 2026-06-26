@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature, Version,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
+    TransactionEffects, UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -36,14 +36,14 @@ pub enum WaitForTx {
 }
 
 /// One page of objects plus an optional cursor for the next page. See
-/// [`ClientMethods::objects`].
+/// [`TransactionBuilderClient::objects`].
 #[derive(Clone, Debug)]
 pub struct ObjectsPage {
     /// The objects in this page.
     pub data: Vec<Object>,
     /// Opaque continuation cursor for fetching the next page; `None` when no
     /// further pages exist. Pass it back as the `cursor` argument to
-    /// [`ClientMethods::objects`] to advance.
+    /// [`TransactionBuilderClient::objects`] to advance.
     pub next_cursor: Option<Vec<u8>>,
 }
 
@@ -58,7 +58,7 @@ pub struct ProtocolConfig {
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
-pub trait ClientMethods {
+pub trait TransactionBuilderClient {
     /// The error type for this client.
     type Error: 'static + std::error::Error + Send + Sync;
     /// The result of a dry run.
@@ -80,10 +80,8 @@ pub trait ClientMethods {
     /// pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: Option<StructTag>,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
@@ -100,13 +98,13 @@ pub trait ClientMethods {
     /// Fetch a transaction
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>>;
 
     /// Fetch transaction effects
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>>;
 
     /// Get the reference gas price
@@ -139,12 +137,12 @@ pub trait ClientMethods {
     /// Wait for the indexing or finalization of a transaction by its digest.
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>>;
 }
 
-impl<T: ClientMethods> ClientMethods for &T {
+impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
     type Error = T::Error;
     type DryRunResult = T::DryRunResult;
 
@@ -158,14 +156,12 @@ impl<T: ClientMethods> ClientMethods for &T {
 
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: Option<StructTag>,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
-        (*self).objects(type_tag, owner, object_ids, ascending, cursor, limit)
+        (*self).objects(struct_tag, owner, cursor, limit)
     }
 
     fn protocol_config(
@@ -176,14 +172,14 @@ impl<T: ClientMethods> ClientMethods for &T {
 
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
         (*self).transaction(digest)
     }
 
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
         (*self).transaction_effects(digest)
     }
@@ -221,14 +217,14 @@ impl<T: ClientMethods> ClientMethods for &T {
 
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         (*self).wait_for_tx(digest, wait_for)
     }
 }
 
-impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
+impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T> {
     type Error = T::Error;
     type DryRunResult = T::DryRunResult;
 
@@ -242,15 +238,12 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
 
     fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: Option<StructTag>,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>> {
-        self.as_ref()
-            .objects(type_tag, owner, object_ids, ascending, cursor, limit)
+        self.as_ref().objects(struct_tag, owner, cursor, limit)
     }
 
     fn protocol_config(
@@ -261,14 +254,14 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
 
     fn transaction(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
         self.as_ref().transaction(digest)
     }
 
     fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
         self.as_ref().transaction_effects(digest)
     }
@@ -306,7 +299,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
 
     fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         self.as_ref().wait_for_tx(digest, wait_for)
@@ -318,11 +311,11 @@ pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
     use iota_types::{
-        Address, Digest, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction,
-        StructTag, Transaction, TransactionEffects, TypeTag, UserSignature, Version,
+        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction, StructTag,
+        Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
     };
 
-    use super::{ClientMethods, WaitForTx};
+    use super::{TransactionBuilderClient, WaitForTx};
     use crate::ObjectsPage;
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
@@ -344,11 +337,16 @@ pub(crate) mod test_client {
             contents,
         )
         .expect("contents always contain a full object id");
-        Object::new(ObjectData::Struct(move_struct), owner, Digest::ZERO, 0)
+        Object::new(
+            ObjectData::Struct(move_struct),
+            owner,
+            TransactionDigest::ZERO,
+            0,
+        )
     }
 
-    /// A test client that implements [`ClientMethods`] by fabricating objects
-    /// on demand.
+    /// A test client that implements [`TransactionBuilderClient`] by
+    /// fabricating objects on demand.
     ///
     /// It is useful for building transactions in tests, examples, and doc tests
     /// where a live network connection is not available. Object lookups resolve
@@ -357,7 +355,7 @@ pub(crate) mod test_client {
     /// selection always finds a single funded coin. This is enough to drive
     /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
     /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_tx`](ClientMethods::execute_tx) returns an error.
+    /// — [`execute_tx`](TransactionBuilderClient::execute_tx) returns an error.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
@@ -366,7 +364,7 @@ pub(crate) mod test_client {
     #[error("TestClientError: {0}")]
     pub struct TestClientError(pub String);
 
-    impl ClientMethods for TestClient {
+    impl TransactionBuilderClient for TestClient {
         type Error = TestClientError;
         type DryRunResult = ();
 
@@ -391,10 +389,8 @@ pub(crate) mod test_client {
 
         async fn objects(
             &self,
-            _type_tag: Option<TypeTag>,
-            owner: Option<Address>,
-            _object_ids: Option<Vec<ObjectId>>,
-            _ascending: bool,
+            _struct_tag: Option<StructTag>,
+            owner: Address,
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,
         ) -> Result<ObjectsPage, Self::Error> {
@@ -403,7 +399,7 @@ pub(crate) mod test_client {
             // that won't collide with the object ids used in examples.
             let gas_coin_id = ObjectId::from_bytes([0xee; ObjectId::LENGTH])
                 .expect("32 bytes is a valid object id");
-            let owner = Owner::Address(owner.unwrap_or(Address::ZERO));
+            let owner = Owner::Address(owner);
             Ok(ObjectsPage {
                 data: vec![fabricated_coin(gas_coin_id, owner, FABRICATED_COIN_BALANCE)],
                 next_cursor: None,
@@ -412,14 +408,14 @@ pub(crate) mod test_client {
 
         async fn transaction(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
         ) -> Result<Option<SignedTransaction>, Self::Error> {
             Ok(None)
         }
 
         async fn transaction_effects(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
         ) -> Result<Option<TransactionEffects>, Self::Error> {
             Ok(None)
         }
@@ -456,7 +452,7 @@ pub(crate) mod test_client {
 
         async fn wait_for_tx(
             &self,
-            _digest: Digest,
+            _digest: TransactionDigest,
             _wait_for: WaitForTx,
         ) -> Result<(), Self::Error> {
             Ok(())

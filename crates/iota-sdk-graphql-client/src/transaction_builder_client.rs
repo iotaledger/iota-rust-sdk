@@ -1,12 +1,12 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`ClientMethods`] for the GraphQL [`Client`].
+//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
 
-use iota_transaction_builder::{ClientMethods, ObjectsPage, ProtocolConfig, WaitForTx};
+use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
-    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature, Version,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
+    TransactionEffects, UserSignature, Version,
 };
 
 use crate::{
@@ -15,7 +15,7 @@ use crate::{
     query_types::ObjectFilter,
 };
 
-impl ClientMethods for Client {
+impl TransactionBuilderClient for Client {
     type Error = crate::error::Error;
     type DryRunResult = DryRunResult;
 
@@ -29,10 +29,8 @@ impl ClientMethods for Client {
 
     async fn objects(
         &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
+        struct_tag: Option<StructTag>,
+        owner: Address,
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
@@ -47,16 +45,12 @@ impl ClientMethods for Client {
         let page = self
             .objects(
                 ObjectFilter {
-                    type_: type_tag.as_ref().map(ToString::to_string),
-                    owner,
-                    object_ids,
+                    type_: struct_tag.map(|tag| tag.to_string()),
+                    owner: Some(owner),
+                    object_ids: None,
                 },
                 PaginationFilter {
-                    direction: if ascending {
-                        Direction::Forward
-                    } else {
-                        Direction::Backward
-                    },
+                    direction: Direction::Forward,
                     cursor,
                     limit: limit.map(|v| v as _),
                 },
@@ -81,13 +75,16 @@ impl ClientMethods for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
+    async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>, Self::Error> {
         self.transaction(digest).await
     }
 
     async fn transaction_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         self.transaction_effects(digest).await
     }
@@ -126,7 +123,11 @@ impl ClientMethods for Client {
         self.execute_tx(signatures, tx, wait_for).await
     }
 
-    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
+    async fn wait_for_tx(
+        &self,
+        digest: TransactionDigest,
+        wait_for: WaitForTx,
+    ) -> Result<(), Self::Error> {
         self.wait_for_tx(digest, wait_for, None).await
     }
 }

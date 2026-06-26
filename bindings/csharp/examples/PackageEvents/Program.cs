@@ -16,9 +16,11 @@ class Program
 
         foreach (var evt in events.data)
         {
+            // Sender and module are optional: some events (such as system- or
+            // genesis-emitted ones) carry neither.
             Console.WriteLine($"Type: {evt.@type}");
-            Console.WriteLine($"Sender: {evt.sender.ToHex()}");
-            Console.WriteLine($"Module: {evt.module}");
+            Console.WriteLine($"Sender: {evt.sender?.ToHex() ?? "none"}");
+            Console.WriteLine($"Module: {evt.module ?? "none"}");
             Console.WriteLine($"JSON: {evt.json}");
         }
     }

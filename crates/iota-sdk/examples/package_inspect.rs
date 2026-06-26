@@ -266,11 +266,7 @@ async fn print_object_samples(
     } else {
         println!("    sample objects:");
         for object in &objects.data {
-            println!(
-                "      - {} (version {})",
-                object.object_id(),
-                object.version()
-            );
+            println!("      - {} (version {})", object.id(), object.version());
         }
         if objects.page_info.has_next_page {
             println!("      - ...");
@@ -349,8 +345,8 @@ fn is_package_make_immutable_call(move_call: &MoveCall) -> bool {
 
 fn publishes_package_as_immutable(tx: &Transaction) -> bool {
     let Some(programmable_tx) = tx
-        .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
+        .as_opt_v1()
+        .and_then(|tx_v1| tx_v1.kind.as_opt_programmable())
     else {
         return false;
     };
@@ -376,7 +372,7 @@ fn publishes_package_as_immutable(tx: &Transaction) -> bool {
         .iter()
         .skip(usize::from(*publish_index) + 1)
         .any(|command| {
-            command.as_move_call_opt().is_some_and(|move_call| {
+            command.as_opt_move_call().is_some_and(|move_call| {
                 is_package_make_immutable_call(move_call)
                     && move_call.arguments.len() == 1
                     && move_call.arguments[0].as_result_opt() == Some(*publish_index)
@@ -386,8 +382,8 @@ fn publishes_package_as_immutable(tx: &Transaction) -> bool {
 
 fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<u16> {
     let Some(programmable_tx) = tx
-        .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
+        .as_opt_v1()
+        .and_then(|tx_v1| tx_v1.kind.as_opt_programmable())
     else {
         return Vec::new();
     };
@@ -415,8 +411,8 @@ fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<
 
 fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectId) -> bool {
     let Some(programmable_tx) = tx
-        .as_v1_opt()
-        .and_then(|tx_v1| tx_v1.kind.as_programmable_opt())
+        .as_opt_v1()
+        .and_then(|tx_v1| tx_v1.kind.as_opt_programmable())
     else {
         return false;
     };
@@ -427,7 +423,7 @@ fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectI
     }
 
     programmable_tx.commands.iter().any(|command| {
-        command.as_move_call_opt().is_some_and(|move_call| {
+        command.as_opt_move_call().is_some_and(|move_call| {
             is_package_make_immutable_call(move_call)
                 && move_call.arguments.len() == 1
                 && move_call.arguments[0]

@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Digest, GasCostSummary, Object, SignedTransaction, TransactionEffects, TransactionEvents,
+    CheckpointContentsDigest, CheckpointDigest, Digest, GasCostSummary, Object, SignedTransaction,
+    TransactionDigest, TransactionEffects, TransactionEffectsDigest, TransactionEvents,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
 };
 
@@ -25,6 +26,7 @@ pub type ProtocolVersion = u64;
 /// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -107,8 +109,8 @@ pub struct EndOfEpochData {
 /// checkpoint-summary = u64                            ; epoch
 ///                      u64                            ; sequence_number
 ///                      u64                            ; network_total_transactions
-///                      digest                         ; content_digest
-///                      (option digest)                ; previous_digest
+///                      checkpoint-contents-digest     ; content_digest
+///                      (option checkpoint-digest)     ; previous_digest
 ///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
 ///                      u64                            ; timestamp_ms
 ///                      (vector checkpoint-commitment) ; checkpoint_commitments
@@ -116,24 +118,29 @@ pub struct EndOfEpochData {
 ///                      bytes                          ; version_specific_data
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The height of this checkpoint.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub sequence_number: CheckpointSequenceNumber,
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
-    pub content_digest: Digest,
+    pub content_digest: CheckpointContentsDigest,
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub previous_digest: Option<Digest>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub previous_digest: Option<CheckpointDigest>,
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
@@ -141,17 +148,24 @@ pub struct CheckpointSummary {
     /// Checkpoint timestamps are monotonic, but not strongly monotonic -
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub timestamp_ms: CheckpointTimestamp,
     /// Commitments to checkpoint-specific state.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub checkpoint_commitments: Vec<CheckpointCommitment>,
     /// Extra data only present in the final checkpoint of an epoch.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub end_of_epoch_data: Option<EndOfEpochData>,
     /// CheckpointSummary is not an evolvable structure - it must be readable by
     /// any version of the code. Therefore, in order to allow extensions to
     /// be added to CheckpointSummary, we allow opaque data to be added to
     /// checkpoints which can be deserialized based on the current
     /// protocol version.
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, with = "crate::_serde::ReadableBase64Encoded")
+    )]
     pub version_specific_data: Vec<u8>,
 }
 
@@ -182,7 +196,7 @@ pub struct SignedCheckpointSummary {
 ///                                                           ; transaction. MUST be the same
 ///                                                           ; length as the vector of digests
 ///
-/// execution-digests = digest digest   ; transaction, effects
+/// execution-digests = transaction-digest transaction-effects-digest   ; transaction, effects
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -210,8 +224,8 @@ impl CheckpointContents {
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
-    pub transaction: Digest,
-    pub effects: Digest,
+    pub transaction: TransactionDigest,
+    pub effects: TransactionEffectsDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub signatures: Vec<UserSignature>,
 }
@@ -262,193 +276,6 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde::Serialize)]
-    #[serde(rename = "CheckpointSummary")]
-    struct ReadableCheckpointSummaryRef<'a> {
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        epoch: &'a EpochId,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        sequence_number: &'a CheckpointSequenceNumber,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        network_total_transactions: &'a u64,
-        content_digest: &'a Digest,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        previous_digest: &'a Option<Digest>,
-        epoch_rolling_gas_cost_summary: &'a GasCostSummary,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        timestamp_ms: &'a CheckpointTimestamp,
-        #[serde(skip_serializing_if = "Vec::is_empty")]
-        checkpoint_commitments: &'a Vec<CheckpointCommitment>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        end_of_epoch_data: &'a Option<EndOfEpochData>,
-        #[serde(skip_serializing_if = "Vec::is_empty")]
-        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-        version_specific_data: &'a Vec<u8>,
-    }
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "CheckpointSummary")]
-    struct ReadableCheckpointSummary {
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        epoch: EpochId,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        sequence_number: CheckpointSequenceNumber,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        network_total_transactions: u64,
-        content_digest: Digest,
-        #[serde(default)]
-        previous_digest: Option<Digest>,
-        epoch_rolling_gas_cost_summary: GasCostSummary,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        timestamp_ms: CheckpointTimestamp,
-        #[serde(default)]
-        checkpoint_commitments: Vec<CheckpointCommitment>,
-        #[serde(default)]
-        end_of_epoch_data: Option<EndOfEpochData>,
-        #[serde(default)]
-        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-        version_specific_data: Vec<u8>,
-    }
-
-    #[derive(serde::Serialize)]
-    #[serde(rename = "CheckpointSummary")]
-    struct BinaryCheckpointSummaryRef<'a> {
-        epoch: &'a EpochId,
-        sequence_number: &'a CheckpointSequenceNumber,
-        network_total_transactions: &'a u64,
-        content_digest: &'a Digest,
-        previous_digest: &'a Option<Digest>,
-        epoch_rolling_gas_cost_summary: &'a GasCostSummary,
-        timestamp_ms: &'a CheckpointTimestamp,
-        checkpoint_commitments: &'a Vec<CheckpointCommitment>,
-        end_of_epoch_data: &'a Option<EndOfEpochData>,
-        version_specific_data: &'a Vec<u8>,
-    }
-
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "CheckpointSummary")]
-    struct BinaryCheckpointSummary {
-        epoch: EpochId,
-        sequence_number: CheckpointSequenceNumber,
-        network_total_transactions: u64,
-        content_digest: Digest,
-        previous_digest: Option<Digest>,
-        epoch_rolling_gas_cost_summary: GasCostSummary,
-        timestamp_ms: CheckpointTimestamp,
-        checkpoint_commitments: Vec<CheckpointCommitment>,
-        end_of_epoch_data: Option<EndOfEpochData>,
-        version_specific_data: Vec<u8>,
-    }
-
-    impl Serialize for CheckpointSummary {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let Self {
-                epoch,
-                sequence_number,
-                network_total_transactions,
-                content_digest,
-                previous_digest,
-                epoch_rolling_gas_cost_summary,
-                timestamp_ms,
-                checkpoint_commitments,
-                end_of_epoch_data,
-                version_specific_data,
-            } = self;
-
-            if serializer.is_human_readable() {
-                let readable = ReadableCheckpointSummaryRef {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = BinaryCheckpointSummaryRef {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CheckpointSummary {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let ReadableCheckpointSummary {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                } = Deserialize::deserialize(deserializer)?;
-                Ok(Self {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                })
-            } else {
-                let BinaryCheckpointSummary {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                } = Deserialize::deserialize(deserializer)?;
-                Ok(Self {
-                    epoch,
-                    sequence_number,
-                    network_total_transactions,
-                    content_digest,
-                    previous_digest,
-                    epoch_rolling_gas_cost_summary,
-                    timestamp_ms,
-                    checkpoint_commitments,
-                    end_of_epoch_data,
-                    version_specific_data,
-                })
-            }
-        }
-    }
-
     impl Serialize for CheckpointContents {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
@@ -461,8 +288,8 @@ mod serialization {
             } else {
                 #[derive(serde::Serialize)]
                 struct Digests<'a> {
-                    transaction: &'a Digest,
-                    effects: &'a Digest,
+                    transaction: &'a TransactionDigest,
+                    effects: &'a TransactionEffectsDigest,
                 }
 
                 struct DigestSeq<'a>(&'a CheckpointContents);
@@ -508,8 +335,8 @@ mod serialization {
     #[derive(serde::Deserialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     struct ExecutionDigests {
-        transaction: Digest,
-        effects: Digest,
+        transaction: TransactionDigest,
+        effects: TransactionEffectsDigest,
     }
 
     #[derive(serde::Deserialize)]
@@ -577,63 +404,6 @@ mod serialization {
                         )
                         .collect(),
                 ))
-            }
-        }
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
-    #[serde(rename = "CheckpointCommitment")]
-    enum ReadableCommitment {
-        EcmhLiveObjectSet { digest: Digest },
-    }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    #[serde(rename = "CheckpointCommitment")]
-    enum BinaryCommitment {
-        EcmhLiveObjectSet { digest: Digest },
-    }
-
-    impl Serialize for CheckpointCommitment {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match *self {
-                    CheckpointCommitment::EcmhLiveObjectSet { digest } => {
-                        ReadableCommitment::EcmhLiveObjectSet { digest }
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match *self {
-                    CheckpointCommitment::EcmhLiveObjectSet { digest } => {
-                        BinaryCommitment::EcmhLiveObjectSet { digest }
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CheckpointCommitment {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                Ok(match ReadableCommitment::deserialize(deserializer)? {
-                    ReadableCommitment::EcmhLiveObjectSet { digest } => {
-                        Self::EcmhLiveObjectSet { digest }
-                    }
-                })
-            } else {
-                Ok(match BinaryCommitment::deserialize(deserializer)? {
-                    BinaryCommitment::EcmhLiveObjectSet { digest } => {
-                        Self::EcmhLiveObjectSet { digest }
-                    }
-                })
             }
         }
     }

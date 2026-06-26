@@ -83,7 +83,12 @@ paste.workspace = true
 rand.workspace = true
 serde_json.workspace = true
 
-[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom 0.2 needs its "js" feature to support wasm; force it on for this crate and everything downstream.
 getrandom_2.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+# getrandom 0.3 additionally needs the `getrandom_backend="wasm_js"` rustflag (set in .cargo/config.toml),
+# so it can't be imposed on consumers; scope it to our own wasm tests, where proptest pulls it in.
 getrandom_3.workspace = true
 wasm-bindgen-test.workspace = true

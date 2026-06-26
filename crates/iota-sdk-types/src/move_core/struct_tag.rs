@@ -412,6 +412,9 @@ impl StructTag {
         authenticator_state::AuthenticatorState,
         clock::Clock,
         iota::IotaTreasuryCap,
+        kiosk::Kiosk,
+        kiosk::KioskOwnerCap,
+        package::Publisher,
         package::UpgradeCap,
         package::UpgradeTicket,
         package::UpgradeReceipt,
@@ -451,6 +454,13 @@ impl StructTag {
     );
     add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper, transfer::Receiving);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);
+    add_struct_tag_ctor!(STARDUST, alias::Alias, nft::Nft, irc27::Irc27Metadata);
+    add_struct_tag_ctor_from_type_tag!(
+        STARDUST,
+        basic_output::BasicOutput,
+        nft_output::NftOutput,
+        alias_output::AliasOutput,
+    );
 }
 
 impl std::fmt::Display for StructTag {

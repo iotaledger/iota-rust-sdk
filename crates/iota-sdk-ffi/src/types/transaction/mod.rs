@@ -10,7 +10,7 @@ use crate::{
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-        digest::Digest,
+        digest::{ConsensusCommitDigest, TransactionDigest, TransactionEffectsDigest},
         events::Event,
         move_core::{Identifier, TypeTag},
         object::{GenesisObject, ObjectId, ObjectReference},
@@ -67,7 +67,7 @@ impl Transaction {
         self.as_v1().expiration()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> TransactionDigest {
         self.as_v1().digest()
     }
 
@@ -143,7 +143,7 @@ impl TransactionV1 {
         self.0.expiration
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> TransactionDigest {
         self.0.digest().into()
     }
 
@@ -736,7 +736,7 @@ impl ConsensusCommitPrologueV1 {
         round: u64,
         sub_dag_index: Option<u64>,
         commit_timestamp_ms: CheckpointTimestamp,
-        consensus_commit_digest: &Digest,
+        consensus_commit_digest: &ConsensusCommitDigest,
         consensus_determined_version_assignments: &ConsensusDeterminedVersionAssignments,
     ) -> Self {
         Self(iota_sdk::types::ConsensusCommitPrologueV1 {
@@ -773,7 +773,7 @@ impl ConsensusCommitPrologueV1 {
     }
 
     /// Digest of consensus output
-    pub fn consensus_commit_digest(&self) -> Digest {
+    pub fn consensus_commit_digest(&self) -> ConsensusCommitDigest {
         self.0.consensus_commit_digest.into()
     }
 
@@ -841,7 +841,10 @@ pub struct CancelledTransaction(pub iota_sdk::types::CancelledTransaction);
 #[uniffi::export]
 impl CancelledTransaction {
     #[uniffi::constructor]
-    pub fn new(digest: &Digest, version_assignments: Vec<Arc<VersionAssignment>>) -> Self {
+    pub fn new(
+        digest: &TransactionDigest,
+        version_assignments: Vec<Arc<VersionAssignment>>,
+    ) -> Self {
         Self(iota_sdk::types::CancelledTransaction {
             digest: digest.0,
             version_assignments: version_assignments
@@ -851,7 +854,7 @@ impl CancelledTransaction {
         })
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> TransactionDigest {
         self.0.digest.into()
     }
 
@@ -914,11 +917,14 @@ pub struct GenesisTransaction(iota_sdk::types::GenesisTransaction);
 #[uniffi::export]
 impl GenesisTransaction {
     #[uniffi::constructor]
-    pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> Self {
-        Self(iota_sdk::types::GenesisTransaction {
+    pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> crate::error::Result<Self> {
+        Ok(Self(iota_sdk::types::GenesisTransaction {
             objects: objects.iter().map(|object| object.0.clone()).collect(),
-            events: events.into_iter().map(Into::into).collect(),
-        })
+            events: events
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<crate::error::Result<_>>()?,
+        }))
     }
 
     pub fn objects(&self) -> Vec<Arc<GenesisObject>> {
@@ -1560,7 +1566,7 @@ impl TransactionEffects {
         self.0.as_v1().clone().into()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> TransactionEffectsDigest {
         self.0.digest().into()
     }
 }
@@ -1725,6 +1731,34 @@ impl MoveCall {
             .map(Into::into)
             .map(Arc::new)
             .collect()
+    }
+}
+
+/// A shared object input to a programmable transaction
+#[derive(uniffi::Record)]
+pub struct SharedObjectReference {
+    object_id: Arc<ObjectId>,
+    initial_shared_version: Arc<Version>,
+    mutable: bool,
+}
+
+impl From<iota_sdk::types::SharedObjectReference> for SharedObjectReference {
+    fn from(value: iota_sdk::types::SharedObjectReference) -> Self {
+        Self {
+            object_id: Arc::new((value.object_id).into()),
+            initial_shared_version: Arc::new(value.initial_shared_version.into()),
+            mutable: value.mutable,
+        }
+    }
+}
+
+impl From<SharedObjectReference> for iota_sdk::types::SharedObjectReference {
+    fn from(value: SharedObjectReference) -> Self {
+        Self::new(
+            **value.object_id,
+            **value.initial_shared_version,
+            value.mutable,
+        )
     }
 }
 

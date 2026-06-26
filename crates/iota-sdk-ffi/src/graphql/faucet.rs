@@ -6,13 +6,14 @@ use std::sync::Arc;
 use crate::{
     error::{Result, SdkFfiError},
     graphql::client::GraphQLClient,
-    types::{address::Address, digest::Digest, object::ObjectId},
+    types::{address::Address, digest::TransactionDigest, object::ObjectId},
 };
 
 #[derive(uniffi::Object)]
 pub struct FaucetClient(iota_sdk::graphql_client::faucet::FaucetClient);
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl FaucetClient {
     /// Construct a new `FaucetClient` with the given faucet service URL. This
     /// `FaucetClient` expects that the service provides two endpoints:
@@ -140,7 +141,7 @@ impl From<BatchSendStatusType> for iota_sdk::graphql_client::faucet::BatchSendSt
 pub struct CoinInfo {
     pub amount: u64,
     pub id: Arc<ObjectId>,
-    pub transfer_tx_digest: Arc<Digest>,
+    pub transfer_tx_digest: Arc<TransactionDigest>,
 }
 
 impl From<iota_sdk::graphql_client::faucet::CoinInfo> for CoinInfo {

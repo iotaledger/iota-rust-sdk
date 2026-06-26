@@ -1,0 +1,837 @@
+<!doctype html>
+<!--
+  Copyright (c) 2026 IOTA Stiftung
+  SPDX-License-Identifier: Apache-2.0
+
+  dApp: Stake IOTA to a validator using the WASM bindings + IOTA Wallet Standard.
+
+  To run:
+    1. Build the WASM bindings (see ../README.md)
+    2. From the bindings/wasm/ directory:
+         pnpm install && pnpm run serve
+    3. Open http://localhost:5173/examples/staking.html in your browser.
+    4. Make sure you have an IOTA wallet extension installed (e.g. IOTA Wallet).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IOTA Staking dApp</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        background: #0d1117;
+        color: #c9d1d9;
+        line-height: 1.5;
+      }
+
+      h1 {
+        color: #58a6ff;
+        margin-bottom: 0.25rem;
+      }
+
+      h1 + p {
+        color: #8b949e;
+        margin-top: 0;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      select,
+      input,
+      button {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        background: #161b22;
+        color: #c9d1d9;
+        font-size: 0.95rem;
+      }
+
+      select:focus,
+      input:focus {
+        outline: none;
+        border-color: #58a6ff;
+      }
+
+      button {
+        cursor: pointer;
+        background: #238636;
+        border-color: #238636;
+        color: #fff;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: background 0.15s;
+      }
+
+      button:hover:not(:disabled) {
+        background: #2ea043;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      button.secondary {
+        background: #21262d;
+        border-color: #30363d;
+      }
+
+      button.secondary:hover:not(:disabled) {
+        background: #30363d;
+      }
+
+      .info-box {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.75rem;
+        word-break: break-all;
+      }
+
+      .info-box .label {
+        color: #8b949e;
+        font-size: 0.85rem;
+      }
+
+      .info-box .value {
+        color: #c9d1d9;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .success {
+        background: #0d1f0d;
+        border-color: #238636;
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 6px;
+      }
+
+      .success a {
+        color: #58a6ff;
+      }
+
+      .error {
+        color: #f85149;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #30363d;
+        border-top-color: #58a6ff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: middle;
+        margin-right: 0.4rem;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .validator-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 0.5rem;
+      }
+
+      .validator-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        margin-bottom: 0.4rem;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+
+      .validator-item:hover {
+        border-color: #58a6ff;
+      }
+
+      .validator-item.selected {
+        border-color: #58a6ff;
+        background: #161b22;
+      }
+
+      .validator-item .v-name {
+        font-weight: 600;
+      }
+
+      .validator-item .v-addr {
+        font-size: 0.8rem;
+        color: #8b949e;
+        font-family: monospace;
+      }
+
+      .validator-item .v-apy {
+        margin-left: auto;
+        color: #3fb950;
+        font-weight: 600;
+      }
+
+      .validator-item .v-stake {
+        font-size: 0.8rem;
+        color: #8b949e;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #status {
+        color: #8b949e;
+        font-style: italic;
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>IOTA Staking</h1>
+    <p>Stake IOTA tokens to a validator using the WASM SDK</p>
+
+    <div id="init-status">
+      <span class="spinner"></span> Loading WASM module...
+    </div>
+
+    <div id="app" class="hidden">
+      <!-- Network selector -->
+      <label for="network">Network</label>
+      <select id="network">
+        <option value="mainnet">Mainnet</option>
+        <option value="testnet" selected>Testnet</option>
+        <option value="devnet">Devnet</option>
+        <option value="localnet">Localnet</option>
+      </select>
+
+      <!-- Wallet connection -->
+      <div
+        style="display: flex; gap: 0.5rem; align-items: end; margin-top: 1rem"
+      >
+        <div style="flex: 1">
+          <label for="wallet-select">Wallet</label>
+          <select id="wallet-select">
+            <option value="">Detecting wallets...</option>
+          </select>
+        </div>
+        <button
+          id="connect-btn"
+          class="secondary"
+          style="width: auto; min-width: 120px; margin-top: 0"
+        >
+          Connect
+        </button>
+      </div>
+      <div id="wallet-error" class="error hidden"></div>
+
+      <!-- Connected info -->
+      <div id="connected-info" class="hidden">
+        <div class="info-box">
+          <div class="label">Connected Address</div>
+          <div class="value" id="address-display"></div>
+        </div>
+        <div class="info-box">
+          <div class="label">Available Balance</div>
+          <div class="value" id="balance-display">...</div>
+        </div>
+      </div>
+
+      <!-- Validators -->
+      <div id="validators-section" class="hidden">
+        <label>Select a Validator</label>
+        <div id="validators-status">
+          <span class="spinner"></span> Loading validators...
+        </div>
+        <div id="validator-list" class="validator-list"></div>
+
+        <!-- Stake amount -->
+        <label for="stake-amount">Amount to Stake (IOTA)</label>
+        <input
+          type="number"
+          id="stake-amount"
+          placeholder="e.g. 1.0"
+          min="1"
+          step="0.001"
+        />
+        <div id="stake-error" class="error hidden"></div>
+
+        <button id="stake-btn" disabled>Stake</button>
+        <div id="stake-status" class="hidden"></div>
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="hidden"></div>
+    </div>
+
+    <script type="module">
+      import {
+        initAsync,
+        GraphQlClient,
+        TransactionBuilder,
+        PtbArgument,
+        MoveArg,
+        Address,
+        UserSignature,
+        transactionFromBcs,
+        WaitForTx,
+      } from "../dist/iota-sdk.js";
+
+      // The IOTA wallet extension calls .toJSON() on the transaction object
+      // for postMessage serialization. Wrap the WASM SDK Transaction so the
+      // wallet can serialize it (it deserializes via Transaction.from() on
+      // the extension side).
+      function wrapTxForWallet(wasmTx) {
+        const base64 = wasmTx.toBase64();
+        return { toJSON: () => base64 };
+      }
+
+      // --------------- state ---------------
+      let client = null;
+      let wallets = [];
+      let connectedWallet = null;
+      let connectedAccount = null;
+      let selectedValidator = null;
+      let balanceNanos = 0n;
+      const NANOS_PER_IOTA = 1_000_000_000n;
+
+      // --------------- helpers ---------------
+      const $ = (id) => document.getElementById(id);
+      const show = (id) => $(id).classList.remove("hidden");
+      const hide = (id) => $(id).classList.add("hidden");
+
+      function shortenAddress(addr) {
+        if (addr.length <= 16) return addr;
+        return addr.slice(0, 10) + "..." + addr.slice(-6);
+      }
+
+      function formatIota(nanos) {
+        const whole = nanos / NANOS_PER_IOTA;
+        const remainder = nanos % NANOS_PER_IOTA;
+        const decimal = remainder
+          .toString()
+          .padStart(9, "0")
+          .replace(/0+$/, "");
+        return decimal ? `${whole}.${decimal}` : `${whole}`;
+      }
+
+      function explorerUrl(digest, network) {
+        const networkUrls = {
+          mainnet: "https://indexer.mainnet.iota.cafe",
+          testnet: "https://indexer.testnet.iota.cafe",
+          devnet: "https://indexer.devnet.iota.cafe",
+          localnet: "http://localhost:9000",
+        };
+        const net = encodeURIComponent(
+          networkUrls[network] || networkUrls.mainnet,
+        );
+        return `https://explorer.iota.org/txBlock/${digest}?network=${net}`;
+      }
+
+      async function createClient(network) {
+        let c;
+        switch (network) {
+          case "mainnet":
+            c = GraphQlClient.newMainnet();
+            break;
+          case "testnet":
+            c = GraphQlClient.newTestnet();
+            break;
+          case "devnet":
+            c = GraphQlClient.newDevnet();
+            break;
+          case "localnet":
+            c = GraphQlClient.newLocalnet();
+            break;
+          default:
+            c = GraphQlClient.newTestnet();
+        }
+
+        return c;
+      }
+
+      // --------------- Wallet Standard discovery ---------------
+      // The Wallet Standard (https://github.com/wallet-standard/wallet-standard)
+      // uses a global registry pattern. Wallets call `registerWallet(wallet)`,
+      // which dispatches a custom event. dApps announce themselves via
+      // `wallet-standard:app-ready` and receive registered wallets in response.
+
+      /** Access the global wallet registry, bootstrapping it if needed. */
+      function getWalletRegistry() {
+        // The registry lives at window[Symbol("WalletStandard")]
+        // but wallets also expose it via the event handshake.
+        if (window.__walletStandardRegistry)
+          return window.__walletStandardRegistry;
+
+        const registered = [];
+        const listeners = [];
+
+        const registry = {
+          get: () => [...registered],
+          on: (event, listener) => {
+            listeners.push({ event, listener });
+            return () => {
+              const idx = listeners.findIndex((l) => l.listener === listener);
+              if (idx >= 0) listeners.splice(idx, 1);
+            };
+          },
+          register: (...newWallets) => {
+            for (const w of newWallets) {
+              if (!registered.some((r) => r.name === w.name)) {
+                registered.push(w);
+                listeners
+                  .filter((l) => l.event === "register")
+                  .forEach((l) => l.listener(w));
+              }
+            }
+          },
+        };
+
+        window.__walletStandardRegistry = registry;
+        return registry;
+      }
+
+      function discoverWallets() {
+        const registry = getWalletRegistry();
+        wallets = registry.get().filter((w) => {
+          // Only show wallets that support IOTA chains
+          const chains = w.chains || [];
+          return chains.some(
+            (c) => c.startsWith("iota:") || c.startsWith("sui:"),
+          );
+        });
+
+        // If no chain-filtered wallets, show all registered wallets
+        if (wallets.length === 0) wallets = registry.get();
+
+        const sel = $("wallet-select");
+        sel.innerHTML = "";
+        if (wallets.length === 0) {
+          sel.innerHTML =
+            '<option value="">No wallets found — install an IOTA wallet extension</option>';
+          return;
+        }
+        wallets.forEach((w, i) => {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.textContent = w.name;
+          sel.appendChild(opt);
+        });
+      }
+
+      function listenForWallets() {
+        // First, announce ourselves so wallets can register
+        const event = new CustomEvent("wallet-standard:app-ready", {
+          detail: {
+            register: (...newWallets) => {
+              const registry = getWalletRegistry();
+              registry.register(...newWallets);
+              discoverWallets();
+            },
+          },
+        });
+        window.dispatchEvent(event);
+
+        // Listen for wallets that register after we've announced
+        const registry = getWalletRegistry();
+        registry.on("register", () => discoverWallets());
+
+        // Initial population
+        discoverWallets();
+
+        // Poll briefly since some wallets inject asynchronously
+        let polls = 0;
+        const poller = setInterval(() => {
+          discoverWallets();
+          if (++polls >= 15 || wallets.length > 0) clearInterval(poller);
+        }, 500);
+      }
+
+      // --------------- Wallet connection ---------------
+      async function connectWallet() {
+        const idx = $("wallet-select").value;
+        if (idx === "" || !wallets[idx]) {
+          showWalletError("No wallet selected");
+          return;
+        }
+        hide("wallet-error");
+        const wallet = wallets[idx];
+
+        try {
+          // Use standard wallet features
+          const connectFeature =
+            wallet.features?.["standard:connect"] ||
+            wallet.features?.["iota:connect"];
+          if (!connectFeature) {
+            showWalletError("Selected wallet does not support connection");
+            return;
+          }
+
+          const result = await connectFeature.connect();
+          const accounts = result.accounts || wallet.accounts || [];
+          if (accounts.length === 0) {
+            showWalletError("No accounts available");
+            return;
+          }
+
+          connectedWallet = wallet;
+          connectedAccount = accounts[0];
+
+          const addr = connectedAccount.address;
+          $("address-display").textContent = addr;
+          $("connect-btn").textContent = "Connected";
+          $("connect-btn").disabled = true;
+          show("connected-info");
+          show("validators-section");
+
+          await fetchBalance(addr);
+          await fetchValidators();
+        } catch (err) {
+          showWalletError(err.message || String(err));
+        }
+      }
+
+      function showWalletError(msg) {
+        $("wallet-error").textContent = msg;
+        show("wallet-error");
+      }
+
+      // --------------- Balance ---------------
+      async function fetchBalance(addr) {
+        try {
+          const address = Address.fromHex(addr);
+          const balance = await client.balance(address, undefined);
+          balanceNanos = balance ?? 0n;
+          $("balance-display").textContent = `${formatIota(balanceNanos)} IOTA`;
+        } catch (err) {
+          $("balance-display").textContent = "Error fetching balance";
+          console.error("Balance error:", err);
+        }
+      }
+
+      // --------------- Validators ---------------
+      async function fetchValidators() {
+        $("validators-status").innerHTML =
+          '<span class="spinner"></span> Loading validators...';
+        show("validators-status");
+        $("validator-list").innerHTML = "";
+
+        try {
+          const page = await client.activeValidators(undefined, undefined);
+          const validators = page.data;
+          hide("validators-status");
+
+          if (validators.length === 0) {
+            $("validators-status").textContent =
+              "No validators found for this network.";
+            show("validators-status");
+            return;
+          }
+
+          validators.forEach((v, i) => {
+            const div = document.createElement("div");
+            div.className = "validator-item";
+            div.dataset.index = i;
+
+            const name = v.name || "Unknown";
+            const addr = v.address.toHex();
+            const apyBps = v.apy;
+            const apyStr =
+              apyBps != null ? (apyBps / 100).toFixed(2) + "%" : "N/A";
+            const stakeIota =
+              v.nextEpochStake != null
+                ? formatIota(v.nextEpochStake) + " IOTA"
+                : "";
+
+            // Use textContent to avoid XSS from validator-supplied names
+            const col1 = document.createElement("div");
+            const vName = document.createElement("div");
+            vName.className = "v-name";
+            vName.textContent = name;
+            const vAddr = document.createElement("div");
+            vAddr.className = "v-addr";
+            vAddr.textContent = shortenAddress(addr);
+            col1.append(vName, vAddr);
+
+            const col2 = document.createElement("div");
+            col2.style.textAlign = "right";
+            const vApy = document.createElement("div");
+            vApy.className = "v-apy";
+            vApy.textContent = "APY: " + apyStr;
+            const vStake = document.createElement("div");
+            vStake.className = "v-stake";
+            vStake.textContent = stakeIota;
+            col2.append(vApy, vStake);
+
+            div.append(col1, col2);
+
+            div.addEventListener("click", () => {
+              document
+                .querySelectorAll(".validator-item")
+                .forEach((el) => el.classList.remove("selected"));
+              div.classList.add("selected");
+              selectedValidator = v;
+              updateStakeButton();
+            });
+
+            $("validator-list").appendChild(div);
+          });
+        } catch (err) {
+          $("validators-status").textContent =
+            "Error loading validators: " + (err.message || err);
+          show("validators-status");
+          console.error("Validators error:", err);
+        }
+      }
+
+      function updateStakeButton() {
+        const amount = parseFloat($("stake-amount").value);
+        $("stake-btn").disabled =
+          !selectedValidator || !amount || amount <= 0 || !connectedAccount;
+      }
+
+      // --------------- Staking ---------------
+      async function doStake() {
+        hide("stake-error");
+        hide("result");
+
+        const amountStr = $("stake-amount").value;
+        const amountFloat = parseFloat(amountStr);
+        if (!amountFloat || amountFloat <= 0) {
+          $("stake-error").textContent = "Enter a valid amount";
+          show("stake-error");
+          return;
+        }
+
+        const amountNanos = BigInt(Math.floor(amountFloat * 1e9));
+        if (amountNanos > balanceNanos) {
+          $("stake-error").textContent = "Insufficient balance";
+          show("stake-error");
+          return;
+        }
+
+        if (amountNanos < NANOS_PER_IOTA) {
+          $("stake-error").textContent = "Minimum stake is 1 IOTA";
+          show("stake-error");
+          return;
+        }
+
+        if (!selectedValidator) {
+          $("stake-error").textContent = "Select a validator first";
+          show("stake-error");
+          return;
+        }
+
+        $("stake-btn").disabled = true;
+        $("stake-status").innerHTML =
+          '<span class="spinner"></span> Building transaction...';
+        show("stake-status");
+
+        try {
+          const senderAddr = Address.fromHex(connectedAccount.address);
+          const validatorAddr = selectedValidator.address;
+
+          // Build the staking transaction using the WASM SDK.
+          // The .stake() method is a high-level helper that splits the
+          // requested amount from the gas coin and stakes it.
+          const stakeArg = PtbArgument.moveArg(MoveArg.u64(amountNanos));
+          const builder = new TransactionBuilder(senderAddr)
+            .withClient(client)
+            .stake(stakeArg, validatorAddr);
+
+          // Finalize the transaction (resolves gas, etc.)
+          $("stake-status").innerHTML =
+            '<span class="spinner"></span> Finalizing transaction...';
+          const tx = await builder.finish();
+
+          // Wrap the WASM SDK transaction so the wallet can call .toJSON()
+          const walletTx = wrapTxForWallet(tx);
+
+          $("stake-status").innerHTML =
+            '<span class="spinner"></span> Please approve in your wallet...';
+
+          // Sign and execute via the connected wallet
+          const network = $("network").value;
+          const txDigest = await signAndExecuteViaWallet(walletTx, network);
+
+          // Show success — use DOM API to safely render the digest
+          const url = explorerUrl(txDigest, network);
+          $("result").className = "success";
+          $("result").innerHTML = "";
+          const strong = document.createElement("strong");
+          strong.textContent = "Staking successful!";
+          const code = document.createElement("code");
+          code.textContent = txDigest;
+          const link = document.createElement("a");
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = "View on Explorer \u2192";
+          $("result").append(
+            strong,
+            document.createElement("br"),
+            "Transaction digest: ",
+            code,
+            document.createElement("br"),
+            link,
+          );
+          show("result");
+          hide("stake-status");
+
+          // Refresh balance
+          await fetchBalance(connectedAccount.address);
+        } catch (err) {
+          $("stake-error").textContent = err.message || String(err);
+          show("stake-error");
+          hide("stake-status");
+          console.error("Stake error:", err);
+        } finally {
+          $("stake-btn").disabled = false;
+          updateStakeButton();
+        }
+      }
+
+      // --------------- Sign & Execute via Wallet Standard ---------------
+      async function signAndExecuteViaWallet(walletTx, network) {
+        // The walletTx is an @iota/iota-sdk Transaction instance (has .toJSON()).
+        const features = connectedWallet.features || {};
+        const chain = chainId(network);
+
+        // Approach 1: signAndExecuteTransaction (preferred)
+        const signAndExecFeature =
+          features["iota:signAndExecuteTransaction"] ||
+          features["iota:signAndExecuteTransactionBlock"];
+        if (signAndExecFeature) {
+          const method =
+            signAndExecFeature.signAndExecuteTransaction ||
+            signAndExecFeature.signAndExecuteTransactionBlock;
+          const result = await method.call(signAndExecFeature, {
+            transaction: walletTx,
+            account: connectedAccount,
+            chain,
+          });
+          return result.digest || result.txDigest;
+        }
+
+        // Approach 2: signTransaction then execute via GraphQL SDK
+        const signFeature =
+          features["iota:signTransaction"] ||
+          features["iota:signTransactionBlock"];
+        if (signFeature) {
+          const method =
+            signFeature.signTransaction || signFeature.signTransactionBlock;
+          const signed = await method.call(signFeature, {
+            transaction: walletTx,
+            account: connectedAccount,
+            chain,
+          });
+
+          // The wallet returns { bytes, signature } — we need to submit
+          // the transaction + signature to the network via our SDK client.
+          const signedBytes = fromBase64(signed.bytes);
+          const signedTx = transactionFromBcs(signedBytes.buffer);
+
+          const sigBytes = fromBase64(signed.signature);
+          const userSig = UserSignature.fromBytes(sigBytes.buffer);
+          const effects = await client.executeTx(
+            [userSig],
+            signedTx,
+            WaitForTx.Finalized,
+          );
+          return effects.digest().toBase58();
+        }
+
+        throw new Error(
+          "Connected wallet does not support transaction signing",
+        );
+      }
+
+      function chainId(network) {
+        // Wallet standard chain identifiers
+        const chains = {
+          mainnet: "iota:mainnet",
+          testnet: "iota:testnet",
+          devnet: "iota:devnet",
+          localnet: "iota:localnet",
+        };
+        return chains[network] || "iota:testnet";
+      }
+
+      // Encode ArrayBuffer to base64
+      function toBase64(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = "";
+        for (let i = 0; i < bytes.byteLength; i++)
+          binary += String.fromCharCode(bytes[i]);
+        return btoa(binary);
+      }
+
+      // Decode base64 to Uint8Array
+      function fromBase64(b64) {
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+
+      // --------------- Event listeners ---------------
+      $("network").addEventListener("change", async () => {
+        client = await createClient($("network").value);
+        selectedValidator = null;
+        hide("result");
+        if (connectedAccount) {
+          await fetchBalance(connectedAccount.address);
+          await fetchValidators();
+        }
+      });
+
+      $("connect-btn").addEventListener("click", connectWallet);
+      $("stake-amount").addEventListener("input", updateStakeButton);
+      $("stake-btn").addEventListener("click", doStake);
+
+      // --------------- Init ---------------
+      async function main() {
+        await initAsync();
+        client = await createClient($("network").value);
+        hide("init-status");
+        show("app");
+        listenForWallets();
+      }
+
+      main().catch((err) => {
+        console.error("Init error:", err);
+        $("init-status").innerHTML =
+          `<span class="error">Failed to load: ${err.message || err}</span>`;
+      });
+    </script>
+  </body>
+</html>

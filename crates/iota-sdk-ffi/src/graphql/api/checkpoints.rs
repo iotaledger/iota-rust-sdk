@@ -10,10 +10,11 @@ use iota_sdk::{graphql_client::pagination::PaginationFilter, types::CheckpointSe
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, pagination::CheckpointSummaryPage},
-    types::{checkpoint::CheckpointSummary, digest::Digest},
+    types::{checkpoint::CheckpointSummary, digest::CheckpointDigest},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get the `CheckpointSummary` for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
@@ -21,7 +22,7 @@ impl GraphQLClient {
     #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<Arc<Digest>>,
+        digest: Option<Arc<CheckpointDigest>>,
         seq_num: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
@@ -65,7 +66,10 @@ impl GraphQLClient {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(&self, digest: &Digest) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_digest(
+        &self,
+        digest: &CheckpointDigest,
+    ) -> Result<Option<u64>> {
         Ok(self
             .0
             .read()

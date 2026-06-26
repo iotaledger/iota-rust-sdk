@@ -22,7 +22,7 @@ async fn main() -> Result<()> {
     } else {
         println!("StakedIota object IDs:");
         for staked_iota in staked_iotas.data {
-            println!("{}", staked_iota.object_id());
+            println!("{}", staked_iota.id());
         }
     }
 

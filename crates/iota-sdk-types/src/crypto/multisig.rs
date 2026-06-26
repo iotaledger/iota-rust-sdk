@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
-use std::sync::OnceLock;
-
-#[cfg(feature = "serde")]
 use super::SignatureFromBytesError;
 use super::{
     Ed25519Signature, PublicKey, Secp256k1Signature, Secp256r1Signature, SignatureScheme,
@@ -275,7 +272,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
@@ -288,10 +285,6 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
-    /// A bytes representation of this aggregated signature. This helps with
-    /// implementing [trait AsRef<[u8]>].
-    #[cfg(feature = "serde")]
-    bytes: OnceLock<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -323,8 +316,6 @@ impl MultisigAggregatedSignature {
             signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         }
     }
 
@@ -380,8 +371,6 @@ impl MultisigAggregatedSignature {
             signatures: member_signatures,
             bitmap,
             committee,
-            #[cfg(feature = "serde")]
-            bytes: OnceLock::new(),
         };
 
         Ok(signature)
@@ -454,16 +443,6 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
     Ok(res)
 }
 
-impl PartialEq for MultisigAggregatedSignature {
-    fn eq(&self, other: &Self) -> bool {
-        self.bitmap == other.bitmap
-            && self.committee == other.committee
-            && self.signatures == other.signatures
-    }
-}
-
-impl Eq for MultisigAggregatedSignature {}
-
 /// A signature from a member of a multisig committee.
 ///
 /// # BCS
@@ -527,9 +506,6 @@ impl TryFrom<UserSignature> for MultisigMemberSignature {
         match signature {
             UserSignature::Simple(simple) => Ok(simple.into()),
             UserSignature::Multisig(_) => Err(MultisigError::UnallowedSignatureType),
-            UserSignature::ZkLoginAuthenticatorDeprecated => {
-                Err(MultisigError::UnallowedSignatureType)
-            }
             UserSignature::PasskeyAuthenticator(auth) => Ok(Self::Passkey(auth)),
             UserSignature::MoveAuthenticator(_) => Err(MultisigError::UnallowedSignatureType),
         }
@@ -602,7 +578,6 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
                 signatures,
                 bitmap,
                 committee,
-                bytes: OnceLock::new(),
             })
             .boxed()
     }
@@ -684,7 +659,6 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
-                    bytes: OnceLock::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
@@ -694,7 +668,7 @@ mod serialization {
     }
 
     impl MultisigAggregatedSignature {
-        pub(crate) fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let mut buf = Vec::new();
             buf.push(SignatureScheme::Multisig as u8);
 
@@ -723,7 +697,6 @@ mod serialization {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
-                    bytes: OnceLock::new(),
                 };
                 multisig
                     .validate()
@@ -844,20 +817,9 @@ mod serialization {
         }
     }
 
-    /// This initialize the underlying bytes representation of
-    /// [`MultisigAggregatedSignature`].
-    /// It encodes [`MultisigAggregatedSignature`] as the MultiSig flag (0x03)
-    /// concat with the bcs bytes of [`MultisigAggregatedSignature`] i.e. `flag
-    /// || bcs_bytes(multiSig)`.
-    impl AsRef<[u8]> for MultisigAggregatedSignature {
-        fn as_ref(&self) -> &[u8] {
-            self.bytes.get_or_init(|| self.to_bytes())
-        }
-    }
-
     impl Hash for MultisigAggregatedSignature {
         fn hash<H: Hasher>(&self, state: &mut H) {
-            self.as_ref().hash(state);
+            self.to_bytes().hash(state);
         }
     }
 
@@ -1062,6 +1024,37 @@ mod tests {
         assert_eq!(
             sig, decoded,
             "to_base64/from_base64 must be inverses of each other"
+        );
+    }
+
+    /// The BCS tag of a multisig `MemberSignature` is the on-chain wire
+    /// format, so the variant indices must stay fixed. A round-trip test
+    /// can't catch a shift (encode and decode move together), so the tag
+    /// values are pinned here against hardcoded expectations. In particular
+    /// this guards the `ZkLoginDeprecated` placeholder kept at index `0x03`:
+    /// removing it would silently shift `Passkey` from `0x04` to `0x03`.
+    #[test]
+    fn member_signature_bcs_tags() {
+        use crate::Ed25519Signature;
+
+        let ed25519 = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0xAB; 64]));
+        assert_eq!(
+            bcs::to_bytes(&ed25519).unwrap()[0],
+            0x00,
+            "ed25519 member must use BCS tag 0x00"
+        );
+
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+        let passkey = MultisigMemberSignature::Passkey(passkey_authenticator);
+        assert_eq!(
+            bcs::to_bytes(&passkey).unwrap()[0],
+            0x04,
+            "passkey member must use BCS tag 0x04"
         );
     }
 
