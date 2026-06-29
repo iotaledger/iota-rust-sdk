@@ -35,9 +35,9 @@ class Program
 
         var res = await builder.DryRun(true);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to call generic Move function: {res.error}");
+            throw new Exception($"Failed to call generic Move function: {res.Error}");
         }
 
         Console.WriteLine("Successfully called generic Move function!");

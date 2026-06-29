@@ -133,5 +133,5 @@ const queryStr = `
   }
 `;
 
-const res = await client.runQuery(Query.new({ query: queryStr }));
+const res = await client.runQuery(Query.new({ queryString: queryStr }));
 console.log(res);

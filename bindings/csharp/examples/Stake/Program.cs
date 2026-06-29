@@ -12,23 +12,23 @@ class Program
         var myAddress = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
 
         var validators = await client.ActiveValidators();
-        if (validators.data.Length == 0)
+        if (validators.Data.Length == 0)
         {
             throw new Exception("no validators found");
         }
-        var validator = validators.data[0];
+        var validator = validators.Data[0];
 
-        Console.WriteLine($"Staking to validator {validator.name ?? "with no name"}");
+        Console.WriteLine($"Staking to validator {validator.Name ?? "with no name"}");
 
         var builder = new TransactionBuilder(myAddress).WithClient(client);
 
-        builder.Stake(PtbArgument.U64(1000000000), validator.address);
+        builder.Stake(PtbArgument.U64(1000000000), validator.Address);
 
         var res = await builder.DryRun(false);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to stake: {res.error}");
+            throw new Exception($"Failed to stake: {res.Error}");
         }
 
         Console.WriteLine("Stake dry run was successful!");

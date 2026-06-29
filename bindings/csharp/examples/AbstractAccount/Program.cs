@@ -29,7 +29,7 @@ class Program
         var signer = TransactionSigner.FromMoveAuthenticator(moveAuthenticator);
         var effects = await builder.Execute(signer, WaitForTx.Finalized);
 
-        Console.WriteLine($"Sending IOTA via abstract account: {effects.AsV1().status}");
+        Console.WriteLine($"Sending IOTA via abstract account: {effects.AsV1().Status}");
     }
 
     static async Task<ObjectId> SetupAccount(GraphQlClient client)
@@ -52,25 +52,25 @@ class Program
         var txSigner = TransactionSigner.FromEd25519(privateKey);
         var effects = await builder.Execute(txSigner, WaitForTx.Finalized);
 
-        Console.WriteLine($"Publishing package: {effects.AsV1().status}\n");
+        Console.WriteLine($"Publishing package: {effects.AsV1().Status}\n");
 
         ObjectId? packageId = null;
         ObjectId? packageMetadataId = null;
         ObjectId? accountId = null;
 
-        foreach (var changedObj in effects.AsV1().changedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects)
         {
-            if (changedObj.outputState is ObjectOut.PackageWrite)
+            if (changedObj.OutputState is ObjectOut.PackageWrite)
             {
-                packageId = changedObj.objectId;
+                packageId = changedObj.ObjectId;
             }
-            else if (changedObj.outputState is ObjectOut.ObjectWrite)
+            else if (changedObj.OutputState is ObjectOut.ObjectWrite)
             {
-                var objectId = changedObj.objectId;
+                var objectId = changedObj.ObjectId;
                 var obj = await client.Object(objectId, null);
                 if (obj != null)
                 {
-                    var typeName = obj.AsStruct().structType.Name().AsStr();
+                    var typeName = obj.AsStruct().StructType.Name().AsStr();
                     if (typeName == "PackageMetadataV1")
                         packageMetadataId = objectId;
                     if (typeName == "Account")
@@ -102,7 +102,7 @@ class Program
         );
 
         var effects2 = await builder2.Execute(txSigner, WaitForTx.Finalized);
-        Console.WriteLine($"Linking account to authenticate method: {effects2.AsV1().status}\n");
+        Console.WriteLine($"Linking account to authenticate method: {effects2.AsV1().Status}\n");
 
         return accountId;
     }
