@@ -87,10 +87,10 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
-    /// # use iota_types::Digest;
+    /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let digest: Digest = Digest::ZERO;
+    /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
     /// let txs = client
     ///     .get_transactions_masked(
