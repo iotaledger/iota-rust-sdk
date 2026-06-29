@@ -1129,4 +1129,148 @@ mod tests {
             "non-adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
         );
     }
+
+    /// Pin the committee validation rules enforced by
+    /// [`MultisigCommittee::new`].
+    #[test]
+    fn committee_new_validation() {
+        use crate::Ed25519PublicKey;
+
+        let member = |b: u8| MultisigMember::new(Ed25519PublicKey::new([b; 32]), 1);
+
+        // A well-formed committee is accepted.
+        assert!(MultisigCommittee::new(vec![member(1), member(2)], 2).is_ok());
+
+        // Zero threshold.
+        assert!(matches!(
+            MultisigCommittee::new(vec![member(1)], 0),
+            Err(MultisigError::ZeroThreshold)
+        ));
+
+        // Empty committee.
+        assert!(matches!(
+            MultisigCommittee::new(vec![], 1),
+            Err(MultisigError::EmptyCommittee)
+        ));
+
+        // Zero-weight member.
+        assert!(matches!(
+            MultisigCommittee::new(
+                vec![MultisigMember::new(Ed25519PublicKey::new([1; 32]), 0)],
+                1
+            ),
+            Err(MultisigError::ZeroWeightMember)
+        ));
+
+        // Threshold larger than the total weight.
+        assert!(matches!(
+            MultisigCommittee::new(vec![member(1), member(2)], 3),
+            Err(MultisigError::InsufficientWeight(2, 3))
+        ));
+
+        // Duplicate public keys.
+        assert!(matches!(
+            MultisigCommittee::new(vec![member(1), member(1)], 1),
+            Err(MultisigError::DuplicatePublicKey)
+        ));
+
+        // More than `MULTISIG_COMMITTEE_SIZE_MAX` members.
+        let too_many = (0..=MULTISIG_COMMITTEE_SIZE_MAX as u8)
+            .map(member)
+            .collect();
+        assert!(matches!(
+            MultisigCommittee::new(too_many, 1),
+            Err(MultisigError::CommitteeTooLarge(n)) if n == MULTISIG_COMMITTEE_SIZE_MAX + 1
+        ));
+    }
+
+    /// Pin the multisig address derivation against accidental changes. A
+    /// committee with a fixed set of public keys and weights must always map
+    /// to the same address.
+    #[cfg(feature = "hash")]
+    #[test]
+    fn derive_address_is_stable() {
+        use crate::{Address, Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(Ed25519PublicKey::new([1; 32]), 1),
+                MultisigMember::new(Secp256k1PublicKey::new([2; 33]), 2),
+                MultisigMember::new(Secp256r1PublicKey::new([3; 33]), 3),
+            ],
+            2,
+        )
+        .unwrap();
+
+        assert_eq!(
+            committee.derive_address(),
+            Address::from_hex("0x391d9897d470cda2a489f59b54a04f2d8fa7bcb9c1ac978872689b477909cffe")
+                .unwrap()
+        );
+    }
+
+    /// `new` rejects empty signature lists and lists longer than the committee.
+    #[test]
+    fn new_rejects_invalid_signature_count() {
+        use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(Ed25519PublicKey::new([1; 32]), 1),
+                MultisigMember::new(Ed25519PublicKey::new([2; 32]), 1),
+            ],
+            2,
+        )
+        .unwrap();
+
+        let dummy = Ed25519Signature::new([0; 64]);
+        let sig = |b: u8| {
+            UserSignature::Simple(SimpleSignature::Ed25519 {
+                signature: dummy,
+                public_key: Ed25519PublicKey::new([b; 32]),
+            })
+        };
+
+        // Empty signature list.
+        assert!(matches!(
+            MultisigAggregatedSignature::new(vec![], committee.clone()),
+            Err(MultisigError::InvalidSignatureNumber)
+        ));
+
+        // More signatures than committee members.
+        assert!(matches!(
+            MultisigAggregatedSignature::new(vec![sig(1), sig(2), sig(3)], committee),
+            Err(MultisigError::InvalidSignatureNumber)
+        ));
+    }
+
+    /// The getters expose the committee, member signatures, bitmap, and the
+    /// indices derived from the bitmap.
+    #[test]
+    fn aggregated_signature_getters() {
+        use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
+
+        let pk0 = Ed25519PublicKey::new([1; 32]);
+        let pk1 = Ed25519PublicKey::new([2; 32]);
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(pk0, 1), MultisigMember::new(pk1, 1)],
+            2,
+        )
+        .unwrap();
+
+        let dummy = Ed25519Signature::new([7; 64]);
+        let sig = |pk| {
+            UserSignature::Simple(SimpleSignature::Ed25519 {
+                signature: dummy,
+                public_key: pk,
+            })
+        };
+        let aggregated =
+            MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1)], committee.clone()).unwrap();
+
+        assert_eq!(aggregated.committee(), &committee);
+        assert_eq!(aggregated.bitmap(), 0b11);
+        assert_eq!(aggregated.signatures().len(), 2);
+        assert_eq!(aggregated.indices().unwrap(), vec![0, 1]);
+    }
 }
