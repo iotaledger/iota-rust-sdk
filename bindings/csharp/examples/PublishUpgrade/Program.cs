@@ -41,9 +41,9 @@ class Program
 
         Console.WriteLine("> Publishing package (dry run):");
         var result = await client.DryRunTx(tx);
-        if (result.error != null)
-            throw new Exception($"Dry run failed: {result.error}");
-        if (result.effects == null)
+        if (result.Error != null)
+            throw new Exception($"Dry run failed: {result.Error}");
+        if (result.Effects == null)
             throw new Exception("Dry run failed: no effects");
         Console.WriteLine("Success");
 
@@ -54,26 +54,26 @@ class Program
 
         ObjectId? upgradeCap = null;
         ObjectId? packageId = null;
-        foreach (var changedObj in effects.AsV1().changedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects)
         {
-            if (changedObj.outputState is ObjectOut.ObjectWrite objWrite)
+            if (changedObj.OutputState is ObjectOut.ObjectWrite objWrite)
             {
-                var objectId = changedObj.objectId;
+                var objectId = changedObj.ObjectId;
                 var obj = await client.Object(objectId, null);
                 if (obj == null) throw new Exception($"Missing object {objectId.ToHex()}");
 
-                if (obj.AsStruct().structType.Equals(StructTag.NewUpgradeCap()))
+                if (obj.AsStruct().StructType.Equals(StructTag.NewUpgradeCap()))
                 {
                     Console.WriteLine($"UpgradeCap: {objectId.ToHex()}");
-                    Console.WriteLine($"UpgradeCapOwner: {objWrite.owner.AsAddress().ToHex()}");
+                    Console.WriteLine($"UpgradeCapOwner: {objWrite.Owner.AsAddress().ToHex()}");
                     upgradeCap = objectId;
                 }
             }
-            else if (changedObj.outputState is ObjectOut.PackageWrite pkgWrite)
+            else if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite)
             {
-                packageId = changedObj.objectId;
+                packageId = changedObj.ObjectId;
                 Console.WriteLine($"Package ID: {packageId.ToHex()}");
-                Console.WriteLine($"Package version: {pkgWrite.version}");
+                Console.WriteLine($"Package version: {pkgWrite.Version}");
             }
         }
 
@@ -116,9 +116,9 @@ class Program
 
         Console.WriteLine("> Upgrading package (dry run):");
         result = await client.DryRunTx(tx);
-        if (result.error != null)
-            throw new Exception($"Dry run failed: {result.error}");
-        if (result.effects == null)
+        if (result.Error != null)
+            throw new Exception($"Dry run failed: {result.Error}");
+        if (result.Effects == null)
             throw new Exception("Dry run failed: no effects");
         Console.WriteLine("Success");
 
@@ -127,12 +127,12 @@ class Program
         effects = await client.ExecuteTx(new[] { sig }, tx);
         Console.WriteLine("Success");
 
-        foreach (var changedObj in effects.AsV1().changedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects)
         {
-            if (changedObj.outputState is ObjectOut.PackageWrite pkgWrite2)
+            if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite2)
             {
-                Console.WriteLine($"New Package ID: {changedObj.objectId.ToHex()}");
-                Console.WriteLine($"New Package version: {pkgWrite2.version}");
+                Console.WriteLine($"New Package ID: {changedObj.ObjectId.ToHex()}");
+                Console.WriteLine($"New Package version: {pkgWrite2.Version}");
             }
         }
     }

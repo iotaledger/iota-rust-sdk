@@ -9,11 +9,11 @@ class Program
     {
         var client = GraphQlClient.NewTestnet();
         var address = Address.Zero();
-        var filter = new ObjectFilter(owner: address);
+        var filter = new ObjectFilter(Owner: address);
 
         var objectsPage = await client.Objects(filter: filter);
-        Console.WriteLine($"Owned objects({objectsPage.data.Length}):");
-        foreach (var obj in objectsPage.data)
+        Console.WriteLine($"Owned objects({objectsPage.Data.Length}):");
+        foreach (var obj in objectsPage.Data)
         {
             Console.WriteLine(obj.Id().ToHex());
         }

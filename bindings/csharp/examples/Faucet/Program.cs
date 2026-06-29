@@ -15,9 +15,9 @@ class Program
         if (faucetReceipt != null)
         {
             Console.WriteLine("Faucet receipt:");
-            foreach (var coin in faucetReceipt.sent)
+            foreach (var coin in faucetReceipt.Sent)
             {
-                Console.WriteLine($"  Coin ID: {coin.id.ToHex()}, Amount: {coin.amount}, Digest: {coin.transferTxDigest.ToBase58()}");
+                Console.WriteLine($"  Coin ID: {coin.Id.ToHex()}, Amount: {coin.Amount}, Digest: {coin.TransferTxDigest.ToBase58()}");
             }
         }
         else

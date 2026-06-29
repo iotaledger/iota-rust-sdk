@@ -21,9 +21,9 @@ class Program
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
 
         var res = await client.DryRunTx(txn);
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to send IOTA: {res.error}");
+            throw new Exception($"Failed to send IOTA: {res.Error}");
         }
 
         Console.WriteLine("Send IOTA dry run was successful!");

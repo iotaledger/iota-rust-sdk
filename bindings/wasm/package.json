@@ -40,6 +40,7 @@
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
-    "uniffi-bindgen-react-native": "0.29.3-1"
+    "@ubjs/core": "0.31.0-3",
+    "uniffi-bindgen-react-native": "0.31.0-3"
   }
 }
