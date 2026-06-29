@@ -16,21 +16,21 @@ class Program
         var client = GraphQlClient.NewLocalnet();
         var address = Address.FromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa");
 
-        var outgoing = await client.Transactions(filter: new TransactionsFilter(sentAddress: address));
-        var incoming = await client.Transactions(filter: new TransactionsFilter(recvAddress: address));
+        var outgoing = await client.Transactions(filter: new TransactionsFilter(SentAddress: address));
+        var incoming = await client.Transactions(filter: new TransactionsFilter(RecvAddress: address));
 
         Console.WriteLine($"Transactions for {address.ToHex()}");
 
-        Console.WriteLine($"\nOutgoing (sent by address): {outgoing.data.Length}");
-        foreach (var tx in outgoing.data)
+        Console.WriteLine($"\nOutgoing (sent by address): {outgoing.Data.Length}");
+        foreach (var tx in outgoing.Data)
         {
-            Console.WriteLine($"  - {tx.transaction.Digest().ToBase58()}");
+            Console.WriteLine($"  - {tx.Transaction.Digest().ToBase58()}");
         }
 
-        Console.WriteLine($"\nIncoming (received by address): {incoming.data.Length}");
-        foreach (var tx in incoming.data)
+        Console.WriteLine($"\nIncoming (received by address): {incoming.Data.Length}");
+        foreach (var tx in incoming.Data)
         {
-            Console.WriteLine($"  - {tx.transaction.Digest().ToBase58()}");
+            Console.WriteLine($"  - {tx.Transaction.Digest().ToBase58()}");
         }
     }
 }

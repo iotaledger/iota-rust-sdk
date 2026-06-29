@@ -260,37 +260,40 @@ mod type_digest {
     use base64ct::Encoding;
 
     use super::Hasher;
-    use crate::Digest;
+    use crate::{
+        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, TransactionDigest,
+        TransactionEffectsDigest, TransactionEventsDigest,
+    };
 
     impl crate::Object {
         /// Calculate the digest of this `Object`
         ///
         /// This is done by hashing the BCS bytes of this `Object` prefixed
         /// with a salt.
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> ObjectDigest {
             const SALT: &str = "Object::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::CheckpointSummary {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> CheckpointDigest {
             const SALT: &str = "CheckpointSummary::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::CheckpointContents {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> CheckpointContentsDigest {
             const SALT: &str = "CheckpointContents::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::Transaction {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &self)
+            type_digest(SALT, &self).into()
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
@@ -317,9 +320,9 @@ mod type_digest {
     }
 
     impl crate::TransactionV1 {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &crate::Transaction::V1(self.clone()))
+            type_digest(SALT, &crate::Transaction::V1(self.clone())).into()
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
@@ -346,16 +349,16 @@ mod type_digest {
     }
 
     impl crate::TransactionEffects {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionEffectsDigest {
             const SALT: &str = "TransactionEffects::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::TransactionEvents {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionEventsDigest {
             const SALT: &str = "TransactionEvents::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
@@ -473,7 +476,7 @@ impl crate::ObjectId {
     ///
     /// `count` is the number of objects that have been created during a
     /// transactions.
-    pub fn derive_id(digest: crate::Digest, count: u64) -> Self {
+    pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
         hasher.update(digest);

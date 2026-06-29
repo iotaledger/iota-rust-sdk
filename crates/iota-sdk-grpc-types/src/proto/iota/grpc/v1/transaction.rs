@@ -45,8 +45,8 @@ impl TransactionEffects {
     /// `ExecutedTransaction` (see [`TRANSACTION_EFFECTS_DIGEST`]).
     ///
     /// [`TRANSACTION_EFFECTS_DIGEST`]: crate::read_masks::TRANSACTION_EFFECTS_DIGEST
-    pub fn digest(&self) -> Result<iota_types::Digest, TryFromProtoError> {
-        self.try_into()
+    pub fn digest(&self) -> Result<iota_types::TransactionEffectsDigest, TryFromProtoError> {
+        Ok(iota_types::Digest::try_from(self)?.into())
     }
 
     /// Deserialize effects from BCS.
@@ -118,8 +118,8 @@ impl TransactionEvents {
     /// `ExecutedTransaction` (see [`TRANSACTION_EVENTS_DIGEST`]).
     ///
     /// [`TRANSACTION_EVENTS_DIGEST`]: crate::read_masks::TRANSACTION_EVENTS_DIGEST
-    pub fn digest(&self) -> Result<iota_types::Digest, TryFromProtoError> {
-        self.try_into()
+    pub fn digest(&self) -> Result<iota_types::TransactionEventsDigest, TryFromProtoError> {
+        Ok(iota_types::Digest::try_from(self)?.into())
     }
 
     /// Deserialize all events from BCS.
@@ -340,8 +340,8 @@ impl Transaction {
     /// `ExecutedTransaction` (see [`TRANSACTION_DIGEST`]).
     ///
     /// [`TRANSACTION_DIGEST`]: crate::read_masks::TRANSACTION_DIGEST
-    pub fn digest(&self) -> Result<iota_types::Digest, TryFromProtoError> {
-        self.try_into()
+    pub fn digest(&self) -> Result<iota_types::TransactionDigest, TryFromProtoError> {
+        Ok(iota_types::Digest::try_from(self)?.into())
     }
 
     /// Deserialize the transaction from BCS.

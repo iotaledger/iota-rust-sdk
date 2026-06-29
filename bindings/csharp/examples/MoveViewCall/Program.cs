@@ -18,13 +18,13 @@ class Program
 
         var result = await client.MoveViewCall("0x2::hash::blake2b256", null, hashArgs);
 
-        if (result.error != null)
+        if (result.Error != null)
         {
-            Console.WriteLine($"Error: {result.error}");
+            Console.WriteLine($"Error: {result.Error}");
         }
-        else if (result.results != null)
+        else if (result.Results != null)
         {
-            Console.WriteLine($"Results: {result.results}");
+            Console.WriteLine($"Results: {result.Results}");
         }
         else
         {
@@ -38,13 +38,13 @@ class Program
         var jsonArgs = new[] { "[0, 1, 2]" };
         var jsonResult = await client.MoveViewCallJson("0x2::hash::blake2b256", null, jsonArgs);
 
-        if (jsonResult.error != null)
+        if (jsonResult.Error != null)
         {
-            Console.WriteLine($"JSON Error: {jsonResult.error}");
+            Console.WriteLine($"JSON Error: {jsonResult.Error}");
         }
-        else if (jsonResult.results != null)
+        else if (jsonResult.Results != null)
         {
-            Console.WriteLine($"JSON Results: {jsonResult.results}");
+            Console.WriteLine($"JSON Results: {jsonResult.Results}");
         }
         else
         {

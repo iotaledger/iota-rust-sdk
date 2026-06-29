@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
-    ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
+    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
+    ObjectId, ObjectReference, ProtocolVersion, RandomnessRound, TransactionDigest, TypeTag,
+    UserSignature, Version,
 };
 use crate::utils::write_sep;
 
@@ -492,14 +493,14 @@ impl ConsensusDeterminedVersionAssignments {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = digest (vector version-assignment)
+/// cancelled-transaction = transaction-digest (vector version-assignment)
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CancelledTransaction {
-    pub digest: Digest,
+    pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
 }
@@ -537,7 +538,7 @@ impl VersionAssignment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
+/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 consensus-commit-digest
 ///                                consensus-determined-version-assignments
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -563,7 +564,7 @@ pub struct ConsensusCommitPrologueV1 {
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub commit_timestamp_ms: CheckpointTimestamp,
     /// Digest of consensus output
-    pub consensus_commit_digest: Digest,
+    pub consensus_commit_digest: ConsensusCommitDigest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }

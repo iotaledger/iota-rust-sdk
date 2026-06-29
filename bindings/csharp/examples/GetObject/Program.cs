@@ -23,6 +23,6 @@ class Program
         Console.WriteLine($"Owner: {obj.Owner()}");
         Console.WriteLine($"Storage rebate: {obj.StorageRebate()}");
         Console.WriteLine($"Type: {obj.ObjectType()}");
-        Console.WriteLine($"BCS bytes: {Iota.HexEncode(obj.AsStruct().contents)}");
+        Console.WriteLine($"BCS bytes: {Iota.HexEncode(obj.AsStruct().Contents)}");
     }
 }
