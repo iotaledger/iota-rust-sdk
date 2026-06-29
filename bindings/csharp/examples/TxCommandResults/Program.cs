@@ -53,9 +53,9 @@ class Program
 
         var res = await client.DryRunTx(txn);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to send tx: {res.error}");
+            throw new Exception($"Failed to send tx: {res.Error}");
         }
 
         Console.WriteLine("Tx dry run was successful!");

@@ -14,19 +14,19 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewTestnet();
-        var filter = new ObjectFilter(typeTag: "0x3::staking_pool::StakedIota");
+        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota");
 
         var page = await client.Objects(filter);
 
-        if (page.data.Length == 0)
+        if (page.Data.Length == 0)
         {
             Console.WriteLine("No StakedIota objects on testnet right now.");
             return;
         }
 
-        Console.WriteLine($"Decoded {page.data.Length} StakedIota object(s):\n");
+        Console.WriteLine($"Decoded {page.Data.Length} StakedIota object(s):\n");
         ulong totalPrincipal = 0;
-        foreach (var obj in page.data)
+        foreach (var obj in page.Data)
         {
             var staked = StakedIota.TryFromObject(obj);
             totalPrincipal += staked.Principal();
