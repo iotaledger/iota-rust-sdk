@@ -6,7 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
     ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
 };
-use crate::utils::write_sep;
+use crate::{crypto::PublicKey, utils::write_sep};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -183,6 +183,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 claim-account-transaction              ; ClaimAccount
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -206,6 +207,8 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// User transaction for claiming/creating an Account object
+    ClaimAccount(ClaimAccountTransaction),
 }
 
 impl TransactionKind {
@@ -218,6 +221,7 @@ impl TransactionKind {
         Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+        ClaimAccount(ClaimAccountTransaction),
     }
 
     /// Create a [`TransactionKind::Programmable`].
@@ -245,6 +249,11 @@ impl TransactionKind {
         Self::RandomnessStateUpdate(tx)
     }
 
+    /// Create a [`TransactionKind::ClaimAccount`].
+    pub fn new_claim_account(tx: ClaimAccountTransaction) -> Self {
+        Self::ClaimAccount(tx)
+    }
+
     /// Returns `true` if this is a system transaction.
     pub fn is_system(&self) -> bool {
         match self {
@@ -253,7 +262,7 @@ impl TransactionKind {
             | TransactionKind::AuthenticatorStateUpdateV1Deprecated
             | TransactionKind::RandomnessStateUpdate(_)
             | TransactionKind::EndOfEpoch(_) => true,
-            TransactionKind::Programmable(_) => false,
+            TransactionKind::Programmable(_) | TransactionKind::ClaimAccount(_) => false,
         }
     }
 
@@ -302,6 +311,7 @@ impl core::fmt::Display for TransactionKind {
             Self::RandomnessStateUpdate(_) => {
                 writeln!(f, "Transaction Kind : Randomness State Update")
             }
+            Self::ClaimAccount(_) => writeln!(f, "Transaction Kind : Claim Account"),
         }
     }
 }
@@ -1554,4 +1564,140 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+/// A transaction that creates an Account object via a constrained builder
+/// pipeline. Currently only supports [`AccountClaimKind::SmartAccount`].
+///
+/// # BCS
+///
+/// ```text
+/// claim-account-transaction = account-claim-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct ClaimAccountTransaction {
+    pub kind: AccountClaimKind,
+}
+
+impl ClaimAccountTransaction {
+    pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
+        Self {
+            kind: AccountClaimKind::SmartAccount(claim),
+        }
+    }
+}
+
+/// Discriminated union of account types that can be claimed via
+/// [`ClaimAccountTransaction`]. Non-exhaustive to allow future account types.
+///
+/// # BCS
+///
+/// ```text
+/// account-claim-kind =  %d00 smart-account-claim  ; SmartAccount
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum AccountClaimKind {
+    SmartAccount(SmartAccountClaim),
+}
+
+impl AccountClaimKind {
+    crate::def_is_as_into_opt!(SmartAccount(SmartAccountClaim));
+}
+
+/// Parameters for creating a `SmartAccount` object via the constrained builder
+/// pipeline `claim_builder_v1 → with_field* → build_v1 | build_immutable_v1`.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-claim = public-key               ; owner's public key
+///                       u64                      ; claim_registry initial shared version
+///                       (vector smart-account-field)
+///                       smart-account-build-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct SmartAccountClaim {
+    /// Public key passed to `claim_builder_v1`.
+    pub public_key: PublicKey,
+    /// Initial shared version of the ClaimRegistry object (0x10).
+    /// The caller must look this up from the chain before constructing the
+    /// transaction.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub claim_registry_initial_shared_version: u64,
+    /// Zero or more `with_field` calls to attach named fields to the builder.
+    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=4).lift()))]
+    pub fields: Vec<SmartAccountField>,
+    /// Which terminal builder function to call (`build_v1` vs
+    /// `build_immutable_v1`).
+    pub build_kind: SmartAccountBuildKind,
+}
+
+/// A single typed key-value field attached to a SmartAccount builder via
+/// `with_field<N, V>(builder, name, value)`.
+///
+/// Both name and value are stored as their BCS-encoded bytes together with
+/// their Move type tags so that the execution engine can reconstruct the exact
+/// `pure` inputs.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-field = type-tag   ; name_type (N)
+///                       bytes      ; BCS-encoded name value
+///                       type-tag   ; value_type (V)
+///                       bytes      ; BCS-encoded value
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct SmartAccountField {
+    /// Move type of the field name (`N` in `with_field<N, V>`).
+    pub name_type: TypeTag,
+    /// BCS-encoded bytes of the field name value.
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::_serde::ReadableBase64Encoded")
+    )]
+    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=32).lift()))]
+    pub name_bcs: Vec<u8>,
+    /// Move type of the field value (`V` in `with_field<N, V>`).
+    pub value_type: TypeTag,
+    /// BCS-encoded bytes of the field value.
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::_serde::ReadableBase64Encoded")
+    )]
+    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=64).lift()))]
+    pub value_bcs: Vec<u8>,
+}
+
+/// Selects the terminal builder function for a [`SmartAccountClaim`].
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-build-kind =  %d00  ; Mutable   → build_v1
+///                          =/ %d01  ; Immutable  → build_immutable_v1
+/// ```
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub enum SmartAccountBuildKind {
+    /// Call `iota::smart_account::build_v1` — account object is shared.
+    Mutable,
+    /// Call `iota::smart_account::build_immutable_v1` — account object is
+    /// frozen.
+    Immutable,
 }
