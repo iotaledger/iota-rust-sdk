@@ -30,9 +30,16 @@ impl FaucetClient {
     }
 
     /// Create a new Faucet client connected to the `testnet` faucet.
+    ///
+    /// The testnet faucet is web-only: its programmatic gas endpoint responds
+    /// with a deprecation error. Request testnet gas from the web faucet at
+    /// <https://faucet.testnet.iota.cafe>. `new_devnet` and `new_localnet`
+    /// expose working programmatic endpoints.
     #[uniffi::constructor]
     pub fn new_testnet() -> Self {
-        Self(iota_sdk::graphql_client::faucet::FaucetClient::new_testnet())
+        Self(iota_sdk::graphql_client::faucet::FaucetClient::new(
+            iota_sdk::graphql_client::faucet::FAUCET_TESTNET_HOST,
+        ))
     }
 
     /// Create a new Faucet client connected to the `devnet` faucet.

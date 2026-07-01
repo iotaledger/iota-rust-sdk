@@ -13,6 +13,12 @@ use tracing::{error, info};
 use crate::WaitForTx;
 
 pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
+/// Host of the testnet faucet.
+///
+/// The testnet faucet is web-only: the programmatic gas endpoint at this
+/// host (`/v1/gas`) responds with a deprecation error. Request testnet gas
+/// from the web faucet at <https://faucet.testnet.iota.cafe>. The devnet and
+/// localnet faucets expose working programmatic endpoints.
 pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
@@ -100,6 +106,15 @@ impl FaucetClient {
     }
 
     /// Create a new Faucet client connected to the `testnet` faucet.
+    ///
+    /// The testnet faucet is web-only: its programmatic gas endpoint
+    /// (`https://faucet.testnet.iota.cafe/v1/gas`) responds with a deprecation
+    /// error. Request testnet gas from the web faucet at
+    /// <https://faucet.testnet.iota.cafe>. [`FaucetClient::new_devnet`] and
+    /// [`FaucetClient::new_localnet`] expose working programmatic endpoints.
+    #[deprecated(
+        note = "the testnet faucet is web-only; its programmatic gas endpoint returns a deprecation error. Request gas from the web faucet at https://faucet.testnet.iota.cafe . new_devnet and new_localnet are unaffected."
+    )]
     pub fn new_testnet() -> Self {
         Self::new(FAUCET_TESTNET_HOST)
     }
