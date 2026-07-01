@@ -37,7 +37,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -57,6 +57,24 @@ pub struct PasskeyAuthenticator {
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
     /// for more information on this field.
     pub(crate) client_data_json: String,
+}
+
+impl std::fmt::Debug for PasskeyAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("PasskeyAuthenticator")
+            .field("public_key", &self.public_key)
+            .field("signature", &self.signature)
+            .field(
+                "challenge",
+                &format_args!("\"{}\"", super::Base64Display32(&self.challenge)),
+            )
+            .field(
+                "authenticator_data",
+                &crate::base64_debug::Base64Debug(&self.authenticator_data),
+            )
+            .field("client_data_json", &self.client_data_json)
+            .finish()
+    }
 }
 
 impl PasskeyAuthenticator {

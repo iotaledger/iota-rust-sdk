@@ -151,7 +151,7 @@ pub struct GasPayment {
 /// ```text
 /// randomness-state-update = u64 randomness-round bytes version
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -169,6 +169,23 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     pub randomness_obj_initial_shared_version: Version,
+}
+
+impl std::fmt::Debug for RandomnessStateUpdate {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RandomnessStateUpdate")
+            .field("epoch", &self.epoch)
+            .field("randomness_round", &self.randomness_round)
+            .field(
+                "random_bytes",
+                &crate::base64_debug::Base64Debug(&self.random_bytes),
+            )
+            .field(
+                "randomness_obj_initial_shared_version",
+                &self.randomness_obj_initial_shared_version,
+            )
+            .finish()
+    }
 }
 
 /// Transaction type
@@ -774,7 +791,7 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -789,6 +806,19 @@ pub struct SystemPackage {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
+}
+
+impl std::fmt::Debug for SystemPackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SystemPackage")
+            .field("version", &self.version)
+            .field(
+                "modules",
+                &crate::base64_debug::Base64DebugList(&self.modules),
+            )
+            .field("dependencies", &self.dependencies)
+            .finish()
+    }
 }
 
 /// The genesis transaction
@@ -864,7 +894,7 @@ impl core::fmt::Display for ProgrammableTransaction {
 ///            =/ %d01 object-id u64 bool   ; Shared
 ///            =/ %d02 object-reference     ; Receiving
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -885,6 +915,28 @@ pub enum Input {
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
+}
+
+impl std::fmt::Debug for Input {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Pure(bytes) => f
+                .debug_tuple("Pure")
+                .field(&crate::base64_debug::Base64Debug(bytes))
+                .finish(),
+            Self::ImmutableOrOwned(object_reference) => f
+                .debug_tuple("ImmutableOrOwned")
+                .field(object_reference)
+                .finish(),
+            Self::Shared(shared_object_reference) => f
+                .debug_tuple("Shared")
+                .field(shared_object_reference)
+                .finish(),
+            Self::Receiving(object_reference) => {
+                f.debug_tuple("Receiving").field(object_reference).finish()
+            }
+        }
+    }
 }
 
 impl Input {
@@ -1309,7 +1361,7 @@ pub struct MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1324,6 +1376,18 @@ pub struct Publish {
     pub modules: Vec<Vec<u8>>,
     /// Set of packages that the to-be published package depends on
     pub dependencies: Vec<ObjectId>,
+}
+
+impl std::fmt::Debug for Publish {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Publish")
+            .field(
+                "modules",
+                &crate::base64_debug::Base64DebugList(&self.modules),
+            )
+            .field("dependencies", &self.dependencies)
+            .finish()
+    }
 }
 
 /// Command to build a move vector out of a set of individual elements
@@ -1363,7 +1427,7 @@ pub struct MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1382,6 +1446,20 @@ pub struct Upgrade {
     pub package: ObjectId,
     /// Ticket authorizing the upgrade
     pub ticket: Argument,
+}
+
+impl std::fmt::Debug for Upgrade {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Upgrade")
+            .field(
+                "modules",
+                &crate::base64_debug::Base64DebugList(&self.modules),
+            )
+            .field("dependencies", &self.dependencies)
+            .field("package", &self.package)
+            .field("ticket", &self.ticket)
+            .finish()
+    }
 }
 
 /// An argument to a programmable transaction command

@@ -117,7 +117,7 @@ pub struct EndOfEpochData {
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -167,6 +167,32 @@ pub struct CheckpointSummary {
         serde(default, with = "crate::_serde::ReadableBase64Encoded")
     )]
     pub version_specific_data: Vec<u8>,
+}
+
+impl std::fmt::Debug for CheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CheckpointSummary")
+            .field("epoch", &self.epoch)
+            .field("sequence_number", &self.sequence_number)
+            .field(
+                "network_total_transactions",
+                &self.network_total_transactions,
+            )
+            .field("content_digest", &self.content_digest)
+            .field("previous_digest", &self.previous_digest)
+            .field(
+                "epoch_rolling_gas_cost_summary",
+                &self.epoch_rolling_gas_cost_summary,
+            )
+            .field("timestamp_ms", &self.timestamp_ms)
+            .field("checkpoint_commitments", &self.checkpoint_commitments)
+            .field("end_of_epoch_data", &self.end_of_epoch_data)
+            .field(
+                "version_specific_data",
+                &crate::base64_debug::Base64Debug(&self.version_specific_data),
+            )
+            .finish()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]

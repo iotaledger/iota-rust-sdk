@@ -111,6 +111,8 @@
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
 
+mod base64_debug;
+
 pub mod address;
 pub mod checkpoint;
 pub mod crypto;

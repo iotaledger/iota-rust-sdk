@@ -53,7 +53,7 @@ impl TryFrom<u8> for UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
@@ -64,6 +64,19 @@ pub struct MovePackageData {
     /// The package digest.
     #[cfg_attr(feature = "serde", serde(with = "serialization::digest"))]
     pub digest: Digest,
+}
+
+impl std::fmt::Debug for MovePackageData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MovePackageData")
+            .field(
+                "modules",
+                &crate::base64_debug::Base64DebugList(&self.modules),
+            )
+            .field("dependencies", &self.dependencies)
+            .field("digest", &self.digest)
+            .finish()
+    }
 }
 
 impl MovePackageData {
@@ -137,7 +150,7 @@ pub struct TypeOrigin {
 ///                (vector type-origin)               ; type-origin-table
 ///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -183,6 +196,21 @@ pub struct MovePackage {
         )
     )]
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+}
+
+impl std::fmt::Debug for MovePackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MovePackage")
+            .field("id", &self.id)
+            .field("version", &self.version)
+            .field(
+                "modules",
+                &crate::base64_debug::Base64DebugMap(&self.modules),
+            )
+            .field("type_origin_table", &self.type_origin_table)
+            .field("linkage_table", &self.linkage_table)
+            .finish()
+    }
 }
 
 impl MovePackage {
