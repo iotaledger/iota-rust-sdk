@@ -105,20 +105,6 @@ impl FaucetClient {
         FaucetClient { faucet_url, inner }
     }
 
-    /// Create a new Faucet client connected to the `testnet` faucet.
-    ///
-    /// The testnet faucet is web-only: its programmatic gas endpoint
-    /// (`https://faucet.testnet.iota.cafe/v1/gas`) responds with a deprecation
-    /// error. Request testnet gas from the web faucet at
-    /// <https://faucet.testnet.iota.cafe>. [`FaucetClient::new_devnet`] and
-    /// [`FaucetClient::new_localnet`] expose working programmatic endpoints.
-    #[deprecated(
-        note = "the testnet faucet is web-only; its programmatic gas endpoint returns a deprecation error. Request gas from the web faucet at https://faucet.testnet.iota.cafe . new_devnet and new_localnet are unaffected."
-    )]
-    pub fn new_testnet() -> Self {
-        Self::new(FAUCET_TESTNET_HOST)
-    }
-
     /// Create a new Faucet client connected to the `devnet` faucet.
     pub fn new_devnet() -> Self {
         Self::new(FAUCET_DEVNET_HOST)
