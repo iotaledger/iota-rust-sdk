@@ -102,22 +102,7 @@ pub mod staking_pool {
         }
     }
 
-    /// Decode a [`StakedIota`] from an on-chain object, validating that
-    /// the object's type tag matches `0x3::staking_pool::StakedIota`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for StakedIota {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_staked_iota() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(StakedIota, is_staked_iota);
 
     /// Rust version of the Move `iota_system::staking_pool::StakingPoolV1`
     /// type.
@@ -258,26 +243,10 @@ pub mod validator_cap {
         }
     }
 
-    /// Decode an [`UnverifiedValidatorOperationCap`] from an on-chain
-    /// object, validating that the object's type tag matches
-    /// `0x3::validator_cap::UnverifiedValidatorOperationCap`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for UnverifiedValidatorOperationCap {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct
-                .object_type()
-                .is_unverified_validator_operation_cap()
-            {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(
+        UnverifiedValidatorOperationCap,
+        is_unverified_validator_operation_cap
+    );
 
     /// Rust version of the Move
     /// `iota_system::validator_cap::ValidatorOperationCap` type.
@@ -855,27 +824,7 @@ pub mod iota_system {
         }
     }
 
-    /// Decode an [`IotaSystemState`] from an on-chain object,
-    /// validating that the object's type tag matches
-    /// `0x3::iota_system::IotaSystemState`.
-    ///
-    /// This is only the versioned wrapper (the `0x5` object); the
-    /// actual state lives in a dynamic field holding e.g. an
-    /// [`IotaSystemStateV2`](super::iota_system_state_inner::IotaSystemStateV2).
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for IotaSystemState {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_iota_system_state() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(IotaSystemState, is_iota_system_state);
 }
 
 /// Types from `0x3::storage_fund`.
@@ -959,23 +908,7 @@ pub mod timelocked_staking {
         }
     }
 
-    /// Decode a [`TimelockedStakedIota`] from an on-chain object,
-    /// validating that the object's type tag matches
-    /// `0x3::timelocked_staking::TimelockedStakedIota`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for TimelockedStakedIota {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_timelocked_staked_iota() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(TimelockedStakedIota, is_timelocked_staked_iota);
 }
 
 /// Types from `0x3::genesis`.
