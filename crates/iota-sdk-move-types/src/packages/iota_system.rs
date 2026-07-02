@@ -102,7 +102,7 @@ pub mod staking_pool {
         }
     }
 
-    impl_try_from_object!(StakedIota, is_staked_iota);
+    impl_try_from_object!(StakedIota);
 
     /// Rust version of the Move `iota_system::staking_pool::StakingPoolV1`
     /// type.
@@ -243,10 +243,7 @@ pub mod validator_cap {
         }
     }
 
-    impl_try_from_object!(
-        UnverifiedValidatorOperationCap,
-        is_unverified_validator_operation_cap
-    );
+    impl_try_from_object!(UnverifiedValidatorOperationCap);
 
     /// Rust version of the Move
     /// `iota_system::validator_cap::ValidatorOperationCap` type.
@@ -824,7 +821,7 @@ pub mod iota_system {
         }
     }
 
-    impl_try_from_object!(IotaSystemState, is_iota_system_state);
+    impl_try_from_object!(IotaSystemState);
 }
 
 /// Types from `0x3::storage_fund`.
@@ -908,7 +905,7 @@ pub mod timelocked_staking {
         }
     }
 
-    impl_try_from_object!(TimelockedStakedIota, is_timelocked_staked_iota);
+    impl_try_from_object!(TimelockedStakedIota);
 }
 
 /// Types from `0x3::genesis`.

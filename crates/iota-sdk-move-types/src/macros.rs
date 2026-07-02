@@ -4,18 +4,24 @@
 //! Internal macros generating the `Object` constructors that every `key`
 //! Move-object mirror shares.
 //!
-//! The mirrors differ only in their type, the [`StructTag`] predicate that
-//! identifies them, and (for generic mirrors) their single type parameter, so
-//! the `TryFrom<&Object>` / `try_from_object_with_type` bodies are otherwise
-//! identical boilerplate. `from_bcs` and the field accessors stay hand-written
-//! per type.
+//! The mirrors differ only in their type and (for generic mirrors) their
+//! single type parameter, so the `TryFrom<&Object>` /
+//! `try_from_object_with_type` bodies are otherwise identical boilerplate.
+//! `from_bcs` and the field accessors stay hand-written per type.
+//!
+//! The [`StructTag`] predicate a mirror validates against is derived from its
+//! name as `is_<name:snake>` — the same `paste` snake-casing that generated
+//! that predicate in the first place — so callers pass only the type. A type
+//! whose predicate name doesn't follow from `:snake` (an acronym like
+//! `VerifiedID`, whose predicate is `is_verified_id`, not `is_verified_i_d`)
+//! passes its predicate explicitly as a second argument.
 //!
 //! [`StructTag`]: iota_types::StructTag
 
 /// Generate the `TryFrom<&Object>` constructor for a non-generic mirror.
 ///
-/// `$is_fn` is the [`StructTag`](iota_types::StructTag) predicate matching the
-/// mirror's on-chain type (e.g. `is_clock` for `0x2::clock::Clock`).
+/// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
+/// second argument when the snake-cased name doesn't match.
 macro_rules! impl_try_from_object {
     ($ty:ident, $is_fn:ident $(,)?) => {
         #[cfg(feature = "serde")]
@@ -38,15 +44,18 @@ macro_rules! impl_try_from_object {
             }
         }
     };
+    ($ty:ident $(,)?) => {
+        ::paste::paste! {
+            impl_try_from_object!($ty, [< is_ $ty:snake >]);
+        }
+    };
 }
 
 /// Generate `try_from_object_with_type` and the `TryFrom<&Object>` constructor
 /// for a mirror with a single type parameter.
 ///
-/// `$is_fn` is the [`StructTag`](iota_types::StructTag) predicate matching the
-/// mirror's on-chain type (e.g. `is_coin` for `0x2::coin::Coin`); the tag's
-/// single type parameter is checked against the caller's `type_param` (runtime)
-/// or `$param`'s [`MoveType`](crate::MoveType) tag (compile time).
+/// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
+/// second argument when the snake-cased name doesn't match.
 macro_rules! impl_try_from_object_generic {
     ($ty:ident<$param:ident>, $is_fn:ident $(,)?) => {
         #[cfg(feature = "serde")]
@@ -91,6 +100,11 @@ macro_rules! impl_try_from_object_generic {
             fn try_from(object: &::iota_types::Object) -> Result<Self, Self::Error> {
                 Self::try_from_object_with_type(object, &<$param as $crate::MoveType>::type_tag())
             }
+        }
+    };
+    ($ty:ident<$param:ident> $(,)?) => {
+        ::paste::paste! {
+            impl_try_from_object_generic!($ty<$param>, [< is_ $ty:snake >]);
         }
     };
 }

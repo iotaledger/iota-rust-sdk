@@ -114,7 +114,7 @@ pub mod nft {
         }
     }
 
-    impl_try_from_object!(Nft, is_nft);
+    impl_try_from_object!(Nft);
 }
 
 /// Types from `0x107a::nft_output`.
@@ -182,7 +182,7 @@ pub mod nft_output {
         }
     }
 
-    impl_try_from_object_generic!(NftOutput<T>, is_nft_output);
+    impl_try_from_object_generic!(NftOutput<T>);
 }
 
 /// Types from `0x107a::stardust_upgrade_label`.
@@ -292,7 +292,7 @@ pub mod basic_output {
         }
     }
 
-    impl_try_from_object_generic!(BasicOutput<T>, is_basic_output);
+    impl_try_from_object_generic!(BasicOutput<T>);
 }
 
 /// Types from `0x107a::alias`.
@@ -344,7 +344,7 @@ pub mod alias {
         }
     }
 
-    impl_try_from_object!(Alias, is_alias);
+    impl_try_from_object!(Alias);
 }
 
 /// Types from `0x107a::alias_output`.
@@ -392,7 +392,7 @@ pub mod alias_output {
         }
     }
 
-    impl_try_from_object_generic!(AliasOutput<T>, is_alias_output);
+    impl_try_from_object_generic!(AliasOutput<T>);
 }
 
 /// Types from `0x107a::timelock_unlock_condition`.
