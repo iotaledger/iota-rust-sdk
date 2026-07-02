@@ -149,6 +149,27 @@ impl Client {
 mod tests {
     use crate::{PaginationFilter, test_utils::test_client};
 
+    #[test]
+    fn checkpoints_query_forwards_pagination_arguments() {
+        use cynic::QueryBuilder;
+
+        use crate::query_types::{CheckpointsArgs, CheckpointsQuery};
+
+        let operation = CheckpointsQuery::build(CheckpointsArgs {
+            first: Some(10),
+            after: None,
+            last: None,
+            before: None,
+        });
+        for arg in ["first:", "after:", "last:", "before:"] {
+            assert!(
+                operation.query.contains(arg),
+                "checkpoints query is missing the `{arg}` argument:\n{}",
+                operation.query
+            );
+        }
+    }
+
     #[tokio::test]
     async fn test_checkpoint_query() {
         let client = test_client();
