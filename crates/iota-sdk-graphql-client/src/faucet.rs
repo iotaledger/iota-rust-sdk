@@ -13,13 +13,6 @@ use tracing::{error, info};
 use crate::WaitForTx;
 
 pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
-/// Host of the testnet faucet.
-///
-/// The testnet faucet is web-only: the programmatic gas endpoint at this
-/// host (`/v1/gas`) responds with a deprecation error. Request testnet gas
-/// from the web faucet at <https://faucet.testnet.iota.cafe>. The devnet and
-/// localnet faucets expose working programmatic endpoints.
-pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
 const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
