@@ -1,6 +1,80 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+/// Define the FFI wrapper for a non-generic `key` Move-object mirror: the
+/// `uniffi::Object` newtype plus its `try_from_object` / `try_from_bcs`
+/// constructors. Type-specific field accessors go in the trailing block and
+/// are spliced into the exported impl.
+#[macro_export]
+macro_rules! ffi_move_object {
+    (
+        $(#[$meta:meta])*
+        $name:ident($core:ty) { $($accessors:tt)* }
+    ) => {
+        $(#[$meta])*
+        #[derive(Debug, derive_more::From, uniffi::Object)]
+        #[uniffi::export(Debug)]
+        pub struct $name(pub $core);
+
+        #[uniffi::export]
+        impl $name {
+            /// Decode from an on-chain object, validating its Move type tag.
+            #[uniffi::constructor]
+            pub fn try_from_object(
+                object: &$crate::types::object::Object,
+            ) -> $crate::error::Result<Self> {
+                Ok(<$core>::try_from(&object.0)?.into())
+            }
+
+            /// Decode from BCS bytes, without validating the on-chain type tag.
+            #[uniffi::constructor]
+            pub fn try_from_bcs(bytes: Vec<u8>) -> $crate::error::Result<Self> {
+                Ok(::bcs::from_bytes::<$core>(&bytes)?.into())
+            }
+
+            $($accessors)*
+        }
+    };
+}
+
+/// Like [`ffi_move_object`], but for a mirror with a single (phantom) type
+/// parameter. `$core` is the type instantiated at `IOTA` (a phantom marker, so
+/// the BCS layout is the same for every coin type); the object constructor
+/// validates the on-chain type parameter against a caller-provided `TypeTag`.
+#[macro_export]
+macro_rules! ffi_move_object_generic {
+    (
+        $(#[$meta:meta])*
+        $name:ident($core:ty) { $($accessors:tt)* }
+    ) => {
+        $(#[$meta])*
+        #[derive(Debug, derive_more::From, uniffi::Object)]
+        #[uniffi::export(Debug)]
+        pub struct $name(pub $core);
+
+        #[uniffi::export]
+        impl $name {
+            /// Decode from an on-chain object, validating its Move type tag,
+            /// including that its type parameter equals `type_param`.
+            #[uniffi::constructor]
+            pub fn try_from_object_with_type(
+                object: &$crate::types::object::Object,
+                type_param: &$crate::types::move_core::TypeTag,
+            ) -> $crate::error::Result<Self> {
+                Ok(<$core>::try_from_object_with_type(&object.0, &type_param.0)?.into())
+            }
+
+            /// Decode from BCS bytes, without validating the on-chain type tag.
+            #[uniffi::constructor]
+            pub fn try_from_bcs(bytes: Vec<u8>) -> $crate::error::Result<Self> {
+                Ok(::bcs::from_bytes::<$core>(&bytes)?.into())
+            }
+
+            $($accessors)*
+        }
+    };
+}
+
 #[macro_export]
 macro_rules! export_iota_types_bcs_conversion {
     ($($name:ty),+ $(,)?) => {
