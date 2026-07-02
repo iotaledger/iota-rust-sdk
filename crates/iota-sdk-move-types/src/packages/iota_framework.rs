@@ -460,6 +460,51 @@ pub mod coin {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> RegulatedCoinMetadata<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`RegulatedCoinMetadata<T>`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x2::coin::RegulatedCoinMetadata<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_regulated_coin_metadata()
+                || tag.type_params() != core::slice::from_ref(type_param)
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`RegulatedCoinMetadata<T>`] from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x2::coin::RegulatedCoinMetadata<T>`, including the type parameter
+    /// `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for RegulatedCoinMetadata<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
     ///
     /// Capability allowing the bearer to mint and burn coins of type `T`.
@@ -477,6 +522,48 @@ pub mod coin {
     impl<T> TreasuryCap<T> {
         pub const fn new(id: UID, total_supply: Supply<T>) -> Self {
             Self { id, total_supply }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TreasuryCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TreasuryCap<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::coin::TreasuryCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_treasury_cap() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`TreasuryCap<T>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::coin::TreasuryCap<T>`, including
+    /// the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for TreasuryCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -505,6 +592,47 @@ pub mod coin {
                 allow_global_pause,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> DenyCapV1<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`DenyCapV1<T>`] from an on-chain object, validating that
+        /// the object's type tag matches `0x2::coin::DenyCapV1<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_deny_cap_v1() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`DenyCapV1<T>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::coin::DenyCapV1<T>`, including
+    /// the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for DenyCapV1<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 }
@@ -964,6 +1092,23 @@ pub mod zklogin_verified_id {
         /// The audience (wallet).
         pub audience: string::String,
     }
+
+    /// Decode a [`VerifiedID`] from an on-chain object, validating that the
+    /// object's type tag matches `0x2::zklogin_verified_id::VerifiedID`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for VerifiedID {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_verified_id() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
 }
 
 /// Types from `0x2::zklogin_verified_issuer`.
@@ -986,6 +1131,24 @@ pub mod zklogin_verified_issuer {
         pub id: UID,
         pub owner: Address,
         pub issuer: string::String,
+    }
+
+    /// Decode a [`VerifiedIssuer`] from an on-chain object, validating that
+    /// the object's type tag matches
+    /// `0x2::zklogin_verified_issuer::VerifiedIssuer`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for VerifiedIssuer {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_verified_issuer() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
     }
 }
 
@@ -1250,6 +1413,48 @@ pub mod labeler {
             }
         }
     }
+
+    #[cfg(feature = "serde")]
+    impl<L> LabelerCap<L>
+    where
+        L: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`LabelerCap<L>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::labeler::LabelerCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `L`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_labeler_cap() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`LabelerCap<L>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::labeler::LabelerCap<L>`,
+    /// including the type parameter `L`.
+    #[cfg(feature = "serde")]
+    impl<L> TryFrom<&iota_types::Object> for LabelerCap<L>
+    where
+        L: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &L::type_tag())
+        }
+    }
 }
 
 /// Types from `0x2::linked_table`.
@@ -1452,6 +1657,24 @@ pub mod authenticator_state {
         pub version: u64,
     }
 
+    /// Decode an [`AuthenticatorState`] from an on-chain object, validating
+    /// that the object's type tag matches
+    /// `0x2::authenticator_state::AuthenticatorState`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for AuthenticatorState {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_authenticator_state() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -1559,6 +1782,47 @@ pub mod display {
                 version,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> Display<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`Display<T>`] from an on-chain object, validating that
+        /// the object's type tag matches `0x2::display::Display<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_display() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`Display<T>`] from an on-chain object, validating that the
+    /// object's type tag matches `0x2::display::Display<T>`, including the
+    /// type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for Display<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -2045,6 +2309,48 @@ pub mod coin_manager {
         pub metadata_immutable: bool,
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> CoinManager<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`CoinManager<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::coin_manager::CoinManager<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_coin_manager() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`CoinManager<T>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::coin_manager::CoinManager<T>`,
+    /// including the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for CoinManager<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2068,6 +2374,51 @@ pub mod coin_manager {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> CoinManagerTreasuryCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`CoinManagerTreasuryCap<T>`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x2::coin_manager::CoinManagerTreasuryCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_coin_manager_treasury_cap()
+                || tag.type_params() != core::slice::from_ref(type_param)
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`CoinManagerTreasuryCap<T>`] from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x2::coin_manager::CoinManagerTreasuryCap<T>`, including the type
+    /// parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for CoinManagerTreasuryCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2088,6 +2439,51 @@ pub mod coin_manager {
                 id,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> CoinManagerMetadataCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`CoinManagerMetadataCap<T>`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x2::coin_manager::CoinManagerMetadataCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_coin_manager_metadata_cap()
+                || tag.type_params() != core::slice::from_ref(type_param)
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`CoinManagerMetadataCap<T>`] from an on-chain object,
+    /// validating that the object's type tag matches
+    /// `0x2::coin_manager::CoinManagerMetadataCap<T>`, including the type
+    /// parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for CoinManagerMetadataCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -2202,6 +2598,47 @@ pub mod token {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> Token<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`Token<T>`] from an on-chain object, validating that the
+        /// object's type tag matches `0x2::token::Token<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_token() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`Token<T>`] from an on-chain object, validating that the
+    /// object's type tag matches `0x2::token::Token<T>`, including the type
+    /// parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for Token<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2223,6 +2660,49 @@ pub mod token {
                 r#for,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TokenPolicyCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TokenPolicyCap<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::token::TokenPolicyCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_token_policy_cap() || tag.type_params() != core::slice::from_ref(type_param)
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`TokenPolicyCap<T>`] from an on-chain object, validating
+    /// that the object's type tag matches `0x2::token::TokenPolicyCap<T>`,
+    /// including the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for TokenPolicyCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -2254,6 +2734,48 @@ pub mod token {
                 spent_balance,
                 rules,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TokenPolicy<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TokenPolicy<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::token::TokenPolicy<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_token_policy() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`TokenPolicy<T>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::token::TokenPolicy<T>`, including
+    /// the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for TokenPolicy<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 
@@ -2426,6 +2948,24 @@ pub mod package_metadata {
         pub modules_metadata: VecMap<ascii::String, ModuleMetadataV1>,
     }
 
+    /// Decode a [`PackageMetadataV1`] from an on-chain object, validating
+    /// that the object's type tag matches
+    /// `0x2::package_metadata::PackageMetadataV1`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for PackageMetadataV1 {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_package_metadata_v1() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move
     /// `iota::package_metadata::ModuleMetadataV1` type.
     ///
@@ -2479,6 +3019,23 @@ pub mod deny_list {
         pub id: UID,
         /// The individual deny lists.
         pub lists: Bag,
+    }
+
+    /// Decode a [`DenyList`] from an on-chain object, validating that the
+    /// object's type tag matches `0x2::deny_list::DenyList`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for DenyList {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_deny_list() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
     }
 
     /// Rust version of the Move `iota::deny_list::ConfigWriteCap` type.
@@ -2571,6 +3128,23 @@ pub mod random {
         pub inner: Versioned,
     }
 
+    /// Decode a [`Random`] from an on-chain object, validating that the
+    /// object's type tag matches `0x2::random::Random`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for Random {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct.object_type().is_random() {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move `iota::random::RandomInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2628,6 +3202,48 @@ pub mod config {
                 id,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<WriteCap> Config<WriteCap>
+    where
+        WriteCap: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`Config<WriteCap>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::config::Config<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `WriteCap`. When the type param is known at
+        /// compile time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_config() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`Config<WriteCap>`] from an on-chain object, validating
+    /// that the object's type tag matches `0x2::config::Config<WriteCap>`,
+    /// including the type parameter `WriteCap`.
+    #[cfg(feature = "serde")]
+    impl<WriteCap> TryFrom<&iota_types::Object> for Config<WriteCap>
+    where
+        WriteCap: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &WriteCap::type_tag())
         }
     }
 
@@ -3020,6 +3636,48 @@ pub mod kiosk {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> PurchaseCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`PurchaseCap<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::kiosk::PurchaseCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_purchase_cap() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`PurchaseCap<T>`] from an on-chain object, validating that
+    /// the object's type tag matches `0x2::kiosk::PurchaseCap<T>`, including
+    /// the type parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for PurchaseCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move `iota::kiosk::Borrow` type.
     ///
     /// Hot potato ensuring an item was returned after being taken with
@@ -3275,6 +3933,49 @@ pub mod transfer_policy {
         }
     }
 
+    #[cfg(feature = "serde")]
+    impl<T> TransferPolicy<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TransferPolicy<T>`] from an on-chain object, validating
+        /// that the object's type tag matches
+        /// `0x2::transfer_policy::TransferPolicy<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_transfer_policy() || tag.type_params() != core::slice::from_ref(type_param) {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`TransferPolicy<T>`] from an on-chain object, validating
+    /// that the object's type tag matches
+    /// `0x2::transfer_policy::TransferPolicy<T>`, including the type
+    /// parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for TransferPolicy<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
+        }
+    }
+
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3297,6 +3998,51 @@ pub mod transfer_policy {
                 policy_id,
                 _marker: PhantomData,
             }
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    impl<T> TransferPolicyCap<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        /// Decode a [`TransferPolicyCap<T>`] from an on-chain object,
+        /// validating that the object's type tag matches
+        /// `0x2::transfer_policy::TransferPolicyCap<type_param>`.
+        ///
+        /// Escape hatch for type params only known at runtime; nothing ties
+        /// `type_param` to `T`. When the type param is known at compile
+        /// time, prefer the `TryFrom` impl.
+        pub fn try_from_object_with_type(
+            object: &iota_types::Object,
+            type_param: &iota_types::TypeTag,
+        ) -> Result<Self, crate::FromObjectError> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            let tag = move_struct.struct_tag();
+            if !tag.is_transfer_policy_cap()
+                || tag.type_params() != core::slice::from_ref(type_param)
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
+    /// Decode a [`TransferPolicyCap<T>`] from an on-chain object, validating
+    /// that the object's type tag matches
+    /// `0x2::transfer_policy::TransferPolicyCap<T>`, including the type
+    /// parameter `T`.
+    #[cfg(feature = "serde")]
+    impl<T> TryFrom<&iota_types::Object> for TransferPolicyCap<T>
+    where
+        T: serde::de::DeserializeOwned + crate::MoveType,
+    {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            Self::try_from_object_with_type(object, &T::type_tag())
         }
     }
 

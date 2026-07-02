@@ -258,6 +258,27 @@ pub mod validator_cap {
         }
     }
 
+    /// Decode an [`UnverifiedValidatorOperationCap`] from an on-chain
+    /// object, validating that the object's type tag matches
+    /// `0x3::validator_cap::UnverifiedValidatorOperationCap`.
+    #[cfg(feature = "serde")]
+    impl TryFrom<&iota_types::Object> for UnverifiedValidatorOperationCap {
+        type Error = crate::FromObjectError;
+
+        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
+            let move_struct = object
+                .as_struct_opt()
+                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
+            if !move_struct
+                .object_type()
+                .is_unverified_validator_operation_cap()
+            {
+                return Err(crate::FromObjectError::WrongType);
+            }
+            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
+        }
+    }
+
     /// Rust version of the Move
     /// `iota_system::validator_cap::ValidatorOperationCap` type.
     ///
