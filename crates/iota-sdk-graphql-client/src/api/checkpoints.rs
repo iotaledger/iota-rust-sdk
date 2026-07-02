@@ -149,9 +149,6 @@ impl Client {
 mod tests {
     use crate::{PaginationFilter, test_utils::test_client};
 
-    /// Guards #1210: the `checkpoints` field must forward its pagination
-    /// arguments. Without them the server returns its default page and every
-    /// `PaginationFilter` (direction, limit, cursor) is silently ignored.
     #[test]
     fn checkpoints_query_forwards_pagination_arguments() {
         use cynic::QueryBuilder;
