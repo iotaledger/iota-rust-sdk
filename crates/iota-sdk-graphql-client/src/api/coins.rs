@@ -123,7 +123,7 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
-        client::{DEVNET_HOST, LOCAL_HOST, TESTNET_HOST},
+        client::{DEVNET_HOST, LOCAL_HOST},
         faucet::FaucetClient,
         test_utils::{NUM_COINS_FROM_FAUCET, test_client},
     };
@@ -148,8 +148,9 @@ mod tests {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
-            TESTNET_HOST => FaucetClient::new_testnet(),
             DEVNET_HOST => FaucetClient::new_devnet(),
+            // The testnet faucet is web-only and exposes no programmatic gas
+            // endpoint, so this test cannot fund an address on testnet.
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
