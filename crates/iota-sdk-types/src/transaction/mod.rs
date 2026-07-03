@@ -151,7 +151,7 @@ pub struct GasPayment {
 /// ```text
 /// randomness-state-update = u64 randomness-round bytes version
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -166,6 +166,7 @@ pub struct RandomnessStateUpdate {
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(random_bytes))]
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     pub randomness_obj_initial_shared_version: Version,
@@ -774,7 +775,7 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -787,6 +788,13 @@ pub struct SystemPackage {
         )
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
+    )]
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
 }
@@ -864,7 +872,7 @@ impl core::fmt::Display for ProgrammableTransaction {
 ///            =/ %d01 object-id u64 bool   ; Shared
 ///            =/ %d02 object-reference     ; Receiving
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -877,7 +885,7 @@ pub enum Input {
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure(Vec<u8>),
+    Pure(#[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(_0))] Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
@@ -1309,7 +1317,7 @@ pub struct MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1320,6 +1328,13 @@ pub struct Publish {
         serde(
             with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
         )
+    )]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
     )]
     pub modules: Vec<Vec<u8>>,
     /// Set of packages that the to-be published package depends on
@@ -1363,7 +1378,7 @@ pub struct MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1374,6 +1389,13 @@ pub struct Upgrade {
         serde(
             with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
         )
+    )]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
     )]
     pub modules: Vec<Vec<u8>>,
     /// Set of packages that the to-be published package depends on

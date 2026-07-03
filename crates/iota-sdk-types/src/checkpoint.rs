@@ -117,7 +117,7 @@ pub struct EndOfEpochData {
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -165,6 +165,10 @@ pub struct CheckpointSummary {
     #[cfg_attr(
         feature = "serde",
         serde(default, with = "crate::_serde::ReadableBase64Encoded")
+    )]
+    #[debug(
+        "{:?}",
+        <base64ct::Base64 as base64ct::Encoding>::encode_string(version_specific_data)
     )]
     pub version_specific_data: Vec<u8>,
 }
