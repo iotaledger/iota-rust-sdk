@@ -280,7 +280,7 @@ impl std::str::FromStr for MoveObjectType {
 ///
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
-#[derive(Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -301,20 +301,8 @@ pub struct MoveStruct {
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(contents))]
     contents: Vec<u8>,
-}
-
-impl std::fmt::Debug for MoveStruct {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("MoveStruct")
-            .field("object_type", &self.object_type)
-            .field("version", &self.version)
-            .field(
-                "contents",
-                &crate::base64_debug::Base64Debug(&self.contents),
-            )
-            .finish()
-    }
 }
 
 impl MoveStruct {

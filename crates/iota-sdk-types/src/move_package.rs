@@ -53,30 +53,24 @@ impl TryFrom<u8> for UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(Clone)]
+#[derive(Clone, derive_more::Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
     #[cfg_attr(feature = "serde", serde(with = "serialization::modules"))]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
+    )]
     pub modules: Vec<Vec<u8>>,
     /// The package dependencies, specified by their object IDs.
     pub dependencies: Vec<ObjectId>,
     /// The package digest.
     #[cfg_attr(feature = "serde", serde(with = "serialization::digest"))]
     pub digest: Digest,
-}
-
-impl std::fmt::Debug for MovePackageData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("MovePackageData")
-            .field(
-                "modules",
-                &crate::base64_debug::Base64DebugList(&self.modules),
-            )
-            .field("dependencies", &self.dependencies)
-            .field("digest", &self.digest)
-            .finish()
-    }
 }
 
 impl MovePackageData {
@@ -150,7 +144,7 @@ pub struct TypeOrigin {
 ///                (vector type-origin)               ; type-origin-table
 ///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
-#[derive(Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -182,6 +176,13 @@ pub struct MovePackage {
             proptest::collection::btree_map(proptest::arbitrary::any::<Identifier>(), proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5)
         )
     )]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|(k, v)| (k, <base64ct::Base64 as base64ct::Encoding>::encode_string(v)))
+            .collect::<BTreeMap<_, _>>()
+    )]
     pub modules: BTreeMap<Identifier, Vec<u8>>,
     /// Maps structs and enums in a given module to a package version where it
     /// was first defined, stored as a vector for simple serialization and
@@ -196,21 +197,6 @@ pub struct MovePackage {
         )
     )]
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
-}
-
-impl std::fmt::Debug for MovePackage {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("MovePackage")
-            .field("id", &self.id)
-            .field("version", &self.version)
-            .field(
-                "modules",
-                &crate::base64_debug::Base64DebugMap(&self.modules),
-            )
-            .field("type_origin_table", &self.type_origin_table)
-            .field("linkage_table", &self.linkage_table)
-            .finish()
-    }
 }
 
 impl MovePackage {
