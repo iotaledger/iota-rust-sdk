@@ -39,10 +39,6 @@ class Program
             },
             2
         );
-        if (!committee.IsValid())
-        {
-            throw new Exception("committee must be valid");
-        }
 
         // 4. Derive multisig address
         var multisigAddress = committee.DeriveAddress();
@@ -60,9 +56,9 @@ class Program
         var txn = await builder.Finish();
 
         var dryRunResult = await client.DryRunTx(txn);
-        if (dryRunResult.error != null)
+        if (dryRunResult.Error != null)
         {
-            throw new Exception($"Dry run failed: {dryRunResult.error}");
+            throw new Exception($"Dry run failed: {dryRunResult.Error}");
         }
 
         // 7. Sign with key0 and key1 (2-of-3 threshold)
@@ -80,7 +76,7 @@ class Program
         var effects = await client.ExecuteTx(new[] { userSignature }, txn);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

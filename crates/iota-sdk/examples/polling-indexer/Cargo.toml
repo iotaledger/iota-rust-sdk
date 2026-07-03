@@ -6,12 +6,15 @@ license = "Apache-2.0"
 description = "Polling-based custom indexer example using iota_sdk::graphql_client::Client"
 
 [dependencies]
+# external dependencies
 anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }
-iota-sdk = { workspace = true, features = ["graphql", "types", "serde", "hash"] }
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "json"] }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time", "fs"] }
-tracing = "0.1"
+tracing.workspace = true
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+# internal dependencies
+iota-sdk = { workspace = true, features = ["graphql", "types", "serde", "hash"] }

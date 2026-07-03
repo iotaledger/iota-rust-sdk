@@ -4,8 +4,8 @@
 use crate::{
     error::Result,
     types::{
+        move_core::TypeTag,
         object::{Object, ObjectId},
-        type_tag::TypeTag,
     },
 };
 

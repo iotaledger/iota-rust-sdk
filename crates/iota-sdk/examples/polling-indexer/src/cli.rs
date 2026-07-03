@@ -6,7 +6,7 @@ use std::{fmt, str::FromStr};
 use clap::Parser;
 use serde::Deserialize;
 
-#[derive(Debug, Clone, Parser)]
+#[derive(Clone, Debug, Parser)]
 #[command(name = "polling-indexer")]
 #[command(about = "Custom polling indexer using iota_sdk::graphql_client::Client")]
 pub struct Cli {
@@ -78,7 +78,7 @@ pub struct Cli {
     pub event_package_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum Network {
     Mainnet,

@@ -10,10 +10,11 @@ use crate::{
     graphql::{
         client::GraphQLClient, pagination::DynamicFieldOutputPage, query_types::DynamicFieldOutput,
     },
-    types::{address::Address, type_tag::TypeTag},
+    types::{address::Address, move_core::TypeTag},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Access a dynamic field on an object using its name. Names are arbitrary
     /// Move values whose type have copy, drop, and store, and are specified

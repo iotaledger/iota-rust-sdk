@@ -8,7 +8,7 @@ use iota_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PrivateKeyError {
     /// Empty input data
@@ -59,58 +59,24 @@ pub mod secp256r1;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 pub mod passkey;
 
-#[cfg(feature = "zklogin")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "zklogin")))]
-pub mod zklogin;
-
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod simple;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 pub mod multisig;
 
-#[cfg(any(
-    feature = "ed25519",
-    feature = "secp256r1",
-    feature = "secp256k1",
-    feature = "zklogin"
-))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-        feature = "zklogin"
-    )))
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
@@ -220,7 +186,7 @@ pub trait ToFromBytes {
     fn to_bytes(&self) -> Self::ByteArray;
 
     /// Create an instance from raw bytes
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error>
     where
         Self: Sized;
 }

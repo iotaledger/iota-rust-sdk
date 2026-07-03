@@ -1,0 +1,475 @@
+; Auto-generated BCS schema definitions
+; Do not edit manually
+
+address = 32OCTET
+
+argument = %d00           ; Gas
+         / %d01 u16       ; Input
+         / %d02 u16       ; Result
+         / %d03 u16 u16   ; NestedResult
+
+bls12381-public-key = %d96 96OCTET
+
+bls12381-signature = 48OCTET
+
+bool    = %d00   ; false
+        / %d01   ; true
+
+bytes   = size *OCTET
+
+call-arg = %d00 bytes        ; Pure
+         / %d01 object-arg   ; Object
+
+cancelled-transaction = transaction-digest           ; digest
+                        (size *version-assignment)   ; version-assignments
+
+certificate-digest = digest
+
+change-epoch = u64                      ; epoch
+               u64                      ; protocol-version
+               u64                      ; storage-charge
+               u64                      ; computation-charge
+               u64                      ; storage-rebate
+               u64                      ; non-refundable-storage-fee
+               u64                      ; epoch-start-timestamp-ms
+               (size *system-package)   ; system-packages
+
+change-epoch-v2 = u64                      ; epoch
+                  u64                      ; protocol-version
+                  u64                      ; storage-charge
+                  u64                      ; computation-charge
+                  u64                      ; computation-charge-burned
+                  u64                      ; storage-rebate
+                  u64                      ; non-refundable-storage-fee
+                  u64                      ; epoch-start-timestamp-ms
+                  (size *system-package)   ; system-packages
+
+change-epoch-v3 = u64                      ; epoch
+                  u64                      ; protocol-version
+                  u64                      ; storage-charge
+                  u64                      ; computation-charge
+                  u64                      ; computation-charge-burned
+                  u64                      ; storage-rebate
+                  u64                      ; non-refundable-storage-fee
+                  u64                      ; epoch-start-timestamp-ms
+                  (size *system-package)   ; system-packages
+                  (size *u64)              ; eligible-active-validators
+
+change-epoch-v4 = u64                      ; epoch
+                  u64                      ; protocol-version
+                  u64                      ; storage-charge
+                  u64                      ; computation-charge
+                  u64                      ; computation-charge-burned
+                  u64                      ; storage-rebate
+                  u64                      ; non-refundable-storage-fee
+                  u64                      ; epoch-start-timestamp-ms
+                  (size *system-package)   ; system-packages
+                  (size *u64)              ; eligible-active-validators
+                  (size *u64)              ; scores
+                  bool                     ; adjust-rewards-by-score
+
+changed-object = object-id      ; object-id
+                 object-in      ; input-state
+                 object-out     ; output-state
+                 id-operation   ; id-operation
+
+checkpoint-commitment = %d00 digest   ; EcmhLiveObjectSet
+
+checkpoint-contents = %d00 checkpoint-contents-v1   ; V1
+
+checkpoint-contents-digest = digest
+
+checkpoint-contents-v1 = (size *execution-digests)        ; digests
+                         (size *(size *user-signature))   ; signatures
+
+checkpoint-data = signed-checkpoint-summary        ; checkpoint-summary
+                  checkpoint-contents              ; checkpoint-contents
+                  (size *checkpoint-transaction)   ; transactions
+
+checkpoint-digest = digest
+
+checkpoint-summary = u64                               ; epoch
+                     u64                               ; sequence-number
+                     u64                               ; network-total-transactions
+                     checkpoint-contents-digest        ; content-digest
+                     (%d00 / %d01 checkpoint-digest)   ; previous-digest
+                     gas-cost-summary                  ; epoch-rolling-gas-cost-summary
+                     u64                               ; timestamp-ms
+                     (size *checkpoint-commitment)     ; checkpoint-commitments
+                     (%d00 / %d01 end-of-epoch-data)   ; end-of-epoch-data
+                     bytes                             ; version-specific-data
+
+checkpoint-transaction = %d01 intent-signed-transaction     ; transaction
+                         transaction-effects                ; effects
+                         (%d00 / %d01 transaction-events)   ; events
+                         (size *object)                     ; input-objects
+                         (size *object)                     ; output-objects
+
+command = %d00 move-call          ; MoveCall
+        / %d01 transfer-objects   ; TransferObjects
+        / %d02 split-coins        ; SplitCoins
+        / %d03 merge-coins        ; MergeCoins
+        / %d04 publish            ; Publish
+        / %d05 make-move-vector   ; MakeMoveVector
+        / %d06 upgrade            ; Upgrade
+
+command-argument-error = %d00           ; TypeMismatch
+                       / %d01           ; InvalidBcsBytes
+                       / %d02           ; InvalidUsageOfPureArgument
+                       / %d03           ; InvalidArgumentToPrivateEntryFunction
+                       / %d04 u16       ; IndexOutOfBounds
+                       / %d05 u16 u16   ; SecondaryIndexOutOfBounds
+                       / %d06 u16       ; InvalidResultArity
+                       / %d07           ; InvalidGasCoinUsage
+                       / %d08           ; InvalidValueUsage
+                       / %d09           ; InvalidObjectByValue
+                       / %d10           ; InvalidObjectByMutRef
+                       / %d11           ; SharedObjectOperationNotAllowed
+                       / %d12           ; InvalidArgumentArity
+
+compressed-struct-tag = %d00 struct-tag   ; Other
+                      / %d01              ; GasCoin
+                      / %d02              ; StakedIota
+                      / %d03 type-tag     ; Coin
+
+consensus-commit-digest = digest
+
+consensus-commit-prologue-v1 = u64                                        ; epoch
+                               u64                                        ; round
+                               (%d00 / %d01 u64)                          ; sub-dag-index
+                               u64                                        ; commit-timestamp-ms
+                               consensus-commit-digest                    ; consensus-commit-digest
+                               consensus-determined-version-assignments   ; consensus-determined-version-assignments
+
+consensus-determined-version-assignments = %d00 (size *cancelled-transaction)   ; CancelledTransactions
+
+digest = %d32 32OCTET
+
+effects-aux-data-digest = digest
+
+end-of-epoch-data = (size *validator-committee-member)   ; next-epoch-committee
+                    u64                                  ; next-epoch-protocol-version
+                    (size *checkpoint-commitment)        ; epoch-commitments
+                    i64                                  ; epoch-supply-change
+
+end-of-epoch-transaction-kind = %d00 change-epoch      ; ChangeEpoch
+                              / %d01 change-epoch-v2   ; ChangeEpochV2
+                              / %d02 change-epoch-v3   ; ChangeEpochV3
+                              / %d03 change-epoch-v4   ; ChangeEpochV4
+
+event = object-id    ; package-id
+        identifier   ; module
+        address      ; sender
+        struct-tag   ; type-
+        bytes        ; contents
+
+execution-digests = transaction-digest           ; transaction
+                    transaction-effects-digest   ; effects
+
+execution-error = %d00                               ; InsufficientGas
+                / %d01                               ; InvalidGasObject
+                / %d02                               ; InvariantViolation
+                / %d03                               ; FeatureNotYetSupported
+                / %d04 u64 u64                       ; ObjectTooBig
+                / %d05 u64 u64                       ; PackageTooBig
+                / %d06 object-id                     ; CircularObjectOwnership
+                / %d07                               ; InsufficientCoinBalance
+                / %d08                               ; CoinBalanceOverflow
+                / %d09                               ; PublishErrorNonZeroAddress
+                / %d10                               ; IotaMoveVerificationError
+                / %d11 (%d00 / %d01 move-location)   ; MovePrimitiveRuntimeError
+                / %d12 move-location u64             ; MoveAbort
+                / %d13                               ; VmVerificationOrDeserializationError
+                / %d14                               ; VmInvariantViolation
+                / %d15                               ; FunctionNotFound
+                / %d16                               ; ArityMismatch
+                / %d17                               ; TypeArityMismatch
+                / %d18                               ; NonEntryFunctionInvoked
+                / %d19 u16 command-argument-error    ; CommandArgumentError
+                / %d20 u16 type-argument-error       ; TypeArgumentError
+                / %d21 u16 u16                       ; UnusedValueWithoutDrop
+                / %d22 u16                           ; InvalidPublicFunctionReturnType
+                / %d23                               ; InvalidTransferObject
+                / %d24 u64 u64                       ; EffectsTooLarge
+                / %d25                               ; PublishUpgradeMissingDependency
+                / %d26                               ; PublishUpgradeDependencyDowngrade
+                / %d27 package-upgrade-error         ; PackageUpgradeError
+                / %d28 u64 u64                       ; WrittenObjectsTooLarge
+                / %d29                               ; CertificateDenied
+                / %d30                               ; IotaMoveVerificationTimeout
+                / %d31                               ; SharedObjectOperationNotAllowed
+                / %d32                               ; InputObjectDeleted
+                / %d33 (size *object-id)             ; ExecutionCancelledDueToSharedObjectCongestion
+                / %d34 address string                ; AddressDeniedForCoin
+                / %d35 string                        ; CoinTypeGlobalPause
+                / %d36                               ; ExecutionCancelledDueToRandomnessUnavailable
+                / %d37 (size *object-id) u64         ; ExecutionCancelledDueToSharedObjectCongestionV2
+                / %d38                               ; InvalidLinkage
+
+execution-status = %d00                                     ; Success
+                 / %d01 execution-error (%d00 / %d01 u64)   ; Failure
+
+gas-cost-summary = u64   ; computation-cost
+                   u64   ; computation-cost-burned
+                   u64   ; storage-cost
+                   u64   ; storage-rebate
+                   u64   ; non-refundable-storage-fee
+
+gas-payment = (size *object-reference)   ; objects
+              address                    ; owner
+              u64                        ; price
+              u64                        ; budget
+
+genesis-object = %d00 object-data owner   ; RawObject
+
+genesis-transaction = (size *genesis-object)   ; objects
+                      (size *event)            ; events
+
+i64     = 8OCTET
+
+id-operation = %d00   ; None
+             / %d01   ; Created
+             / %d02   ; Deleted
+
+identifier = string
+
+input = call-arg
+
+intent = intent-scope     ; scope
+         intent-version   ; version
+         intent-app-id    ; app-id
+
+intent-app-id = %d00   ; Iota
+              / %d01   ; Consensus
+
+intent-scope = %d00   ; TransactionData
+             / %d01   ; TransactionEffects
+             / %d02   ; CheckpointSummary
+             / %d03   ; PersonalMessage
+             / %d04   ; SenderSignedTransaction
+             / %d05   ; ProofOfPossession
+             / %d06   ; BridgeEventDeprecated
+             / %d07   ; ConsensusBlock
+             / %d08   ; DiscoveryPeers
+             / %d09   ; AuthorityCapabilities
+
+intent-signed-transaction = intent                   ; intent
+                            transaction              ; transaction
+                            (size *user-signature)   ; signatures
+
+intent-version = %d00   ; V0
+
+make-move-vector = (%d00 / %d01 type-tag)   ; type-
+                   (size *argument)         ; elements
+
+merge-coins = argument           ; coin
+              (size *argument)   ; coins-to-merge
+
+misbehavior-report-digest = digest
+
+move-authenticator-digest = digest
+
+move-call = object-id          ; package
+            identifier         ; module
+            identifier         ; function
+            (size *type-tag)   ; type-arguments
+            (size *argument)   ; arguments
+
+move-location = object-id                  ; package
+                identifier                 ; module
+                u16                        ; function
+                u16                        ; instruction
+                (%d00 / %d01 identifier)   ; function-name
+
+move-package = object-id                          ; id
+               version                            ; version
+               (size *(identifier bytes))         ; modules
+               (size *type-origin)                ; type-origin-table
+               (size *(object-id upgrade-info))   ; linkage-table
+
+move-struct = compressed-struct-tag   ; object-type
+              version                 ; version
+              bytes                   ; contents
+
+object = object-data          ; data
+         owner                ; owner
+         transaction-digest   ; previous-transaction
+         u64                  ; storage-rebate
+
+object-arg = %d00 object-reference         ; ImmutableOrOwned
+           / %d01 object-id version bool   ; Shared
+           / %d02 object-reference         ; Receiving
+
+object-data = %d00 move-struct    ; Struct
+            / %d01 move-package   ; Package
+
+object-digest = digest
+
+object-id = address
+
+object-in = %d00                               ; Missing
+          / %d01 version object-digest owner   ; Data
+
+object-out = %d00                         ; Missing
+           / %d01 object-digest owner     ; ObjectWrite
+           / %d02 version object-digest   ; PackageWrite
+
+object-reference = object-id       ; object-id
+                   version         ; version
+                   object-digest   ; digest
+
+owner = %d00 address     ; Address
+      / %d01 object-id   ; Object
+      / %d02 version     ; Shared
+      / %d03             ; Immutable
+
+package-upgrade-error = %d00 object-id             ; UnableToFetchPackage
+                      / %d01 object-id             ; NotAPackage
+                      / %d02                       ; IncompatibleUpgrade
+                      / %d03 digest                ; DigestDoesNotMatch
+                      / %d04 u8                    ; UnknownUpgradePolicy
+                      / %d05 object-id object-id   ; PackageIdDoesNotMatch
+
+programmable-transaction = (size *input)     ; inputs
+                           (size *command)   ; commands
+
+publish = (size *bytes)       ; modules
+          (size *object-id)   ; dependencies
+
+randomness-round = u64
+
+randomness-state-update = u64                ; epoch
+                          randomness-round   ; randomness-round
+                          bytes              ; random-bytes
+                          version            ; randomness-obj-initial-shared-version
+
+sender-signed-data-digest = digest
+
+signed-checkpoint-summary = checkpoint-summary               ; checkpoint
+                            validator-aggregated-signature   ; signature
+
+signed-transaction = transaction              ; transaction
+                     (size *user-signature)   ; signatures
+
+size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
+
+split-coins = argument           ; coin
+              (size *argument)   ; amounts
+
+string  = size *OCTET   ; UTF-8 encoded
+
+struct-tag = address            ; address
+             identifier         ; module
+             identifier         ; name
+             (size *type-tag)   ; type-params
+
+system-package = version             ; version
+                 (size *bytes)       ; modules
+                 (size *object-id)   ; dependencies
+
+transaction = %d00 transaction-v1   ; V1
+
+transaction-digest = digest
+
+transaction-effects = %d00 transaction-effects-v1   ; V1
+
+transaction-effects-digest = digest
+
+transaction-effects-v1 = execution-status                          ; status
+                         u64                                       ; epoch
+                         gas-cost-summary                          ; gas-cost-summary
+                         transaction-digest                        ; transaction-digest
+                         (%d00 / %d01 u32)                         ; gas-object-index
+                         (%d00 / %d01 transaction-events-digest)   ; events-digest
+                         (size *transaction-digest)                ; dependencies
+                         version                                   ; lamport-version
+                         (size *changed-object)                    ; changed-objects
+                         (size *unchanged-shared-object)           ; unchanged-shared-objects
+                         (%d00 / %d01 effects-aux-data-digest)     ; auxiliary-data-digest
+
+transaction-events = (size *event)
+
+transaction-events-digest = digest
+
+transaction-expiration = %d00       ; None
+                       / %d01 u64   ; Epoch
+
+transaction-kind = %d00 programmable-transaction                ; Programmable
+                 / %d01 genesis-transaction                     ; Genesis
+                 / %d02 consensus-commit-prologue-v1            ; ConsensusCommitPrologueV1
+                 / %d03                                         ; AuthenticatorStateUpdateV1Deprecated
+                 / %d04 (size *end-of-epoch-transaction-kind)   ; EndOfEpoch
+                 / %d05 randomness-state-update                 ; RandomnessStateUpdate
+
+transaction-v1 = transaction-kind         ; kind
+                 address                  ; sender
+                 gas-payment              ; gas-payment
+                 transaction-expiration   ; expiration
+
+transfer-objects = (size *argument)   ; objects
+                   argument           ; address
+
+type-argument-error = %d00   ; TypeNotFound
+                    / %d01   ; ConstraintNotSatisfied
+
+type-origin = identifier   ; module-name
+              identifier   ; datatype-name
+              object-id    ; package
+
+type-tag = %d00              ; Bool
+         / %d01              ; U8
+         / %d02              ; U64
+         / %d03              ; U128
+         / %d04              ; Address
+         / %d05              ; Signer
+         / %d06 type-tag     ; Vector
+         / %d07 struct-tag   ; Struct
+         / %d08              ; U16
+         / %d09              ; U32
+         / %d10              ; U256
+
+u128    = 16OCTET
+
+u16     = 2OCTET
+
+u32     = 4OCTET
+
+u64     = 8OCTET
+
+u8      = 1OCTET
+
+uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer
+
+unchanged-shared-kind = %d00 version object-digest   ; ReadOnlyRoot
+                      / %d01 version                 ; MutateDeleted
+                      / %d02 version                 ; ReadDeleted
+                      / %d03 version                 ; Cancelled
+                      / %d04                         ; PerEpochConfig
+
+unchanged-shared-object = object-id               ; object-id
+                          unchanged-shared-kind   ; kind
+
+upgrade = (size *bytes)       ; modules
+          (size *object-id)   ; dependencies
+          object-id           ; package
+          argument            ; ticket
+
+upgrade-info = object-id   ; upgraded-id
+               version     ; upgraded-version
+
+user-signature = bytes
+
+validator-aggregated-signature = u64                  ; epoch
+                                 bls12381-signature   ; signature
+                                 bytes                ; bitmap
+
+validator-committee = u64                                  ; epoch
+                      (size *validator-committee-member)   ; members
+
+validator-committee-member = bls12381-public-key   ; public-key
+                             u64                   ; stake
+
+version = u64
+
+version-assignment = object-id   ; object-id
+                     version     ; version

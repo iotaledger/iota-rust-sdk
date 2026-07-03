@@ -7,13 +7,14 @@ use crate::{
     error::Result,
     graphql::client::GraphQLClient,
     transaction_builder::ptb_arg::PTBArgument,
-    types::{crypto::move_authenticator::MoveAuthenticator, object::ObjectId, type_tag::TypeTag},
+    types::{crypto::move_authenticator::MoveAuthenticator, move_core::TypeTag, object::ObjectId},
 };
 
 #[derive(uniffi::Object)]
 pub struct MoveAuthenticatorBuilder(pub iota_sdk::transaction_builder::MoveAuthenticatorBuilder);
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl MoveAuthenticatorBuilder {
     /// Create a new move authenticator call with the account ID, function
     /// inputs, and generic types.

@@ -82,10 +82,10 @@ If you want to build the Go bindings from the Rust source:
 - Rust toolchain
 - uniffi-bindgen-go
 
-Until https://github.com/NordSecurity/uniffi-bindgen-go/pull/77 is merged, it is recommended to install `uniffi-bindgen-go` via:
+Install `uniffi-bindgen-go` via:
 
 ```bash
-cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d
+make install-uniffi-bindgen-go
 ```
 
 Verify by running `make --version`, `go version`, and `uniffi-bindgen-go --version`.

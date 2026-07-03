@@ -161,7 +161,7 @@ mod tests {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
         client
-            .dynamic_field(ObjectId::SYSTEM.into(), TypeTag::U64, BcsName(bcs))
+            .dynamic_field(ObjectId::SYSTEM_STATE.into(), TypeTag::U64, BcsName(bcs))
             .await
             .map_err(|e| {
                 format!(
@@ -172,7 +172,7 @@ mod tests {
             .unwrap();
 
         client
-            .dynamic_field(ObjectId::SYSTEM.into(), TypeTag::U64, 2u64)
+            .dynamic_field(ObjectId::SYSTEM_STATE.into(), TypeTag::U64, 2u64)
             .await
             .map_err(|e| {
                 format!(
@@ -187,7 +187,7 @@ mod tests {
     async fn test_dynamic_fields_query() {
         let client = test_client();
         client
-            .dynamic_fields(ObjectId::SYSTEM.into(), PaginationFilter::default())
+            .dynamic_fields(ObjectId::SYSTEM_STATE.into(), PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(

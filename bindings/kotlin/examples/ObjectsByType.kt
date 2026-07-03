@@ -16,7 +16,7 @@ fun main() = runBlocking {
         } else {
             println("StakedIota object IDs:")
             for (stakedIota in stakedIotas.data) {
-                println(stakedIota.objectId().toHex())
+                println(stakedIota.id().toHex())
             }
         }
     } catch (e: Exception) {

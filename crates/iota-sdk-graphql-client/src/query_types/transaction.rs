@@ -164,7 +164,7 @@ pub struct TransactionBlockCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 
-#[derive(cynic::Enum, Clone, Copy, Debug)]
+#[derive(Clone, Copy, cynic::Enum, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "TransactionBlockKindInput",
@@ -176,7 +176,6 @@ pub enum TransactionBlockKindInput {
     ProgrammableTx,
     Genesis,
     ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
 }
@@ -189,7 +188,7 @@ pub struct TransactionsFilter {
     pub after_checkpoint: Option<u64>,
     pub at_checkpoint: Option<u64>,
     pub before_checkpoint: Option<u64>,
-    pub sign_address: Option<Address>,
+    pub sent_address: Option<Address>,
     pub recv_address: Option<Address>,
     pub input_object: Option<ObjectId>,
     pub changed_object: Option<ObjectId>,

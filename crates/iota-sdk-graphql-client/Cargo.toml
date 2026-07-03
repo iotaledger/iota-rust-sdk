@@ -12,31 +12,39 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 workspace = true
 
 [dependencies]
+# external dependencies
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 chrono = "0.4.26"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, default-features = false, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls-tls", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
-tracing = "0.1.37"
+tracing.workspace = true
 url = "2.5.3"
 variadics_please.workspace = true
 
+# internal dependencies
+iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2", features = ["js"] }
+getrandom_2.workspace = true
+js-sys.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
 
 [dev-dependencies]
+# external dependencies
 eyre.workspace = true
 rand.workspace = true
 
+# internal dependencies
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]

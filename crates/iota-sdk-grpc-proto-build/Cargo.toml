@@ -1,0 +1,27 @@
+[package]
+name = "iota-sdk-grpc-proto-build"
+version = "0.0.1-alpha.1"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2024"
+license = "Apache-2.0"
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+bitflags = "2.11"
+heck = { version = ">=0.4, <=0.5" }
+itertools = "0.14.0"
+petgraph = "0.8"
+prettyplease = "0.2"
+proc-macro2.workspace = true
+prost.workspace = true
+prost-reflect = "0.16"
+prost-types.workspace = true
+protox = "0.9"
+quote.workspace = true
+regex = "1.12"
+syn.workspace = true
+tonic-prost-build = "0.14"
+walkdir = "2.5"

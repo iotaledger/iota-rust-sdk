@@ -7,22 +7,27 @@ license = "Apache-2.0"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
+[features]
+default = []
+test-client = []
+
 [lints]
 workspace = true
 
 [dependencies]
+# external dependencies
 base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
-reqwest.workspace = true
+reqwest = { workspace = true, features = ["json"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 variadics_please.workspace = true
 
+# internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
-iota-graphql-client.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
@@ -32,8 +37,10 @@ tokio = { workspace = true, features = ["macros", "rt"] }
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
+# external dependencies
 eyre.workspace = true
 rand.workspace = true
 serde_json.workspace = true
 
+# internal dependencies
 iota-types = { workspace = true, features = ["rand"] }

@@ -26,6 +26,7 @@ consts = "consts"
 
 [files]
 extend-exclude = [
+  "bindings/csharp/src/IotaSdk/IotaSdk.cs",
   "bindings/go/iota_sdk/iota_sdk.go",
   "bindings/go/iota_sdk/iota_sdk.h",
   "bindings/kotlin/lib/iota_sdk/iota_sdk.kt",

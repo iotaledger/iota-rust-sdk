@@ -18,9 +18,9 @@
 //! enabled which allows one to enable a subset specifically for their use case.
 //! Below is a list of the available feature flags.
 //!
-//! - `schemars`: Enables JSON schema generation using the [schemars] library.
 //! - `serde`: Enables support for serializing and deserializing types to/from
-//!   BCS utilizing [serde] library.
+//!   BCS utilizing [serde] library. Note: JSON serialization is NOT guaranteed
+//!   to match the IOTA monorepo's JSON-RPC format.
 //! - `rand`: Enables support for generating random instances of a number of
 //!   types via the [rand] library.
 //! - `hash`: Enables support for hashing, which is required for deriving
@@ -32,7 +32,6 @@
 //! [serde]: https://docs.rs/serde
 //! [rand]: https://docs.rs/rand
 //! [proptest]: https://docs.rs/proptest
-//! [schemars]: https://docs.rs/schemars
 //! [proptest::arbitrary::Arbitrary]: https://docs.rs/proptest/latest/proptest/arbitrary/trait.Arbitrary.html
 //!
 //! # BCS
@@ -71,34 +70,36 @@
 //! bcs-length-prefixed = bytes / string / vector / option
 //! bcs-fixed-length    = u8 / u16 / u32 / u64 / u128 /
 //!                       i8 / i16 / i32 / i64 / i128 /
-//!                       boolean
-//! bcs-struct          = *bcs-value                ; Sequence of serialized fields
-//! bcs-enum            = uleb128-index bcs-value   ; Enum index and associated value
+//!                       bool
+//! bcs-struct          = *bcs-value          ; Sequence of serialized fields
+//! bcs-enum            = uleb128 bcs-value   ; Variant index (ULEB128) + associated value
+//!
+//! ; --- Named primitives ---
+//! uleb128 = *(%x80-FF) %x00-7F   ; Variable-length unsigned integer
+//! size    = uleb128               ; BCS sequence / string length
+//! opt     = %d00                  ; None — no value follows
+//!         / %d01                  ; Some — value follows
 //!
 //! ; --- Length-prefixed types ---
-//! bytes           = uleb128 *OCTET          ; Raw bytes of the specified length
-//! string          = uleb128 *OCTET          ; valid utf8 string of the specified length
-//! vector          = uleb128 *bcs-value      ; Length-prefixed list of values
-//! option          = %x00 / (%x01 bcs-value) ; optional value
+//! bytes   = size *OCTET          ; Raw bytes
+//! string  = size *OCTET          ; UTF-8 string
+//! vector  = size *bcs-value      ; Length-prefixed list of values
+//! option  = %d00 / (%d01 bcs-value)  ; Optional value
 //!
 //! ; --- Fixed-length types ---
-//! u8          = OCTET                     ; 1-byte unsigned integer
-//! u16         = 2OCTET                    ; 2-byte unsigned integer, little-endian
-//! u32         = 4OCTET                    ; 4-byte unsigned integer, little-endian
-//! u64         = 8OCTET                    ; 8-byte unsigned integer, little-endian
-//! u128        = 16OCTET                   ; 16-byte unsigned integer, little-endian
-//! i8          = OCTET                     ; 1-byte signed integer
-//! i16         = 2OCTET                    ; 2-byte signed integer, little-endian
-//! i32         = 4OCTET                    ; 4-byte signed integer, little-endian
-//! i64         = 8OCTET                    ; 8-byte signed integer, little-endian
-//! i128        = 16OCTET                   ; 16-byte signed integer, little-endian
-//! boolean     = %x00 / %x01               ; Boolean: 0 = false, 1 = true
-//! array       = *(bcs-value)              ; Fixed-length array
-//!
-//! ; --- ULEB128 definition ---
-//! uleb128         = 1*5uleb128-byte       ; Variable-length ULEB128 encoding
-//! uleb128-byte    = %x00-7F / %x80-FF     ; ULEB128 continuation rules
-//! uleb128-index   = uleb128               ; ULEB128-encoded variant index
+//! u8      = 1OCTET               ; 1-byte unsigned integer
+//! u16     = 2OCTET               ; 2-byte unsigned integer, little-endian
+//! u32     = 4OCTET               ; 4-byte unsigned integer, little-endian
+//! u64     = 8OCTET               ; 8-byte unsigned integer, little-endian
+//! u128    = 16OCTET              ; 16-byte unsigned integer, little-endian
+//! i8      = 1OCTET               ; 1-byte signed integer
+//! i16     = 2OCTET               ; 2-byte signed integer, little-endian
+//! i32     = 4OCTET               ; 4-byte signed integer, little-endian
+//! i64     = 8OCTET               ; 8-byte signed integer, little-endian
+//! i128    = 16OCTET              ; 16-byte signed integer, little-endian
+//! bool    = %d00                 ; false
+//!         / %d01                 ; true
+//! array   = *(bcs-value)         ; Fixed-length array (no length prefix)
 //! ```
 //!
 //! [BCS]: https://docs.rs/bcs
@@ -123,13 +124,15 @@ pub mod execution_status;
 pub mod framework;
 pub mod gas;
 pub mod iota_names;
+pub mod move_core;
 pub mod move_package;
 pub mod object;
 pub mod object_id;
 pub mod transaction;
-pub mod type_tag;
 pub mod u256;
+pub mod utils;
 pub mod validator;
+pub mod version;
 
 pub use address::{Address, AddressParseError};
 pub use checkpoint::{
@@ -138,59 +141,90 @@ pub use checkpoint::{
     EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary, StakeUnit,
 };
 pub use crypto::{
-    Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError,
-    IntentMessage, IntentScope, IntentVersion, InvalidSignatureScheme,
-    InvalidZkLoginAuthenticatorError, Jwk, JwkId, MoveAuthenticator, MoveAuthenticatorV1,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
-    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator, ZkLoginClaim,
-    ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+    Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
+    INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
+    IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
+    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
+    RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
-pub use digest::{Digest, DigestParseError, SigningDigest};
+pub use digest::{
+    CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
+    DigestParseError, EffectsAuxDataDigest, MisbehaviorReportDigest, MoveAuthenticatorDigest,
+    ObjectDigest, SenderSignedDataDigest, SigningDigest, TransactionDigest,
+    TransactionEffectsDigest, TransactionEventsDigest,
+};
 pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
 };
-pub use events::{BalanceChange, Event, TransactionEvents};
+pub use events::{Event, TransactionEvents};
 pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
-pub use move_package::{MovePackageData, UpgradePolicy};
+pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
+pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
-    GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
-    TypeOrigin, UpgradeInfo, Version,
+    GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,
+    ObjectReference, ObjectType, Owner,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4, Command,
-    ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
-    ExecutionTimeObservation, ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment,
-    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
-    Publish, RandomnessStateUpdate, SenderSignedTransaction, SignedTransaction, SplitCoins,
-    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
-    TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
+    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments,
+    EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
+    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
+    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
+    VersionAssignment,
 };
-pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
+pub use version::Version;
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
+
+/// Returns the next array in byte-increasing order.
+pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
+    match next_lexicographical_array_opt(array) {
+        Some(next) => next,
+        None => [0; N],
+    }
+}
+
+/// Returns the next array in byte-increasing order, or `None` if the result
+/// would overflow.
+pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> Option<[u8; N]> {
+    let mut next = *array;
+    let mut i = N;
+
+    while i > 0 {
+        i -= 1;
+        let (new_byte, overflow) = next[i].overflowing_add(1);
+        next[i] = new_byte;
+
+        if !overflow {
+            return Some(next);
+        }
+    }
+
+    None
+}
 
 #[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
         paste::paste! {$(
+        #[doc = "Checks if this is a " $variant:snake " variant."]
         #[inline]
         pub fn [< is_ $variant:snake >](&self) -> bool {
             matches!(self, Self::$variant { .. })
@@ -203,6 +237,7 @@ macro_rules! def_is {
 macro_rules! def_is_as_into_opt {
     (@into $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
         pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
@@ -213,6 +248,7 @@ macro_rules! def_is_as_into_opt {
             }
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
             self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($rename)))
@@ -221,8 +257,9 @@ macro_rules! def_is_as_into_opt {
     };
     (@into $variant:ident ($rename:ident) [$inner:ty]) => {
         paste::paste! {
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
+        pub fn [< into_opt_ $rename >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -231,26 +268,30 @@ macro_rules! def_is_as_into_opt {
             }
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
-            self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+            self.[< into_opt_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
         }
     };
     (@impl $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
+        #[doc = "Checks if this is a " $rename:snake " variant."]
         #[inline]
         pub fn [< is_ $rename >](&self) -> bool {
             matches!(self, Self::$variant(_))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
             self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+        pub fn [< as_opt_ $rename >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -264,18 +305,38 @@ macro_rules! def_is_as_into_opt {
     };
     (@impl $variant:ident ($rename:ident) [$inner:ty]) => {
         paste::paste! {
+        #[doc = "Checks if this is a " $rename:snake " variant."]
         #[inline]
         pub fn [< is_ $rename >](&self) -> bool {
             matches!(self, Self::$variant(_))
         }
 
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
-            self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+            self.[< as_opt_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
+        #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
-        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+        pub fn [< as_mut_ $rename >](&mut self) -> &mut $inner {
+            self.[< as_opt_mut_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+
+        #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
+        #[inline]
+        pub fn [< as_opt_ $rename >](&self) -> Option<&$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
+        #[inline]
+        pub fn [< as_opt_mut_ $rename >](&mut self) -> Option<&mut $inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -417,135 +478,75 @@ mod _serde {
     pub(crate) use super::SignedTransactionWithIntentMessage;
 }
 
-#[cfg(feature = "schemars")]
-mod _schemars {
-    use schemars::{
-        JsonSchema,
-        schema::{InstanceType, Metadata, SchemaObject},
-    };
+#[cfg(test)]
+mod test {
+    use super::{next_lexicographical_array, next_lexicographical_array_opt};
 
-    pub(crate) struct U64;
-
-    impl JsonSchema for U64 {
-        fn schema_name() -> String {
-            "u64".to_owned()
+    #[test]
+    fn test_lexical_order() {
+        fn array_from_str(s: &str) -> [u8; 32] {
+            hex::decode(s).unwrap().try_into().unwrap()
         }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 64-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000000"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000000ffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002c"
+            )),
+            array_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+        );
     }
 
-    pub(crate) struct I128;
-
-    impl JsonSchema for I128 {
-        fn schema_name() -> String {
-            "i128".to_owned()
+    #[test]
+    fn test_lexical_order_opt() {
+        fn array_from_str(s: &str) -> [u8; 32] {
+            hex::decode(s).unwrap().try_into().unwrap()
         }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("i128".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct U256;
-
-    impl JsonSchema for U256 {
-        fn schema_name() -> String {
-            "u256".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 256-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u256".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct Base64;
-
-    impl JsonSchema for Base64 {
-        fn schema_name() -> String {
-            "Base64".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Base64 encoded data".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("base64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct Base58;
-
-    impl JsonSchema for Base58 {
-        fn schema_name() -> String {
-            "Base58".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Base58 encoded data".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("base58".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000000"
+            )),
+            Some(array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000001"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000000ffff"
+            )),
+            Some(array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000010000"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002c"
+            )),
+            Some(array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002d"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            )),
+            None,
+        );
     }
 }

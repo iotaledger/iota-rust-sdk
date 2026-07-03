@@ -18,7 +18,7 @@ async def main():
     builder = TransactionBuilder(
         staked_iota.owner().as_address()).with_client(client)
 
-    builder.unstake(PtbArgument.object_id(staked_iota.object_id()))
+    builder.unstake(PtbArgument.object_id(staked_iota.id()))
 
     res = await builder.dry_run()
     if res.error is not None:

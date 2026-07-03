@@ -18,7 +18,7 @@ fun main() = runBlocking {
             )
         }
 
-        val balance = client.balance(address)
+        val balance = client.balance(address) ?: 0uL
         println("Total Balance = $balance")
     } catch (e: Exception) {
         e.printStackTrace()

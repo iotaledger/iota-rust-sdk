@@ -62,9 +62,7 @@ impl PTBArgument for ObjectReference {
 
 impl<T: MoveArg> PTBArgument for T {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Pure {
-            value: self.pure_bytes().0,
-        })
+        InputKind::Input(iota_types::Input::Pure(self.pure_bytes().0))
     }
 }
 
@@ -226,11 +224,13 @@ impl PTBArgument for Shared<ObjectReference> {
 
 impl PTBArgument for &Shared<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Shared {
-            object_id: self.0.object_id,
-            mutable: false,
-            initial_shared_version: self.0.version,
-        })
+        InputKind::Input(iota_types::Input::Shared(
+            iota_types::SharedObjectReference {
+                object_id: self.0.object_id,
+                mutable: false,
+                initial_shared_version: self.0.version,
+            },
+        ))
     }
 }
 
@@ -278,11 +278,13 @@ impl PTBArgument for SharedMut<ObjectReference> {
 
 impl PTBArgument for &SharedMut<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Shared {
-            object_id: self.0.object_id,
-            mutable: true,
-            initial_shared_version: self.0.version,
-        })
+        InputKind::Input(iota_types::Input::Shared(
+            iota_types::SharedObjectReference {
+                object_id: self.0.object_id,
+                mutable: true,
+                initial_shared_version: self.0.version,
+            },
+        ))
     }
 }
 
@@ -327,12 +329,12 @@ impl PTBArgument for Receiving<ObjectReference> {
 
 impl PTBArgument for &Receiving<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Receiving(self.0.clone()))
+        InputKind::Input(iota_types::Input::Receiving(self.0))
     }
 }
 
 /// A result of a previous command to which a name was assigned.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Assigned(String);
 
 /// Get the result of a previous command by its assigned name.

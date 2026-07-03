@@ -18,7 +18,7 @@ async def main():
             f"Coin = {coin.id().to_hex()}, Coin Type = {coin.coin_type().as_struct_tag()}, Balance = {coin.balance()}"
         )
 
-    balance = await client.balance(address)
+    balance = await client.balance(address) or 0
     print(f"Total Balance = {balance}")
 
 

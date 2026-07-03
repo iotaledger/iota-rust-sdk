@@ -17,11 +17,10 @@ use crate::{
     },
     types::{
         address::Address,
+        move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
-        struct_tag::Identifier,
-        transaction::Transaction,
-        type_tag::TypeTag,
+        transaction::{ProgrammableTransaction, Transaction},
     },
 };
 
@@ -49,12 +48,38 @@ impl TransactionBuilder {
     }
 }
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
     #[uniffi::constructor]
     pub fn new(sender: &Address) -> Self {
         Self(iota_sdk::transaction_builder::TransactionBuilder::new(**sender).into())
+    }
+
+    /// Reconstruct a transaction builder from a finalized transaction.
+    /// Calling `finish` on the returned builder produces a transaction equal
+    /// to the input.
+    ///
+    /// Only programmable transactions are supported; other transaction kinds
+    /// will return an error.
+    #[uniffi::constructor]
+    pub fn from_transaction(transaction: &Transaction) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::transaction_builder::TransactionBuilder::try_from(transaction.0.clone())?
+                .into(),
+        ))
+    }
+
+    /// Create a transaction builder from a programmable transaction.
+    ///
+    /// The returned builder has the original inputs and commands but no
+    /// sender, gas payment, sponsor, or expiration; the sender defaults to
+    /// the zero address and must be set via `set_sender` before `finish`
+    /// is called.
+    #[uniffi::constructor]
+    pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
+        Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
     }
 
     pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {

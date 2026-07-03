@@ -1,0 +1,23 @@
+[package]
+name = "iota-sdk-bcs-schema"
+version = "0.0.0"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2024"
+license = "Apache-2.0"
+publish = false
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "A procedural macro to generate BCS schema definitions for Rust types in ABNF format"
+
+[lib]
+proc-macro = true
+
+[features]
+move-shape = []
+
+[dependencies]
+proc-macro2.workspace = true
+quote.workspace = true
+syn.workspace = true
+
+[lints]
+workspace = true

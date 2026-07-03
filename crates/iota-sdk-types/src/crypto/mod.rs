@@ -8,10 +8,11 @@ mod intent;
 mod move_authenticator;
 mod multisig;
 mod passkey;
+mod public_key;
+mod randomness_round;
 mod secp256k1;
 mod secp256r1;
 mod signature;
-mod zklogin;
 
 pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
@@ -21,20 +22,20 @@ pub use intent::{
 };
 pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1};
 pub use multisig::{
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature,
+    BitmapUnit, MULTISIG_BITMAP_VALUE_MAX, MULTISIG_COMMITTEE_SIZE_MAX,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
+    MultisigMemberSignature, ThresholdUnit, WeightUnit,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
+pub use public_key::PublicKey;
+pub use randomness_round::RandomnessRound;
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
-pub use zklogin::{
-    Bn254FieldElement, CircomG1, CircomG2, InvalidZkLoginAuthenticatorError, Jwk, JwkId,
-    ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
-};
 
 #[cfg(feature = "serde")]
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
+#[error("error deserializing bytes: {0}")]
 pub struct SignatureFromBytesError(String);
 
 #[cfg(feature = "serde")]
@@ -43,16 +44,6 @@ impl SignatureFromBytesError {
         Self(msg.to_string())
     }
 }
-
-#[cfg(feature = "serde")]
-impl core::fmt::Display for SignatureFromBytesError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "error deserializing bytes: {}", self.0)
-    }
-}
-
-#[cfg(feature = "serde")]
-impl std::error::Error for SignatureFromBytesError {}
 
 // Implement various base64 fixed-size array helpers
 //
@@ -164,7 +155,7 @@ pub trait PublicKeyExt: Sized {
     fn as_bytes(&self) -> &[u8];
 
     /// Tries to create a PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr>;
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::FromBytesErr>;
 
     /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme;

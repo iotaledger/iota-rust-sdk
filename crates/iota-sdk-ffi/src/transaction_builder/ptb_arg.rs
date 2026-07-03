@@ -46,6 +46,13 @@ impl MoveArg {
     }
 
     #[uniffi::constructor]
+    pub fn address_from_short_hex(hex: String) -> Result<Self> {
+        Ok(Self::Address(iota_sdk::types::Address::from_short_hex(
+            hex,
+        )?))
+    }
+
+    #[uniffi::constructor]
     pub fn digest(digest: &Digest) -> Self {
         Self::Digest(**digest)
     }
@@ -413,7 +420,7 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
     ) -> iota_sdk::transaction_builder::unresolved::Argument {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
-            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().arg(ptb),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.arg(ptb),
             PTBArgument::Move(arg) => arg.arg(ptb),
             PTBArgument::Assigned(assigned) => assigned.arg(ptb),
             PTBArgument::Shared(shared) => shared.arg(ptb),
@@ -426,7 +433,7 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
     fn input(self) -> iota_sdk::transaction_builder::unresolved::InputKind {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.input(),
-            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().input(),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.input(),
             PTBArgument::Move(arg) => arg.input(),
             PTBArgument::Assigned(assigned) => assigned.input(),
             PTBArgument::Shared(shared) => shared.input(),

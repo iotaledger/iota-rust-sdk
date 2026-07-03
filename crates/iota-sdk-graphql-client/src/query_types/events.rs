@@ -51,7 +51,7 @@ pub struct EventFilter {
     pub transaction_digest: Option<String>,
 }
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
     pub sending_module: Option<MoveModuleQuery>,

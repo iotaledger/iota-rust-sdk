@@ -10,10 +10,14 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, pagination::ObjectPage, query_types::ObjectFilter},
-    types::object::{Object, ObjectId},
+    types::{
+        object::{Object, ObjectId},
+        version::Version,
+    },
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Return an object based on the provided `Address`.
     ///
@@ -24,13 +28,13 @@ impl GraphQLClient {
     pub async fn object(
         &self,
         object_id: &ObjectId,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
             .0
             .read()
             .await
-            .object(**object_id, version)
+            .object(**object_id, version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -74,13 +78,13 @@ impl GraphQLClient {
     pub async fn move_object_contents_bcs(
         &self,
         object_id: &ObjectId,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents_bcs(**object_id, version)
+            .move_object_contents_bcs(**object_id, version.map(|v| **v))
             .await?)
     }
 
@@ -93,13 +97,13 @@ impl GraphQLClient {
     pub async fn move_object_contents(
         &self,
         object_id: &ObjectId,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents(**object_id, version)
+            .move_object_contents(**object_id, version.map(|v| **v))
             .await?)
     }
 }

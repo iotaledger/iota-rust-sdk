@@ -40,7 +40,40 @@ jobs:
         if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
         run: make doc
 
+      - name: BCS schema
+        if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+        run: make bcs-schema
+
       - run: make is-dirty
+
+  cargo-sort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install dprint
+        run: curl -fsSL https://dprint.dev/install.sh | sh && echo "$HOME/.dprint/bin" >> $GITHUB_PATH
+
+      - name: Sort, consolidate, and format Cargo.toml dependencies
+        run: make cargo-sort
+
+      - name: Check for uncommitted Cargo.toml changes
+        run: |
+          if ! git diff --quiet -- '*.toml'; then
+            echo "Cargo.toml files not properly sorted, consolidated, or formatted! Please run 'make cargo-sort'."
+            git diff -- '*.toml'
+            exit 1
+          fi
+
+  sort-derives:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Check derive trait ordering
+        run: make check-sort-derives
 
   cargo-deny:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
@@ -62,7 +95,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - name: Install nightly cargo-udeps
-        run: cargo +nightly install cargo-udeps
+      - name: Install cargo-udeps
+        uses: taiki-e/install-action@7a79fe8c3a13344501c80d99cae481c1c9085912 # v2.81.10
+        with:
+          tool: cargo-udeps
       - name: Run Cargo Udeps
         run: cargo +nightly udeps ${{ matrix.flags }}
+
+  proto-build:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
+        with:
+          version: "34.1"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Regenerate gRPC types
+        run: make grpc
+
+      - name: Check for uncommitted changes
+        run: |
+          if ! git diff --quiet -- crates/iota-sdk-grpc-types/src/proto/generated/; then
+            echo "Generated gRPC types are out of date! Please run 'make grpc' and commit the changes."
+            git diff -- crates/iota-sdk-grpc-types/src/proto/generated/
+            exit 1
+          fi

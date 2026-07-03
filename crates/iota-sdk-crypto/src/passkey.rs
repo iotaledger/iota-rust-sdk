@@ -2,17 +2,24 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{PasskeyAuthenticator, SimpleSignature, UserSignature};
+use iota_types::{Address, PasskeyAuthenticator, SimpleSignature, UserSignature};
 use signature::Verifier;
 
 use crate::{SignatureError, secp256r1::Secp256r1VerifyingKey};
 
-#[derive(Default, Clone, Debug)]
-pub struct PasskeyVerifier {}
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub struct PasskeyVerifier {
+    address: Option<Address>,
+}
 
 impl PasskeyVerifier {
     pub fn new() -> Self {
-        Self {}
+        Default::default()
+    }
+
+    pub fn with_address(mut self, address: Address) -> Self {
+        self.address = Some(address);
+        self
     }
 }
 
@@ -22,6 +29,12 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
         message: &[u8],
         authenticator: &PasskeyAuthenticator,
     ) -> Result<(), SignatureError> {
+        if let Some(address) = &self.address
+            && authenticator.public_key().derive_address() != *address
+        {
+            return Err(SignatureError::from_source("Invalid author"));
+        }
+
         let SimpleSignature::Secp256r1 {
             signature,
             public_key,
@@ -48,9 +61,7 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
         };
         message.extend_from_slice(&client_data_hash);
 
-        let verifying_key = Secp256r1VerifyingKey::new(&public_key)?;
-
-        verifying_key.verify(&message, &signature)
+        Secp256r1VerifyingKey::new(&public_key)?.verify(&message, &signature)
     }
 }
 

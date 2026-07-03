@@ -11,7 +11,8 @@ use crate::{
     types::transaction::{Transaction, TransactionKind},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Dry run a `Transaction` and return the transaction effects and dry run
     /// error (if any).

@@ -1,0 +1,125 @@
+name: Publish WASM SDK to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      test_publish:
+        description: "Dry-run only (npm publish --dry-run)"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build WASM bindings
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-wasm-sdk')) || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout iota-rust-sdk
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: wasm-pack
+
+      - name: Install clang
+        run: sudo apt-get install -y clang
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: wasm-publish
+
+      - name: Install WASM bindings prerequisites
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.122
+          npm install -g pnpm@10
+
+      - name: Build WASM bindings
+        run: make wasm
+
+      - name: Upload built package
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: wasm-package
+          path: |
+            bindings/wasm/dist
+            bindings/wasm/package.json
+            bindings/wasm/README.md
+          retention-days: 1
+
+  publish:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    # Isolated from the build step so a compromised cargo/pnpm dependency in
+    # `make wasm` cannot reach the publish credentials: only this job is granted
+    # `id-token: write`, and it runs nothing but trusted actions plus
+    # `npm publish --ignore-scripts` against the pre-built artifact.
+    permissions:
+      contents: read
+      id-token: write # mint the OIDC token for npm trusted publishing + provenance
+    steps:
+      - name: Stage package
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: wasm-package
+          path: package
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Ensure OIDC-capable npm
+        # Trusted publishing needs npm >= 11.5.1, newer than the version bundled
+        # with the runner's Node.
+        run: npm install -g npm@latest
+
+      - name: Set package version from release tag
+        if: github.event_name == 'release'
+        working-directory: package
+        # `npm version` rewrites the version field of package.json in the
+        # unpacked artifact dir (`package/`); --no-git-tag-version skips the
+        # git commit/tag it would otherwise create.
+        run: |
+          version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-wasm-sdk-v(.*)|\1|p')
+          echo "Publishing version $version"
+          npm version "$version" --no-git-tag-version --allow-same-version
+
+      - name: Determine npm dist-tag
+        working-directory: package
+        # npm >= 11.6 refuses to publish a prerelease version without an
+        # explicit --tag, so prereleases are published under `next` instead of
+        # the implicit `latest`.
+        run: |
+          version=$(npm pkg get version | tr -d '"')
+          case "$version" in
+            *-*) echo "NPM_DIST_TAG=next" >> "$GITHUB_ENV" ;;
+            *) echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV" ;;
+          esac
+
+      - name: Publish to npm (dry-run)
+        if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
+        working-directory: package
+        run: npm publish --access public --ignore-scripts --tag "$NPM_DIST_TAG" --dry-run
+
+      - name: Publish to npm
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
+        working-directory: package
+        # Authenticates via npm OIDC trusted publishing (no NPM_TOKEN). The repo
+        # is public, so --provenance attaches a verifiable build attestation.
+        run: npm publish --access public --ignore-scripts --tag "$NPM_DIST_TAG" --provenance

@@ -140,7 +140,7 @@ func main() {
 	`
 
 	query := iota_sdk.Query{
-		Query: queryStr,
+		QueryString: queryStr,
 	}
 	res, err := client.RunQuery(query)
 	if err != nil {

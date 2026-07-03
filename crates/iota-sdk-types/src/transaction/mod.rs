@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
-    ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
+    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
+    ObjectId, ObjectReference, ProtocolVersion, RandomnessRound, TransactionDigest, TypeTag,
+    UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -21,17 +22,16 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction = %x00 transaction-v1
+/// transaction = %d00 transaction-v1
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Transaction {
-    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     V1(TransactionV1),
     // When new variants are introduced, it is important that we check version support
     // in the validity_check function based on the protocol config.
@@ -55,14 +55,10 @@ impl crate::TreeDisplay for Transaction {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionV1 {
     pub kind: TransactionKind,
     pub sender: Address,
@@ -95,10 +91,10 @@ impl std::fmt::Display for SenderSignedTransaction {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
@@ -119,11 +115,13 @@ impl crate::TreeDisplay for SignedTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-expiration =  %x00      ; none
-///                        =/ %x01 u64  ; epoch
+/// transaction-expiration =  %d00      ; none
+///                        =/ %d01 u64  ; epoch
 /// ```
-#[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
@@ -131,7 +129,11 @@ pub enum TransactionExpiration {
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
-    Epoch(EpochId),
+    Epoch(
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
+        EpochId,
+    ),
 }
 
 impl TransactionExpiration {
@@ -156,15 +158,15 @@ impl std::fmt::Display for TransactionExpiration {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// gas-payment = (vector object-ref) ; gas coin objects
-///               address             ; owner
-///               u64                 ; price
-///               u64                 ; budget
+/// gas-payment = (vector object-reference) ; gas coin objects
+///               address                   ; owner
+///               u64                       ; price
+///               u64                       ; budget
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
     /// Owner of the gas objects, either the transaction sender or a sponsor
@@ -174,11 +176,9 @@ pub struct GasPayment {
     /// Must be greater-than-or-equal-to the network's current RGP (reference
     /// gas price)
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub price: u64,
     /// Total budget willing to spend for the execution of a transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub budget: u64,
 }
 
@@ -199,36 +199,27 @@ impl crate::TreeDisplay for GasPayment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// randomness-state-update = u64 u64 bytes u64
+/// randomness-state-update = u64 randomness-round bytes version
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
     /// Randomness round of the update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub randomness_round: u64,
+    pub randomness_round: RandomnessRound,
     /// Updated random bytes
     #[cfg_attr(
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(random_bytes))]
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Version,
 }
 
 impl crate::TreeDisplay for RandomnessStateUpdate {
@@ -253,22 +244,21 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %x00 ptb
-///                     =/ %x01 change-epoch
-///                     =/ %x02 genesis-transaction
-///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
-///                     =/ %x05 (vector end-of-epoch-transaction-kind)
-///                     =/ %x06 randomness-state-update
-///                     =/ %x07 consensus-commit-prologue-v2
-///                     =/ %x08 consensus-commit-prologue-v3
+/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
+///                     =/ %d01 genesis-transaction                    ; Genesis
+///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
+///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
+///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
+///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
-    ProgrammableTransaction(ProgrammableTransaction),
+    Programmable(ProgrammableTransaction),
     /// Transaction used to initialize the chain state.
     ///
     /// Only valid if in the genesis checkpoint (0) and if this is the very
@@ -276,8 +266,8 @@ pub enum TransactionKind {
     Genesis(GenesisTransaction),
     /// V1 consensus commit update
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-    /// Update set of valid JWKs used for zklogin
-    AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
+    /// Update set of valid JWKs used for zklogin - Deprecated
+    AuthenticatorStateUpdateV1Deprecated,
     /// Set of operations to run at the end of the epoch to close out the
     /// current epoch and start the next one.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
@@ -287,25 +277,79 @@ pub enum TransactionKind {
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
-        ProgrammableTransaction,
         ConsensusCommitPrologueV1,
-        AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
     }
 
     crate::def_is_as_into_opt! {
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+    }
+
+    /// Create a [`TransactionKind::Programmable`].
+    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
+        Self::Programmable(tx)
+    }
+
+    /// Create a [`TransactionKind::Genesis`].
+    pub fn new_genesis(tx: GenesisTransaction) -> Self {
+        Self::Genesis(tx)
+    }
+
+    /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
+    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(tx)
+    }
+
+    /// Create a [`TransactionKind::EndOfEpoch`].
+    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(tx)
+    }
+
+    /// Create a [`TransactionKind::RandomnessStateUpdate`].
+    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(tx)
+    }
+
+    /// Returns `true` if this is a system transaction.
+    pub fn is_system(&self) -> bool {
+        match self {
+            TransactionKind::Genesis(_)
+            | TransactionKind::ConsensusCommitPrologueV1(_)
+            | TransactionKind::AuthenticatorStateUpdateV1Deprecated
+            | TransactionKind::RandomnessStateUpdate(_)
+            | TransactionKind::EndOfEpoch(_) => true,
+            TransactionKind::Programmable(_) => false,
+        }
+    }
+
+    /// Returns the number of commands, or 0 if it is a system transaction.
+    pub fn num_commands(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns the number of transactions, or 1 if it is a system transaction.
+    pub fn num_transactions(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 1,
+        }
     }
 }
 
 impl crate::TreeDisplay for TransactionKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            Self::ProgrammableTransaction(pt) => pt.fmt_tree(w),
+            Self::Programmable(pt) => pt.fmt_tree(w),
             Self::Genesis(v) => v.fmt_tree(w),
             Self::ConsensusCommitPrologueV1(v) => v.fmt_tree(w),
-            Self::AuthenticatorStateUpdateV1(v) => v.fmt_tree(w),
+            Self::AuthenticatorStateUpdateV1Deprecated => {
+                w.header("Authenticator State Update V1 (Deprecated)")
+            }
             Self::EndOfEpoch(items) => {
                 w.header("End of Epoch")?;
                 w.vec_children("Transactions", items, true)
@@ -322,31 +366,15 @@ impl crate::TreeDisplay for TransactionKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// end-of-epoch-transaction-kind   =  eoe-change-epoch
-///                                 =/ eoe-authenticator-state-create
-///                                 =/ eoe-authenticator-state-expire
-///                                 =/ eoe-randomness-state-create
-///                                 =/ eoe-deny-list-state-create
-///                                 =/ eoe-bridge-state-create
-///                                 =/ eoe-bridge-committee-init
-///                                 =/ eoe-store-execution-time-observations
-///
-/// eoe-change-epoch                = %x00 change-epoch
-/// eoe-authenticator-state-create  = %x01
-/// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-/// eoe-randomness-state-create     = %x03
-/// eoe-deny-list-state-create      = %x04
-/// eoe-bridge-state-create         = %x05 digest
-/// eoe-bridge-committee-init       = %x06 u64
-/// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+/// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
+///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
+///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
+///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum EndOfEpochTransactionKind {
     /// End the epoch and start the next one
@@ -357,16 +385,133 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
-    /// Create and initialize the authenticator object used for zklogin
-    AuthenticatorStateCreate,
-    /// Expire JWKs used for zklogin
-    AuthenticatorStateExpire(AuthenticatorStateExpire),
 }
 
 impl EndOfEpochTransactionKind {
-    crate::def_is!(AuthenticatorStateCreate);
+    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,);
 
-    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
+    /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpoch(ChangeEpoch {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV2`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v2(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpochV2(ChangeEpochV2 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV3`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v3(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+    ) -> Self {
+        Self::ChangeEpochV3(ChangeEpochV3 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+        })
+    }
+
+    /// Creates a [`ChangeEpochV4`] end-of-epoch transaction kind.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v4(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+        scores: Vec<u64>,
+        adjust_rewards_by_score: bool,
+    ) -> Self {
+        Self::ChangeEpochV4(ChangeEpochV4 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+            scores,
+            adjust_rewards_by_score,
+        })
+    }
+
+    /// Returns an iterator over the shared input objects required by this
+    /// transaction kind.
+    pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
+        match self {
+            Self::ChangeEpoch(_)
+            | Self::ChangeEpochV2(_)
+            | Self::ChangeEpochV3(_)
+            | Self::ChangeEpochV4(_) => {
+                vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter()
+            }
+        }
+    }
 }
 
 impl crate::TreeDisplay for EndOfEpochTransactionKind {
@@ -376,312 +521,14 @@ impl crate::TreeDisplay for EndOfEpochTransactionKind {
             Self::ChangeEpochV2(v) => v.fmt_tree(w),
             Self::ChangeEpochV3(v) => v.fmt_tree(w),
             Self::ChangeEpochV4(v) => v.fmt_tree(w),
-            Self::AuthenticatorStateCreate => w.header("AuthenticatorStateCreate"),
-            Self::AuthenticatorStateExpire(v) => v.fmt_tree(w),
         }
     }
 }
 
-/// Set of Execution Time Observations from the committee.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
-///
-/// v1-stored-execution-time-observations = (vec
-///                                          execution-time-observation-key
-///                                          (vec execution-time-observation)
-///                                         )
-/// ```
-#[derive(Debug, Hash, PartialEq, Eq, Clone)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[non_exhaustive]
-pub enum ExecutionTimeObservations {
-    V1(Vec<ExecutionTimeObservation>),
-}
-
-impl ExecutionTimeObservations {
-    crate::def_is_as_into_opt!(V1(Vec<ExecutionTimeObservation>));
-}
-
-impl crate::TreeDisplay for ExecutionTimeObservations {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        match self {
-            ExecutionTimeObservations::V1(observations) => {
-                w.header("Execution Time Observations V1")?;
-                w.vec_children("Observations", observations, true)
-            }
-        }
-    }
-}
-
-#[derive(Debug, Hash, PartialEq, Eq, Clone)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ExecutionTimeObservation {
-    pub key: ExecutionTimeObservationKey,
-    pub observations: Vec<ValidatorExecutionTimeObservation>,
-}
-
-impl crate::TreeDisplay for ExecutionTimeObservation {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Execution Time Observation")?;
-        w.leaf("Key", &self.key, false)?;
-        w.vec_children("Observations", &self.observations, true)
-    }
-}
-
-/// An execution time observation from a particular validator
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation = bls-public-key duration
-/// duration =  u64 ; seconds
-///             u32 ; subsecond nanoseconds
-/// ```
-#[derive(Debug, Hash, PartialEq, Eq, Clone)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ValidatorExecutionTimeObservation {
-    pub validator: crate::Bls12381PublicKey,
-    pub duration: std::time::Duration,
-}
-
-impl crate::TreeDisplay for ValidatorExecutionTimeObservation {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Validator Execution Time Observation")?;
-        w.leaf("Validator", &self.validator, false)?;
-        w.leaf("Duration", &format!("{:?}", self.duration), true)
-    }
-}
-
-/// Key for an execution time observation
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-time-observation-key  =  %x00 move-entry-point
-///                                 =/ %x01 ; transfer-objects
-///                                 =/ %x02 ; split-coins
-///                                 =/ %x03 ; merge-coins
-///                                 =/ %x04 ; publish
-///                                 =/ %x05 ; make-move-vec
-///                                 =/ %x06 ; upgrade
-///
-/// move-entry-point = object-id string string (vec type-tag)
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Clone)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[non_exhaustive]
-pub enum ExecutionTimeObservationKey {
-    // Contains all the fields from `ProgrammableMoveCall` besides `arguments`.
-    MoveEntryPoint {
-        /// The package containing the module and function.
-        package: ObjectId,
-        /// The specific module in the package containing the function.
-        module: String,
-        /// The function to be called.
-        function: String,
-        /// The type arguments to the function.
-        /// NOTE: This field is currently not populated.
-        type_arguments: Vec<TypeTag>,
-    },
-    TransferObjects,
-    SplitCoins,
-    MergeCoins,
-    Publish, // special case: should not be used; we only use hard-coded estimate for this
-    MakeMoveVec,
-    Upgrade,
-}
-
-impl ExecutionTimeObservationKey {
-    crate::def_is!(
-        MoveEntryPoint,
-        TransferObjects,
-        SplitCoins,
-        MergeCoins,
-        Publish,
-        MakeMoveVec,
-        Upgrade,
-    );
-}
-
-impl std::fmt::Display for ExecutionTimeObservationKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExecutionTimeObservationKey::MoveEntryPoint {
-                package,
-                module,
-                function,
-                type_arguments,
-            } => {
-                write!(f, "MoveEntryPoint({package}::{module}::{function})")?;
-                let mut w = crate::TreeWriter::new_after_text(f);
-                w.vec_inline("Type Arguments", type_arguments, true)
-            }
-            ExecutionTimeObservationKey::TransferObjects => write!(f, "TransferObjects"),
-            ExecutionTimeObservationKey::SplitCoins => write!(f, "SplitCoins"),
-            ExecutionTimeObservationKey::MergeCoins => write!(f, "MergeCoins"),
-            ExecutionTimeObservationKey::Publish => write!(f, "Publish"),
-            ExecutionTimeObservationKey::MakeMoveVec => write!(f, "MakeMoveVec"),
-            ExecutionTimeObservationKey::Upgrade => write!(f, "Upgrade"),
-        }
-    }
-}
-
-/// Expire old JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-expire = u64 u64
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateExpire {
-    /// expire JWKs that have a lower epoch than this
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub min_epoch: u64,
-    /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-impl crate::TreeDisplay for AuthenticatorStateExpire {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Authenticator State Expire")?;
-        w.leaf("Min Epoch", &self.min_epoch, false)?;
-        w.leaf(
-            "Authenticator Obj Initial Shared Version",
-            &self.authenticator_obj_initial_shared_version,
-            true,
-        )
-    }
-}
-
-/// Update the set of valid JWKs
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// authenticator-state-update = u64 ; epoch
-///                              u64 ; round
-///                              (vector active-jwk)
-///                              u64 ; initial version of the authenticator object
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateUpdateV1 {
-    /// Epoch of the authenticator state update transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
-    /// Consensus round of the authenticator state update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub round: u64,
-    /// newly active jwks
-    pub new_active_jwks: Vec<ActiveJwk>,
-    /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
-}
-
-impl crate::TreeDisplay for AuthenticatorStateUpdateV1 {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Authenticator State Update V1")?;
-        w.leaf("Epoch", &self.epoch, false)?;
-        w.leaf("Round", &self.round, false)?;
-        w.vec_children("New Active JWKs", &self.new_active_jwks, false)?;
-        w.leaf(
-            "Authenticator Obj Initial Shared Version",
-            &self.authenticator_obj_initial_shared_version,
-            true,
-        )
-    }
-}
-
-/// A new Jwk
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// active-jwk = jwk-id jwk u64
-/// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ActiveJwk {
-    /// Identifier used to uniquely identify a Jwk
-    pub jwk_id: JwkId,
-    /// The Jwk
-    pub jwk: Jwk,
-    /// Most recent epoch in which the jwk was validated
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
-}
-
-impl crate::TreeDisplay for ActiveJwk {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Active JWK")?;
-        w.leaf("JWK ID", &self.jwk_id, false)?;
-        w.leaf("JWK", &self.jwk, false)?;
-        w.leaf("Epoch", &self.epoch, true)
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
@@ -722,18 +569,14 @@ impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = digest (vector version-assignment)
+/// cancelled-transaction = transaction-digest (vector version-assignment)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CancelledTransaction {
-    pub digest: Digest,
+    pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
 }
@@ -750,24 +593,26 @@ impl crate::TreeDisplay for CancelledTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form for this type is defined by the
+/// following ABNF:
 ///
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
+}
+
+impl VersionAssignment {
+    /// Creates a [`VersionAssignment`].
+    pub fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
 }
 
 impl crate::TreeDisplay for VersionAssignment {
@@ -785,25 +630,19 @@ impl crate::TreeDisplay for VersionAssignment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
+/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 consensus-commit-digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
     /// Consensus round of the commit
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
     /// The sub DAG index of the consensus commit. This field will be populated
     /// if there are multiple consensus commits per round.
@@ -811,14 +650,13 @@ pub struct ConsensusCommitPrologueV1 {
         feature = "serde",
         serde(with = "crate::_serde::OptionReadableDisplay")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Option<crate::_schemars::U64>"))]
     pub sub_dag_index: Option<u64>,
     /// Unix timestamp from consensus
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub commit_timestamp_ms: CheckpointTimestamp,
     /// Digest of consensus output
-    pub consensus_commit_digest: Digest,
+    pub consensus_commit_digest: ConsensusCommitDigest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }
@@ -854,42 +692,33 @@ impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangeEpoch {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The protocol version in effect in the new epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub protocol_version: ProtocolVersion,
     /// The total amount of gas charged for storage during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
     /// The total amount of gas charged for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The non-refundable storage fee.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
     /// System packages (specifically framework and move stdlib) that are
     /// written before the new epoch starts. This tracks framework upgrades
@@ -930,56 +759,46 @@ impl crate::TreeDisplay for ChangeEpoch {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// change-epoch = u64  ; next epoch
-///                u64  ; protocol version
-///                u64  ; storage charge
-///                u64  ; computation charge
-///                u64  ; computation charge burned
-///                u64  ; storage rebate
-///                u64  ; non-refundable storage fee
-///                u64  ; epoch start timestamp
-///                (vector system-package)
+/// change-epoch-v2 = u64  ; next epoch
+///                   u64  ; protocol version
+///                   u64  ; storage charge
+///                   u64  ; computation charge
+///                   u64  ; computation charge burned
+///                   u64  ; storage rebate
+///                   u64  ; non-refundable storage fee
+///                   u64  ; epoch start timestamp
+///                   (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangeEpochV2 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The protocol version in effect in the new epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub protocol_version: ProtocolVersion,
     /// The total amount of gas charged for storage during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
     /// The total amount of gas charged for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
     /// The total amount of gas burned for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge_burned: u64,
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The non-refundable storage fee.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
     /// System packages (specifically framework and move stdlib) that are
     /// written before the new epoch starts. This tracks framework upgrades
@@ -1018,46 +837,36 @@ impl crate::TreeDisplay for ChangeEpochV2 {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangeEpochV3 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The protocol version in effect in the new epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub protocol_version: ProtocolVersion,
     /// The total amount of gas charged for storage during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
     /// The total amount of gas charged for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
     /// The total amount of gas burned for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge_burned: u64,
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The non-refundable storage fee.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
     /// System packages (specifically framework and move stdlib) that are
     /// written before the new epoch starts. This tracks framework upgrades
@@ -1104,46 +913,36 @@ impl crate::TreeDisplay for ChangeEpochV3 {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangeEpochV4 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The protocol version in effect in the new epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub protocol_version: ProtocolVersion,
     /// The total amount of gas charged for storage during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
     /// The total amount of gas charged for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
     /// The total amount of gas burned for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge_burned: u64,
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The non-refundable storage fee.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
     /// System packages (specifically framework and move stdlib) that are
     /// written before the new epoch starts. This tracks framework upgrades
@@ -1201,13 +1000,11 @@ impl crate::TreeDisplay for ChangeEpochV4 {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SystemPackage {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
     #[cfg_attr(
         feature = "serde",
@@ -1215,8 +1012,14 @@ pub struct SystemPackage {
             with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
+    )]
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
 }
@@ -1239,10 +1042,10 @@ impl crate::TreeDisplay for SystemPackage {
 /// ```text
 /// genesis-transaction = (vector genesis-object)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct GenesisTransaction {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<GenesisObject>,
@@ -1270,10 +1073,10 @@ impl crate::TreeDisplay for GenesisTransaction {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ProgrammableTransaction {
     /// Input objects or primitive values
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
@@ -1293,7 +1096,13 @@ impl crate::TreeDisplay for ProgrammableTransaction {
             w.branch("Inputs", false, |w| {
                 let last_idx = self.inputs.len() - 1;
                 for (i, input) in self.inputs.iter().enumerate() {
-                    let label = format!("{i}: {}", input.variant_name());
+                    let variant = match input {
+                        Input::Pure(_) => "Pure",
+                        Input::ImmutableOrOwned(_) => "ImmutableOrOwned",
+                        Input::Shared(_) => "Shared",
+                        Input::Receiving(_) => "Receiving",
+                    };
+                    let label = format!("{i}: {variant}");
                     w.child(&label, input, i == last_idx)?;
                 }
                 Ok(())
@@ -1302,7 +1111,6 @@ impl crate::TreeDisplay for ProgrammableTransaction {
         w.vec_children("Commands", &self.commands, true)
     }
 }
-
 /// An input to a user transaction
 ///
 /// # BCS
@@ -1310,69 +1118,115 @@ impl crate::TreeDisplay for ProgrammableTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+/// input = call-arg
 ///
-/// input-pure                  = %x00 bytes
-/// input-immutable-or-owned    = %x01 object-ref
-/// input-shared                = %x02 object-id u64 bool
-/// input-receiving             = %x04 object-ref
+/// call-arg   =  %d00 bytes        ; Pure
+///            =/ %d01 object-arg   ; Object
+///
+/// object-arg =  %d00 object-reference     ; ImmutableOrOwned
+///            =/ %d01 object-id u64 bool   ; Shared
+///            =/ %d02 object-reference     ; Receiving
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "type", rename_all = "snake_case")
-)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "call-arg")
+)]
 #[non_exhaustive]
 pub enum Input {
     /// A move value serialized as BCS.
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
-        value: Vec<u8>,
-    },
+    Pure(#[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(_0))] Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
-    #[cfg_attr(feature = "schemars", schemars(rename_all = "camelCase"))]
-    Shared {
-        object_id: ObjectId,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        initial_shared_version: u64,
-        /// Controls whether the caller asks for a mutable reference to the
-        /// shared object.
-        mutable: bool,
-    },
+    Shared(SharedObjectReference),
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
 }
 
 impl Input {
-    fn variant_name(&self) -> &'static str {
+    /// Shared `Input` for the IOTA system state object.
+    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_IMMUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: false,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
+    crate::def_is_as_into_opt!(
+        Pure(Vec<u8>),
+        ImmutableOrOwned(ObjectReference),
+        Shared(SharedObjectReference),
+        Receiving(ObjectReference)
+    );
+
+    /// Create a `Pure` input from a BCS-serializable value.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn pure<T: serde::Serialize>(value: &T) -> Self {
+        Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
+    }
+
+    /// Returns the object id referenced by this input, if any.
+    ///
+    /// Returns `None` for `Pure` inputs.
+    pub fn object_id_opt(&self) -> Option<&ObjectId> {
         match self {
-            Self::Pure { .. } => "Pure",
-            Self::ImmutableOrOwned(_) => "ImmutableOrOwned",
-            Self::Shared { .. } => "Shared",
-            Self::Receiving(_) => "Receiving",
+            Self::Pure { .. } => None,
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
+            Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
         }
     }
 
-    crate::def_is!(Pure, Shared);
+    /// Returns `true` if this input references a mutable shared object.
+    pub fn is_mutable_shared(&self) -> bool {
+        matches!(
+            self,
+            Self::Shared(SharedObjectReference { mutable: true, .. })
+        )
+    }
 
-    crate::def_is_as_into_opt!(
-        ImmutableOrOwned(ObjectReference),
-        Receiving(ObjectReference)
-    );
+    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
+    /// `Receiving` input.
+    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+        match self {
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
+            _ => None,
+        }
+    }
+
+    /// Returns the pure value bytes if this is a `Pure` input.
+    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
+        match self {
+            Self::Pure(value) => Some(value),
+            _ => None,
+        }
+    }
 }
 
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            Self::Pure { value } => {
+            Self::Pure(value) => {
                 w.header("Pure")?;
                 w.leaf("Value", &hex::encode(value), true)
             }
@@ -1382,15 +1236,15 @@ impl crate::TreeDisplay for Input {
                 w.leaf("Version", &obj_ref.version, false)?;
                 w.leaf("Digest", &obj_ref.digest, true)
             }
-            Self::Shared {
-                object_id,
-                initial_shared_version,
-                mutable,
-            } => {
+            Self::Shared(shared) => {
                 w.header("Shared")?;
-                w.leaf("Object ID", object_id, false)?;
-                w.leaf("Initial Shared Version", initial_shared_version, false)?;
-                w.leaf("Mutable", mutable, true)
+                w.leaf("Object ID", &shared.object_id, false)?;
+                w.leaf(
+                    "Initial Shared Version",
+                    &shared.initial_shared_version,
+                    false,
+                )?;
+                w.leaf("Mutable", &shared.mutable, true)
             }
             Self::Receiving(obj_ref) => {
                 w.header("Receiving")?;
@@ -1398,6 +1252,36 @@ impl crate::TreeDisplay for Input {
                 w.leaf("Version", &obj_ref.version, false)?;
                 w.leaf("Digest", &obj_ref.digest, true)
             }
+        }
+    }
+}
+
+/// A shared object input to a programmable transaction
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct SharedObjectReference {
+    pub object_id: ObjectId,
+    pub initial_shared_version: Version,
+    /// Controls whether the caller asks for a mutable reference to the
+    /// shared object.
+    pub mutable: bool,
+}
+
+impl SharedObjectReference {
+    pub const IOTA_SYSTEM_STATE_OBJ_MUTABLE: Self = Self {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    };
+
+    /// Creates a new shared object reference from the object's id, initial
+    /// shared version, and mutability.
+    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
+        Self {
+            object_id,
+            initial_shared_version,
+            mutable,
         }
     }
 }
@@ -1417,21 +1301,18 @@ impl crate::TreeDisplay for Input {
 ///         =/ command-make-move-vector
 ///         =/ command-upgrade
 ///
-/// command-move-call           = %x00 move-call
-/// command-transfer-objects    = %x01 transfer-objects
-/// command-split-coins         = %x02 split-coins
-/// command-merge-coins         = %x03 merge-coins
-/// command-publish             = %x04 publish
-/// command-make-move-vector    = %x05 make-move-vector
-/// command-upgrade             = %x06 upgrade
+/// command-move-call           = %d00 move-call
+/// command-transfer-objects    = %d01 transfer-objects
+/// command-split-coins         = %d02 split-coins
+/// command-merge-coins         = %d03 merge-coins
+/// command-publish             = %d04 publish
+/// command-make-move-vector    = %d05 make-move-vector
+/// command-upgrade             = %d06 upgrade
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "command", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Command {
     /// A call to either an entry or a public Move function
@@ -1475,6 +1356,69 @@ impl Command {
         MakeMoveVector,
         Upgrade,
     );
+
+    /// Create a command to call a Move function.
+    pub fn new_move_call(
+        package: ObjectId,
+        module: Identifier,
+        function: Identifier,
+        type_arguments: Vec<TypeTag>,
+        arguments: Vec<Argument>,
+    ) -> Self {
+        Command::MoveCall(MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        })
+    }
+
+    /// Create a command to transfer objects to an address.
+    pub fn new_transfer_objects(objects: Vec<Argument>, address: Argument) -> Self {
+        Command::TransferObjects(TransferObjects { objects, address })
+    }
+
+    /// Create a command to split a coin into multiple coins by amounts.
+    pub fn new_split_coins(coin: Argument, amounts: Vec<Argument>) -> Self {
+        Command::SplitCoins(SplitCoins { coin, amounts })
+    }
+
+    /// Create a command to merge multiple coins into one.
+    pub fn new_merge_coins(coin: Argument, coins_to_merge: Vec<Argument>) -> Self {
+        Command::MergeCoins(MergeCoins {
+            coin,
+            coins_to_merge,
+        })
+    }
+
+    /// Create a command to publish a new Move package.
+    pub fn new_publish(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
+        Command::Publish(Publish {
+            modules,
+            dependencies,
+        })
+    }
+
+    /// Create a command to construct a Move vector from elements.
+    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    }
+
+    /// Create a command to upgrade an existing Move package.
+    pub fn new_upgrade(
+        modules: Vec<Vec<u8>>,
+        dependencies: Vec<ObjectId>,
+        package: ObjectId,
+        ticket: Argument,
+    ) -> Self {
+        Command::Upgrade(Upgrade {
+            modules,
+            dependencies,
+            package,
+            ticket,
+        })
+    }
 }
 
 impl crate::TreeDisplay for Command {
@@ -1500,10 +1444,10 @@ impl crate::TreeDisplay for Command {
 /// ```text
 /// transfer-objects = (vector argument) argument
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransferObjects {
     /// Set of objects to transfer
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -1529,10 +1473,10 @@ impl crate::TreeDisplay for TransferObjects {
 /// ```text
 /// split-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SplitCoins {
     /// The coin to split
     pub coin: Argument,
@@ -1558,14 +1502,10 @@ impl crate::TreeDisplay for SplitCoins {
 /// ```text
 /// merge-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MergeCoins {
     /// Coin to merge coins into
     pub coin: Argument,
@@ -1594,10 +1534,10 @@ impl crate::TreeDisplay for MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Publish {
     /// The serialized move modules
     #[cfg_attr(
@@ -1606,7 +1546,13 @@ pub struct Publish {
             with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
+    )]
     pub modules: Vec<Vec<u8>>,
     /// Set of packages that the to-be published package depends on
     pub dependencies: Vec<ObjectId>,
@@ -1629,10 +1575,10 @@ impl crate::TreeDisplay for Publish {
 /// ```text
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MakeMoveVector {
     /// Type of the individual elements
     ///
@@ -1665,10 +1611,10 @@ impl crate::TreeDisplay for MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Upgrade {
     /// The serialized move modules
     #[cfg_attr(
@@ -1677,7 +1623,13 @@ pub struct Upgrade {
             with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
         )
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
+    #[debug(
+        "{:?}",
+        modules
+            .iter()
+            .map(|m| <base64ct::Base64 as base64ct::Encoding>::encode_string(m))
+            .collect::<Vec<_>>()
+    )]
     pub modules: Vec<Vec<u8>>,
     /// Set of packages that the to-be published package depends on
     pub dependencies: Vec<ObjectId>,
@@ -1709,13 +1661,15 @@ impl crate::TreeDisplay for Upgrade {
 ///             =/ argument-result
 ///             =/ argument-nested-result
 ///
-/// argument-gas            = %x00
-/// argument-input          = %x01 u16
-/// argument-result         = %x02 u16
-/// argument-nested-result  = %x03 u16 u16
+/// argument-gas            = %d00
+/// argument-input          = %d01 u16
+/// argument-result         = %d02 u16
+/// argument-nested-result  = %d03 u16 u16
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Argument {
     /// The gas coin. The gas coin can only be used by-ref, except for with
@@ -1731,6 +1685,17 @@ pub enum Argument {
     /// return values.
     // (command index, subresult index)
     NestedResult(u16, u16),
+}
+
+impl std::fmt::Display for Argument {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Argument::Gas => write!(f, "GasCoin"),
+            Argument::Input(i) => write!(f, "Input({i})"),
+            Argument::Result(i) => write!(f, "Result({i})"),
+            Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),
+        }
+    }
 }
 
 impl Argument {
@@ -1782,17 +1747,6 @@ impl Argument {
     }
 }
 
-impl std::fmt::Display for Argument {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Argument::Gas => write!(f, "GasCoin"),
-            Argument::Input(i) => write!(f, "Input({i})"),
-            Argument::Result(i) => write!(f, "Result({i})"),
-            Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),
-        }
-    }
-}
-
 /// Command to call a move function
 ///
 /// Functions that can be called by a `MoveCall` command are those that have a
@@ -1810,18 +1764,18 @@ impl std::fmt::Display for Argument {
 ///             (vector type-tag)   ; type arguments, if any
 ///             (vector argument)   ; input arguments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
     /// The specific module in the package containing the function.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
+    )]
     pub module: Identifier,
     /// The function to be called.
     pub function: Identifier,
@@ -1847,16 +1801,11 @@ impl crate::TreeDisplay for MoveCall {
 crate::impl_tree_display!(
     Transaction,
     TransactionV1,
-    TransactionKind,
-    EndOfEpochTransactionKind,
+    SignedTransaction,
     GasPayment,
     RandomnessStateUpdate,
-    ExecutionTimeObservations,
-    ExecutionTimeObservation,
-    ValidatorExecutionTimeObservation,
-    AuthenticatorStateExpire,
-    AuthenticatorStateUpdateV1,
-    ActiveJwk,
+    TransactionKind,
+    EndOfEpochTransactionKind,
     ConsensusDeterminedVersionAssignments,
     CancelledTransaction,
     VersionAssignment,
@@ -1868,6 +1817,7 @@ crate::impl_tree_display!(
     SystemPackage,
     GenesisTransaction,
     ProgrammableTransaction,
+    Input,
     Command,
     TransferObjects,
     SplitCoins,
@@ -1876,6 +1826,4 @@ crate::impl_tree_display!(
     MakeMoveVector,
     Upgrade,
     MoveCall,
-    Input,
-    SignedTransaction,
 );

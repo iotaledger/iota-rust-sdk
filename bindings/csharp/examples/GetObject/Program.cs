@@ -17,12 +17,12 @@ class Program
             throw new Exception("missing object");
         }
 
-        Console.WriteLine($"Object ID: {obj.ObjectId().ToHex()}");
+        Console.WriteLine($"Object ID: {obj.Id().ToHex()}");
         Console.WriteLine($"Version: {obj.Version()}");
         Console.WriteLine($"Previous transaction: {obj.PreviousTransaction().ToBase58()}");
         Console.WriteLine($"Owner: {obj.Owner()}");
         Console.WriteLine($"Storage rebate: {obj.StorageRebate()}");
         Console.WriteLine($"Type: {obj.ObjectType()}");
-        Console.WriteLine($"BCS bytes: {Iota.HexEncode(obj.AsStruct().contents)}");
+        Console.WriteLine($"BCS bytes: {Iota.HexEncode(obj.AsStruct().Contents)}");
     }
 }

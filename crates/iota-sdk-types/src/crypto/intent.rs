@@ -9,7 +9,7 @@ use crate::TreeDisplay;
 
 pub const INTENT_PREFIX_LENGTH: usize = 3;
 
-#[derive(thiserror::Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum IntentError {
     #[error("invalid bytes for Intent")]
@@ -43,12 +43,9 @@ pub enum IntentError {
 /// ```text
 /// intent = intent-scope intent-version intent-app-id
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Intent {
     pub scope: IntentScope,
     pub version: IntentVersion,
@@ -113,7 +110,8 @@ impl Intent {
     }
 
     #[cfg(feature = "serde")]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, IntentError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, IntentError> {
+        let bytes = bytes.as_ref();
         if bytes.len() != INTENT_PREFIX_LENGTH {
             return Err(IntentError::Bytes);
         }
@@ -160,12 +158,13 @@ impl FromStr for Intent {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+    derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum IntentScope {
     TransactionData = 0,         // Used for a user signature on a transaction data.
@@ -219,12 +218,13 @@ impl TryFrom<u8> for IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+    derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum IntentVersion {
     V0 = 0,
@@ -258,12 +258,13 @@ impl TryFrom<u8> for IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+    derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum IntentAppId {
     Iota = 0,
@@ -291,8 +292,8 @@ impl TryFrom<u8> for IntentAppId {
 ///
 /// The serialization of an IntentMessage is compact: it only prepends three
 /// bytes to the message itself.
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct IntentMessage<T> {
     pub intent: Intent,
     pub value: T,
@@ -323,10 +324,10 @@ impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`. See
 /// `iota_types::crypto::SignatureScheme::flag()`.
-#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash, strum::Display)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+    derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
 )]
 #[repr(u8)]
 #[non_exhaustive]
@@ -336,8 +337,8 @@ pub enum HashingIntentScope {
 }
 
 /// A personal message that wraps around a byte array.
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
 
 impl std::fmt::Display for PersonalMessage<'_> {

@@ -8,3 +8,5 @@
 
 # C# generated bindings
 libiota_sdk_ffi.*
+
+src/IotaSdk/*.cs

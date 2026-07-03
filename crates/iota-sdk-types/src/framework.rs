@@ -6,7 +6,7 @@
 
 use super::{Object, ObjectId, TypeTag};
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Coin {
     coin_type: TypeTag,
     id: ObjectId,
@@ -30,22 +30,21 @@ impl Coin {
         match &object.data {
             super::ObjectData::Struct(move_struct) => {
                 let coin_type = move_struct
-                    .type_
+                    .object_type()
                     .coin_type_opt()
                     .ok_or(CoinFromObjectError::NotACoin)?;
 
-                let contents = &move_struct.contents;
+                let contents = move_struct.contents();
                 if contents.len() != ObjectId::LENGTH + std::mem::size_of::<u64>() {
                     return Err(CoinFromObjectError::InvalidContentLength);
                 }
 
-                let id = ObjectId::new((&contents[..ObjectId::LENGTH]).try_into().unwrap());
                 let balance =
                     u64::from_le_bytes((&contents[ObjectId::LENGTH..]).try_into().unwrap());
 
                 Ok(Self {
                     coin_type: coin_type.clone(),
-                    id,
+                    id: move_struct.id(),
                     balance,
                 })
             }
@@ -65,7 +64,7 @@ impl crate::TreeDisplay for Coin {
 
 crate::impl_tree_display!(Coin);
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum CoinFromObjectError {
     NotACoin,

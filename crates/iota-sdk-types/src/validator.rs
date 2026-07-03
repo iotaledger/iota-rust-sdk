@@ -15,13 +15,13 @@ use crate::checkpoint::{EpochId, StakeUnit};
 /// validator-committee = u64 ; epoch
 ///                       (vector validator-committee-member)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorCommittee {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     pub members: Vec<ValidatorCommitteeMember>,
 }
@@ -41,23 +41,18 @@ impl crate::TreeDisplay for ValidatorCommittee {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-committee-member = bls-public-key
+/// validator-committee-member = bls12381-public-key
 ///                              u64 ; stake
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorCommitteeMember {
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "Bls12381PublicKey"))]
     pub public_key: Bls12381PublicKey,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub stake: StakeUnit,
 }
 
@@ -76,31 +71,30 @@ impl crate::TreeDisplay for ValidatorCommitteeMember {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-aggregated-signature = u64               ; epoch
-///                                  bls-signature
-///                                  roaring-bitmap
-/// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-///                         ; according to the serialized spec for
-///                         ; roaring bitmaps
+/// validator-aggregated-signature = u64                  ; epoch
+///                                  bls12381-signature   ; signature
+///                                  bytes                ; bitmap — contents of the bytes are
+///                                                       ; valid according to the serialized
+///                                                       ; spec for roaring bitmaps
 /// ```
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorAggregatedSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     pub signature: Bls12381Signature,
     #[cfg_attr(feature = "serde", serde(with = "RoaringBitMapSerialization"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     #[cfg_attr(
         feature = "proptest",
         strategy(proptest::strategy::Just(roaring::RoaringBitmap::default()))
     )]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "bytes"))]
     pub bitmap: roaring::RoaringBitmap,
 }
 
@@ -160,24 +154,17 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// validator-signature = u64               ; epoch
-///                       bls-public-key
-///                       bls-signature
+/// validator-signature = u64                  ; epoch
+///                       bls12381-public-key
+///                       bls12381-signature
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "Bls12381PublicKey"))]
     pub public_key: Bls12381PublicKey,
     pub signature: Bls12381Signature,
 }

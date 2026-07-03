@@ -12,11 +12,11 @@ use crate::{
         },
         error::IotaNamesError,
     },
-    type_tag::IdentifierRef,
+    move_core::Identifier,
 };
 
-#[derive(Debug, Clone, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Name {
     // Labels of the name, in reverse order
     labels: Vec<String>,
@@ -69,13 +69,13 @@ impl std::fmt::Display for Name {
 
 impl Name {
     pub fn type_(package_address: Address) -> StructTag {
-        const IOTA_NAMES_NAME_MODULE: &IdentifierRef = IdentifierRef::const_new("name");
-        const IOTA_NAMES_NAME_STRUCT: &IdentifierRef = IdentifierRef::const_new("Name");
+        const IOTA_NAMES_NAME_MODULE: Identifier = Identifier::from_static("name");
+        const IOTA_NAMES_NAME_STRUCT: Identifier = Identifier::from_static("Name");
 
         StructTag::new(
             package_address,
-            IOTA_NAMES_NAME_MODULE.to_owned(),
-            IOTA_NAMES_NAME_STRUCT.to_owned(),
+            IOTA_NAMES_NAME_MODULE,
+            IOTA_NAMES_NAME_STRUCT,
             vec![],
         )
     }
@@ -168,7 +168,7 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(Clone, Eq, PartialEq, Debug, strum::Display)]
+#[derive(Clone, Debug, Eq, PartialEq, strum::Display)]
 pub enum NameFormat {
     At,
     Dot,

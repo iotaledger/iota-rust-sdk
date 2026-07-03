@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use thiserror::Error;
+
 use super::{Address, Digest, Identifier, ObjectId};
 
 /// The status of an executed Transaction
@@ -12,11 +14,12 @@ use super::{Address, Digest, Identifier, ObjectId};
 ///
 /// ```text
 /// execution-status = success / failure
-/// success = %x00
-/// failure = %x01 execution-error (option u64)
+/// success = %d00
+/// failure = %d01 execution-error (option u64)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
@@ -38,6 +41,28 @@ pub enum ExecutionStatus {
 
 impl ExecutionStatus {
     crate::def_is!(Success, Failure);
+
+    pub fn new_failure(error: ExecutionError, command: Option<u64>) -> Self {
+        Self::Failure { error, command }
+    }
+
+    pub fn unwrap(&self) {
+        match self {
+            Self::Success => {}
+            Self::Failure { .. } => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+        }
+    }
+
+    pub fn unwrap_err(self) -> (ExecutionError, Option<u64>) {
+        match self {
+            Self::Success => {
+                panic!("Unable to unwrap_err() on {self:?}");
+            }
+            Self::Failure { error, command } => (error, command),
+        }
+    }
 
     /// The error encountered during execution.
     pub fn error(&self) -> Option<&ExecutionError> {
@@ -71,6 +96,36 @@ impl std::fmt::Display for ExecutionStatus {
             }
         }
     }
+}
+
+fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a Option<MoveLocation>);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            match &self.0 {
+                None => write!(f, "UNKNOWN"),
+                Some(l) => write!(f, "{l}"),
+            }
+        }
+    }
+    W(location)
+}
+
+fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a [ObjectId]);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            let mut iter = self.0.iter();
+            if let Some(first) = iter.next() {
+                write!(f, "{first}")?;
+                for obj in iter {
+                    write!(f, ", {obj}")?;
+                }
+            }
+            Ok(())
+        }
+    }
+    W(objects)
 }
 
 /// An error that can occur during the execution of a transaction
@@ -118,218 +173,254 @@ impl std::fmt::Display for ExecutionStatus {
 ///                 =/ address-denied-for-coin
 ///                 =/ coin-type-global-pause
 ///                 =/ execution-cancelled-due-to-randomness-unavailable
+///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
+///                 =/ invalid-linkage
 ///
-/// insufficient-gas                                    = %x00
-/// invalid-gas-object                                  = %x01
-/// invariant-violation                                 = %x02
-/// feature-not-yet-supported                           = %x03
-/// object-too-big                                      = %x04 u64 u64
-/// package-too-big                                     = %x05 u64 u64
-/// circular-object-ownership                           = %x06 object-id
-/// insufficient-coin-balance                           = %x07
-/// coin-balance-overflow                               = %x08
-/// publish-error-non-zero-address                      = %x09
-/// iota-move-verification-error                        = %x0a
-/// move-primitive-runtime-error                        = %x0b (option move-location)
-/// move-abort                                          = %x0c move-location u64
-/// vm-verification-or-deserialization-error            = %x0d
-/// vm-invariant-violation                              = %x0e
-/// function-not-found                                  = %x0f
-/// arity-mismatch                                      = %x10
-/// type-arity-mismatch                                 = %x11
-/// non-entry-function-invoked                          = %x12
-/// command-argument-error                              = %x13 u16 command-argument-error
-/// type-argument-error                                 = %x14 u16 type-argument-error
-/// unused-value-without-drop                           = %x15 u16 u16
-/// invalid-public-function-return-type                 = %x16 u16
-/// invalid-transfer-object                             = %x17
-/// effects-too-large                                   = %x18 u64 u64
-/// publish-upgrade-missing-dependency                  = %x19
-/// publish-upgrade-dependency-downgrade                = %x1a
-/// package-upgrade-error                               = %x1b package-upgrade-error
-/// written-objects-too-large                           = %x1c u64 u64
-/// certificate-denied                                  = %x1d
-/// iota-move-verification-timeout                      = %x1e
-/// shared-object-operation-not-allowed                 = %x1f
-/// input-object-deleted                                = %x20
-/// execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
-/// address-denied-for-coin                             = %x22 address string
-/// coin-type-global-pause                              = %x23 string
-/// execution-cancelled-due-to-randomness-unavailable   = %x24
+/// insufficient-gas                                       = %d00
+/// invalid-gas-object                                     = %d01
+/// invariant-violation                                    = %d02
+/// feature-not-yet-supported                              = %d03
+/// object-too-big                                         = %d04 u64 u64
+/// package-too-big                                        = %d05 u64 u64
+/// circular-object-ownership                              = %d06 object-id
+/// insufficient-coin-balance                              = %d07
+/// coin-balance-overflow                                  = %d08
+/// publish-error-non-zero-address                         = %d09
+/// iota-move-verification-error                           = %d10
+/// move-primitive-runtime-error                           = %d11 (option move-location)
+/// move-abort                                             = %d12 move-location u64
+/// vm-verification-or-deserialization-error               = %d13
+/// vm-invariant-violation                                 = %d14
+/// function-not-found                                     = %d15
+/// arity-mismatch                                         = %d16
+/// type-arity-mismatch                                    = %d17
+/// non-entry-function-invoked                             = %d18
+/// command-argument-error                                 = %d19 u16 command-argument-error
+/// type-argument-error                                    = %d20 u16 type-argument-error
+/// unused-value-without-drop                              = %d21 u16 u16
+/// invalid-public-function-return-type                    = %d22 u16
+/// invalid-transfer-object                                = %d23
+/// effects-too-large                                      = %d24 u64 u64
+/// publish-upgrade-missing-dependency                     = %d25
+/// publish-upgrade-dependency-downgrade                   = %d26
+/// package-upgrade-error                                  = %d27 package-upgrade-error
+/// written-objects-too-large                              = %d28 u64 u64
+/// certificate-denied                                     = %d29
+/// iota-move-verification-timeout                         = %d30
+/// shared-object-operation-not-allowed                    = %d31
+/// input-object-deleted                                   = %d32
+/// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+/// address-denied-for-coin                                = %d34 address string
+/// coin-type-global-pause                                 = %d35 string
+/// execution-cancelled-due-to-randomness-unavailable      = %d36
+/// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+/// invalid-linkage                                        = %d38
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "error", rename_all = "snake_case")
-)]
+// WARNING: The variant order of this enum is protocol-significant. Each variant's position
+// determines its BCS discriminant (the integer sent over the wire).
+// Reordering or inserting variants will break protocol compatibility.
+// New variants MUST be added at the end.
+// The `execution_error_bcs_discriminants` snapshot test enforces this.
+#[derive(Clone, Debug, Eq, Error, PartialEq, strum::AsRefStr)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
-    #[error("Insufficient gas")]
+    #[error("Insufficient Gas")]
     InsufficientGas,
     /// Invalid Gas Object.
-    #[error("Invalid gas object")]
+    #[error("Invalid Gas Object. Possibly not address-owned or possibly not an IOTA coin")]
     InvalidGasObject,
     /// Invariant Violation
-    #[error("Invariant violation")]
+    #[error("INVARIANT VIOLATION")]
     InvariantViolation,
-    /// Attempted to used feature that is not supported yet
-    #[error("Feature not yet supported")]
+    /// Attempted to use feature that is not supported yet
+    #[error("Attempted to use feature that is not supported yet")]
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
-    #[error("Object too big: size {object_size} exceeds max {max_object_size}")]
+    #[error(
+        "Move object with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     ObjectTooBig {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         object_size: u64,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
-    #[error("Package too big: size {object_size} exceeds max {max_object_size}")]
+    #[error(
+        "Move package with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     PackageTooBig {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         object_size: u64,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_object_size: u64,
     },
     /// Circular Object Ownership
-    #[error("Circular object ownership detected for {object}")]
+    #[error("Circular Object Ownership, including object {object}")]
     CircularObjectOwnership { object: ObjectId },
     /// Insufficient coin balance for requested operation
-    #[error("Insufficient coin balance")]
+    #[error("Insufficient coin balance for operation")]
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
-    #[error("Coin balance overflow")]
+    #[error("The coin balance overflows u64")]
     CoinBalanceOverflow,
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
-    #[error("Publish error: non-zero address in module")]
+    #[error(
+        "Publish Error, Non-zero Address. The modules in the package must have their self-addresses set to zero."
+    )]
     PublishErrorNonZeroAddress,
     /// IOTA Move Bytecode Verification Error.
-    #[error("IOTA Move bytecode verification error")]
+    #[error(
+        "IOTA Move Bytecode Verification Error. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationError,
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
-    #[error("Move primitive runtime error{}", .location.as_ref().map(|l| format!(" at {l}")).unwrap_or_default())]
+    #[error(
+        "Move Primitive Runtime Error. Location: {}. Arithmetic error, stack overflow, max value depth, etc.",
+        display_move_location_opt(.location)
+    )]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
-    #[error("Move abort {code} at {location}")]
+    #[error("Move Runtime Abort. Location: {location}, Abort Code: {code}")]
     MoveAbort {
         location: MoveLocation,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         code: u64,
     },
     /// Bytecode verification error.
-    #[error("VM verification or deserialization error")]
+    #[error(
+        "Move Bytecode Verification Error. Please run the Bytecode Verifier for more information."
+    )]
     VmVerificationOrDeserializationError,
     /// MoveVm invariant violation
-    #[error("VM invariant violation")]
+    #[error("MOVE VM INVARIANT VIOLATION")]
     VmInvariantViolation,
     /// Function not found
-    #[error("Function not found")]
+    #[error("Function Not Found")]
     FunctionNotFound,
     /// Arity mismatch for Move function.
     /// The number of arguments does not match the number of parameters
-    #[error("Arity mismatch")]
+    #[error(
+        "Arity mismatch for Move function. The number of arguments does not match the number of parameters"
+    )]
     ArityMismatch,
     /// Type arity mismatch for Move function.
     /// Mismatch between the number of actual versus expected type arguments.
-    #[error("Type arity mismatch")]
+    #[error(
+        "Type arity mismatch for Move function. Mismatch between the number of actual versus expected type arguments."
+    )]
     TypeArityMismatch,
     /// Non Entry Function Invoked. Move Call must start with an entry function.
-    #[error("Non-entry function invoked")]
+    #[error("Non Entry Function Invoked. Move Call must start with an entry function")]
     NonEntryFunctionInvoked,
     /// Invalid command argument
-    #[error("Command argument error at argument {argument}: {kind}")]
+    #[error("Invalid command argument at {argument}. {kind}")]
     CommandArgumentError {
         argument: u16,
         kind: CommandArgumentError,
     },
     /// Type argument error
-    #[error("Type argument error at type argument {type_argument}: {kind}")]
+    #[error("Error for type argument at index {type_argument}: {kind}")]
     TypeArgumentError {
         /// Index of the problematic type argument
         type_argument: u16,
         kind: TypeArgumentError,
     },
     /// Unused result without the drop ability.
-    #[error("Unused value without drop: result {result}, subresult {subresult}")]
+    #[error(
+        "Unused result without the drop ability. Command result {result}, return value {subresult}"
+    )]
     UnusedValueWithoutDrop { result: u16, subresult: u16 },
     /// Invalid public Move function signature.
     /// Unsupported return type for return value
-    #[error("Invalid public function return type at index {index}")]
+    #[error(
+        "Invalid public Move function signature. Unsupported return type for return value {index}"
+    )]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
-    #[error("Invalid transfer object: missing public transfer")]
+    #[error("Invalid Transfer Object, object does not have public transfer")]
     InvalidTransferObject,
     /// Effects from the transaction are too large
-    #[error("Effects too large: size {current_size} exceeds max {max_size}")]
+    #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
     EffectsTooLarge {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         current_size: u64,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_size: u64,
     },
     /// Publish or Upgrade is missing dependency
-    #[error("Publish or upgrade is missing dependency")]
+    #[error(
+        "Publish/Upgrade Error, Missing dependency. A dependency of a published or upgraded package has not been assigned an on-chain address."
+    )]
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
-    #[error("Publish or upgrade dependency downgrade")]
+    #[error(
+        "Publish/Upgrade Error, Dependency downgrade. Indirect (transitive) dependency of published or upgraded package has been assigned an on-chain version that is less than the version required by one of the package's transitive dependencies."
+    )]
     PublishUpgradeDependencyDowngrade,
     /// Invalid package upgrade
-    #[error("Package upgrade error: {kind}")]
-    #[cfg_attr(feature = "schemars", schemars(title = "PackageUpgradeError"))]
+    #[error("Invalid package upgrade. {kind}")]
     PackageUpgradeError { kind: PackageUpgradeError },
     /// Indicates the transaction tried to write objects too large to storage
-    #[error("Written objects too large: size {object_size} exceeds max {max_object_size}")]
+    #[error("Written objects of {object_size} bytes too large. Limit is {max_object_size} bytes")]
     WrittenObjectsTooLarge {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         object_size: u64,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_object_size: u64,
     },
     /// Certificate is on the deny list
-    #[error("Certificate denied")]
+    #[error("Certificate is on the deny list")]
     CertificateDenied,
     /// IOTA Move Bytecode verification timed out.
-    #[error("IOTA Move bytecode verification timed out")]
+    #[error(
+        "IOTA Move Bytecode Verification Timeout. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationTimeout,
     /// The requested shared object operation is not allowed
-    #[error("Shared object operation not allowed")]
+    #[error("The shared object operation is not allowed")]
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
-    #[error("Input object deleted")]
+    #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
     InputObjectDeleted,
     /// Certificate is cancelled due to congestion on shared objects
-    #[error("Execution cancelled due to shared object congestion on {} objects", congested_objects.len())]
+    #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
-    /// Certificate is cancelled due to congestion on shared objects;
-    /// suggested gas price can be used to give this certificate more priority.
-    #[error("Execution cancelled due to shared object congestion on {} objects (suggested gas price: {suggested_gas_price})", congested_objects.len())]
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
-        congested_objects: Vec<ObjectId>,
-        suggested_gas_price: u64,
-    },
     /// Address is denied for this coin type
-    #[error("Address {address} denied for coin type {coin_type}")]
+    #[error("Address {address:?} is denied for coin {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
     /// Coin type is globally paused for use
-    #[error("Coin type globally paused: {coin_type}")]
+    #[error("Coin type is globally paused for use: {coin_type}")]
     CoinTypeGlobalPause { coin_type: String },
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
-    #[error("Execution cancelled due to randomness unavailable")]
+    #[error("Certificate is cancelled because randomness could not be generated this epoch")]
     ExecutionCancelledDueToRandomnessUnavailable,
+    /// Certificate is cancelled due to congestion on shared objects;
+    /// suggested gas price can be used to give this certificate more priority.
+    #[error(
+        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
+        display_congested_objects(.congested_objects)
+    )]
+    ExecutionCancelledDueToSharedObjectCongestionV2 {
+        congested_objects: Vec<ObjectId>,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        suggested_gas_price: u64,
+    },
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
-    #[error("Invalid linkage")]
+    #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
 }
 
@@ -369,12 +460,16 @@ impl ExecutionError {
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion,
-        ExecutionCancelledDueToSharedObjectCongestionV2,
         AddressDeniedForCoin,
         CoinTypeGlobalPause,
         ExecutionCancelledDueToRandomnessUnavailable,
+        ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
     );
+
+    pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
+        Self::CommandArgumentError { argument, kind }
+    }
 }
 
 /// Location in move bytecode where an error occurred
@@ -386,14 +481,10 @@ impl ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveLocation {
     /// The package id
     pub package: ObjectId,
@@ -408,18 +499,28 @@ pub struct MoveLocation {
     pub function_name: Option<Identifier>,
 }
 
-impl crate::TreeDisplay for MoveLocation {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Move Location")?;
-        w.leaf("Package", &self.package, false)?;
-        w.leaf("Module", &self.module, false)?;
-        w.leaf("Function", &self.function, false)?;
-        w.leaf("Instruction", &self.instruction, false)?;
-        w.option("Function Name", &self.function_name, true)
+impl core::fmt::Display for MoveLocation {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            instruction,
+            function_name,
+        } = self;
+        if let Some(fname) = function_name {
+            write!(
+                f,
+                "{package}::{module}::{fname} (function index {function}) at offset {instruction}"
+            )
+        } else {
+            write!(
+                f,
+                "{package}::{module} in function definition {function} at offset {instruction}"
+            )
+        }
     }
 }
-
-crate::impl_tree_display!(MoveLocation);
 
 /// An error with an argument to a command
 ///
@@ -441,74 +542,94 @@ crate::impl_tree_display!(MoveLocation);
 ///                        =/ invalid-object-by-mut-ref
 ///                        =/ shared-object-operation-not-allowed
 ///
-/// type-mismatch                               = %x00
-/// invalid-bcs-bytes                           = %x01
-/// invalid-usage-of-pure-argument              = %x02
-/// invalid-argument-to-private-entry-function  = %x03
-/// index-out-of-bounds                         = %x04 u16
-/// secondary-index-out-of-bound                = %x05 u16 u16
-/// invalid-result-arity                        = %x06 u16
-/// invalid-gas-coin-usage                      = %x07
-/// invalid-value-usage                         = %x08
-/// invalid-object-by-value                     = %x09
-/// invalid-object-by-mut-ref                   = %x0a
-/// shared-object-operation-not-allowed         = %x0b
+/// type-mismatch                               = %d00
+/// invalid-bcs-bytes                           = %d01
+/// invalid-usage-of-pure-argument              = %d02
+/// invalid-argument-to-private-entry-function  = %d03
+/// index-out-of-bounds                         = %d04 u16
+/// secondary-index-out-of-bound                = %d05 u16 u16
+/// invalid-result-arity                        = %d06 u16
+/// invalid-gas-coin-usage                      = %d07
+/// invalid-value-usage                         = %d08
+/// invalid-object-by-value                     = %d09
+/// invalid-object-by-mut-ref                   = %d10
+/// shared-object-operation-not-allowed         = %d11
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
-    #[error("Type mismatch")]
+    #[error("The type of the value does not match the expected type")]
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
-    #[error("Invalid BCS bytes")]
+    #[error("The argument cannot be deserialized into a value of the specified type")]
     InvalidBcsBytes,
     /// The argument cannot be instantiated from raw bytes
-    #[error("Invalid usage of pure argument")]
+    #[error("The argument cannot be instantiated from raw bytes")]
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
-    #[error("Invalid argument to private entry function")]
+    #[error(
+        "Invalid argument to private entry function. \
+        These functions cannot take arguments from other Move functions"
+    )]
     InvalidArgumentToPrivateEntryFunction,
     /// Out of bounds access to input or results
-    #[error("Index out of bounds: {index}")]
+    #[error("Out of bounds access to input or result vector {index}")]
     IndexOutOfBounds { index: u16 },
     /// Out of bounds access to subresult
-    #[error("Secondary index out of bounds: result {result}, subresult {subresult}")]
+    #[error(
+        "Out of bounds secondary access to result vector \
+        {result} at secondary index {subresult}"
+    )]
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
-    #[error("Invalid result arity at result {result}")]
+    #[error(
+        "Invalid usage of result {result}, \
+        expected a single result but found either no return values or multiple."
+    )]
     InvalidResultArity { result: u16 },
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
-    #[error("Invalid gas coin usage")]
+    #[error(
+        "Invalid taking of the Gas coin. \
+        It can only be used by-value with TransferObjects"
+    )]
     InvalidGasCoinUsage,
     /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
-    #[error("Invalid value usage")]
+    #[error(
+        "Invalid usage of value. \
+        Mutably borrowed values require unique usage. \
+        Immutably borrowed values cannot be taken or borrowed mutably. \
+        Taken values cannot be used again."
+    )]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
-    #[error("Invalid object by value: immutable objects cannot be passed by value")]
+    #[error("Immutable objects cannot be passed by-value")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
-    #[error("Invalid object by mutable reference: immutable objects cannot be passed by &mut")]
+    #[error("Immutable objects cannot be passed by mutable reference, &mut")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
-    #[error("Shared object operation not allowed")]
+    #[error(
+        "Shared object operations such a wrapping, freezing, or converting to owned are not \
+        allowed."
+    )]
     SharedObjectOperationNotAllowed,
     /// Invalid argument arity. Expected a single argument but found a result
     /// that expanded to multiple arguments.
-    #[error("Invalid argument arity")]
+    #[error(
+        "Invalid argument arity. Expected a single argument but found a result that expanded to \
+        multiple arguments."
+    )]
     InvalidArgumentArity,
 }
 
@@ -543,39 +664,36 @@ impl CommandArgumentError {
 ///                         unknown-upgrade-policy  /
 ///                         package-id-does-not-match
 ///
-/// unable-to-fetch-package     = %x00 object-id
-/// not-a-package               = %x01 object-id
-/// incompatible-upgrade        = %x02
-/// digest-does-not-match       = %x03 digest
-/// unknown-upgrade-policy      = %x04 u8
-/// package-id-does-not-match   = %x05 object-id object-id
+/// unable-to-fetch-package     = %d00 object-id
+/// not-a-package               = %d01 object-id
+/// incompatible-upgrade        = %d02
+/// digest-does-not-match       = %d03 digest
+/// unknown-upgrade-policy      = %d04 u8
+/// package-id-does-not-match   = %d05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
-    #[error("Unable to fetch package {package_id}")]
+    #[error("Unable to fetch package at {package_id}")]
     UnableToFetchPackage { package_id: ObjectId },
     /// Object is not a package
     #[error("Object {object_id} is not a package")]
     NotAPackage { object_id: ObjectId },
     /// Package upgrade is incompatible with previous version
-    #[error("Incompatible upgrade")]
+    #[error("New package is incompatible with previous version")]
     IncompatibleUpgrade,
     /// Digest in upgrade ticket and computed digest differ
-    #[error("Digest does not match: {digest}")]
+    #[error("Digest in upgrade ticket and computed digest disagree")]
     DigestDoesNotMatch { digest: Digest },
     /// Upgrade policy is not valid
-    #[error("Unknown upgrade policy: {policy}")]
+    #[error("Upgrade policy {policy} is not a valid upgrade policy")]
     UnknownUpgradePolicy { policy: u8 },
-    /// PackageId does not matach PackageId in upgrade ticket
-    #[error("Package ID {package_id} does not match ticket ID {ticket_id}")]
+    /// PackageId does not match PackageId in upgrade ticket
+    #[error("Package ID {package_id} does not match package ID in upgrade ticket {ticket_id}")]
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
@@ -601,28 +719,24 @@ impl PackageUpgradeError {
 ///
 /// ```text
 /// type-argument-error = type-not-found / constraint-not-satisfied
-/// type-not-found = %x00
-/// constraint-not-satisfied = %x01
+/// type-not-found = %d00
+/// constraint-not-satisfied = %d01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug, thiserror::Error)]
+#[derive(Clone, Copy, Debug, Eq, Error, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
+    derive(serde::Deserialize, serde::Serialize),
     serde(rename_all = "snake_case")
 )]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
-    #[error("Type not found")]
+    #[error("A type was not found in the module specified")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
-    #[error("Constraint not satisfied")]
+    #[error("A type provided did not match the specified constraints")]
     ConstraintNotSatisfied,
 }
 
@@ -637,37 +751,23 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "ExecutionStatus")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableExecutionStatus {
         success: bool,
         #[serde(skip_serializing_if = "Option::is_none")]
         status: Option<FailureStatus>,
     }
 
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for ExecutionStatus {
-        fn schema_name() -> String {
-            ReadableExecutionStatus::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            ReadableExecutionStatus::json_schema(generator)
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    #[derive(serde::Deserialize, serde::Serialize)]
     struct FailureStatus {
         error: ExecutionError,
         #[serde(skip_serializing_if = "Option::is_none")]
         command: Option<u16>,
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(rename = "ExecutionStatus")]
     enum BinaryExecutionStatus {
         Success,
         Failure {
@@ -735,1024 +835,6 @@ mod serialization {
                     BinaryExecutionStatus::Failure { error, command } => {
                         Self::Failure { error, command }
                     }
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "error", rename_all = "snake_case")]
-    enum ReadableExecutionError {
-        InsufficientGas,
-        InvalidGasObject,
-        InvariantViolation,
-        FeatureNotYetSupported,
-        ObjectTooBig {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            object_size: u64,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            max_object_size: u64,
-        },
-        PackageTooBig {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            object_size: u64,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            max_object_size: u64,
-        },
-        CircularObjectOwnership {
-            object: ObjectId,
-        },
-        InsufficientCoinBalance,
-        CoinBalanceOverflow,
-        PublishErrorNonZeroAddress,
-        IotaMoveVerificationError,
-        MovePrimitiveRuntimeError {
-            location: Option<MoveLocation>,
-        },
-        MoveAbort {
-            location: MoveLocation,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            code: u64,
-        },
-        VmVerificationOrDeserializationError,
-        VmInvariantViolation,
-        FunctionNotFound,
-        ArityMismatch,
-        TypeArityMismatch,
-        NonEntryFunctionInvoked,
-        CommandArgumentError {
-            argument: u16,
-            kind: CommandArgumentError,
-        },
-        TypeArgumentError {
-            type_argument: u16,
-            kind: TypeArgumentError,
-        },
-        UnusedValueWithoutDrop {
-            result: u16,
-            subresult: u16,
-        },
-        InvalidPublicFunctionReturnType {
-            index: u16,
-        },
-        InvalidTransferObject,
-        EffectsTooLarge {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            current_size: u64,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            max_size: u64,
-        },
-        PublishUpgradeMissingDependency,
-        PublishUpgradeDependencyDowngrade,
-        PackageUpgradeError {
-            kind: PackageUpgradeError,
-        },
-        WrittenObjectsTooLarge {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            object_size: u64,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            max_object_size: u64,
-        },
-        CertificateDenied,
-        IotaMoveVerificationTimeout,
-        SharedObjectOperationNotAllowed,
-        InputObjectDeleted,
-        ExecutionCancelledDueToSharedObjectCongestion {
-            congested_objects: Vec<ObjectId>,
-        },
-        AddressDeniedForCoin {
-            address: Address,
-            coin_type: String,
-        },
-        CoinTypeGlobalPause {
-            coin_type: String,
-        },
-        ExecutionCancelledDueToRandomnessUnavailable,
-        ExecutionCancelledDueToSharedObjectCongestionV2 {
-            congested_objects: Vec<ObjectId>,
-            suggested_gas_price: u64,
-        },
-        InvalidLinkage,
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    enum BinaryExecutionError {
-        InsufficientGas,
-        InvalidGasObject,
-        InvariantViolation,
-        FeatureNotYetSupported,
-        ObjectTooBig {
-            object_size: u64,
-            max_object_size: u64,
-        },
-        PackageTooBig {
-            object_size: u64,
-            max_object_size: u64,
-        },
-        CircularObjectOwnership {
-            object: ObjectId,
-        },
-        InsufficientCoinBalance,
-        CoinBalanceOverflow,
-        PublishErrorNonZeroAddress,
-        IotaMoveVerificationError,
-        MovePrimitiveRuntimeError {
-            location: Option<MoveLocation>,
-        },
-        MoveAbort {
-            location: MoveLocation,
-            code: u64,
-        },
-        VmVerificationOrDeserializationError,
-        VmInvariantViolation,
-        FunctionNotFound,
-        ArityMismatch,
-        TypeArityMismatch,
-        NonEntryFunctionInvoked,
-        CommandArgumentError {
-            argument: u16,
-            kind: CommandArgumentError,
-        },
-        TypeArgumentError {
-            type_argument: u16,
-            kind: TypeArgumentError,
-        },
-        UnusedValueWithoutDrop {
-            result: u16,
-            subresult: u16,
-        },
-        InvalidPublicFunctionReturnType {
-            index: u16,
-        },
-        InvalidTransferObject,
-        EffectsTooLarge {
-            current_size: u64,
-            max_size: u64,
-        },
-        PublishUpgradeMissingDependency,
-        PublishUpgradeDependencyDowngrade,
-        PackageUpgradeError {
-            kind: PackageUpgradeError,
-        },
-        WrittenObjectsTooLarge {
-            object_size: u64,
-            max_object_size: u64,
-        },
-        CertificateDenied,
-        IotaMoveVerificationTimeout,
-        SharedObjectOperationNotAllowed,
-        InputObjectDeleted,
-        ExecutionCancelledDueToSharedObjectCongestion {
-            congested_objects: Vec<ObjectId>,
-        },
-        AddressDeniedForCoin {
-            address: Address,
-            coin_type: String,
-        },
-        CoinTypeGlobalPause {
-            coin_type: String,
-        },
-        ExecutionCancelledDueToRandomnessUnavailable,
-        ExecutionCancelledDueToSharedObjectCongestionV2 {
-            congested_objects: Vec<ObjectId>,
-            suggested_gas_price: u64,
-        },
-        InvalidLinkage,
-    }
-
-    impl Serialize for ExecutionError {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    Self::InsufficientGas => ReadableExecutionError::InsufficientGas,
-                    Self::InvalidGasObject => ReadableExecutionError::InvalidGasObject,
-                    Self::InvariantViolation => ReadableExecutionError::InvariantViolation,
-                    Self::FeatureNotYetSupported => ReadableExecutionError::FeatureNotYetSupported,
-                    Self::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    } => ReadableExecutionError::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    } => ReadableExecutionError::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::CircularObjectOwnership { object } => {
-                        ReadableExecutionError::CircularObjectOwnership { object }
-                    }
-                    Self::InsufficientCoinBalance => {
-                        ReadableExecutionError::InsufficientCoinBalance
-                    }
-                    Self::CoinBalanceOverflow => ReadableExecutionError::CoinBalanceOverflow,
-                    Self::PublishErrorNonZeroAddress => {
-                        ReadableExecutionError::PublishErrorNonZeroAddress
-                    }
-                    Self::IotaMoveVerificationError => {
-                        ReadableExecutionError::IotaMoveVerificationError
-                    }
-                    Self::MovePrimitiveRuntimeError { location } => {
-                        ReadableExecutionError::MovePrimitiveRuntimeError { location }
-                    }
-                    Self::MoveAbort { location, code } => {
-                        ReadableExecutionError::MoveAbort { location, code }
-                    }
-                    Self::VmVerificationOrDeserializationError => {
-                        ReadableExecutionError::VmVerificationOrDeserializationError
-                    }
-                    Self::VmInvariantViolation => ReadableExecutionError::VmInvariantViolation,
-                    Self::FunctionNotFound => ReadableExecutionError::FunctionNotFound,
-                    Self::ArityMismatch => ReadableExecutionError::ArityMismatch,
-                    Self::TypeArityMismatch => ReadableExecutionError::TypeArityMismatch,
-                    Self::NonEntryFunctionInvoked => {
-                        ReadableExecutionError::NonEntryFunctionInvoked
-                    }
-                    Self::CommandArgumentError { argument, kind } => {
-                        ReadableExecutionError::CommandArgumentError { argument, kind }
-                    }
-                    Self::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    } => ReadableExecutionError::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    },
-                    Self::UnusedValueWithoutDrop { result, subresult } => {
-                        ReadableExecutionError::UnusedValueWithoutDrop { result, subresult }
-                    }
-                    Self::InvalidPublicFunctionReturnType { index } => {
-                        ReadableExecutionError::InvalidPublicFunctionReturnType { index }
-                    }
-                    Self::InvalidTransferObject => ReadableExecutionError::InvalidTransferObject,
-                    Self::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    } => ReadableExecutionError::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    },
-                    Self::PublishUpgradeMissingDependency => {
-                        ReadableExecutionError::PublishUpgradeMissingDependency
-                    }
-                    Self::PublishUpgradeDependencyDowngrade => {
-                        ReadableExecutionError::PublishUpgradeDependencyDowngrade
-                    }
-                    Self::PackageUpgradeError { kind } => {
-                        ReadableExecutionError::PackageUpgradeError { kind }
-                    }
-                    Self::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    } => ReadableExecutionError::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::CertificateDenied => ReadableExecutionError::CertificateDenied,
-                    Self::IotaMoveVerificationTimeout => {
-                        ReadableExecutionError::IotaMoveVerificationTimeout
-                    }
-                    Self::SharedObjectOperationNotAllowed => {
-                        ReadableExecutionError::SharedObjectOperationNotAllowed
-                    }
-                    Self::InputObjectDeleted => ReadableExecutionError::InputObjectDeleted,
-                    Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
-                        ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                            congested_objects,
-                        }
-                    }
-                    Self::AddressDeniedForCoin { address, coin_type } => {
-                        ReadableExecutionError::AddressDeniedForCoin { address, coin_type }
-                    }
-                    Self::CoinTypeGlobalPause { coin_type } => {
-                        ReadableExecutionError::CoinTypeGlobalPause { coin_type }
-                    }
-                    Self::ExecutionCancelledDueToRandomnessUnavailable => {
-                        ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable
-                    }
-                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
-                    Self::InvalidLinkage => ReadableExecutionError::InvalidLinkage,
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    Self::InsufficientGas => BinaryExecutionError::InsufficientGas,
-                    Self::InvalidGasObject => BinaryExecutionError::InvalidGasObject,
-                    Self::InvariantViolation => BinaryExecutionError::InvariantViolation,
-                    Self::FeatureNotYetSupported => BinaryExecutionError::FeatureNotYetSupported,
-                    Self::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    } => BinaryExecutionError::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    } => BinaryExecutionError::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::CircularObjectOwnership { object } => {
-                        BinaryExecutionError::CircularObjectOwnership { object }
-                    }
-                    Self::InsufficientCoinBalance => BinaryExecutionError::InsufficientCoinBalance,
-                    Self::CoinBalanceOverflow => BinaryExecutionError::CoinBalanceOverflow,
-                    Self::PublishErrorNonZeroAddress => {
-                        BinaryExecutionError::PublishErrorNonZeroAddress
-                    }
-                    Self::IotaMoveVerificationError => {
-                        BinaryExecutionError::IotaMoveVerificationError
-                    }
-                    Self::MovePrimitiveRuntimeError { location } => {
-                        BinaryExecutionError::MovePrimitiveRuntimeError { location }
-                    }
-                    Self::MoveAbort { location, code } => {
-                        BinaryExecutionError::MoveAbort { location, code }
-                    }
-                    Self::VmVerificationOrDeserializationError => {
-                        BinaryExecutionError::VmVerificationOrDeserializationError
-                    }
-                    Self::VmInvariantViolation => BinaryExecutionError::VmInvariantViolation,
-                    Self::FunctionNotFound => BinaryExecutionError::FunctionNotFound,
-                    Self::ArityMismatch => BinaryExecutionError::ArityMismatch,
-                    Self::TypeArityMismatch => BinaryExecutionError::TypeArityMismatch,
-                    Self::NonEntryFunctionInvoked => BinaryExecutionError::NonEntryFunctionInvoked,
-                    Self::CommandArgumentError { argument, kind } => {
-                        BinaryExecutionError::CommandArgumentError { argument, kind }
-                    }
-                    Self::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    } => BinaryExecutionError::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    },
-                    Self::UnusedValueWithoutDrop { result, subresult } => {
-                        BinaryExecutionError::UnusedValueWithoutDrop { result, subresult }
-                    }
-                    Self::InvalidPublicFunctionReturnType { index } => {
-                        BinaryExecutionError::InvalidPublicFunctionReturnType { index }
-                    }
-                    Self::InvalidTransferObject => BinaryExecutionError::InvalidTransferObject,
-                    Self::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    } => BinaryExecutionError::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    },
-                    Self::PublishUpgradeMissingDependency => {
-                        BinaryExecutionError::PublishUpgradeMissingDependency
-                    }
-                    Self::PublishUpgradeDependencyDowngrade => {
-                        BinaryExecutionError::PublishUpgradeDependencyDowngrade
-                    }
-                    Self::PackageUpgradeError { kind } => {
-                        BinaryExecutionError::PackageUpgradeError { kind }
-                    }
-                    Self::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    } => BinaryExecutionError::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    },
-                    Self::CertificateDenied => BinaryExecutionError::CertificateDenied,
-                    Self::IotaMoveVerificationTimeout => {
-                        BinaryExecutionError::IotaMoveVerificationTimeout
-                    }
-                    Self::SharedObjectOperationNotAllowed => {
-                        BinaryExecutionError::SharedObjectOperationNotAllowed
-                    }
-                    Self::InputObjectDeleted => BinaryExecutionError::InputObjectDeleted,
-                    Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
-                        BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                            congested_objects,
-                        }
-                    }
-                    Self::AddressDeniedForCoin { address, coin_type } => {
-                        BinaryExecutionError::AddressDeniedForCoin { address, coin_type }
-                    }
-                    Self::CoinTypeGlobalPause { coin_type } => {
-                        BinaryExecutionError::CoinTypeGlobalPause { coin_type }
-                    }
-                    Self::ExecutionCancelledDueToRandomnessUnavailable => {
-                        BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable
-                    }
-                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
-                    Self::InvalidLinkage => BinaryExecutionError::InvalidLinkage,
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ExecutionError {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableExecutionError::deserialize(deserializer).map(|readable| match readable {
-                    ReadableExecutionError::InsufficientGas => Self::InsufficientGas,
-                    ReadableExecutionError::InvalidGasObject => Self::InvalidGasObject,
-                    ReadableExecutionError::InvariantViolation => Self::InvariantViolation,
-                    ReadableExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-                    ReadableExecutionError::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    } => Self::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    ReadableExecutionError::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    } => Self::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    ReadableExecutionError::CircularObjectOwnership { object } => {
-                        Self::CircularObjectOwnership { object }
-                    }
-                    ReadableExecutionError::InsufficientCoinBalance => {
-                        Self::InsufficientCoinBalance
-                    }
-                    ReadableExecutionError::CoinBalanceOverflow => Self::CoinBalanceOverflow,
-                    ReadableExecutionError::PublishErrorNonZeroAddress => {
-                        Self::PublishErrorNonZeroAddress
-                    }
-                    ReadableExecutionError::IotaMoveVerificationError => {
-                        Self::IotaMoveVerificationError
-                    }
-                    ReadableExecutionError::MovePrimitiveRuntimeError { location } => {
-                        Self::MovePrimitiveRuntimeError { location }
-                    }
-                    ReadableExecutionError::MoveAbort { location, code } => {
-                        Self::MoveAbort { location, code }
-                    }
-                    ReadableExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
-                    }
-                    ReadableExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
-                    ReadableExecutionError::FunctionNotFound => Self::FunctionNotFound,
-                    ReadableExecutionError::ArityMismatch => Self::ArityMismatch,
-                    ReadableExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
-                    ReadableExecutionError::NonEntryFunctionInvoked => {
-                        Self::NonEntryFunctionInvoked
-                    }
-                    ReadableExecutionError::CommandArgumentError { argument, kind } => {
-                        Self::CommandArgumentError { argument, kind }
-                    }
-                    ReadableExecutionError::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    } => Self::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    },
-                    ReadableExecutionError::UnusedValueWithoutDrop { result, subresult } => {
-                        Self::UnusedValueWithoutDrop { result, subresult }
-                    }
-                    ReadableExecutionError::InvalidPublicFunctionReturnType { index } => {
-                        Self::InvalidPublicFunctionReturnType { index }
-                    }
-                    ReadableExecutionError::InvalidTransferObject => Self::InvalidTransferObject,
-                    ReadableExecutionError::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    } => Self::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    },
-                    ReadableExecutionError::PublishUpgradeMissingDependency => {
-                        Self::PublishUpgradeMissingDependency
-                    }
-                    ReadableExecutionError::PublishUpgradeDependencyDowngrade => {
-                        Self::PublishUpgradeDependencyDowngrade
-                    }
-                    ReadableExecutionError::PackageUpgradeError { kind } => {
-                        Self::PackageUpgradeError { kind }
-                    }
-                    ReadableExecutionError::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    } => Self::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    },
-                    ReadableExecutionError::CertificateDenied => Self::CertificateDenied,
-                    ReadableExecutionError::IotaMoveVerificationTimeout => {
-                        Self::IotaMoveVerificationTimeout
-                    }
-                    ReadableExecutionError::SharedObjectOperationNotAllowed => {
-                        Self::SharedObjectOperationNotAllowed
-                    }
-                    ReadableExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects },
-                    ReadableExecutionError::AddressDeniedForCoin { address, coin_type } => {
-                        Self::AddressDeniedForCoin { address, coin_type }
-                    }
-                    ReadableExecutionError::CoinTypeGlobalPause { coin_type } => {
-                        Self::CoinTypeGlobalPause { coin_type }
-                    }
-                    ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                        Self::ExecutionCancelledDueToRandomnessUnavailable
-                    }
-                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
-                    ReadableExecutionError::InvalidLinkage => Self::InvalidLinkage,
-                })
-            } else {
-                BinaryExecutionError::deserialize(deserializer).map(|binary| match binary {
-                    BinaryExecutionError::InsufficientGas => Self::InsufficientGas,
-                    BinaryExecutionError::InvalidGasObject => Self::InvalidGasObject,
-                    BinaryExecutionError::InvariantViolation => Self::InvariantViolation,
-                    BinaryExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-                    BinaryExecutionError::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    } => Self::ObjectTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    BinaryExecutionError::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    } => Self::PackageTooBig {
-                        object_size,
-                        max_object_size,
-                    },
-                    BinaryExecutionError::CircularObjectOwnership { object } => {
-                        Self::CircularObjectOwnership { object }
-                    }
-                    BinaryExecutionError::InsufficientCoinBalance => Self::InsufficientCoinBalance,
-                    BinaryExecutionError::CoinBalanceOverflow => Self::CoinBalanceOverflow,
-                    BinaryExecutionError::PublishErrorNonZeroAddress => {
-                        Self::PublishErrorNonZeroAddress
-                    }
-                    BinaryExecutionError::IotaMoveVerificationError => {
-                        Self::IotaMoveVerificationError
-                    }
-                    BinaryExecutionError::MovePrimitiveRuntimeError { location } => {
-                        Self::MovePrimitiveRuntimeError { location }
-                    }
-                    BinaryExecutionError::MoveAbort { location, code } => {
-                        Self::MoveAbort { location, code }
-                    }
-                    BinaryExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
-                    }
-                    BinaryExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
-                    BinaryExecutionError::FunctionNotFound => Self::FunctionNotFound,
-                    BinaryExecutionError::ArityMismatch => Self::ArityMismatch,
-                    BinaryExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
-                    BinaryExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
-                    BinaryExecutionError::CommandArgumentError { argument, kind } => {
-                        Self::CommandArgumentError { argument, kind }
-                    }
-                    BinaryExecutionError::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    } => Self::TypeArgumentError {
-                        type_argument,
-                        kind,
-                    },
-                    BinaryExecutionError::UnusedValueWithoutDrop { result, subresult } => {
-                        Self::UnusedValueWithoutDrop { result, subresult }
-                    }
-                    BinaryExecutionError::InvalidPublicFunctionReturnType { index } => {
-                        Self::InvalidPublicFunctionReturnType { index }
-                    }
-                    BinaryExecutionError::InvalidTransferObject => Self::InvalidTransferObject,
-                    BinaryExecutionError::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    } => Self::EffectsTooLarge {
-                        current_size,
-                        max_size,
-                    },
-                    BinaryExecutionError::PublishUpgradeMissingDependency => {
-                        Self::PublishUpgradeMissingDependency
-                    }
-                    BinaryExecutionError::PublishUpgradeDependencyDowngrade => {
-                        Self::PublishUpgradeDependencyDowngrade
-                    }
-                    BinaryExecutionError::PackageUpgradeError { kind } => {
-                        Self::PackageUpgradeError { kind }
-                    }
-                    BinaryExecutionError::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    } => Self::WrittenObjectsTooLarge {
-                        object_size,
-                        max_object_size,
-                    },
-                    BinaryExecutionError::CertificateDenied => Self::CertificateDenied,
-                    BinaryExecutionError::IotaMoveVerificationTimeout => {
-                        Self::IotaMoveVerificationTimeout
-                    }
-                    BinaryExecutionError::SharedObjectOperationNotAllowed => {
-                        Self::SharedObjectOperationNotAllowed
-                    }
-                    BinaryExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects },
-                    BinaryExecutionError::AddressDeniedForCoin { address, coin_type } => {
-                        Self::AddressDeniedForCoin { address, coin_type }
-                    }
-                    BinaryExecutionError::CoinTypeGlobalPause { coin_type } => {
-                        Self::CoinTypeGlobalPause { coin_type }
-                    }
-                    BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                        Self::ExecutionCancelledDueToRandomnessUnavailable
-                    }
-                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
-                    BinaryExecutionError::InvalidLinkage => Self::InvalidLinkage,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableCommandArgumentError {
-        TypeMismatch,
-        InvalidBcsBytes,
-        InvalidUsageOfPureArgument,
-        InvalidArgumentToPrivateEntryFunction,
-        IndexOutOfBounds { index: u16 },
-        SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
-        InvalidResultArity { result: u16 },
-        InvalidGasCoinUsage,
-        InvalidValueUsage,
-        InvalidObjectByValue,
-        InvalidObjectByMutRef,
-        SharedObjectOperationNotAllowed,
-        InvalidArgumentArity,
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    enum BinaryCommandArgumentError {
-        TypeMismatch,
-        InvalidBcsBytes,
-        InvalidUsageOfPureArgument,
-        InvalidArgumentToPrivateEntryFunction,
-        IndexOutOfBounds { index: u16 },
-        SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
-        InvalidResultArity { result: u16 },
-        InvalidGasCoinUsage,
-        InvalidValueUsage,
-        InvalidObjectByValue,
-        InvalidObjectByMutRef,
-        SharedObjectOperationNotAllowed,
-        InvalidArgumentArity,
-    }
-
-    impl Serialize for CommandArgumentError {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    Self::TypeMismatch => ReadableCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => ReadableCommandArgumentError::InvalidBcsBytes,
-                    Self::InvalidUsageOfPureArgument => {
-                        ReadableCommandArgumentError::InvalidUsageOfPureArgument
-                    }
-                    Self::InvalidArgumentToPrivateEntryFunction => {
-                        ReadableCommandArgumentError::InvalidArgumentToPrivateEntryFunction
-                    }
-                    Self::IndexOutOfBounds { index } => {
-                        ReadableCommandArgumentError::IndexOutOfBounds { index }
-                    }
-                    Self::SecondaryIndexOutOfBounds { result, subresult } => {
-                        ReadableCommandArgumentError::SecondaryIndexOutOfBounds {
-                            result,
-                            subresult,
-                        }
-                    }
-                    Self::InvalidResultArity { result } => {
-                        ReadableCommandArgumentError::InvalidResultArity { result }
-                    }
-                    Self::InvalidGasCoinUsage => ReadableCommandArgumentError::InvalidGasCoinUsage,
-                    Self::InvalidValueUsage => ReadableCommandArgumentError::InvalidValueUsage,
-                    Self::InvalidObjectByValue => {
-                        ReadableCommandArgumentError::InvalidObjectByValue
-                    }
-                    Self::InvalidObjectByMutRef => {
-                        ReadableCommandArgumentError::InvalidObjectByMutRef
-                    }
-                    Self::SharedObjectOperationNotAllowed => {
-                        ReadableCommandArgumentError::SharedObjectOperationNotAllowed
-                    }
-                    Self::InvalidArgumentArity => {
-                        ReadableCommandArgumentError::InvalidArgumentArity
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    Self::TypeMismatch => BinaryCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => BinaryCommandArgumentError::InvalidBcsBytes,
-                    Self::InvalidUsageOfPureArgument => {
-                        BinaryCommandArgumentError::InvalidUsageOfPureArgument
-                    }
-                    Self::InvalidArgumentToPrivateEntryFunction => {
-                        BinaryCommandArgumentError::InvalidArgumentToPrivateEntryFunction
-                    }
-                    Self::IndexOutOfBounds { index } => {
-                        BinaryCommandArgumentError::IndexOutOfBounds { index }
-                    }
-                    Self::SecondaryIndexOutOfBounds { result, subresult } => {
-                        BinaryCommandArgumentError::SecondaryIndexOutOfBounds { result, subresult }
-                    }
-                    Self::InvalidResultArity { result } => {
-                        BinaryCommandArgumentError::InvalidResultArity { result }
-                    }
-                    Self::InvalidGasCoinUsage => BinaryCommandArgumentError::InvalidGasCoinUsage,
-                    Self::InvalidValueUsage => BinaryCommandArgumentError::InvalidValueUsage,
-                    Self::InvalidObjectByValue => BinaryCommandArgumentError::InvalidObjectByValue,
-                    Self::InvalidObjectByMutRef => {
-                        BinaryCommandArgumentError::InvalidObjectByMutRef
-                    }
-                    Self::SharedObjectOperationNotAllowed => {
-                        BinaryCommandArgumentError::SharedObjectOperationNotAllowed
-                    }
-                    Self::InvalidArgumentArity => BinaryCommandArgumentError::InvalidArgumentArity,
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CommandArgumentError {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableCommandArgumentError::deserialize(deserializer).map(|readable| {
-                    match readable {
-                        ReadableCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                        ReadableCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
-                        ReadableCommandArgumentError::InvalidUsageOfPureArgument => {
-                            Self::InvalidUsageOfPureArgument
-                        }
-                        ReadableCommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
-                            Self::InvalidArgumentToPrivateEntryFunction
-                        }
-                        ReadableCommandArgumentError::IndexOutOfBounds { index } => {
-                            Self::IndexOutOfBounds { index }
-                        }
-                        ReadableCommandArgumentError::SecondaryIndexOutOfBounds {
-                            result,
-                            subresult,
-                        } => Self::SecondaryIndexOutOfBounds { result, subresult },
-                        ReadableCommandArgumentError::InvalidResultArity { result } => {
-                            Self::InvalidResultArity { result }
-                        }
-                        ReadableCommandArgumentError::InvalidGasCoinUsage => {
-                            Self::InvalidGasCoinUsage
-                        }
-                        ReadableCommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
-                        ReadableCommandArgumentError::InvalidObjectByValue => {
-                            Self::InvalidObjectByValue
-                        }
-                        ReadableCommandArgumentError::InvalidObjectByMutRef => {
-                            Self::InvalidObjectByMutRef
-                        }
-                        ReadableCommandArgumentError::SharedObjectOperationNotAllowed => {
-                            Self::SharedObjectOperationNotAllowed
-                        }
-                        ReadableCommandArgumentError::InvalidArgumentArity => {
-                            Self::InvalidArgumentArity
-                        }
-                    }
-                })
-            } else {
-                BinaryCommandArgumentError::deserialize(deserializer).map(|binary| match binary {
-                    BinaryCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                    BinaryCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
-                    BinaryCommandArgumentError::InvalidUsageOfPureArgument => {
-                        Self::InvalidUsageOfPureArgument
-                    }
-                    BinaryCommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
-                        Self::InvalidArgumentToPrivateEntryFunction
-                    }
-                    BinaryCommandArgumentError::IndexOutOfBounds { index } => {
-                        Self::IndexOutOfBounds { index }
-                    }
-                    BinaryCommandArgumentError::SecondaryIndexOutOfBounds { result, subresult } => {
-                        Self::SecondaryIndexOutOfBounds { result, subresult }
-                    }
-                    BinaryCommandArgumentError::InvalidResultArity { result } => {
-                        Self::InvalidResultArity { result }
-                    }
-                    BinaryCommandArgumentError::InvalidGasCoinUsage => Self::InvalidGasCoinUsage,
-                    BinaryCommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
-                    BinaryCommandArgumentError::InvalidObjectByValue => Self::InvalidObjectByValue,
-                    BinaryCommandArgumentError::InvalidObjectByMutRef => {
-                        Self::InvalidObjectByMutRef
-                    }
-                    BinaryCommandArgumentError::SharedObjectOperationNotAllowed => {
-                        Self::SharedObjectOperationNotAllowed
-                    }
-                    BinaryCommandArgumentError::InvalidArgumentArity => Self::InvalidArgumentArity,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadablePackageUpgradeError {
-        UnableToFetchPackage {
-            package_id: ObjectId,
-        },
-        NotAPackage {
-            object_id: ObjectId,
-        },
-        IncompatibleUpgrade,
-        DigestDoesNotMatch {
-            digest: Digest,
-        },
-        UnknownUpgradePolicy {
-            policy: u8,
-        },
-        PackageIdDoesNotMatch {
-            package_id: ObjectId,
-            ticket_id: ObjectId,
-        },
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    enum BinaryPackageUpgradeError {
-        UnableToFetchPackage {
-            package_id: ObjectId,
-        },
-        NotAPackage {
-            object_id: ObjectId,
-        },
-        IncompatibleUpgrade,
-        DigestDoesNotMatch {
-            digest: Digest,
-        },
-        UnknownUpgradePolicy {
-            policy: u8,
-        },
-        PackageIdDoesNotMatch {
-            package_id: ObjectId,
-            ticket_id: ObjectId,
-        },
-    }
-
-    impl Serialize for PackageUpgradeError {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    Self::UnableToFetchPackage { package_id } => {
-                        ReadablePackageUpgradeError::UnableToFetchPackage { package_id }
-                    }
-                    Self::NotAPackage { object_id } => {
-                        ReadablePackageUpgradeError::NotAPackage { object_id }
-                    }
-                    Self::IncompatibleUpgrade => ReadablePackageUpgradeError::IncompatibleUpgrade,
-                    Self::DigestDoesNotMatch { digest } => {
-                        ReadablePackageUpgradeError::DigestDoesNotMatch { digest }
-                    }
-                    Self::UnknownUpgradePolicy { policy } => {
-                        ReadablePackageUpgradeError::UnknownUpgradePolicy { policy }
-                    }
-                    Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => ReadablePackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    Self::UnableToFetchPackage { package_id } => {
-                        BinaryPackageUpgradeError::UnableToFetchPackage { package_id }
-                    }
-                    Self::NotAPackage { object_id } => {
-                        BinaryPackageUpgradeError::NotAPackage { object_id }
-                    }
-                    Self::IncompatibleUpgrade => BinaryPackageUpgradeError::IncompatibleUpgrade,
-                    Self::DigestDoesNotMatch { digest } => {
-                        BinaryPackageUpgradeError::DigestDoesNotMatch { digest }
-                    }
-                    Self::UnknownUpgradePolicy { policy } => {
-                        BinaryPackageUpgradeError::UnknownUpgradePolicy { policy }
-                    }
-                    Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => BinaryPackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for PackageUpgradeError {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadablePackageUpgradeError::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadablePackageUpgradeError::UnableToFetchPackage { package_id } => {
-                            Self::UnableToFetchPackage { package_id }
-                        }
-                        ReadablePackageUpgradeError::NotAPackage { object_id } => {
-                            Self::NotAPackage { object_id }
-                        }
-                        ReadablePackageUpgradeError::IncompatibleUpgrade => {
-                            Self::IncompatibleUpgrade
-                        }
-                        ReadablePackageUpgradeError::DigestDoesNotMatch { digest } => {
-                            Self::DigestDoesNotMatch { digest }
-                        }
-                        ReadablePackageUpgradeError::UnknownUpgradePolicy { policy } => {
-                            Self::UnknownUpgradePolicy { policy }
-                        }
-                        ReadablePackageUpgradeError::PackageIdDoesNotMatch {
-                            package_id,
-                            ticket_id,
-                        } => Self::PackageIdDoesNotMatch {
-                            package_id,
-                            ticket_id,
-                        },
-                    },
-                )
-            } else {
-                BinaryPackageUpgradeError::deserialize(deserializer).map(|binary| match binary {
-                    BinaryPackageUpgradeError::UnableToFetchPackage { package_id } => {
-                        Self::UnableToFetchPackage { package_id }
-                    }
-                    BinaryPackageUpgradeError::NotAPackage { object_id } => {
-                        Self::NotAPackage { object_id }
-                    }
-                    BinaryPackageUpgradeError::IncompatibleUpgrade => Self::IncompatibleUpgrade,
-                    BinaryPackageUpgradeError::DigestDoesNotMatch { digest } => {
-                        Self::DigestDoesNotMatch { digest }
-                    }
-                    BinaryPackageUpgradeError::UnknownUpgradePolicy { policy } => {
-                        Self::UnknownUpgradePolicy { policy }
-                    }
-                    BinaryPackageUpgradeError::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    } => Self::PackageIdDoesNotMatch {
-                        package_id,
-                        ticket_id,
-                    },
                 })
             }
         }

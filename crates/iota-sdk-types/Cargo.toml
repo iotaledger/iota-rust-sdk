@@ -18,7 +18,6 @@ all-features = true
 rustdoc-args = [
   # Enable doc_cfg showing the required features.
   "--cfg=doc_cfg",
-
   # Generate links to definition in rustdoc source code pages
   # https://github.com/rust-lang/rust/pull/84176
   "-Zunstable-options",
@@ -27,61 +26,69 @@ rustdoc-args = [
 
 [features]
 default = []
+bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = [
-  "dep:serde",
-  "dep:serde_with",
   "dep:bcs",
+  "dep:serde",
   "dep:serde_json",
-  "roaring/std",
-  "dep:itertools",
   "dep:serde_repr",
+  "dep:serde_with",
+  "roaring/std",
 ]
-schemars = ["serde", "dep:schemars", "dep:serde_json"]
-rand = ["dep:rand_core"]
+rand = ["dep:rand_core", "rand_core/getrandom"]
 hash = ["dep:blake2"]
-proptest = ["dep:proptest", "dep:test-strategy", "serde", "schemars"]
+proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
-base64ct = { workspace = true, features = ["alloc"] }
-bnum.workspace = true
-bs58 = "0.5.1"
-derive_more = { workspace = true, features = ["display"] }
-hex.workspace = true
-paste.workspace = true
-roaring.workspace = true
-strum = { workspace = true, features = ["derive"] }
-thiserror.workspace = true
-winnow = "0.7"
-
+# external dependencies
+base64ct = { workspace = true, features = ["alloc", "std"] }
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
-itertools = { workspace = true, optional = true }
+# Hash support
+blake2 = { version = "0.10.6", optional = true }
+bnum = "0.12.0"
+bs58 = "0.5.1"
+bytestring = "1.5.0"
+derive_more = { workspace = true, features = ["full"] }
+hex.workspace = true
+paste.workspace = true
+# proptest support
+proptest = { workspace = true, features = ["std"], optional = true }
+# RNG support
+rand_core = { workspace = true, optional = true }
+roaring.workspace = true
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
-
-# JsonSchema definitions for types, useful for generating an OpenAPI Specification.
-schemars = { version = "0.8.21", optional = true }
-
-# RNG support
-rand_core = { workspace = true, optional = true }
-
-# Hash support
-blake2 = { version = "0.10.6", optional = true }
-
-# proptest support
-proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
+strum = { workspace = true, features = ["derive"] }
 test-strategy = { workspace = true, optional = true }
+thiserror.workspace = true
+winnow = "0.7"
+
+# internal dependencies
+iota-bcs-schema = { workspace = true, optional = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rand_core = { workspace = true, optional = true, features = ["getrandom"] }
+
+[build-dependencies]
+filetime = "0.2"
 
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
-jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
+rand.workspace = true
 serde_json.workspace = true
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom 0.2 needs its "js" feature to support wasm; force it on for this crate and everything downstream.
+getrandom_2.workspace = true
+
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-wasm-bindgen-test = "0.3"
-getrandom = { version = "0.3", features = ["wasm_js"] }
+# getrandom 0.3 additionally needs the `getrandom_backend="wasm_js"` rustflag (set in .cargo/config.toml),
+# so it can't be imposed on consumers; scope it to our own wasm tests, where proptest pulls it in.
+getrandom_3.workspace = true
+wasm-bindgen-test.workspace = true

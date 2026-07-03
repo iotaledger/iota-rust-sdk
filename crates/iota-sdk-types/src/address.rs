@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::ObjectId;
+
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
 /// An `Address` is a 32-byte pseudonymous identifier used to uniquely identify
@@ -55,9 +57,14 @@
 /// ```text
 /// address = 32OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "32OCTET")
+)]
 pub struct Address(
     #[cfg_attr(
         feature = "serde",
@@ -69,18 +76,48 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD: Self = Self::from_u8(1);
-    pub const FRAMEWORK: Self = Self::from_u8(2);
-    pub const SYSTEM: Self = Self::from_u8(3);
+    pub const MAX: Self = Self([u8::MAX; Self::LENGTH]);
+    pub const STD: Self = Self::from_u16(1);
+    pub const FRAMEWORK: Self = Self::from_u16(2);
+    pub const SYSTEM: Self = Self::from_u16(3);
+    pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
+    pub const STARDUST: Self = Self::from_u16(0x107a);
+    pub const SYSTEM_STATE: Self = Self::from_u16(5);
+    pub const CLOCK: Self = Self::from_u16(6);
+    pub const AUTHENTICATOR_STATE: Self = Self::from_u16(7);
+    pub const RANDOMNESS_STATE: Self = Self::from_u16(8);
+    pub const GENESIS_IOTA_BRIDGE: Self = Self::from_u16(9);
+    pub const DENY_LIST: Self = Self::from_u16(0x403);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)
     }
 
-    pub(crate) const fn from_u8(byte: u8) -> Self {
+    /// Creates an `Address` from a `u16` suffix by setting the last two bytes.
+    pub const fn from_u16(suffix: u16) -> Self {
         let mut address = Self::ZERO;
-        address.0[31] = byte;
+        let [hi, lo] = suffix.to_be_bytes();
+        address.0[Address::LENGTH - 2] = hi;
+        address.0[Address::LENGTH - 1] = lo;
         address
+    }
+
+    /// Checks if the address is one of the system package addresses.
+    /// The system packages are:
+    /// - STD
+    /// - FRAMEWORK
+    /// - SYSTEM
+    /// - GENESIS_BRIDGE
+    /// - STARDUST
+    pub fn is_system_package(&self) -> bool {
+        [
+            Self::STD,
+            Self::FRAMEWORK,
+            Self::SYSTEM,
+            Self::GENESIS_BRIDGE,
+            Self::STARDUST,
+        ]
+        .contains(self)
     }
 
     #[cfg(feature = "rand")]
@@ -94,12 +131,18 @@ impl Address {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of a Address.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -107,10 +150,44 @@ impl Address {
         &self.0
     }
 
+    pub const fn from_object_id(object_id: ObjectId) -> Self {
+        object_id.0
+    }
+
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        let hex = hex.as_ref();
+        let hex = if hex.starts_with(b"0x") {
+            &hex[2..]
+        } else {
+            hex
+        };
+        if hex.len() != Self::LENGTH * 2 {
+            return Err(AddressParseError::FromHex(
+                hex::FromHexError::InvalidStringLength,
+            ));
+        }
+        <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
+            .map(Self)
+            .map_err(AddressParseError::FromHex)
+    }
+
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    pub fn from_prefixed_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        if !hex.as_ref().starts_with(b"0x") {
+            return Err(AddressParseError::MissingPrefix);
+        }
+        Self::from_hex(hex)
+    }
+
     /// Parses an Address from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
-    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+    pub fn from_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         let hex = hex.as_ref();
         let hex = if hex.starts_with(b"0x") {
             &hex[2..]
@@ -133,8 +210,41 @@ impl Address {
         .map_err(AddressParseError::FromHex)
     }
 
+    /// Parses an Address from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    pub fn from_prefixed_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        if !hex.as_ref().starts_with(b"0x") {
+            return Err(AddressParseError::MissingPrefix);
+        }
+        Self::from_short_hex(hex)
+    }
+
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
     pub fn to_hex(&self) -> String {
-        self.to_string()
+        self.to_canonical_string(true)
+    }
+
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.to_canonical_string(false)
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed).
+    pub fn to_short_hex(&self) -> String {
+        format!("0x{}", self.to_raw_short_hex())
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        let full_str = self.to_canonical_string(false);
+        let trimmed = full_str.trim_start_matches('0');
+        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
+        hex_str.to_owned()
     }
 
     /// Returns the string representation of this address using the
@@ -148,20 +258,7 @@ impl Address {
         }
     }
 
-    /// Returns the shortest possible string representation of the address (i.e.
-    /// with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        let full_str = self.to_canonical_string(false);
-        let trimmed = full_str.trim_start_matches('0');
-        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
-        if with_prefix {
-            format!("0x{hex_str}")
-        } else {
-            hex_str.to_owned()
-        }
-    }
-
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, AddressParseError> {
         let bytes = bytes.as_ref();
         <[u8; Self::LENGTH]>::try_from(bytes)
             .map_err(|_| AddressParseError::InvalidByteLength {
@@ -169,13 +266,32 @@ impl Address {
             })
             .map(Self)
     }
+
+    /// Returns the next address in byte-increasing order.
+    pub const fn next_lexicographical(&self) -> Self {
+        Self::new(crate::next_lexicographical_array(self.bytes()))
+    }
+
+    /// Returns the next address in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub const fn next_lexicographical_opt(&self) -> Option<Self> {
+        match crate::next_lexicographical_array_opt(self.bytes()) {
+            Some(val) => Some(Self::new(val)),
+            None => None,
+        }
+    }
 }
 
 impl std::str::FromStr for Address {
     type Err = AddressParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_hex(s)
+        // If the string is not prefixed, we only accept full-length hex
+        if s.starts_with("0x") {
+            Self::from_prefixed_short_hex(s)
+        } else {
+            Self::from_hex(s)
+        }
     }
 }
 
@@ -193,7 +309,7 @@ impl AsRef<[u8; 32]> for Address {
 
 impl From<Address> for [u8; 32] {
     fn from(address: Address) -> Self {
-        address.into_inner()
+        address.into_bytes()
     }
 }
 
@@ -211,7 +327,7 @@ impl From<Address> for Vec<u8> {
 
 impl From<super::ObjectId> for Address {
     fn from(value: super::ObjectId) -> Self {
-        Self::new(value.into_inner())
+        Self::from_object_id(value)
     }
 }
 
@@ -253,11 +369,11 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
         D: serde::Deserializer<'de>,
     {
         let address: Address = serde_with::DisplayFromStr::deserialize_as(deserializer)?;
-        Ok(address.into_inner())
+        Ok(address.into_bytes())
     }
 }
 
-#[derive(Clone, Debug, thiserror::Error, PartialEq)]
+#[derive(Clone, Debug, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum AddressParseError {
     #[error("address must be hex string of length {}", Address::LENGTH * 2)]
@@ -267,36 +383,8 @@ pub enum AddressParseError {
         Address::LENGTH
     )]
     InvalidByteLength { actual: usize },
-}
-
-#[cfg(feature = "schemars")]
-impl schemars::JsonSchema for Address {
-    fn schema_name() -> String {
-        "Address".to_owned()
-    }
-
-    fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-        use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
-
-        let hex_length = Address::LENGTH * 2;
-        SchemaObject {
-            metadata: Some(Box::new(Metadata {
-                title: Some(Self::schema_name()),
-                description: Some("A 32-byte IOTA address, encoded as a hex string.".to_owned()),
-                examples: vec![serde_json::to_value(Address::FRAMEWORK).unwrap()],
-                ..Default::default()
-            })),
-            instance_type: Some(InstanceType::String.into()),
-            format: Some("hex".to_owned()),
-            string: Some(Box::new(StringValidation {
-                max_length: Some((hex_length + 2) as u32),
-                min_length: None,
-                pattern: Some(format!("0x[a-z0-9]{{1,{hex_length}}}")),
-            })),
-            ..Default::default()
-        }
-        .into()
-    }
+    #[error("address hex string missing `0x` prefix")]
+    MissingPrefix,
 }
 
 #[cfg(test)]
@@ -321,14 +409,14 @@ mod tests {
     #[test]
     fn parse_address_with_0x_prefix() {
         let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-        let address = Address::from_hex(hex).unwrap();
+        let address = Address::from_short_hex(hex).unwrap();
         assert_eq!(address.to_string(), hex);
     }
 
     #[test]
     fn parse_address_without_0x_prefix() {
         let hex = "02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-        let address = Address::from_hex(hex).unwrap();
+        let address = Address::from_short_hex(hex).unwrap();
         assert_eq!(
             address.to_string(),
             "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331"
@@ -337,7 +425,7 @@ mod tests {
 
     #[test]
     fn parse_short_address_single_digit() {
-        let address = Address::from_hex("0x1").unwrap();
+        let address = Address::from_short_hex("0x1").unwrap();
         assert_eq!(address, Address::STD);
         assert_eq!(
             address.to_string(),
@@ -347,27 +435,28 @@ mod tests {
 
     #[test]
     fn parse_short_address_without_prefix() {
-        let address = Address::from_hex("3").unwrap();
+        let address = Address::from_short_hex("3").unwrap();
         assert_eq!(address, Address::SYSTEM);
     }
 
     #[test]
     fn parse_zero_address() {
-        let address = Address::from_hex("0x0").unwrap();
+        let address = Address::from_short_hex("0x0").unwrap();
         assert_eq!(address, Address::ZERO);
 
-        let address = Address::from_hex("0").unwrap();
+        let address = Address::from_short_hex("0").unwrap();
         assert_eq!(address, Address::ZERO);
 
-        let address =
-            Address::from_hex("0x0000000000000000000000000000000000000000000000000000000000000000")
-                .unwrap();
+        let address = Address::from_short_hex(
+            "0x0000000000000000000000000000000000000000000000000000000000000000",
+        )
+        .unwrap();
         assert_eq!(address, Address::ZERO);
     }
 
     #[test]
     fn parse_address_invalid_hex_char() {
-        let result = Address::from_hex("0xGGGG");
+        let result = Address::from_short_hex("0xGGGG");
         assert!(result.is_err());
         assert!(matches!(
             result,
@@ -380,7 +469,7 @@ mod tests {
     #[test]
     fn parse_address_too_long() {
         // 65 hex chars (one more than allowed 64)
-        let result = Address::from_hex(
+        let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331",
         );
         assert!(matches!(
@@ -389,7 +478,7 @@ mod tests {
         ));
 
         // 66 hex chars (two more than allowed 64)
-        let result = Address::from_hex(
+        let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3316",
         );
         assert!(matches!(
@@ -426,18 +515,18 @@ mod tests {
 
     #[test]
     fn to_short_string_formats() {
-        let address = Address::from_hex("0x2").unwrap();
-        assert_eq!(address.to_short_string(true), "0x2");
-        assert_eq!(address.to_short_string(false), "2");
+        let address = Address::from_short_hex("0x2").unwrap();
+        assert_eq!(address.to_short_hex(), "0x2");
+        assert_eq!(address.to_raw_short_hex(), "2");
 
         let zero = Address::ZERO;
-        assert_eq!(zero.to_short_string(true), "0x0");
-        assert_eq!(zero.to_short_string(false), "0");
+        assert_eq!(zero.to_short_hex(), "0x0");
+        assert_eq!(zero.to_raw_short_hex(), "0");
     }
 
     #[test]
     fn to_canonical_string_formats() {
-        let address = Address::from_hex("0x2").unwrap();
+        let address = Address::from_short_hex("0x2").unwrap();
         assert_eq!(
             address.to_canonical_string(true),
             "0x0000000000000000000000000000000000000000000000000000000000000002"
@@ -451,7 +540,7 @@ mod tests {
     #[test]
     #[cfg(feature = "serde")]
     fn formats() {
-        let actual = Address::from_hex("0x2").unwrap();
+        let actual = Address::from_short_hex("0x2").unwrap();
 
         println!("{}", serde_json::to_string(&actual).unwrap());
         println!("{:?}", bcs::to_bytes(&actual).unwrap());

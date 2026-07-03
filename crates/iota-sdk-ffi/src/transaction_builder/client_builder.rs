@@ -18,11 +18,10 @@ use crate::{
     },
     types::{
         address::Address,
+        move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::ObjectId,
-        struct_tag::Identifier,
         transaction::{Transaction, TransactionEffects},
-        type_tag::TypeTag,
     },
 };
 
@@ -51,7 +50,8 @@ impl ClientTransactionBuilder {
     }
 }
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl ClientTransactionBuilder {
     /// Set the sender address.
     pub fn set_sender(self: Arc<Self>, sender: &Address) {

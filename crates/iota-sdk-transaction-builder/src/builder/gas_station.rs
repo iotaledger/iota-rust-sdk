@@ -4,7 +4,9 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
+use iota_types::{
+    Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest, Version,
+};
 use reqwest::{
     Url,
     header::{HeaderMap, HeaderName, HeaderValue},
@@ -46,7 +48,7 @@ fn idx_to_segment_name(idx: usize) -> &'static str {
 }
 
 /// Data to configure gas station sponsorship.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct GasStationData {
     /// The gas station URL.
@@ -75,7 +77,7 @@ impl GasStationData {
     }
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GasStationVersion {
     version_core: [u8; 3],
     // Suffix without leading '-'.
@@ -194,14 +196,14 @@ struct GasObjectRef {
     pub object_id: ObjectId,
     /// The version of this object.
     #[serde(deserialize_with = "deserialize_readable_u64")]
-    pub version: Version,
+    pub version: u64,
     /// The digest of this object.
-    pub digest: Digest,
+    pub digest: ObjectDigest,
 }
 
 fn deserialize_readable_u64<'de, D: serde::Deserializer<'de>>(
     deserializer: D,
-) -> Result<Version, D::Error> {
+) -> Result<u64, D::Error> {
     #[derive(Deserialize)]
     #[serde(untagged)]
     enum NumOrString {
@@ -353,16 +355,18 @@ impl GasStationData {
         self,
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
-    ) -> Result<Digest, Error> {
+    ) -> Result<TransactionDigest, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
         let effects = self.execute_txn_inner(&url, txn, signer).await?;
 
-        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
-            message: Some(e.to_string()),
-            gas_station_url: url,
+        TransactionDigest::deserialize(&effects["transactionDigest"]).map_err(|e| {
+            Error::GasStationResponse {
+                message: Some(e.to_string()),
+                gas_station_url: url,
+            }
         })
     }
 
@@ -400,7 +404,7 @@ impl GasStationData {
                     .into_iter()
                     .map(|obj_ref| ObjectReference {
                         object_id: obj_ref.object_id,
-                        version: obj_ref.version as _,
+                        version: Version::from_u64(obj_ref.version),
                         digest: obj_ref.digest,
                     })
                     .collect();

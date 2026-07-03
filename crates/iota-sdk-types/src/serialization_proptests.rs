@@ -12,13 +12,6 @@ macro_rules! serialization_test {
             #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
             #[cfg_attr(not(target_arch = "wasm32"), proptest)]
             #[allow(non_snake_case)]
-            fn [< test_valid_json_schema_ $type >] (instance: $type) {
-                assert_valid_json_schema(&instance);
-            }
-
-            #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
-            #[cfg_attr(not(target_arch = "wasm32"), proptest)]
-            #[allow(non_snake_case)]
             fn [< test_roundtrip_ $type >] (instance: $type) {
                 assert_roundtrip(&instance);
             }
@@ -33,28 +26,6 @@ macro_rules! serialization_test {
             }
         }
     };
-}
-
-fn assert_valid_json_schema<T>(instance: &T)
-where
-    T: serde::Serialize + schemars::JsonSchema,
-{
-    let root_schema = schemars::r#gen::SchemaGenerator::default().into_root_schema_for::<T>();
-    let schema = serde_json::json!(root_schema);
-    let validator = jsonschema::Validator::new(&schema).unwrap();
-    let instance = serde_json::json!(instance);
-
-    let result = validator.validate(&instance);
-    let r = result.is_ok();
-    if let Err(errors) = result {
-        for error in errors {
-            println!("Validation error: {error}");
-            println!("Instance path: {}", error.instance_path);
-        }
-    }
-
-    // assert!(compiled.is_valid(&instance));
-    assert!(r);
 }
 
 fn assert_roundtrip<T>(instance: &T)
@@ -84,16 +55,12 @@ serialization_test!(EndOfEpochData);
 serialization_test!(SignedCheckpointSummary);
 serialization_test!(Bls12381PublicKey);
 serialization_test!(Bls12381Signature);
-serialization_test!(Bn254FieldElement);
-serialization_test!(ZkLoginClaim);
 serialization_test!(Ed25519PublicKey);
 serialization_test!(Ed25519Signature);
-serialization_test!(Jwk);
-serialization_test!(JwkId);
 serialization_test!(MultisigAggregatedSignature);
 serialization_test!(MultisigCommittee);
 serialization_test!(MultisigMember);
-serialization_test!(MultisigMemberPublicKey);
+serialization_test!(PublicKey);
 serialization_test!(MultisigMemberSignature);
 serialization_test!(Secp256k1PublicKey);
 serialization_test!(Secp256k1Signature);
@@ -105,15 +72,24 @@ serialization_test!(ValidatorAggregatedSignature);
 serialization_test!(ValidatorCommittee);
 serialization_test!(ValidatorCommitteeMember);
 serialization_test!(ValidatorSignature);
-serialization_test!(ZkLoginAuthenticator);
-serialization_test!(ZkLoginInputs);
-serialization_test!(ZkLoginProof);
-serialization_test!(ZkLoginPublicIdentifier);
-serialization_test!(CircomG1);
-serialization_test!(CircomG2);
 serialization_test!(PasskeyAuthenticator);
+serialization_test!(PasskeyPublicKey);
 serialization_test!(MoveAuthenticator);
+serialization_test!(MoveAuthenticatorV1);
+serialization_test!(RandomnessRound);
 serialization_test!(Digest);
+serialization_test!(CheckpointDigest);
+serialization_test!(CheckpointContentsDigest);
+serialization_test!(CertificateDigest);
+serialization_test!(SenderSignedDataDigest);
+serialization_test!(TransactionDigest);
+serialization_test!(TransactionEffectsDigest);
+serialization_test!(TransactionEventsDigest);
+serialization_test!(EffectsAuxDataDigest);
+serialization_test!(ObjectDigest);
+serialization_test!(ConsensusCommitDigest);
+serialization_test!(MisbehaviorReportDigest);
+serialization_test!(MoveAuthenticatorDigest);
 serialization_test!(ChangedObject);
 serialization_test!(IdOperation);
 serialization_test!(ObjectIn);
@@ -122,7 +98,6 @@ serialization_test!(TransactionEffects);
 serialization_test!(TransactionEffectsV1);
 serialization_test!(UnchangedSharedKind);
 serialization_test!(UnchangedSharedObject);
-serialization_test!(BalanceChange);
 serialization_test!(Event);
 serialization_test!(TransactionEvents);
 serialization_test!(CommandArgumentError);
@@ -133,17 +108,22 @@ serialization_test!(PackageUpgradeError);
 serialization_test!(TypeArgumentError);
 serialization_test!(GasCostSummary);
 serialization_test!(GenesisObject);
+serialization_test!(MovePackage);
+serialization_test!(MoveObjectType);
+serialization_test!(MoveStruct);
 serialization_test!(Object);
+serialization_test!(ObjectData);
 serialization_test!(ObjectReference);
+serialization_test!(SharedObjectReference);
 serialization_test!(Owner);
 serialization_test!(TypeOrigin);
 serialization_test!(UpgradeInfo);
 serialization_test!(ObjectId);
-serialization_test!(ActiveJwk);
 serialization_test!(Argument);
-serialization_test!(AuthenticatorStateExpire);
-serialization_test!(AuthenticatorStateUpdateV1);
 serialization_test!(ChangeEpoch);
+serialization_test!(ChangeEpochV2);
+serialization_test!(ChangeEpochV3);
+serialization_test!(ChangeEpochV4);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
 serialization_test!(CancelledTransaction);
@@ -171,3 +151,4 @@ serialization_test!(Upgrade);
 serialization_test!(Identifier);
 serialization_test!(StructTag);
 serialization_test!(TypeTag);
+serialization_test!(Version);

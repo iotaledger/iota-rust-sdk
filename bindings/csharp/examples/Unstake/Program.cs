@@ -9,22 +9,22 @@ class Program
     {
         var client = GraphQlClient.NewTestnet();
 
-        var stakedIotas = await client.Objects(new ObjectFilter(typeTag: StructTag.NewStakedIota().ToString()));
-        if (stakedIotas.data.Length == 0)
+        var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString()));
+        if (stakedIotas.Data.Length == 0)
         {
             throw new Exception("no staked iotas found");
         }
-        var stakedIota = stakedIotas.data[0];
+        var stakedIota = stakedIotas.Data[0];
 
         var builder = new TransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client);
 
-        builder.Unstake(PtbArgument.ObjectId(stakedIota.ObjectId()));
+        builder.Unstake(PtbArgument.ObjectId(stakedIota.Id()));
 
         var res = await builder.DryRun(false);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to unstake: {res.error}");
+            throw new Exception($"Failed to unstake: {res.Error}");
         }
 
         Console.WriteLine("Unstake dry run was successful!");

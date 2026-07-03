@@ -6,7 +6,7 @@
 
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{Address, IdentifierRef, StructTag, framework::Coin};
+use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
     Client,
@@ -64,8 +64,8 @@ impl Client {
                     .unwrap_or_else(|| {
                         StructTag::new(
                             Address::FRAMEWORK,
-                            IdentifierRef::const_new("coin").into(),
-                            IdentifierRef::const_new("Coin").into(),
+                            Identifier::from_static("coin"),
+                            Identifier::from_static("Coin"),
                             Default::default(),
                         )
                     })
@@ -92,7 +92,7 @@ impl Client {
         owner: Address,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
-        self.coins(owner, StructTag::new_iota_coin_type(), pagination_filter)
+        self.coins(owner, StructTag::new_gas(), pagination_filter)
             .await
     }
 
@@ -123,7 +123,7 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
-        client::{DEVNET_HOST, LOCAL_HOST, TESTNET_HOST},
+        client::{DEVNET_HOST, LOCAL_HOST},
         faucet::FaucetClient,
         test_utils::{NUM_COINS_FROM_FAUCET, test_client},
     };
@@ -148,8 +148,9 @@ mod tests {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
-            TESTNET_HOST => FaucetClient::new_testnet(),
             DEVNET_HOST => FaucetClient::new_devnet(),
+            // The testnet faucet is web-only and exposes no programmatic gas
+            // endpoint, so this test cannot fund an address on testnet.
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());

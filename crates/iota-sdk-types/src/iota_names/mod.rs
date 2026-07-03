@@ -10,15 +10,11 @@ pub mod registry;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub use self::name::{Name, NameFormat};
-use crate::{Address, ObjectId, StructTag, type_tag::IdentifierRef};
+use crate::{Address, ObjectId, StructTag, move_core::Identifier};
 
 /// An object to manage a second-level name (SLN).
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct NameRegistration {
     id: ObjectId,
     name: Name,
@@ -48,8 +44,8 @@ impl crate::TreeDisplay for NameRegistration {
 }
 
 /// An object to manage a subname.
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct SubnameRegistration {
     id: ObjectId,
     nft: NameRegistration,
@@ -77,16 +73,11 @@ crate::impl_tree_display!(NameRegistration, SubnameRegistration);
 
 /// Unifying trait for [`NameRegistration`] and [`SubnameRegistration`]
 pub trait IotaNamesNft {
-    const MODULE: &IdentifierRef;
-    const TYPE_NAME: &IdentifierRef;
+    const MODULE: Identifier;
+    const TYPE_NAME: Identifier;
 
     fn type_(package_id: Address) -> StructTag {
-        StructTag::new(
-            package_id,
-            Self::MODULE.into(),
-            Self::TYPE_NAME.into(),
-            Vec::new(),
-        )
+        StructTag::new(package_id, Self::MODULE, Self::TYPE_NAME, Vec::new())
     }
 
     fn name(&self) -> &Name;
@@ -107,8 +98,8 @@ pub trait IotaNamesNft {
 }
 
 impl IotaNamesNft for NameRegistration {
-    const MODULE: &IdentifierRef = IdentifierRef::const_new("name_registration");
-    const TYPE_NAME: &IdentifierRef = IdentifierRef::const_new("NameRegistration");
+    const MODULE: Identifier = Identifier::from_static("name_registration");
+    const TYPE_NAME: Identifier = Identifier::from_static("NameRegistration");
 
     fn name(&self) -> &Name {
         &self.name
@@ -128,8 +119,8 @@ impl IotaNamesNft for NameRegistration {
 }
 
 impl IotaNamesNft for SubnameRegistration {
-    const MODULE: &IdentifierRef = IdentifierRef::const_new("subname_registration");
-    const TYPE_NAME: &IdentifierRef = IdentifierRef::const_new("SubnameRegistration");
+    const MODULE: Identifier = Identifier::from_static("subname_registration");
+    const TYPE_NAME: Identifier = Identifier::from_static("SubnameRegistration");
 
     fn name(&self) -> &Name {
         self.nft.name()

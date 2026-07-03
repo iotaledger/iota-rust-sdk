@@ -46,17 +46,6 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
-    /// Create a TreeWriter after text has already been written to the
-    /// formatter, so the first tree node emits a newline before its connector.
-    pub fn new_after_text(f: &'f mut std::fmt::Formatter<'a>) -> Self {
-        Self {
-            f,
-            prefix: String::new(),
-            needs_newline: true,
-            skip_header: false,
-        }
-    }
-
     /// Write the root label without connectors. When called as a child
     /// (via [`child`](Self::child)), this is a no-op because the parent
     /// already wrote the label.
@@ -219,38 +208,13 @@ mod tests {
     use super::*;
 
     /// Helper that captures formatted output by implementing Display with a
-    /// closure, letting us write plain text then use
-    /// TreeWriter::new_after_text.
+    /// closure.
     struct AfterText<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
 
     impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for AfterText<F> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             (self.0)(f)
         }
-    }
-
-    #[test]
-    fn new_after_text_emits_newline_before_first_leaf() {
-        let output = AfterText(|f| {
-            write!(f, "MyLabel")?;
-            let mut w = TreeWriter::new_after_text(f);
-            w.leaf("Key", &"value", true)
-        })
-        .to_string();
-
-        assert_eq!(output, "MyLabel\n└── Key: value");
-    }
-
-    #[test]
-    fn new_after_text_emits_newline_before_first_branch() {
-        let output = AfterText(|f| {
-            write!(f, "Header")?;
-            let mut w = TreeWriter::new_after_text(f);
-            w.branch("Section", true, |w| w.leaf("A", &1, true))
-        })
-        .to_string();
-
-        assert_eq!(output, "Header\n└── Section\n    └── A: 1");
     }
 
     #[test]

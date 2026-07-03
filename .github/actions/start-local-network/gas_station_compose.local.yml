@@ -1,0 +1,11 @@
+# Local development override: use host networking so the gas station
+# can reach the IOTA fullnode running on the host without firewall issues.
+services:
+  redis:
+    network_mode: host
+    networks: !reset []
+    ports: !reset []
+  iota-gas-station:
+    network_mode: host
+    networks: !reset []
+    ports: !reset []

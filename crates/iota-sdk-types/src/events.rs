@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
+use super::{Address, Identifier, ObjectId, StructTag};
 
 /// Events emitted during the successful execution of a transaction
 ///
@@ -13,10 +13,10 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 /// ```text
 /// transaction-events = vector event
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Default, derive_more::Deref, derive_more::DerefMut, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEvents(pub Vec<Event>);
 
 impl crate::TreeDisplay for TransactionEvents {
@@ -35,14 +35,10 @@ impl crate::TreeDisplay for TransactionEvents {
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(PartialEq, Eq, Debug, Clone)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted.
@@ -61,8 +57,33 @@ pub struct Event {
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(contents))]
     pub contents: Vec<u8>,
+}
+
+impl Event {
+    fn is_system_epoch_info_event_type(&self, name: Identifier) -> bool {
+        self.type_.address() == Address::SYSTEM
+            && *self.type_.module() == Identifier::IOTA_SYSTEM_STATE_INNER_MODULE
+            && *self.type_.name() == name
+    }
+
+    /// Checks if this is a `SystemEpochInfoEvent` of any version (V1 or V2).
+    pub fn is_system_epoch_info_event(&self) -> bool {
+        self.is_system_epoch_info_event_v1() || self.is_system_epoch_info_event_v2()
+    }
+
+    /// Checks if this is
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
+    pub fn is_system_epoch_info_event_v1(&self) -> bool {
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V1)
+    }
+
+    /// Checks if this is
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
+    pub fn is_system_epoch_info_event_v2(&self) -> bool {
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
+    }
 }
 
 impl crate::TreeDisplay for Event {
@@ -76,35 +97,4 @@ impl crate::TreeDisplay for Event {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct BalanceChange {
-    /// Owner of the balance change
-    pub address: Address,
-    /// Type of the Coin
-    pub coin_type: TypeTag,
-    /// The amount indicate the balance value changes.
-    ///
-    /// A negative amount means spending coin value and positive means receiving
-    /// coin value.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
-    pub amount: i128,
-}
-
-impl crate::TreeDisplay for BalanceChange {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Balance Change")?;
-        w.leaf("Address", &self.address, false)?;
-        w.leaf("Coin Type", &self.coin_type, false)?;
-        w.leaf("Amount", &self.amount, true)
-    }
-}
-
-crate::impl_tree_display!(TransactionEvents, Event, BalanceChange);
+crate::impl_tree_display!(TransactionEvents, Event);

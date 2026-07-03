@@ -14,10 +14,11 @@ use crate::{
         pagination::MovePackagePage,
         query_types::{MoveFunction, MoveModule},
     },
-    types::{address::Address, object::MovePackage},
+    types::{address::Address, object::MovePackage, version::Version},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// The package corresponding to the given address (at the optionally given
     /// version). When no version is given, the package is loaded directly
@@ -34,13 +35,13 @@ impl GraphQLClient {
     pub async fn package(
         &self,
         address: &Address,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
             .0
             .read()
             .await
-            .package(**address, version)
+            .package(**address, version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -53,8 +54,8 @@ impl GraphQLClient {
     pub async fn package_versions(
         &self,
         address: &Address,
-        after_version: Option<u64>,
-        before_version: Option<u64>,
+        after_version: Option<Arc<Version>>,
+        before_version: Option<Arc<Version>>,
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<MovePackagePage> {
         Ok(self
@@ -64,8 +65,8 @@ impl GraphQLClient {
             .package_versions(
                 **address,
                 pagination_filter.unwrap_or_default(),
-                after_version,
-                before_version,
+                after_version.map(|v| **v),
+                before_version.map(|v| **v),
             )
             .await?
             .map(Into::into)
@@ -122,13 +123,13 @@ impl GraphQLClient {
         package: &Address,
         module: &str,
         function: &str,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<MoveFunction>>> {
         Ok(self
             .0
             .read()
             .await
-            .normalized_move_function(**package, module, function, version)
+            .normalized_move_function(**package, module, function, version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -137,7 +138,7 @@ impl GraphQLClient {
     /// Return the normalized Move module data for the provided module.
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     #[uniffi::method(default(
         version = None,
         pagination_filter_enums = None,
@@ -149,7 +150,7 @@ impl GraphQLClient {
         &self,
         package: &Address,
         module: &str,
-        version: Option<u64>,
+        version: Option<Arc<Version>>,
         pagination_filter_enums: Option<PaginationFilter>,
         pagination_filter_friends: Option<PaginationFilter>,
         pagination_filter_functions: Option<PaginationFilter>,
@@ -162,7 +163,7 @@ impl GraphQLClient {
             .normalized_move_module(
                 **package,
                 module,
-                version,
+                version.map(|v| **v),
                 pagination_filter_enums.unwrap_or_default(),
                 pagination_filter_friends.unwrap_or_default(),
                 pagination_filter_functions.unwrap_or_default(),

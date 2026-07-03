@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::MoveViewResult},
-    types::{address::Address, object::ObjectId, type_tag::TypeTag},
+    types::{address::Address, move_core::TypeTag, object::ObjectId},
 };
 
 /// An argument for a Move View Function call.
@@ -141,7 +141,8 @@ impl MoveViewArg {
     }
 }
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///

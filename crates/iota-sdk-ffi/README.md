@@ -31,7 +31,7 @@ bcs-enum            = uleb128-index bcs-value   ; Enum index and associated valu
 bytes           = uleb128 *OCTET          ; Raw bytes of the specified length
 string          = uleb128 *OCTET          ; valid utf8 string of the specified length
 vector          = uleb128 *bcs-value      ; Length-prefixed list of values
-option          = %x00 / (%x01 bcs-value) ; optional value
+option          = %d00 / (%d01 bcs-value) ; optional value
 ; --- Fixed-length types ---
 u8          = OCTET                     ; 1-byte unsigned integer
 u16         = 2OCTET                    ; 2-byte unsigned integer, little-endian
@@ -43,7 +43,7 @@ i16         = 2OCTET                    ; 2-byte signed integer, little-endian
 i32         = 4OCTET                    ; 4-byte signed integer, little-endian
 i64         = 8OCTET                    ; 8-byte signed integer, little-endian
 i128        = 16OCTET                   ; 16-byte signed integer, little-endian
-boolean     = %x00 / %x01               ; Boolean: 0 = false, 1 = true
+boolean     = %d00 / %d01               ; Boolean: 0 = false, 1 = true
 array       = *(bcs-value)              ; Fixed-length array
 ; --- ULEB128 definition ---
 uleb128         = 1*5uleb128-byte       ; Variable-length ULEB128 encoding
@@ -113,6 +113,9 @@ By default the request will contain the header `Content-Type: application/json` 
 
 ## Supported languages
 
+- [C#](../../bindings/csharp)
 - [Go](../../bindings/go)
 - [Kotlin](../../bindings/kotlin)
 - [Python](../../bindings/python)
+- [Swift](../../bindings/swift)
+- [WASM](../../bindings/wasm)

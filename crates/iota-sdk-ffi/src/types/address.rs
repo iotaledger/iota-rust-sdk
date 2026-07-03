@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
 /// Unique identifier for an Account on the IOTA blockchain.
@@ -45,14 +47,14 @@ use crate::error::Result;
 /// ```
 #[derive(
     Debug,
-    Hash,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
+    derive_more::Deref,
     derive_more::Display,
     derive_more::From,
-    derive_more::Deref,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -65,26 +67,59 @@ impl Address {
         Ok(Self(iota_sdk::types::Address::from_bytes(bytes)?))
     }
 
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
     #[uniffi::constructor]
-    /// Parses an Address from a hex string, with or without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
     pub fn from_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
     }
 
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        let mut rng = rand::thread_rng();
-        Self(iota_sdk::types::Address::generate(&mut rng))
+    pub fn from_prefixed_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_prefixed_hex(hex)?))
+    }
+
+    /// Parses an Address from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    #[uniffi::constructor]
+    pub fn from_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_short_hex(hex)?))
+    }
+
+    /// Parses an Address from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    #[uniffi::constructor]
+    pub fn from_prefixed_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_prefixed_short_hex(
+            hex,
+        )?))
+    }
+
+    #[uniffi::constructor]
+    pub fn random() -> Self {
+        Self(iota_sdk::types::Address::random())
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
         self.0.as_bytes().to_vec()
     }
 
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
+    }
+
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.0.to_raw_hex()
     }
 
     /// Returns the string representation of this address using the
@@ -95,8 +130,25 @@ impl Address {
 
     /// Returns the shortest possible string representation of the address (i.e.
     /// with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        self.0.to_short_string(with_prefix)
+    pub fn to_short_hex(&self) -> String {
+        self.0.to_short_hex()
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        self.0.to_raw_short_hex()
+    }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        Self(self.0.next_lexicographical())
+    }
+
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
+        self.0.next_lexicographical_opt().map(Self).map(Arc::new)
     }
 }
 
@@ -114,7 +166,21 @@ macro_rules! named_address {
     }
 }
 
-named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
+named_address!(
+    ZERO,
+    MAX,
+    STD,
+    FRAMEWORK,
+    SYSTEM,
+    GENESIS_BRIDGE,
+    STARDUST,
+    SYSTEM_STATE,
+    CLOCK,
+    AUTHENTICATOR_STATE,
+    RANDOMNESS_STATE,
+    GENESIS_IOTA_BRIDGE,
+    DENY_LIST
+);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
 crate::export_iota_types_objects_json_conversion!(Address);

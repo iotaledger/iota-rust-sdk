@@ -6,15 +6,15 @@
 ///
 /// Storage is charged independently of computation.
 /// There are 3 parts to the storage charges:
-/// `storage_cost`: it is the charge of storage at the time the transaction is
-/// executed.                 The cost of storage is the number of bytes of the
-/// objects being mutated                 multiplied by a variable storage cost
-/// per byte `storage_rebate`: this is the amount a user gets back when
-/// manipulating an object.                   The `storage_rebate` is the
-/// `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
-/// all the value of the object storage cost is                               
-/// given back to user and there is a small fraction that                       
-/// is kept by the system. This value tracks that charge.
+/// - `storage_cost`: it is the charge of storage at the time the transaction is
+///   executed. The cost of storage is the number of bytes of the objects being
+///   mutated multiplied by a variable storage cost per byte
+/// - `storage_rebate`: this is the amount a user gets back when manipulating an
+///   object. The `storage_rebate` is the `storage_cost` for an object minus
+///   fees.
+/// - `non_refundable_storage_fee`: not all the value of the object storage cost
+///   is given back to user and there is a small fraction that is kept by the
+///   system. This value tracks that charge.
 ///
 /// When looking at a gas cost summary the amount charged to the user is
 /// `computation_cost + storage_cost - storage_rebate`
@@ -33,42 +33,34 @@
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// gas-cost-summary = u64 ; computation-cost
-///                    u64 ; storage-cost
-///                    u64 ; storage-rebate
-///                    u64 ; non-refundable-storage-fee
+/// gas-cost-summary = u64   ; computation-cost
+///                    u64   ; computation-cost-burned
+///                    u64   ; storage-cost
+///                    u64   ; storage-rebate
+///                    u64   ; non-refundable-storage-fee
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct GasCostSummary {
     /// Cost of computation/execution
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_cost: u64,
     /// The burned component of the computation/execution costs
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_cost_burned: u64,
     /// Storage cost, it's the sum of all storage cost for all objects created
     /// or mutated.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_cost: u64,
     /// The amount of storage cost refunded to the user for all objects deleted
     /// or mutated in the transaction.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The fee for the rebate. The portion of the storage rebate kept by the
     /// system.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
 }
 
@@ -101,13 +93,79 @@ impl GasCostSummary {
 
     /// The total gas used, which is the sum of computation and storage costs.
     pub fn gas_used(&self) -> u64 {
-        self.computation_cost + self.storage_cost
+        self.computation_cost
+            .checked_add(self.storage_cost)
+            .expect("gas_used overflow")
     }
 
     /// The net gas usage, which is the total gas used minus the storage rebate.
     /// A positive number means used gas; negative number means refund.
     pub fn net_gas_usage(&self) -> i64 {
-        self.gas_used() as i64 - self.storage_rebate as i64
+        (self.gas_used() as i64)
+            .checked_sub(self.storage_rebate as i64)
+            .expect("net_gas_usage underflow")
+    }
+}
+
+impl std::ops::AddAssign<&Self> for GasCostSummary {
+    fn add_assign(&mut self, other: &Self) {
+        self.computation_cost = self
+            .computation_cost
+            .checked_add(other.computation_cost)
+            .expect("computation_cost overflow");
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_add(other.computation_cost_burned)
+            .expect("computation_cost_burned overflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_add(other.storage_cost)
+            .expect("storage_cost overflow");
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_add(other.storage_rebate)
+            .expect("storage_rebate overflow");
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_add(other.non_refundable_storage_fee)
+            .expect("non_refundable_storage_fee overflow");
+    }
+}
+
+impl std::ops::SubAssign<&Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: &Self) {
+        self.computation_cost = self
+            .computation_cost
+            .checked_sub(other.computation_cost)
+            .expect("computation_cost underflow");
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_sub(other.computation_cost_burned)
+            .expect("computation_cost_burned underflow");
+        self.storage_cost = self
+            .storage_cost
+            .checked_sub(other.storage_cost)
+            .expect("storage_cost underflow");
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_sub(other.storage_rebate)
+            .expect("storage_rebate underflow");
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_sub(other.non_refundable_storage_fee)
+            .expect("non_refundable_storage_fee underflow");
+    }
+}
+
+impl std::ops::AddAssign<Self> for GasCostSummary {
+    fn add_assign(&mut self, other: Self) {
+        self.add_assign(&other);
+    }
+}
+
+impl std::ops::SubAssign<Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: Self) {
+        self.sub_assign(&other);
     }
 }
 

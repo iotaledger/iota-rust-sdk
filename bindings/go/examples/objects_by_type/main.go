@@ -24,7 +24,7 @@ func main() {
 	} else {
 		fmt.Println("StakedIota object IDs:")
 		for _, stakedIota := range stakedIotas.Data {
-			fmt.Printf("%s\n", stakedIota.ObjectId().ToHex())
+			fmt.Printf("%s\n", stakedIota.Id().ToHex())
 		}
 	}
 }

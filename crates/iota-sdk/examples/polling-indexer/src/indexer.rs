@@ -193,7 +193,7 @@ impl Indexer {
 
         let tx_filter = TransactionsFilter {
             function: self.config.filters.derived_tx_function(),
-            sign_address: self.config.filters.tx_sender,
+            sent_address: self.config.filters.tx_sender,
             after_checkpoint: range_start.checked_sub(1),
             before_checkpoint: Some(range_end.saturating_add(1)),
             ..Default::default()
@@ -221,7 +221,7 @@ impl Indexer {
                 .iter()
                 .filter(|td| {
                     self.config.filters.include_failed_txs
-                        || matches!(td.effects.status(), ExecutionStatus::Success)
+                        || matches!(td.effects.as_v1().status, ExecutionStatus::Success)
                 })
                 .map(|td| {
                     let digest = td.effects.as_v1().transaction_digest.to_string();
@@ -249,7 +249,7 @@ impl Indexer {
 
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
-                let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
+                let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
                     r#"
@@ -323,7 +323,7 @@ impl Indexer {
 
         let tx_filter = TransactionsFilter {
             function: self.config.filters.tx_function.clone(),
-            sign_address: self.config.filters.tx_sender,
+            sent_address: self.config.filters.tx_sender,
             after_checkpoint: sequence.checked_sub(1),
             before_checkpoint: Some(sequence.saturating_add(1)),
             ..Default::default()
@@ -345,7 +345,7 @@ impl Indexer {
 
             for tx_data in tx_page.data() {
                 if !self.config.filters.include_failed_txs
-                    && !matches!(tx_data.effects.status(), ExecutionStatus::Success)
+                    && !matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success)
                 {
                     continue;
                 }
@@ -353,7 +353,7 @@ impl Indexer {
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
-                let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
+                let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
                     r#"
@@ -493,15 +493,15 @@ fn sender_str(tx: &SignedTransaction) -> Option<String> {
 fn tx_kind_str(tx: &SignedTransaction) -> String {
     match &tx.transaction {
         Transaction::V1(v1) => match &v1.kind {
-            iota_sdk::types::transaction::TransactionKind::ProgrammableTransaction(_) => {
-                "programmable_transaction".to_owned()
+            iota_sdk::types::transaction::TransactionKind::Programmable(_) => {
+                "programmable".to_owned()
             }
             iota_sdk::types::transaction::TransactionKind::Genesis(_) => "genesis".to_owned(),
             iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {
                 "consensus_commit_prologue_v1".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1(_) => {
-                "authenticator_state_update_v1".to_owned()
+            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                "authenticator_state_update_v1_deprecated".to_owned()
             }
             iota_sdk::types::transaction::TransactionKind::EndOfEpoch(_) => {
                 "end_of_epoch".to_owned()

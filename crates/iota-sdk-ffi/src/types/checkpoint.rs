@@ -5,7 +5,14 @@ use std::sync::Arc;
 
 use iota_sdk::types::GasCostSummary;
 
-use crate::types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember};
+use crate::types::{
+    digest::{
+        CheckpointContentsDigest, CheckpointDigest, Digest, TransactionDigest,
+        TransactionEffectsDigest,
+    },
+    signature::UserSignature,
+    validator::ValidatorCommitteeMember,
+};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -58,13 +65,13 @@ pub struct CheckpointSummary(pub iota_sdk::types::CheckpointSummary);
 #[uniffi::export]
 impl CheckpointSummary {
     #[uniffi::constructor]
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new(
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
         network_total_transactions: u64,
-        content_digest: &Digest,
-        previous_digest: Option<Arc<Digest>>,
+        content_digest: &CheckpointContentsDigest,
+        previous_digest: Option<Arc<CheckpointDigest>>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         timestamp_ms: CheckpointTimestamp,
         checkpoint_commitments: Vec<Arc<CheckpointCommitment>>,
@@ -105,14 +112,14 @@ impl CheckpointSummary {
     }
 
     /// The hash of the `CheckpointContents` for this checkpoint.
-    pub fn content_digest(&self) -> Digest {
+    pub fn content_digest(&self) -> CheckpointContentsDigest {
         self.0.content_digest.into()
     }
 
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub fn previous_digest(&self) -> Option<Arc<Digest>> {
+    pub fn previous_digest(&self) -> Option<Arc<CheckpointDigest>> {
         self.0.previous_digest.map(Into::into).map(Arc::new)
     }
 
@@ -155,7 +162,7 @@ impl CheckpointSummary {
         self.0.version_specific_data.clone()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> CheckpointDigest {
         self.0.digest().into()
     }
 
@@ -179,12 +186,14 @@ impl CheckpointSummary {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+/// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 ///
-/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
-///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
-///                                                               ; transaction. MUST be the same
-///                                                               ; length as the vector of digests
+/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+///                          (vector (vector user-signature)) ; set of user signatures for each
+///                                                           ; transaction. MUST be the same
+///                                                           ; length as the vector of digests
+///
+/// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
@@ -208,7 +217,7 @@ impl CheckpointContents {
             .collect()
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> CheckpointContentsDigest {
         self.0.digest().into()
     }
 }
@@ -221,8 +230,8 @@ pub struct CheckpointTransactionInfo(pub iota_sdk::types::CheckpointTransactionI
 impl CheckpointTransactionInfo {
     #[uniffi::constructor]
     pub fn new(
-        transaction: &Digest,
-        effects: &Digest,
+        transaction: &TransactionDigest,
+        effects: &TransactionEffectsDigest,
         signatures: Vec<Arc<UserSignature>>,
     ) -> Self {
         Self(iota_sdk::types::CheckpointTransactionInfo {
@@ -232,11 +241,11 @@ impl CheckpointTransactionInfo {
         })
     }
 
-    pub fn transaction(&self) -> Digest {
+    pub fn transaction(&self) -> TransactionDigest {
         self.0.transaction.into()
     }
 
-    pub fn effects(&self) -> Digest {
+    pub fn effects(&self) -> TransactionEffectsDigest {
         self.0.effects.into()
     }
 
@@ -260,7 +269,7 @@ impl CheckpointTransactionInfo {
 /// ```text
 /// ; CheckpointCommitment is an enum and each variant is prefixed with its index
 /// checkpoint-commitment = ecmh-live-object-set
-/// ecmh-live-object-set = %x00 digest
+/// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointCommitment(pub iota_sdk::types::CheckpointCommitment);
@@ -287,6 +296,7 @@ impl CheckpointCommitment {
 /// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
 ///                     u64                                 ; next_epoch_protocol_version
 ///                     (vector checkpoint-commitment)      ; epoch_commitments
+///                     i64                                 ; epoch_supply_change
 /// ```
 #[derive(uniffi::Record)]
 pub struct EndOfEpochData {

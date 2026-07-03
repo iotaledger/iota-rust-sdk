@@ -14,10 +14,25 @@ path = "uniffi_bindgen.rs"
 name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
+[features]
+default = ["crypto", "bls12381"]
+crypto = [
+  "iota-sdk/bech32",
+  "iota-sdk/crypto",
+  "iota-sdk/ed25519",
+  "iota-sdk/mnemonic",
+  "iota-sdk/passkey",
+  "iota-sdk/pem",
+  "iota-sdk/secp256k1",
+  "iota-sdk/secp256r1",
+]
+bls12381 = ["iota-sdk/bls12381"]
+
 [lints]
 workspace = true
 
 [dependencies]
+# external dependencies
 async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
@@ -29,7 +44,16 @@ rand.workspace = true
 roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-tokio = { workspace = true, features = ["time"] }
-uniffi = { version = "0.29", features = ["cli", "tokio"] }
+# wasm-unstable-single-threaded relaxes Send+Sync checks on wasm32 targets only
+uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
 
-iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk" }
+# internal dependencies
+iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# sync for tokio::sync::RwLock used in the graphql client wrapper
+tokio = { workspace = true, features = ["sync"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# wasm additionally needs macros+rt for async
+tokio = { workspace = true, features = ["macros", "rt", "sync"] }

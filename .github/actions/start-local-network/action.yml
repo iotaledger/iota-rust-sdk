@@ -1,75 +1,47 @@
 name: "Start Local IOTA Network"
-description: "Downloads and starts a local IOTA network for testing"
+description: "Downloads and starts a local IOTA network for testing via run_localnet.sh"
 
 runs:
   using: "composite"
   steps:
-    - name: Start PostgreSQL
-      shell: bash
-      run: |
-        docker run -d \
-        --name postgres \
-        -e POSTGRES_USER=postgres \
-        -e POSTGRES_PASSWORD=postgrespw \
-        -e POSTGRES_DB=iota_indexer_v2 \
-        -e POSTGRES_HOST_AUTH_METHOD=trust \
-        -p 5432:5432 \
-        --health-cmd pg_isready \
-        --health-interval 10s \
-        --health-timeout 5s \
-        --health-retries 5 \
-        postgres
-
-    - name: Get the IOTA binary and start a local network
+    - name: Get the IOTA binary
       shell: bash
       env:
-        IOTA_BINARY_VERSION: "v1.18.1-rc"
-        EPOCH_DURATION_MS: "10000"
         GH_TOKEN: ${{ github.token }}
       run: |
         # Uncomment when using a nightly build
-        # nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --event schedule --branch develop --limit 1 --json startedAt --json databaseId -q '.[0]')
+        # nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --branch develop --limit 1 --json startedAt,databaseId,event -q '[.[] | select(.event == "schedule" or .event == "workflow_dispatch")] | first')
         # database_id=$(echo $nightly | jq '.databaseId')
-        # started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
-        # gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-x86_64"
-        # tar -zxvf "iota-nightly-$started_at-linux-x86_64.tgz" ./iota
+        # event=$(echo $nightly | jq -r '.event')
+        # if [ "$event" = "workflow_dispatch" ]; then
+        #   artifact_name="iota-develop-linux-x86_64"
+        # else
+        #   started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
+        #   artifact_name="iota-nightly-$started_at-linux-x86_64"
+        # fi
+        # gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
+        # tar -zxvf "$artifact_name.tgz" ./iota ./iota-localnet
 
         # Uncomment when using a released build
+        IOTA_BINARY_VERSION="v1.24.0-rc"
         ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
         download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
         echo "Downloading binary from $download_url"
         wget -q $download_url -O iota.tgz
-        tar -zxvf iota.tgz ./iota
+        tar -zxvf iota.tgz ./iota ./iota-localnet
 
-        chmod +x ./iota
-        echo "Starting local network with a faucet, an indexer (port 5432) and GraphQL. Epoch duration is set to $EPOCH_DURATION_MS ms"
+        chmod +x ./iota ./iota-localnet
+        # Make `iota` available on PATH for `iota move build` used by test fixtures
         echo "$(pwd)" >> $GITHUB_PATH
-        ./iota start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
-        sleep $((EPOCH_DURATION_MS / 1000)) # wait for the first epoch to end
 
-    - name: Start gas station and request faucet coins
+        # Bootstrap ~/.iota/iota_config so subsequent `iota move build` calls
+        # don't fall into the interactive setup wizard (which writes prompts to
+        # stdout and hangs in CI). The network isn't up yet, so the call logs a
+        # connection error but still writes the config and exits 0.
+        ./iota client -y new-env --alias localnet --rpc http://127.0.0.1:9000 || true
+
+    - name: Start local network and gas station
       shell: bash
       env:
-        GAS_STATION_AUTH: "test"
-      run: |
-        ./iota client -y new-env --alias localnet --rpc http://127.0.0.1:9000 --graphql http://0.0.0.0:9125 --faucet http://127.0.0.1:9123/v1/gas
-        ./iota keytool update-alias $(./iota client active-address) gas_station
-
-        echo "Getting keypair"
-        private_key="$(./iota keytool export gas_station --json | jq -r '.["exportedPrivateKey"]')"
-        key="$(./iota keytool convert $private_key --json | jq -r '.["base64WithFlag"]')"
-
-        echo "Setting keypair in config"
-        sed -i "s|<keypair>|$key|g" ./.github/actions/start-local-network/config.yaml
-
-        echo "Updating fullnode-url to use host IP"
-        HOST_IP=$(hostname -I | awk '{print $1}')
-        sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" ./.github/actions/start-local-network/config.yaml
-
-        echo "Requesting faucet coins"
-        ./iota client faucet --address gas_station
-
-        echo "Starting Gas Station"
-        docker compose -f ./.github/actions/start-local-network/gas_station_compose.yml up -d
-
-        docker logs iota-gas-station & sleep 10
+        IOTA_START_EXTRA_ARGS: "--pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms 10000"
+      run: ./run_localnet.sh start ./iota-localnet

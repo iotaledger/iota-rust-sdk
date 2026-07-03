@@ -28,7 +28,7 @@ use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
     graphql_client::{Client, WaitForTx, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
-    types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy},
+    types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
 use rand::rngs::OsRng;
 
@@ -83,13 +83,13 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
@@ -101,7 +101,7 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().type_ == StructTag::new_upgrade_cap() {
+                if obj.as_struct().object_type().is_upgrade_cap() {
                     println!("UpgradeCap: {object_id}");
                     println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);
@@ -154,13 +154,13 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client.execute_tx(&[sig], &tx, None).await?;
-    println!("{:?}", effects.status());
+    println!("{:?}", effects.as_v1().status);
 
     // Print the new package version (should now be 2)
     for changed_obj in effects.as_v1().changed_objects.iter() {

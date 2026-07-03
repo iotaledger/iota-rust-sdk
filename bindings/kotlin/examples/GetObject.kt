@@ -16,7 +16,7 @@ fun main() = runBlocking {
 
         val obj = client.`object`(objectId)!!
 
-        println("Object ID: ${obj.objectId().toHex()}")
+        println("Object ID: ${obj.id().toHex()}")
         println("Version: ${obj.version()}")
         println("Previous transaction: ${obj.previousTransaction().toBase58()}")
         println("Owner: ${obj.owner().toString()}")

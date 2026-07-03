@@ -3,7 +3,7 @@
 
 use bip39::Mnemonic;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub enum MnemonicLength {
     Words12 = 12,

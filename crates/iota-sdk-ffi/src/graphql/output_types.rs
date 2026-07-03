@@ -4,8 +4,8 @@
 use std::sync::Arc;
 
 use crate::types::{
+    move_core::TypeTag,
     transaction::{SignedTransaction, TransactionEffects},
-    type_tag::TypeTag,
 };
 
 /// A transaction argument used in programmable transactions.

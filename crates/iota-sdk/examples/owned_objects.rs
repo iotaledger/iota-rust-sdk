@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
         .await?;
     println!("Owned objects ({}):", owned_objects_page.data.len());
     for obj in owned_objects_page.data {
-        println!("{}", obj.object_id());
+        println!("{}", obj.id());
     }
 
     Ok(())
