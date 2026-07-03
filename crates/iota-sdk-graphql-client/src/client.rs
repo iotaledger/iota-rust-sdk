@@ -145,10 +145,12 @@ impl Client {
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;
+        let target_type = std::any::type_name::<R>();
         if !status.is_success() {
-            return Err(Error::http(url, status, &bytes));
+            return Err(Error::http(url, status, &bytes).while_decoding(target_type));
         }
-        serde_json::from_slice::<R>(&bytes).map_err(|e| Error::decode(url, status, &bytes, e))
+        serde_json::from_slice::<R>(&bytes)
+            .map_err(|e| Error::decode(url, status, &bytes, e).while_decoding(target_type))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
