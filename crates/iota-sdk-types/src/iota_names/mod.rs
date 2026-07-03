@@ -13,8 +13,8 @@ pub use self::name::{Name, NameFormat};
 use crate::{Address, ObjectId, StructTag, move_core::Identifier};
 
 /// An object to manage a second-level name (SLN).
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct NameRegistration {
     id: ObjectId,
     name: Name,
@@ -34,8 +34,8 @@ impl NameRegistration {
 }
 
 /// An object to manage a subname.
-#[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct SubnameRegistration {
     id: ObjectId,
     nft: NameRegistration,

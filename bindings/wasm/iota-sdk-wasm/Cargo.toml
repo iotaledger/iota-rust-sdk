@@ -1,0 +1,11 @@
+# Placeholder — overwritten by `ubrn build web` (see bindings/wasm/ubrn.config.yaml).
+# Must exist so the workspace root can reference this member.
+[package]
+name = "iota-sdk-wasm"
+version = "0.0.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]

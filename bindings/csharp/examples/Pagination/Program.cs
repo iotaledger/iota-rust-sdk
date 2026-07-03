@@ -17,14 +17,14 @@ class Program
         {
             Console.WriteLine($"Fetching page with cursor: {nextCursor}");
             var page = await client.Objects(
-                new ObjectFilter(owner: address),
+                new ObjectFilter(Owner: address),
                 new PaginationFilter(Direction.Forward, nextCursor, 1)
             );
-            allObjects.AddRange(page.data);
+            allObjects.AddRange(page.Data);
 
-            if (page.pageInfo.hasNextPage)
+            if (page.PageInfo.HasNextPage)
             {
-                nextCursor = page.pageInfo.endCursor;
+                nextCursor = page.PageInfo.EndCursor;
             }
             else
             {
@@ -35,7 +35,7 @@ class Program
         Console.WriteLine($"{allObjects.Count} objects fetched:");
         foreach (var obj in allObjects)
         {
-            Console.WriteLine(obj.ObjectId().ToHex());
+            Console.WriteLine(obj.Id().ToHex());
         }
     }
 }

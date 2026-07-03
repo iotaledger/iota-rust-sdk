@@ -15,7 +15,7 @@ class Program
 
             var coins = await client.Coins(address, null, null);
 
-            foreach (var coin in coins.data)
+            foreach (var coin in coins.Data)
             {
                 Console.WriteLine($"Coin = {coin.Id().ToHex()}, Coin Type = {coin.CoinType().AsStructTag()}, Balance = {coin.Balance()}");
             }

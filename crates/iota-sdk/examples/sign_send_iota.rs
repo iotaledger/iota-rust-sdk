@@ -37,12 +37,10 @@ async fn main() -> Result<()> {
         eyre::bail!("Dry run failed: {err}");
     }
 
-    let signature = private_key.sign_transaction(&tx)?;
-
-    let effects = client.execute_tx(&[signature], &tx, None).await?;
-
+    let sig = private_key.sign_transaction(&tx)?;
+    let effects = client.execute_tx(&[sig], &tx, None).await?;
     println!("Digest: {}", effects.digest());
-    println!("Transaction status: {:?}", effects.status());
+    println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");
 
     Ok(())

@@ -4,7 +4,7 @@
 
 use blake2::Digest as DigestTrait;
 
-use crate::{Address, Digest, PublicKeyExt};
+use crate::{Address, Digest, PublicKeyExt, crypto::PublicKey};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -85,6 +85,12 @@ impl crate::Ed25519PublicKey {
     }
 }
 
+impl From<crate::Ed25519PublicKey> for Address {
+    fn from(public_key: crate::Ed25519PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::Secp256k1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
@@ -117,6 +123,12 @@ impl crate::Secp256k1PublicKey {
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
         hasher.update(self.inner());
+    }
+}
+
+impl From<crate::Secp256k1PublicKey> for Address {
+    fn from(public_key: crate::Secp256k1PublicKey) -> Self {
+        public_key.derive_address()
     }
 }
 
@@ -155,6 +167,12 @@ impl crate::Secp256r1PublicKey {
     }
 }
 
+impl From<crate::Secp256r1PublicKey> for Address {
+    fn from(public_key: crate::Secp256r1PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::PasskeyPublicKey {
     /// Derive an `Address` from this Passkey Public Key
     ///
@@ -176,6 +194,29 @@ impl crate::PasskeyPublicKey {
     }
 }
 
+impl From<crate::PasskeyPublicKey> for Address {
+    fn from(public_key: crate::PasskeyPublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
+impl crate::PublicKey {
+    pub fn derive_address(&self) -> Address {
+        match self {
+            Self::Ed25519(pk) => pk.derive_address(),
+            Self::Secp256k1(pk) => pk.derive_address(),
+            Self::Secp256r1(pk) => pk.derive_address(),
+            Self::Passkey(pk) => pk.derive_address(),
+        }
+    }
+}
+
+impl From<crate::PublicKey> for Address {
+    fn from(public_key: crate::PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
@@ -187,21 +228,16 @@ impl crate::MultisigCommittee {
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
     pub fn derive_address(&self) -> Address {
-        use crate::MultisigMemberPublicKey::*;
-
         let mut hasher = Hasher::new();
         hasher.update([self.scheme().to_u8()]);
         hasher.update(self.threshold().to_le_bytes());
 
         for member in self.members() {
             match member.public_key() {
-                Ed25519(p) => p.write_into_hasher(&mut hasher),
-                Secp256k1(p) => p.write_into_hasher(&mut hasher),
-                Secp256r1(p) => p.write_into_hasher(&mut hasher),
-                ZkLoginDeprecated => {
-                    panic!("MultisigMemberPublicKey::ZkLoginDeprecated is not supported")
-                }
-                Passkey(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Ed25519(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Secp256k1(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Secp256r1(p) => p.write_into_hasher(&mut hasher),
+                PublicKey::Passkey(p) => p.write_into_hasher(&mut hasher),
             }
 
             hasher.update(member.weight().to_le_bytes());
@@ -212,43 +248,52 @@ impl crate::MultisigCommittee {
     }
 }
 
+impl From<crate::MultisigCommittee> for Address {
+    fn from(public_key: crate::MultisigCommittee) -> Self {
+        public_key.derive_address()
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
     use base64ct::Encoding;
 
     use super::Hasher;
-    use crate::Digest;
+    use crate::{
+        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, TransactionDigest,
+        TransactionEffectsDigest, TransactionEventsDigest,
+    };
 
     impl crate::Object {
         /// Calculate the digest of this `Object`
         ///
         /// This is done by hashing the BCS bytes of this `Object` prefixed
         /// with a salt.
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> ObjectDigest {
             const SALT: &str = "Object::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::CheckpointSummary {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> CheckpointDigest {
             const SALT: &str = "CheckpointSummary::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::CheckpointContents {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> CheckpointContentsDigest {
             const SALT: &str = "CheckpointContents::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::Transaction {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &self)
+            type_digest(SALT, &self).into()
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
@@ -275,9 +320,9 @@ mod type_digest {
     }
 
     impl crate::TransactionV1 {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &crate::Transaction::V1(self.clone()))
+            type_digest(SALT, &crate::Transaction::V1(self.clone())).into()
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
@@ -304,15 +349,22 @@ mod type_digest {
     }
 
     impl crate::TransactionEffects {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionEffectsDigest {
             const SALT: &str = "TransactionEffects::";
-            type_digest(SALT, self)
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::TransactionEvents {
-        pub fn digest(&self) -> Digest {
+        pub fn digest(&self) -> TransactionEventsDigest {
             const SALT: &str = "TransactionEvents::";
+            type_digest(SALT, self).into()
+        }
+    }
+
+    impl crate::MoveAuthenticator {
+        pub fn digest(&self) -> Digest {
+            const SALT: &str = "MoveAuthenticator::";
             type_digest(SALT, self)
         }
     }
@@ -329,8 +381,8 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage, SigningDigest,
-        Transaction, TransactionV1, hash::Hasher,
+        Digest, Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion, PersonalMessage,
+        SigningDigest, Transaction, TransactionV1, hash::Hasher,
     };
 
     impl Transaction {
@@ -394,12 +446,23 @@ mod signing_message {
             hex::encode(self.signing_message())
         }
     }
+
+    impl<T> IntentMessage<T>
+    where
+        T: serde::Serialize,
+    {
+        pub fn signing_digest(&self) -> Digest {
+            let mut hasher = Hasher::default();
+            bcs::serialize_into(&mut hasher, self).unwrap();
+            hasher.finalize()
+        }
+    }
 }
 
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
 /// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
-#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 enum HashingIntent {
@@ -413,7 +476,7 @@ impl crate::ObjectId {
     ///
     /// `count` is the number of objects that have been created during a
     /// transactions.
-    pub fn derive_id(digest: crate::Digest, count: u64) -> Self {
+    pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
         hasher.update(digest);

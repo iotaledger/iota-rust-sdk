@@ -334,7 +334,7 @@ impl PTBArgument for &Receiving<ObjectReference> {
 }
 
 /// A result of a previous command to which a name was assigned.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Assigned(String);
 
 /// Get the result of a previous command by its assigned name.

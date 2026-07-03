@@ -15,7 +15,7 @@ This tool generates Rust code from `.proto` files with additional field masking 
 Run this tool whenever you modify `.proto` files.
 
 ```bash
-crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+make grpc
 ```
 
 **NOTE**: After generating files, the tool checks if any generated code changed. If changes are detected, you should commit them to keep the generated code in sync with the proto definitions.

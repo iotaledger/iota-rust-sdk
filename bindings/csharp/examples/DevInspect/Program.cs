@@ -76,25 +76,25 @@ class Program
 
         var res = await builder.DryRun(true);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to lookup name: {res.error}");
+            throw new Exception($"Failed to lookup name: {res.Error}");
         }
 
-        if (res.results.Length > 0)
+        if (res.Results.Length > 0)
         {
-            var lastEffect = res.results[res.results.Length - 1];
-            if (lastEffect.returnValues.Length > 0)
+            var lastEffect = res.Results[res.Results.Length - 1];
+            if (lastEffect.ReturnValues.Length > 0)
             {
-                var returnValue = lastEffect.returnValues[0];
-                if (returnValue.typeTag.IsAddress() && returnValue.bcs.Length == 32)
+                var returnValue = lastEffect.ReturnValues[0];
+                if (returnValue.TypeTag.IsAddress() && returnValue.Bcs.Length == 32)
                 {
-                    var resolvedAddress = Address.FromBytes(returnValue.bcs);
+                    var resolvedAddress = Address.FromBytes(returnValue.Bcs);
                     Console.WriteLine($"Resolved address: {resolvedAddress.ToHex()}");
                 }
                 else
                 {
-                    Console.WriteLine($"Last result is not an address type or has wrong length: {returnValue.bcs.Length}");
+                    Console.WriteLine($"Last result is not an address type or has wrong length: {returnValue.Bcs.Length}");
                 }
             }
             else

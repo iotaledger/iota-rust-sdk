@@ -1,5 +1,5 @@
 target/
-Cargo.lock
+*.lock
 .idea
 .DS_Store
 *.dylib
@@ -9,3 +9,8 @@ __pycache__
 build
 .vscode
 .kotlin
+.vite
+# Compiled Move system packages, fetched at the rev pinned by the
+# move-binary-format dependency in crates/iota-sdk-move-types/Cargo.toml
+# (see update_compiled_packages.sh)
+crates/iota-sdk-move-types/src/packages_compiled/

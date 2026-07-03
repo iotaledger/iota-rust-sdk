@@ -15,23 +15,20 @@ use iota_sdk::graphql_client::{
     },
 };
 
-use crate::types::{
-    address::Address,
-    move_core::TypeTag,
-    object::ObjectId,
-    transaction::{SignedTransaction, TransactionEffects},
+use crate::{
+    error::SdkFfiError,
+    types::{
+        address::Address,
+        move_core::TypeTag,
+        object::ObjectId,
+        transaction::{SignedTransaction, TransactionEffects},
+    },
 };
 
 uniffi::custom_type!(Base64, String, {
     remote,
     lower: |val| val.0,
     try_lift: |s| Ok(Base64(s)),
-});
-
-uniffi::custom_type!(BigInt, String, {
-    remote,
-    lower: |val| val.0,
-    try_lift: |s| Ok(BigInt(s)),
 });
 
 #[derive(uniffi::Record)]
@@ -113,7 +110,7 @@ pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub before_checkpoint: Option<u64>,
     #[uniffi(default = None)]
-    pub sign_address: Option<Arc<Address>>,
+    pub sent_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
     pub recv_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
@@ -134,7 +131,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(Into::into).map(Arc::new),
+            sent_address: value.sent_address.map(Into::into).map(Arc::new),
             recv_address: value.recv_address.map(Into::into).map(Arc::new),
             input_object: value.input_object.map(Into::into).map(Arc::new),
             changed_object: value.changed_object.map(Into::into).map(Arc::new),
@@ -155,7 +152,7 @@ impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::Transac
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            sign_address: value.sign_address.map(|v| **v),
+            sent_address: value.sent_address.map(|v| **v),
             recv_address: value.recv_address.map(|v| **v),
             input_object: value.input_object.map(|v| **v),
             changed_object: value.changed_object.map(|v| **v),
@@ -429,6 +426,73 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
             sender: value.sender.map(|a| **a),
             transaction_digest: value.transaction_digest,
         }
+    }
+}
+
+/// An event as returned by the GraphQL `events` query.
+///
+/// This is a faithful view of the GraphQL response, distinct from the chain
+/// [`Event`](crate::types::events::Event). Three fields are optional, for two
+/// different reasons:
+///
+/// - `package_id`, `module` and `sender` are absent for events emitted by the
+///   system or at genesis (e.g. the genesis validator
+///   `0x3::validator::StakingRequestEvent`s): on chain their sender is the zero
+///   address and their emitting module can't be resolved, both of which the
+///   GraphQL server reports as `null`.
+/// - `timestamp` is absent for events not yet included in a checkpoint (e.g.
+///   from a dry run or a just-executed transaction).
+///
+/// `type_`, `contents`, `data` and `json` are always present (non-null in the
+/// GraphQL schema). Unlike the chain `Event`, this type is not
+/// BCS/JSON-serializable as a chain event.
+#[derive(uniffi::Record)]
+pub struct GraphQlEvent {
+    /// Package id of the top-level function invoked by a MoveCall command which
+    /// triggered this event to be emitted. `None` for system events.
+    pub package_id: Option<Arc<ObjectId>>,
+    /// Module name of the top-level function invoked by a MoveCall command
+    /// which triggered this event to be emitted. `None` for system events.
+    pub module: Option<String>,
+    /// Address of the account that sent the transaction where this event was
+    /// emitted. `None` for system events.
+    pub sender: Option<Arc<Address>>,
+    /// The type of the event emitted
+    pub type_: String,
+    /// BCS serialized bytes of the event
+    pub contents: Vec<u8>,
+    /// UTC timestamp in milliseconds since epoch (1/1/1970)
+    pub timestamp: Option<String>,
+    /// Structured contents of a Move value
+    pub data: String,
+    /// Representation of a Move value in JSON
+    pub json: String,
+}
+
+impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
+    type Error = crate::error::SdkFfiError;
+
+    fn try_from(value: iota_sdk::graphql_client::query_types::Event) -> crate::error::Result<Self> {
+        let (package_id, module) = match value.sending_module {
+            Some(sending_module) => (
+                Some(Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
+                    sending_module.package.address,
+                )))),
+                Some(sending_module.name),
+            ),
+            None => (None, None),
+        };
+        Ok(Self {
+            package_id,
+            module,
+            sender: value.sender.map(|s| Arc::new(Address(s.address))),
+            type_: value.type_.repr,
+            contents: base64ct::Base64::decode_vec(&value.bcs.0)
+                .map_err(crate::error::SdkFfiError::custom)?,
+            timestamp: value.timestamp.map(|t| t.0),
+            data: value.data.0.to_string(),
+            json: value.json.to_string(),
+        })
     }
 }
 
@@ -901,23 +965,30 @@ pub struct CoinMetadata {
     pub symbol: Option<String>,
     /// The overall quantity of tokens that will be issued.
     #[uniffi(default = None)]
-    pub supply: Option<BigInt>,
+    pub supply: Option<u64>,
     /// Version of the token.
     pub version: u64,
 }
 
-impl From<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
-    fn from(value: iota_sdk::graphql_client::query_types::CoinMetadata) -> Self {
-        Self {
+impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
+    type Error = SdkFfiError;
+
+    fn try_from(
+        value: iota_sdk::graphql_client::query_types::CoinMetadata,
+    ) -> Result<Self, Self::Error> {
+        Ok(Self {
             address: Arc::new(value.address.into()),
             decimals: value.decimals,
             description: value.description,
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            supply: value.supply,
+            // The GraphQL `BigInt` scalar carries the supply as a decimal
+            // string; on-chain a coin's supply is a `u64`, so parse it into one
+            // to expose a native integer (e.g. `bigint` in TS) to bindings.
+            supply: value.supply.map(u64::try_from).transpose()?,
             version: value.version,
-        }
+        })
     }
 }
 
@@ -930,13 +1001,13 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            supply: value.supply,
+            supply: value.supply.map(|supply| BigInt(supply.to_string())),
             version: value.version,
         }
     }
 }
 
-#[derive(Debug, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Display)]
 pub struct MoveFunction(iota_sdk::graphql_client::query_types::MoveFunction);
 

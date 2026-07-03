@@ -20,8 +20,10 @@ bytes   = size *OCTET
 call-arg = %d00 bytes        ; Pure
          / %d01 object-arg   ; Object
 
-cancelled-transaction = digest                       ; digest
+cancelled-transaction = transaction-digest           ; digest
                         (size *version-assignment)   ; version-assignments
+
+certificate-digest = digest
 
 change-epoch = u64                      ; epoch
                u64                      ; protocol-version
@@ -75,6 +77,8 @@ checkpoint-commitment = %d00 digest   ; EcmhLiveObjectSet
 
 checkpoint-contents = %d00 checkpoint-contents-v1   ; V1
 
+checkpoint-contents-digest = digest
+
 checkpoint-contents-v1 = (size *execution-digests)        ; digests
                          (size *(size *user-signature))   ; signatures
 
@@ -82,11 +86,13 @@ checkpoint-data = signed-checkpoint-summary        ; checkpoint-summary
                   checkpoint-contents              ; checkpoint-contents
                   (size *checkpoint-transaction)   ; transactions
 
+checkpoint-digest = digest
+
 checkpoint-summary = u64                               ; epoch
                      u64                               ; sequence-number
                      u64                               ; network-total-transactions
-                     digest                            ; content-digest
-                     (%d00 / %d01 digest)              ; previous-digest
+                     checkpoint-contents-digest        ; content-digest
+                     (%d00 / %d01 checkpoint-digest)   ; previous-digest
                      gas-cost-summary                  ; epoch-rolling-gas-cost-summary
                      u64                               ; timestamp-ms
                      (size *checkpoint-commitment)     ; checkpoint-commitments
@@ -126,16 +132,20 @@ compressed-struct-tag = %d00 struct-tag   ; Other
                       / %d02              ; StakedIota
                       / %d03 type-tag     ; Coin
 
+consensus-commit-digest = digest
+
 consensus-commit-prologue-v1 = u64                                        ; epoch
                                u64                                        ; round
                                (%d00 / %d01 u64)                          ; sub-dag-index
                                u64                                        ; commit-timestamp-ms
-                               digest                                     ; consensus-commit-digest
+                               consensus-commit-digest                    ; consensus-commit-digest
                                consensus-determined-version-assignments   ; consensus-determined-version-assignments
 
 consensus-determined-version-assignments = %d00 (size *cancelled-transaction)   ; CancelledTransactions
 
 digest = %d32 32OCTET
+
+effects-aux-data-digest = digest
 
 end-of-epoch-data = (size *validator-committee-member)   ; next-epoch-committee
                     u64                                  ; next-epoch-protocol-version
@@ -153,8 +163,8 @@ event = object-id    ; package-id
         struct-tag   ; type-
         bytes        ; contents
 
-execution-digests = digest   ; transaction
-                    digest   ; effects
+execution-digests = transaction-digest           ; transaction
+                    transaction-effects-digest   ; effects
 
 execution-error = %d00                               ; InsufficientGas
                 / %d01                               ; InvalidGasObject
@@ -255,6 +265,10 @@ make-move-vector = (%d00 / %d01 type-tag)   ; type-
 merge-coins = argument           ; coin
               (size *argument)   ; coins-to-merge
 
+misbehavior-report-digest = digest
+
+move-authenticator-digest = digest
+
 move-call = object-id          ; package
             identifier         ; module
             identifier         ; function
@@ -277,10 +291,10 @@ move-struct = compressed-struct-tag   ; object-type
               version                 ; version
               bytes                   ; contents
 
-object = object-data   ; data
-         owner         ; owner
-         digest        ; previous-transaction
-         u64           ; storage-rebate
+object = object-data          ; data
+         owner                ; owner
+         transaction-digest   ; previous-transaction
+         u64                  ; storage-rebate
 
 object-arg = %d00 object-reference         ; ImmutableOrOwned
            / %d01 object-id version bool   ; Shared
@@ -289,18 +303,20 @@ object-arg = %d00 object-reference         ; ImmutableOrOwned
 object-data = %d00 move-struct    ; Struct
             / %d01 move-package   ; Package
 
+object-digest = digest
+
 object-id = address
 
-object-in = %d00                        ; Missing
-          / %d01 version digest owner   ; Data
+object-in = %d00                               ; Missing
+          / %d01 version object-digest owner   ; Data
 
-object-out = %d00                  ; Missing
-           / %d01 digest owner     ; ObjectWrite
-           / %d02 version digest   ; PackageWrite
+object-out = %d00                         ; Missing
+           / %d01 object-digest owner     ; ObjectWrite
+           / %d02 version object-digest   ; PackageWrite
 
-object-reference = object-id   ; object-id
-                   version     ; version
-                   digest      ; digest
+object-reference = object-id       ; object-id
+                   version         ; version
+                   object-digest   ; digest
 
 owner = %d00 address     ; Address
       / %d01 object-id   ; Object
@@ -327,6 +343,8 @@ randomness-state-update = u64                ; epoch
                           bytes              ; random-bytes
                           version            ; randomness-obj-initial-shared-version
 
+sender-signed-data-digest = digest
+
 signed-checkpoint-summary = checkpoint-summary               ; checkpoint
                             validator-aggregated-signature   ; signature
 
@@ -351,21 +369,27 @@ system-package = version             ; version
 
 transaction = %d00 transaction-v1   ; V1
 
+transaction-digest = digest
+
 transaction-effects = %d00 transaction-effects-v1   ; V1
 
-transaction-effects-v1 = execution-status                  ; status
-                         u64                               ; epoch
-                         gas-cost-summary                  ; gas-used
-                         digest                            ; transaction-digest
-                         (%d00 / %d01 u32)                 ; gas-object-index
-                         (%d00 / %d01 digest)              ; events-digest
-                         (size *digest)                    ; dependencies
-                         version                           ; lamport-version
-                         (size *changed-object)            ; changed-objects
-                         (size *unchanged-shared-object)   ; unchanged-shared-objects
-                         (%d00 / %d01 digest)              ; auxiliary-data-digest
+transaction-effects-digest = digest
+
+transaction-effects-v1 = execution-status                          ; status
+                         u64                                       ; epoch
+                         gas-cost-summary                          ; gas-cost-summary
+                         transaction-digest                        ; transaction-digest
+                         (%d00 / %d01 u32)                         ; gas-object-index
+                         (%d00 / %d01 transaction-events-digest)   ; events-digest
+                         (size *transaction-digest)                ; dependencies
+                         version                                   ; lamport-version
+                         (size *changed-object)                    ; changed-objects
+                         (size *unchanged-shared-object)           ; unchanged-shared-objects
+                         (%d00 / %d01 effects-aux-data-digest)     ; auxiliary-data-digest
 
 transaction-events = (size *event)
+
+transaction-events-digest = digest
 
 transaction-expiration = %d00       ; None
                        / %d01 u64   ; Epoch
@@ -416,11 +440,11 @@ u8      = 1OCTET
 
 uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer
 
-unchanged-shared-kind = %d00 version digest   ; ReadOnlyRoot
-                      / %d01 version          ; MutateDeleted
-                      / %d02 version          ; ReadDeleted
-                      / %d03 version          ; Cancelled
-                      / %d04                  ; PerEpochConfig
+unchanged-shared-kind = %d00 version object-digest   ; ReadOnlyRoot
+                      / %d01 version                 ; MutateDeleted
+                      / %d02 version                 ; ReadDeleted
+                      / %d03 version                 ; Cancelled
+                      / %d04                         ; PerEpochConfig
 
 unchanged-shared-object = object-id               ; object-id
                           unchanged-shared-kind   ; kind

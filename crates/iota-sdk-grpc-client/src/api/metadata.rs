@@ -32,7 +32,7 @@ use crate::ResponseExt;
 /// // Extract just the body if you don't need metadata
 /// let body = response.into_inner();
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct MetadataEnvelope<T> {
     inner: T,
     metadata: tonic::metadata::MetadataMap,

@@ -11,7 +11,7 @@ struct OwnedObjectsExample {
     let objectsPage = try await client.objects(filter: ObjectFilter(owner: address))
     print("Owned objects(\(objectsPage.data.count)):")
     for obj in objectsPage.data {
-      print(obj.objectId().toHex())
+      print(obj.id().toHex())
     }
   }
 }

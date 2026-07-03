@@ -34,7 +34,7 @@ fn main() {
     std::fs::create_dir_all(&out_dir).unwrap();
 
     let proto_ext = std::ffi::OsStr::new("proto");
-    let proto_files = walkdir::WalkDir::new(&proto_dir)
+    let mut proto_files = walkdir::WalkDir::new(&proto_dir)
         .into_iter()
         .filter_map(|entry| {
             (|| {
@@ -54,6 +54,11 @@ fn main() {
         })
         .collect::<Result<Vec<_>, walkdir::Error>>()
         .unwrap();
+    // `walkdir` traversal order depends on the OS (and is non-deterministic on
+    // Linux), so sort the paths to keep `compile_protos` output stable across
+    // runs — without this, messages from different .proto files in the same
+    // package can swap positions in the generated module.
+    proto_files.sort();
 
     let mut compiler_init = protox::Compiler::new(std::slice::from_ref(&proto_dir)).unwrap();
     let compiler = compiler_init

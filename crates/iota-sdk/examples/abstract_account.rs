@@ -41,8 +41,10 @@ async fn main() -> Result<()> {
     let effects = builder
         .execute(&move_authenticator, WaitForTx::Finalized)
         .await?;
-
-    println!("Sending IOTA via abstract account: {:?}", effects.status());
+    println!(
+        "Sending IOTA via abstract account: {:?}",
+        effects.as_v1().status
+    );
 
     Ok(())
 }
@@ -75,8 +77,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (publish the package)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
-    println!("Publishing package: {:?}\n", effects.status());
+    println!("Publishing package: {:?}\n", effects.as_v1().status);
 
     // Get package, package metadata and account IDs from the effects
     let mut package_id = None::<ObjectId>;
@@ -130,10 +131,9 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Sign and execute the transaction (link the authenticator)
     let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
-
     println!(
         "Linking account to authenticate method: {:?}\n",
-        effects.status()
+        effects.as_v1().status
     );
 
     Ok(account_id)

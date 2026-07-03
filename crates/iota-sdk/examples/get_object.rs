@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
         .await?
         .ok_or_eyre("missing object")?;
 
-    println!("Object ID: {}", obj.object_id());
+    println!("Object ID: {}", obj.id());
     println!("Version: {}", obj.version());
     println!(
         "Previous transaction: {}",

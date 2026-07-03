@@ -1,0 +1,65 @@
+name: Move Types Drift Nightly
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # Daily at 3am UTC
+  workflow_dispatch:
+
+concurrency:
+  group: move-types-drift-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    # Diffs the type surface of `crates/iota-framework/published_api.txt`
+    # in the iota monorepo between the pinned rev (the `move-binary-format`
+    # rev in `crates/iota-sdk-move-types/Cargo.toml` — what PR CI and local
+    # runs test against) and the monorepo's `develop` HEAD. A failure means
+    # upstream added/removed/renamed a public Move type since the pin was
+    # last bumped — add/update the Rust mirrors, bump the rev, and open a
+    # PR; that PR's own CI then validates the mirrors against the new rev.
+    #
+    # Unrelated PRs are intentionally NOT affected by upstream drift: they
+    # test against the pinned rev until the catch-up PR moves it.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Fetch artifacts at the pinned rev
+        # Resolves the pin from Cargo.toml and writes the filtered manifest
+        # to src/packages_compiled/published_api.txt — and doubles as a
+        # daily smoke test of the fetch script itself.
+        run: bash crates/iota-sdk-move-types/update_compiled_packages.sh
+
+      - name: Fetch published_api.txt at develop HEAD
+        # Keep only `public struct`/`public enum` records — function churn
+        # is irrelevant to a crate that mirrors Move *types*. Same filter
+        # as crates/iota-sdk-move-types/update_compiled_packages.sh.
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-framework/published_api.txt \
+            | awk '
+                NR%3==1 {name=$0}
+                NR%3==2 {kind=$0}
+                NR%3==0 {
+                    if (kind ~ /(struct|enum)$/) {
+                        print name; print kind; print $0
+                    }
+                }' > head_published_api.txt
+
+      - name: Diff pinned type surface against develop HEAD
+        run: |
+          if ! diff -u \
+            crates/iota-sdk-move-types/src/packages_compiled/published_api.txt \
+            head_published_api.txt; then
+            echo
+            echo "::error::Move framework type drift detected."
+            echo "Upstream iotaledger/iota@develop changed the public type surface of crates/iota-framework since the pinned rev (the move-binary-format rev in crates/iota-sdk-move-types/Cargo.toml)."
+            echo "Review the diff above, add/update the Rust mirrors, bump that rev to the new monorepo SHA, run 'make update-compiled-packages' + 'make test' locally, and open a PR."
+            exit 1
+          fi

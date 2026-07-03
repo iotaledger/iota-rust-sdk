@@ -16,21 +16,21 @@ class Program
             throw new Exception("missing current epoch");
         }
 
-        Console.WriteLine($"Current epoch: {currentEpoch.epochId}");
-        Console.WriteLine($"Current epoch start time: {currentEpoch.startTimestamp}");
+        Console.WriteLine($"Current epoch: {currentEpoch.EpochId}");
+        Console.WriteLine($"Current epoch start time: {currentEpoch.StartTimestamp}");
 
         // Get previous epoch
-        var previousEpochId = currentEpoch.epochId - 1;
+        var previousEpochId = currentEpoch.EpochId - 1;
         var previousEpoch = await client.Epoch(previousEpochId);
         if (previousEpoch == null)
         {
             throw new Exception("missing previous epoch");
         }
 
-        Console.WriteLine($"Previous epoch: {previousEpoch.epochId}");
-        if (previousEpoch.totalStakeRewards != null)
+        Console.WriteLine($"Previous epoch: {previousEpoch.EpochId}");
+        if (previousEpoch.TotalStakeRewards != null)
         {
-            Console.WriteLine($"Previous epoch stake rewards: {previousEpoch.totalStakeRewards}");
+            Console.WriteLine($"Previous epoch stake rewards: {previousEpoch.TotalStakeRewards}");
         }
     }
 }

@@ -46,7 +46,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Get objects with default mask
@@ -63,7 +63,7 @@ impl Client {
     /// for obj in objs.body() {
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
-    ///     println!("Got object ID: {:?}", sdk_obj.object_id());
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }

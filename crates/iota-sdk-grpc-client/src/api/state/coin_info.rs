@@ -27,7 +27,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::StructTag;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let coin_type: StructTag = "0x2::iota::IOTA".parse()?;
     ///
     /// let response = client.get_coin_info(coin_type).await?;

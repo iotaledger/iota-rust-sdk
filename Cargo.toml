@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
+  "bindings/wasm/iota-sdk-wasm",
+  "crates/integration-tests",
   "crates/iota-sdk",
   "crates/iota-sdk-bcs-schema",
   "crates/iota-sdk-crypto",
@@ -10,6 +12,8 @@ members = [
   "crates/iota-sdk-grpc-client",
   "crates/iota-sdk-grpc-proto-build",
   "crates/iota-sdk-grpc-types",
+  "crates/iota-sdk-move-types",
+  "crates/iota-sdk-move-types/examples/capture_move_type_fixtures",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
   "crates/iota-sdk/examples/polling-indexer",
@@ -21,6 +25,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
 [workspace.lints.clippy]
 redundant_clone = "warn"
 uninlined_format_args = "warn"
+unused_async = "warn"
 
 [workspace.dependencies]
 # external dependencies
@@ -33,6 +38,7 @@ futures = "0.3.29"
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
 hex = "0.4.3"
+js-sys = "0.3"
 paste = "1.0.15"
 primitive-types = { version = "0.14", features = ["impl-serde"] }
 proc-macro2 = "1"
@@ -54,6 +60,8 @@ tokio = "1.40.0"
 tonic = "0.14"
 tracing = "0.1"
 variadics_please = "1.1"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
 wasm-bindgen-test = "0.3"
 
 # internal dependencies
@@ -64,6 +72,17 @@ iota-graphql-client-build = { version = "0.0.1-alpha.1", package = "iota-sdk-gra
 iota-grpc-client = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-client", path = "crates/iota-sdk-grpc-client", default-features = false }
 iota-grpc-proto-build = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-proto-build", path = "crates/iota-sdk-grpc-proto-build", default-features = false }
 iota-grpc-types = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-types", path = "crates/iota-sdk-grpc-types", default-features = false }
+iota-move-types = { version = "0.0.1-alpha.1", package = "iota-sdk-move-types", path = "crates/iota-sdk-move-types", default-features = false }
 iota-sdk = { version = "3.0.0-alpha.1", package = "iota-sdk", path = "crates/iota-sdk", default-features = false }
 iota-transaction-builder = { version = "0.0.1-alpha.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
 iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
+
+# Custom profile for WASM builds — optimizes for binary size.
+# Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
+[profile.wasm-release]
+codegen-units = 1
+inherits = "release"
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = true

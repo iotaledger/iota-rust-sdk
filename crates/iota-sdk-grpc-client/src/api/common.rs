@@ -24,7 +24,7 @@ use iota_grpc_types::{
         types::ObjectId as ProtoObjectId,
     },
 };
-use iota_types::{Digest, ObjectId};
+use iota_types::{ObjectId, TransactionDigest};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
@@ -162,7 +162,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// let mask = ReadMask::from(&[TransactionField::EFFECTS, TransactionField::CHECKPOINT]);
 /// assert_eq!(mask.as_str(), "effects,checkpoint");
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct ReadMask<'a>(Cow<'a, str>);
 
 impl<'a> ReadMask<'a> {
@@ -334,7 +334,7 @@ where
 ///
 /// Returned when awaiting a list query builder directly (single-page mode).
 /// Contains the items from this page plus an optional continuation token.
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Page<T> {
     /// The items returned in this page.
     pub items: Vec<T>,
@@ -523,7 +523,10 @@ pub fn proto_object_id(id: ObjectId) -> ProtoObjectId {
 }
 
 /// Build a proto Transaction from serializable transaction data and digest.
-pub fn build_proto_transaction<T: Serialize>(data: &T, digest: Digest) -> Result<ProtoTransaction> {
+pub fn build_proto_transaction<T: Serialize>(
+    data: &T,
+    digest: TransactionDigest,
+) -> Result<ProtoTransaction> {
     let bcs = BcsData::serialize(data)
         .map_err(|e| Error::from(TryFromProtoError::invalid("transaction", e)))?;
 

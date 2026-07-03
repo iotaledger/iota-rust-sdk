@@ -8,20 +8,20 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewTestnet();
-        var filter = new ObjectFilter(typeTag: "0x3::staking_pool::StakedIota");
+        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota");
 
         var stakedIotas = await client.Objects(filter);
 
-        if (stakedIotas.data.Length == 0)
+        if (stakedIotas.Data.Length == 0)
         {
             Console.WriteLine("No StakedIota objects found");
         }
         else
         {
             Console.WriteLine("StakedIota object IDs:");
-            foreach (var stakedIota in stakedIotas.data)
+            foreach (var stakedIota in stakedIotas.Data)
             {
-                Console.WriteLine(stakedIota.ObjectId().ToHex());
+                Console.WriteLine(stakedIota.Id().ToHex());
             }
         }
     }

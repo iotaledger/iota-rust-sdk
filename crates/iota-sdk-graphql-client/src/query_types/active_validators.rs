@@ -53,7 +53,7 @@ pub struct ValidatorConnection {
 }
 
 /// Represents a validator in the system.
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Validator")]
 pub struct Validator {
     /// The APY of this validator in basis points.
@@ -115,7 +115,7 @@ pub struct Validator {
 }
 
 /// The credentials related fields associated with a validator.
-#[derive(cynic::QueryFragment, Debug, Clone)]
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ValidatorCredentials")]
 pub struct ValidatorCredentials {
     pub authority_pub_key: Option<Base64>,

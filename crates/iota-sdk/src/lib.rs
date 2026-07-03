@@ -11,6 +11,8 @@ pub use iota_graphql_client as graphql_client;
 pub use iota_grpc_client as grpc_client;
 #[cfg(feature = "grpc")]
 pub use iota_grpc_types as grpc_types;
+#[cfg(feature = "move-types")]
+pub use iota_move_types as move_types;
 #[cfg(feature = "txn-builder")]
 pub use iota_transaction_builder as transaction_builder;
 #[cfg(feature = "types")]

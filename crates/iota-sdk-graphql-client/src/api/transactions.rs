@@ -9,8 +9,9 @@ use std::time::Duration;
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
 use futures::Stream;
+use iota_transaction_builder::WaitForTx;
 use iota_types::{
-    Digest, SenderSignedTransaction, SignedTransaction, Transaction, TransactionEffects,
+    SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
     UserSignature,
 };
 
@@ -28,36 +29,12 @@ use crate::{
     streams::stream_paginated_query,
 };
 
-/// Determines what to wait for after executing a transaction.
-///
-/// Users should almost always use [`WaitForTx::Finalized`] (the default).
-/// The GraphQL client interacts with the indexer, not the fullnode directly.
-/// Using [`WaitForTx::IndexedOnNode`] only guarantees the transaction is
-/// indexed on the fullnode (meaning you can submit transactions that reference
-/// objects created by this transaction), but subsequent queries using the
-/// transaction ID can still fail until the transaction is indexed on the
-/// indexer.
-#[non_exhaustive]
-#[derive(Default)]
-pub enum WaitForTx {
-    /// Indicates that the transaction effects will be usable in subsequent
-    /// transactions (you can reference objects created by this transaction),
-    /// and that the transaction itself is indexed on the fullnode.
-    ///
-    /// **Warning:** This does not guarantee the transaction is indexed on the
-    /// indexer. Since the GraphQL client queries the indexer, subsequent
-    /// queries with this transaction ID may still fail. Prefer
-    /// [`WaitForTx::Finalized`] unless you have a specific reason to use this.
-    IndexedOnNode,
-    /// Indicates that the transaction has been included in a checkpoint, and
-    /// all queries may include it.
-    #[default]
-    Finalized,
-}
-
 impl Client {
     /// Get a transaction by its digest.
-    pub async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>> {
+    pub async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>> {
         let operation = TransactionBlockQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -99,7 +76,10 @@ impl Client {
     }
 
     /// Get a transaction's effects by its digest.
-    pub async fn transaction_effects(&self, digest: Digest) -> Result<Option<TransactionEffects>> {
+    pub async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>> {
         let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -143,7 +123,7 @@ impl Client {
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
     ) -> Result<Option<TransactionDataEffects>> {
         let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
@@ -269,7 +249,7 @@ impl Client {
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_tx_finalized`].
-    pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
+    pub async fn is_tx_indexed_on_node(&self, digest: TransactionDigest) -> Result<bool> {
         let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -281,7 +261,7 @@ impl Client {
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
-    pub async fn is_tx_finalized(&self, digest: Digest) -> Result<bool> {
+    pub async fn is_tx_finalized(&self, digest: TransactionDigest) -> Result<bool> {
         let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -303,22 +283,24 @@ impl Client {
     /// exceeded, will return an error (default 60s).
     pub async fn wait_for_tx(
         &self,
-        digest: Digest,
+        digest: TransactionDigest,
         wait_for: WaitForTx,
         timeout: impl Into<Option<Duration>>,
     ) -> Result<()> {
-        tokio::time::timeout(
+        crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
-                let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
-                    interval.tick().await;
                     if match wait_for {
                         WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
+                        _ => unimplemented!(
+                            "a new WaitForTx enum variant was added and needs to be handled"
+                        ),
                     } {
                         break Ok(());
                     }
+                    crate::wait::sleep(Duration::from_millis(100)).await;
                 }
             },
         )
@@ -329,7 +311,7 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use iota_types::Digest;
+    use iota_types::TransactionDigest;
 
     use crate::{
         Client, PaginationFilter, query_types::TransactionsFilter, test_utils::test_client,
@@ -392,7 +374,8 @@ mod tests {
 
         client
             .transaction_data_effects(
-                Digest::from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8").unwrap(),
+                TransactionDigest::from_base58("FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj")
+                    .unwrap(),
             )
             .await
             .unwrap()
@@ -407,7 +390,7 @@ mod tests {
             .transactions_data_effects(
                 TransactionsFilter {
                     transaction_ids: Some(vec![
-                        "CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8".to_string(),
+                        "FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj".to_string(),
                     ]),
                     ..Default::default()
                 },

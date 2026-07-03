@@ -11,13 +11,13 @@
 //!
 //! ```no_run
 //! use iota_sdk_grpc_client::Client;
-//! use iota_types::{Digest, ObjectId};
+//! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = Client::new("http://localhost:9000").await?;
+//! let client = Client::new("http://localhost:9000")?;
 //!
 //! // Get a transaction with full details (None = use default field mask)
-//! let digest: Digest = todo!();
+//! let digest: TransactionDigest = todo!();
 //! let txs = client.get_transactions(&[digest], None).await?;
 //! if let Some(tx) = txs.body().first() {
 //!     println!("Transaction digest: {:?}", tx.transaction()?.digest()?);
@@ -34,6 +34,7 @@
 //! ```
 
 pub mod api;
+mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
 pub use api::{

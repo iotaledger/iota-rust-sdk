@@ -1,0 +1,14 @@
+[package]
+name = "capture-move-type-fixtures"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+description = "Capture real on-chain BCS fixtures for the Move types mirrored by iota-sdk-move-types"
+
+[dependencies]
+# external dependencies
+base64ct = { workspace = true, features = ["alloc", "std"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+# internal dependencies
+iota-sdk = { workspace = true, features = ["graphql", "types"] }

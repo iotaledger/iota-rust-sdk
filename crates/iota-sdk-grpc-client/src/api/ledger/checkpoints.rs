@@ -23,7 +23,7 @@ use iota_grpc_types::v1::{
     signatures::ValidatorAggregatedSignature as ProtoValidatorAggregatedSignature,
     transaction::ExecutedTransaction,
 };
-use iota_types::{CheckpointSequenceNumber, Digest};
+use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 
 use crate::{
     Client, Error,
@@ -54,7 +54,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let checkpoint = client.get_checkpoint_latest(None, None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
@@ -95,7 +95,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let checkpoint = client
     ///     .get_checkpoint_by_sequence_number(100, None, None, None)
     ///     .await?;
@@ -138,10 +138,10 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_types::Digest;
+    /// # use iota_types::CheckpointDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
-    /// let digest: Digest = todo!();
+    /// let client = Client::new("http://localhost:9000")?;
+    /// let digest: CheckpointDigest = todo!();
     /// let checkpoint = client
     ///     .get_checkpoint_by_digest(digest, None, None, None)
     ///     .await?;
@@ -151,7 +151,7 @@ impl Client {
     /// ```
     pub async fn get_checkpoint_by_digest(
         &self,
-        digest: Digest,
+        digest: CheckpointDigest,
         read_mask: Option<ReadMask<'_>>,
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
@@ -259,7 +259,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// let mut stream = client
     ///     .stream_checkpoints(Some(0), Some(10), None, None, None)
     ///     .await?;
@@ -349,7 +349,7 @@ impl Client {
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000").await?;
+    /// let client = Client::new("http://localhost:9000")?;
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client

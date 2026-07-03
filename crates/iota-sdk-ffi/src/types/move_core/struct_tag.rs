@@ -20,7 +20,7 @@ use crate::types::{
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
 
@@ -116,6 +116,36 @@ impl StructTag {
             .collect()
     }
 
+    /// Returns whether the type (excluding the type params) is the same as
+    /// another struct tag.
+    pub fn is_same_type_as(&self, other: &StructTag) -> bool {
+        self.0.is_same_type_as(&other.0)
+    }
+
+    /// Checks if this is an IOTA balance type
+    /// (`0x2::balance::Balance<0x2::iota::IOTA>`)
+    pub fn is_gas_balance(&self) -> bool {
+        self.0.is_gas_balance()
+    }
+
+    /// Checks if this is a timelocked coin balance `TimeLock<Balance<T>>`
+    pub fn is_timelocked_balance(&self) -> bool {
+        self.0.is_timelocked_balance()
+    }
+
+    /// Creates a new timelocked IOTA balance struct tag
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    #[uniffi::constructor]
+    pub fn new_timelocked_gas_balance() -> Self {
+        Self(iota_sdk::types::StructTag::new_timelocked_gas_balance())
+    }
+
+    /// Checks if this is a timelocked IOTA balance type
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    pub fn is_timelocked_gas_balance(&self) -> bool {
+        self.0.is_timelocked_gas_balance()
+    }
+
     /// Returns the string representation of this struct tag using the
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
@@ -175,7 +205,6 @@ export_struct_tag_ctors!(
     AsciiString,
     AuthenticatorState,
     Clock,
-    Config,
     DenyListAddressKey,
     DenyListConfigKey,
     DenyListGlobalPauseKey,
@@ -193,20 +222,32 @@ export_struct_tag_ctors!(
     String,
     SystemEpochInfoEvent,
     TimelockedStakedIota,
-    TransferReceiving,
     Uid,
     Url,
     Bag,
     ObjectBag,
-    TxContext
+    TxContext,
+    Alias,
+    Nft,
+    Irc27Metadata,
+    Kiosk,
+    KioskOwnerCap,
+    Publisher
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
+    Config,
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
+    RegulatedCoinMetadata,
+    DenyCapV1,
     TimeLock,
-    Option
+    Option,
+    TransferReceiving,
+    BasicOutput,
+    NftOutput,
+    AliasOutput,
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,

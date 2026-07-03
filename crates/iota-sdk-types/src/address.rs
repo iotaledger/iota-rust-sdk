@@ -57,8 +57,8 @@ use crate::ObjectId;
 /// ```text
 /// address = 32OCTET
 /// ```
-#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -131,8 +131,8 @@ impl Address {
         Self::new(buf)
     }
 
-    #[cfg(all(feature = "rand", not(target_arch = "wasm32")))]
-    #[cfg_attr(doc_cfg, doc(cfg(all(feature = "rand", not(target_arch = "wasm32")))))]
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::generate(rand_core::OsRng)
     }
@@ -258,7 +258,7 @@ impl Address {
         }
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+    pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, AddressParseError> {
         let bytes = bytes.as_ref();
         <[u8; Self::LENGTH]>::try_from(bytes)
             .map_err(|_| AddressParseError::InvalidByteLength {
@@ -373,7 +373,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
     }
 }
 
-#[derive(Clone, Debug, thiserror::Error, PartialEq)]
+#[derive(Clone, Debug, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum AddressParseError {
     #[error("address must be hex string of length {}", Address::LENGTH * 2)]

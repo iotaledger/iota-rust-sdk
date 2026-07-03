@@ -5,12 +5,15 @@ use std::sync::Arc;
 
 use iota_sdk::types::SignatureScheme;
 
-use crate::types::{
-    address::Address,
-    crypto::{
-        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature,
-        passkey::{PasskeyAuthenticator, PasskeyPublicKey},
+use crate::{
+    error::Result,
+    types::{
+        address::Address,
+        crypto::{
+            Ed25519Signature, Secp256k1Signature, Secp256r1Signature,
+            passkey::PasskeyAuthenticator, public_key::PublicKey,
+        },
+        signature::UserSignature,
     },
 };
 
@@ -24,16 +27,14 @@ use crate::types::{
 /// multisig-member-signature = ed25519-multisig-member-signature /
 ///                             secp256k1-multisig-member-signature /
 ///                             secp256r1-multisig-member-signature /
-///                             zklogin-multisig-member-signature-deprecated /
 ///                             passkey-multisig-member-signature
 ///
 /// ed25519-multisig-member-signature               = %d00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// zklogin-multisig-member-signature-deprecated    = %d03
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberSignature(pub iota_sdk::types::MultisigMemberSignature);
 
@@ -43,9 +44,9 @@ impl MultisigMemberSignature {
         self.0.is_ed25519()
     }
 
-    pub fn as_ed25519_opt(&self) -> Option<Arc<Ed25519Signature>> {
+    pub fn as_opt_ed25519(&self) -> Option<Arc<Ed25519Signature>> {
         self.0
-            .as_ed25519_opt()
+            .as_opt_ed25519()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -59,9 +60,9 @@ impl MultisigMemberSignature {
         self.0.is_secp256k1()
     }
 
-    pub fn as_secp256k1_opt(&self) -> Option<Arc<Secp256k1Signature>> {
+    pub fn as_opt_secp256k1(&self) -> Option<Arc<Secp256k1Signature>> {
         self.0
-            .as_secp256k1_opt()
+            .as_opt_secp256k1()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -75,9 +76,9 @@ impl MultisigMemberSignature {
         self.0.is_secp256r1()
     }
 
-    pub fn as_secp256r1_opt(&self) -> Option<Arc<Secp256r1Signature>> {
+    pub fn as_opt_secp256r1(&self) -> Option<Arc<Secp256r1Signature>> {
         self.0
-            .as_secp256r1_opt()
+            .as_opt_secp256r1()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -91,9 +92,9 @@ impl MultisigMemberSignature {
         self.0.is_passkey()
     }
 
-    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
+    pub fn as_opt_passkey(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
-            .as_passkey_opt()
+            .as_opt_passkey()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -101,111 +102,6 @@ impl MultisigMemberSignature {
 
     pub fn as_passkey(&self) -> PasskeyAuthenticator {
         self.0.as_passkey().clone().into()
-    }
-}
-
-/// Enum of valid public keys for multisig committee members
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member-public-key = ed25519-multisig-member-public-key /
-///                              secp256k1-multisig-member-public-key /
-///                              secp256r1-multisig-member-public-key /
-///                              zklogin-multisig-member-public-key-deprecated /
-///                              passkey-multisig-member-public-key
-///
-/// ed25519-multisig-member-public-key              = %d00 ed25519-public-key
-/// secp256k1-multisig-member-public-key            = %d01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key            = %d02 secp256r1-public-key
-/// zklogin-multisig-member-public-key-deprecated   = %d03
-/// passkey-multisig-member-public-key              = %d04 passkey-public-key
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
-///                                            ; and the decoded bytes are defined
-///                                            ; by legacy-public-key
-/// legacy-public-key = (ed25519-flag ed25519-public-key) /
-///                     (secp256k1-flag secp256k1-public-key) /
-///                     (secp256r1-flag secp256r1-public-key)
-/// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq)]
-pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
-
-#[uniffi::export]
-impl MultisigMemberPublicKey {
-    pub fn is_ed25519(&self) -> bool {
-        self.0.is_ed25519()
-    }
-
-    pub fn as_ed25519_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
-        self.0
-            .as_ed25519_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_ed25519(&self) -> Ed25519PublicKey {
-        (*self.0.as_ed25519()).into()
-    }
-
-    pub fn is_secp256k1(&self) -> bool {
-        self.0.is_secp256k1()
-    }
-
-    pub fn as_secp256k1_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
-        self.0
-            .as_secp256k1_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_secp256k1(&self) -> Secp256k1PublicKey {
-        (*self.0.as_secp256k1()).into()
-    }
-
-    pub fn is_secp256r1(&self) -> bool {
-        self.0.is_secp256r1()
-    }
-
-    pub fn as_secp256r1_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
-        self.0
-            .as_secp256r1_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_secp256r1(&self) -> Secp256r1PublicKey {
-        (*self.0.as_secp256r1()).into()
-    }
-
-    pub fn is_passkey(&self) -> bool {
-        self.0.is_passkey()
-    }
-
-    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyPublicKey>> {
-        self.0
-            .as_passkey_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    pub fn as_passkey(&self) -> PasskeyPublicKey {
-        self.0.as_passkey().clone().into()
-    }
-
-    pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
     }
 }
 
@@ -234,30 +130,32 @@ impl MultisigMemberPublicKey {
 ///
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSignature);
 
 #[uniffi::export]
 impl MultisigAggregatedSignature {
-    /// Construct a new aggregated multisig signature.
+    /// Construct a `MultisigAggregatedSignature` from a list of
+    /// `UserSignature`s and a `MultisigCommittee`.
     ///
-    /// Since the list of signatures doesn't contain sufficient information to
-    /// identify which committee member provided the signature, it is up to
-    /// the caller to ensure that the provided signature list is in the same
-    /// order as it's corresponding member in the provided committee
-    /// and that it's position in the provided bitmap is set.
+    /// This:
+    ///  - validates `committee` via `MultisigCommittee::validate`;
+    ///  - converts each `UserSignature` into a `MultisigMemberSignature`;
+    ///  - derives the `bitmap` by locating each signature's public key in the
+    ///    committee, rejecting duplicates and signatures from non-members;
+    ///  - rejects empty signature lists and lists longer than the committee.
+    ///
+    /// The caller must provide `signatures` in the same order as their
+    /// corresponding members in `committee`: for committee
+    /// `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is valid but
+    /// `[sig2, sig1, sig5]` is not.
     #[uniffi::constructor]
-    pub fn new(
-        committee: &MultisigCommittee,
-        signatures: Vec<Arc<MultisigMemberSignature>>,
-        bitmap: u16,
-    ) -> Self {
-        Self(iota_sdk::types::MultisigAggregatedSignature::new(
-            committee.0.clone(),
+    pub fn new(signatures: Vec<Arc<UserSignature>>, committee: &MultisigCommittee) -> Result<Self> {
+        Ok(Self(iota_sdk::types::MultisigAggregatedSignature::new(
             signatures.into_iter().map(|s| s.0.clone()).collect(),
-            bitmap,
-        ))
+            committee.0.clone(),
+        )?))
     }
 
     /// The list of signatures from committee members
@@ -304,23 +202,29 @@ impl MultisigAggregatedSignature {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 
 #[uniffi::export]
 impl MultisigCommittee {
-    /// Construct a new committee from a list of `MultisigMember`s and a
-    /// `threshold`.
+    /// Construct a `MultisigCommittee` and verify it via `validate`.
+    ///
+    /// This rejects committees that:
+    ///  - have a zero `threshold`;
+    ///  - contain zero or more than ten members;
+    ///  - contain a member with weight 0;
+    ///  - have a `threshold` greater than the sum of all member weights;
+    ///  - contain duplicate public keys.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
     #[uniffi::constructor]
-    pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
-        Self(iota_sdk::types::MultisigCommittee::new(
+    pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Result<Self> {
+        Ok(Self(iota_sdk::types::MultisigCommittee::new(
             members.into_iter().map(|m| m.0.clone()).collect(),
             threshold,
-        ))
+        )?))
     }
 
     /// The members of the committee
@@ -352,11 +256,10 @@ impl MultisigCommittee {
     ///  - Has at least one member
     ///  - Has at most ten members
     ///  - No member has weight 0
-    ///  - the sum of the weights of all members must be larger than the
-    ///    threshold
+    ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
-    pub fn is_valid(&self) -> bool {
-        self.0.is_valid()
+    pub fn validate(&self) -> Result<()> {
+        Ok(self.0.validate()?)
     }
 
     /// Derive an `Address` from this MultisigCommittee.
@@ -390,15 +293,15 @@ impl MultisigCommittee {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 
 #[uniffi::export]
 impl MultisigMember {
-    /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
+    /// Construct a new member from a `PublicKey` and a `weight`.
     #[uniffi::constructor]
-    pub fn new(public_key: &MultisigMemberPublicKey, weight: u8) -> Self {
+    pub fn new(public_key: &PublicKey, weight: u8) -> Self {
         Self(iota_sdk::types::MultisigMember::new(
             public_key.0.clone(),
             weight,
@@ -406,7 +309,7 @@ impl MultisigMember {
     }
 
     /// This member's public key.
-    pub fn public_key(&self) -> MultisigMemberPublicKey {
+    pub fn public_key(&self) -> PublicKey {
         self.0.public_key().clone().into()
     }
 
@@ -418,14 +321,14 @@ impl MultisigMember {
 
 crate::export_iota_types_objects_bcs_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember
 );
 crate::export_iota_types_objects_json_conversion!(
     MultisigMemberSignature,
-    MultisigMemberPublicKey,
+    PublicKey,
     MultisigAggregatedSignature,
     MultisigCommittee,
     MultisigMember

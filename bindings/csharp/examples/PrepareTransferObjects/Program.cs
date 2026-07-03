@@ -29,9 +29,9 @@ class Program
 
         var res = await client.DryRunTx(txn);
 
-        if (res.error != null)
+        if (res.Error != null)
         {
-            throw new Exception($"Failed to transfer objects: {res.error}");
+            throw new Exception($"Failed to transfer objects: {res.Error}");
         }
 
         Console.WriteLine("Transfer objects dry run was successful!");

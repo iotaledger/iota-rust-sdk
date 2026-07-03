@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId, Version, execution_status::ExecutionStatus,
-    object::Owner,
+    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
+    ObjectId, Owner, TransactionDigest, TransactionEventsDigest, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -14,41 +14,43 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-effects-v1 = execution-status                   ; status
-///                          u64                                ; epoch
-///                          gas-cost-summary                   ; gas-used
-///                          digest                             ; transaction-digest
-///                          (option u32)                       ; gas-object-index
-///                          (option digest)                    ; events-digest
-///                          (vector digest)                    ; dependencies
-///                          u64                                ; lamport-version
-///                          (vector changed-object)            ; changed-objects
-///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
-///                          (option digest)                    ; auxiliary-data-digest
+/// transaction-effects-v1 = execution-status                    ; status
+///                          u64                                 ; epoch
+///                          gas-cost-summary                    ; gas-used
+///                          transaction-digest                  ; transaction-digest
+///                          (option u32)                        ; gas-object-index
+///                          (option transaction-events-digest)  ; events-digest
+///                          (vector transaction-digest)         ; dependencies
+///                          u64                                 ; lamport-version
+///                          (vector changed-object)             ; changed-objects
+///                          (vector unchanged-shared-object)    ; unchanged-shared-objects
+///                          (option effects-aux-data-digest)    ; auxiliary-data-digest
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
     /// The epoch when this transaction was executed.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The gas used by this transaction
-    pub gas_used: GasCostSummary,
+    pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
-    pub transaction_digest: Digest,
+    pub transaction_digest: TransactionDigest,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
-    pub events_digest: Option<Digest>,
+    pub events_digest: Option<TransactionEventsDigest>,
     /// The set of transaction digests this transaction depends on.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
-    pub dependencies: Vec<Digest>,
+    pub dependencies: Vec<TransactionDigest>,
     /// The version number of all the written Move objects by this transaction.
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
@@ -65,24 +67,7 @@ pub struct TransactionEffectsV1 {
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
-    pub auxiliary_data_digest: Option<Digest>,
-}
-
-impl TransactionEffectsV1 {
-    /// The status of the execution
-    pub fn status(&self) -> &ExecutionStatus {
-        &self.status
-    }
-
-    /// The epoch when this transaction was executed.
-    pub fn epoch(&self) -> EpochId {
-        self.epoch
-    }
-
-    /// The gas used in this transaction.
-    pub fn gas_summary(&self) -> &GasCostSummary {
-        &self.gas_used
-    }
+    pub auxiliary_data_digest: Option<EffectsAuxDataDigest>,
 }
 
 /// Input/output state of an object that was changed during execution
@@ -94,8 +79,8 @@ impl TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ChangedObject {
@@ -121,8 +106,8 @@ pub struct ChangedObject {
 /// unchanged-shared-object = object-id               ; object-id
 ///                           unchanged-shared-kind   ; kind
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UnchangedSharedObject {
@@ -137,13 +122,14 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
-///                       / %d01 u64           ; MutateDeleted
-///                       / %d02 u64           ; ReadDeleted
-///                       / %d03 u64           ; Cancelled
-///                       / %d04               ; PerEpochConfig
+/// unchanged-shared-kind = %d00 u64 object-digest   ; ReadOnlyRoot
+///                       / %d01 u64                  ; MutateDeleted
+///                       / %d02 u64                  ; ReadDeleted
+///                       / %d03 u64                  ; Cancelled
+///                       / %d04                       ; PerEpochConfig
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -151,7 +137,10 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot { version: Version, digest: Digest },
+    ReadOnlyRoot {
+        version: Version,
+        digest: ObjectDigest,
+    },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
@@ -185,10 +174,11 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = %d00           ; Missing
-///           / %d01 u64 digest owner   ; Data
+/// object-in = %d00                          ; Missing
+///           / %d01 u64 object-digest owner   ; Data
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -197,7 +187,7 @@ pub enum ObjectIn {
     /// The old version, digest and owner.
     Data {
         version: Version,
-        digest: Digest,
+        digest: ObjectDigest,
         owner: Owner,
     },
 }
@@ -217,7 +207,7 @@ impl ObjectIn {
         self.version_opt().expect("object does not exist")
     }
 
-    pub fn digest_opt(&self) -> Option<Digest> {
+    pub fn digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::Data { digest, .. } = self {
             Some(*digest)
         } else {
@@ -225,7 +215,7 @@ impl ObjectIn {
         }
     }
 
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> ObjectDigest {
         self.digest_opt().expect("object does not exist")
     }
 
@@ -249,11 +239,12 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out = %d00                ; Missing
-///            / %d01 digest owner   ; ObjectWrite
-///            / %d02 u64 digest     ; PackageWrite
+/// object-out = %d00                       ; Missing
+///            / %d01 object-digest owner   ; ObjectWrite
+///            / %d02 u64 object-digest     ; PackageWrite
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -261,16 +252,19 @@ pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
-    ObjectWrite { digest: Digest, owner: Owner },
+    ObjectWrite { digest: ObjectDigest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite { version: Version, digest: Digest },
+    PackageWrite {
+        version: Version,
+        digest: ObjectDigest,
+    },
 }
 
 impl ObjectOut {
     crate::def_is!(Missing, ObjectWrite, PackageWrite);
 
-    pub fn object_digest_opt(&self) -> Option<Digest> {
+    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::ObjectWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -278,7 +272,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn object_digest(&self) -> Digest {
+    pub fn object_digest(&self) -> ObjectDigest {
         self.object_digest_opt().expect("object does not exist")
     }
 
@@ -306,7 +300,7 @@ impl ObjectOut {
         self.package_version_opt().expect("object does not exist")
     }
 
-    pub fn package_digest_opt(&self) -> Option<Digest> {
+    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
         if let Self::PackageWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -314,530 +308,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn package_digest(&self) -> Digest {
+    pub fn package_digest(&self) -> ObjectDigest {
         self.package_digest_opt().expect("package does not exist")
-    }
-}
-
-/// Defines what happened to an ObjectId during execution
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation = %d00   ; None
-///              / %d01   ; Created
-///              / %d02   ; Deleted
-/// ```
-#[derive(Eq, PartialEq, Copy, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[non_exhaustive]
-pub enum IdOperation {
-    None,
-    Created,
-    Deleted,
-}
-
-impl IdOperation {
-    crate::def_is!(None, Created, Deleted);
-}
-
-#[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-mod serialization {
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-    use super::*;
-
-    #[derive(serde::Serialize)]
-    struct ReadableTransactionEffectsV1Ref<'a> {
-        #[serde(flatten)]
-        status: &'a ExecutionStatus,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
-        transaction_digest: &'a Digest,
-        gas_object_index: &'a Option<u32>,
-        events_digest: &'a Option<Digest>,
-        dependencies: &'a Vec<Digest>,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        lamport_version: &'a Version,
-        changed_objects: &'a Vec<ChangedObject>,
-        unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: &'a Option<Digest>,
-    }
-
-    #[derive(serde::Deserialize)]
-    struct ReadableTransactionEffectsV1 {
-        #[serde(flatten)]
-        status: ExecutionStatus,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        epoch: EpochId,
-        gas_used: GasCostSummary,
-        transaction_digest: Digest,
-        gas_object_index: Option<u32>,
-        events_digest: Option<Digest>,
-        dependencies: Vec<Digest>,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        lamport_version: Version,
-        changed_objects: Vec<ChangedObject>,
-        unchanged_shared_objects: Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: Option<Digest>,
-    }
-
-    #[derive(serde::Serialize)]
-    struct BinaryTransactionEffectsV1Ref<'a> {
-        status: &'a ExecutionStatus,
-        epoch: &'a EpochId,
-        gas_used: &'a GasCostSummary,
-        transaction_digest: &'a Digest,
-        gas_object_index: &'a Option<u32>,
-        events_digest: &'a Option<Digest>,
-        dependencies: &'a Vec<Digest>,
-        lamport_version: &'a Version,
-        changed_objects: &'a Vec<ChangedObject>,
-        unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: &'a Option<Digest>,
-    }
-
-    #[derive(serde::Deserialize)]
-    struct BinaryTransactionEffectsV1 {
-        status: ExecutionStatus,
-        epoch: EpochId,
-        gas_used: GasCostSummary,
-        transaction_digest: Digest,
-        gas_object_index: Option<u32>,
-        events_digest: Option<Digest>,
-        dependencies: Vec<Digest>,
-        lamport_version: Version,
-        changed_objects: Vec<ChangedObject>,
-        unchanged_shared_objects: Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: Option<Digest>,
-    }
-
-    impl Serialize for TransactionEffectsV1 {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let Self {
-                status,
-                epoch,
-                gas_used,
-                transaction_digest,
-                gas_object_index,
-                events_digest,
-                dependencies,
-                lamport_version,
-                changed_objects,
-                unchanged_shared_objects,
-                auxiliary_data_digest,
-            } = self;
-            if serializer.is_human_readable() {
-                let readable = ReadableTransactionEffectsV1Ref {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = BinaryTransactionEffectsV1Ref {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for TransactionEffectsV1 {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                let ReadableTransactionEffectsV1 {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                } = Deserialize::deserialize(deserializer)?;
-                Ok(Self {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                })
-            } else {
-                let BinaryTransactionEffectsV1 {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                } = Deserialize::deserialize(deserializer)?;
-                Ok(Self {
-                    status,
-                    epoch,
-                    gas_used,
-                    transaction_digest,
-                    gas_object_index,
-                    events_digest,
-                    dependencies,
-                    lamport_version,
-                    changed_objects,
-                    unchanged_shared_objects,
-                    auxiliary_data_digest,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableUnchangedSharedKind {
-        ReadOnlyRoot {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-        MutateDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        ReadDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        Cancelled {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        PerEpochConfig,
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(rename = "UnchangedSharedKind")]
-    enum BinaryUnchangedSharedKind {
-        ReadOnlyRoot { version: Version, digest: Digest },
-        MutateDeleted { version: Version },
-        ReadDeleted { version: Version },
-        Cancelled { version: Version },
-        PerEpochConfig,
-    }
-
-    impl Serialize for UnchangedSharedKind {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest }
-                    }
-                    UnchangedSharedKind::MutateDeleted { version } => {
-                        ReadableUnchangedSharedKind::MutateDeleted { version }
-                    }
-                    UnchangedSharedKind::ReadDeleted { version } => {
-                        ReadableUnchangedSharedKind::ReadDeleted { version }
-                    }
-                    UnchangedSharedKind::Cancelled { version } => {
-                        ReadableUnchangedSharedKind::Cancelled { version }
-                    }
-                    UnchangedSharedKind::PerEpochConfig => {
-                        ReadableUnchangedSharedKind::PerEpochConfig
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest }
-                    }
-                    UnchangedSharedKind::MutateDeleted { version } => {
-                        BinaryUnchangedSharedKind::MutateDeleted { version }
-                    }
-                    UnchangedSharedKind::ReadDeleted { version } => {
-                        BinaryUnchangedSharedKind::ReadDeleted { version }
-                    }
-                    UnchangedSharedKind::Cancelled { version } => {
-                        BinaryUnchangedSharedKind::Cancelled { version }
-                    }
-                    UnchangedSharedKind::PerEpochConfig => {
-                        BinaryUnchangedSharedKind::PerEpochConfig
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for UnchangedSharedKind {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableUnchangedSharedKind::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                            Self::ReadOnlyRoot { version, digest }
-                        }
-                        ReadableUnchangedSharedKind::MutateDeleted { version } => {
-                            Self::MutateDeleted { version }
-                        }
-                        ReadableUnchangedSharedKind::ReadDeleted { version } => {
-                            Self::ReadDeleted { version }
-                        }
-                        ReadableUnchangedSharedKind::Cancelled { version } => {
-                            Self::Cancelled { version }
-                        }
-                        ReadableUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-                    },
-                )
-            } else {
-                BinaryUnchangedSharedKind::deserialize(deserializer).map(|binary| match binary {
-                    BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                        Self::ReadOnlyRoot { version, digest }
-                    }
-                    BinaryUnchangedSharedKind::MutateDeleted { version } => {
-                        Self::MutateDeleted { version }
-                    }
-                    BinaryUnchangedSharedKind::ReadDeleted { version } => {
-                        Self::ReadDeleted { version }
-                    }
-                    BinaryUnchangedSharedKind::Cancelled { version } => Self::Cancelled { version },
-                    BinaryUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "state", rename_all = "snake_case")]
-    enum ReadableObjectIn {
-        Missing,
-        Data {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-            owner: Owner,
-        },
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    enum BinaryObjectIn {
-        Missing,
-        Data {
-            version: Version,
-            digest: Digest,
-            owner: Owner,
-        },
-    }
-
-    impl Serialize for ObjectIn {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    ObjectIn::Missing => ReadableObjectIn::Missing,
-                    ObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => ReadableObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    ObjectIn::Missing => BinaryObjectIn::Missing,
-                    ObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => BinaryObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ObjectIn {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableObjectIn::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectIn::Missing => Self::Missing,
-                    ReadableObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => Self::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                })
-            } else {
-                BinaryObjectIn::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectIn::Missing => Self::Missing,
-                    BinaryObjectIn::Data {
-                        version,
-                        digest,
-                        owner,
-                    } => Self::Data {
-                        version,
-                        digest,
-                        owner,
-                    },
-                })
-            }
-        }
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "state", rename_all = "snake_case")]
-    enum ReadableObjectOut {
-        Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-    }
-
-    #[derive(serde::Serialize, serde::Deserialize)]
-    enum BinaryObjectOut {
-        Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-    }
-
-    impl Serialize for ObjectOut {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    ObjectOut::Missing => ReadableObjectOut::Missing,
-                    ObjectOut::ObjectWrite { digest, owner } => {
-                        ReadableObjectOut::ObjectWrite { digest, owner }
-                    }
-                    ObjectOut::PackageWrite { version, digest } => {
-                        ReadableObjectOut::PackageWrite { version, digest }
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    ObjectOut::Missing => BinaryObjectOut::Missing,
-                    ObjectOut::ObjectWrite { digest, owner } => {
-                        BinaryObjectOut::ObjectWrite { digest, owner }
-                    }
-                    ObjectOut::PackageWrite { version, digest } => {
-                        BinaryObjectOut::PackageWrite { version, digest }
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ObjectOut {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableObjectOut::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectOut::Missing => Self::Missing,
-                    ReadableObjectOut::ObjectWrite { digest, owner } => {
-                        Self::ObjectWrite { digest, owner }
-                    }
-                    ReadableObjectOut::PackageWrite { version, digest } => {
-                        Self::PackageWrite { version, digest }
-                    }
-                })
-            } else {
-                BinaryObjectOut::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectOut::Missing => Self::Missing,
-                    BinaryObjectOut::ObjectWrite { digest, owner } => {
-                        Self::ObjectWrite { digest, owner }
-                    }
-                    BinaryObjectOut::PackageWrite { version, digest } => {
-                        Self::PackageWrite { version, digest }
-                    }
-                })
-            }
-        }
     }
 }

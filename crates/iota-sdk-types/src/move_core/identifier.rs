@@ -19,7 +19,7 @@ use crate::{TypeParseError, move_core::parse::MAX_IDENTIFIER_LENGTH};
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",

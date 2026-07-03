@@ -13,7 +13,8 @@ use crate::{
     types::{address::Address, move_core::StructTag},
 };
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Get the list of coins for the specified address.
     ///
@@ -59,13 +60,13 @@ impl GraphQLClient {
 
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
-        Ok(self
-            .0
+        self.0
             .read()
             .await
             .coin_metadata(coin_type)
             .await?
-            .map(Into::into))
+            .map(CoinMetadata::try_from)
+            .transpose()
     }
 
     /// Get total supply for the coin type.

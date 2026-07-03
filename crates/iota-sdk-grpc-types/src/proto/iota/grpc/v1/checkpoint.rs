@@ -41,7 +41,7 @@ impl CheckpointSummary {
     /// [`CHECKPOINT_SUMMARY_DIGEST`]).
     ///
     /// [`CHECKPOINT_SUMMARY_DIGEST`]: crate::read_masks::CHECKPOINT_SUMMARY_DIGEST
-    pub fn digest(&self) -> Result<iota_types::Digest, TryFromProtoError> {
+    pub fn digest(&self) -> Result<iota_types::CheckpointDigest, TryFromProtoError> {
         get_inner_field!(self.digest, Self::DIGEST_FIELD, try_into)
     }
 
@@ -80,7 +80,7 @@ impl CheckpointContents {
     /// [`CHECKPOINT_CONTENTS_DIGEST`]).
     ///
     /// [`CHECKPOINT_CONTENTS_DIGEST`]: crate::read_masks::CHECKPOINT_CONTENTS_DIGEST
-    pub fn digest(&self) -> Result<iota_types::Digest, TryFromProtoError> {
+    pub fn digest(&self) -> Result<iota_types::CheckpointContentsDigest, TryFromProtoError> {
         get_inner_field!(self.digest, Self::DIGEST_FIELD, try_into)
     }
 

@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     types::{
         address::Address,
-        digest::Digest,
+        digest::{ObjectDigest, TransactionDigest},
         move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
@@ -33,12 +33,12 @@ use crate::{
 /// ```
 #[derive(
     Debug,
-    PartialEq,
-    Eq,
-    Hash,
-    derive_more::From,
     derive_more::Deref,
     derive_more::Display,
+    derive_more::From,
+    Eq,
+    Hash,
+    PartialEq,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -98,7 +98,7 @@ impl ObjectId {
     /// Create an ObjectId from a transaction digest and the number of objects
     /// that have been created during a transactions.
     #[uniffi::constructor]
-    pub fn derive_id(digest: &Digest, count: u64) -> Self {
+    pub fn derive_id(digest: &TransactionDigest, count: u64) -> Self {
         Self(iota_sdk::types::ObjectId::derive_id(**digest, count))
     }
 
@@ -198,7 +198,7 @@ named_object_id!(
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: Arc<Version>,
-    digest: Arc<Digest>,
+    digest: Arc<ObjectDigest>,
 }
 
 impl From<iota_sdk::types::ObjectReference> for ObjectReference {
@@ -226,7 +226,7 @@ impl From<ObjectReference> for iota_sdk::types::ObjectReference {
 /// ```text
 /// object = object-data owner digest u64
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct Object(pub iota_sdk::types::Object);
 
@@ -236,7 +236,7 @@ impl Object {
     pub fn new(
         data: &ObjectData,
         owner: &Owner,
-        previous_transaction: &Digest,
+        previous_transaction: &TransactionDigest,
         storage_rebate: u64,
     ) -> Self {
         Self(iota_sdk::types::Object::new(
@@ -248,8 +248,8 @@ impl Object {
     }
 
     /// Return this object's id
-    pub fn object_id(&self) -> ObjectId {
-        self.0.object_id().into()
+    pub fn id(&self) -> ObjectId {
+        self.0.id().into()
     }
 
     /// Return this object's reference
@@ -302,7 +302,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> Digest {
+    pub fn previous_transaction(&self) -> TransactionDigest {
         self.0.previous_transaction.into()
     }
 
@@ -317,7 +317,7 @@ impl Object {
     /// Calculate the digest of this `Object`
     ///
     /// This is done by hashing the BCS bytes of this `Object` prefixed
-    pub fn digest(&self) -> Digest {
+    pub fn digest(&self) -> ObjectDigest {
         self.0.digest().into()
     }
 }
@@ -334,7 +334,7 @@ impl Object {
 /// object-data-struct  = %d00 object-move-struct
 /// object-data-package = %d01 object-move-package
 /// ```
-#[derive(Debug, Eq, Hash, PartialEq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct ObjectData(pub iota_sdk::types::ObjectData);
 
@@ -363,14 +363,14 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MoveStruct`
-    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
-        self.0.as_struct_opt().cloned().map(Into::into)
+    pub fn as_opt_struct(&self) -> Option<MoveStruct> {
+        self.0.as_opt_struct().cloned().map(Into::into)
     }
 
     /// Try to interpret this object as a `MovePackage`
-    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+    pub fn as_opt_package(&self) -> Option<Arc<MovePackage>> {
         self.0
-            .as_package_opt()
+            .as_opt_package()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -467,7 +467,7 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
 ///                (vector type-origin)               ; type-origin-table
 ///                (vector (object-id upgrade-info))  ; linkage-table
 /// ```
-#[derive(Debug, Eq, Hash, PartialEq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct MovePackage(pub iota_sdk::types::MovePackage);
 
@@ -598,14 +598,14 @@ impl From<MoveStruct> for iota_sdk::types::MoveStruct {
 /// ```
 #[derive(
     Debug,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
-    derive_more::From,
     derive_more::Deref,
     derive_more::Display,
+    derive_more::From,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -661,9 +661,9 @@ impl Owner {
 
     /// Convert this owner into an address owner if it is one, or return `None`
     /// otherwise
-    pub fn as_address_opt(&self) -> Option<Arc<Address>> {
+    pub fn as_opt_address(&self) -> Option<Arc<Address>> {
         self.0
-            .as_address_opt()
+            .as_opt_address()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -676,9 +676,9 @@ impl Owner {
 
     /// Convert this owner into an object owner if it is one, or return `None`
     /// otherwise
-    pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
+    pub fn as_opt_object(&self) -> Option<Arc<ObjectId>> {
         self.0
-            .as_object_opt()
+            .as_opt_object()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -691,9 +691,9 @@ impl Owner {
 
     /// Convert this owner into a shared owner if it is one, or return `None`
     /// otherwise
-    pub fn as_shared_opt(&self) -> Option<Arc<Version>> {
+    pub fn as_opt_shared(&self) -> Option<Arc<Version>> {
         self.0
-            .as_shared_opt()
+            .as_opt_shared()
             .copied()
             .map(Into::into)
             .map(Arc::new)
@@ -712,7 +712,7 @@ impl Owner {
 
 /// Type of an IOTA object
 #[derive(
-    Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::From, derive_more::Display, uniffi::Object,
+    Debug, derive_more::Display, derive_more::From, Eq, Ord, PartialEq, PartialOrd, uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq)]
 pub struct ObjectType(pub iota_sdk::types::ObjectType);
@@ -741,9 +741,9 @@ impl ObjectType {
         self.0.as_struct().clone().into()
     }
 
-    pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
+    pub fn as_opt_struct(&self) -> Option<Arc<StructTag>> {
         self.0
-            .as_struct_opt()
+            .as_opt_struct()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -762,7 +762,7 @@ impl ObjectType {
 /// ```text
 /// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct GenesisObject(pub iota_sdk::types::GenesisObject);
 
