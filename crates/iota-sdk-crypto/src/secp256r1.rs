@@ -2,19 +2,22 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use fastcrypto::{
+    secp256r1::{
+        Secp256r1KeyPair, Secp256r1PublicKey as FcSecp256r1PublicKey,
+        Secp256r1Signature as FcSecp256r1Signature,
+    },
+    traits::{KeyPair as _, Signer as _, ToFromBytes as _, VerifyingKey as _},
+};
 use iota_types::{
     Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
-};
-use p256::{
-    ecdsa::{SigningKey, VerifyingKey},
-    elliptic_curve::group::GroupEncoding,
 };
 use signature::{Signer, Verifier};
 
 use crate::SignatureError;
 
 #[derive(Clone, Eq, PartialEq)]
-pub struct Secp256r1PrivateKey(SigningKey);
+pub struct Secp256r1PrivateKey([u8; Self::LENGTH]);
 
 impl std::fmt::Debug for Secp256r1PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -42,20 +45,32 @@ impl Secp256r1PrivateKey {
     pub const LENGTH: usize = 32;
 
     pub fn new(bytes: [u8; Self::LENGTH]) -> Self {
-        Self(SigningKey::from_bytes(&bytes.into()).unwrap())
+        // Validate that the bytes form a well-formed secp256r1 private key.
+        Secp256r1KeyPair::from_bytes(&bytes).expect("invalid secp256r1 private key");
+        Self(bytes)
     }
 
     pub fn scheme(&self) -> SignatureScheme {
         SignatureScheme::Secp256r1
     }
 
+    /// Reconstruct the fastcrypto keypair, which performs all signing.
+    fn keypair(&self) -> Secp256r1KeyPair {
+        Secp256r1KeyPair::from_bytes(&self.0).expect("validated on construction")
+    }
+
     pub fn verifying_key(&self) -> Secp256r1VerifyingKey {
-        let verifying_key = self.0.verifying_key();
-        Secp256r1VerifyingKey(*verifying_key)
+        Secp256r1VerifyingKey(self.keypair().public().clone())
     }
 
     pub fn public_key(&self) -> Secp256r1PublicKey {
-        Secp256r1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().into())
+        Secp256r1PublicKey::new(
+            self.keypair()
+                .public()
+                .as_ref()
+                .try_into()
+                .expect("secp256r1 public key is 33 bytes"),
+        )
     }
 
     pub fn generate<R>(mut rng: R) -> Self
@@ -73,7 +88,7 @@ impl Secp256r1PrivateKey {
     /// format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
-            .map(Self)
+            .map(Self::from_p256)
             .map_err(SignatureError::from_source)
     }
 
@@ -83,7 +98,7 @@ impl Secp256r1PrivateKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use p256::pkcs8::EncodePrivateKey;
 
-        self.0
+        self.as_p256()?
             .to_pkcs8_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.as_bytes().to_owned())
@@ -94,7 +109,7 @@ impl Secp256r1PrivateKey {
     /// Deserialize PKCS#8-encoded private key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
-            .map(Self)
+            .map(Self::from_p256)
             .map_err(SignatureError::from_source)
     }
 
@@ -104,15 +119,22 @@ impl Secp256r1PrivateKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
-        self.0
+        self.as_p256()?
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
     }
 
     #[cfg(feature = "pem")]
-    pub(crate) fn from_p256(private_key: SigningKey) -> Self {
-        Self(private_key)
+    pub(crate) fn from_p256(private_key: p256::ecdsa::SigningKey) -> Self {
+        Self::new(private_key.to_bytes().into())
+    }
+
+    /// Re-expose the raw private key through p256, used only as a PKCS#8/PEM
+    /// codec (signing itself always goes through fastcrypto).
+    #[cfg(feature = "pem")]
+    fn as_p256(&self) -> Result<p256::ecdsa::SigningKey, SignatureError> {
+        p256::ecdsa::SigningKey::from_slice(&self.0).map_err(SignatureError::from_source)
     }
 }
 
@@ -122,7 +144,7 @@ impl crate::ToFromBytes for Secp256r1PrivateKey {
 
     /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Self::ByteArray {
-        self.0.to_bytes().into()
+        self.0
     }
 
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
@@ -186,8 +208,14 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
 
 impl Signer<Secp256r1Signature> for Secp256r1PrivateKey {
     fn try_sign(&self, message: &[u8]) -> Result<Secp256r1Signature, SignatureError> {
-        let signature: p256::ecdsa::Signature = self.0.try_sign(message)?;
-        Ok(Secp256r1Signature::new(signature.to_bytes().into()))
+        // fastcrypto signs with SHA-256 and normalizes the signature to low-S.
+        let signature: FcSecp256r1Signature = self.keypair().sign(message);
+        Ok(Secp256r1Signature::new(
+            signature
+                .as_ref()
+                .try_into()
+                .expect("secp256r1 signature is 64 bytes"),
+        ))
     }
 }
 
@@ -209,15 +237,22 @@ impl Signer<UserSignature> for Secp256r1PrivateKey {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Secp256r1VerifyingKey(VerifyingKey);
+pub struct Secp256r1VerifyingKey(FcSecp256r1PublicKey);
 
 impl Secp256r1VerifyingKey {
     pub fn new(public_key: &Secp256r1PublicKey) -> Result<Self, SignatureError> {
-        VerifyingKey::try_from(public_key.inner().as_ref()).map(Self)
+        FcSecp256r1PublicKey::from_bytes(public_key.inner().as_ref())
+            .map(Self)
+            .map_err(SignatureError::from_source)
     }
 
     pub fn public_key(&self) -> Secp256r1PublicKey {
-        Secp256r1PublicKey::new(self.0.as_ref().to_bytes().into())
+        Secp256r1PublicKey::new(
+            self.0
+                .as_ref()
+                .try_into()
+                .expect("secp256r1 public key is 33 bytes"),
+        )
     }
 
     #[cfg(feature = "pem")]
@@ -225,7 +260,7 @@ impl Secp256r1VerifyingKey {
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePublicKey::from_public_key_der(bytes)
-            .map(Self)
+            .map(Self::from_p256)
             .map_err(SignatureError::from_source)
     }
 
@@ -235,7 +270,7 @@ impl Secp256r1VerifyingKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.0
+        self.as_p256()?
             .to_public_key_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.into_vec())
@@ -246,7 +281,7 @@ impl Secp256r1VerifyingKey {
     /// Deserialize public key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePublicKey::from_public_key_pem(s)
-            .map(Self)
+            .map(Self::from_p256)
             .map_err(SignatureError::from_source)
     }
 
@@ -256,21 +291,37 @@ impl Secp256r1VerifyingKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.0
+        self.as_p256()?
             .to_public_key_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
     }
 
     #[cfg(feature = "pem")]
-    pub(crate) fn from_p256(verifying_key: VerifyingKey) -> Self {
-        Self(verifying_key)
+    pub(crate) fn from_p256(verifying_key: p256::ecdsa::VerifyingKey) -> Self {
+        let compressed = verifying_key.to_encoded_point(true);
+        Self(
+            FcSecp256r1PublicKey::from_bytes(compressed.as_bytes())
+                .expect("p256 public key is a valid secp256r1 point"),
+        )
+    }
+
+    /// Re-expose the public key through p256, used only as a PKCS#8/PEM codec
+    /// (verification itself always goes through fastcrypto).
+    #[cfg(feature = "pem")]
+    fn as_p256(&self) -> Result<p256::ecdsa::VerifyingKey, SignatureError> {
+        p256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
+            .map_err(SignatureError::from_source)
     }
 }
 
 impl Verifier<Secp256r1Signature> for Secp256r1VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Secp256r1Signature) -> Result<(), SignatureError> {
-        let signature = p256::ecdsa::Signature::from_bytes(signature.inner().into())?;
-        self.0.verify(message, &signature)
+        // fastcrypto hashes with SHA-256 and rejects high-S signatures.
+        let signature = FcSecp256r1Signature::from_bytes(signature.inner())
+            .map_err(SignatureError::from_source)?;
+        self.0
+            .verify(message, &signature)
+            .map_err(SignatureError::from_source)
     }
 }
 

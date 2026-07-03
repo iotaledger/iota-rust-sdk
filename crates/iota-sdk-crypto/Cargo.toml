@@ -26,12 +26,17 @@ rustdoc-args = [
 
 [features]
 default = []
-ed25519 = ["dep:ed25519-dalek", "dep:rand_core"]
-secp256r1 = ["dep:p256", "dep:rand_core"]
+ed25519 = ["dep:fastcrypto", "dep:rand_core"]
+secp256r1 = ["dep:fastcrypto", "dep:rand_core"]
 passkey = ["secp256r1", "dep:sha2"]
 secp256k1 = ["dep:k256", "dep:rand_core", "signature/std"]
 bech32 = ["dep:bech32", "signature/std"]
+# PKCS#8/PEM support. fastcrypto has no PKCS#8 codec, so ed25519-dalek and p256
+# are pulled in purely as encoders/decoders here; the actual signing and
+# verification always go through fastcrypto.
 pem = [
+  "dep:ed25519-dalek",
+  "dep:p256",
   "dep:pem-rfc7468",
   "dep:pkcs8",
   "ed25519-dalek?/pem",
@@ -53,11 +58,13 @@ bip32 = { version = "0.5.3", optional = true }
 bip39 = { version = "2.0.0", features = ["rand"], optional = true }
 # bls12381 support
 blst = { version = "0.3.13", optional = true }
-# ed25519 support
+# ed25519 PKCS#8/PEM codec (see the `pem` feature)
 ed25519-dalek = { version = "2.1.1", optional = true }
+# ed25519 and secp256r1 signing/verification backend
+fastcrypto = { version = "0.1.10", optional = true }
 # secp256k1 support
 k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"], optional = true }
-# secp256r1 support
+# secp256r1 PKCS#8/PEM codec (see the `pem` feature)
 p256 = { version = "0.13.2", default-features = false, features = ["ecdsa", "std"], optional = true }
 # pkcs8 der and pem support
 pem-rfc7468 = { version = "0.7", optional = true, features = ["std"] }
@@ -73,6 +80,10 @@ thiserror.workspace = true
 
 # internal dependencies
 iota-types = { workspace = true, features = ["hash", "serde"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# On wasm32 fastcrypto needs getrandom's "js" backend, enabled by its "wasm" feature.
+fastcrypto = { version = "0.1.10", optional = true, features = ["wasm"] }
 
 [dev-dependencies]
 # external dependencies
