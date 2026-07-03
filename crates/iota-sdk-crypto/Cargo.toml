@@ -61,7 +61,7 @@ blst = { version = "0.3.13", optional = true }
 # ed25519 PKCS#8/PEM codec (see the `pem` feature)
 ed25519-dalek = { version = "2.1.1", optional = true }
 # ed25519 and secp256r1 signing/verification backend
-fastcrypto = { version = "0.1.10", optional = true }
+fastcrypto = { version = "=0.1.11", optional = true }
 # secp256k1 support
 k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"], optional = true }
 # secp256r1 PKCS#8/PEM codec (see the `pem` feature)
@@ -83,7 +83,7 @@ iota-types = { workspace = true, features = ["hash", "serde"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # On wasm32 fastcrypto needs getrandom's "js" backend, enabled by its "wasm" feature.
-fastcrypto = { version = "0.1.10", optional = true, features = ["wasm"] }
+fastcrypto = { version = "=0.1.11", optional = true, features = ["wasm"] }
 
 [dev-dependencies]
 # external dependencies

@@ -122,7 +122,8 @@ impl Ed25519PrivateKey {
     }
 
     /// Re-expose the raw private key through ed25519-dalek, used only as a
-    /// PKCS#8/PEM codec (signing itself always goes through fastcrypto).
+    /// PKCS#8/PEM codec. Don't sign with the returned key — use this type's
+    /// `Signer` impl (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn as_dalek(&self) -> ed25519_dalek::SigningKey {
         ed25519_dalek::SigningKey::from_bytes(&self.0)
@@ -305,8 +306,8 @@ impl Ed25519VerifyingKey {
     }
 
     /// Re-expose the public key through ed25519-dalek, used only as a
-    /// PKCS#8/PEM codec (verification itself always goes through
-    /// fastcrypto).
+    /// PKCS#8/PEM codec. Don't verify with the returned key — use this type's
+    /// `Verifier` impl instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn as_dalek(&self) -> Result<ed25519_dalek::VerifyingKey, SignatureError> {
         ed25519_dalek::VerifyingKey::from_bytes(

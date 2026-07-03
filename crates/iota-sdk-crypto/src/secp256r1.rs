@@ -131,7 +131,8 @@ impl Secp256r1PrivateKey {
     }
 
     /// Re-expose the raw private key through p256, used only as a PKCS#8/PEM
-    /// codec (signing itself always goes through fastcrypto).
+    /// codec. Don't sign with the returned key — use this type's `Signer` impl
+    /// (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn as_p256(&self) -> Result<p256::ecdsa::SigningKey, SignatureError> {
         p256::ecdsa::SigningKey::from_slice(&self.0).map_err(SignatureError::from_source)
@@ -305,8 +306,9 @@ impl Secp256r1VerifyingKey {
         )
     }
 
-    /// Re-expose the public key through p256, used only as a PKCS#8/PEM codec
-    /// (verification itself always goes through fastcrypto).
+    /// Re-expose the public key through p256, used only as a PKCS#8/PEM codec.
+    /// Don't verify with the returned key — use this type's `Verifier` impl
+    /// instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn as_p256(&self) -> Result<p256::ecdsa::VerifyingKey, SignatureError> {
         p256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
