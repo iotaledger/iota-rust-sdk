@@ -33,6 +33,12 @@ gen_python() {
     rm -rf "$OUT_DIR/python"
     mkdir -p "$OUT_DIR/python/docs"
     pydoc-markdown "$SCRIPT_DIR/pydoc-markdown.yml"
+    python3 "$SCRIPT_DIR/split_python_api.py" \
+        "$OUT_DIR/python/docs/python/iota_sdk.md" \
+        bindings/python/lib/iota_sdk.py \
+        "$OUT_DIR/python/docs/python"
+    rm -f "$OUT_DIR/python/docs/python/iota_sdk.md" \
+        "$OUT_DIR/python/docs/python/sidebar.json"
     package python
 }
 

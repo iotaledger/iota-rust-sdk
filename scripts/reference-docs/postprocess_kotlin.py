@@ -77,6 +77,17 @@ def rewrite_links(text: str) -> str:
     return re.sub(r"\[([^\]]*)\]\(\)", r"\1", text)
 
 
+def strip_breadcrumbs(text: str) -> str:
+    """Drop Dokka's leading ``//[module](...)`` breadcrumb line; the site
+    renders its own breadcrumbs."""
+    lines = text.splitlines()
+    if lines and lines[0].startswith("//["):
+        lines = lines[1:]
+        while lines and not lines[0].strip():
+            lines = lines[1:]
+    return "\n".join(lines) + "\n"
+
+
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     if dst.exists():
@@ -85,7 +96,7 @@ def main():
         rel = path.relative_to(src)
         out_path = dst / decode_path(str(rel))
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(rewrite_links(path.read_text()))
+        out_path.write_text(strip_breadcrumbs(rewrite_links(path.read_text())))
 
 
 if __name__ == "__main__":
