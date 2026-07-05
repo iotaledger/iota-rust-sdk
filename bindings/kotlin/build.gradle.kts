@@ -74,10 +74,10 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
 
 // lib/ is both a Kotlin source dir and a resources dir, so the sources jar
 // would see the native library twice; it does not belong in a sources
-// artifact at all.
+// artifact at all. configureEach also covers the task when the publish
+// plugin creates it eagerly, before a whenTaskAdded hook would register.
 tasks.withType<Jar>().configureEach {
     if (name == "sourcesJar") {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
 }
@@ -180,11 +180,5 @@ signing {
     if (signingKeyEncoded.isPresent && signingPassword.isPresent) {
         val signingKey = String(Base64.getDecoder().decode(signingKeyEncoded.get()))
         useInMemoryPgpKeys(signingKey, signingPassword.get())
-    }
-}
-
-tasks.whenTaskAdded {
-    if (name == "sourcesJar") {
-        (this as Jar).exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
 }

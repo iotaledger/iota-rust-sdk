@@ -72,6 +72,9 @@ def main():
                 active = functions[-1][1]
         active.append(line)
 
+    if not classes or not functions:
+        sys.exit(f"no class or function sections found in {src}")
+
     classes.sort(key=lambda c: c[0].lower())
     functions.sort(key=lambda f: f[0].lower())
 

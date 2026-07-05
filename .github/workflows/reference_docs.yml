@@ -61,6 +61,7 @@ jobs:
         with:
           distribution: "oracle"
           java-version: "21"
+          cache: "gradle"
 
       - name: Install Swift
         if: matrix.language == 'swift'
