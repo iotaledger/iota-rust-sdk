@@ -61,16 +61,16 @@ def rewrite_links(text: str) -> str:
         target = match.group(1)
         if "://" in target or target.startswith("#") or target.startswith("mailto:"):
             return match.group(0)
+        # Anchors are Dokka-internal numeric IDs that don't exist in the
+        # GFM output, so they are always dropped.
         path = target.split("#", 1)[0]
-        anchor = target.split("#", 1)[1] if "#" in target else None
         # Links to dropped member pages keep their text only (the target is
         # emptied here and the brackets removed in a second pass). Only links
         # whose basename is exactly index.md survive — endswith would wrongly
         # match member pages like state-index.md.
         if path.split("/")[-1] != "index.md":
             return "]()"
-        decoded = decode_path(path)
-        return f"]({decoded}#{anchor})" if anchor else f"]({decoded})"
+        return f"]({decode_path(path)})"
 
     text = LINK_RE.sub(repl, text)
     # [text]() -> text
