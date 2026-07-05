@@ -67,6 +67,10 @@ gen_csharp() {
     dll="$(find bindings/csharp/src/IotaSdk/bin/Release -name IotaSdk.dll | head -1)"
     xmldoc2md "$dll" --output "$OUT_DIR/csharp/docs/csharp" \
         --platform docusaurus --member-accessibility-level public
+    # Drop UniFFI plumbing pages and their index entries.
+    find "$OUT_DIR/csharp/docs/csharp" -name '*._uniffilib.*' -delete
+    sed -i.bak '/_uniffilib/d' "$OUT_DIR/csharp/docs/csharp/index.md" &&
+        rm -f "$OUT_DIR/csharp/docs/csharp/index.md.bak"
     package csharp
 }
 
