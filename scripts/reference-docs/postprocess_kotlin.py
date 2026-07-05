@@ -9,6 +9,12 @@ produces unreadable URLs and sidebar labels, so this script renames
 every path segment back to its real name and rewrites all relative
 links accordingly.
 
+Dokka also emits one page per member (thousands of files for this
+module), which makes the Docusaurus build run out of memory. Each
+type's ``index.md`` already lists every member with its signature and
+documentation, so only the ``index.md`` pages are kept and links to the
+dropped member pages are replaced by their text.
+
 Usage: postprocess_kotlin.py <dokka-gfm-dir> <output-dir>
 """
 
@@ -55,19 +61,25 @@ def rewrite_links(text: str) -> str:
         target = match.group(1)
         if "://" in target or target.startswith("#") or target.startswith("mailto:"):
             return match.group(0)
-        if "#" in target:
-            path, anchor = target.split("#", 1)
-            return f"]({decode_path(path)}#{anchor})"
-        return f"]({decode_path(target)})"
+        path = target.split("#", 1)[0]
+        anchor = target.split("#", 1)[1] if "#" in target else None
+        # Links to dropped member pages keep their text only. A FULL_LINK_RE
+        # pass removes the brackets afterwards; here the target is emptied.
+        if not path.endswith("index.md"):
+            return "]()"
+        decoded = decode_path(path)
+        return f"]({decoded}#{anchor})" if anchor else f"]({decoded})"
 
-    return LINK_RE.sub(repl, text)
+    text = LINK_RE.sub(repl, text)
+    # [text]() -> text
+    return re.sub(r"\[([^\]]*)\]\(\)", r"\1", text)
 
 
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     if dst.exists():
         shutil.rmtree(dst)
-    for path in sorted(src.rglob("*.md")):
+    for path in sorted(src.rglob("index.md")):
         rel = path.relative_to(src)
         out_path = dst / decode_path(str(rel))
         out_path.parent.mkdir(parents=True, exist_ok=True)
