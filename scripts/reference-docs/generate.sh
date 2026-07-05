@@ -12,7 +12,7 @@
 #   kotlin: JDK 21
 #   csharp: .NET SDK 8, xmldoc2md (dotnet tool install -g XMLDoc2Markdown)
 #           uniffi-bindgen-cs     (make install-uniffi-bindgen-cs)
-#   swift:  docker (swiftdoc/swift-doc image)
+#   swift:  Swift 6 toolchain
 #
 # Usage: scripts/reference-docs/generate.sh [python|go|kotlin|csharp|swift|all]
 set -euo pipefail
@@ -65,7 +65,8 @@ gen_csharp() {
     dotnet build bindings/csharp/src/IotaSdk -c Release -p:GenerateDocumentationFile=true
     local dll
     dll="$(find bindings/csharp/src/IotaSdk/bin/Release -name IotaSdk.dll | head -1)"
-    xmldoc2md "$dll" "$OUT_DIR/csharp/docs/csharp" --index-page-name index
+    xmldoc2md "$dll" --output "$OUT_DIR/csharp/docs/csharp" \
+        --platform docusaurus --member-accessibility-level public
     package csharp
 }
 
@@ -73,15 +74,10 @@ gen_swift() {
     make swift
     rm -rf "$OUT_DIR/swift"
     mkdir -p "$OUT_DIR/swift/docs"
-    docker run --rm -v "$REPO_ROOT/bindings/swift:/src" swiftdoc/swift-doc:latest \
-        generate /src/Sources/IotaSDK --module-name IotaSDK \
-        --format commonmark --output /src/build/reference-docs
-    # The container writes as root; copy out and normalize the entry page.
-    cp -R bindings/swift/build/reference-docs/. "$OUT_DIR/swift/docs/swift/"
-    if [ -f "$OUT_DIR/swift/docs/swift/Home.md" ]; then
-        mv "$OUT_DIR/swift/docs/swift/Home.md" "$OUT_DIR/swift/docs/swift/index.md"
-    fi
-    rm -f "$OUT_DIR/swift/docs/swift/_Sidebar.md" "$OUT_DIR/swift/docs/swift/_Footer.md"
+    (cd bindings/swift && swift package dump-symbol-graph)
+    local graph
+    graph="$(find bindings/swift/.build -name 'IotaSDK.symbols.json' | head -1)"
+    python3 "$SCRIPT_DIR/symbolgraph_to_md.py" "$graph" "$OUT_DIR/swift/docs/swift"
     package swift
 }
 
