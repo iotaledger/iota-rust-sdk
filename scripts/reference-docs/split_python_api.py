@@ -9,8 +9,8 @@ Classes are delimited by ``## <Name> Objects`` headings. Module-level
 functions render exactly like methods, so the generated Python source
 is consulted to tell them apart: a ``#### name`` block is a module
 function iff the name is a top-level ``def`` in the module and not also
-a method of any class (a colliding name stays with its class, which
-only costs the function its copy on the Functions page).
+a method of any class (a colliding name stays in the preceding block,
+which only costs the function its copy on the Functions page).
 
 Usage: split_python_api.py <iota_sdk.md> <iota_sdk.py> <output-dir>
 """
@@ -72,8 +72,8 @@ def main():
                 active = functions[-1][1]
         active.append(line)
 
-    if not classes or not functions:
-        sys.exit(f"no class or function sections found in {src}")
+    if not classes:
+        sys.exit(f"no class sections found in {src}")
 
     classes.sort(key=lambda c: c[0].lower())
     functions.sort(key=lambda f: f[0].lower())
