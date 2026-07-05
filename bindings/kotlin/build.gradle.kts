@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.serialization") version "2.2.21"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
+    id("org.jetbrains.dokka") version "1.9.20"
     application
     signing
 }
@@ -63,6 +64,12 @@ tasks.register<JavaExec>("example") {
             "${className}Kt"
         }
     )
+}
+
+// API reference generation (scripts/reference-docs/generate.sh): document
+// only the generated bindings under lib/, not the examples.
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    dokkaSourceSets { named("main") { sourceRoots.setFrom(file("lib")) } }
 }
 
 sourceSets {

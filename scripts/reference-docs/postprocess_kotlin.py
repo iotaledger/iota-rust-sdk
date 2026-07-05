@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Make Dokka's GFM output consumable by Docusaurus.
+
+Dokka encodes uppercase letters in file and directory names as a dash
+followed by the lowercase letter (``TransactionBuilder`` becomes
+``-transaction-builder``) and names the default package ``[root]``.
+Square brackets are invalid in Docusaurus routes and the dash encoding
+produces unreadable URLs and sidebar labels, so this script renames
+every path segment back to its real name and rewrites all relative
+links accordingly.
+
+Usage: postprocess_kotlin.py <dokka-gfm-dir> <output-dir>
+"""
+
+import re
+import shutil
+import sys
+from pathlib import Path
+
+LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
+
+
+def decode_segment(segment: str) -> str:
+    """Reverse Dokka's dash-encoding of uppercase letters in one path segment."""
+    if segment == "[root]":
+        return "root"
+    # Module directories keep their literal name (Dokka only dash-encodes
+    # class/member names, and the module name contains a real dash).
+    if segment in ("iota-sdk", ".", ".."):
+        return segment
+    out = []
+    upper_next = False
+    for ch in segment:
+        if ch == "-":
+            if upper_next:
+                # A literal dash was encoded as "--".
+                out.append("-")
+                upper_next = False
+            else:
+                upper_next = True
+        elif upper_next:
+            out.append(ch.upper())
+            upper_next = False
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def decode_path(path: str) -> str:
+    return "/".join(decode_segment(seg) for seg in path.split("/"))
+
+
+def rewrite_links(text: str) -> str:
+    def repl(match):
+        target = match.group(1)
+        if "://" in target or target.startswith("#") or target.startswith("mailto:"):
+            return match.group(0)
+        if "#" in target:
+            path, anchor = target.split("#", 1)
+            return f"]({decode_path(path)}#{anchor})"
+        return f"]({decode_path(target)})"
+
+    return LINK_RE.sub(repl, text)
+
+
+def main():
+    src, dst = Path(sys.argv[1]), Path(sys.argv[2])
+    if dst.exists():
+        shutil.rmtree(dst)
+    for path in sorted(src.rglob("*.md")):
+        rel = path.relative_to(src)
+        out_path = dst / decode_path(str(rel))
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(rewrite_links(path.read_text()))
+
+
+if __name__ == "__main__":
+    main()
