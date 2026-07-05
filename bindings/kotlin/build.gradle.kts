@@ -72,6 +72,16 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
     dokkaSourceSets { named("main") { sourceRoots.setFrom(file("lib")) } }
 }
 
+// lib/ is both a Kotlin source dir and a resources dir, so the sources jar
+// would see the native library twice; it does not belong in a sources
+// artifact at all.
+tasks.withType<Jar>().configureEach {
+    if (name == "sourcesJar") {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        exclude("**/*.so", "**/*.dylib", "**/*.dll")
+    }
+}
+
 sourceSets {
     main {
         kotlin {
