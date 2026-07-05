@@ -10,14 +10,13 @@ Usage: symbolgraph_to_md.py <Module.symbols.json> <output-dir>
 """
 
 import json
-import re
 import sys
 from collections import defaultdict
 from pathlib import Path
 
-MAX_PAGE_LINES = 6000
+import common
 
-PLUMBING_RE = re.compile(r"^(FfiConverter|FfiDestroyer|RustBuffer|RustCallStatus|Uniffi|uniffi)")
+PLUMBING_RE = common.PLUMBING_RE
 
 # Top-level kinds and the page group they render into.
 KIND_GROUPS = {
@@ -90,33 +89,6 @@ def render_type(symbol, members):
     return out
 
 
-def paginate(rendered, stem, label):
-    """Split (name, lines) chunks into pages under MAX_PAGE_LINES."""
-    pages, current, count = [], [], 0
-    for name, lines in rendered:
-        if current and count + len(lines) > MAX_PAGE_LINES:
-            pages.append(current)
-            current, count = [], 0
-        current.append((name, lines))
-        count += len(lines)
-    if current:
-        pages.append(current)
-
-    out = []
-    for i, page in enumerate(pages):
-        first, last = page[0][0][:1].upper(), page[-1][0][:1].upper()
-        letters = first if first == last else f"{first}–{last}"
-        if len(pages) == 1:
-            filename, page_title = f"{stem}.md", label
-        else:
-            filename, page_title = f"{stem}-{i + 1:02d}.md", f"{label} ({letters})"
-        body = []
-        for _name, lines in page:
-            body += lines
-        out.append((filename, page_title, body))
-    return out
-
-
 def main():
     src, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -166,16 +138,19 @@ def main():
             )
             for symbol in group
         ]
-        pages += paginate(rendered, stem, label)
+        pages += common.pack(
+            rendered, stem, label, lambda s: s[0], lambda s: len(s[1])
+        )
 
-    for filename, page_title, body in pages:
-        front = f"---\ntitle: {page_title}\nsidebar_label: {page_title}\n---\n\n"
-        (out_dir / filename).write_text(front + "\n".join(body) + "\n")
+    for filename, page_title, page_sections in pages:
+        body = "\n".join(line for _name, lines in page_sections for line in lines)
+        common.write_page(out_dir / filename, page_title, body)
 
-    toc = "\n".join(f"- [{t}]({f})" for f, t, _b in pages)
-    (out_dir / "index.md").write_text(
-        "---\ntitle: Swift API\nsidebar_label: Overview\nsidebar_position: 1\n---\n\n"
-        f"API reference for the `{module}` Swift module.\n\n## Pages\n\n{toc}\n"
+    common.write_index(
+        out_dir / "index.md",
+        "Swift API",
+        f"API reference for the `{module}` Swift module.",
+        pages,
     )
 
 

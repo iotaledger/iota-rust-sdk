@@ -5,14 +5,14 @@ name: Reference Docs
 # publishes the tarballs as assets of the `docs-references` release, from
 # where the docs build downloads them.
 #
-# Pull requests touching the generation pipeline or the bindings only
-# validate that generation succeeds; publishing happens on pushes to
-# develop and on manual dispatch.
+# Pull requests touching the generation pipeline only validate that
+# generation succeeds; publishing happens on pushes to develop and on
+# manual dispatch.
 
 on:
   workflow_dispatch:
   push:
-    branches: [develop, "claude/iota-rust-sdk-docs-zksew0"]
+    branches: [develop]
     paths:
       - ".github/workflows/reference_docs.yml"
       - "scripts/reference-docs/**"
@@ -39,6 +39,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          key: reference-docs-${{ matrix.language }}
 
       - name: Install pydoc-markdown
         if: matrix.language == 'python'
@@ -87,8 +91,6 @@ jobs:
           if-no-files-found: error
 
   publish:
-    # Publish from develop and manual runs; the extra branch is the
-    # bootstrap for the first upload and is removed after merge.
     if: github.event_name != 'pull_request'
     needs: generate
     runs-on: ubuntu-latest

@@ -7,117 +7,84 @@ an index page, alphabetically grouped class pages, and function pages.
 
 Classes are delimited by ``## <Name> Objects`` headings. Module-level
 functions render exactly like methods, so the generated Python source
-is consulted to tell them apart: every ``#### name`` matching a
-top-level ``def`` in the module, found after the last class's methods,
-starts the functions part.
+is consulted to tell them apart: a ``#### name`` block is a module
+function iff the name is a top-level ``def`` in the module and not also
+a method of any class (a colliding name stays with its class, which
+only costs the function its copy on the Functions page).
 
 Usage: split_python_api.py <iota_sdk.md> <iota_sdk.py> <output-dir>
 """
 
 import ast
-import re
 import sys
 from pathlib import Path
 
-MAX_PAGE_LINES = 6000
+import common
 
-CLASS_RE = re.compile(r"^## (.+) Objects$")
-MEMBER_RE = re.compile(r"^#### (.+)$")
+CLASS_MARKER = " Objects"
 
 
-def pack(sections, page_stem, label):
-    """Greedily pack (name, lines) sections into letter-labeled pages."""
-    pages, current, count = [], [], 0
-    for section in sections:
-        if current and count + len(section[1]) > MAX_PAGE_LINES:
-            pages.append(current)
-            current, count = [], 0
-        current.append(section)
-        count += len(section[1])
-    if current:
-        pages.append(current)
-
-    out = []
-    for i, page in enumerate(pages):
-        first, last = page[0][0][:1].upper(), page[-1][0][:1].upper()
-        letters = first if first == last else f"{first}–{last}"
-        if len(pages) == 1:
-            filename, title = f"{page_stem}.md", label
-        else:
-            filename, title = f"{page_stem}-{i + 1:02d}.md", f"{label} ({letters})"
-        out.append((filename, title, [l for _n, lines in page for l in lines]))
-    return out
+def module_function_names(module_py: Path) -> set:
+    tree = ast.parse(module_py.read_text())
+    top_level = {
+        node.name
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    methods = {
+        member.name
+        for node in tree.body
+        if isinstance(node, ast.ClassDef)
+        for member in node.body
+        if isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    return top_level - methods
 
 
 def main():
     src, module_py, out_dir = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    module_functions = {
-        node.name
-        for node in ast.parse(module_py.read_text()).body
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-    }
+    module_functions = module_function_names(module_py)
 
     lines = src.read_text().splitlines()
     # Drop the pydoc-markdown front matter; each page gets its own.
-    if lines and lines[0] == "---":
+    if lines and lines[0] == "---" and "---" in lines[1:]:
         lines = lines[lines.index("---", 1) + 1 :]
 
-    preamble, classes = [], []
-    current = None  # (name, lines) of the class being collected
-    function_lines = []
-    in_functions = False
+    preamble = []
+    classes = []  # (name, lines)
+    functions = []  # (name, lines)
+    # Lines are appended to the most recently opened block: a class block
+    # opens on `## X Objects`, a function block on a `#### name` whose name
+    # is a module-level function. Everything else follows its predecessor,
+    # so a class section stays intact even after the first module function.
+    active = preamble
     for line in lines:
-        class_match = CLASS_RE.match(line)
-        member_match = MEMBER_RE.match(line)
-        if in_functions:
-            function_lines.append(line)
-            continue
-        if class_match:
-            current = (class_match.group(1).replace("\\", ""), [line])
-            classes.append(current)
-            continue
-        if member_match and member_match.group(1).replace("\\", "") in module_functions:
-            in_functions = True
-            function_lines.append(line)
-            continue
-        if current is None:
-            preamble.append(line)
-        else:
-            current[1].append(line)
+        if line.startswith("## ") and line.endswith(CLASS_MARKER):
+            name = line[3 : -len(CLASS_MARKER)].replace("\\", "")
+            classes.append((name, []))
+            active = classes[-1][1]
+        elif line.startswith("#### "):
+            name = line[5:].replace("\\", "")
+            if name in module_functions:
+                functions.append((name, []))
+                active = functions[-1][1]
+        active.append(line)
 
     classes.sort(key=lambda c: c[0].lower())
-    pages = pack(classes, "classes", "Classes")
-    if function_lines:
-        functions = []
-        name = "functions"
-        block = []
-        for line in function_lines:
-            member_match = MEMBER_RE.match(line)
-            if member_match:
-                if block:
-                    functions.append((name, block))
-                name, block = member_match.group(1).replace("\\", ""), []
-            block.append(line)
-        if block:
-            functions.append((name, block))
-        functions.sort(key=lambda f: f[0].lower())
-        pages += pack(functions, "functions", "Functions")
+    functions.sort(key=lambda f: f[0].lower())
 
-    for filename, title, body in pages:
-        front = f"---\ntitle: {title}\nsidebar_label: {title}\n---\n\n"
-        (out_dir / filename).write_text(front + "\n".join(body).strip() + "\n")
+    name_of = lambda s: s[0]
+    size_of = lambda s: len(s[1])
+    pages = common.pack(classes, "classes", "Classes", name_of, size_of)
+    pages += common.pack(functions, "functions", "Functions", name_of, size_of)
 
-    toc = "\n".join(f"- [{title}]({filename})" for filename, title, _body in pages)
-    intro = "\n".join(preamble).strip()
-    (out_dir / "index.md").write_text(
-        "---\ntitle: Python API\nsidebar_label: Overview\nsidebar_position: 1\n---\n\n"
-        + (intro + "\n\n" if intro else "")
-        + "## Pages\n\n"
-        + toc
-        + "\n"
-    )
+    for filename, title, page_sections in pages:
+        body = "\n".join(line for _name, lines in page_sections for line in lines)
+        common.write_page(out_dir / filename, title, body)
+
+    common.write_index(out_dir / "index.md", "Python API", "\n".join(preamble), pages)
 
 
 if __name__ == "__main__":

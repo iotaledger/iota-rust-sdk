@@ -70,7 +70,11 @@ gen_csharp() {
     mkdir -p "$OUT_DIR/csharp/docs"
     dotnet build bindings/csharp/src/IotaSdk -c Release -p:GenerateDocumentationFile=true
     local dll
-    dll="$(find bindings/csharp/src/IotaSdk/bin/Release -name IotaSdk.dll | head -1)"
+    dll="$(find bindings/csharp/src/IotaSdk/bin/Release -name IotaSdk.dll -print -quit)"
+    if [ -z "$dll" ]; then
+        echo "IotaSdk.dll not found under bindings/csharp/src/IotaSdk/bin/Release" >&2
+        exit 1
+    fi
     xmldoc2md "$dll" --output "$OUT_DIR/csharp/docs/csharp" \
         --platform docusaurus --member-accessibility-level public
     # Drop UniFFI plumbing pages and their index entries.
@@ -86,7 +90,11 @@ gen_swift() {
     mkdir -p "$OUT_DIR/swift/docs"
     (cd bindings/swift && swift package dump-symbol-graph)
     local graph
-    graph="$(find bindings/swift/.build -name 'IotaSDK.symbols.json' | head -1)"
+    graph="$(find bindings/swift/.build -name 'IotaSDK.symbols.json' -print -quit)"
+    if [ -z "$graph" ]; then
+        echo "IotaSDK.symbols.json not found under bindings/swift/.build" >&2
+        exit 1
+    fi
     python3 "$SCRIPT_DIR/symbolgraph_to_md.py" "$graph" "$OUT_DIR/swift/docs/swift"
     package swift
 }

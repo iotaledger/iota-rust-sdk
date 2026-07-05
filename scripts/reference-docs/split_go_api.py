@@ -15,15 +15,15 @@ import re
 import sys
 from pathlib import Path
 
-# Upper bound per generated page. Pages are packed greedily with whole
-# sections, so a page can exceed this only if a single section does.
-MAX_PAGE_LINES = 6000
+import common
 
 ANCHOR_RE = re.compile(r'^<a name="([^"]+)"></a>(.*)$')
 HEADING_RE = re.compile(r"^(#{2,4}) (.+)$")
 # gomarkdoc link form: [text](<#anchor>) — also matches without angle brackets.
 LINK_RE = re.compile(r"\]\(<?#([A-Za-z0-9_.]+)>?\)")
 MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+
+PLUMBING_RE = re.compile(rf"^(func|type) \[?{common.PLUMBING_NAMES}")
 
 
 def plain_heading(heading_text: str) -> str:
@@ -89,33 +89,6 @@ def sort_key(section: Section) -> str:
     return text.lower()
 
 
-def pack(sections, page_stem, label):
-    """Greedily pack sections into pages, labeled by first-letter range."""
-    pages = []
-    current, current_lines = [], 0
-    for section in sections:
-        if current and current_lines + len(section.lines) > MAX_PAGE_LINES:
-            pages.append(current)
-            current, current_lines = [], 0
-        current.append(section)
-        current_lines += len(section.lines)
-    if current:
-        pages.append(current)
-
-    out = []
-    for i, page_sections in enumerate(pages):
-        first = sort_key(page_sections[0])[:1].upper()
-        last = sort_key(page_sections[-1])[:1].upper()
-        letters = first if first == last else f"{first}–{last}"
-        if len(pages) == 1:
-            filename, title = f"{page_stem}.md", label
-        else:
-            filename = f"{page_stem}-{i + 1:02d}.md"
-            title = f"{label} ({letters})"
-        out.append((filename, title, page_sections))
-    return out
-
-
 def main():
     src, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -124,10 +97,7 @@ def main():
     preamble, sections = parse_sections(lines)
 
     # Drop UniFFI plumbing that go users never call directly.
-    plumbing = re.compile(
-        r"^(func|type) \[?(FfiConverter|FfiDestroyer|RustBuffer|Uniffi|uniffi)"
-    )
-    sections = [s for s in sections if not plumbing.match(plain_heading(s.heading))]
+    sections = [s for s in sections if not PLUMBING_RE.match(plain_heading(s.heading))]
 
     variables = [s for s in sections if s.heading in ("Variables", "Constants")]
     functions = sorted(
@@ -135,11 +105,12 @@ def main():
     )
     types = sorted((s for s in sections if s.heading.startswith("type ")), key=sort_key)
 
+    section_size = lambda s: len(s.lines)
     pages = []
     if variables:
         pages.append(("variables.md", "Constants and Variables", variables))
-    pages += pack(functions, "functions", "Functions")
-    pages += pack(types, "types", "Types")
+    pages += common.pack(functions, "functions", "Functions", sort_key, section_size)
+    pages += common.pack(types, "types", "Types", sort_key, section_size)
 
     # Map every anchor to (page file, heading slug) for link rewriting.
     anchor_map = {}
@@ -161,45 +132,28 @@ def main():
             filename, slug = anchor_map[anchor]
             return f"]({filename}#{slug})"
         # Anchors gomarkdoc references but this script cannot resolve
-        # (e.g. into the dropped Index) fall back to a plain-text link
-        # target removal by keeping the closing bracket only.
+        # (e.g. into the dropped Index) degrade to plain text.
         return "]()"
 
-    def render(filename, title, page_sections):
+    def rewrite_links(text: str) -> str:
+        return common.strip_empty_links(LINK_RE.sub(rewrite, text))
+
+    for filename, title, page_sections in pages:
         body_lines = []
         for section in page_sections:
             body_lines.extend(section.lines)
             body_lines.append("")
-        body = "\n".join(body_lines)
-        body = LINK_RE.sub(rewrite, body)
-        # Drop links whose target could not be resolved: [text]() -> text
-        body = re.sub(r"\[([^\]]*)\]\(\)", r"\1", body)
-        front = f"---\ntitle: {title}\nsidebar_label: {title}\n---\n\n"
-        (out_dir / filename).write_text(front + body)
+        common.write_page(out_dir / filename, title, rewrite_links("\n".join(body_lines)))
 
-    for filename, title, page_sections in pages:
-        render(filename, title, page_sections)
-
-    # Index page: package preamble (minus gomarkdoc's own giant index)
-    # plus links to the generated pages.
-    intro = []
-    for line in preamble:
-        # The frontmatter title replaces the H1, and gomarkdoc's own
-        # "generated" comment is dropped.
-        if line.startswith("<!--") or line.startswith("# "):
-            continue
-        intro.append(line)
-    toc = "\n".join(
-        f"- [{title}]({filename})" for filename, title, _sections in pages
+    # Index page: package preamble (minus gomarkdoc's own H1, which the
+    # frontmatter title replaces, and its "generated" comment) plus links
+    # to the generated pages.
+    intro = "\n".join(
+        line
+        for line in preamble
+        if not line.startswith("<!--") and not line.startswith("# ")
     )
-    index = (
-        "---\ntitle: Go API\nsidebar_label: Overview\nsidebar_position: 1\n---\n\n"
-        + "\n".join(intro).strip()
-        + "\n\n## Pages\n\n"
-        + toc
-        + "\n"
-    )
-    (out_dir / "index.md").write_text(index)
+    common.write_index(out_dir / "index.md", "Go API", rewrite_links(intro), pages)
 
 
 if __name__ == "__main__":

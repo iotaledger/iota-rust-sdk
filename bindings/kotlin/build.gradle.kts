@@ -126,6 +126,16 @@ mavenPublishing {
     publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
 
+    // Keep the javadoc jar empty: with the Dokka plugin applied the default
+    // would switch to building it from dokkaHtml, putting Dokka analysis on
+    // the release path (Dokka is only used for the Reference Docs workflow).
+    configure(
+        com.vanniktech.maven.publish.KotlinJvm(
+            javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty(),
+            sourcesJar = true,
+        )
+    )
+
     coordinates("org.iota", "iota-sdk", version.toString())
 
     pom {

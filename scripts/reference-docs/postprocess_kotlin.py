@@ -23,16 +23,21 @@ import shutil
 import sys
 from pathlib import Path
 
+import common
+
 LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
+
+# Module directories keep their literal name (Dokka only dash-encodes
+# class/member names, and a module name may contain a real dash). Filled
+# in from the top-level directories of the Dokka output.
+module_dirs = set()
 
 
 def decode_segment(segment: str) -> str:
     """Reverse Dokka's dash-encoding of uppercase letters in one path segment."""
     if segment == "[root]":
         return "root"
-    # Module directories keep their literal name (Dokka only dash-encodes
-    # class/member names, and the module name contains a real dash).
-    if segment in ("iota-sdk", ".", ".."):
+    if segment in module_dirs:
         return segment
     out = []
     upper_next = False
@@ -72,9 +77,7 @@ def rewrite_links(text: str) -> str:
             return "]()"
         return f"]({decode_path(path)})"
 
-    text = LINK_RE.sub(repl, text)
-    # [text]() -> text
-    return re.sub(r"\[([^\]]*)\]\(\)", r"\1", text)
+    return common.strip_empty_links(LINK_RE.sub(repl, text))
 
 
 def strip_breadcrumbs(text: str) -> str:
@@ -90,6 +93,7 @@ def strip_breadcrumbs(text: str) -> str:
 
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
+    module_dirs.update(p.name for p in src.iterdir() if p.is_dir())
     if dst.exists():
         shutil.rmtree(dst)
     for path in sorted(src.rglob("index.md")):
