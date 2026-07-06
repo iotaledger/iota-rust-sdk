@@ -12,7 +12,7 @@ name: Reference Docs
 on:
   workflow_dispatch:
   push:
-    branches: [develop]
+    branches: [develop, "claude/iota-rust-sdk-docs-zksew0"]
     paths:
       - ".github/workflows/reference_docs.yml"
       - "scripts/reference-docs/**"
