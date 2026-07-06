@@ -16,7 +16,7 @@ use signature::{Signer, Verifier};
 
 use crate::SignatureError;
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Secp256r1PrivateKey([u8; Self::LENGTH]);
 
 impl std::fmt::Debug for Secp256r1PrivateKey {

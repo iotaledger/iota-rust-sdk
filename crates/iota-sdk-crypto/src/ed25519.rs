@@ -15,7 +15,7 @@ use iota_types::{
 
 use crate::{SignatureError, Signer, Verifier};
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Ed25519PrivateKey([u8; Self::LENGTH]);
 
 impl std::fmt::Debug for Ed25519PrivateKey {
