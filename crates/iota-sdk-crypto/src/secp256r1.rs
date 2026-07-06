@@ -98,7 +98,7 @@ impl Secp256r1PrivateKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use p256::pkcs8::EncodePrivateKey;
 
-        self.as_p256()?
+        self.to_p256()?
             .to_pkcs8_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.as_bytes().to_owned())
@@ -119,7 +119,7 @@ impl Secp256r1PrivateKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
-        self.as_p256()?
+        self.to_p256()?
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
@@ -134,7 +134,7 @@ impl Secp256r1PrivateKey {
     /// codec. Don't sign with the returned key — use this type's `Signer` impl
     /// (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn as_p256(&self) -> Result<p256::ecdsa::SigningKey, SignatureError> {
+    fn to_p256(&self) -> Result<p256::ecdsa::SigningKey, SignatureError> {
         p256::ecdsa::SigningKey::from_slice(&self.0).map_err(SignatureError::from_source)
     }
 }
@@ -158,7 +158,13 @@ impl crate::ToFromBytes for Secp256r1PrivateKey {
 
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
-        Ok(Self::new(arr))
+
+        // Reject scalars that aren't a well-formed secp256r1 private key (e.g.
+        // all-zeros or >= the curve order) rather than panicking in `new`.
+        Secp256r1KeyPair::from_bytes(&arr).map_err(|e| {
+            crate::PrivateKeyError::InvalidScheme(format!("invalid secp256r1 private key: {e}"))
+        })?;
+        Ok(Self(arr))
     }
 }
 
@@ -271,7 +277,7 @@ impl Secp256r1VerifyingKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.as_p256()?
+        self.to_p256()?
             .to_public_key_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.into_vec())
@@ -292,7 +298,7 @@ impl Secp256r1VerifyingKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.as_p256()?
+        self.to_p256()?
             .to_public_key_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
     }
@@ -310,7 +316,7 @@ impl Secp256r1VerifyingKey {
     /// Don't verify with the returned key — use this type's `Verifier` impl
     /// instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn as_p256(&self) -> Result<p256::ecdsa::VerifyingKey, SignatureError> {
+    fn to_p256(&self) -> Result<p256::ecdsa::VerifyingKey, SignatureError> {
         p256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
             .map_err(SignatureError::from_source)
     }
@@ -440,5 +446,15 @@ mod tests {
         let external_sig = "AlqWPdkIE2bZAUquKv2Tdh9i+Ih+rVSQXH/YsgvwkmeOJR0YLjL/kadivoPtiQkvZBQ1ZI8eDZxe8SaLniwoT88Dh+/vAuGf1UrouFTdefpBEWn3apy8x3EexN5c5ESzGDc=";
         let b64 = sig.to_base64();
         assert_eq!(external_sig, b64);
+    }
+
+    #[test]
+    fn from_bytes_rejects_invalid_scalar() {
+        use crate::ToFromBytes;
+
+        // The all-zeros scalar is not a valid secp256r1 private key; `from_bytes`
+        // must surface this as an error rather than panicking.
+        let err = Secp256r1PrivateKey::from_bytes([0u8; Secp256r1PrivateKey::LENGTH]);
+        assert!(err.is_err());
     }
 }

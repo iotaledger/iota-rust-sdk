@@ -89,7 +89,7 @@ impl Ed25519PrivateKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use ed25519_dalek::pkcs8::EncodePrivateKey;
 
-        self.as_dalek()
+        self.to_dalek()
             .to_pkcs8_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.as_bytes().to_owned())
@@ -110,7 +110,7 @@ impl Ed25519PrivateKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
-        self.as_dalek()
+        self.to_dalek()
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
@@ -125,7 +125,7 @@ impl Ed25519PrivateKey {
     /// PKCS#8/PEM codec. Don't sign with the returned key — use this type's
     /// `Signer` impl (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn as_dalek(&self) -> ed25519_dalek::SigningKey {
+    fn to_dalek(&self) -> ed25519_dalek::SigningKey {
         ed25519_dalek::SigningKey::from_bytes(&self.0)
     }
 }
@@ -271,7 +271,7 @@ impl Ed25519VerifyingKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.as_dalek()?
+        self.to_dalek()?
             .to_public_key_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.into_vec())
@@ -292,7 +292,7 @@ impl Ed25519VerifyingKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.as_dalek()?
+        self.to_dalek()?
             .to_public_key_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
     }
@@ -309,7 +309,7 @@ impl Ed25519VerifyingKey {
     /// PKCS#8/PEM codec. Don't verify with the returned key — use this type's
     /// `Verifier` impl instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn as_dalek(&self) -> Result<ed25519_dalek::VerifyingKey, SignatureError> {
+    fn to_dalek(&self) -> Result<ed25519_dalek::VerifyingKey, SignatureError> {
         ed25519_dalek::VerifyingKey::from_bytes(
             self.0
                 .as_ref()
