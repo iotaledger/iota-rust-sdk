@@ -155,10 +155,6 @@ mod tests {
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
         let address = key.derive_address();
-        // Wait until the funding transactions are finalized so the coins are
-        // available in the indexer before we stream them. `request_and_wait`
-        // alone only confirms the faucet transfer on the node, not that the
-        // coins have been indexed for GraphQL queries.
         faucet
             .request_and_wait_for_finalized(address, &client)
             .await
