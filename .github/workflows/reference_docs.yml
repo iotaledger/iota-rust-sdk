@@ -1,23 +1,13 @@
 name: Reference Docs
 
-# Generates the per-language API reference markdown consumed by the docs
-# site in the iota repository (see scripts/reference-docs/generate.sh) and
-# publishes the tarballs as assets of the `docs-references` release, from
-# where the docs build downloads them.
-#
-# Pull requests touching the generation pipeline only validate that
-# generation succeeds; publishing happens on pushes to develop and on
-# manual dispatch.
+# Validates that the per-language API reference markdown generates
+# (see scripts/reference-docs/generate.sh). Building and uploading the
+# tarballs the docs site consumes happens in the iota repository's
+# "Upload IOTA SDK References to S3" workflow, from the revision pinned
+# there in docs/site/iota-sdk-references.rev.
 
 on:
   workflow_dispatch:
-  push:
-    branches: [develop]
-    paths:
-      - ".github/workflows/reference_docs.yml"
-      - "scripts/reference-docs/**"
-      - "bindings/**"
-      - "crates/iota-sdk-ffi/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -26,7 +16,7 @@ on:
 
 concurrency:
   group: reference-docs-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+  cancel-in-progress: true
 
 jobs:
   generate:
@@ -90,31 +80,3 @@ jobs:
           name: reference-docs-${{ matrix.language }}
           path: dist/reference-docs/${{ matrix.language }}.tar.gz
           if-no-files-found: error
-
-  publish:
-    if: github.event_name != 'pull_request'
-    needs: generate
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Download artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
-        with:
-          pattern: reference-docs-*
-          merge-multiple: true
-          path: dist/reference-docs
-
-      - name: Update the docs-references release assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if ! gh release view docs-references >/dev/null 2>&1; then
-            gh release create docs-references --prerelease \
-              --title "API reference markdown" \
-              --notes "Machine-generated API reference tarballs consumed by the docs build in iotaledger/iota. Updated by the Reference Docs workflow; not for direct use."
-          fi
-          gh release upload docs-references dist/reference-docs/*.tar.gz --clobber
