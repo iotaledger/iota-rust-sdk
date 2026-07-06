@@ -207,7 +207,7 @@ impl Signer<Ed25519Signature> for Ed25519PrivateKey {
             signature
                 .as_ref()
                 .try_into()
-                .expect("ed25519 signature is 64 bytes"),
+                .expect("ed25519 signature must be 64 bytes"),
         ))
     }
 }
@@ -252,7 +252,7 @@ impl Ed25519VerifyingKey {
             self.0
                 .as_ref()
                 .try_into()
-                .expect("ed25519 public key is 32 bytes"),
+                .expect("ed25519 public key must be 32 bytes"),
         )
     }
 
@@ -314,7 +314,7 @@ impl Ed25519VerifyingKey {
             self.0
                 .as_ref()
                 .try_into()
-                .expect("ed25519 public key is 32 bytes"),
+                .expect("ed25519 public key must be 32 bytes"),
         )
         .map_err(SignatureError::from_source)
     }

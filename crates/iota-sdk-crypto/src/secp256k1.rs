@@ -71,7 +71,7 @@ impl Secp256k1PrivateKey {
                 .public()
                 .as_ref()
                 .try_into()
-                .expect("secp256k1 public key is 33 bytes"),
+                .expect("secp256k1 public key must be 33 bytes"),
         )
     }
 
@@ -225,7 +225,7 @@ impl Signer<Secp256k1Signature> for Secp256k1PrivateKey {
             signature
                 .as_ref()
                 .try_into()
-                .expect("secp256k1 signature is 64 bytes"),
+                .expect("secp256k1 signature must be 64 bytes"),
         ))
     }
 }
@@ -262,7 +262,7 @@ impl Secp256k1VerifyingKey {
             self.0
                 .as_ref()
                 .try_into()
-                .expect("secp256k1 public key is 33 bytes"),
+                .expect("secp256k1 public key must be 33 bytes"),
         )
     }
 
