@@ -37,7 +37,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -46,11 +46,13 @@ pub struct PasskeyAuthenticator {
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`, which is expected to be the signing
     /// message `hash(Intent | bcs_message)`
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(challenge))]
     pub(crate) challenge: SigningDigest,
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
     /// more information on this field.
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(authenticator_data))]
     pub(crate) authenticator_data: Vec<u8>,
     /// Structured, unparsed, JSON for this passkey signature.
     ///
