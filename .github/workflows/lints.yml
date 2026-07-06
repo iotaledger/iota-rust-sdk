@@ -100,7 +100,7 @@ jobs:
         with:
           tool: cargo-udeps
       - name: Run Cargo Udeps
-        run: cargo +nightly udeps ${{ matrix.flags }}
+        run: cargo +nightly-2026-06-29 udeps ${{ matrix.flags }}
 
   proto-build:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))

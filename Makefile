@@ -10,11 +10,11 @@ check-features: ## Check feature flags for crates
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
-	cargo +nightly fmt -- --check
+	cargo +nightly-2026-06-29 fmt -- --check
 
 .PHONY: fmt
 fmt: ## Format code
-	cargo +nightly fmt
+	cargo +nightly-2026-06-29 fmt
 
 .PHONY: fetch-compiled-packages
 fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out of date (used by `make test`)
