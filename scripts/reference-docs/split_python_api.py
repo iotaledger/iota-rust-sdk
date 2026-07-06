@@ -3,7 +3,8 @@
 
 pydoc-markdown renders the whole generated ``iota_sdk`` module as one
 markdown file (tens of thousands of lines). This script splits it into
-an index page, alphabetically grouped class pages, and function pages.
+an index page, one page per class (so every class is findable by name
+in the sidebar), and a functions page.
 
 Classes are delimited by ``## <Name> Objects`` headings. Module-level
 functions render exactly like methods, so the generated Python source
@@ -78,16 +79,26 @@ def main():
     classes.sort(key=lambda c: c[0].lower())
     functions.sort(key=lambda f: f[0].lower())
 
-    name_of = lambda s: s[0]
-    size_of = lambda s: len(s[1])
-    pages = common.pack(classes, "classes", "Classes", name_of, size_of)
-    pages += common.pack(functions, "functions", "Functions", name_of, size_of)
+    common.write_category(out_dir / "classes", "Classes", 3)
+    # Names differing only in case (e.g. Input vs INPUT) get distinct
+    # filenames so the tree also extracts safely on case-insensitive
+    # filesystems.
+    taken = {}
+    for name, class_lines in classes:
+        stem = name
+        while taken.setdefault(stem.lower(), name) != name:
+            stem += "_"
+        common.write_page(out_dir / "classes" / f"{stem}.md", name, "\n".join(class_lines))
 
-    for filename, title, page_sections in pages:
-        body = "\n".join(line for _name, lines in page_sections for line in lines)
-        common.write_page(out_dir / filename, title, body)
+    function_body = "\n".join(line for _name, lines in functions for line in lines)
+    common.write_page(out_dir / "functions.md", "Functions", function_body, position=2)
 
-    common.write_index(out_dir / "index.md", "Python API", "\n".join(preamble), pages)
+    common.write_index(
+        out_dir / "index.md",
+        "Python API",
+        "\n".join(preamble),
+        [("functions.md", "Functions")],
+    )
 
 
 if __name__ == "__main__":

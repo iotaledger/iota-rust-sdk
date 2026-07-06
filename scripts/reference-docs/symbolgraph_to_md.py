@@ -2,9 +2,10 @@
 """Render a Swift symbol graph as Docusaurus markdown pages.
 
 Consumes the JSON emitted by ``swift package dump-symbol-graph`` and
-produces one page per symbol-kind group (classes, structs, enums,
-protocols, functions, ...), split into alphabetical chunks like the Go
-reference. UniFFI plumbing symbols are dropped.
+produces one page per type (grouped in classes/structs/enums/protocols
+sidebar categories, so every type is findable by name) plus single
+pages for functions, type aliases, and globals. UniFFI plumbing
+symbols are dropped.
 
 Usage: symbolgraph_to_md.py <Module.symbols.json> <output-dir>
 """
@@ -18,12 +19,16 @@ import common
 
 PLUMBING_RE = common.PLUMBING_RE
 
-# Top-level kinds and the page group they render into.
-KIND_GROUPS = {
+# Type kinds get one page per symbol, in a sidebar category per kind.
+TYPE_KINDS = {
     "swift.class": ("classes", "Classes"),
     "swift.struct": ("structs", "Structs"),
     "swift.enum": ("enums", "Enums"),
     "swift.protocol": ("protocols", "Protocols"),
+}
+
+# Remaining kinds share one page per kind.
+PAGE_KINDS = {
     "swift.func": ("functions", "Functions"),
     "swift.typealias": ("typealiases", "Type Aliases"),
     "swift.var": ("globals", "Globals"),
@@ -115,42 +120,45 @@ def main():
         if PLUMBING_RE.match(name):
             continue
         kind = symbol.get("kind", {}).get("identifier", "")
-        if kind in KIND_GROUPS:
+        if kind in TYPE_KINDS or kind in PAGE_KINDS:
             groups[kind].append(symbol)
 
-    pages = []
-    for kind, (stem, label) in KIND_GROUPS.items():
+    def public_members(symbol):
+        return [
+            m
+            for m in members.get(symbol["identifier"]["precise"], [])
+            if m.get("accessLevel") in (None, "public", "open")
+            and not PLUMBING_RE.match(title(m))
+        ]
+
+    single_pages = []
+    position = 2
+    for kind, (stem, label) in PAGE_KINDS.items():
         group = sorted(groups.get(kind, []), key=lambda s: title(s).lower())
         if not group:
             continue
-        rendered = [
-            (
-                title(symbol),
-                render_type(
-                    symbol,
-                    [
-                        m
-                        for m in members.get(symbol["identifier"]["precise"], [])
-                        if m.get("accessLevel") in (None, "public", "open")
-                        and not PLUMBING_RE.match(title(m))
-                    ],
-                ),
-            )
-            for symbol in group
-        ]
-        pages += common.pack(
-            rendered, stem, label, lambda s: s[0], lambda s: len(s[1])
-        )
+        body_lines = []
+        for symbol in group:
+            body_lines += render_type(symbol, public_members(symbol))
+        common.write_page(out_dir / f"{stem}.md", label, "\n".join(body_lines), position)
+        single_pages.append((f"{stem}.md", label))
+        position += 1
 
-    for filename, page_title, page_sections in pages:
-        body = "\n".join(line for _name, lines in page_sections for line in lines)
-        common.write_page(out_dir / filename, page_title, body)
+    for kind, (stem, label) in TYPE_KINDS.items():
+        group = sorted(groups.get(kind, []), key=lambda s: title(s).lower())
+        if not group:
+            continue
+        common.write_category(out_dir / stem, label, position)
+        position += 1
+        for symbol in group:
+            body = "\n".join(render_type(symbol, public_members(symbol)))
+            common.write_page(out_dir / stem / f"{title(symbol)}.md", title(symbol), body)
 
     common.write_index(
         out_dir / "index.md",
         "Swift API",
         f"API reference for the `{module}` Swift module.",
-        pages,
+        single_pages,
     )
 
 

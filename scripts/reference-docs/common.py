@@ -48,8 +48,19 @@ def pack(sections, stem, label, name_of, size_of):
     return out
 
 
-def write_page(path, title, body: str):
-    front = f"---\ntitle: {title}\nsidebar_label: {title}\n---\n\n"
+def write_category(directory, label, position):
+    """Mark a directory as a Docusaurus sidebar category."""
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "_category_.json").write_text(
+        f'{{"label": "{label}", "position": {position}}}\n'
+    )
+
+
+def write_page(path, title, body: str, position=None):
+    front = f"---\ntitle: {title}\nsidebar_label: {title}\n"
+    if position is not None:
+        front += f"sidebar_position: {position}\n"
+    front += "---\n\n"
     path.write_text(front + body.strip() + "\n")
 
 
