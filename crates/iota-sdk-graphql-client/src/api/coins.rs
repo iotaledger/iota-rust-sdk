@@ -119,6 +119,7 @@ impl Client {
 mod tests {
     use futures::StreamExt;
     use iota_types::{Address, Ed25519PublicKey};
+    use tokio::time;
 
     use crate::{
         Direction, PaginationFilter,
@@ -159,13 +160,39 @@ mod tests {
             .await
             .unwrap();
 
-        let num_coins = client
-            .coins_stream(address, None, Direction::default())
-            .filter_map(|r| async { r.ok() })
-            .count()
-            .await;
+        const MAX_RETRIES: u32 = 10;
+        const RETRY_DELAY: time::Duration = time::Duration::from_secs(1);
 
-        assert!(num_coins >= NUM_COINS_FROM_FAUCET);
+        // Retry until the expected number of coins is streamed. Indexer lag can
+        // return a successful but incomplete page, so retry on a low count as
+        // well as on a stream error, re-counting from scratch each attempt.
+        let mut num_coins = 0;
+        for attempt in 0..MAX_RETRIES {
+            num_coins = 0;
+            let mut stream = client.coins_stream(address, None, Direction::default());
+            let mut errored = false;
+            while let Some(result) = stream.next().await {
+                match result {
+                    Ok(_) => num_coins += 1,
+                    Err(_) => {
+                        errored = true;
+                        break;
+                    }
+                }
+            }
+
+            if !errored && num_coins >= NUM_COINS_FROM_FAUCET {
+                break;
+            }
+            if attempt < MAX_RETRIES - 1 {
+                time::sleep(RETRY_DELAY).await;
+            }
+        }
+
+        assert!(
+            num_coins >= NUM_COINS_FROM_FAUCET,
+            "expected at least {NUM_COINS_FROM_FAUCET} coins for {address}, got {num_coins}"
+        );
     }
 
     #[tokio::test]
