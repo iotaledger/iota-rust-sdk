@@ -146,20 +146,18 @@ pub type Result<T> = std::result::Result<T, Error>;
 // Field Masks
 // =============================================================================
 
-/// A read mask that can be passed to client methods.
+/// A low-level read mask string.
 ///
-/// Construct from field path constants defined in
-/// [`read_mask_fields`](crate::read_mask_fields):
+/// Most callers should use the scoped per-endpoint mask types in
+/// [`read_mask_fields`](crate::read_mask_fields)
+/// (e.g. [`ObjectReadMask`](crate::read_mask_fields::ObjectReadMask)) which
+/// are passed directly to the client methods. This type is the underlying
+/// string holder, useful when composing masks by hand:
 ///
 /// ```
-/// use iota_sdk_grpc_client::{ReadMask, read_mask_fields::TransactionField};
+/// use iota_sdk_grpc_client::ReadMask;
 ///
-/// // Single field
-/// let mask = ReadMask::from(TransactionField::EFFECTS);
-/// assert_eq!(mask.as_str(), "effects");
-///
-/// // Multiple fields
-/// let mask = ReadMask::from(&[TransactionField::EFFECTS, TransactionField::CHECKPOINT]);
+/// let mask = ReadMask::from("effects,checkpoint");
 /// assert_eq!(mask.as_str(), "effects,checkpoint");
 /// ```
 #[derive(Clone, Debug)]
@@ -209,11 +207,8 @@ impl From<FieldMask> for ReadMask<'_> {
 ///
 /// This is a convenience helper that handles the common pattern of using
 /// a user-provided field mask or falling back to a default.
-pub fn field_mask_with_default(custom: Option<ReadMask<'_>>, default: &str) -> FieldMask {
-    match custom {
-        Some(mask) => FieldMask::from_str(mask.as_str()),
-        None => FieldMask::from_str(default),
-    }
+pub fn field_mask_with_default(custom: Option<&str>, default: &str) -> FieldMask {
+    FieldMask::from_str(custom.unwrap_or(default))
 }
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of
@@ -351,9 +346,12 @@ pub struct Page<T> {
 ///
 /// - `$query_name` — name of the generated builder struct
 /// - `$service_client_type` — the tonic service client type
-/// - `$item_type` — the item type in the response vec
+/// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
 /// - `$items_field` — the field name on the response containing the items vec
+/// - `map_item` (optional) — a fallible `fn(&ProtoItem) -> Result<$item_type>`
+///   applied to each response element. When omitted, items are passed through
+///   unchanged (so `$item_type` must be the response field's element type).
 ///
 /// # Example
 ///
@@ -368,7 +366,23 @@ pub struct Page<T> {
 ///     }
 /// }
 /// ```
+///
+/// With a per-item conversion:
+///
+/// ```ignore
+/// define_list_query! {
+///     pub struct GetCoinsQuery {
+///         service_client: StateServiceClient<InterceptedChannel>,
+///         request: ListOwnedObjectsRequest,
+///         item: Coin,
+///         rpc_method: list_owned_objects,
+///         items_field: objects,
+///         map_item: object_to_coin, // fn(&Object) -> Result<Coin>
+///     }
+/// }
+/// ```
 macro_rules! define_list_query {
+    // Pass-through variant: `$item_type` is the response element type.
     (
         $(#[$meta:meta])*
         pub struct $query_name:ident {
@@ -377,6 +391,59 @@ macro_rules! define_list_query {
             item: $item_type:ty,
             rpc_method: $rpc_method:ident,
             items_field: $items_field:ident,
+        }
+    ) => {
+        $crate::api::define_list_query! {
+            @impl
+            $(#[$meta])*
+            pub struct $query_name {
+                service_client: $service_client_type,
+                request: $request_type,
+                item: $item_type,
+                rpc_method: $rpc_method,
+                items_field: $items_field,
+                map_item: |item| $crate::api::Result::Ok(item),
+            }
+        }
+    };
+
+    // Conversion variant: each response element is mapped through `$map_item`,
+    // a fallible `fn(&ProtoItem) -> Result<$item_type>`.
+    (
+        $(#[$meta:meta])*
+        pub struct $query_name:ident {
+            service_client: $service_client_type:ty,
+            request: $request_type:ty,
+            item: $item_type:ty,
+            rpc_method: $rpc_method:ident,
+            items_field: $items_field:ident,
+            map_item: $map_item:expr,
+        }
+    ) => {
+        $crate::api::define_list_query! {
+            @impl
+            $(#[$meta])*
+            pub struct $query_name {
+                service_client: $service_client_type,
+                request: $request_type,
+                item: $item_type,
+                rpc_method: $rpc_method,
+                items_field: $items_field,
+                map_item: |item| $map_item(&item),
+            }
+        }
+    };
+
+    (
+        @impl
+        $(#[$meta:meta])*
+        pub struct $query_name:ident {
+            service_client: $service_client_type:ty,
+            request: $request_type:ty,
+            item: $item_type:ty,
+            rpc_method: $rpc_method:ident,
+            items_field: $items_field:ident,
+            map_item: $map_item:expr,
         }
     ) => {
         $(#[$meta])*
@@ -413,7 +480,7 @@ macro_rules! define_list_query {
                 limit: impl Into<Option<u32>>,
             ) -> $crate::api::Result<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
                 let limit = limit.into();
-                let mut all_items = Vec::new();
+                let mut all_items: Vec<$item_type> = Vec::new();
                 let mut next_page_token = self.page_token;
                 let mut result_metadata = None;
                 let mut service_client = self.service_client;
@@ -454,7 +521,10 @@ macro_rules! define_list_query {
                         result_metadata = Some(metadata);
                     }
 
-                    all_items.extend(body.$items_field);
+                    let map_item = $map_item;
+                    for item in body.$items_field {
+                        all_items.push(map_item(item)?);
+                    }
 
                     match body.next_page_token {
                         Some(token) => next_page_token = Some(token),
@@ -502,9 +572,16 @@ macro_rules! define_list_query {
                     let (body, metadata) =
                         $crate::api::MetadataEnvelope::from(response).into_parts();
 
+                    let map_item = $map_item;
+                    let items = body
+                        .$items_field
+                        .into_iter()
+                        .map(map_item)
+                        .collect::<$crate::api::Result<Vec<$item_type>>>()?;
+
                     Ok($crate::api::MetadataEnvelope::new(
                         $crate::api::Page {
-                            items: body.$items_field,
+                            items,
                             next_page_token: body.next_page_token,
                         },
                         metadata,

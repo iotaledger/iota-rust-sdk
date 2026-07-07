@@ -6,7 +6,8 @@
 use std::time::Duration;
 
 use iota_grpc_types::{
-    read_mask_fields::EpochField, v1::transaction_execution_service::SimulatedTransaction,
+    read_mask_fields::{EpochField, EpochReadMask, TransactionField, TransactionReadMask},
+    v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
@@ -16,11 +17,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    api::{
-        EXECUTED_TRANSACTION_CHECKPOINT, EXECUTED_TRANSACTION_SIGNATURES,
-        EXECUTED_TRANSACTION_TRANSACTION, Error, ReadMask, TRANSACTION_DIGEST,
-        TRANSACTION_EFFECTS_BCS, saturating_usize_to_u32,
-    },
+    api::{Error, saturating_usize_to_u32},
 };
 
 /// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
@@ -50,7 +47,10 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Option<Object>, Self::Error> {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
-        match self.get_objects(&[(object_id, version.into())], None).await {
+        match self
+            .get_objects_with_versions([(object_id, version.into())], None)
+            .await
+        {
             Ok(envelope) => match envelope.into_inner().first() {
                 Some(obj) => Ok(Some(obj.object()?)),
                 None => Ok(None),
@@ -90,7 +90,7 @@ impl TransactionBuilderClient for Client {
         let epoch = self
             .get_epoch(
                 None,
-                Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
+                EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
             )
             .await?
             .into_inner();
@@ -108,11 +108,11 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Option<SignedTransaction>, Self::Error> {
         match self
             .get_transactions(
-                &[digest],
-                Some(ReadMask::from(&[
-                    EXECUTED_TRANSACTION_TRANSACTION,
-                    EXECUTED_TRANSACTION_SIGNATURES,
-                ])),
+                [digest],
+                TransactionReadMask::from([
+                    TransactionField::TRANSACTION,
+                    TransactionField::SIGNATURES,
+                ]),
             )
             .await
         {
@@ -137,7 +137,10 @@ impl TransactionBuilderClient for Client {
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         match self
-            .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
+            .get_transactions(
+                [digest],
+                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
+            )
             .await
         {
             Ok(envelope) => match envelope.into_inner().into_iter().next() {
@@ -156,7 +159,7 @@ impl TransactionBuilderClient for Client {
         let epoch = self
             .get_epoch(
                 epoch.into(),
-                Some(ReadMask::from(EpochField::REFERENCE_GAS_PRICE)),
+                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
             )
             .await?
             .into_inner();
@@ -225,8 +228,10 @@ impl TransactionBuilderClient for Client {
         // transaction field confirms it is indexed on the node, while
         // `checkpoint` is only populated once it has been finalized.
         let mask = match wait_for {
-            WaitForTx::IndexedOnNode => ReadMask::from(TRANSACTION_DIGEST),
-            WaitForTx::Finalized => ReadMask::from(EXECUTED_TRANSACTION_CHECKPOINT),
+            WaitForTx::IndexedOnNode => {
+                TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
+            }
+            WaitForTx::Finalized => TransactionReadMask::from(TransactionField::CHECKPOINT),
             _ => {
                 unimplemented!("a new WaitForTx enum variant was added and needs to be handled")
             }
@@ -236,7 +241,7 @@ impl TransactionBuilderClient for Client {
             let mut interval = tokio::time::interval(WAIT_FOR_TX_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                match self.get_transactions(&[digest], Some(mask.clone())).await {
+                match self.get_transactions([digest], mask.clone()).await {
                     Ok(envelope) => {
                         if let Some(tx) = envelope.into_inner().first() {
                             let ready = match wait_for {

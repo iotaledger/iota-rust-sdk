@@ -5,14 +5,14 @@
 
 use iota_grpc_types::{
     field::FieldMask,
+    read_mask_fields::EpochReadMask,
     v1::{epoch::Epoch, ledger_service::GetEpochRequest},
 };
 
 use crate::{
     Client,
     api::{
-        GET_EPOCH_READ_MASK, MetadataEnvelope, ReadMask, Result, TryFromProtoError,
-        field_mask_with_default,
+        GET_EPOCH_READ_MASK, MetadataEnvelope, Result, TryFromProtoError, field_mask_with_default,
     },
 };
 
@@ -20,95 +20,86 @@ impl Client {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type with fields populated according to the
-    /// `read_mask`.
-    ///
-    /// # Parameters
-    ///
-    /// * `epoch` - The epoch to query. If `None`, returns the current epoch.
-    /// * `read_mask` - Optional field mask specifying which fields to include.
-    ///   If `None`, uses [`GET_EPOCH_READ_MASK`].
-    ///
-    /// # Read Mask
-    ///
-    /// Use [`EpochField`](iota_grpc_types::read_mask_fields::EpochField)
-    /// constants with [`ReadMask::from`] for field selection. For individual
-    /// protocol config map entries, use
+    /// `read_mask`; pass `None` for the default field mask
+    /// [`GET_EPOCH_READ_MASK`]. Pass an
+    /// [`EpochReadMask`](iota_grpc_types::read_mask_fields::EpochReadMask)
+    /// built from an
+    /// [`EpochField`](iota_grpc_types::read_mask_fields::EpochField) or any
+    /// slice/array/vec of fields. For individual protocol config map entries,
+    /// use
     /// [`EpochField::feature_flag`](iota_grpc_types::read_mask_fields::EpochField::feature_flag)
     /// and
     /// [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
     ///
+    /// # Parameters
+    ///
+    /// * `epoch` - The epoch to query. If `None`, returns the current epoch.
+    /// * `read_mask` - Optional field mask; `None` uses the default.
+    ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::EpochField;
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{EpochField, EpochReadMask};
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     ///
-    /// // Get current epoch with default fields
+    /// // Current epoch with the default mask.
     /// let epoch = client.get_epoch(None, None).await?;
     /// println!("Epoch: {:?}", epoch.body().epoch);
     ///
-    /// // Get specific epoch with custom fields
+    /// // Specific epoch with selected fields.
     /// let epoch = client
     ///     .get_epoch(
     ///         Some(0),
-    ///         Some(ReadMask::from(&[
+    ///         EpochReadMask::from([
     ///             EpochField::EPOCH,
     ///             EpochField::REFERENCE_GAS_PRICE,
     ///             EpochField::FIRST_CHECKPOINT,
-    ///         ])),
+    ///         ]),
     ///     )
     ///     .await?;
     ///
-    /// // Get all feature flags for the current epoch
+    /// // All feature flags for the current epoch.
     /// let epoch = client
     ///     .get_epoch(
     ///         None,
-    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS)),
+    ///         EpochReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS),
     ///     )
     ///     .await?
     ///     .into_inner();
     /// let flags = epoch.protocol_config.unwrap().feature_flags.unwrap().flags;
     ///
-    /// // Get a single named feature flag
-    /// let flag_field = EpochField::feature_flag("enable_vdf");
-    /// let epoch = client
-    ///     .get_epoch(None, Some(ReadMask::from(flag_field.as_str())))
-    ///     .await?;
-    ///
-    /// // Get all protocol attributes for the current epoch
+    /// // A single named feature flag.
     /// let epoch = client
     ///     .get_epoch(
     ///         None,
-    ///         Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
+    ///         EpochReadMask::from(EpochField::feature_flag("enable_vdf")),
     ///     )
-    ///     .await?
-    ///     .into_inner();
-    /// let attributes = epoch
-    ///     .protocol_config
-    ///     .unwrap()
-    ///     .attributes
-    ///     .unwrap()
-    ///     .attributes;
+    ///     .await?;
     ///
-    /// // Get a single named attribute
-    /// let attr_field = EpochField::attribute("max_tx_gas");
+    /// // A single named attribute.
     /// let epoch = client
-    ///     .get_epoch(None, Some(ReadMask::from(attr_field.as_str())))
+    ///     .get_epoch(
+    ///         None,
+    ///         EpochReadMask::from(EpochField::attribute("max_tx_gas")),
+    ///     )
     ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_epoch(
         &self,
-        epoch: Option<u64>,
-        read_mask: Option<ReadMask<'_>>,
+        epoch: impl Into<Option<u64>>,
+        read_mask: impl Into<Option<EpochReadMask>>,
     ) -> Result<MetadataEnvelope<Epoch>> {
-        let mut request = GetEpochRequest::default()
-            .with_read_mask(field_mask_with_default(read_mask, GET_EPOCH_READ_MASK));
+        let read_mask = read_mask.into();
+        let mut request = GetEpochRequest::default().with_read_mask(field_mask_with_default(
+            read_mask.as_ref().map(|m| m.as_str()),
+            GET_EPOCH_READ_MASK,
+        ));
 
-        if let Some(epoch) = epoch {
+        if let Some(epoch) = epoch.into() {
             request = request.with_epoch(epoch);
         }
 
@@ -128,7 +119,7 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let gas_price = client.get_reference_gas_price().await?.into_inner();
     /// println!("Reference gas price: {gas_price} NANOS");
     /// # Ok(())

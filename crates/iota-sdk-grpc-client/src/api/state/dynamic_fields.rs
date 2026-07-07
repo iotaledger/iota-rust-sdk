@@ -5,21 +5,25 @@
 //!
 //! # Read Mask
 //!
-//! Use [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
-//! constants with [`ReadMask::from`](crate::ReadMask::from) for field
-//! selection.
+//! Pass `None` for the default mask, or a
+//! [`DynamicFieldReadMask`](iota_grpc_types::read_mask_fields::DynamicFieldReadMask)
+//! built from a
+//! [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+//! (or any slice/array/vec of fields).
 
-use iota_grpc_types::v1::{
-    dynamic_field::DynamicField,
-    state_service::{ListDynamicFieldsRequest, state_service_client::StateServiceClient},
+use iota_grpc_types::{
+    read_mask_fields::DynamicFieldReadMask,
+    v1::{
+        dynamic_field::DynamicField,
+        state_service::{ListDynamicFieldsRequest, state_service_client::StateServiceClient},
+    },
 };
 use iota_types::ObjectId;
 
 use crate::{
     Client, InterceptedChannel,
     api::{
-        LIST_DYNAMIC_FIELDS_READ_MASK, ReadMask, define_list_query, field_mask_with_default,
-        proto_object_id,
+        LIST_DYNAMIC_FIELDS_READ_MASK, define_list_query, field_mask_with_default, proto_object_id,
     },
 };
 
@@ -45,13 +49,19 @@ impl Client {
     /// (with access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
+    /// The `read_mask` controls which fields the server returns; pass `None`
+    /// for the default field mask [`LIST_DYNAMIC_FIELDS_READ_MASK`], or a
+    /// [`DynamicFieldReadMask`](iota_grpc_types::read_mask_fields::DynamicFieldReadMask)
+    /// built from a
+    /// [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+    /// or any slice/array/vec of fields.
+    ///
     /// # Parameters
     ///
     /// - `parent` - The object ID of the parent object.
     /// - `page_size` - Optional maximum number of fields per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Optional field mask. If `None`, uses
-    ///   [`LIST_DYNAMIC_FIELDS_READ_MASK`].
+    /// - `read_mask` - Optional field mask; `None` uses the default.
     ///
     /// # Examples
     ///
@@ -60,7 +70,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let page = client.list_dynamic_fields(parent, None, None, None).await?;
@@ -76,7 +86,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
@@ -92,14 +102,29 @@ impl Client {
     pub fn list_dynamic_fields(
         &self,
         parent: ObjectId,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+        read_mask: impl Into<Option<DynamicFieldReadMask>>,
+    ) -> ListDynamicFieldsQuery {
+        self.list_dynamic_fields_internal(
+            parent,
+            page_size.into(),
+            page_token.into(),
+            read_mask.into(),
+        )
+    }
+
+    fn list_dynamic_fields_internal(
+        &self,
+        parent: ObjectId,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<ReadMask<'_>>,
+        read_mask: Option<DynamicFieldReadMask>,
     ) -> ListDynamicFieldsQuery {
         let base_request = ListDynamicFieldsRequest::default()
             .with_parent(proto_object_id(parent))
             .with_read_mask(field_mask_with_default(
-                read_mask,
+                read_mask.as_ref().map(|m| m.as_str()),
                 LIST_DYNAMIC_FIELDS_READ_MASK,
             ));
 

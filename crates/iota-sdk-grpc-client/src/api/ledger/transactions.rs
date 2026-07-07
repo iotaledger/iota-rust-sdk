@@ -3,17 +3,20 @@
 
 //! High-level API for transaction queries.
 
-use iota_grpc_types::v1::{
-    ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
-    transaction::ExecutedTransaction,
+use iota_grpc_types::{
+    read_mask_fields::TransactionReadMask,
+    v1::{
+        ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
+        transaction::ExecutedTransaction,
+    },
 };
 use iota_types::TransactionDigest;
 
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ProtoResult, ReadMask, Result,
-        collect_stream, field_mask_with_default, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ProtoResult, Result, collect_stream,
+        field_mask_with_default, saturating_usize_to_u32,
     },
 };
 
@@ -33,44 +36,30 @@ impl Client {
     /// Results are returned in the same order as the input digests.
     /// If a transaction is not found, an error is returned.
     ///
+    /// The optional `read_mask` controls which fields the server returns; pass
+    /// `None` for the default field mask [`GET_TRANSACTIONS_READ_MASK`], or a
+    /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask)
+    /// built from a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields.
+    ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `digests` is empty.
     ///
-    /// # Read Mask
-    ///
-    /// The optional `read_mask` parameter controls which fields the server
-    /// returns. If `None`, uses [`GET_TRANSACTIONS_READ_MASK`].
-    ///
-    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// constants with [`ReadMask::from`] for field selection.
-    ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{TransactionField, TransactionReadMask};
     /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
-    /// let digest: TransactionDigest = todo!();
+    /// let client = Client::new_localnet()?;
+    /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
-    /// // Get transactions with default mask
-    /// let txs = client.get_transactions(&[digest], None).await?;
-    ///
-    /// // Get transactions with field mask
-    /// let txs = client
-    ///     .get_transactions(
-    ///         &[digest],
-    ///         Some(ReadMask::from(&[
-    ///             TransactionField::EFFECTS,
-    ///             TransactionField::CHECKPOINT,
-    ///         ])),
-    ///     )
-    ///     .await?;
-    ///
+    /// // Default mask
+    /// let txs = client.get_transactions([digest], None).await?;
     /// for tx in txs.body() {
-    ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
     ///     println!("Status: {:?}", effects.as_v1().status);
     ///
@@ -78,29 +67,45 @@ impl Client {
     ///     let checkpoint = tx.checkpoint_sequence_number()?;
     ///     println!("Checkpoint: {}", checkpoint);
     /// }
+    ///
+    /// // Selected fields
+    /// let txs = client
+    ///     .get_transactions(
+    ///         [digest],
+    ///         TransactionReadMask::from([TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
+    ///     )
+    ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_transactions(
         &self,
-        digests: &[TransactionDigest],
-        read_mask: Option<ReadMask<'_>>,
+        digests: impl IntoIterator<Item = TransactionDigest>,
+        read_mask: impl Into<Option<TransactionReadMask>>,
     ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
-        if digests.is_empty() {
+        let requests = digests
+            .into_iter()
+            .map(|d| TransactionRequest::default().with_digest(d))
+            .collect::<Vec<_>>();
+        self.get_transactions_internal(requests, read_mask.into())
+            .await
+    }
+
+    async fn get_transactions_internal(
+        &self,
+        requests: Vec<TransactionRequest>,
+        read_mask: Option<TransactionReadMask>,
+    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
+        if requests.is_empty() {
             return Err(Error::EmptyRequest);
         }
 
-        let requests = TransactionRequests::default().with_requests(
-            digests
-                .iter()
-                .map(|d| TransactionRequest::default().with_digest(*d))
-                .collect(),
-        );
+        let requests = TransactionRequests::default().with_requests(requests);
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
             .with_read_mask(field_mask_with_default(
-                read_mask,
+                read_mask.as_ref().map(|m| m.as_str()),
                 GET_TRANSACTIONS_READ_MASK,
             ));
 
