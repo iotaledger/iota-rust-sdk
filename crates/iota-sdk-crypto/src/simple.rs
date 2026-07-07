@@ -233,11 +233,11 @@ mod keypair {
                 .map_err(SignatureError::from_source)?
             {
                 #[cfg(feature = "ed25519")]
-                (ed25519_dalek::pkcs8::ALGORITHM_OID, None) => private_key
+                (ed25519::pkcs8::ALGORITHM_OID, None) => private_key
                     .try_into()
-                    .map(crate::ed25519::Ed25519PrivateKey::from_dalek)
-                    .map(InnerKeypair::Ed25519)
-                    .map_err(SignatureError::from_source),
+                    .map_err(SignatureError::from_source)
+                    .and_then(crate::ed25519::Ed25519PrivateKey::from_pkcs8)
+                    .map(InnerKeypair::Ed25519),
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,
@@ -416,11 +416,11 @@ mod keypair {
                 .map_err(SignatureError::from_source)?
             {
                 #[cfg(feature = "ed25519")]
-                (ed25519_dalek::pkcs8::ALGORITHM_OID, None) => public_key
+                (ed25519::pkcs8::ALGORITHM_OID, None) => public_key
                     .try_into()
-                    .map(crate::ed25519::Ed25519VerifyingKey::from_dalek)
-                    .map(InnerVerifyingKey::Ed25519)
-                    .map_err(SignatureError::from_source),
+                    .map_err(SignatureError::from_source)
+                    .and_then(crate::ed25519::Ed25519VerifyingKey::from_pkcs8)
+                    .map(InnerVerifyingKey::Ed25519),
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,

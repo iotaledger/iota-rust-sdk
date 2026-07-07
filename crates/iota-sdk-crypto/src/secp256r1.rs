@@ -98,7 +98,7 @@ impl Secp256r1PrivateKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use p256::pkcs8::EncodePrivateKey;
 
-        self.to_p256()?
+        self.to_p256()
             .to_pkcs8_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.as_bytes().to_owned())
@@ -119,7 +119,7 @@ impl Secp256r1PrivateKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
-        self.to_p256()?
+        self.to_p256()
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
@@ -134,8 +134,8 @@ impl Secp256r1PrivateKey {
     /// codec. Don't sign with the returned key — use this type's `Signer` impl
     /// (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn to_p256(&self) -> Result<p256::ecdsa::SigningKey, SignatureError> {
-        p256::ecdsa::SigningKey::from_slice(&self.0).map_err(SignatureError::from_source)
+    fn to_p256(&self) -> p256::ecdsa::SigningKey {
+        p256::ecdsa::SigningKey::from_slice(&self.0).expect("validated on construction")
     }
 }
 
@@ -277,7 +277,7 @@ impl Secp256r1VerifyingKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.to_p256()?
+        self.to_p256()
             .to_public_key_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.into_vec())
@@ -298,7 +298,7 @@ impl Secp256r1VerifyingKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.to_p256()?
+        self.to_p256()
             .to_public_key_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
     }
@@ -316,9 +316,9 @@ impl Secp256r1VerifyingKey {
     /// Don't verify with the returned key — use this type's `Verifier` impl
     /// instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
-    fn to_p256(&self) -> Result<p256::ecdsa::VerifyingKey, SignatureError> {
+    fn to_p256(&self) -> p256::ecdsa::VerifyingKey {
         p256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
-            .map_err(SignatureError::from_source)
+            .expect("validated on construction")
     }
 }
 

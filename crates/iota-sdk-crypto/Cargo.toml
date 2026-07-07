@@ -31,17 +31,18 @@ secp256r1 = ["dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
 passkey = ["secp256r1", "dep:sha2"]
 secp256k1 = ["dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
 bech32 = ["dep:bech32", "signature/std"]
-# PKCS#8/PEM support. fastcrypto has no PKCS#8 codec, so ed25519-dalek, p256 and
+# PKCS#8/PEM support. fastcrypto has no PKCS#8 codec, so ed25519, p256 and
 # k256 are pulled in purely as encoders/decoders here; the actual signing and
 # verification always go through fastcrypto.
 pem = [
-  "dep:ed25519-dalek",
+  "dep:ed25519",
   "dep:k256",
   "dep:p256",
   "dep:pem-rfc7468",
   "dep:pkcs8",
-  "ed25519-dalek?/pem",
-  "ed25519-dalek?/pkcs8",
+  "ed25519?/pem",
+  "ed25519?/pkcs8",
+  "ed25519?/zeroize",
   "k256?/pem",
   "k256?/pkcs8",
   "p256?/pem",
@@ -60,7 +61,7 @@ bip39 = { version = "2.0.0", features = ["rand"], optional = true }
 # bls12381 support
 blst = { version = "0.3.13", optional = true }
 # ed25519 PKCS#8/PEM codec (see the `pem` feature)
-ed25519-dalek = { version = "2.1.1", optional = true }
+ed25519 = { version = "2.2", optional = true }
 # ed25519, secp256r1 and secp256k1 signing/verification backend
 fastcrypto = { version = "=0.1.11", optional = true }
 # secp256k1 PKCS#8/PEM codec (see the `pem` feature)

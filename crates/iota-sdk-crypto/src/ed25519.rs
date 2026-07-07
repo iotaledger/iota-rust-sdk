@@ -53,7 +53,7 @@ impl Ed25519PrivateKey {
 
     /// Reconstruct the fastcrypto keypair, which performs all signing.
     fn keypair(&self) -> Ed25519KeyPair {
-        Ed25519KeyPair::from_bytes(&self.0).expect("any 32 bytes are a valid ed25519 seed")
+        Ed25519KeyPair::from_bytes(&self.0).expect("validated Ed25519KeyPair on construction")
     }
 
     pub fn verifying_key(&self) -> Ed25519VerifyingKey {
@@ -78,18 +78,18 @@ impl Ed25519PrivateKey {
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-        ed25519_dalek::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
-            .map(Self::from_dalek)
+        pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
             .map_err(SignatureError::from_source)
+            .and_then(Self::from_pkcs8)
     }
 
     #[cfg(feature = "pem")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Serialize this private key as DER-encoded PKCS#8
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
-        use ed25519_dalek::pkcs8::EncodePrivateKey;
+        use pkcs8::EncodePrivateKey;
 
-        self.to_dalek()
+        self.to_pkcs8()
             .to_pkcs8_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.as_bytes().to_owned())
@@ -99,9 +99,9 @@ impl Ed25519PrivateKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize PKCS#8-encoded private key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-        ed25519_dalek::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
-            .map(Self::from_dalek)
+        pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
             .map_err(SignatureError::from_source)
+            .and_then(Self::from_pkcs8)
     }
 
     #[cfg(feature = "pem")]
@@ -110,23 +110,37 @@ impl Ed25519PrivateKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
-        self.to_dalek()
+        self.to_pkcs8()
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
     }
 
+    /// Rejects PKCS#8 v2 documents whose embedded public key does not match
+    /// the private key.
     #[cfg(feature = "pem")]
-    pub(crate) fn from_dalek(private_key: ed25519_dalek::SigningKey) -> Self {
-        Self::new(private_key.to_bytes())
+    pub(crate) fn from_pkcs8(
+        keypair_bytes: ed25519::pkcs8::KeypairBytes,
+    ) -> Result<Self, SignatureError> {
+        let private_key = Self::new(keypair_bytes.secret_key);
+        if let Some(public_key) = &keypair_bytes.public_key
+            && public_key.as_ref() != private_key.public_key().inner()
+        {
+            return Err(SignatureError::from_source(
+                "PKCS#8 embedded public key does not match the private key",
+            ));
+        }
+        Ok(private_key)
     }
 
-    /// Re-expose the raw private key through ed25519-dalek, used only as a
-    /// PKCS#8/PEM codec. Don't sign with the returned key — use this type's
-    /// `Signer` impl (`try_sign`) instead, so signing goes through fastcrypto.
+    /// Re-expose the raw private key as PKCS#8 v2 key material (with the
+    /// public key embedded), used only as a PEM/DER codec.
     #[cfg(feature = "pem")]
-    fn to_dalek(&self) -> ed25519_dalek::SigningKey {
-        ed25519_dalek::SigningKey::from_bytes(&self.0)
+    fn to_pkcs8(&self) -> ed25519::pkcs8::KeypairBytes {
+        ed25519::pkcs8::KeypairBytes {
+            secret_key: self.0,
+            public_key: Some(ed25519::pkcs8::PublicKeyBytes(*self.public_key().inner())),
+        }
     }
 }
 
@@ -260,9 +274,9 @@ impl Ed25519VerifyingKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-        ed25519_dalek::pkcs8::DecodePublicKey::from_public_key_der(bytes)
-            .map(Self::from_dalek)
+        pkcs8::DecodePublicKey::from_public_key_der(bytes)
             .map_err(SignatureError::from_source)
+            .and_then(Self::from_pkcs8)
     }
 
     #[cfg(feature = "pem")]
@@ -271,7 +285,7 @@ impl Ed25519VerifyingKey {
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.to_dalek()?
+        self.to_pkcs8()
             .to_public_key_der()
             .map_err(SignatureError::from_source)
             .map(|der| der.into_vec())
@@ -281,9 +295,9 @@ impl Ed25519VerifyingKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize public key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-        ed25519_dalek::pkcs8::DecodePublicKey::from_public_key_pem(s)
-            .map(Self::from_dalek)
+        pkcs8::DecodePublicKey::from_public_key_pem(s)
             .map_err(SignatureError::from_source)
+            .and_then(Self::from_pkcs8)
     }
 
     #[cfg(feature = "pem")]
@@ -292,31 +306,31 @@ impl Ed25519VerifyingKey {
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
-        self.to_dalek()?
+        self.to_pkcs8()
             .to_public_key_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
     }
 
+    /// Validates that the raw PKCS#8 key material is a valid ed25519 point.
     #[cfg(feature = "pem")]
-    pub(crate) fn from_dalek(verifying_key: ed25519_dalek::VerifyingKey) -> Self {
-        Self(
-            FcEd25519PublicKey::from_bytes(verifying_key.as_bytes())
-                .expect("ed25519-dalek public key is a valid ed25519 point"),
-        )
+    pub(crate) fn from_pkcs8(
+        public_key: ed25519::pkcs8::PublicKeyBytes,
+    ) -> Result<Self, SignatureError> {
+        FcEd25519PublicKey::from_bytes(public_key.as_ref())
+            .map(Self)
+            .map_err(SignatureError::from_source)
     }
 
-    /// Re-expose the public key through ed25519-dalek, used only as a
-    /// PKCS#8/PEM codec. Don't verify with the returned key — use this type's
-    /// `Verifier` impl instead, so verification goes through fastcrypto.
+    /// Re-expose the public key as PKCS#8 key material, used only as a PEM/DER
+    /// codec.
     #[cfg(feature = "pem")]
-    fn to_dalek(&self) -> Result<ed25519_dalek::VerifyingKey, SignatureError> {
-        ed25519_dalek::VerifyingKey::from_bytes(
+    fn to_pkcs8(&self) -> ed25519::pkcs8::PublicKeyBytes {
+        ed25519::pkcs8::PublicKeyBytes(
             self.0
                 .as_ref()
                 .try_into()
                 .expect("ed25519 public key must be 32 bytes"),
         )
-        .map_err(SignatureError::from_source)
     }
 }
 
