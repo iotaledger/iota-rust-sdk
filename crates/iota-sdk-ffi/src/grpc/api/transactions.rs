@@ -8,7 +8,7 @@ use std::sync::Arc;
 use crate::{
     error::Result,
     grpc::{client::GrpcClient, output_types::ExecutedTransaction},
-    types::digest::Digest,
+    types::digest::TransactionDigest,
 };
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -24,7 +24,7 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn get_transactions(
         &self,
-        digests: Vec<Arc<Digest>>,
+        digests: Vec<Arc<TransactionDigest>>,
         read_mask: Option<Vec<String>>,
     ) -> Result<Vec<ExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();

@@ -6,7 +6,7 @@
 use crate::{
     error::Result,
     grpc::{client::GrpcClient, output_types::CheckpointResponse},
-    types::digest::Digest,
+    types::digest::CheckpointDigest,
 };
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -62,7 +62,7 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn get_checkpoint_by_digest(
         &self,
-        digest: &Digest,
+        digest: &CheckpointDigest,
         read_mask: Option<Vec<String>>,
     ) -> Result<CheckpointResponse> {
         (&self
