@@ -79,6 +79,7 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 cynic.workspace = true
 eyre.workspace = true
+futures.workspace = true
 hex.workspace = true
 rand.workspace = true
 reqwest = { workspace = true, features = ["rustls-tls", "json"] }
@@ -91,3 +92,7 @@ iota-graphql-client-build.workspace = true
 [[example]]
 name = "decode_staked_iota"
 required-features = ["move-types"]
+
+[[example]]
+name = "grpc_stream_checkpoints"
+required-features = ["grpc"]

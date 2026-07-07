@@ -16,7 +16,7 @@ crate-type = ["lib", "cdylib"]
 
 [features]
 default = ["crypto", "bls12381", "grpc"]
-grpc = ["iota-sdk/grpc"]
+grpc = ["iota-sdk/grpc", "dep:futures"]
 crypto = [
   "iota-sdk/bech32",
   "iota-sdk/crypto",
@@ -38,6 +38,7 @@ async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
+futures = { workspace = true, optional = true }
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
