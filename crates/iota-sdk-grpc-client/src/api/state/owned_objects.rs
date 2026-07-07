@@ -5,10 +5,8 @@
 //!
 //! # Read Mask
 //!
-//! Pass `None` for the default mask, or an
-//! [`OwnedObjectReadMask`](iota_grpc_types::read_mask_fields::OwnedObjectReadMask)
-//! built from an
-//! [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
+//! Pass `None` for the default mask, or an [`OwnedObjectReadMask`] built from
+//! an [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
 //! (or any slice/array/vec of fields).
 
 use iota_grpc_types::{

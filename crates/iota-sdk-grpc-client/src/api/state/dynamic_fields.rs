@@ -5,9 +5,7 @@
 //!
 //! # Read Mask
 //!
-//! Pass `None` for the default mask, or a
-//! [`DynamicFieldReadMask`](iota_grpc_types::read_mask_fields::DynamicFieldReadMask)
-//! built from a
+//! Pass `None` for the default mask, or a [`DynamicFieldReadMask`] built from a
 //! [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
 //! (or any slice/array/vec of fields).
 
