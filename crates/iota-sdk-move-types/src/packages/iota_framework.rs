@@ -888,8 +888,6 @@ pub mod zklogin_verified_id {
         /// The audience (wallet).
         pub audience: string::String,
     }
-
-    impl_try_from_object!(VerifiedID, is_verified_id);
 }
 
 /// Types from `0x2::zklogin_verified_issuer`.
@@ -913,8 +911,6 @@ pub mod zklogin_verified_issuer {
         pub owner: Address,
         pub issuer: string::String,
     }
-
-    impl_try_from_object!(VerifiedIssuer);
 }
 
 /// Types from `0x2::transfer`.

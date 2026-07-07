@@ -34,14 +34,12 @@ use iota_sdk_move_types::{
         token::{Token, TokenPolicy, TokenPolicyCap},
         transfer_policy::{TransferPolicy, TransferPolicyCap},
         vec_map::VecMap,
-        zklogin_verified_id::VerifiedID,
-        zklogin_verified_issuer::VerifiedIssuer,
     },
     iota_system::{
         iota_system::IotaSystemState, staking_pool::StakedIota,
         timelocked_staking::TimelockedStakedIota, validator_cap::UnverifiedValidatorOperationCap,
     },
-    move_stdlib::{ascii, string},
+    move_stdlib::ascii,
     stardust::{
         alias::Alias, alias_output::AliasOutput, basic_output::BasicOutput, nft::Nft,
         nft_output::NftOutput,
@@ -474,45 +472,6 @@ mod synthetic {
                 &object,
                 &<Balance<Foo> as MoveType>::type_tag(),
             ),
-            Err(FromObjectError::WrongType)
-        ));
-    }
-
-    #[test]
-    fn verified_id_roundtrip_and_tag_check() {
-        let value = VerifiedID {
-            id: UID::new(ObjectId::ZERO),
-            owner: Address::ZERO,
-            key_claim_name: string::String::new(b"sub".to_vec()),
-            key_claim_value: string::String::new(b"12345".to_vec()),
-            issuer: string::String::new(b"https://accounts.example.com".to_vec()),
-            audience: string::String::new(b"my-app".to_vec()),
-        };
-        let object = synthetic_object("0x2::zklogin_verified_id::VerifiedID", &value);
-        let decoded = VerifiedID::try_from(&object).expect("tag matches");
-        assert_eq!(decoded, value);
-
-        let object = synthetic_object("0x2::zklogin_verified_issuer::VerifiedIssuer", &value);
-        assert!(matches!(
-            VerifiedID::try_from(&object),
-            Err(FromObjectError::WrongType)
-        ));
-    }
-
-    #[test]
-    fn verified_issuer_roundtrip_and_tag_check() {
-        let value = VerifiedIssuer {
-            id: UID::new(ObjectId::ZERO),
-            owner: Address::ZERO,
-            issuer: string::String::new(b"https://accounts.example.com".to_vec()),
-        };
-        let object = synthetic_object("0x2::zklogin_verified_issuer::VerifiedIssuer", &value);
-        let decoded = VerifiedIssuer::try_from(&object).expect("tag matches");
-        assert_eq!(decoded, value);
-
-        let object = synthetic_object("0x2::zklogin_verified_id::VerifiedID", &value);
-        assert!(matches!(
-            VerifiedIssuer::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
     }

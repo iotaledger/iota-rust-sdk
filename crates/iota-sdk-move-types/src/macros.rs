@@ -12,8 +12,8 @@
 //! The [`StructTag`] predicate a mirror validates against is derived from its
 //! name as `is_<name:snake>` — the same `paste` snake-casing that generated
 //! that predicate in the first place — so callers pass only the type. A type
-//! whose predicate name doesn't follow from `:snake` (an acronym like
-//! `VerifiedID`, whose predicate is `is_verified_id`, not `is_verified_i_d`)
+//! whose predicate name doesn't follow from `:snake` (for example a name
+//! containing an acronym, where `:snake` would insert an extra underscore)
 //! passes its predicate explicitly as a second argument.
 //!
 //! [`StructTag`]: iota_types::StructTag

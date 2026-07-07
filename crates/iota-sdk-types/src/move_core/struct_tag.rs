@@ -425,7 +425,6 @@ impl StructTag {
         object_bag::ObjectBag,
         tx_context::TxContext,
         deny_list::DenyList,
-        zklogin_verified_issuer::VerifiedIssuer,
         package_metadata::PackageMetadataV1
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
@@ -475,30 +474,6 @@ impl StructTag {
         nft_output::NftOutput,
         alias_output::AliasOutput,
     );
-
-    /// Creates a new zkLogin verified ID struct tag
-    /// (`0x2::zklogin_verified_id::VerifiedID`).
-    ///
-    /// Hand-written because the `ID` acronym does not round-trip through the
-    /// macro's snake-case conversion (it would yield `verified_i_d`), the
-    /// same reason [`StructTag::new_id`] is hand-written.
-    pub fn new_verified_id() -> Self {
-        Self {
-            address: Address::FRAMEWORK,
-            module: Identifier::from_static("zklogin_verified_id"),
-            name: Identifier::from_static("VerifiedID"),
-            type_params: vec![],
-        }
-    }
-
-    /// Checks if this is a zkLogin verified ID type
-    /// (`0x2::zklogin_verified_id::VerifiedID`).
-    pub fn is_verified_id(&self) -> bool {
-        self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("zklogin_verified_id")
-            && self.name == Identifier::from_static("VerifiedID")
-            && self.type_params.is_empty()
-    }
 }
 
 impl std::fmt::Display for StructTag {
