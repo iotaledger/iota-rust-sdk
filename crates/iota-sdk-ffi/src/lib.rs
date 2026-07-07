@@ -17,6 +17,7 @@ pub mod error;
 pub mod graphql;
 #[cfg(feature = "grpc")]
 pub mod grpc;
+pub mod move_types;
 pub mod transaction_builder;
 pub mod types;
 
@@ -39,8 +40,21 @@ pub fn hex_encode(input: &[u8]) -> String {
 
 #[uniffi::export]
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
+    let input = input.strip_prefix("0x").unwrap_or(&input);
     Ok(hex::decode(input)?)
 }
 
 crate::export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
 crate::export_primitive_types_json_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hex_decode_accepts_optional_0x_prefix() {
+        let expected = vec![0xde, 0xad, 0xbe, 0xef];
+        assert_eq!(hex_decode("deadbeef".to_owned()).unwrap(), expected);
+        assert_eq!(hex_decode("0xdeadbeef".to_owned()).unwrap(), expected);
+    }
+}

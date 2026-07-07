@@ -7,7 +7,8 @@ import IotaSDK
 struct GetTransactionExample {
   static func main() async throws {
     let client = GraphQlClient.newTestnet()
-    let digest = try Digest.fromBase58(base58: "3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
+    let digest = try TransactionDigest.fromBase58(
+      base58: "3wN9oLKfvCjCd7uFW1D6fp1uSEsD3wJ2cU61YULNKzFh")
 
     let signedTransaction = try await client.transaction(digest: digest)
     print("Signed Transaction: `\(String(describing: signedTransaction))`\n")

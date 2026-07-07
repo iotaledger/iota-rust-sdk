@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install uniffi-bindgen-cs
-        run: cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+        run: make install-uniffi-bindgen-cs
       - name: Setup .NET
         uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
         with:
@@ -144,3 +144,33 @@ jobs:
       # Release example requires iota-sdk-swift package to be published first
       # - name: Run the release example
       #   run: make swift-release-example
+
+  wasm:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
+    needs: diff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: wasm-pack
+      - name: Install clang
+        run: sudo apt-get install -y clang
+      - name: Install WASM bindings prerequisites
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.122
+          npm install -g pnpm@10
+      - name: Build the bindings
+        run: make wasm
+      - name: Check format of the examples
+        run: make wasm-examples-format-check
+      # Verify the build left a clean tree, before start-local-network mutates
+      # its tracked config.yaml (keypair/redis placeholders).
+      - run: make is-dirty
+      - uses: ./.github/actions/start-local-network
+      - name: Run the examples
+        run: make wasm-examples
+      - name: Run the release example
+        run: make wasm-release-example

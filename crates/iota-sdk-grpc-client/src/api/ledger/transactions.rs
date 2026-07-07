@@ -7,7 +7,7 @@ use iota_grpc_types::v1::{
     ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
     transaction::ExecutedTransaction,
 };
-use iota_types::Digest;
+use iota_types::TransactionDigest;
 
 use crate::{
     Client,
@@ -50,10 +50,10 @@ impl Client {
     /// ```no_run
     /// # use iota_sdk_grpc_client::{Client, ReadMask};
     /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
-    /// # use iota_types::Digest;
+    /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000")?;
-    /// let digest: Digest = todo!();
+    /// let digest: TransactionDigest = todo!();
     ///
     /// // Get transactions with default mask
     /// let txs = client.get_transactions(&[digest], None).await?;
@@ -83,7 +83,7 @@ impl Client {
     /// ```
     pub async fn get_transactions(
         &self,
-        digests: &[Digest],
+        digests: &[TransactionDigest],
         read_mask: Option<ReadMask<'_>>,
     ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
         if digests.is_empty() {

@@ -22,13 +22,16 @@ impl GraphQLClient {
 
 #[derive(Debug, serde::Serialize, uniffi::Record)]
 pub struct Query {
-    pub query: String,
+    // `query_string` avoids C# CS0542 (member == type `Query`); serde keeps the `query` wire key.
+    #[serde(rename = "query")]
+    pub query_string: String,
     #[uniffi(default = None)]
     #[serde(default)]
     pub variables: Option<serde_json::Value>,
 }
 
-#[uniffi::export(async_runtime = "tokio")]
+#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
+#[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]

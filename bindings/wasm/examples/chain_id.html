@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  Copyright (c) 2026 IOTA Stiftung
+  SPDX-License-Identifier: Apache-2.0
+
+  Example: query the IOTA testnet chain ID using the WASM bindings.
+
+  To run:
+    1. Build the WASM bindings (see ../README.md)
+    2. From the bindings/wasm/ directory:
+         pnpm install && pnpm run serve
+    3. Open http://localhost:5173/examples/chain_id.html in your browser.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>IOTA WASM – Chain ID</title>
+  </head>
+
+  <body>
+    <h1>IOTA WASM binding – Chain ID</h1>
+    <p id="status">Loading…</p>
+    <pre id="result"></pre>
+    <pre id="error-detail"></pre>
+
+    <script type="module">
+      import { initAsync, GraphQlClient } from "../dist/iota-sdk.js";
+
+      async function main() {
+        await initAsync();
+
+        const client = GraphQlClient.newTestnet();
+
+        const chainId = await client.chainId();
+        console.log("Chain ID:", chainId);
+
+        document.getElementById("status").textContent = "Done";
+        document.getElementById("result").textContent = "Chain ID: " + chainId;
+      }
+
+      main().catch((err) => {
+        console.error(
+          "Main error:",
+          err && err.message ? err.message : String(err),
+        );
+        if (err && err.stack) console.error("Stack:", err.stack);
+        document.getElementById("status").textContent = "Error – see console";
+        document.getElementById("error-detail").textContent =
+          err && err.stack ? err.stack : String(err);
+      });
+    </script>
+  </body>
+</html>

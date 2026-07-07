@@ -80,7 +80,7 @@ fn object_reference_roundtrip() {
     let original = iota_types::ObjectReference {
         object_id: iota_types::ObjectId::new([1u8; 32]),
         version: 42u64.into(),
-        digest: iota_types::Digest::new([2u8; 32]),
+        digest: iota_types::ObjectDigest::new([2u8; 32]),
     };
 
     let proto: v1::types::ObjectReference = original.into();

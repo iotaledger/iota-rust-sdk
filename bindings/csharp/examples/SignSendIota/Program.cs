@@ -28,9 +28,9 @@ class Program
         var txn = await builder.Finish();
 
         var dryRunResult = await client.DryRunTx(txn);
-        if (dryRunResult.error != null)
+        if (dryRunResult.Error != null)
         {
-            throw new Exception($"Dry run failed: {dryRunResult.error}");
+            throw new Exception($"Dry run failed: {dryRunResult.Error}");
         }
 
         var signature = privateKey.TrySignSimple(txn.SigningDigest());
@@ -39,7 +39,7 @@ class Program
         var effects = await client.ExecuteTx(new[] { userSignature }, txn);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

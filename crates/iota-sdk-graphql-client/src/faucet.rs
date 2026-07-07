@@ -4,7 +4,7 @@
 
 use std::{collections::HashSet, time::Duration};
 
-use iota_types::{Address, Digest, ObjectId};
+use iota_types::{Address, ObjectId, TransactionDigest};
 use reqwest::{StatusCode, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -13,7 +13,6 @@ use tracing::{error, info};
 use crate::WaitForTx;
 
 pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
-pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
 const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
@@ -82,7 +81,7 @@ pub struct FaucetReceipt {
 pub struct CoinInfo {
     pub amount: u64,
     pub id: ObjectId,
-    pub transfer_tx_digest: Digest,
+    pub transfer_tx_digest: TransactionDigest,
 }
 
 impl FaucetClient {
@@ -97,11 +96,6 @@ impl FaucetClient {
         let inner = reqwest::Client::new();
         let faucet_url = Url::parse(faucet_url).expect("Invalid faucet URL");
         FaucetClient { faucet_url, inner }
-    }
-
-    /// Create a new Faucet client connected to the `testnet` faucet.
-    pub fn new_testnet() -> Self {
-        Self::new(FAUCET_TESTNET_HOST)
     }
 
     /// Create a new Faucet client connected to the `devnet` faucet.
@@ -187,10 +181,8 @@ impl FaucetClient {
         let request_id = self.request(address).await?;
 
         if let Some(request_id) = request_id {
-            let status_response = tokio::time::timeout(FAUCET_REQUEST_TIMEOUT, async {
-                let mut interval = tokio::time::interval(FAUCET_POLL_INTERVAL);
+            let status_response = crate::wait::timeout(FAUCET_REQUEST_TIMEOUT, async {
                 loop {
-                    interval.tick().await;
                     info!("Polling faucet request status: {request_id}");
                     let status_response = self.request_status(request_id.clone()).await?;
 
@@ -206,11 +198,12 @@ impl FaucetClient {
                                     transferred_gas_objects: None,
                                 });
                             }
-                            BatchSendStatusType::InProgress => {
-                                continue;
-                            }
+                            // Still pending — fall through to the poll interval and retry.
+                            BatchSendStatusType::InProgress => {}
                         }
                     }
+
+                    crate::wait::sleep(FAUCET_POLL_INTERVAL).await;
                 }
             })
             .await

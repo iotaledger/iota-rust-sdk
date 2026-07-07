@@ -6,22 +6,27 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-move-types check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
-	cargo +nightly fmt -- --check
+	cargo +nightly-2026-06-29 fmt -- --check
 
 .PHONY: fmt
 fmt: ## Format code
-	cargo +nightly fmt
+	cargo +nightly-2026-06-29 fmt
+
+.PHONY: fetch-compiled-packages
+fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out of date (used by `make test`)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh --ensure
 
 .PHONY: clippy
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
 .PHONY: test
-test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder
+test: fetch-compiled-packages ## Run unit tests
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder -p iota-sdk-move-types
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
@@ -39,13 +44,40 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 
-.PHONY: wasm
-wasm: ## Build WASM modules
+# Verify that individual SDK crates compile to wasm32-unknown-unknown.
+# This is a quick compatibility check, not the full WASM bindings build.
+.PHONY: wasm32
+wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
+
+# Build the full WASM bindings package for browsers.
+# Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
+# to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
+.PHONY: wasm
+wasm: ## Build WASM bindings for browsers
+	cd bindings/wasm && pnpm install --frozen-lockfile && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
+	@# If wasm-opt is installed on PATH, shrink the wasm-bindgen output;
+	@# the build works without it (no flag involved).
+	@if command -v wasm-opt >/dev/null 2>&1; then \
+		printf "Running wasm-opt for size reduction...\n"; \
+		wasm-opt -Oz --vacuum --strip-debug \
+			--enable-bulk-memory --enable-mutable-globals --enable-sign-ext --enable-nontrapping-float-to-int \
+			bindings/wasm/src/ts/wasm-bindgen/index_bg.wasm \
+			-o bindings/wasm/src/ts/wasm-bindgen/index_bg.wasm; \
+	fi
+	cd bindings/wasm && pnpm run build
+	@# `ubrn build web` overwrites the tracked placeholders
+	@# bindings/wasm/iota-sdk-wasm/{Cargo.toml,src/lib.rs} with generated content (the
+	@# generated bridge src/iota_sdk_ffi_module.rs stays and is gitignored).
+	@# Restore the placeholders so the tree stays clean (`make is-dirty`) and the
+	@# workspace keeps a profile-free member manifest.
+	@git checkout -- bindings/wasm/iota-sdk-wasm/Cargo.toml bindings/wasm/iota-sdk-wasm/src/lib.rs
+	@printf "WASM bindings built successfully in bindings/wasm/dist/\n"
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -60,7 +92,7 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt check-sort-derives test wasm ## Run the full CI process
+ci: check-features check-fmt check-sort-derives test wasm32 ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
@@ -87,11 +119,11 @@ clean-all: clean ## Clean all generated files, including those ignored by Git. F
 
 .PHONY: install-uniffi-bindgen-go
 install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
-	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
+	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.7.1+v0.31.0
 
 .PHONY: install-uniffi-bindgen-cs
 install-uniffi-bindgen-cs: ## Install uniffi-bindgen-cs
-	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+	cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.11.0+v0.31.0
 
 .PHONY: bindings
 bindings: ## Build all bindings
@@ -100,6 +132,7 @@ bindings: ## Build all bindings
 	@$(MAKE) python
 	@$(MAKE) csharp
 	@$(MAKE) swift
+	@$(MAKE) wasm
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
@@ -108,6 +141,7 @@ bindings-example: ## Run a specific example for all bindings. Usage: make bindin
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) csharp-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) wasm-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
@@ -116,6 +150,7 @@ bindings-examples: ## Run all bindings examples
 	@$(MAKE) python-examples
 	@$(MAKE) csharp-examples
 	@$(MAKE) swift-examples
+	@$(MAKE) wasm-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
@@ -124,6 +159,7 @@ bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) python-examples-format-check
 	@$(MAKE) csharp-examples-format-check
 	@$(MAKE) swift-examples-format-check
+	@$(MAKE) wasm-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
@@ -132,8 +168,10 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) python-examples-format
 	@$(MAKE) csharp-examples-format
 	@$(MAKE) swift-examples-format
+	@$(MAKE) wasm-examples-format
 
-# Build ffi crate and detect platform
+# Build the FFI crate (release) and detect the shared library extension
+# (sets LIB_EXT, used to locate libiota_sdk_ffi).
 define build_binding
 cargo build -p iota-sdk-ffi --lib --release; \
 case "$$(uname -s)" in \
@@ -165,7 +203,6 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 1000 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -342,13 +379,44 @@ swift-examples-format-check: ## Check format of all Swift bindings examples
 swift-examples-format: ## Format all Swift bindings examples
 	@swift-format format --recursive bindings/swift/examples --in-place
 
+# WASM examples are .mjs scripts executed via Node.js against the same bundle
+# that ships to npm. The dev-server / browser story for the HTML examples is
+# behind `make wasm-serve` (see below).
+.PHONY: wasm-example
+wasm-example: ## Run a specific WASM example with Node. Usage: make wasm-example chain_id
+%:
+	@true
+wasm-example:
+	@printf "\nRunning WASM example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@node bindings/wasm/examples/$(word 2,$(MAKECMDGOALS)).mjs || exit $$?
+
+.PHONY: wasm-examples
+wasm-examples: ## Run all WASM bindings examples
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
+		$(MAKE) wasm-example "$$example" || exit $$?; \
+	done
+
+.PHONY: wasm-examples-format-check
+wasm-examples-format-check: ## Check format of all WASM bindings examples
+	@cd bindings/wasm && pnpm run examples:format-check
+
+.PHONY: wasm-examples-format
+wasm-examples-format: ## Format all WASM bindings examples
+	@cd bindings/wasm && pnpm run examples:format
+
+.PHONY: wasm-serve
+wasm-serve: ## Serve the WASM browser examples at http://localhost:5173/examples/
+	@cd bindings/wasm && pnpm run serve
+
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
 %:
 	@true
 example:
 	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
-	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+	@# --all-features so examples gated behind non-default features (e.g.
+	@# `move-types`) build and run; extra features are additive.
+	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
 .PHONY: examples
 examples: ## Run all Rust examples
@@ -388,6 +456,11 @@ swift-release-example: ## Run the Swift release example
 	@printf "\nRunning Swift release example\n"
 	@cd bindings/swift/examples/release && swift run || exit $$?
 
+.PHONY: wasm-release-example
+wasm-release-example: ## Run the WASM release example
+	@printf "\nRunning WASM release example\n"
+	@cd bindings/wasm/examples/release && npm install && node example.mjs || exit $$?
+
 .PHONY: release-examples
 release-examples: ## Run all release examples
 	@$(MAKE) rust-release-example
@@ -396,15 +469,21 @@ release-examples: ## Run all release examples
 	@$(MAKE) python-release-example
 	@$(MAKE) csharp-release-example
 	@$(MAKE) swift-release-example
+	@$(MAKE) wasm-release-example
 
 .PHONY: bcs-schema
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema || exit $$?
 
 .PHONY: grpc
 grpc: ## Regenerate gRPC protobuf types
 	@./crates/iota-sdk-grpc-proto-build/update_grpc_types.sh
+
+.PHONY: update-compiled-packages
+update-compiled-packages: ## Force re-fetch the compiled Move packages (REF=branch-or-sha overrides the pinned rev)
+	@bash crates/iota-sdk-move-types/update_compiled_packages.sh $(REF)
 
 .PHONY: help
 help: ## Show this help

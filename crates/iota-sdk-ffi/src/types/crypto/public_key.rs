@@ -49,9 +49,9 @@ impl PublicKey {
         self.0.is_ed25519()
     }
 
-    pub fn as_ed25519_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
+    pub fn as_opt_ed25519(&self) -> Option<Arc<Ed25519PublicKey>> {
         self.0
-            .as_ed25519_opt()
+            .as_opt_ed25519()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -65,9 +65,9 @@ impl PublicKey {
         self.0.is_secp256k1()
     }
 
-    pub fn as_secp256k1_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
+    pub fn as_opt_secp256k1(&self) -> Option<Arc<Secp256k1PublicKey>> {
         self.0
-            .as_secp256k1_opt()
+            .as_opt_secp256k1()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -81,9 +81,9 @@ impl PublicKey {
         self.0.is_secp256r1()
     }
 
-    pub fn as_secp256r1_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
+    pub fn as_opt_secp256r1(&self) -> Option<Arc<Secp256r1PublicKey>> {
         self.0
-            .as_secp256r1_opt()
+            .as_opt_secp256r1()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -97,9 +97,9 @@ impl PublicKey {
         self.0.is_passkey()
     }
 
-    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyPublicKey>> {
+    pub fn as_opt_passkey(&self) -> Option<Arc<PasskeyPublicKey>> {
         self.0
-            .as_passkey_opt()
+            .as_opt_passkey()
             .cloned()
             .map(Into::into)
             .map(Arc::new)

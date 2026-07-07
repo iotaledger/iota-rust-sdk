@@ -49,6 +49,8 @@ jobs:
             PACKAGE_ROOT="bindings/python"
           elif [[ "$PACKAGE" == "iota-swift-sdk" ]]; then
             PACKAGE_ROOT="bindings/swift"
+          elif [[ "$PACKAGE" == "iota-wasm-sdk" ]]; then
+            PACKAGE_ROOT="bindings/wasm"
           fi
           CHANGELOG=$(./.github/gen_changelog.sh "$PACKAGE" "$PACKAGE_ROOT" ${{ github.sha }} "$VERSION")
           echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV

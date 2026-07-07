@@ -27,7 +27,7 @@ jobs:
       - uses: taiki-e/install-action@cargo-hack
 
       - name: Install latest nightly
-        run: rustup toolchain install nightly --component rustfmt --allow-downgrade
+        run: rustup toolchain install nightly-2026-06-29 --component rustfmt --allow-downgrade
 
       - name: rustfmt
         run: make check-fmt
@@ -95,10 +95,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - name: Install nightly cargo-udeps
-        run: cargo +nightly install cargo-udeps
+      - name: Install cargo-udeps
+        uses: taiki-e/install-action@7a79fe8c3a13344501c80d99cae481c1c9085912 # v2.81.10
+        with:
+          tool: cargo-udeps
       - name: Run Cargo Udeps
-        run: cargo +nightly udeps ${{ matrix.flags }}
+        run: cargo +nightly-2026-06-29 udeps ${{ matrix.flags }}
 
   proto-build:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))

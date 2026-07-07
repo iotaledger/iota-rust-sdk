@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Digest, GasCostSummary, Object, SignedTransaction, TransactionEffects, TransactionEvents,
+    CheckpointContentsDigest, CheckpointDigest, Digest, GasCostSummary, Object, SignedTransaction,
+    TransactionDigest, TransactionEffects, TransactionEffectsDigest, TransactionEvents,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
 };
 
@@ -108,15 +109,15 @@ pub struct EndOfEpochData {
 /// checkpoint-summary = u64                            ; epoch
 ///                      u64                            ; sequence_number
 ///                      u64                            ; network_total_transactions
-///                      digest                         ; content_digest
-///                      (option digest)                ; previous_digest
+///                      checkpoint-contents-digest     ; content_digest
+///                      (option checkpoint-digest)     ; previous_digest
 ///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
 ///                      u64                            ; timestamp_ms
 ///                      (vector checkpoint-commitment) ; checkpoint_commitments
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -134,12 +135,12 @@ pub struct CheckpointSummary {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
-    pub content_digest: Digest,
+    pub content_digest: CheckpointContentsDigest,
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
     #[cfg_attr(feature = "serde", serde(default))]
-    pub previous_digest: Option<Digest>,
+    pub previous_digest: Option<CheckpointDigest>,
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
@@ -165,7 +166,107 @@ pub struct CheckpointSummary {
         feature = "serde",
         serde(default, with = "crate::_serde::ReadableBase64Encoded")
     )]
+    #[debug(
+        "{:?}",
+        <base64ct::Base64 as base64ct::Encoding>::encode_string(version_specific_data)
+    )]
     pub version_specific_data: Vec<u8>,
+}
+
+impl CheckpointSummary {
+    /// Construct a `CheckpointSummary` from its constituent parts.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        sequence_number: CheckpointSequenceNumber,
+        network_total_transactions: u64,
+        content_digest: CheckpointContentsDigest,
+        previous_digest: Option<CheckpointDigest>,
+        epoch_rolling_gas_cost_summary: GasCostSummary,
+        timestamp_ms: CheckpointTimestamp,
+        checkpoint_commitments: Vec<CheckpointCommitment>,
+        end_of_epoch_data: Option<EndOfEpochData>,
+        version_specific_data: Vec<u8>,
+    ) -> Self {
+        Self {
+            epoch,
+            sequence_number,
+            network_total_transactions,
+            content_digest,
+            previous_digest,
+            epoch_rolling_gas_cost_summary,
+            timestamp_ms,
+            checkpoint_commitments,
+            end_of_epoch_data,
+            version_specific_data,
+        }
+    }
+
+    /// The epoch that this checkpoint belongs to.
+    pub fn epoch(&self) -> EpochId {
+        self.epoch
+    }
+
+    /// The height of this checkpoint.
+    pub fn sequence_number(&self) -> CheckpointSequenceNumber {
+        self.sequence_number
+    }
+
+    /// Total number of transactions committed since genesis, including those in
+    /// this checkpoint.
+    pub fn network_total_transactions(&self) -> u64 {
+        self.network_total_transactions
+    }
+
+    /// The hash of the [`CheckpointContents`] for this checkpoint.
+    pub fn content_digest(&self) -> CheckpointContentsDigest {
+        self.content_digest
+    }
+
+    /// The hash of the previous `CheckpointSummary`, or `None` for the genesis
+    /// checkpoint.
+    pub fn previous_digest(&self) -> Option<CheckpointDigest> {
+        self.previous_digest
+    }
+
+    /// The running total gas costs of all transactions included in the current
+    /// epoch so far until this checkpoint.
+    pub fn epoch_rolling_gas_cost_summary(&self) -> &GasCostSummary {
+        &self.epoch_rolling_gas_cost_summary
+    }
+
+    /// Timestamp of the checkpoint, in milliseconds from the Unix epoch.
+    pub fn timestamp_ms(&self) -> CheckpointTimestamp {
+        self.timestamp_ms
+    }
+
+    /// Commitments to checkpoint-specific state.
+    pub fn checkpoint_commitments(&self) -> &[CheckpointCommitment] {
+        &self.checkpoint_commitments
+    }
+
+    /// Extra data present only in the final checkpoint of an epoch.
+    pub fn end_of_epoch_data(&self) -> Option<&EndOfEpochData> {
+        self.end_of_epoch_data.as_ref()
+    }
+
+    /// Opaque, protocol-version-specific data carried by the checkpoint.
+    pub fn version_specific_data(&self) -> &[u8] {
+        &self.version_specific_data
+    }
+
+    /// The validator committee that takes effect in the next epoch, present
+    /// only on the final checkpoint of an epoch.
+    pub fn next_epoch_committee(&self) -> Option<&[ValidatorCommitteeMember]> {
+        self.end_of_epoch_data
+            .as_ref()
+            .map(|data| data.next_epoch_committee.as_slice())
+    }
+
+    /// Whether this is the final checkpoint of an epoch.
+    pub fn is_last_checkpoint_of_epoch(&self) -> bool {
+        self.end_of_epoch_data.is_some()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -195,7 +296,7 @@ pub struct SignedCheckpointSummary {
 ///                                                           ; transaction. MUST be the same
 ///                                                           ; length as the vector of digests
 ///
-/// execution-digests = digest digest   ; transaction, effects
+/// execution-digests = transaction-digest transaction-effects-digest   ; transaction, effects
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -223,8 +324,8 @@ impl CheckpointContents {
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
-    pub transaction: Digest,
-    pub effects: Digest,
+    pub transaction: TransactionDigest,
+    pub effects: TransactionEffectsDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub signatures: Vec<UserSignature>,
 }
@@ -287,8 +388,8 @@ mod serialization {
             } else {
                 #[derive(serde::Serialize)]
                 struct Digests<'a> {
-                    transaction: &'a Digest,
-                    effects: &'a Digest,
+                    transaction: &'a TransactionDigest,
+                    effects: &'a TransactionEffectsDigest,
                 }
 
                 struct DigestSeq<'a>(&'a CheckpointContents);
@@ -334,8 +435,8 @@ mod serialization {
     #[derive(serde::Deserialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     struct ExecutionDigests {
-        transaction: Digest,
-        effects: Digest,
+        transaction: TransactionDigest,
+        effects: TransactionEffectsDigest,
     }
 
     #[derive(serde::Deserialize)]

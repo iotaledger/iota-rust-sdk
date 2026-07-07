@@ -2,7 +2,9 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version};
+use super::{
+    Address, MovePackage, ObjectDigest, ObjectId, StructTag, TransactionDigest, TypeTag, Version,
+};
 
 /// Reference to an object
 ///
@@ -13,7 +15,7 @@ use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version}
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-reference = object-id u64 digest
+/// object-reference = object-id u64 object-digest
 /// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -25,13 +27,13 @@ pub struct ObjectReference {
     /// The version of this object.
     pub version: Version,
     /// The digest of this object.
-    pub digest: Digest,
+    pub digest: ObjectDigest,
 }
 
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: ObjectDigest) -> Self {
         Self {
             object_id,
             version,
@@ -53,12 +55,12 @@ impl ObjectReference {
 
     /// Returns the digest of the object that this ObjectReference is referring
     /// to.
-    pub fn digest(&self) -> &Digest {
+    pub fn digest(&self) -> &ObjectDigest {
         &self.digest
     }
 
     /// Returns a 3-tuple containing the object id, version, and digest.
-    pub fn into_parts(self) -> (ObjectId, Version, Digest) {
+    pub fn into_parts(self) -> (ObjectId, Version, ObjectDigest) {
         let Self {
             object_id,
             version,
@@ -120,13 +122,13 @@ impl Owner {
 
 impl PartialEq<Address> for Owner {
     fn eq(&self, other: &Address) -> bool {
-        self.as_address_opt() == Some(other)
+        self.as_opt_address() == Some(other)
     }
 }
 
 impl PartialEq<ObjectId> for Owner {
     fn eq(&self, other: &ObjectId) -> bool {
-        self.as_object_opt() == Some(other)
+        self.as_opt_object() == Some(other)
     }
 }
 
@@ -170,14 +172,14 @@ pub enum ObjectData {
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 
-    pub fn object_type(&self) -> Option<&MoveObjectType> {
+    pub fn opt_object_type(&self) -> Option<&MoveObjectType> {
         match self {
             Self::Struct(m) => Some(m.object_type()),
             Self::Package(_) => None,
         }
     }
 
-    pub fn struct_tag(&self) -> Option<StructTag> {
+    pub fn opt_struct_tag(&self) -> Option<StructTag> {
         match self {
             Self::Struct(m) => Some(m.struct_tag().clone()),
             Self::Package(_) => None,
@@ -278,7 +280,7 @@ impl std::str::FromStr for MoveObjectType {
 ///
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -299,6 +301,7 @@ pub struct MoveStruct {
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(contents))]
     contents: Vec<u8>,
 }
 
@@ -468,7 +471,7 @@ pub struct Object {
     /// The owner that unlocks this object
     pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
-    pub previous_transaction: Digest,
+    pub previous_transaction: TransactionDigest,
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
@@ -481,7 +484,7 @@ impl Object {
     pub fn new(
         data: ObjectData,
         owner: Owner,
-        previous_transaction: Digest,
+        previous_transaction: TransactionDigest,
         storage_rebate: u64,
     ) -> Self {
         Self {
@@ -563,7 +566,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> Digest {
+    pub fn previous_transaction(&self) -> TransactionDigest {
         self.previous_transaction
     }
 
@@ -615,7 +618,7 @@ impl Object {
 
     /// Returns the struct tag of this object if it is a Move struct.
     pub fn struct_tag(&self) -> Option<StructTag> {
-        self.data.struct_tag()
+        self.data.opt_struct_tag()
     }
 
     /// Returns true if this object is a gas coin.
@@ -918,7 +921,7 @@ mod serialization {
             let object = Object {
                 data: ObjectData::Package(package),
                 owner: Owner::Object(ObjectId::ZERO),
-                previous_transaction: Digest::ZERO,
+                previous_transaction: TransactionDigest::ZERO,
                 storage_rebate: 100,
             };
 
@@ -970,7 +973,7 @@ mod serialization {
             let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
             assert_eq!(obj_ref.object_id, ObjectId::ZERO);
             assert_eq!(obj_ref.version, Version::from_u64(0));
-            assert_eq!(obj_ref.digest, Digest::ZERO);
+            assert_eq!(obj_ref.digest, ObjectDigest::ZERO);
 
             // Roundtrip
             let serialized = serde_json::to_string(&obj_ref).unwrap();
@@ -992,7 +995,7 @@ mod serialization {
                 assert_eq!(refs.len(), 1);
                 assert_eq!(refs[0].object_id, ObjectId::ZERO);
                 assert_eq!(refs[0].version, Version::from_u64(0));
-                assert_eq!(refs[0].digest, Digest::ZERO);
+                assert_eq!(refs[0].digest, ObjectDigest::ZERO);
             }
         }
 

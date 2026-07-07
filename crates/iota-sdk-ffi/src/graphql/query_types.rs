@@ -15,23 +15,20 @@ use iota_sdk::graphql_client::{
     },
 };
 
-use crate::types::{
-    address::Address,
-    move_core::TypeTag,
-    object::ObjectId,
-    transaction::{SignedTransaction, TransactionEffects},
+use crate::{
+    error::SdkFfiError,
+    types::{
+        address::Address,
+        move_core::TypeTag,
+        object::ObjectId,
+        transaction::{SignedTransaction, TransactionEffects},
+    },
 };
 
 uniffi::custom_type!(Base64, String, {
     remote,
     lower: |val| val.0,
     try_lift: |s| Ok(Base64(s)),
-});
-
-uniffi::custom_type!(BigInt, String, {
-    remote,
-    lower: |val| val.0,
-    try_lift: |s| Ok(BigInt(s)),
 });
 
 #[derive(uniffi::Record)]
@@ -968,23 +965,30 @@ pub struct CoinMetadata {
     pub symbol: Option<String>,
     /// The overall quantity of tokens that will be issued.
     #[uniffi(default = None)]
-    pub supply: Option<BigInt>,
+    pub supply: Option<u64>,
     /// Version of the token.
     pub version: u64,
 }
 
-impl From<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
-    fn from(value: iota_sdk::graphql_client::query_types::CoinMetadata) -> Self {
-        Self {
+impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
+    type Error = SdkFfiError;
+
+    fn try_from(
+        value: iota_sdk::graphql_client::query_types::CoinMetadata,
+    ) -> Result<Self, Self::Error> {
+        Ok(Self {
             address: Arc::new(value.address.into()),
             decimals: value.decimals,
             description: value.description,
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            supply: value.supply,
+            // The GraphQL `BigInt` scalar carries the supply as a decimal
+            // string; on-chain a coin's supply is a `u64`, so parse it into one
+            // to expose a native integer (e.g. `bigint` in TS) to bindings.
+            supply: value.supply.map(u64::try_from).transpose()?,
             version: value.version,
-        }
+        })
     }
 }
 
@@ -997,7 +1001,7 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            supply: value.supply,
+            supply: value.supply.map(|supply| BigInt(supply.to_string())),
             version: value.version,
         }
     }

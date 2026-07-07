@@ -146,7 +146,12 @@ pub use crypto::{
     RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
-pub use digest::{Digest, DigestParseError, SigningDigest};
+pub use digest::{
+    CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
+    DigestParseError, EffectsAuxDataDigest, MisbehaviorReportDigest, MoveAuthenticatorDigest,
+    ObjectDigest, SenderSignedDataDigest, SigningDigest, TransactionDigest,
+    TransactionEffectsDigest, TransactionEventsDigest,
+};
 pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
@@ -251,7 +256,7 @@ macro_rules! def_is_as_into_opt {
         paste::paste! {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
+        pub fn [< into_opt_ $rename >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -263,7 +268,7 @@ macro_rules! def_is_as_into_opt {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
-            self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+            self.[< into_opt_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
         }
     };
@@ -283,7 +288,7 @@ macro_rules! def_is_as_into_opt {
 
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+        pub fn [< as_opt_ $rename >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -306,18 +311,18 @@ macro_rules! def_is_as_into_opt {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
-            self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+            self.[< as_opt_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
         #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
-        pub fn [< as_ $rename _mut >](&mut self) -> &mut $inner {
-            self.[< as_ $rename _mut_opt >]().expect(&format!("not a {}", stringify!($variant)))
+        pub fn [< as_mut_ $rename >](&mut self) -> &mut $inner {
+            self.[< as_opt_mut_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+        pub fn [< as_opt_ $rename >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -328,7 +333,7 @@ macro_rules! def_is_as_into_opt {
 
         #[doc = "Converts this into a mut " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< as_ $rename _mut_opt >](&mut self) -> Option<&mut $inner> {
+        pub fn [< as_opt_mut_ $rename >](&mut self) -> Option<&mut $inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
