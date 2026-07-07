@@ -23,9 +23,7 @@
 //! // The batched reads return one result per request, so a transaction the
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
-//! let txs = client
-//!     .get_transactions([digest], TransactionReadMask::default())
-//!     .await?;
+//! let txs = client.get_transactions([digest]).await?;
 //! for tx in txs.body() {
 //!     match tx {
 //!         Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
@@ -35,9 +33,7 @@
 //!
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
-//! let objects = client
-//!     .get_objects([object_id], ObjectReadMask::default())
-//!     .await?;
+//! let objects = client.get_objects([object_id]).await?;
 //! for object in objects.body() {
 //!     match object {
 //!         Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),

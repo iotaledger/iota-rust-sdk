@@ -60,12 +60,9 @@ impl Client {
     ///
     /// # Read Mask
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `TransactionReadMask::default()` for the default field mask, or pass a
-    /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask)
-    /// built from a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields.
+    /// Uses the default field mask `TransactionReadMask::default()`. Use
+    /// [`get_transactions_masked`](Self::get_transactions_masked) to specify a
+    /// custom mask.
     ///
     /// The `input_objects`, `output_objects`, `balance_changes` and
     /// `object_changes` fields (also included by wildcard masks) require the
@@ -79,16 +76,12 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::{TransactionField, TransactionReadMask};
     /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
-    /// // Default mask
-    /// let txs = client
-    ///     .get_transactions([digest], TransactionReadMask::default())
-    ///     .await?;
+    /// let txs = client.get_transactions([digest]).await?;
     /// for tx in txs.body() {
     ///     let tx = match tx {
     ///         Ok(tx) => tx,
@@ -108,23 +101,56 @@ impl Client {
     ///     let checkpoint = tx.checkpoint_sequence_number()?;
     ///     println!("Checkpoint: {}", checkpoint);
     /// }
-    ///
-    /// // Selected fields
-    /// let txs = client
-    ///     .get_transactions(
-    ///         [digest],
-    ///         TransactionReadMask::from([TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
-    ///     )
-    ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_transactions(
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+        self.get_transactions_internal(digests.into_iter().collect(), Default::default())
+            .await
+    }
+
+    /// Get transactions by their digests, with a custom read mask.
+    ///
+    /// See [`get_transactions`](Self::get_transactions) for behavior. Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
+    /// # use iota_types::TransactionDigest;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new_localnet()?;
+    /// let digest: TransactionDigest = TransactionDigest::ZERO;
+    ///
+    /// let txs = client
+    ///     .get_transactions_masked(
+    ///         [digest],
+    ///         [TransactionField::EFFECTS, TransactionField::CHECKPOINT],
+    ///     )
+    ///     .await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_transactions_masked(
+        &self,
+        digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl IntoReadMask<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
-        let digests = digests.into_iter().collect::<Vec<_>>();
+        self.get_transactions_internal(digests.into_iter().collect(), read_mask.into_read_mask())
+            .await
+    }
+
+    async fn get_transactions_internal(
+        &self,
+        digests: Vec<TransactionDigest>,
+        read_mask: TransactionReadMask,
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if digests.is_empty() {
             return Err(Error::EmptyRequest);
         }

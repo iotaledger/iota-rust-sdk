@@ -194,8 +194,8 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Most callers should use the scoped per-endpoint mask types in
 /// [`read_mask_fields`](crate::read_mask_fields)
 /// (e.g. [`ObjectReadMask`](crate::read_mask_fields::ObjectReadMask)) which
-/// are passed directly to the client methods. This type is the underlying
-/// string holder, useful when composing masks by hand:
+/// are passed directly to the masked client methods. This type is the
+/// underlying string holder, useful when composing masks by hand:
 ///
 /// ```
 /// use iota_sdk_grpc_client::ReadMask;

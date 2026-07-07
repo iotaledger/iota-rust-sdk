@@ -11,7 +11,7 @@
 
 use eyre::{Result, bail};
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::ObjectReadMask},
+    grpc_client::Client,
     types::{ObjectId, Owner},
 };
 
@@ -22,9 +22,7 @@ async fn main() -> Result<()> {
     let object_id: ObjectId =
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;
 
-    let response = client
-        .get_objects([object_id], ObjectReadMask::default())
-        .await?;
+    let response = client.get_objects([object_id]).await?;
     // Each requested id gets its own result, so a failure here concerns only
     // this object.
     let proto_obj = match response.body().first() {
