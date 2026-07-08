@@ -32,6 +32,11 @@ macro_rules! ffi_move_object {
                 Ok(::bcs::from_bytes::<$core>(&bytes)?.into())
             }
 
+            /// The object's ID.
+            pub fn id(&self) -> $crate::types::object::ObjectId {
+                (*self.0.id.object_id()).into()
+            }
+
             $($accessors)*
         }
     };
@@ -68,6 +73,11 @@ macro_rules! ffi_move_object_generic {
             #[uniffi::constructor]
             pub fn try_from_bcs(bytes: Vec<u8>) -> $crate::error::Result<Self> {
                 Ok(::bcs::from_bytes::<$core>(&bytes)?.into())
+            }
+
+            /// The object's ID.
+            pub fn id(&self) -> $crate::types::object::ObjectId {
+                (*self.0.id.object_id()).into()
             }
 
             $($accessors)*
