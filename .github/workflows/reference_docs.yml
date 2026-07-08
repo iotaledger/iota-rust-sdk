@@ -1,10 +1,12 @@
 name: Reference Docs
 
-# Validates that the per-language API reference markdown generates
-# (see scripts/reference-docs/generate.sh). Building and uploading the
-# tarballs the docs site consumes happens in the iota repository's
-# "Upload IOTA SDK References to S3" workflow, from the revision pinned
-# there in docs/site/iota-sdk-references.rev.
+# Validates on pull requests that the per-language API reference markdown
+# still generates (see scripts/reference-docs/generate.sh), and attaches
+# the result to the CI run so reviewers can inspect it. Nothing is
+# published from here: the tarballs the docs site consumes are built and
+# uploaded to S3 by the iota repository's "Upload IOTA SDK References to
+# S3" workflow, which checks out this repository at the revision pinned
+# in docs/site/iota-sdk-references.rev and runs generate.sh directly.
 
 on:
   workflow_dispatch:
@@ -74,7 +76,7 @@ jobs:
       - name: Generate the ${{ matrix.language }} reference
         run: ./scripts/reference-docs/generate.sh ${{ matrix.language }}
 
-      - name: Upload artifact
+      - name: Attach the generated markdown to the run for review
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: reference-docs-${{ matrix.language }}
