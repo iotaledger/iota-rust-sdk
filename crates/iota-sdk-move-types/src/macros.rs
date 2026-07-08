@@ -11,17 +11,20 @@
 //!
 //! The [`StructTag`] predicate a mirror validates against is derived from its
 //! name as `is_<name:snake>` — the same `paste` snake-casing that generated
-//! that predicate in the first place — so callers pass only the type. A type
-//! whose predicate name doesn't follow from `:snake` (for example a name
-//! containing an acronym, where `:snake` would insert an extra underscore)
-//! passes its predicate explicitly as a second argument.
+//! that predicate in the first place, applied to the same identifier, so it
+//! always matches for a type registered on a plain `add_struct_tag_ctor!` arm.
+//! A type whose predicate lives under a different name — one registered with
+//! `@with_module` (predicate `is_<module>_<name>`), or a mirror whose Rust name
+//! diverges from the Move struct name — passes its predicate explicitly as a
+//! second argument.
 //!
 //! [`StructTag`]: iota_types::StructTag
 
 /// Generate the `TryFrom<&Object>` constructor for a non-generic mirror.
 ///
 /// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
-/// second argument when the snake-cased name doesn't match.
+/// second argument when it lives under a different name (e.g. an
+/// `@with_module` registration, whose predicate is `is_<module>_<name>`).
 macro_rules! impl_try_from_object {
     ($ty:ident, $is_fn:ident $(,)?) => {
         #[cfg(feature = "serde")]
@@ -55,7 +58,8 @@ macro_rules! impl_try_from_object {
 /// for a mirror with a single type parameter.
 ///
 /// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
-/// second argument when the snake-cased name doesn't match.
+/// second argument when it lives under a different name (e.g. an
+/// `@with_module` registration, whose predicate is `is_<module>_<name>`).
 macro_rules! impl_try_from_object_generic {
     ($ty:ident<$param:ident>, $is_fn:ident $(,)?) => {
         #[cfg(feature = "serde")]
