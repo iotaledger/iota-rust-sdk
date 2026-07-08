@@ -65,11 +65,218 @@ pub struct ExecutedTransaction {
     #[prost(message, optional, tag = "6")]
     pub timestamp: ::core::option::Option<::prost_types::Timestamp>,
     /// Set of input objects used by this transaction.
+    ///
+    /// The returned set is always complete: if the serving node no longer has
+    /// one of the objects (e.g. pruned), requesting this field fails with
+    /// `FAILED_PRECONDITION` instead of returning a silently shortened list.
+    /// Narrow the read mask, or fetch objects individually via `GetObjects`
+    /// for best-effort retrieval.
     #[prost(message, optional, tag = "7")]
     pub input_objects: ::core::option::Option<super::object::Objects>,
     /// Set of output objects produced by this transaction.
+    ///
+    /// The returned set is always complete: if the serving node no longer has
+    /// one of the objects (e.g. pruned), requesting this field fails with
+    /// `FAILED_PRECONDITION` instead of returning a silently shortened list.
+    /// Narrow the read mask, or fetch objects individually via `GetObjects`
+    /// for best-effort retrieval.
     #[prost(message, optional, tag = "8")]
     pub output_objects: ::core::option::Option<super::object::Objects>,
+    /// The balance changes caused by this transaction.
+    ///
+    /// Derived from the transaction's effects and input/output objects. If the
+    /// serving node no longer has a required object (e.g. pruned), requesting
+    /// this field fails with `FAILED_PRECONDITION` instead of returning a
+    /// silently wrong result; retry without this field in the read mask.
+    #[prost(message, optional, tag = "9")]
+    pub balance_changes: ::core::option::Option<BalanceChanges>,
+    /// The object changes caused by this transaction.
+    ///
+    /// Derived from the transaction's effects and input/output objects. If the
+    /// serving node no longer has a required object (e.g. pruned), requesting
+    /// this field fails with `FAILED_PRECONDITION` instead of returning a
+    /// silently incomplete result; retry without this field in the read mask.
+    #[prost(message, optional, tag = "10")]
+    pub object_changes: ::core::option::Option<ObjectChanges>,
+}
+/// The delta, or change, in balance of a particular coin type for an owner.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BalanceChange {
+    /// The owner whose balance changed.
+    #[prost(message, optional, tag = "1")]
+    pub owner: ::core::option::Option<super::types::Owner>,
+    /// The type of the coin, e.g. `0x2::iota::IOTA`.
+    #[prost(message, optional, tag = "2")]
+    pub coin_type: ::core::option::Option<super::types::TypeTag>,
+    /// The amount the balance changed by, encoded as a decimal string
+    /// (128-bit signed integer). A negative amount means the net flow of
+    /// value is away from the owner.
+    #[prost(string, optional, tag = "3")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// A list of balance changes.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BalanceChanges {
+    #[prost(message, repeated, tag = "1")]
+    pub balance_changes: ::prost::alloc::vec::Vec<BalanceChange>,
+}
+/// A package was published.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangePublished {
+    /// The ID of the published package.
+    #[prost(message, optional, tag = "1")]
+    pub package_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version of the published package.
+    #[prost(uint64, optional, tag = "2")]
+    pub version: ::core::option::Option<u64>,
+    /// The digest of the published package.
+    #[prost(message, optional, tag = "3")]
+    pub digest: ::core::option::Option<super::types::Digest>,
+    /// The set of modules in the published package.
+    #[prost(string, repeated, tag = "4")]
+    pub modules: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// An object was mutated.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangeMutated {
+    /// The sender of the transaction.
+    #[prost(message, optional, tag = "1")]
+    pub sender: ::core::option::Option<super::types::Address>,
+    /// The owner of the object.
+    #[prost(message, optional, tag = "2")]
+    pub owner: ::core::option::Option<super::types::Owner>,
+    /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[prost(string, optional, tag = "3")]
+    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// The ID of the object.
+    #[prost(message, optional, tag = "4")]
+    pub object_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version of the object.
+    #[prost(uint64, optional, tag = "5")]
+    pub version: ::core::option::Option<u64>,
+    /// The version of the object before it was mutated.
+    #[prost(uint64, optional, tag = "6")]
+    pub previous_version: ::core::option::Option<u64>,
+    /// The digest of the object.
+    #[prost(message, optional, tag = "7")]
+    pub digest: ::core::option::Option<super::types::Digest>,
+}
+/// An object was deleted.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangeDeleted {
+    /// The sender of the transaction.
+    #[prost(message, optional, tag = "1")]
+    pub sender: ::core::option::Option<super::types::Address>,
+    /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[prost(string, optional, tag = "2")]
+    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// The ID of the object.
+    #[prost(message, optional, tag = "3")]
+    pub object_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version the object was deleted at.
+    #[prost(uint64, optional, tag = "4")]
+    pub version: ::core::option::Option<u64>,
+}
+/// An object was wrapped inside another object.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangeWrapped {
+    /// The sender of the transaction.
+    #[prost(message, optional, tag = "1")]
+    pub sender: ::core::option::Option<super::types::Address>,
+    /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[prost(string, optional, tag = "2")]
+    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// The ID of the object.
+    #[prost(message, optional, tag = "3")]
+    pub object_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version the object was wrapped at.
+    #[prost(uint64, optional, tag = "4")]
+    pub version: ::core::option::Option<u64>,
+}
+/// An object was unwrapped from inside another object.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangeUnwrapped {
+    /// The sender of the transaction.
+    #[prost(message, optional, tag = "1")]
+    pub sender: ::core::option::Option<super::types::Address>,
+    /// The owner of the object.
+    #[prost(message, optional, tag = "2")]
+    pub owner: ::core::option::Option<super::types::Owner>,
+    /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[prost(string, optional, tag = "3")]
+    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// The ID of the object.
+    #[prost(message, optional, tag = "4")]
+    pub object_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version of the object.
+    #[prost(uint64, optional, tag = "5")]
+    pub version: ::core::option::Option<u64>,
+    /// The digest of the object.
+    #[prost(message, optional, tag = "6")]
+    pub digest: ::core::option::Option<super::types::Digest>,
+}
+/// A new object was created.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChangeCreated {
+    /// The sender of the transaction.
+    #[prost(message, optional, tag = "1")]
+    pub sender: ::core::option::Option<super::types::Address>,
+    /// The owner of the object.
+    #[prost(message, optional, tag = "2")]
+    pub owner: ::core::option::Option<super::types::Owner>,
+    /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[prost(string, optional, tag = "3")]
+    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// The ID of the object.
+    #[prost(message, optional, tag = "4")]
+    pub object_id: ::core::option::Option<super::types::ObjectId>,
+    /// The version of the object.
+    #[prost(uint64, optional, tag = "5")]
+    pub version: ::core::option::Option<u64>,
+    /// The digest of the object.
+    #[prost(message, optional, tag = "6")]
+    pub digest: ::core::option::Option<super::types::Digest>,
+}
+/// A change to an object caused by executing a transaction.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ObjectChange {
+    #[prost(oneof = "object_change::Kind", tags = "1, 2, 3, 4, 5, 6")]
+    pub kind: ::core::option::Option<object_change::Kind>,
+}
+/// Nested message and enum types in `ObjectChange`.
+pub mod object_change {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Kind {
+        #[prost(message, tag = "1")]
+        Published(super::ObjectChangePublished),
+        #[prost(message, tag = "2")]
+        Mutated(super::ObjectChangeMutated),
+        #[prost(message, tag = "3")]
+        Deleted(super::ObjectChangeDeleted),
+        #[prost(message, tag = "4")]
+        Wrapped(super::ObjectChangeWrapped),
+        #[prost(message, tag = "5")]
+        Unwrapped(super::ObjectChangeUnwrapped),
+        #[prost(message, tag = "6")]
+        Created(super::ObjectChangeCreated),
+    }
+}
+/// A list of object changes.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ObjectChanges {
+    #[prost(message, repeated, tag = "1")]
+    pub object_changes: ::prost::alloc::vec::Vec<ObjectChange>,
 }
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]

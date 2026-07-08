@@ -77,10 +77,207 @@ message ExecutedTransaction {
   optional google.protobuf.Timestamp timestamp = 6;
 
   // Set of input objects used by this transaction.
+  //
+  // The returned set is always complete: if the serving node no longer has
+  // one of the objects (e.g. pruned), requesting this field fails with
+  // `FAILED_PRECONDITION` instead of returning a silently shortened list.
+  // Narrow the read mask, or fetch objects individually via `GetObjects`
+  // for best-effort retrieval.
   optional iota.grpc.v1.object.Objects input_objects = 7;
 
   // Set of output objects produced by this transaction.
+  //
+  // The returned set is always complete: if the serving node no longer has
+  // one of the objects (e.g. pruned), requesting this field fails with
+  // `FAILED_PRECONDITION` instead of returning a silently shortened list.
+  // Narrow the read mask, or fetch objects individually via `GetObjects`
+  // for best-effort retrieval.
   optional iota.grpc.v1.object.Objects output_objects = 8;
+
+  // The balance changes caused by this transaction.
+  //
+  // Derived from the transaction's effects and input/output objects. If the
+  // serving node no longer has a required object (e.g. pruned), requesting
+  // this field fails with `FAILED_PRECONDITION` instead of returning a
+  // silently wrong result; retry without this field in the read mask.
+  optional BalanceChanges balance_changes = 9;
+
+  // The object changes caused by this transaction.
+  //
+  // Derived from the transaction's effects and input/output objects. If the
+  // serving node no longer has a required object (e.g. pruned), requesting
+  // this field fails with `FAILED_PRECONDITION` instead of returning a
+  // silently incomplete result; retry without this field in the read mask.
+  optional ObjectChanges object_changes = 10;
+}
+
+// The delta, or change, in balance of a particular coin type for an owner.
+message BalanceChange {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The owner whose balance changed.
+  optional iota.grpc.v1.types.Owner owner = 1;
+
+  // The type of the coin, e.g. `0x2::iota::IOTA`.
+  optional iota.grpc.v1.types.TypeTag coin_type = 2;
+
+  // The amount the balance changed by, encoded as a decimal string
+  // (128-bit signed integer). A negative amount means the net flow of
+  // value is away from the owner.
+  optional string amount = 3;
+}
+
+// A list of balance changes.
+message BalanceChanges {
+  option (iota.grpc.message_accessors) = "with";
+  option (iota.grpc.field_mask_transparent) = true;
+
+  repeated BalanceChange balance_changes = 1;
+}
+
+// A package was published.
+message ObjectChangePublished {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The ID of the published package.
+  optional iota.grpc.v1.types.ObjectId package_id = 1;
+
+  // The version of the published package.
+  optional uint64 version = 2;
+
+  // The digest of the published package.
+  optional iota.grpc.v1.types.Digest digest = 3;
+
+  // The set of modules in the published package.
+  repeated string modules = 4;
+}
+
+// An object was mutated.
+message ObjectChangeMutated {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The sender of the transaction.
+  optional iota.grpc.v1.types.Address sender = 1;
+
+  // The owner of the object.
+  optional iota.grpc.v1.types.Owner owner = 2;
+
+  // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+  optional string object_type = 3;
+
+  // The ID of the object.
+  optional iota.grpc.v1.types.ObjectId object_id = 4;
+
+  // The version of the object.
+  optional uint64 version = 5;
+
+  // The version of the object before it was mutated.
+  optional uint64 previous_version = 6;
+
+  // The digest of the object.
+  optional iota.grpc.v1.types.Digest digest = 7;
+}
+
+// An object was deleted.
+message ObjectChangeDeleted {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The sender of the transaction.
+  optional iota.grpc.v1.types.Address sender = 1;
+
+  // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+  optional string object_type = 2;
+
+  // The ID of the object.
+  optional iota.grpc.v1.types.ObjectId object_id = 3;
+
+  // The version the object was deleted at.
+  optional uint64 version = 4;
+}
+
+// An object was wrapped inside another object.
+message ObjectChangeWrapped {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The sender of the transaction.
+  optional iota.grpc.v1.types.Address sender = 1;
+
+  // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+  optional string object_type = 2;
+
+  // The ID of the object.
+  optional iota.grpc.v1.types.ObjectId object_id = 3;
+
+  // The version the object was wrapped at.
+  optional uint64 version = 4;
+}
+
+// An object was unwrapped from inside another object.
+message ObjectChangeUnwrapped {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The sender of the transaction.
+  optional iota.grpc.v1.types.Address sender = 1;
+
+  // The owner of the object.
+  optional iota.grpc.v1.types.Owner owner = 2;
+
+  // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+  optional string object_type = 3;
+
+  // The ID of the object.
+  optional iota.grpc.v1.types.ObjectId object_id = 4;
+
+  // The version of the object.
+  optional uint64 version = 5;
+
+  // The digest of the object.
+  optional iota.grpc.v1.types.Digest digest = 6;
+}
+
+// A new object was created.
+message ObjectChangeCreated {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The sender of the transaction.
+  optional iota.grpc.v1.types.Address sender = 1;
+
+  // The owner of the object.
+  optional iota.grpc.v1.types.Owner owner = 2;
+
+  // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
+  optional string object_type = 3;
+
+  // The ID of the object.
+  optional iota.grpc.v1.types.ObjectId object_id = 4;
+
+  // The version of the object.
+  optional uint64 version = 5;
+
+  // The digest of the object.
+  optional iota.grpc.v1.types.Digest digest = 6;
+}
+
+// A change to an object caused by executing a transaction.
+message ObjectChange {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof kind {
+    ObjectChangePublished published = 1;
+    ObjectChangeMutated mutated = 2;
+    ObjectChangeDeleted deleted = 3;
+    ObjectChangeWrapped wrapped = 4;
+    ObjectChangeUnwrapped unwrapped = 5;
+    ObjectChangeCreated created = 6;
+  }
+}
+
+// A list of object changes.
+message ObjectChanges {
+  option (iota.grpc.message_accessors) = "with";
+  option (iota.grpc.field_mask_transparent) = true;
+
+  repeated ObjectChange object_changes = 1;
 }
 
 message ExecutedTransactions {
