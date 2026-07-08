@@ -27,6 +27,7 @@ serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
 [dependencies]
 # external dependencies
 bcs = { workspace = true, optional = true }
+paste = { workspace = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 thiserror = { workspace = true, optional = true }
 
