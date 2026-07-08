@@ -17,13 +17,13 @@ func main() {
 	}
 
 	// Pick a small range of recent checkpoints to stream.
-	latest, err := client.GetCheckpointLatest(nil)
+	latest, err := client.GetCheckpointLatest(nil, nil, nil)
 	if err != nil {
 		log.Fatalf("Failed to get latest checkpoint: %v", err)
 	}
 	start := latest.SequenceNumber - 4
 
-	stream, err := client.StreamCheckpoints(&start, &latest.SequenceNumber, nil)
+	stream, err := client.StreamCheckpoints(&start, &latest.SequenceNumber, nil, nil, nil)
 	if err != nil {
 		log.Fatalf("Failed to open checkpoint stream: %v", err)
 	}

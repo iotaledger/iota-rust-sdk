@@ -3,5 +3,6 @@
 
 pub mod api;
 pub mod client;
+pub mod filters;
 pub mod output_types;
 pub mod transaction_builder_client;
