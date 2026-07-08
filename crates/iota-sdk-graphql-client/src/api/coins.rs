@@ -123,7 +123,7 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
-        client::{DEVNET_HOST, LOCAL_HOST, TESTNET_HOST},
+        client::{DEVNET_HOST, LOCAL_HOST},
         faucet::FaucetClient,
         test_utils::{NUM_COINS_FROM_FAUCET, test_client},
     };
@@ -148,36 +148,51 @@ mod tests {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
-            TESTNET_HOST => FaucetClient::new_testnet(),
             DEVNET_HOST => FaucetClient::new_devnet(),
+            // The testnet faucet is web-only and exposes no programmatic gas
+            // endpoint, so this test cannot fund an address on testnet.
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
         let address = key.derive_address();
-        faucet.request_and_wait(address).await.unwrap();
+        faucet
+            .request_and_wait_for_finalized(address, &client)
+            .await
+            .unwrap();
 
         const MAX_RETRIES: u32 = 10;
         const RETRY_DELAY: time::Duration = time::Duration::from_secs(1);
 
+        // Retry until the expected number of coins is streamed. Indexer lag can
+        // return a successful but incomplete page, so retry on a low count as
+        // well as on a stream error, re-counting from scratch each attempt.
         let mut num_coins = 0;
         for attempt in 0..MAX_RETRIES {
+            num_coins = 0;
             let mut stream = client.coins_stream(address, None, Direction::default());
-
+            let mut errored = false;
             while let Some(result) = stream.next().await {
                 match result {
                     Ok(_) => num_coins += 1,
                     Err(_) => {
-                        if attempt < MAX_RETRIES - 1 {
-                            time::sleep(RETRY_DELAY).await;
-                            num_coins = 0;
-                            break;
-                        }
+                        errored = true;
+                        break;
                     }
                 }
             }
+
+            if !errored && num_coins >= NUM_COINS_FROM_FAUCET {
+                break;
+            }
+            if attempt < MAX_RETRIES - 1 {
+                time::sleep(RETRY_DELAY).await;
+            }
         }
 
-        assert!(num_coins >= NUM_COINS_FROM_FAUCET);
+        assert!(
+            num_coins >= NUM_COINS_FROM_FAUCET,
+            "expected at least {NUM_COINS_FROM_FAUCET} coins for {address}, got {num_coins}"
+        );
     }
 
     #[tokio::test]

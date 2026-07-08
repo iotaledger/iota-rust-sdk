@@ -13,7 +13,6 @@ use tracing::{error, info};
 use crate::WaitForTx;
 
 pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
-pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
 const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
@@ -97,11 +96,6 @@ impl FaucetClient {
         let inner = reqwest::Client::new();
         let faucet_url = Url::parse(faucet_url).expect("Invalid faucet URL");
         FaucetClient { faucet_url, inner }
-    }
-
-    /// Create a new Faucet client connected to the `testnet` faucet.
-    pub fn new_testnet() -> Self {
-        Self::new(FAUCET_TESTNET_HOST)
     }
 
     /// Create a new Faucet client connected to the `devnet` faucet.

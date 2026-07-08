@@ -41,6 +41,7 @@ pub struct CheckpointTotalTx {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsArgs")]
 pub struct CheckpointsQuery {
+    #[arguments(first: $first, after: $after, last: $last, before: $before)]
     pub checkpoints: CheckpointConnection,
 }
 
