@@ -96,3 +96,7 @@ required-features = ["move-types"]
 [[example]]
 name = "grpc_stream_checkpoints"
 required-features = ["grpc"]
+
+[[example]]
+name = "grpc_execute_transaction"
+required-features = ["grpc"]

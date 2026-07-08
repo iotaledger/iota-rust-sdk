@@ -26,7 +26,7 @@ if [ "$1" == "start" ]; then
 
     # Start IOTA network
     echo "Starting IOTA network..."
-    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_LOCALNET_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
+    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_LOCALNET_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql --with-grpc $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
     IOTA_PID=$!
 
     # Use all 9's private key for gas station
