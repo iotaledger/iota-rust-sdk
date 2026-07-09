@@ -423,7 +423,9 @@ impl StructTag {
         url::Url,
         bag::Bag,
         object_bag::ObjectBag,
-        tx_context::TxContext
+        tx_context::TxContext,
+        deny_list::DenyList,
+        package_metadata::PackageMetadataV1
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
     add_struct_tag_ctor!(
@@ -431,7 +433,8 @@ impl StructTag {
         iota_system::IotaSystemState,
         staking_pool::StakedIota,
         timelocked_staking::TimelockedStakedIota,
-        iota_system_state_inner::SystemEpochInfoEvent
+        iota_system_state_inner::SystemEpochInfoEvent,
+        validator_cap::UnverifiedValidatorOperationCap
     );
     add_struct_tag_ctor!(STD, string::String);
     add_struct_tag_ctor!(@with_module STD, ascii::String);
@@ -451,6 +454,16 @@ impl StructTag {
         balance::Balance,
         timelock::TimeLock,
         config::Config,
+        display::Display,
+        coin_manager::CoinManagerTreasuryCap,
+        coin_manager::CoinManagerMetadataCap,
+        token::Token,
+        token::TokenPolicyCap,
+        token::TokenPolicy,
+        transfer_policy::TransferPolicy,
+        transfer_policy::TransferPolicyCap,
+        labeler::LabelerCap,
+        kiosk::PurchaseCap,
     );
     add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper, transfer::Receiving);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);

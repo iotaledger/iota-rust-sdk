@@ -15,18 +15,29 @@
 use iota_sdk_move_types::{
     FromObjectError, MoveType,
     iota_framework::{
+        authenticator_state::AuthenticatorState,
         balance::Balance,
         clock::Clock,
-        coin::{Coin, CoinMetadata},
+        coin::{Coin, CoinMetadata, DenyCapV1, RegulatedCoinMetadata, TreasuryCap},
+        coin_manager::{CoinManager, CoinManagerMetadataCap, CoinManagerTreasuryCap},
+        config::Config,
+        deny_list::DenyList,
+        display::Display,
         iota::IOTA,
-        kiosk::{Kiosk, KioskOwnerCap},
+        kiosk::{Kiosk, KioskOwnerCap, PurchaseCap},
+        labeler::LabelerCap,
         object::{ID, UID},
         package::{Publisher, UpgradeCap},
+        package_metadata::PackageMetadataV1,
+        random::Random,
         timelock::TimeLock,
+        token::{Token, TokenPolicy, TokenPolicyCap},
+        transfer_policy::{TransferPolicy, TransferPolicyCap},
+        vec_map::VecMap,
     },
     iota_system::{
         iota_system::IotaSystemState, staking_pool::StakedIota,
-        timelocked_staking::TimelockedStakedIota,
+        timelocked_staking::TimelockedStakedIota, validator_cap::UnverifiedValidatorOperationCap,
     },
     move_stdlib::ascii,
     stardust::{
@@ -152,6 +163,92 @@ coin_marker_validation_tests!(
 
 coin_marker_validation_tests!(coin, Coin, "0x2::coin::Coin", "fixtures/coin_iota.bcs");
 
+coin_marker_validation_tests!(
+    regulated_coin_metadata,
+    RegulatedCoinMetadata,
+    "0x2::coin::RegulatedCoinMetadata",
+    "fixtures/regulated_coin_metadata.bcs"
+);
+
+coin_marker_validation_tests!(
+    treasury_cap,
+    TreasuryCap,
+    "0x2::coin::TreasuryCap",
+    "fixtures/treasury_cap.bcs"
+);
+
+coin_marker_validation_tests!(
+    deny_cap_v1,
+    DenyCapV1,
+    "0x2::coin::DenyCapV1",
+    "fixtures/deny_cap_v1.bcs"
+);
+
+coin_marker_validation_tests!(
+    display,
+    Display,
+    "0x2::display::Display",
+    "fixtures/display.bcs"
+);
+
+coin_marker_validation_tests!(
+    coin_manager,
+    CoinManager,
+    "0x2::coin_manager::CoinManager",
+    "fixtures/coin_manager.bcs"
+);
+
+coin_marker_validation_tests!(
+    coin_manager_treasury_cap,
+    CoinManagerTreasuryCap,
+    "0x2::coin_manager::CoinManagerTreasuryCap",
+    "fixtures/coin_manager_treasury_cap.bcs"
+);
+
+coin_marker_validation_tests!(
+    coin_manager_metadata_cap,
+    CoinManagerMetadataCap,
+    "0x2::coin_manager::CoinManagerMetadataCap",
+    "fixtures/coin_manager_metadata_cap.bcs"
+);
+
+coin_marker_validation_tests!(token, Token, "0x2::token::Token", "fixtures/token.bcs");
+
+coin_marker_validation_tests!(
+    token_policy_cap,
+    TokenPolicyCap,
+    "0x2::token::TokenPolicyCap",
+    "fixtures/token_policy_cap.bcs"
+);
+
+coin_marker_validation_tests!(
+    token_policy,
+    TokenPolicy,
+    "0x2::token::TokenPolicy",
+    "fixtures/token_policy.bcs"
+);
+
+coin_marker_validation_tests!(
+    config,
+    Config,
+    "0x2::config::Config",
+    "fixtures/deny_list_config.bcs"
+);
+
+coin_marker_validation_tests!(
+    transfer_policy,
+    TransferPolicy,
+    "0x2::transfer_policy::TransferPolicy",
+    "fixtures/transfer_policy.bcs"
+);
+
+coin_marker_validation_tests!(
+    transfer_policy_cap,
+    TransferPolicyCap,
+    "0x2::transfer_policy::TransferPolicyCap",
+    "fixtures/transfer_policy_cap.bcs"
+);
+
 /// Tag-validation tests for non-generic mirrors: the constructor must
 /// accept the type's own tag and reject any other.
 macro_rules! object_tag_validation_tests {
@@ -217,6 +314,22 @@ object_tag_validation_tests!(
     TimelockedStakedIota,
     "0x3::timelocked_staking::TimelockedStakedIota",
     "fixtures/timelocked_staked_iota.bcs"
+);
+
+object_tag_validation_tests!(
+    deny_list,
+    DenyList,
+    "0x2::deny_list::DenyList",
+    "fixtures/deny_list.bcs"
+);
+
+object_tag_validation_tests!(random, Random, "0x2::random::Random", "fixtures/random.bcs");
+
+object_tag_validation_tests!(
+    unverified_validator_operation_cap,
+    UnverifiedValidatorOperationCap,
+    "0x3::validator_cap::UnverifiedValidatorOperationCap",
+    "fixtures/validator_operation_cap.bcs"
 );
 
 /// Mirrors without a committed fixture are exercised with synthetic
@@ -361,5 +474,109 @@ mod synthetic {
             ),
             Err(FromObjectError::WrongType)
         ));
+    }
+
+    #[test]
+    fn authenticator_state_roundtrip_and_tag_check() {
+        let value = AuthenticatorState {
+            id: UID::new(ObjectId::ZERO),
+            version: 1,
+        };
+        let object = synthetic_object("0x2::authenticator_state::AuthenticatorState", &value);
+        let decoded = AuthenticatorState::try_from(&object).expect("tag matches");
+        assert_eq!(decoded, value);
+
+        // Same byte shape (`UID` + `u64`) as `Clock`, so only the tag
+        // distinguishes them.
+        let object = synthetic_object("0x2::clock::Clock", &value);
+        assert!(matches!(
+            AuthenticatorState::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+    }
+
+    #[test]
+    fn package_metadata_v1_roundtrip_and_tag_check() {
+        let value = PackageMetadataV1 {
+            id: UID::new(ObjectId::ZERO),
+            storage_id: ID::new(ObjectId::ZERO),
+            runtime_id: ID::new(ObjectId::ZERO),
+            package_version: 1,
+            modules_metadata: VecMap::new(Vec::new()),
+        };
+        let object = synthetic_object("0x2::package_metadata::PackageMetadataV1", &value);
+        let decoded = PackageMetadataV1::try_from(&object).expect("tag matches");
+        assert_eq!(decoded, value);
+
+        let object = synthetic_object("0x123::foo::FOO", &value);
+        assert!(matches!(
+            PackageMetadataV1::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+    }
+
+    #[test]
+    fn labeler_cap_validates_label_type() {
+        let value = LabelerCap::<IOTA>::new(UID::new(ObjectId::ZERO));
+
+        let object = synthetic_object("0x2::labeler::LabelerCap<0x2::iota::IOTA>", &value);
+        let decoded = LabelerCap::<IOTA>::try_from(&object).expect("tag matches L");
+        assert_eq!(decoded, value);
+
+        // Escape hatch: an explicit label-type tag. Accepts the matching
+        // tag and rejects a foreign one.
+        LabelerCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+            .expect("explicit label type matches");
+        assert!(matches!(
+            LabelerCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            Err(FromObjectError::WrongType)
+        ));
+
+        // Same bytes labeled with a different type must be rejected for
+        // `LabelerCap<IOTA>` …
+        let object = synthetic_object("0x2::labeler::LabelerCap<0x123::foo::FOO>", &value);
+        assert!(matches!(
+            LabelerCap::<IOTA>::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+
+        // … while `LabelerCap<Foo>` composes the matching tag through the
+        // `MoveType` impl on the marker.
+        LabelerCap::<Foo>::try_from(&object).expect("composed tag matches");
+    }
+
+    #[test]
+    fn purchase_cap_validates_item_type() {
+        let value = PurchaseCap::<IOTA>::new(
+            UID::new(ObjectId::ZERO),
+            ID::new(ObjectId::ZERO),
+            ID::new(ObjectId::ZERO),
+            1000,
+        );
+
+        let object = synthetic_object("0x2::kiosk::PurchaseCap<0x2::iota::IOTA>", &value);
+        let decoded = PurchaseCap::<IOTA>::try_from(&object).expect("tag matches T");
+        assert_eq!(decoded, value);
+
+        // Escape hatch: an explicit item-type tag. Accepts the matching tag
+        // and rejects a foreign one.
+        PurchaseCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+            .expect("explicit item type matches");
+        assert!(matches!(
+            PurchaseCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            Err(FromObjectError::WrongType)
+        ));
+
+        // Same bytes labeled with a different item type must be rejected
+        // for `PurchaseCap<IOTA>` …
+        let object = synthetic_object("0x2::kiosk::PurchaseCap<0x123::foo::FOO>", &value);
+        assert!(matches!(
+            PurchaseCap::<IOTA>::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+
+        // … while `PurchaseCap<Foo>` composes the matching tag through the
+        // `MoveType` impl on the marker.
+        PurchaseCap::<Foo>::try_from(&object).expect("composed tag matches");
     }
 }
