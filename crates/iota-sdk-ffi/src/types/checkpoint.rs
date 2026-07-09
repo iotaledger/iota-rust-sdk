@@ -187,13 +187,6 @@ impl CheckpointSummary {
 ///
 /// ```text
 /// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
-///
-/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
-///                          (vector (vector user-signature)) ; set of user signatures for each
-///                                                           ; transaction. MUST be the same
-///                                                           ; length as the vector of digests
-///
-/// execution-digests = digest digest   ; transaction, effects
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
@@ -201,24 +194,62 @@ pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
 #[uniffi::export]
 impl CheckpointContents {
     #[uniffi::constructor]
+    pub fn new_v1(contents: &CheckpointContentsV1) -> Self {
+        Self(iota_sdk::types::CheckpointContents::new_v1(
+            contents.0.clone(),
+        ))
+    }
+
+    pub fn is_v1(&self) -> bool {
+        self.0.is_v1()
+    }
+
+    pub fn as_v1(&self) -> CheckpointContentsV1 {
+        self.0.as_v1().clone().into()
+    }
+
+    pub fn digest(&self) -> CheckpointContentsDigest {
+        self.0.digest().into()
+    }
+}
+
+/// CheckpointContents are the transactions included in an upcoming checkpoint.
+/// They must have already been causally ordered. Since the causal order
+/// algorithm is the same among validators, we expect all honest validators to
+/// come up with the same order for each checkpoint content.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
+///                          (vector (vector user-signature)) ; set of user signatures for each
+///                                                           ; transaction. MUST be the same
+///                                                           ; length as the vector of digests
+///
+/// execution-digests = transaction-digest transaction-effects-digest   ; transaction, effects
+/// ```
+#[derive(derive_more::From, uniffi::Object)]
+pub struct CheckpointContentsV1(pub iota_sdk::types::CheckpointContentsV1);
+
+#[uniffi::export]
+impl CheckpointContentsV1 {
+    #[uniffi::constructor]
     pub fn new(transaction_info: Vec<Arc<CheckpointTransactionInfo>>) -> Self {
-        Self(iota_sdk::types::CheckpointContents::new(
+        Self(iota_sdk::types::CheckpointContentsV1::new(
             transaction_info.into_iter().map(|v| v.0.clone()).collect(),
         ))
     }
 
-    pub fn transaction_info(&self) -> Vec<Arc<CheckpointTransactionInfo>> {
+    pub fn transactions(&self) -> Vec<Arc<CheckpointTransactionInfo>> {
         self.0
-            .0
+            .transactions()
             .iter()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
             .collect()
-    }
-
-    pub fn digest(&self) -> CheckpointContentsDigest {
-        self.0.digest().into()
     }
 }
 
@@ -349,6 +380,7 @@ crate::export_iota_types_bcs_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_bcs_conversion!(
     CheckpointSummary,
     CheckpointContents,
+    CheckpointContentsV1,
     CheckpointTransactionInfo,
     CheckpointCommitment
 );
@@ -356,6 +388,7 @@ crate::export_iota_types_json_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_json_conversion!(
     CheckpointSummary,
     CheckpointContents,
+    CheckpointContentsV1,
     CheckpointTransactionInfo,
     CheckpointCommitment
 );
