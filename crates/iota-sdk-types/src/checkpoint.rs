@@ -317,6 +317,16 @@ impl CheckpointContents {
     pub fn into_v1(self) -> Vec<CheckpointTransactionInfo> {
         self.0
     }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
 }
 
 /// Transaction information committed to in a checkpoint
