@@ -28,7 +28,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -50,6 +50,7 @@ pub struct Event {
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
+    #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(contents))]
     pub contents: Vec<u8>,
 }
 

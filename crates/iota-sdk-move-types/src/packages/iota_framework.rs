@@ -297,42 +297,9 @@ pub mod coin {
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
-
-        /// Decode a [`Coin<T>`] from an on-chain object, validating that
-        /// the object's type tag matches `0x2::coin::Coin<coin_type>`.
-        ///
-        /// Escape hatch for coin types only known at runtime; nothing ties
-        /// `coin_type` to `T`. When the coin type is known at compile time,
-        /// prefer the `TryFrom` impl.
-        pub fn try_from_object_with_type(
-            object: &iota_types::Object,
-            coin_type: &iota_types::TypeTag,
-        ) -> Result<Self, crate::FromObjectError> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            let tag = move_struct.struct_tag();
-            if !tag.is_coin() || tag.type_params() != core::slice::from_ref(coin_type) {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
     }
 
-    /// Decode a [`Coin<T>`] from an on-chain object, validating that the
-    /// object's type tag matches `0x2::coin::Coin<T>`, including the coin
-    /// marker `T`.
-    #[cfg(feature = "serde")]
-    impl<T> TryFrom<&iota_types::Object> for Coin<T>
-    where
-        T: serde::de::DeserializeOwned + crate::MoveType,
-    {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            Self::try_from_object_with_type(object, &T::type_tag())
-        }
-    }
+    impl_try_from_object_generic!(Coin<T>);
 
     /// Rust version of the Move `iota::coin::CoinMetadata<T>` type.
     ///
@@ -391,43 +358,9 @@ pub mod coin {
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
-
-        /// Decode a [`CoinMetadata<T>`] from an on-chain object, validating
-        /// that the object's type tag matches
-        /// `0x2::coin::CoinMetadata<coin_type>`.
-        ///
-        /// Escape hatch for coin types only known at runtime; nothing ties
-        /// `coin_type` to `T`. When the coin type is known at compile time,
-        /// prefer the `TryFrom` impl.
-        pub fn try_from_object_with_type(
-            object: &iota_types::Object,
-            coin_type: &iota_types::TypeTag,
-        ) -> Result<Self, crate::FromObjectError> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            let tag = move_struct.struct_tag();
-            if !tag.is_coin_metadata() || tag.type_params() != core::slice::from_ref(coin_type) {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
     }
 
-    /// Decode a [`CoinMetadata<T>`] from an on-chain object, validating
-    /// that the object's type tag matches `0x2::coin::CoinMetadata<T>`,
-    /// including the coin marker `T`.
-    #[cfg(feature = "serde")]
-    impl<T> TryFrom<&iota_types::Object> for CoinMetadata<T>
-    where
-        T: serde::de::DeserializeOwned + crate::MoveType,
-    {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            Self::try_from_object_with_type(object, &T::type_tag())
-        }
-    }
+    impl_try_from_object_generic!(CoinMetadata<T>);
 
     /// Rust version of the Move `iota::coin::RegulatedCoinMetadata<T>` type.
     ///
@@ -460,6 +393,8 @@ pub mod coin {
         }
     }
 
+    impl_try_from_object_generic!(RegulatedCoinMetadata<T>);
+
     /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
     ///
     /// Capability allowing the bearer to mint and burn coins of type `T`.
@@ -479,6 +414,8 @@ pub mod coin {
             Self { id, total_supply }
         }
     }
+
+    impl_try_from_object_generic!(TreasuryCap<T>);
 
     /// Rust version of the Move `iota::coin::DenyCapV1<T>` type.
     ///
@@ -507,6 +444,8 @@ pub mod coin {
             }
         }
     }
+
+    impl_try_from_object_generic!(DenyCapV1<T>);
 }
 
 /// Types from `0x2::table`.
@@ -838,22 +777,7 @@ pub mod clock {
         }
     }
 
-    /// Decode a [`Clock`] from an on-chain object, validating that the
-    /// object's type tag matches `0x2::clock::Clock`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for Clock {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_clock() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(Clock);
 }
 
 /// Types from `0x2::tx_context`.
@@ -1073,44 +997,9 @@ pub mod timelock {
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
             bcs::from_bytes(bytes)
         }
-
-        /// Decode a [`TimeLock<T>`] from an on-chain object, validating
-        /// that the object's type tag matches
-        /// `0x2::timelock::TimeLock<locked_type>`.
-        ///
-        /// Escape hatch for locked types only known at runtime; nothing
-        /// ties `locked_type` to `T`. When the locked type is known at
-        /// compile time, prefer the `TryFrom` impl.
-        pub fn try_from_object_with_type(
-            object: &iota_types::Object,
-            locked_type: &iota_types::TypeTag,
-        ) -> Result<Self, crate::FromObjectError> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            let tag = move_struct.struct_tag();
-            if !tag.is_time_lock() || tag.type_params() != core::slice::from_ref(locked_type) {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
     }
 
-    /// Decode a [`TimeLock<T>`] from an on-chain object, validating that
-    /// the object's type tag matches `0x2::timelock::TimeLock<T>`, including
-    /// the locked type `T` (e.g. `Balance<IOTA>` for vested-reward
-    /// timelocks).
-    #[cfg(feature = "serde")]
-    impl<T> TryFrom<&iota_types::Object> for TimeLock<T>
-    where
-        T: serde::de::DeserializeOwned + crate::MoveType,
-    {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            Self::try_from_object_with_type(object, &T::type_tag())
-        }
-    }
+    impl_try_from_object_generic!(TimeLock<T>);
 }
 
 /// Types from `0x2::borrow`.
@@ -1250,6 +1139,8 @@ pub mod labeler {
             }
         }
     }
+
+    impl_try_from_object_generic!(LabelerCap<L>);
 }
 
 /// Types from `0x2::linked_table`.
@@ -1452,6 +1343,8 @@ pub mod authenticator_state {
         pub version: u64,
     }
 
+    impl_try_from_object!(AuthenticatorState);
+
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -1562,6 +1455,8 @@ pub mod display {
         }
     }
 
+    impl_try_from_object_generic!(Display<T>);
+
     /// Rust version of the Move `iota::display::DisplayCreated<T>` event
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -1649,22 +1544,7 @@ pub mod package {
         }
     }
 
-    /// Decode a [`Publisher`] from an on-chain object, validating that
-    /// the object's type tag matches `0x2::package::Publisher`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for Publisher {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_publisher() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(Publisher);
 
     /// Rust version of the Move `iota::package::UpgradeCap` type.
     ///
@@ -1696,22 +1576,7 @@ pub mod package {
         }
     }
 
-    /// Decode an [`UpgradeCap`] from an on-chain object, validating
-    /// that the object's type tag matches `0x2::package::UpgradeCap`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for UpgradeCap {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_upgrade_cap() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(UpgradeCap);
 
     /// Rust version of the Move `iota::package::UpgradeTicket` type.
     ///
@@ -2045,6 +1910,8 @@ pub mod coin_manager {
         pub metadata_immutable: bool,
     }
 
+    impl_try_from_object_generic!(CoinManager<T>);
+
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2068,6 +1935,8 @@ pub mod coin_manager {
         }
     }
 
+    impl_try_from_object_generic!(CoinManagerTreasuryCap<T>);
+
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2090,6 +1959,8 @@ pub mod coin_manager {
             }
         }
     }
+
+    impl_try_from_object_generic!(CoinManagerMetadataCap<T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
@@ -2202,6 +2073,8 @@ pub mod token {
         }
     }
 
+    impl_try_from_object_generic!(Token<T>);
+
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2225,6 +2098,8 @@ pub mod token {
             }
         }
     }
+
+    impl_try_from_object_generic!(TokenPolicyCap<T>);
 
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2256,6 +2131,8 @@ pub mod token {
             }
         }
     }
+
+    impl_try_from_object_generic!(TokenPolicy<T>);
 
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2426,6 +2303,8 @@ pub mod package_metadata {
         pub modules_metadata: VecMap<ascii::String, ModuleMetadataV1>,
     }
 
+    impl_try_from_object!(PackageMetadataV1);
+
     /// Rust version of the Move
     /// `iota::package_metadata::ModuleMetadataV1` type.
     ///
@@ -2480,6 +2359,8 @@ pub mod deny_list {
         /// The individual deny lists.
         pub lists: Bag,
     }
+
+    impl_try_from_object!(DenyList);
 
     /// Rust version of the Move `iota::deny_list::ConfigWriteCap` type.
     ///
@@ -2571,6 +2452,8 @@ pub mod random {
         pub inner: Versioned,
     }
 
+    impl_try_from_object!(Random);
+
     /// Rust version of the Move `iota::random::RandomInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2630,6 +2513,8 @@ pub mod config {
             }
         }
     }
+
+    impl_try_from_object_generic!(Config<WriteCap>);
 
     /// Rust version of the Move `iota::config::Setting<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2936,22 +2821,7 @@ pub mod kiosk {
         }
     }
 
-    /// Decode a [`Kiosk`] from an on-chain object, validating that the
-    /// object's type tag matches `0x2::kiosk::Kiosk`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for Kiosk {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_kiosk() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(Kiosk);
 
     /// Rust version of the Move `iota::kiosk::KioskOwnerCap` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2975,22 +2845,7 @@ pub mod kiosk {
         }
     }
 
-    /// Decode a [`KioskOwnerCap`] from an on-chain object, validating
-    /// that the object's type tag matches `0x2::kiosk::KioskOwnerCap`.
-    #[cfg(feature = "serde")]
-    impl TryFrom<&iota_types::Object> for KioskOwnerCap {
-        type Error = crate::FromObjectError;
-
-        fn try_from(object: &iota_types::Object) -> Result<Self, Self::Error> {
-            let move_struct = object
-                .as_struct_opt()
-                .ok_or(crate::FromObjectError::NotAMoveStruct)?;
-            if !move_struct.object_type().is_kiosk_owner_cap() {
-                return Err(crate::FromObjectError::WrongType);
-            }
-            bcs::from_bytes(move_struct.contents()).map_err(crate::FromObjectError::Bcs)
-        }
-    }
+    impl_try_from_object!(KioskOwnerCap);
 
     /// Rust version of the Move `iota::kiosk::PurchaseCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3019,6 +2874,8 @@ pub mod kiosk {
             }
         }
     }
+
+    impl_try_from_object_generic!(PurchaseCap<T>);
 
     /// Rust version of the Move `iota::kiosk::Borrow` type.
     ///
@@ -3275,6 +3132,8 @@ pub mod transfer_policy {
         }
     }
 
+    impl_try_from_object_generic!(TransferPolicy<T>);
+
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3299,6 +3158,8 @@ pub mod transfer_policy {
             }
         }
     }
+
+    impl_try_from_object_generic!(TransferPolicyCap<T>);
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
