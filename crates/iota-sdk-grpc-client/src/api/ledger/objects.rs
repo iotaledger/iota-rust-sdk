@@ -4,7 +4,7 @@
 //! High-level API for object queries.
 
 use iota_grpc_types::{
-    read_mask_fields::ObjectReadMask,
+    read_mask_fields::{IntoReadMask, ObjectReadMask},
     v1::{
         ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
         object::Object,
@@ -16,8 +16,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ProtoResult, Result, collect_stream,
-        field_mask_with_default, proto_object_id, saturating_usize_to_u32,
+        Error, MetadataEnvelope, ProtoResult, Result, collect_stream, proto_object_id,
+        saturating_usize_to_u32,
     },
 };
 
@@ -36,8 +36,8 @@ impl Client {
     ///
     /// # Read Mask
     ///
-    /// The `read_mask` parameter controls which fields the server returns; pass
-    /// `None` for the default mask, or an
+    /// The `read_mask` parameter controls which fields the server returns; use
+    /// `ObjectReadMask::default()` for the default mask, or pass an
     /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
     /// built from an
     /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
@@ -54,7 +54,9 @@ impl Client {
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Default mask
-    /// let objs = client.get_objects([object_id], None).await?;
+    /// let objs = client
+    ///     .get_objects([object_id], ObjectReadMask::default())
+    ///     .await?;
     ///
     /// // Selected fields
     /// let objs = client
@@ -77,7 +79,7 @@ impl Client {
     pub async fn get_objects(
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
-        read_mask: impl Into<Option<ObjectReadMask>>,
+        read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Object>>> {
         let refs = refs
             .into_iter()
@@ -87,7 +89,8 @@ impl Client {
             })
             .collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, read_mask.into()).await
+        self.get_objects_internal(refs, read_mask.into_read_mask())
+            .await
     }
 
     /// Get objects by their IDs and optional versions.
@@ -104,8 +107,8 @@ impl Client {
     ///
     /// # Read Mask
     ///
-    /// The `read_mask` parameter controls which fields the server returns; pass
-    /// `None` for the default mask, or an
+    /// The `read_mask` parameter controls which fields the server returns; use
+    /// `ObjectReadMask::default()` for the default mask, or pass an
     /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
     /// built from an
     /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
@@ -123,7 +126,7 @@ impl Client {
     ///
     /// // Default mask
     /// let objs = client
-    ///     .get_objects_with_versions([(object_id, None)], None)
+    ///     .get_objects_with_versions([(object_id, None)], ObjectReadMask::default())
     ///     .await?;
     ///
     /// // Selected fields
@@ -147,7 +150,7 @@ impl Client {
     pub async fn get_objects_with_versions(
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
-        read_mask: impl Into<Option<ObjectReadMask>>,
+        read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Object>>> {
         let refs = refs
             .into_iter()
@@ -162,13 +165,14 @@ impl Client {
             })
             .collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, read_mask.into()).await
+        self.get_objects_internal(refs, read_mask.into_read_mask())
+            .await
     }
 
     async fn get_objects_internal(
         &self,
         refs: Vec<ObjectRequest>,
-        read_mask: Option<ObjectReadMask>,
+        read_mask: ObjectReadMask,
     ) -> Result<MetadataEnvelope<Vec<Object>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);
@@ -178,10 +182,7 @@ impl Client {
 
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
-            .with_read_mask(field_mask_with_default(
-                read_mask.as_ref().map(|m| m.as_str()),
-                GET_OBJECTS_READ_MASK,
-            ));
+            .with_read_mask(read_mask);
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));

@@ -4,7 +4,7 @@
 //! High-level API for transaction simulation.
 
 use iota_grpc_types::{
-    read_mask_fields::SimulateReadMask,
+    read_mask_fields::{IntoReadMask, SimulateReadMask},
     v1::transaction_execution_service::{
         SimulateTransactionItem, SimulateTransactionsRequest, SimulatedTransaction,
         simulate_transaction_item::TransactionCheckModes,
@@ -14,10 +14,7 @@ use iota_types::Transaction;
 
 use crate::{
     Client,
-    api::{
-        Error, MetadataEnvelope, ProtoResult, ProtocolError, Result,
-        SIMULATE_TRANSACTIONS_READ_MASK, build_proto_transaction, field_mask_with_default,
-    },
+    api::{Error, MetadataEnvelope, ProtoResult, ProtocolError, Result, build_proto_transaction},
 };
 
 /// A single transaction with simulation options for use in batch simulation.
@@ -58,12 +55,15 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::SimulateReadMask;
     /// # use iota_types::Transaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
     /// let tx: Transaction = todo!();
-    /// let result = client.simulate_transaction(tx, false, None).await?;
+    /// let result = client
+    ///     .simulate_transaction(tx, false, SimulateReadMask::default())
+    ///     .await?;
     ///
     /// let executed_tx = result.body().executed_transaction()?;
     /// let effects = executed_tx.effects()?.effects()?;
@@ -75,15 +75,15 @@ impl Client {
     /// # }
     /// ```
     ///
-    /// The optional `read_mask` controls which fields the server returns; pass
-    /// `None` for the default mask, or a
+    /// The `read_mask` controls which fields the server returns; use
+    /// `SimulateReadMask::default()` for the default mask. Pass a
     /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
     /// any slice/array/vec of fields — conversion is automatic.
     pub async fn simulate_transaction(
         &self,
         transaction: Transaction,
         skip_checks: bool,
-        read_mask: impl Into<Option<SimulateReadMask>>,
+        read_mask: impl IntoReadMask<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
         self.simulate_transactions(
             vec![SimulateTransactionInput {
@@ -105,9 +105,9 @@ impl Client {
     /// input. Each element is either the successfully simulated transaction or
     /// the per-item error returned by the server.
     ///
-    /// The optional `read_mask` controls which fields the server returns for
-    /// each `SimulatedTransaction`; pass `None` for the default mask
-    /// [`SIMULATE_TRANSACTIONS_READ_MASK`]. Pass a
+    /// The `read_mask` controls which fields the server returns for each
+    /// `SimulatedTransaction`; use `SimulateReadMask::default()` for the
+    /// default mask. Pass a
     /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
     /// any slice/array/vec of fields — conversion is automatic.
     ///
@@ -119,9 +119,9 @@ impl Client {
     pub async fn simulate_transactions(
         &self,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: impl Into<Option<SimulateReadMask>>,
+        read_mask: impl IntoReadMask<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
-        let read_mask = read_mask.into();
+        let read_mask = read_mask.into_read_mask();
         if transactions.is_empty() {
             return Err(Error::EmptyRequest);
         }
@@ -133,10 +133,7 @@ impl Client {
 
         let request = SimulateTransactionsRequest::default()
             .with_transactions(items)
-            .with_read_mask(field_mask_with_default(
-                read_mask.as_ref().map(|m| m.as_str()),
-                SIMULATE_TRANSACTIONS_READ_MASK,
-            ));
+            .with_read_mask(read_mask);
 
         let response = self
             .execution_service_client()

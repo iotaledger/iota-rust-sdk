@@ -23,22 +23,23 @@ async fn main() -> Result<()> {
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.
     let head = client
-        .get_checkpoint_latest(None, None, None)
+        .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
         .await?
         .body()
         .sequence_number();
     let start = head.saturating_sub(HOW_MANY - 1);
     let end = head;
 
-    // Only ask for the summary — keeps the message small. Drop the mask
-    // (or compose more fields) to pull more data per checkpoint.
+    // Only ask for the summary — keeps the message small. Pass
+    // `CheckpointResponseReadMask::default()` (or compose more fields) to
+    // pull more data per checkpoint.
     let mut stream = client
         .stream_checkpoints(
             start,
             end,
-            CheckpointResponseReadMask::from(CheckpointResponseField::CHECKPOINT_SUMMARY),
             None,
             None,
+            CheckpointResponseField::CHECKPOINT_SUMMARY,
         )
         .await?;
 

@@ -6,9 +6,7 @@
 use std::borrow::Cow;
 
 pub use iota_grpc_types::{
-    field::{FieldMask, FieldMaskUtil},
-    field_mask_normalize,
-    google::rpc::Status as RpcStatus,
+    field::FieldMask, field_mask_normalize, google::rpc::Status as RpcStatus,
     proto::TryFromProtoError,
 };
 use iota_grpc_types::{
@@ -201,14 +199,6 @@ impl From<FieldMask> for ReadMask<'_> {
     fn from(mask: FieldMask) -> Self {
         Self(Cow::Owned(field_mask_normalize(&mask.paths.join(","))))
     }
-}
-
-/// Build a field mask with a custom value or default.
-///
-/// This is a convenience helper that handles the common pattern of using
-/// a user-provided field mask or falling back to a default.
-pub fn field_mask_with_default(custom: Option<&str>, default: &str) -> FieldMask {
-    FieldMask::from_str(custom.unwrap_or(default))
 }
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of

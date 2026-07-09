@@ -17,7 +17,7 @@ pub mod state;
 pub use common::{CheckpointStreamError, Error, Page, ProtocolError, ReadMask, Result, RpcStatus};
 pub(crate) use common::{
     ProtoResult, TryFromProtoError, build_proto_transaction, collect_stream, define_list_query,
-    field_mask_with_default, proto_object_id, saturating_usize_to_u32,
+    proto_object_id, saturating_usize_to_u32,
 };
 pub use iota_grpc_types::read_masks::*;
 use iota_types::CheckpointSequenceNumber;
@@ -211,9 +211,12 @@ impl CheckpointResponse {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let cp = client.get_checkpoint_latest(None, None, None).await?;
+    /// let cp = client
+    ///     .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
+    ///     .await?;
     /// let data = cp.body().checkpoint_data()?;
     /// # Ok(())
     /// # }

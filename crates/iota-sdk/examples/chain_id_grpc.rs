@@ -9,14 +9,16 @@
 //! you observed).
 
 use eyre::{OptionExt, Result};
-use iota_sdk::grpc_client::{Client, ResponseExt};
+use iota_sdk::grpc_client::{Client, ResponseExt, read_mask_fields::ServiceInfoReadMask};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_testnet()?;
 
     // Option 1: explicit service info RPC.
-    let info = client.get_service_info(None).await?;
+    let info = client
+        .get_service_info(ServiceInfoReadMask::default())
+        .await?;
     let chain_id = info
         .body()
         .chain_id

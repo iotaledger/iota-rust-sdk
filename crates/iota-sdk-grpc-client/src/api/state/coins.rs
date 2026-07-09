@@ -14,7 +14,7 @@
 //! supplying a custom mask must include it.
 
 use iota_grpc_types::{
-    read_mask_fields::OwnedObjectReadMask,
+    read_mask_fields::{IntoReadMask, OwnedObjectReadMask},
     v1::{
         state_service::{ListOwnedObjectsRequest, state_service_client::StateServiceClient},
         types::Address as ProtoAddress,
@@ -24,10 +24,7 @@ use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
     Client, InterceptedChannel,
-    api::{
-        Error, LIST_OWNED_OBJECTS_READ_MASK, Result, TryFromProtoError, define_list_query,
-        field_mask_with_default,
-    },
+    api::{Error, Result, TryFromProtoError, define_list_query},
 };
 
 define_list_query! {
@@ -59,9 +56,9 @@ impl Client {
     /// auto-paginate through all results.
     ///
     /// Each returned [`Coin`] is converted from the underlying proto
-    /// `Object`. The `read_mask` controls which fields the server returns; pass
-    /// `None` for the default field mask [`LIST_OWNED_OBJECTS_READ_MASK`]
-    /// (which includes `bcs`, required for conversion), or an
+    /// `Object`. The `read_mask` controls which fields the server returns; use
+    /// `OwnedObjectReadMask::default()` for the default field mask (which
+    /// includes `bcs`, required for conversion), or pass an
     /// [`OwnedObjectReadMask`](iota_grpc_types::read_mask_fields::OwnedObjectReadMask)
     /// — it **must** include
     /// [`OwnedObjectField::BCS`](iota_grpc_types::read_mask_fields::OwnedObjectField::BCS)
@@ -75,19 +72,22 @@ impl Client {
     ///   lists all coin types (`0x2::coin::Coin`).
     /// - `page_size` - Optional maximum number of coins per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Optional field mask; `None` uses the default.
+    /// - `read_mask` - Field mask controlling the returned fields.
     ///
     /// # Examples
     ///
     /// Single page:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client.get_coins(owner, None, None, None, None).await?;
+    /// let page = client
+    ///     .get_coins(owner, None, None, None, OwnedObjectReadMask::default())
+    ///     .await?;
     /// for coin in &page.body().items {
     ///     println!("Coin {}: {}", coin.id(), coin.balance());
     /// }
@@ -98,13 +98,14 @@ impl Client {
     /// Auto-paginate:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .get_coins(owner, None, Some(50), None, None)
+    ///     .get_coins(owner, None, Some(50), None, OwnedObjectReadMask::default())
     ///     .collect(Some(500))
     ///     .await?;
     /// for coin in all.body() {
@@ -119,14 +120,14 @@ impl Client {
         coin_type: impl Into<Option<StructTag>>,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
-        read_mask: impl Into<Option<OwnedObjectReadMask>>,
+        read_mask: impl IntoReadMask<OwnedObjectReadMask>,
     ) -> GetCoinsQuery {
         self.get_coins_internal(
             owner,
             coin_type.into(),
             page_size.into(),
             page_token.into(),
-            read_mask.into(),
+            read_mask.into_read_mask(),
         )
     }
 
@@ -136,7 +137,7 @@ impl Client {
         coin_type: Option<StructTag>,
         page_size: Option<u32>,
         page_token: Option<prost::bytes::Bytes>,
-        read_mask: Option<OwnedObjectReadMask>,
+        read_mask: OwnedObjectReadMask,
     ) -> GetCoinsQuery {
         // When no specific coin type is provided, query for the generic
         // `0x2::coin::Coin` (no type params); the server returns all
@@ -153,10 +154,7 @@ impl Client {
         let base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))
             .with_object_type(coin_type.to_string())
-            .with_read_mask(field_mask_with_default(
-                read_mask.as_ref().map(|m| m.as_str()),
-                LIST_OWNED_OBJECTS_READ_MASK,
-            ));
+            .with_read_mask(read_mask);
 
         GetCoinsQuery::new(
             self.state_service_client(),

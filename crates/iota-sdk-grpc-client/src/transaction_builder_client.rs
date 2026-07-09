@@ -6,7 +6,10 @@
 use std::time::Duration;
 
 use iota_grpc_types::{
-    read_mask_fields::{EpochField, EpochReadMask, TransactionField, TransactionReadMask},
+    read_mask_fields::{
+        EpochField, EpochReadMask, ObjectReadMask, OwnedObjectReadMask, SimulateReadMask,
+        TransactionField, TransactionReadMask,
+    },
     v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
@@ -48,7 +51,7 @@ impl TransactionBuilderClient for Client {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
         match self
-            .get_objects_with_versions([(object_id, version.into())], None)
+            .get_objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
             .await
         {
             Ok(envelope) => match envelope.into_inner().first() {
@@ -73,7 +76,7 @@ impl TransactionBuilderClient for Client {
                 struct_tag,
                 limit.map(saturating_usize_to_u32),
                 cursor.map(prost::bytes::Bytes::from),
-                None,
+                OwnedObjectReadMask::default(),
             )
             .await?
             .into_inner();
@@ -169,7 +172,9 @@ impl TransactionBuilderClient for Client {
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
-        let simulated = self.simulate_transaction(tx.clone(), true, None).await?;
+        let simulated = self
+            .simulate_transaction(tx.clone(), true, SimulateReadMask::default())
+            .await?;
         let effects = simulated
             .into_inner()
             .executed_transaction()?
@@ -189,7 +194,7 @@ impl TransactionBuilderClient for Client {
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, None)
+            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
             .await?
             .into_inner())
     }
@@ -207,7 +212,7 @@ impl TransactionBuilderClient for Client {
         };
         // The default execute read mask includes `effects`.
         let result = self
-            .execute_transaction(signed_transaction, None, None)
+            .execute_transaction(signed_transaction, None, TransactionReadMask::default())
             .await?
             .into_inner();
         let effects = result.effects()?.effects()?;

@@ -4,21 +4,21 @@
 //! High-level API for service info queries.
 
 use iota_grpc_types::{
-    read_mask_fields::ServiceInfoReadMask,
+    read_mask_fields::{IntoReadMask, ServiceInfoReadMask},
     v1::ledger_service::{GetServiceInfoRequest, GetServiceInfoResponse},
 };
 
 use crate::{
     Client,
-    api::{GET_SERVICE_INFO_READ_MASK, MetadataEnvelope, Result, field_mask_with_default},
+    api::{MetadataEnvelope, Result},
 };
 
 impl Client {
     /// Get service info from the node.
     ///
     /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
-    /// according to the `read_mask`; pass `None` for the default read mask
-    /// [`GET_SERVICE_INFO_READ_MASK`], or a
+    /// according to the `read_mask`; use `ServiceInfoReadMask::default()` for
+    /// the default read mask, or pass a
     /// [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask)
     /// built from a
     /// [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
@@ -32,7 +32,9 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
-    /// let info = client.get_service_info(None).await?;
+    /// let info = client
+    ///     .get_service_info(ServiceInfoReadMask::default())
+    ///     .await?;
     /// println!("Chain ID: {:?}", info.body().chain_id);
     /// println!("Epoch: {:?}", info.body().epoch);
     ///
@@ -48,13 +50,10 @@ impl Client {
     /// ```
     pub async fn get_service_info(
         &self,
-        read_mask: impl Into<Option<ServiceInfoReadMask>>,
+        read_mask: impl IntoReadMask<ServiceInfoReadMask>,
     ) -> Result<MetadataEnvelope<GetServiceInfoResponse>> {
-        let read_mask = read_mask.into();
-        let request = GetServiceInfoRequest::default().with_read_mask(field_mask_with_default(
-            read_mask.as_ref().map(|m| m.as_str()),
-            GET_SERVICE_INFO_READ_MASK,
-        ));
+        let read_mask = read_mask.into_read_mask();
+        let request = GetServiceInfoRequest::default().with_read_mask(read_mask);
 
         let mut client = self.ledger_service_client();
         let response = client.get_service_info(request).await?;

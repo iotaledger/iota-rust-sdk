@@ -5,23 +5,21 @@
 
 use iota_grpc_types::{
     field::FieldMask,
-    read_mask_fields::EpochReadMask,
+    read_mask_fields::{EpochReadMask, IntoReadMask},
     v1::{epoch::Epoch, ledger_service::GetEpochRequest},
 };
 
 use crate::{
     Client,
-    api::{
-        GET_EPOCH_READ_MASK, MetadataEnvelope, Result, TryFromProtoError, field_mask_with_default,
-    },
+    api::{MetadataEnvelope, Result, TryFromProtoError},
 };
 
 impl Client {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type with fields populated according to the
-    /// `read_mask`; pass `None` for the default field mask
-    /// [`GET_EPOCH_READ_MASK`]. Pass an
+    /// `read_mask`; use `EpochReadMask::default()` for the default field mask.
+    /// Pass an
     /// [`EpochReadMask`](iota_grpc_types::read_mask_fields::EpochReadMask)
     /// built from an
     /// [`EpochField`](iota_grpc_types::read_mask_fields::EpochField) or any
@@ -34,7 +32,7 @@ impl Client {
     /// # Parameters
     ///
     /// * `epoch` - The epoch to query. If `None`, returns the current epoch.
-    /// * `read_mask` - Optional field mask; `None` uses the default.
+    /// * `read_mask` - Field mask controlling the returned fields.
     ///
     /// # Example
     ///
@@ -45,7 +43,7 @@ impl Client {
     /// let client = Client::new_localnet()?;
     ///
     /// // Current epoch with the default mask.
-    /// let epoch = client.get_epoch(None, None).await?;
+    /// let epoch = client.get_epoch(None, EpochReadMask::default()).await?;
     /// println!("Epoch: {:?}", epoch.body().epoch);
     ///
     /// // Specific epoch with selected fields.
@@ -91,13 +89,10 @@ impl Client {
     pub async fn get_epoch(
         &self,
         epoch: impl Into<Option<u64>>,
-        read_mask: impl Into<Option<EpochReadMask>>,
+        read_mask: impl IntoReadMask<EpochReadMask>,
     ) -> Result<MetadataEnvelope<Epoch>> {
-        let read_mask = read_mask.into();
-        let mut request = GetEpochRequest::default().with_read_mask(field_mask_with_default(
-            read_mask.as_ref().map(|m| m.as_str()),
-            GET_EPOCH_READ_MASK,
-        ));
+        let read_mask = read_mask.into_read_mask();
+        let mut request = GetEpochRequest::default().with_read_mask(read_mask);
 
         if let Some(epoch) = epoch.into() {
             request = request.with_epoch(epoch);

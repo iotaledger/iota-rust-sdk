@@ -6,22 +6,22 @@
 //! Each endpoint has a typed namespace (e.g. [`ObjectField`]) whose associated
 //! constants identify the fields the server can return, and a matching
 //! per-endpoint mask type (e.g. [`ObjectReadMask`]) that the client method
-//! accepts. Pass `None` for the endpoint's default mask, or build a mask from
-//! a single field, a slice, an array, or an owned vec of the matching kind —
-//! conversion happens automatically:
+//! accepts. Use the mask's `default()` for the endpoint's default mask, or
+//! build a mask from a single field, a slice, an array, or an owned vec of the
+//! matching kind — conversion happens automatically:
 //!
 //! ```ignore
 //! use iota_sdk_grpc_types::read_mask_fields::{ObjectField, ObjectReadMask};
 //!
 //! // Default mask.
-//! client.get_objects([id], None).await?;
+//! client.get_objects([id], ObjectReadMask::default()).await?;
 //!
 //! // A single field.
-//! client.get_objects([id], ObjectReadMask::from(ObjectField::BCS)).await?;
+//! client.get_objects([id], ObjectField::BCS).await?;
 //!
 //! // Multiple fields.
 //! client
-//!     .get_objects([id], ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]))
+//!     .get_objects([id], [ObjectField::REFERENCE, ObjectField::BCS])
 //!     .await?;
 //! ```
 //!
@@ -29,7 +29,34 @@
 
 use std::borrow::Cow;
 
-use crate::field_mask_normalize;
+use crate::{
+    field_mask_normalize,
+    read_masks::{
+        GET_CHECKPOINT_READ_MASK, GET_EPOCH_READ_MASK, GET_OBJECTS_READ_MASK,
+        GET_SERVICE_INFO_READ_MASK, GET_TRANSACTIONS_READ_MASK, LIST_DYNAMIC_FIELDS_READ_MASK,
+        LIST_OWNED_OBJECTS_READ_MASK, SIMULATE_TRANSACTIONS_READ_MASK,
+    },
+};
+
+/// Conversion into an endpoint-scoped read mask.
+///
+/// This is the bound used by the client's `read_mask` parameters. It is
+/// implemented for everything convertible into the endpoint's mask type: the
+/// mask itself (e.g. `ObjectReadMask::default()` for the endpoint default), a
+/// field constant of the matching field namespace (e.g. [`ObjectField::BCS`]),
+/// arrays/slices/`Vec`s of such fields, and raw `&'static str`/`String` field
+/// paths.
+#[diagnostic::on_unimplemented(
+    message = "`{Self}` is not a valid read mask for this endpoint",
+    label = "expected a value convertible into `{M}`",
+    note = "accepted: `{M}` itself (e.g. `{M}::default()` for the endpoint default), \
+            a field constant of the matching field namespace, an array/slice/`Vec` \
+            of such fields, or a `&str`/`String` field path"
+)]
+pub trait IntoReadMask<M> {
+    /// Convert `self` into the endpoint's read mask type.
+    fn into_read_mask(self) -> M;
+}
 
 // =============================================================================
 // Macros
@@ -96,7 +123,7 @@ macro_rules! define_field_paths {
 macro_rules! define_scoped_read_mask {
     (
         $(#[$attr:meta])*
-        pub struct $mask:ident from $field:ident;
+        pub struct $mask:ident from $field:ident default $default:expr;
     ) => {
         $(#[$attr])*
         #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -106,6 +133,12 @@ macro_rules! define_scoped_read_mask {
             /// The underlying comma-separated field mask string.
             pub fn as_str(&self) -> &str {
                 &self.0
+            }
+        }
+
+        impl Default for $mask {
+            fn default() -> Self {
+                Self::from($default)
             }
         }
 
@@ -173,6 +206,42 @@ macro_rules! define_scoped_read_mask {
                 Self::from(fields.as_slice())
             }
         }
+
+        impl From<$mask> for ::prost_types::FieldMask {
+            fn from(mask: $mask) -> Self {
+                use crate::field::FieldMaskUtil;
+                ::prost_types::FieldMask::from_str(mask.as_str())
+            }
+        }
+
+        // `IntoReadMask` impls are enumerated (instead of blanket-implemented
+        // over `Into<$mask>`) so that an invalid argument has *no* candidate
+        // impl, which lets the trait's `on_unimplemented` diagnostic fire.
+        impl_into_read_mask!($mask: $mask, $field, &$field, &[$field], Vec<$field>, &'static str, String);
+
+        impl<const N: usize> IntoReadMask<$mask> for [$field; N] {
+            fn into_read_mask(self) -> $mask {
+                self.into()
+            }
+        }
+
+        impl<const N: usize> IntoReadMask<$mask> for &[$field; N] {
+            fn into_read_mask(self) -> $mask {
+                self.into()
+            }
+        }
+    };
+}
+
+macro_rules! impl_into_read_mask {
+    ($mask:ident: $($ty:ty),* $(,)?) => {
+        $(
+            impl IntoReadMask<$mask> for $ty {
+                fn into_read_mask(self) -> $mask {
+                    self.into()
+                }
+            }
+        )*
     };
 }
 
@@ -200,7 +269,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `get_objects` / `get_objects_with_versions`.
-    pub struct ObjectReadMask from ObjectField;
+    pub struct ObjectReadMask from ObjectField default GET_OBJECTS_READ_MASK;
 }
 
 // =============================================================================
@@ -231,7 +300,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `list_owned_objects` and `get_coins`.
-    pub struct OwnedObjectReadMask from OwnedObjectField;
+    pub struct OwnedObjectReadMask from OwnedObjectField default LIST_OWNED_OBJECTS_READ_MASK;
 }
 
 // =============================================================================
@@ -312,7 +381,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `get_transactions` and `execute_transaction(s)`.
-    pub struct TransactionReadMask from TransactionField;
+    pub struct TransactionReadMask from TransactionField default GET_TRANSACTIONS_READ_MASK;
 }
 
 // =============================================================================
@@ -441,7 +510,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `get_service_info`.
-    pub struct ServiceInfoReadMask from ServiceInfoField;
+    pub struct ServiceInfoReadMask from ServiceInfoField default GET_SERVICE_INFO_READ_MASK;
 }
 
 // =============================================================================
@@ -519,7 +588,7 @@ impl EpochField {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `get_epoch`.
-    pub struct EpochReadMask from EpochField;
+    pub struct EpochReadMask from EpochField default GET_EPOCH_READ_MASK;
 }
 
 // =============================================================================
@@ -559,7 +628,7 @@ define_field_paths! {
 define_scoped_read_mask! {
     /// Scoped read mask for checkpoint queries (`get_checkpoint_*`,
     /// `stream_checkpoints`, `stream_checkpoints_filtered`).
-    pub struct CheckpointResponseReadMask from CheckpointResponseField;
+    pub struct CheckpointResponseReadMask from CheckpointResponseField default GET_CHECKPOINT_READ_MASK;
 }
 
 define_field_paths! {
@@ -624,7 +693,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `simulate_transaction(s)`.
-    pub struct SimulateReadMask from SimulateField;
+    pub struct SimulateReadMask from SimulateField default SIMULATE_TRANSACTIONS_READ_MASK;
 }
 
 // =============================================================================
@@ -659,7 +728,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for `list_dynamic_fields`.
-    pub struct DynamicFieldReadMask from DynamicFieldField;
+    pub struct DynamicFieldReadMask from DynamicFieldField default LIST_DYNAMIC_FIELDS_READ_MASK;
 }
 
 // =============================================================================

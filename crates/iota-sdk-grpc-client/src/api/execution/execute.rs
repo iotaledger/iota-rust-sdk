@@ -4,7 +4,7 @@
 //! High-level API for transaction execution.
 
 use iota_grpc_types::{
-    read_mask_fields::TransactionReadMask,
+    read_mask_fields::{IntoReadMask, TransactionReadMask},
     v1::{
         signatures::{UserSignature as ProtoUserSignature, UserSignatures},
         transaction::ExecutedTransaction,
@@ -15,10 +15,7 @@ use iota_types::SignedTransaction;
 
 use crate::{
     Client,
-    api::{
-        EXECUTE_TRANSACTIONS_READ_MASK, Error, MetadataEnvelope, ProtoResult, ProtocolError,
-        Result, build_proto_transaction, field_mask_with_default,
-    },
+    api::{Error, MetadataEnvelope, ProtoResult, ProtocolError, Result, build_proto_transaction},
 };
 
 impl Client {
@@ -34,9 +31,8 @@ impl Client {
     /// - `result.input_objects()` - Get input objects (if requested)
     /// - `result.output_objects()` - Get output objects (if requested)
     ///
-    /// The optional `read_mask` controls which fields the server returns; pass
-    /// `None` for the default mask [`EXECUTE_TRANSACTIONS_READ_MASK`] (effects,
-    /// events, and input/output objects). Pass a
+    /// The `read_mask` controls which fields the server returns; use
+    /// `TransactionReadMask::default()` for the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// or any slice/array/vec of fields — conversion is automatic.
     ///
@@ -51,12 +47,15 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionReadMask;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
-    /// let result = client.execute_transaction(signed_tx, None, None).await?;
+    /// let result = client
+    ///     .execute_transaction(signed_tx, None, TransactionReadMask::default())
+    ///     .await?;
     ///
     /// let effects = result.body().effects()?.effects()?;
     /// println!("Status: {:?}", effects.as_v1().status);
@@ -71,13 +70,13 @@ impl Client {
     pub async fn execute_transaction(
         &self,
         signed_transaction: SignedTransaction,
-        read_mask: impl Into<Option<TransactionReadMask>>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
+        read_mask: impl IntoReadMask<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
         self.execute_transactions(
             vec![signed_transaction],
-            read_mask,
             checkpoint_inclusion_timeout_ms,
+            read_mask,
         )
         .await?
         .try_map(extract_single_execution_result)
@@ -92,9 +91,9 @@ impl Client {
     /// input. Each element is either the successfully executed transaction or
     /// the per-item error returned by the server.
     ///
-    /// The optional `read_mask` controls which fields the server returns for
-    /// each `ExecutedTransaction`; pass `None` for the default mask
-    /// [`EXECUTE_TRANSACTIONS_READ_MASK`]. Pass a
+    /// The `read_mask` controls which fields the server returns for each
+    /// `ExecutedTransaction`; use `TransactionReadMask::default()` for the
+    /// default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// or any slice/array/vec of fields — conversion is automatic.
     ///
@@ -113,10 +112,10 @@ impl Client {
     pub async fn execute_transactions(
         &self,
         transactions: Vec<SignedTransaction>,
-        read_mask: impl Into<Option<TransactionReadMask>>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
+        read_mask: impl IntoReadMask<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
-        let read_mask = read_mask.into();
+        let read_mask = read_mask.into_read_mask();
         let checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
         if transactions.is_empty() {
             return Err(Error::EmptyRequest);
@@ -129,10 +128,7 @@ impl Client {
 
         let mut request = ExecuteTransactionsRequest::default()
             .with_transactions(items)
-            .with_read_mask(field_mask_with_default(
-                read_mask.as_ref().map(|m| m.as_str()),
-                EXECUTE_TRANSACTIONS_READ_MASK,
-            ));
+            .with_read_mask(read_mask);
 
         if let Some(timeout_ms) = checkpoint_inclusion_timeout_ms {
             request = request.with_checkpoint_inclusion_timeout_ms(timeout_ms);

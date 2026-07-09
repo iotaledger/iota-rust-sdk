@@ -10,7 +10,10 @@
 //! # Example
 //!
 //! ```no_run
-//! use iota_sdk_grpc_client::Client;
+//! use iota_sdk_grpc_client::{
+//!     Client,
+//!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
+//! };
 //! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -18,14 +21,18 @@
 //!
 //! // Get a transaction with the default field mask.
 //! let digest: TransactionDigest = todo!();
-//! let txs = client.get_transactions([digest], None).await?;
+//! let txs = client
+//!     .get_transactions([digest], TransactionReadMask::default())
+//!     .await?;
 //! if let Some(tx) = txs.body().first() {
 //!     println!("Transaction digest: {:?}", tx.transaction()?.digest()?);
 //! }
 //!
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
-//! let objects = client.get_objects([object_id], None).await?;
+//! let objects = client
+//!     .get_objects([object_id], ObjectReadMask::default())
+//!     .await?;
 //! if let Some(object) = objects.body().first() {
 //!     println!("Object version: {:?}", object.object_reference()?.version());
 //! }
