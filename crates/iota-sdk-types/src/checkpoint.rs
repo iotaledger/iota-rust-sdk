@@ -570,7 +570,7 @@ mod serialization {
 
             let bcs = Base64::decode_vec(fixture).unwrap();
 
-            let contents: CheckpointContentsV1 = bcs::from_bytes(&bcs).unwrap();
+            let contents: CheckpointContents = bcs::from_bytes(&bcs).unwrap();
             let bytes = bcs::to_bytes(&contents).unwrap();
             assert_eq!(bcs, bytes);
             let json = serde_json::to_string_pretty(&contents).unwrap();
