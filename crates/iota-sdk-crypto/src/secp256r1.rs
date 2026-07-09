@@ -219,7 +219,6 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
 
 impl Signer<Secp256r1Signature> for Secp256r1PrivateKey {
     fn try_sign(&self, message: &[u8]) -> Result<Secp256r1Signature, SignatureError> {
-        // fastcrypto signs with SHA-256 and normalizes the signature to low-S.
         let signature: FcSecp256r1Signature = self.keypair().sign(message);
         Ok(Secp256r1Signature::new(
             signature
