@@ -230,6 +230,18 @@ macro_rules! define_scoped_read_mask {
                 self.into()
             }
         }
+
+        impl PartialEq<str> for $mask {
+            fn eq(&self, other: &str) -> bool {
+                self.0 == other
+            }
+        }
+
+        impl PartialEq<&str> for $mask {
+            fn eq(&self, other: &&str) -> bool {
+                self.0 == *other
+            }
+        }
     };
 }
 
@@ -376,6 +388,28 @@ define_field_paths! {
         OUTPUT_OBJECTS_REFERENCE_DIGEST = "output_objects.reference.digest",
         /// The full BCS-encoded output object.
         OUTPUT_OBJECTS_BCS = "output_objects.bcs",
+        /// Balance changes (all sub-fields).
+        BALANCE_CHANGES = "balance_changes",
+        /// The owner whose balance changed.
+        BALANCE_CHANGES_OWNER = "balance_changes.owner",
+        /// The coin type of the balance change.
+        BALANCE_CHANGES_COIN_TYPE = "balance_changes.coin_type",
+        /// The signed amount of the balance change.
+        BALANCE_CHANGES_AMOUNT = "balance_changes.amount",
+        /// Object changes (all sub-fields).
+        OBJECT_CHANGES = "object_changes",
+        /// Published-package object changes.
+        OBJECT_CHANGES_PUBLISHED = "object_changes.published",
+        /// Mutated-object changes.
+        OBJECT_CHANGES_MUTATED = "object_changes.mutated",
+        /// Deleted-object changes.
+        OBJECT_CHANGES_DELETED = "object_changes.deleted",
+        /// Wrapped-object changes.
+        OBJECT_CHANGES_WRAPPED = "object_changes.wrapped",
+        /// Unwrapped-object changes.
+        OBJECT_CHANGES_UNWRAPPED = "object_changes.unwrapped",
+        /// Created-object changes.
+        OBJECT_CHANGES_CREATED = "object_changes.created",
     }
 }
 
@@ -428,6 +462,10 @@ define_field_paths! {
         OUTPUT_OBJECTS = "transactions.output_objects",
         /// The full BCS-encoded output object.
         OUTPUT_OBJECTS_BCS = "transactions.output_objects.bcs",
+        /// Balance changes (all sub-fields).
+        BALANCE_CHANGES = "transactions.balance_changes",
+        /// Object changes (all sub-fields).
+        OBJECT_CHANGES = "transactions.object_changes",
     }
 }
 
@@ -477,6 +515,10 @@ define_field_paths! {
         OUTPUT_OBJECTS = "executed_transaction.output_objects",
         /// The full BCS-encoded output object.
         OUTPUT_OBJECTS_BCS = "executed_transaction.output_objects.bcs",
+        /// Balance changes (all sub-fields).
+        BALANCE_CHANGES = "executed_transaction.balance_changes",
+        /// Object changes (all sub-fields).
+        OBJECT_CHANGES = "executed_transaction.object_changes",
     }
 }
 
@@ -741,89 +783,97 @@ mod tests {
 
     #[test]
     fn object_field_paths() {
-        assert_eq!(ObjectField::ALL.as_str(), "*");
-        assert_eq!(ObjectField::REFERENCE.as_str(), "reference");
-        assert_eq!(
-            ObjectField::REFERENCE_OBJECT_ID.as_str(),
-            "reference.object_id"
-        );
-        assert_eq!(ObjectField::BCS.as_str(), "bcs");
+        assert_eq!(ObjectField::ALL, "*");
+        assert_eq!(ObjectField::REFERENCE, "reference");
+        assert_eq!(ObjectField::REFERENCE_OBJECT_ID, "reference.object_id");
+        assert_eq!(ObjectField::BCS, "bcs");
     }
 
     #[test]
     fn transaction_field_paths() {
-        assert_eq!(TransactionField::ALL.as_str(), "*");
+        assert_eq!(TransactionField::ALL, "*");
+        assert_eq!(TransactionField::TRANSACTION_DIGEST, "transaction.digest");
+        assert_eq!(TransactionField::EFFECTS_BCS, "effects.bcs");
+        assert_eq!(TransactionField::EVENTS, "events");
+        assert_eq!(TransactionField::EVENTS_EVENTS_BCS, "events.events.bcs");
+        assert_eq!(TransactionField::CHECKPOINT, "checkpoint");
+        assert_eq!(TransactionField::INPUT_OBJECTS_BCS, "input_objects.bcs");
+        assert_eq!(TransactionField::OUTPUT_OBJECTS_BCS, "output_objects.bcs");
+        assert_eq!(TransactionField::BALANCE_CHANGES, "balance_changes");
         assert_eq!(
-            TransactionField::TRANSACTION_DIGEST.as_str(),
-            "transaction.digest"
+            TransactionField::BALANCE_CHANGES_AMOUNT,
+            "balance_changes.amount"
         );
-        assert_eq!(TransactionField::EFFECTS_BCS.as_str(), "effects.bcs");
-        assert_eq!(TransactionField::EVENTS.as_str(), "events");
+        assert_eq!(TransactionField::OBJECT_CHANGES, "object_changes");
         assert_eq!(
-            TransactionField::EVENTS_EVENTS_BCS.as_str(),
-            "events.events.bcs"
-        );
-        assert_eq!(TransactionField::CHECKPOINT.as_str(), "checkpoint");
-        assert_eq!(
-            TransactionField::INPUT_OBJECTS_BCS.as_str(),
-            "input_objects.bcs"
-        );
-        assert_eq!(
-            TransactionField::OUTPUT_OBJECTS_BCS.as_str(),
-            "output_objects.bcs"
+            TransactionField::OBJECT_CHANGES_CREATED,
+            "object_changes.created"
         );
     }
 
     #[test]
     fn checkpoint_transaction_field_paths() {
-        assert_eq!(CheckpointTransactionField::ALL.as_str(), "transactions");
+        assert_eq!(CheckpointTransactionField::ALL, "transactions");
         assert_eq!(
-            CheckpointTransactionField::TRANSACTION_DIGEST.as_str(),
+            CheckpointTransactionField::TRANSACTION_DIGEST,
             "transactions.transaction.digest"
         );
         assert_eq!(
-            CheckpointTransactionField::EFFECTS_BCS.as_str(),
+            CheckpointTransactionField::EFFECTS_BCS,
             "transactions.effects.bcs"
+        );
+        assert_eq!(
+            CheckpointTransactionField::BALANCE_CHANGES,
+            "transactions.balance_changes"
+        );
+        assert_eq!(
+            CheckpointTransactionField::OBJECT_CHANGES,
+            "transactions.object_changes"
         );
     }
 
     #[test]
     fn simulate_executed_transaction_field_paths() {
         assert_eq!(
-            SimulateExecutedTransactionField::ALL.as_str(),
+            SimulateExecutedTransactionField::ALL,
             "executed_transaction"
         );
         assert_eq!(
-            SimulateExecutedTransactionField::EFFECTS.as_str(),
+            SimulateExecutedTransactionField::EFFECTS,
             "executed_transaction.effects"
         );
         assert_eq!(
-            SimulateExecutedTransactionField::EFFECTS_BCS.as_str(),
+            SimulateExecutedTransactionField::EFFECTS_BCS,
             "executed_transaction.effects.bcs"
+        );
+        assert_eq!(
+            SimulateExecutedTransactionField::BALANCE_CHANGES,
+            "executed_transaction.balance_changes"
+        );
+        assert_eq!(
+            SimulateExecutedTransactionField::OBJECT_CHANGES,
+            "executed_transaction.object_changes"
         );
     }
 
     #[test]
     fn service_info_field_paths() {
-        assert_eq!(ServiceInfoField::ALL.as_str(), "*");
-        assert_eq!(ServiceInfoField::CHAIN_ID.as_str(), "chain_id");
-        assert_eq!(ServiceInfoField::SERVER.as_str(), "server");
+        assert_eq!(ServiceInfoField::ALL, "*");
+        assert_eq!(ServiceInfoField::CHAIN_ID, "chain_id");
+        assert_eq!(ServiceInfoField::SERVER, "server");
     }
 
     #[test]
     fn epoch_field_paths() {
-        assert_eq!(EpochField::ALL.as_str(), "*");
-        assert_eq!(EpochField::EPOCH.as_str(), "epoch");
+        assert_eq!(EpochField::ALL, "*");
+        assert_eq!(EpochField::EPOCH, "epoch");
+        assert_eq!(EpochField::REFERENCE_GAS_PRICE, "reference_gas_price");
         assert_eq!(
-            EpochField::REFERENCE_GAS_PRICE.as_str(),
-            "reference_gas_price"
-        );
-        assert_eq!(
-            EpochField::PROTOCOL_CONFIG_PROTOCOL_VERSION.as_str(),
+            EpochField::PROTOCOL_CONFIG_PROTOCOL_VERSION,
             "protocol_config.protocol_version"
         );
         assert_eq!(
-            EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS.as_str(),
+            EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS,
             "protocol_config.feature_flags"
         );
     }
@@ -831,69 +881,60 @@ mod tests {
     #[test]
     fn epoch_dynamic_paths() {
         assert_eq!(
-            EpochField::feature_flag("enable_vdf").as_str(),
+            EpochField::feature_flag("enable_vdf"),
             "protocol_config.feature_flags.enable_vdf"
         );
         assert_eq!(
-            EpochField::attribute("max_tx_gas").as_str(),
+            EpochField::attribute("max_tx_gas"),
             "protocol_config.attributes.max_tx_gas"
         );
     }
 
     #[test]
     fn checkpoint_response_field_paths() {
-        assert_eq!(CheckpointResponseField::ALL.as_str(), "*");
-        assert_eq!(CheckpointResponseField::CHECKPOINT.as_str(), "checkpoint");
+        assert_eq!(CheckpointResponseField::ALL, "*");
+        assert_eq!(CheckpointResponseField::CHECKPOINT, "checkpoint");
         assert_eq!(
-            CheckpointResponseField::CHECKPOINT_SUMMARY_BCS.as_str(),
+            CheckpointResponseField::CHECKPOINT_SUMMARY_BCS,
             "checkpoint.summary.bcs"
         );
-        assert_eq!(
-            CheckpointResponseField::TRANSACTIONS.as_str(),
-            "transactions"
-        );
-        assert_eq!(CheckpointResponseField::EVENTS.as_str(), "events");
+        assert_eq!(CheckpointResponseField::TRANSACTIONS, "transactions");
+        assert_eq!(CheckpointResponseField::EVENTS, "events");
     }
 
     #[test]
     fn checkpoint_event_field_paths() {
-        assert_eq!(CheckpointEventField::ALL.as_str(), "events");
-        assert_eq!(CheckpointEventField::BCS.as_str(), "events.bcs");
-        assert_eq!(
-            CheckpointEventField::PACKAGE_ID.as_str(),
-            "events.package_id"
-        );
+        assert_eq!(CheckpointEventField::ALL, "events");
+        assert_eq!(CheckpointEventField::BCS, "events.bcs");
+        assert_eq!(CheckpointEventField::PACKAGE_ID, "events.package_id");
     }
 
     #[test]
     fn simulate_field_paths() {
-        assert_eq!(SimulateField::ALL.as_str(), "*");
+        assert_eq!(SimulateField::ALL, "*");
+        assert_eq!(SimulateField::SUGGESTED_GAS_PRICE, "suggested_gas_price");
         assert_eq!(
-            SimulateField::SUGGESTED_GAS_PRICE.as_str(),
-            "suggested_gas_price"
-        );
-        assert_eq!(
-            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS.as_str(),
+            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS,
             "execution_result.command_results"
         );
         assert_eq!(
-            SimulateField::EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND.as_str(),
+            SimulateField::EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
             "execution_result.execution_error.bcs_kind"
         );
     }
 
     #[test]
     fn dynamic_field_field_paths() {
-        assert_eq!(DynamicFieldField::ALL.as_str(), "*");
-        assert_eq!(DynamicFieldField::KIND.as_str(), "kind");
-        assert_eq!(DynamicFieldField::NAME.as_str(), "name");
-        assert_eq!(DynamicFieldField::CHILD_OBJECT.as_str(), "child_object");
+        assert_eq!(DynamicFieldField::ALL, "*");
+        assert_eq!(DynamicFieldField::KIND, "kind");
+        assert_eq!(DynamicFieldField::NAME, "name");
+        assert_eq!(DynamicFieldField::CHILD_OBJECT, "child_object");
     }
 
     #[test]
     fn scoped_read_mask_from_single_field() {
         let mask: ObjectReadMask = ObjectField::BCS.into();
-        assert_eq!(mask.as_str(), "bcs");
+        assert_eq!(mask, "bcs");
     }
 
     #[test]
@@ -905,13 +946,13 @@ mod tests {
             ObjectField::BCS,
         ]
         .into();
-        assert_eq!(mask.as_str(), "bcs,reference");
+        assert_eq!(mask, "bcs,reference");
     }
 
     #[test]
     fn scoped_read_mask_from_array_ref() {
         let fields = [ObjectField::REFERENCE, ObjectField::BCS];
         let mask: ObjectReadMask = (&fields).into();
-        assert_eq!(mask.as_str(), "bcs,reference");
+        assert_eq!(mask, "bcs,reference");
     }
 }
