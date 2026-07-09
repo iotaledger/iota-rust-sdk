@@ -207,11 +207,9 @@ mod keypair {
                     }
                     let mut arr = [0u8; crate::secp256r1::Secp256r1PrivateKey::LENGTH];
                     arr.copy_from_slice(key_bytes);
-                    Ok(Self {
-                        inner: InnerKeypair::Secp256r1(crate::secp256r1::Secp256r1PrivateKey::new(
-                            arr,
-                        )),
-                    })
+                    crate::secp256r1::Secp256r1PrivateKey::new(arr)
+                        .map(InnerKeypair::Secp256r1)
+                        .map(|inner| Self { inner })
                 }
                 _ => Err(SignatureError::from_source(
                     "unsupported signature scheme for SimpleKeypair",

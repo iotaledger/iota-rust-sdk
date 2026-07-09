@@ -53,7 +53,7 @@ impl Ed25519PrivateKey {
 
     /// Reconstruct the fastcrypto keypair, which performs all signing.
     fn keypair(&self) -> Ed25519KeyPair {
-        Ed25519KeyPair::from_bytes(&self.0).expect("validated Ed25519KeyPair on construction")
+        Ed25519KeyPair::from_bytes(&self.0).expect("validated on construction")
     }
 
     pub fn verifying_key(&self) -> Ed25519VerifyingKey {

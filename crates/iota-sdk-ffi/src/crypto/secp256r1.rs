@@ -27,7 +27,7 @@ impl Secp256r1PrivateKey {
             bytes.try_into().map_err(|v: Vec<u8>| {
                 SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
             })?,
-        )))
+        )?))
     }
 
     pub fn scheme(&self) -> SignatureScheme {

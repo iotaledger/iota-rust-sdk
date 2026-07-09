@@ -35,7 +35,9 @@ impl proptest::arbitrary::Arbitrary for Secp256r1PrivateKey {
         use proptest::strategy::Strategy;
 
         proptest::arbitrary::any::<[u8; Self::LENGTH]>()
-            .prop_map(Self::new)
+            .prop_filter_map("invalid secp256r1 private key", |bytes| {
+                Self::new(bytes).ok()
+            })
             .boxed()
     }
 }
@@ -44,10 +46,10 @@ impl Secp256r1PrivateKey {
     /// The length of an secp256r1 private key in bytes.
     pub const LENGTH: usize = 32;
 
-    pub fn new(bytes: [u8; Self::LENGTH]) -> Self {
+    pub fn new(bytes: [u8; Self::LENGTH]) -> Result<Self, SignatureError> {
         // Validate that the bytes represent a well-formed secp256r1 private key.
-        Secp256r1KeyPair::from_bytes(&bytes).expect("invalid secp256r1 private key");
-        Self(bytes)
+        Secp256r1KeyPair::from_bytes(&bytes).map_err(SignatureError::from_source)?;
+        Ok(Self(bytes))
     }
 
     pub fn scheme(&self) -> SignatureScheme {
@@ -77,9 +79,16 @@ impl Secp256r1PrivateKey {
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
-        let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
-        rng.fill_bytes(&mut buf);
-        Self::new(buf)
+        // Almost every 32-byte value is a valid secp256r1 private key, but a
+        // few (zero, or values at/above the curve order) are not. Draw fresh
+        // bytes until we get a valid key; in practice this never repeats.
+        loop {
+            let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
+            rng.fill_bytes(&mut buf);
+            if let Ok(key) = Self::new(buf) {
+                return key;
+            }
+        }
     }
 
     #[cfg(feature = "pem")]
@@ -127,7 +136,8 @@ impl Secp256r1PrivateKey {
 
     #[cfg(feature = "pem")]
     pub(crate) fn from_p256(private_key: p256::ecdsa::SigningKey) -> Self {
-        Self::new(private_key.to_bytes().into())
+        // A p256 SigningKey is by construction a valid secp256r1 scalar.
+        Self(private_key.to_bytes().into())
     }
 
     /// Re-expose the raw private key through p256, used only as a PKCS#8/PEM
@@ -158,13 +168,7 @@ impl crate::ToFromBytes for Secp256r1PrivateKey {
 
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
-
-        // Reject scalars that aren't a well-formed secp256r1 private key (e.g.
-        // all-zeros or >= the curve order) rather than panicking in `new`.
-        Secp256r1KeyPair::from_bytes(&arr).map_err(|e| {
-            crate::PrivateKeyError::InvalidScheme(format!("invalid secp256r1 private key: {e}"))
-        })?;
-        Ok(Self(arr))
+        Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
     }
 }
 
@@ -438,7 +442,7 @@ mod tests {
             167, 44, 116, 0, 51, 221, 254, 179, 210, 44, 93, 196, 125, 155, 85, 94, 29, 41, 13, 60,
             59, 132, 69, 84, 176, 217, 77, 49, 25, 113, 118, 125,
         ];
-        let signer = Secp256r1PrivateKey::new(key);
+        let signer = Secp256r1PrivateKey::new(key).unwrap();
 
         let message = PersonalMessage(b"hello".into());
         let sig = signer.sign_personal_message(&message).unwrap();
