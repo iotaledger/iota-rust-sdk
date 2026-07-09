@@ -306,6 +306,35 @@ impl CheckpointContents {
     }
 
     crate::def_is_as_into_opt!(V1(CheckpointContentsV1));
+
+    /// Returns a reference to the list of transactions in this checkpoint.
+    pub fn transactions(&self) -> &[CheckpointTransactionInfo] {
+        match self {
+            CheckpointContents::V1(v1) => v1.transactions(),
+        }
+    }
+
+    /// Consumes the `CheckpointContentsV1` and returns the list of
+    /// transactions.
+    pub fn into_transactions(self) -> Vec<CheckpointTransactionInfo> {
+        match self {
+            CheckpointContents::V1(v1) => v1.into_transactions(),
+        }
+    }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> usize {
+        match self {
+            CheckpointContents::V1(v1) => v1.len(),
+        }
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        match self {
+            CheckpointContents::V1(v1) => v1.is_empty(),
+        }
+    }
 }
 
 /// CheckpointContents are the transactions included in an upcoming checkpoint.

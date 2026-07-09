@@ -208,8 +208,28 @@ impl CheckpointContents {
         self.0.as_v1().clone().into()
     }
 
+    pub fn transactions(&self) -> Vec<Arc<CheckpointTransactionInfo>> {
+        self.0
+            .transactions()
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
     pub fn digest(&self) -> CheckpointContentsDigest {
         self.0.digest().into()
+    }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> u64 {
+        self.0.len() as _
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
@@ -250,6 +270,16 @@ impl CheckpointContentsV1 {
             .map(Into::into)
             .map(Arc::new)
             .collect()
+    }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> u64 {
+        self.0.len() as _
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
