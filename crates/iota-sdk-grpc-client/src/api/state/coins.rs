@@ -9,9 +9,10 @@
 //!
 //! # Read Mask
 //!
-//! The default read mask is [`LIST_OWNED_OBJECTS_READ_MASK`]; the `bcs` field
-//! is required for the proto `Object` → SDK `Coin` conversion, so callers
-//! supplying a custom mask must include it.
+//! The default read mask is
+//! [`LIST_OWNED_OBJECTS_READ_MASK`](iota_grpc_types::read_masks::LIST_OWNED_OBJECTS_READ_MASK);
+//! the `bcs` field is required for the proto `Object` → SDK `Coin` conversion,
+//! so callers supplying a custom mask must include it.
 
 use iota_grpc_types::{
     read_mask_fields::{IntoReadMask, OwnedObjectReadMask},
