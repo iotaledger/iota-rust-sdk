@@ -121,10 +121,11 @@ message BalanceChange {
   // The type of the coin, e.g. `0x2::iota::IOTA`.
   optional iota.grpc.v1.types.TypeTag coin_type = 2;
 
-  // The amount the balance changed by, encoded as a decimal string
-  // (128-bit signed integer). A negative amount means the net flow of
-  // value is away from the owner.
-  optional string amount = 3;
+  // The amount the balance changed by: a 128-bit signed integer in
+  // big-endian two's-complement encoding (exactly 16 bytes,
+  // `i128::to_be_bytes`). A negative amount means the net flow of value is
+  // away from the owner.
+  optional bytes amount = 3;
 }
 
 // A list of balance changes.
@@ -163,7 +164,7 @@ message ObjectChangeMutated {
   optional iota.grpc.v1.types.Owner owner = 2;
 
   // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-  optional string object_type = 3;
+  optional iota.grpc.v1.types.TypeTag object_type = 3;
 
   // The ID of the object.
   optional iota.grpc.v1.types.ObjectId object_id = 4;
@@ -186,7 +187,7 @@ message ObjectChangeDeleted {
   optional iota.grpc.v1.types.Address sender = 1;
 
   // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-  optional string object_type = 2;
+  optional iota.grpc.v1.types.TypeTag object_type = 2;
 
   // The ID of the object.
   optional iota.grpc.v1.types.ObjectId object_id = 3;
@@ -203,7 +204,7 @@ message ObjectChangeWrapped {
   optional iota.grpc.v1.types.Address sender = 1;
 
   // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-  optional string object_type = 2;
+  optional iota.grpc.v1.types.TypeTag object_type = 2;
 
   // The ID of the object.
   optional iota.grpc.v1.types.ObjectId object_id = 3;
@@ -223,7 +224,7 @@ message ObjectChangeUnwrapped {
   optional iota.grpc.v1.types.Owner owner = 2;
 
   // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-  optional string object_type = 3;
+  optional iota.grpc.v1.types.TypeTag object_type = 3;
 
   // The ID of the object.
   optional iota.grpc.v1.types.ObjectId object_id = 4;
@@ -246,7 +247,7 @@ message ObjectChangeCreated {
   optional iota.grpc.v1.types.Owner owner = 2;
 
   // The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-  optional string object_type = 3;
+  optional iota.grpc.v1.types.TypeTag object_type = 3;
 
   // The ID of the object.
   optional iota.grpc.v1.types.ObjectId object_id = 4;

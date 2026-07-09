@@ -109,11 +109,12 @@ pub struct BalanceChange {
     /// The type of the coin, e.g. `0x2::iota::IOTA`.
     #[prost(message, optional, tag = "2")]
     pub coin_type: ::core::option::Option<super::types::TypeTag>,
-    /// The amount the balance changed by, encoded as a decimal string
-    /// (128-bit signed integer). A negative amount means the net flow of
-    /// value is away from the owner.
-    #[prost(string, optional, tag = "3")]
-    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    /// The amount the balance changed by: a 128-bit signed integer in
+    /// big-endian two's-complement encoding (exactly 16 bytes,
+    /// `i128::to_be_bytes`). A negative amount means the net flow of value is
+    /// away from the owner.
+    #[prost(bytes = "bytes", optional, tag = "3")]
+    pub amount: ::core::option::Option<::prost::bytes::Bytes>,
 }
 /// A list of balance changes.
 #[non_exhaustive]
@@ -141,7 +142,7 @@ pub struct ObjectChangePublished {
 }
 /// An object was mutated.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChangeMutated {
     /// The sender of the transaction.
     #[prost(message, optional, tag = "1")]
@@ -150,8 +151,8 @@ pub struct ObjectChangeMutated {
     #[prost(message, optional, tag = "2")]
     pub owner: ::core::option::Option<super::types::Owner>,
     /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[prost(string, optional, tag = "3")]
-    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub object_type: ::core::option::Option<super::types::TypeTag>,
     /// The ID of the object.
     #[prost(message, optional, tag = "4")]
     pub object_id: ::core::option::Option<super::types::ObjectId>,
@@ -167,14 +168,14 @@ pub struct ObjectChangeMutated {
 }
 /// An object was deleted.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChangeDeleted {
     /// The sender of the transaction.
     #[prost(message, optional, tag = "1")]
     pub sender: ::core::option::Option<super::types::Address>,
     /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[prost(string, optional, tag = "2")]
-    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub object_type: ::core::option::Option<super::types::TypeTag>,
     /// The ID of the object.
     #[prost(message, optional, tag = "3")]
     pub object_id: ::core::option::Option<super::types::ObjectId>,
@@ -184,14 +185,14 @@ pub struct ObjectChangeDeleted {
 }
 /// An object was wrapped inside another object.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChangeWrapped {
     /// The sender of the transaction.
     #[prost(message, optional, tag = "1")]
     pub sender: ::core::option::Option<super::types::Address>,
     /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[prost(string, optional, tag = "2")]
-    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub object_type: ::core::option::Option<super::types::TypeTag>,
     /// The ID of the object.
     #[prost(message, optional, tag = "3")]
     pub object_id: ::core::option::Option<super::types::ObjectId>,
@@ -201,7 +202,7 @@ pub struct ObjectChangeWrapped {
 }
 /// An object was unwrapped from inside another object.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChangeUnwrapped {
     /// The sender of the transaction.
     #[prost(message, optional, tag = "1")]
@@ -210,8 +211,8 @@ pub struct ObjectChangeUnwrapped {
     #[prost(message, optional, tag = "2")]
     pub owner: ::core::option::Option<super::types::Owner>,
     /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[prost(string, optional, tag = "3")]
-    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub object_type: ::core::option::Option<super::types::TypeTag>,
     /// The ID of the object.
     #[prost(message, optional, tag = "4")]
     pub object_id: ::core::option::Option<super::types::ObjectId>,
@@ -224,7 +225,7 @@ pub struct ObjectChangeUnwrapped {
 }
 /// A new object was created.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChangeCreated {
     /// The sender of the transaction.
     #[prost(message, optional, tag = "1")]
@@ -233,8 +234,8 @@ pub struct ObjectChangeCreated {
     #[prost(message, optional, tag = "2")]
     pub owner: ::core::option::Option<super::types::Owner>,
     /// The type of the object, e.g. `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[prost(string, optional, tag = "3")]
-    pub object_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub object_type: ::core::option::Option<super::types::TypeTag>,
     /// The ID of the object.
     #[prost(message, optional, tag = "4")]
     pub object_id: ::core::option::Option<super::types::ObjectId>,
@@ -247,7 +248,7 @@ pub struct ObjectChangeCreated {
 }
 /// A change to an object caused by executing a transaction.
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectChange {
     #[prost(oneof = "object_change::Kind", tags = "1, 2, 3, 4, 5, 6")]
     pub kind: ::core::option::Option<object_change::Kind>,
@@ -255,7 +256,7 @@ pub struct ObjectChange {
 /// Nested message and enum types in `ObjectChange`.
 pub mod object_change {
     #[non_exhaustive]
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         #[prost(message, tag = "1")]
         Published(super::ObjectChangePublished),

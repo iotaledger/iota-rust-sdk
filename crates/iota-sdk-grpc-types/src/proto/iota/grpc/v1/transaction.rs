@@ -424,14 +424,19 @@ impl BalanceChange {
             .map_err(|e| e.nested(Self::COIN_TYPE_FIELD.name))
     }
 
-    /// Get the signed amount the balance changed by, parsed from its decimal
-    /// string encoding.
+    /// Get the signed amount the balance changed by, decoded from its 16-byte
+    /// big-endian two's-complement encoding.
     pub fn amount_i128(&self) -> Result<i128, TryFromProtoError> {
-        self.amount
+        let bytes: [u8; 16] = self
+            .amount
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing(Self::AMOUNT_FIELD.name))?
-            .parse()
-            .map_err(|e| TryFromProtoError::invalid(Self::AMOUNT_FIELD.name, e))
+            .as_ref()
+            .try_into()
+            .map_err(|_| {
+                TryFromProtoError::invalid(Self::AMOUNT_FIELD.name, "expected 16 bytes")
+            })?;
+        Ok(i128::from_be_bytes(bytes))
     }
 }
 
@@ -457,17 +462,8 @@ macro_rules! impl_object_change_variant_accessors {
     };
     (@getter object_type) => {
         /// Get the type of the object, parsed as SDK type.
-        pub fn object_type_name(&self) -> Result<iota_types::StructTag, TryFromProtoError> {
-            self.object_type
-                .as_deref()
-                .ok_or_else(|| TryFromProtoError::missing(Self::OBJECT_TYPE_FIELD.name))?
-                .parse()
-                .map_err(|_e: iota_types::TypeParseError| {
-                    TryFromProtoError::invalid(
-                        Self::OBJECT_TYPE_FIELD.name,
-                        "invalid struct tag format",
-                    )
-                })
+        pub fn object_type(&self) -> Result<iota_types::TypeTag, TryFromProtoError> {
+            get_inner_field!(self.object_type, Self::OBJECT_TYPE_FIELD, type_tag)
         }
     };
     (@getter object_id) => {

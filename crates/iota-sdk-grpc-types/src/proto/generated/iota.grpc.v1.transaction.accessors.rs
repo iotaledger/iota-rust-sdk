@@ -22,7 +22,7 @@ mod _accessor_impls {
             self
         }
         /// Sets `amount` with the provided value.
-        pub fn with_amount<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_amount<T: Into<::prost::bytes::Bytes>>(mut self, field: T) -> Self {
             self.amount = Some(field.into());
             self
         }
@@ -197,7 +197,10 @@ mod _accessor_impls {
             self
         }
         /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
             self.object_type = Some(field.into());
             self
         }
@@ -233,7 +236,10 @@ mod _accessor_impls {
             self
         }
         /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
             self.object_type = Some(field.into());
             self
         }
@@ -269,7 +275,10 @@ mod _accessor_impls {
             self
         }
         /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
             self.object_type = Some(field.into());
             self
         }
@@ -346,7 +355,10 @@ mod _accessor_impls {
             self
         }
         /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
             self.object_type = Some(field.into());
             self
         }
@@ -382,7 +394,10 @@ mod _accessor_impls {
             self
         }
         /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<String>>(mut self, field: T) -> Self {
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
             self.object_type = Some(field.into());
             self
         }

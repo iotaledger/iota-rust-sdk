@@ -565,7 +565,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: None,
+            message_fields: Some(TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -639,9 +639,9 @@ mod _field_impls {
             self.path.push(ObjectChangeMutated::OWNER_FIELD.name);
             OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> String {
+        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeMutated::OBJECT_TYPE_FIELD.name);
-            self.finish()
+            TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeMutated::OBJECT_ID_FIELD.name);
@@ -675,7 +675,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: None,
+            message_fields: Some(TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -726,9 +726,9 @@ mod _field_impls {
             self.path.push(ObjectChangeDeleted::SENDER_FIELD.name);
             AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> String {
+        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeDeleted::OBJECT_TYPE_FIELD.name);
-            self.finish()
+            TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeDeleted::OBJECT_ID_FIELD.name);
@@ -754,7 +754,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: None,
+            message_fields: Some(TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -805,9 +805,9 @@ mod _field_impls {
             self.path.push(ObjectChangeWrapped::SENDER_FIELD.name);
             AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> String {
+        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeWrapped::OBJECT_TYPE_FIELD.name);
-            self.finish()
+            TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeWrapped::OBJECT_ID_FIELD.name);
@@ -841,7 +841,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: None,
+            message_fields: Some(TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -906,9 +906,9 @@ mod _field_impls {
             self.path.push(ObjectChangeUnwrapped::OWNER_FIELD.name);
             OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> String {
+        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::OBJECT_TYPE_FIELD.name);
-            self.finish()
+            TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::OBJECT_ID_FIELD.name);
@@ -946,7 +946,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: None,
+            message_fields: Some(TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -1011,9 +1011,9 @@ mod _field_impls {
             self.path.push(ObjectChangeCreated::OWNER_FIELD.name);
             OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> String {
+        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeCreated::OBJECT_TYPE_FIELD.name);
-            self.finish()
+            TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeCreated::OBJECT_ID_FIELD.name);
