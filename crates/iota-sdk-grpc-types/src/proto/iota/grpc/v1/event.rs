@@ -63,8 +63,11 @@ impl Event {
             .as_deref()
             .ok_or_else(|| TryFromProtoError::missing(Self::MODULE_FIELD.name))?
             .parse()
-            .map_err(|_e: iota_types::TypeParseError| {
-                TryFromProtoError::invalid(Self::MODULE_FIELD.name, "invalid identifier format")
+            .map_err(|e: iota_types::TypeParseError| {
+                TryFromProtoError::invalid(
+                    Self::MODULE_FIELD.name,
+                    format!("invalid identifier format {e}"),
+                )
             })
     }
 
@@ -88,8 +91,11 @@ impl Event {
             .as_deref()
             .ok_or_else(|| TryFromProtoError::missing(Self::EVENT_TYPE_FIELD.name))?
             .parse()
-            .map_err(|_e: iota_types::TypeParseError| {
-                TryFromProtoError::invalid(Self::EVENT_TYPE_FIELD.name, "invalid struct tag format")
+            .map_err(|e: iota_types::TypeParseError| {
+                TryFromProtoError::invalid(
+                    Self::EVENT_TYPE_FIELD.name,
+                    format!("invalid struct tag format {e}"),
+                )
             })
     }
 

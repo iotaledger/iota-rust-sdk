@@ -38,6 +38,33 @@ pub struct ObjectReference {
     #[prost(message, optional, tag = "3")]
     pub digest: ::core::option::Option<Digest>,
 }
+/// Ownership information for an object.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Owner {
+    #[prost(oneof = "owner::Kind", tags = "1, 2, 3, 4")]
+    pub kind: ::core::option::Option<owner::Kind>,
+}
+/// Nested message and enum types in `Owner`.
+pub mod owner {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Kind {
+        /// Object is exclusively owned by a single address, and is mutable.
+        #[prost(message, tag = "1")]
+        AddressOwner(super::Address),
+        /// Object is exclusively owned by a single object, and is mutable.
+        #[prost(message, tag = "2")]
+        ObjectOwner(super::ObjectId),
+        /// Object is shared and can be used by any address. The value is the
+        /// version at which the object became shared.
+        #[prost(uint64, tag = "3")]
+        Shared(u64),
+        /// Object is immutable, and hence ownership doesn't matter.
+        #[prost(bool, tag = "4")]
+        Immutable(bool),
+    }
+}
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TypeTagVector {
