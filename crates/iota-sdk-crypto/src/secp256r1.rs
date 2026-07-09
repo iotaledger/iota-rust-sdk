@@ -45,7 +45,7 @@ impl Secp256r1PrivateKey {
     pub const LENGTH: usize = 32;
 
     pub fn new(bytes: [u8; Self::LENGTH]) -> Self {
-        // Validate that the bytes form a well-formed secp256r1 private key.
+        // Validate that the bytes represent a well-formed secp256r1 private key.
         Secp256r1KeyPair::from_bytes(&bytes).expect("invalid secp256r1 private key");
         Self(bytes)
     }
@@ -324,7 +324,6 @@ impl Secp256r1VerifyingKey {
 
 impl Verifier<Secp256r1Signature> for Secp256r1VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Secp256r1Signature) -> Result<(), SignatureError> {
-        // fastcrypto hashes with SHA-256 and rejects high-S signatures.
         let signature = FcSecp256r1Signature::from_bytes(signature.inner())
             .map_err(SignatureError::from_source)?;
         self.0
