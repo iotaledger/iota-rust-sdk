@@ -108,6 +108,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ execution-cancelled-due-to-randomness-unavailable
 ///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
+///                 =/ move-authentication-error
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -148,6 +149,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// execution-cancelled-due-to-randomness-unavailable      = %d36
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
+/// move-authentication-error                              = %d39 execution-error
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionError {
@@ -272,6 +274,26 @@ pub enum ExecutionError {
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
+    /// The transaction's Move-based authentication failed while executing an
+    /// authenticator, before the programmable transaction was run. The
+    /// wrapped error is the failure produced by the authenticator's
+    /// execution.
+    MoveAuthenticationError { error: Arc<ExecutionErrorWrapper> },
+}
+
+/// Holds an [`ExecutionError`] so it can be nested inside another
+/// [`ExecutionError`]. A uniffi enum cannot contain itself by value, so a
+/// variant that carries a further execution error references it through this
+/// object and reads it back via [`ExecutionErrorWrapper::inner`].
+#[derive(Debug, uniffi::Object)]
+pub struct ExecutionErrorWrapper(iota_sdk::types::ExecutionError);
+
+#[uniffi::export]
+impl ExecutionErrorWrapper {
+    /// The wrapped execution error.
+    pub fn inner(&self) -> ExecutionError {
+        self.0.clone().into()
+    }
 }
 
 impl From<iota_sdk::types::ExecutionError> for ExecutionError {
@@ -410,6 +432,11 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            iota_sdk::types::ExecutionError::MoveAuthenticationError { error } => {
+                Self::MoveAuthenticationError {
+                    error: Arc::new(ExecutionErrorWrapper(*error)),
+                }
+            }
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -529,6 +556,9 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            ExecutionError::MoveAuthenticationError { error } => Self::MoveAuthenticationError {
+                error: Box::new(error.0.clone()),
+            },
         }
     }
 }
