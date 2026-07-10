@@ -20,7 +20,7 @@ echo "Commit from: $COMMIT_FROM" 1>&2
 
 echo "Commit to: $COMMIT_TO" 1>&2
 
-ENTRY=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PACKAGE_ROOT)
+ENTRY=$(git-cliff "$COMMIT_FROM..$COMMIT_TO" --tag "$VERSION" --include-path "$PACKAGE_ROOT/**")
 echo "$ENTRY"
 
 if [ "$ADD" = "true" ]; then
