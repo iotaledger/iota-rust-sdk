@@ -100,6 +100,12 @@ jobs:
         with:
           tool: cargo-udeps
       - name: Run Cargo Udeps
+        # The prebuilt cargo-udeps binary is statically linked against musl and
+        # intermittently segfaults in its in-process git fetch of large git
+        # dependencies (the iota monorepo). Shelling out to the system git
+        # avoids that code path.
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
         run: cargo +nightly-2026-06-29 udeps ${{ matrix.flags }}
 
   proto-build:
