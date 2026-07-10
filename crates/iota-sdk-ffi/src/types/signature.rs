@@ -11,6 +11,7 @@ use crate::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
         multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
+        public_key::PublicKey,
     },
 };
 
@@ -266,6 +267,16 @@ impl SimpleSignature {
 
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes()
+    }
+
+    /// The raw signature bytes, without the scheme flag or the public key.
+    pub fn signature_bytes(&self) -> Vec<u8> {
+        self.0.signature_bytes().to_vec()
+    }
+
+    /// The public key embedded in this signature.
+    pub fn to_public_key(&self) -> PublicKey {
+        self.0.to_public_key().into()
     }
 
     pub fn is_ed25519(&self) -> bool {
