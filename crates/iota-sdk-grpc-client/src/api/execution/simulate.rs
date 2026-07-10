@@ -51,6 +51,10 @@ impl Client {
     ///   (if requested)
     /// - `result.executed_transaction()?.output_objects()` - Get output objects
     ///   (if requested)
+    /// - `result.executed_transaction()?.balance_changes()` - Get balance
+    ///   changes (if requested)
+    /// - `result.executed_transaction()?.object_changes()` - Get object changes
+    ///   (if requested)
     ///
     /// # Read Mask
     ///
