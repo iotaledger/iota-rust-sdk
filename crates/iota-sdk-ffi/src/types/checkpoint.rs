@@ -78,21 +78,21 @@ impl CheckpointSummary {
         end_of_epoch_data: Option<EndOfEpochData>,
         version_specific_data: Vec<u8>,
     ) -> Self {
-        Self(iota_sdk::types::CheckpointSummary {
+        Self(iota_sdk::types::CheckpointSummary::new(
             epoch,
             sequence_number,
             network_total_transactions,
-            content_digest: **content_digest,
-            previous_digest: previous_digest.map(|v| **v),
+            **content_digest,
+            previous_digest.map(|v| **v),
             epoch_rolling_gas_cost_summary,
             timestamp_ms,
-            checkpoint_commitments: checkpoint_commitments
+            checkpoint_commitments
                 .into_iter()
                 .map(|v| v.0.clone())
                 .collect(),
-            end_of_epoch_data: end_of_epoch_data.map(Into::into),
+            end_of_epoch_data.map(Into::into),
             version_specific_data,
-        })
+        ))
     }
 
     /// Epoch that this checkpoint belongs to.

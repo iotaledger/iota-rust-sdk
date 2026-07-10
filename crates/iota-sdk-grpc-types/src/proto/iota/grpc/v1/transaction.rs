@@ -6,7 +6,7 @@ include!("../../../generated/iota.grpc.v1.transaction.rs");
 include!("../../../generated/iota.grpc.v1.transaction.field_info.rs");
 include!("../../../generated/iota.grpc.v1.transaction.accessors.rs");
 
-use crate::proto::TryFromProtoError;
+use crate::proto::{TryFromProtoError, get_inner_field};
 
 // TryFrom implementations for TransactionEffects
 impl TryFrom<&TransactionEffects> for iota_types::TransactionEffects {
@@ -242,6 +242,11 @@ impl ExecutedTransaction {
     /// [`EXECUTED_TRANSACTION_INPUT_OBJECTS`]).
     /// For checkpoint context use `"transactions.input_objects"`.
     ///
+    /// The set is always complete: if the serving node no longer has one of
+    /// the objects (e.g. pruned), `get_transactions` requests including this
+    /// field fail with `FAILED_PRECONDITION`. Narrow the read mask, or fetch
+    /// objects individually via `get_objects` for best-effort retrieval.
+    ///
     /// [`EXECUTED_TRANSACTION_INPUT_OBJECTS`]: crate::read_masks::EXECUTED_TRANSACTION_INPUT_OBJECTS
     pub fn input_objects(&self) -> Result<&super::object::Objects, TryFromProtoError> {
         self.input_objects
@@ -258,11 +263,56 @@ impl ExecutedTransaction {
     /// [`EXECUTED_TRANSACTION_OUTPUT_OBJECTS`]).
     /// For checkpoint context use `"transactions.output_objects"`.
     ///
+    /// The set is always complete: if the serving node no longer has one of
+    /// the objects (e.g. pruned), `get_transactions` requests including this
+    /// field fail with `FAILED_PRECONDITION`. Narrow the read mask, or fetch
+    /// objects individually via `get_objects` for best-effort retrieval.
+    ///
     /// [`EXECUTED_TRANSACTION_OUTPUT_OBJECTS`]: crate::read_masks::EXECUTED_TRANSACTION_OUTPUT_OBJECTS
     pub fn output_objects(&self) -> Result<&super::object::Objects, TryFromProtoError> {
         self.output_objects
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing(Self::OUTPUT_OBJECTS_FIELD.name))
+    }
+
+    /// Get balance changes.
+    ///
+    /// Returns proto [`BalanceChanges`] containing the balance changes derived
+    /// from the transaction's effects.
+    ///
+    /// **Read mask:** `"balance_changes"` (see
+    /// [`EXECUTED_TRANSACTION_BALANCE_CHANGES`]).
+    /// For checkpoint context use `"transactions.balance_changes"`.
+    ///
+    /// If the serving node no longer has a required object (e.g. pruned),
+    /// `get_transactions` requests including this field fail with
+    /// `FAILED_PRECONDITION`; retry without it in the read mask.
+    ///
+    /// [`EXECUTED_TRANSACTION_BALANCE_CHANGES`]: crate::read_masks::EXECUTED_TRANSACTION_BALANCE_CHANGES
+    pub fn balance_changes(&self) -> Result<&BalanceChanges, TryFromProtoError> {
+        self.balance_changes
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::BALANCE_CHANGES_FIELD.name))
+    }
+
+    /// Get object changes.
+    ///
+    /// Returns proto [`ObjectChanges`] containing the object changes derived
+    /// from the transaction's effects.
+    ///
+    /// **Read mask:** `"object_changes"` (see
+    /// [`EXECUTED_TRANSACTION_OBJECT_CHANGES`]).
+    /// For checkpoint context use `"transactions.object_changes"`.
+    ///
+    /// If the serving node no longer has a required object (e.g. pruned),
+    /// `get_transactions` requests including this field fail with
+    /// `FAILED_PRECONDITION`; retry without it in the read mask.
+    ///
+    /// [`EXECUTED_TRANSACTION_OBJECT_CHANGES`]: crate::read_masks::EXECUTED_TRANSACTION_OBJECT_CHANGES
+    pub fn object_changes(&self) -> Result<&ObjectChanges, TryFromProtoError> {
+        self.object_changes
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::OBJECT_CHANGES_FIELD.name))
     }
 }
 
@@ -354,3 +404,117 @@ impl Transaction {
         self.try_into()
     }
 }
+
+impl BalanceChange {
+    /// Get the owner whose balance changed, parsed as SDK type.
+    pub fn owner(&self) -> Result<iota_types::Owner, TryFromProtoError> {
+        self.owner
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::OWNER_FIELD.name))?
+            .owner()
+            .map_err(|e| e.nested(Self::OWNER_FIELD.name))
+    }
+
+    /// Get the coin type of the balance change, parsed as SDK type.
+    pub fn coin_type(&self) -> Result<iota_types::TypeTag, TryFromProtoError> {
+        self.coin_type
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::COIN_TYPE_FIELD.name))?
+            .type_tag()
+            .map_err(|e| e.nested(Self::COIN_TYPE_FIELD.name))
+    }
+
+    /// Get the signed amount the balance changed by, decoded from its 16-byte
+    /// big-endian two's-complement encoding.
+    pub fn amount_i128(&self) -> Result<i128, TryFromProtoError> {
+        let bytes: [u8; 16] = self
+            .amount
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::AMOUNT_FIELD.name))?
+            .as_ref()
+            .try_into()
+            .map_err(|_| {
+                TryFromProtoError::invalid(Self::AMOUNT_FIELD.name, "expected 16 bytes")
+            })?;
+        Ok(i128::from_be_bytes(bytes))
+    }
+}
+
+/// The `ObjectChange` variant messages share the same field shapes; this
+/// generates the getters that parse those fields into SDK types.
+macro_rules! impl_object_change_variant_accessors {
+    ($type:ty { $($field:ident),* $(,)? }) => {
+        impl $type {
+            $(impl_object_change_variant_accessors!(@getter $field);)*
+        }
+    };
+    (@getter sender) => {
+        /// Get the sender address of the transaction, parsed as SDK type.
+        pub fn sender(&self) -> Result<iota_types::Address, TryFromProtoError> {
+            get_inner_field!(self.sender, Self::SENDER_FIELD, try_into)
+        }
+    };
+    (@getter owner) => {
+        /// Get the owner of the object, parsed as SDK type.
+        pub fn owner(&self) -> Result<iota_types::Owner, TryFromProtoError> {
+            get_inner_field!(self.owner, Self::OWNER_FIELD, owner)
+        }
+    };
+    (@getter object_type) => {
+        /// Get the type of the object, parsed as SDK type.
+        pub fn object_type(&self) -> Result<iota_types::TypeTag, TryFromProtoError> {
+            get_inner_field!(self.object_type, Self::OBJECT_TYPE_FIELD, type_tag)
+        }
+    };
+    (@getter object_id) => {
+        /// Get the ID of the object, parsed as SDK type.
+        pub fn object_id(&self) -> Result<iota_types::ObjectId, TryFromProtoError> {
+            get_inner_field!(self.object_id, Self::OBJECT_ID_FIELD, object_id)
+        }
+    };
+    (@getter package_id) => {
+        /// Get the ID of the published package, parsed as SDK type.
+        pub fn package_id(&self) -> Result<iota_types::ObjectId, TryFromProtoError> {
+            get_inner_field!(self.package_id, Self::PACKAGE_ID_FIELD, object_id)
+        }
+    };
+    (@getter digest) => {
+        /// Get the digest of the object, parsed as SDK type.
+        pub fn digest(&self) -> Result<iota_types::ObjectDigest, TryFromProtoError> {
+            get_inner_field!(self.digest, Self::DIGEST_FIELD, try_into)
+        }
+    };
+}
+
+impl_object_change_variant_accessors!(ObjectChangePublished { package_id, digest });
+impl_object_change_variant_accessors!(ObjectChangeMutated {
+    sender,
+    owner,
+    object_type,
+    object_id,
+    digest,
+});
+impl_object_change_variant_accessors!(ObjectChangeDeleted {
+    sender,
+    object_type,
+    object_id
+});
+impl_object_change_variant_accessors!(ObjectChangeWrapped {
+    sender,
+    object_type,
+    object_id
+});
+impl_object_change_variant_accessors!(ObjectChangeUnwrapped {
+    sender,
+    owner,
+    object_type,
+    object_id,
+    digest,
+});
+impl_object_change_variant_accessors!(ObjectChangeCreated {
+    sender,
+    owner,
+    object_type,
+    object_id,
+    digest,
+});
