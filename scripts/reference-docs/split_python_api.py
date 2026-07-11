@@ -80,14 +80,9 @@ def main():
     functions.sort(key=lambda f: f[0].lower())
 
     common.write_category(out_dir / "classes", "Classes", 3)
-    # Names differing only in case (e.g. Input vs INPUT) get distinct
-    # filenames so the tree also extracts safely on case-insensitive
-    # filesystems.
     taken = {}
     for name, class_lines in classes:
-        stem = name
-        while taken.setdefault(stem.lower(), name) != name:
-            stem += "_"
+        stem = common.page_stem(taken, name)
         common.write_page(out_dir / "classes" / f"{stem}.md", name, "\n".join(class_lines))
 
     function_body = "\n".join(line for _name, lines in functions for line in lines)

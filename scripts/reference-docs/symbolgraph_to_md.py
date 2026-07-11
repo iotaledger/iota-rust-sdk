@@ -150,9 +150,11 @@ def main():
             continue
         common.write_category(out_dir / stem, label, position)
         position += 1
+        taken = {}
         for symbol in group:
+            page = common.page_stem(taken, title(symbol))
             body = "\n".join(render_type(symbol, public_members(symbol)))
-            common.write_page(out_dir / stem / f"{title(symbol)}.md", title(symbol), body)
+            common.write_page(out_dir / stem / f"{page}.md", title(symbol), body)
 
     common.write_index(
         out_dir / "index.md",

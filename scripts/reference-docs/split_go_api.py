@@ -114,8 +114,10 @@ def main():
         pages.append(("variables.md", "Constants and Variables", variables, 2))
     if functions:
         pages.append(("functions.md", "Functions", functions, 3))
+    taken = {}
     for section in types:
-        pages.append((f"types/{section.name()}.md", section.name(), [section], None))
+        stem = common.page_stem(taken, section.name())
+        pages.append((f"types/{stem}.md", section.name(), [section], None))
 
     # Map every anchor to (page path, heading slug) for link rewriting.
     anchor_map = {}
