@@ -74,8 +74,8 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
 
 // lib/ is both a Kotlin source dir and a resources dir, so the sources jar
 // would see the native library twice; it does not belong in a sources
-// artifact at all. configureEach also covers the task when the publish
-// plugin creates it eagerly, before a whenTaskAdded hook would register.
+// artifact at all. configureEach covers the task regardless of when the
+// publish plugin creates it.
 tasks.withType<Jar>().configureEach {
     if (name == "sourcesJar") {
         exclude("**/*.so", "**/*.dylib", "**/*.dll")
