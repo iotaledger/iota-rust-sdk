@@ -69,8 +69,9 @@ impl Client {
     /// # Parameters
     ///
     /// - `owner` - The address that owns the coins.
-    /// - `coin_type` - Optional coin type filter as a [`StructTag`]. If `None`,
-    ///   lists all coin types (`0x2::coin::Coin`).
+    /// - `coin_type` - Optional coin type filter as a [`StructTag`]. The value
+    ///   must be the inner type `T` of `Coin<T>`. If `None`, lists all coin
+    ///   types (with type `0x2::coin::Coin`).
     /// - `page_size` - Optional maximum number of coins per page.
     /// - `page_token` - Optional continuation token from a previous page.
     /// - `read_mask` - Field mask controlling the returned fields.
