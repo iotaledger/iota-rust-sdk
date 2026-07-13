@@ -34,32 +34,24 @@ jobs:
           name: source
           path: |
             bindings/swift/Sources
-            bindings/swift/Package.swift
+            bindings/swift/dist
             bindings/swift/README.md
 
   prepare-libraries-archives:
     name: Prepare libraries archives
     if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-swift-sdk')) || github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
     strategy:
       matrix:
         include:
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            lib: libiota_sdk_ffi.dylib
+          - target: x86_64-apple-darwin
             folder: darwin-amd64
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            lib: libiota_sdk_ffi.dylib
+          - target: aarch64-apple-darwin
             folder: darwin-aarch64
-          - os: macos-latest
-            target: aarch64-apple-ios
-            lib: libiota_sdk_ffi.dylib
+          - target: aarch64-apple-ios
             folder: ios-aarch64
-          - os: macos-latest
-            target: aarch64-apple-ios-sim
-            lib: libiota_sdk_ffi.dylib
+          - target: aarch64-apple-ios-sim
             folder: ios-sim-aarch64
-    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -73,13 +65,13 @@ jobs:
         with:
           key: swift-${{ matrix.target }}
 
-      - name: Build ${{ matrix.os }} ${{ matrix.target }} library
-        run: ${{ contains(matrix.target, 'ios') && 'IPHONEOS_DEPLOYMENT_TARGET=18.5' || '' }} RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+      - name: Build ${{ matrix.target }} library
+        run: ${{ contains(matrix.target, 'ios') && 'IPHONEOS_DEPLOYMENT_TARGET=16.0' || '' }} RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
       - name: Prepare library archive
         run: |
           mkdir -p tmp/lib/${{ matrix.folder }}
-          cp target/${{ matrix.target }}/release/${{ matrix.lib }} tmp/lib/${{ matrix.folder }}/${{ matrix.lib }}
+          cp target/${{ matrix.target }}/release/libiota_sdk_ffi.dylib tmp/lib/${{ matrix.folder }}/libiota_sdk_ffi.dylib
 
       - name: Archive ${{ matrix.target }} library
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -87,12 +79,51 @@ jobs:
           name: ${{ matrix.target }}
           path: tmp
 
+  xcframework:
+    name: Create XCFramework
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-swift-sdk')) || github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    needs:
+      - prepare-source-archive
+      - prepare-libraries-archives
+    steps:
+      - name: Download source and libraries archives
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          merge-multiple: true
+
+      - name: Prepare headers
+        run: |
+          mkdir headers
+          cp Sources/CIotaSDK/CIotaSDK.h headers/
+          cp dist/module.modulemap headers/
+
+      - name: Create macOS universal dylib
+        run: |
+          lipo -create \
+            lib/darwin-amd64/libiota_sdk_ffi.dylib \
+            lib/darwin-aarch64/libiota_sdk_ffi.dylib \
+            -output libiota_sdk_ffi_macos.dylib
+
+      - name: Create XCFramework
+        run: |
+          xcodebuild -create-xcframework \
+            -library libiota_sdk_ffi_macos.dylib -headers headers \
+            -library lib/ios-aarch64/libiota_sdk_ffi.dylib -headers headers \
+            -library lib/ios-sim-aarch64/libiota_sdk_ffi.dylib -headers headers \
+            -output IotaSDK.xcframework
+
+      - name: Upload XCFramework
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: xcframework
+          path: IotaSDK.xcframework
+
   release-archives:
     name: Release archives
     runs-on: ubuntu-latest
     needs:
-      - prepare-source-archive
-      - prepare-libraries-archives
+      - xcframework
     steps:
       - name: Checkout iota-sdk-swift
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -101,10 +132,21 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_SWIFT_SDK }}
           fetch-depth: 0
 
-      - name: Download source and libraries archives
+      - name: Download source archive
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
-          merge-multiple: true
+          name: source
+
+      - name: Download XCFramework
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: xcframework
+          path: IotaSDK.xcframework
+
+      - name: Replace local-dev layout with XCFramework distribution
+        run: |
+          cp dist/Package.swift Package.swift
+          rm -rf Sources/CIotaSDK lib dist
 
       - name: Set version to input or release tag
         id: set-version

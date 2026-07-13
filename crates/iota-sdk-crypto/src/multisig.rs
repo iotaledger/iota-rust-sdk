@@ -433,7 +433,7 @@ mod tests {
         (
             Ed25519PrivateKey::new([1u8; 32]),
             Secp256k1PrivateKey::new([2u8; 32]).unwrap(),
-            Secp256r1PrivateKey::new([3u8; 32]),
+            Secp256r1PrivateKey::new([3u8; 32]).unwrap(),
         )
     }
 
