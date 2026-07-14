@@ -282,9 +282,10 @@ pub enum ExecutionError {
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
-/// [`ExecutionError`]. A uniffi enum cannot contain itself by value, so a
-/// variant that carries a further execution error references it through this
-/// object and reads it back via [`ExecutionErrorWrapper::inner`].
+/// [`ExecutionError`].
+// Workaround for UniFFI <0.32: enums cannot contain themselves by value, so a
+// variant that carries another execution error stores it through this wrapper.
+// Access the wrapped value via [`ExecutionErrorWrapper::inner`].
 #[derive(Debug, uniffi::Object)]
 pub struct ExecutionErrorWrapper(iota_sdk::types::ExecutionError);
 
