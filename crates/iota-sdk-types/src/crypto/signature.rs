@@ -508,12 +508,17 @@ mod serialization {
             }
         }
 
+        /// Base64-encode this signature as its `flag || sig || pubkey` bytes,
+        /// the same layout as [`to_bytes`](Self::to_bytes).
         pub fn to_base64(&self) -> String {
             use base64ct::Encoding;
 
             base64ct::Base64::encode_string(&self.to_bytes())
         }
 
+        /// Decode a signature from the Base64 form produced by
+        /// [`to_base64`](Self::to_base64), i.e. base64 over the
+        /// `flag || sig || pubkey` bytes.
         pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
             use base64ct::Encoding;
             use serde::de::Error;
