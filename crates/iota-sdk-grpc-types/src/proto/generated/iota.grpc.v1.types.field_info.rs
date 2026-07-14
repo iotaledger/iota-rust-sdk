@@ -187,6 +187,89 @@ mod _field_impls {
             DigestFieldPathBuilder::new_with_base(self.path)
         }
     }
+    impl Owner {
+        pub const ADDRESS_OWNER_FIELD: &'static MessageField = &MessageField {
+            name: "address_owner",
+            json_name: "addressOwner",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(Address::FIELDS),
+        };
+        pub const OBJECT_OWNER_FIELD: &'static MessageField = &MessageField {
+            name: "object_owner",
+            json_name: "objectOwner",
+            number: 2i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(ObjectId::FIELDS),
+        };
+        pub const SHARED_FIELD: &'static MessageField = &MessageField {
+            name: "shared",
+            json_name: "shared",
+            number: 3i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
+        pub const IMMUTABLE_FIELD: &'static MessageField = &MessageField {
+            name: "immutable",
+            json_name: "immutable",
+            number: 4i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
+    }
+    impl Owner {
+        pub const KIND_ONEOF: &'static str = "kind";
+    }
+    impl MessageFields for Owner {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::ADDRESS_OWNER_FIELD,
+            Self::OBJECT_OWNER_FIELD,
+            Self::SHARED_FIELD,
+            Self::IMMUTABLE_FIELD,
+        ];
+        const ONEOFS: &'static [&'static str] = &["kind"];
+    }
+    impl Owner {
+        pub fn path_builder() -> OwnerFieldPathBuilder {
+            OwnerFieldPathBuilder::new()
+        }
+    }
+    pub struct OwnerFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl OwnerFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn address_owner(mut self) -> AddressFieldPathBuilder {
+            self.path.push(Owner::ADDRESS_OWNER_FIELD.name);
+            AddressFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn object_owner(mut self) -> ObjectIdFieldPathBuilder {
+            self.path.push(Owner::OBJECT_OWNER_FIELD.name);
+            ObjectIdFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn shared(mut self) -> String {
+            self.path.push(Owner::SHARED_FIELD.name);
+            self.finish()
+        }
+        pub fn immutable(mut self) -> String {
+            self.path.push(Owner::IMMUTABLE_FIELD.name);
+            self.finish()
+        }
+    }
     impl TypeTagVector {
         pub const INNER_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "inner_type",

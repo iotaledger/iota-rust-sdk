@@ -210,6 +210,27 @@ impl SimpleSignature {
             SimpleSignature::Secp256r1 { .. } => SignatureScheme::Secp256r1,
         }
     }
+
+    /// The raw signature bytes, without the scheme flag or the public key.
+    pub fn signature_bytes(&self) -> &[u8] {
+        match self {
+            SimpleSignature::Ed25519 { signature, .. } => signature.as_ref(),
+            SimpleSignature::Secp256k1 { signature, .. } => signature.as_ref(),
+            SimpleSignature::Secp256r1 { signature, .. } => signature.as_ref(),
+        }
+    }
+
+    /// The public key embedded in this signature.
+    ///
+    /// The raw public-key bytes are available via [`AsRef`] on the returned
+    /// [`PublicKey`].
+    pub fn to_public_key(&self) -> PublicKey {
+        match self {
+            SimpleSignature::Ed25519 { public_key, .. } => PublicKey::Ed25519(*public_key),
+            SimpleSignature::Secp256k1 { public_key, .. } => PublicKey::Secp256k1(*public_key),
+            SimpleSignature::Secp256r1 { public_key, .. } => PublicKey::Secp256r1(*public_key),
+        }
+    }
 }
 
 /// Flag use to disambiguate the signature schemes supported by IOTA.
@@ -485,6 +506,25 @@ mod serialization {
                     Err(SignatureFromBytesError::new("invalid signature scheme"))
                 }
             }
+        }
+
+        /// Base64-encode this signature as its `flag || sig || pubkey` bytes,
+        /// the same layout as [`to_bytes`](Self::to_bytes).
+        pub fn to_base64(&self) -> String {
+            use base64ct::Encoding;
+
+            base64ct::Base64::encode_string(&self.to_bytes())
+        }
+
+        /// Decode a signature from the Base64 form produced by
+        /// [`to_base64`](Self::to_base64), i.e. base64 over the
+        /// `flag || sig || pubkey` bytes.
+        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
+            use base64ct::Encoding;
+            use serde::de::Error;
+
+            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
+            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
         }
     }
 
@@ -947,6 +987,33 @@ mod serialization {
                 let json = serde_json::to_string_pretty(&sig).unwrap();
                 println!("{json}");
                 assert_eq!(sig, serde_json::from_str(&json).unwrap());
+            }
+        }
+
+        #[test]
+        fn simple_signature_base64_roundtrip() {
+            const FIXTURES: &[&str] = &[
+                "YQDaeO4w2ULMy5eqHBzP0oalr1YhDX/9uJS9MntKnW3d55q4aqZYYnoEloaBmXKc6FoD5bTwONdwS9CwdMQGhIcPDX2rNYyNrapO+gBJp1sHQ2VVsQo2ghm7aA9wVxNJ13U=",
+                "YgErcT6WUSQXGD1DaIwls5rWq648akDMlvL41ugUUhyIPWnqURl+daQLG+ILNemARKHYVNOikKJJ8jqu+HzlRa5rAg4XzVk55GsZZkGWjNdZkQuiV34n+nP944dtub7FvOsr",
+                "YgLp1p4K9dSQTt2AeR05yK1MkXmtLm6Sieb9yfkpW1gOBiqnO9ZKZiWUrLJQav2Mxw64zM37g3IVdsB/To6qfl8IA0f7ryPwOKvEwwiicRF6Kkz/rt28X/gcdRe8bHSn7bQw",
+            ];
+
+            for fixture in FIXTURES {
+                let bcs = Base64::decode_vec(fixture).unwrap();
+                let UserSignature::Simple(simple) = bcs::from_bytes(&bcs).unwrap() else {
+                    panic!("fixture is not a simple signature");
+                };
+
+                // Base64 is over the same `flag || sig || pubkey` bytes.
+                assert_eq!(
+                    simple.to_base64(),
+                    Base64::encode_string(&simple.to_bytes())
+                );
+                // Round-trips through base64.
+                assert_eq!(
+                    simple,
+                    SimpleSignature::from_base64(&simple.to_base64()).unwrap()
+                );
             }
         }
 
