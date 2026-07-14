@@ -11,8 +11,8 @@
 //!   [`IotaSystemState`], [`IotaSystemStateV2`].
 //! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
 //!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
-//!   [`Clock`], [`TimelockedIotaBalance`], [`UpgradeCap`], [`Publisher`],
-//!   [`Kiosk`], [`KioskOwnerCap`].
+//!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
+//!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -291,6 +291,38 @@ impl IotaCoinMetadata {
         (*self.0.id.object_id()).into()
     }
 
+    pub fn decimals(&self) -> u8 {
+        self.0.decimals
+    }
+
+    pub fn name(&self) -> String {
+        move_string_to_string(&self.0.name)
+    }
+
+    pub fn symbol(&self) -> String {
+        ascii_to_string(&self.0.symbol)
+    }
+
+    pub fn description(&self) -> String {
+        move_string_to_string(&self.0.description)
+    }
+
+    pub fn icon_url(&self) -> Option<String> {
+        self.0.icon_url.as_ref().map(url_to_string)
+    }
+}
+
+/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<IOTA>` — the
+/// frozen metadata fallback embedded in a `CoinManager`. Reachable only via
+/// `CoinManager::immutable_metadata`; it is not a standalone on-chain object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct ImmutableCoinMetadata(
+    pub iota_sdk::move_types::iota_framework::coin_manager::ImmutableCoinMetadata<IOTA>,
+);
+
+#[uniffi::export]
+impl ImmutableCoinMetadata {
     pub fn decimals(&self) -> u8 {
         self.0.decimals
     }
@@ -1042,8 +1074,27 @@ crate::ffi_move_object_generic! {
             self.0.metadata_immutable
         }
 
-        // The nested `treasury_cap`, `metadata`, and `immutable_metadata`
-        // objects are not surfaced across the FFI.
+        /// The embedded `TreasuryCap` controlling the coin's supply.
+        pub fn treasury_cap(&self) -> TreasuryCap {
+            TreasuryCap(self.0.treasury_cap.clone())
+        }
+
+        /// The coin's `CoinMetadata`, if still held by the manager.
+        pub fn metadata(&self) -> Option<Arc<IotaCoinMetadata>> {
+            self.0
+                .metadata
+                .clone()
+                .map(|m| Arc::new(IotaCoinMetadata(m)))
+        }
+
+        /// Frozen fallback metadata, used only if the original metadata has
+        /// been frozen.
+        pub fn immutable_metadata(&self) -> Option<Arc<ImmutableCoinMetadata>> {
+            self.0
+                .immutable_metadata
+                .clone()
+                .map(|m| Arc::new(ImmutableCoinMetadata(m)))
+        }
     }
 }
 
