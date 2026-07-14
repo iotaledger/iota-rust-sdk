@@ -146,16 +146,29 @@ mod serialization {
     use super::*;
     use crate::{Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
 
-    #[derive(serde::Deserialize, serde::Serialize)]
-    enum BinaryPublicKey {
+    /// Flat wire shape for `PublicKey`.
+    ///
+    /// The BCS variant tags are `PublicKey`'s own historical flag values
+    /// (0x00 Ed25519, 0x01 Secp256k1, 0x02 Secp256r1, 0x04 Passkey) — note
+    /// that passkey public keys use tag `0x04` here even though the passkey
+    /// *signature scheme* flag is `0x06`. The `ZkLoginDeprecated` placeholder
+    /// holds the `0x03` slot and is rejected by the deserializer.
+    #[derive(Deserialize, Serialize)]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "public-key")
+    )]
+    enum PublicKeyBody {
         Ed25519(Ed25519PublicKey),
         Secp256k1(Secp256k1PublicKey),
         Secp256r1(Secp256r1PublicKey),
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(skip))]
         ZkLoginDeprecated,
         Passkey(PasskeyPublicKey),
     }
 
-    #[derive(serde::Deserialize, serde::Serialize)]
+    #[derive(Deserialize, Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "PublicKey")]
     enum ReadablePublicKey {
@@ -188,13 +201,13 @@ mod serialization {
                 };
                 readable.serialize(serializer)
             } else {
-                let binary = match self {
-                    PublicKey::Ed25519(public_key) => BinaryPublicKey::Ed25519(*public_key),
-                    PublicKey::Secp256k1(public_key) => BinaryPublicKey::Secp256k1(*public_key),
-                    PublicKey::Secp256r1(public_key) => BinaryPublicKey::Secp256r1(*public_key),
-                    PublicKey::Passkey(public_key) => BinaryPublicKey::Passkey(public_key.clone()),
+                let body = match self {
+                    PublicKey::Ed25519(public_key) => PublicKeyBody::Ed25519(*public_key),
+                    PublicKey::Secp256k1(public_key) => PublicKeyBody::Secp256k1(*public_key),
+                    PublicKey::Secp256r1(public_key) => PublicKeyBody::Secp256r1(*public_key),
+                    PublicKey::Passkey(public_key) => PublicKeyBody::Passkey(public_key.clone()),
                 };
-                binary.serialize(serializer)
+                body.serialize(serializer)
             }
         }
     }
@@ -218,17 +231,17 @@ mod serialization {
                     ReadablePublicKey::Passkey { public_key } => Self::Passkey(public_key),
                 })
             } else {
-                let binary = BinaryPublicKey::deserialize(deserializer)?;
-                Ok(match binary {
-                    BinaryPublicKey::Ed25519(public_key) => Self::Ed25519(public_key),
-                    BinaryPublicKey::Secp256k1(public_key) => Self::Secp256k1(public_key),
-                    BinaryPublicKey::Secp256r1(public_key) => Self::Secp256r1(public_key),
-                    BinaryPublicKey::ZkLoginDeprecated => {
+                let body = PublicKeyBody::deserialize(deserializer)?;
+                Ok(match body {
+                    PublicKeyBody::Ed25519(public_key) => Self::Ed25519(public_key),
+                    PublicKeyBody::Secp256k1(public_key) => Self::Secp256k1(public_key),
+                    PublicKeyBody::Secp256r1(public_key) => Self::Secp256r1(public_key),
+                    PublicKeyBody::ZkLoginDeprecated => {
                         return Err(serde::de::Error::custom(
                             "zkLoginDeprecated is not supported",
                         ));
                     }
-                    BinaryPublicKey::Passkey(public_key) => Self::Passkey(public_key),
+                    PublicKeyBody::Passkey(public_key) => Self::Passkey(public_key),
                 })
             }
         }

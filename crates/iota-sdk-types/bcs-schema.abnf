@@ -145,6 +145,10 @@ consensus-determined-version-assignments = %d00 (size *cancelled-transaction)   
 
 digest = %d32 32OCTET
 
+ed25519-public-key = 32OCTET
+
+ed25519-signature = 64OCTET
+
 effects-aux-data-digest = digest
 
 end-of-epoch-data = (size *validator-committee-member)   ; next-epoch-committee
@@ -267,7 +271,13 @@ merge-coins = argument           ; coin
 
 misbehavior-report-digest = digest
 
+move-authenticator = %d00 move-authenticator-v1   ; V1
+
 move-authenticator-digest = digest
+
+move-authenticator-v1 = (size *input)      ; call-args
+                        (size *type-tag)   ; type-args
+                        input              ; object-to-authenticate
 
 move-call = object-id          ; package
             identifier         ; module
@@ -290,6 +300,21 @@ move-package = object-id                          ; id
 move-struct = compressed-struct-tag   ; object-type
               version                 ; version
               bytes                   ; contents
+
+multisig-aggregated-signature = (size *multisig-member-signature)   ; signatures
+                                u16                                 ; bitmap
+                                multisig-committee                  ; committee
+
+multisig-committee = (size *multisig-member)   ; members
+                     u16                       ; threshold
+
+multisig-member = public-key   ; public-key
+                  u8           ; weight
+
+multisig-member-signature = %d00 ed25519-signature     ; Ed25519
+                          / %d01 secp256k1-signature   ; Secp256k1
+                          / %d02 secp256r1-signature   ; Secp256r1
+                          / %d04 bytes                 ; Passkey
 
 object = object-data          ; data
          owner                ; owner
@@ -330,8 +355,19 @@ package-upgrade-error = %d00 object-id             ; UnableToFetchPackage
                       / %d04 u8                    ; UnknownUpgradePolicy
                       / %d05 object-id object-id   ; PackageIdDoesNotMatch
 
+passkey-authenticator = bytes              ; authenticator-data
+                        string             ; client-data-json
+                        simple-signature   ; signature
+
+passkey-public-key = secp256r1-public-key
+
 programmable-transaction = (size *input)     ; inputs
                            (size *command)   ; commands
+
+public-key = %d00 ed25519-public-key     ; Ed25519
+           / %d01 secp256k1-public-key   ; Secp256k1
+           / %d02 secp256r1-public-key   ; Secp256r1
+           / %d04 passkey-public-key     ; Passkey
 
 publish = (size *bytes)       ; modules
           (size *object-id)   ; dependencies
@@ -343,6 +379,14 @@ randomness-state-update = u64                ; epoch
                           bytes              ; random-bytes
                           version            ; randomness-obj-initial-shared-version
 
+secp256k1-public-key = 33OCTET
+
+secp256k1-signature = 64OCTET
+
+secp256r1-public-key = 33OCTET
+
+secp256r1-signature = 64OCTET
+
 sender-signed-data-digest = digest
 
 signed-checkpoint-summary = checkpoint-summary               ; checkpoint
@@ -350,6 +394,12 @@ signed-checkpoint-summary = checkpoint-summary               ; checkpoint
 
 signed-transaction = transaction              ; transaction
                      (size *user-signature)   ; signatures
+
+simple-signature = bytes
+
+simple-signature-body = %d00 ed25519-signature ed25519-public-key       ; Ed25519
+                      / %d01 secp256k1-signature secp256k1-public-key   ; Secp256k1
+                      / %d02 secp256r1-signature secp256r1-public-key   ; Secp256r1
 
 size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 
@@ -458,6 +508,13 @@ upgrade-info = object-id   ; upgraded-id
                version     ; upgraded-version
 
 user-signature = bytes
+
+user-signature-body = %d00 ed25519-signature ed25519-public-key       ; Ed25519
+                    / %d01 secp256k1-signature secp256k1-public-key   ; Secp256k1
+                    / %d02 secp256r1-signature secp256r1-public-key   ; Secp256r1
+                    / %d03 multisig-aggregated-signature              ; Multisig
+                    / %d06 passkey-authenticator                      ; Passkey
+                    / %d07 move-authenticator                         ; Move
 
 validator-aggregated-signature = u64                  ; epoch
                                  bls12381-signature   ; signature

@@ -19,10 +19,11 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// simple-signature-bcs = bytes ; where the contents of the bytes are defined by <simple-signature>
-/// simple-signature = (ed25519-flag ed25519-signature ed25519-public-key) /
-///                    (secp256k1-flag secp256k1-signature secp256k1-public-key) /
-///                    (secp256r1-flag secp256r1-signature secp256r1-public-key)
+/// simple-signature = bytes ; where the contents of the bytes are defined by
+///                          ; <simple-signature-body>
+/// simple-signature-body = (ed25519-flag ed25519-signature ed25519-public-key) /
+///                         (secp256k1-flag secp256k1-signature secp256k1-public-key) /
+///                         (secp256r1-flag secp256r1-signature secp256r1-public-key)
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -32,6 +33,11 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 /// the completely serialized signature.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "bytes")
+)]
 #[non_exhaustive]
 pub enum SimpleSignature {
     Ed25519 {
@@ -327,8 +333,9 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / passkey / move-authenticator
+/// user-signature = bytes ; where the contents of the bytes are defined by
+///                        ; <user-signature-body>
+/// user-signature-body = simple-signature-body / multisig / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -397,44 +404,180 @@ impl UserSignature {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use std::str::FromStr;
+    use std::{borrow::Cow, str::FromStr};
+
+    use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
     use crate::crypto::SignatureFromBytesError;
 
-    impl SimpleSignature {
-        pub fn to_bytes(&self) -> Vec<u8> {
-            let mut buf = Vec::new();
-            match self {
+    // -----------------------------------------------------------------------
+    // SimpleSignature
+    // -----------------------------------------------------------------------
+
+    /// Flat wire shape for `SimpleSignature`.
+    ///
+    /// Variant order matches the scheme flags (0x00 Ed25519, 0x01 Secp256k1,
+    /// 0x02 Secp256r1) so BCS emits the correct byte for each variant
+    /// automatically. All fields are `Copy`, so the same owned enum serves
+    /// both serialization (built by copying) and deserialization.
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    pub(crate) enum SimpleSignatureBody {
+        Ed25519 {
+            signature: Ed25519Signature,
+            public_key: Ed25519PublicKey,
+        },
+        Secp256k1 {
+            signature: Secp256k1Signature,
+            public_key: Secp256k1PublicKey,
+        },
+        Secp256r1 {
+            signature: Secp256r1Signature,
+            public_key: Secp256r1PublicKey,
+        },
+    }
+
+    impl From<&SimpleSignature> for SimpleSignatureBody {
+        fn from(sig: &SimpleSignature) -> Self {
+            match *sig {
                 SimpleSignature::Ed25519 {
                     signature,
                     public_key,
-                } => {
-                    buf.push(SignatureScheme::Ed25519 as u8);
-                    buf.extend_from_slice(signature.as_ref());
-                    buf.extend_from_slice(public_key.as_ref());
-                }
+                } => Self::Ed25519 {
+                    signature,
+                    public_key,
+                },
                 SimpleSignature::Secp256k1 {
                     signature,
                     public_key,
-                } => {
-                    buf.push(SignatureScheme::Secp256k1 as u8);
-                    buf.extend_from_slice(signature.as_ref());
-                    buf.extend_from_slice(public_key.as_ref());
-                }
+                } => Self::Secp256k1 {
+                    signature,
+                    public_key,
+                },
                 SimpleSignature::Secp256r1 {
                     signature,
                     public_key,
-                } => {
-                    buf.push(SignatureScheme::Secp256r1 as u8);
-                    buf.extend_from_slice(signature.as_ref());
-                    buf.extend_from_slice(public_key.as_ref());
-                }
+                } => Self::Secp256r1 {
+                    signature,
+                    public_key,
+                },
             }
+        }
+    }
 
-            buf
+    impl From<SimpleSignatureBody> for SimpleSignature {
+        fn from(body: SimpleSignatureBody) -> Self {
+            match body {
+                SimpleSignatureBody::Ed25519 {
+                    signature,
+                    public_key,
+                } => Self::Ed25519 {
+                    signature,
+                    public_key,
+                },
+                SimpleSignatureBody::Secp256k1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256k1 {
+                    signature,
+                    public_key,
+                },
+                SimpleSignatureBody::Secp256r1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256r1 {
+                    signature,
+                    public_key,
+                },
+            }
+        }
+    }
+
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(tag = "scheme", rename_all = "lowercase")]
+    #[serde(rename = "SimpleSignature")]
+    enum ReadableSimpleSignature {
+        Ed25519 {
+            signature: Ed25519Signature,
+            public_key: Ed25519PublicKey,
+        },
+        Secp256k1 {
+            signature: Secp256k1Signature,
+            public_key: Secp256k1PublicKey,
+        },
+        Secp256r1 {
+            signature: Secp256r1Signature,
+            public_key: Secp256r1PublicKey,
+        },
+    }
+
+    impl From<&SimpleSignature> for ReadableSimpleSignature {
+        fn from(sig: &SimpleSignature) -> Self {
+            match *sig {
+                SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => Self::Ed25519 {
+                    signature,
+                    public_key,
+                },
+                SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256k1 {
+                    signature,
+                    public_key,
+                },
+                SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256r1 {
+                    signature,
+                    public_key,
+                },
+            }
+        }
+    }
+
+    impl From<ReadableSimpleSignature> for SimpleSignature {
+        fn from(r: ReadableSimpleSignature) -> Self {
+            match r {
+                ReadableSimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => Self::Ed25519 {
+                    signature,
+                    public_key,
+                },
+                ReadableSimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256k1 {
+                    signature,
+                    public_key,
+                },
+                ReadableSimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => Self::Secp256r1 {
+                    signature,
+                    public_key,
+                },
+            }
+        }
+    }
+
+    impl SimpleSignature {
+        /// Encode this signature as `<scheme-flag> <signature> <public-key>`.
+        ///
+        /// Note: this is the flat body shape — no outer length prefix.
+        pub fn to_bytes(&self) -> Vec<u8> {
+            bcs::to_bytes(&SimpleSignatureBody::from(self))
+                .expect("BCS serialization of SimpleSignature cannot fail")
         }
 
+        /// Decode a `SimpleSignature` from its flat-body byte encoding.
         pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
@@ -443,68 +586,18 @@ mod serialization {
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
             match flag {
-                SignatureScheme::Ed25519 => {
-                    let expected_length = 1 + Ed25519Signature::LENGTH + Ed25519PublicKey::LENGTH;
-
-                    if bytes.len() != expected_length {
-                        return Err(SignatureFromBytesError::new("invalid ed25519 signature"));
-                    }
-
-                    let mut signature = [0; Ed25519Signature::LENGTH];
-                    signature.copy_from_slice(&bytes[1..(1 + Ed25519Signature::LENGTH)]);
-
-                    let mut public_key = [0; Ed25519PublicKey::LENGTH];
-                    public_key.copy_from_slice(&bytes[(1 + Ed25519Signature::LENGTH)..]);
-
-                    Ok(SimpleSignature::Ed25519 {
-                        signature: Ed25519Signature::new(signature),
-                        public_key: Ed25519PublicKey::new(public_key),
-                    })
-                }
-                SignatureScheme::Secp256k1 => {
-                    let expected_length =
-                        1 + Secp256k1Signature::LENGTH + Secp256k1PublicKey::LENGTH;
-
-                    if bytes.len() != expected_length {
-                        return Err(SignatureFromBytesError::new("invalid secp25k1 signature"));
-                    }
-
-                    let mut signature = [0; Secp256k1Signature::LENGTH];
-                    signature.copy_from_slice(&bytes[1..(1 + Secp256k1Signature::LENGTH)]);
-
-                    let mut public_key = [0; Secp256k1PublicKey::LENGTH];
-                    public_key.copy_from_slice(&bytes[(1 + Secp256k1Signature::LENGTH)..]);
-
-                    Ok(SimpleSignature::Secp256k1 {
-                        signature: Secp256k1Signature::new(signature),
-                        public_key: Secp256k1PublicKey::new(public_key),
-                    })
-                }
-                SignatureScheme::Secp256r1 => {
-                    let expected_length =
-                        1 + Secp256r1Signature::LENGTH + Secp256r1PublicKey::LENGTH;
-
-                    if bytes.len() != expected_length {
-                        return Err(SignatureFromBytesError::new("invalid secp25r1 signature"));
-                    }
-
-                    let mut signature = [0; Secp256r1Signature::LENGTH];
-                    signature.copy_from_slice(&bytes[1..(1 + Secp256r1Signature::LENGTH)]);
-
-                    let mut public_key = [0; Secp256r1PublicKey::LENGTH];
-                    public_key.copy_from_slice(&bytes[(1 + Secp256r1Signature::LENGTH)..]);
-
-                    Ok(SimpleSignature::Secp256r1 {
-                        signature: Secp256r1Signature::new(signature),
-                        public_key: Secp256r1PublicKey::new(public_key),
-                    })
-                }
-                SignatureScheme::Multisig
-                | SignatureScheme::Bls12381
-                | SignatureScheme::PasskeyAuthenticator
-                | SignatureScheme::MoveAuthenticator => {
-                    Err(SignatureFromBytesError::new("invalid signature scheme"))
-                }
+                SignatureScheme::Ed25519
+                | SignatureScheme::Secp256k1
+                | SignatureScheme::Secp256r1 => bcs::from_bytes::<SimpleSignatureBody>(bytes)
+                    .map(Into::into)
+                    .map_err(|_| {
+                        SignatureFromBytesError::new(match flag {
+                            SignatureScheme::Ed25519 => "invalid ed25519 signature",
+                            SignatureScheme::Secp256k1 => "invalid secp25k1 signature",
+                            _ => "invalid secp25r1 signature",
+                        })
+                    }),
+                _ => Err(SignatureFromBytesError::new("invalid signature scheme")),
             }
         }
     }
@@ -514,92 +607,10 @@ mod serialization {
         where
             S: serde::Serializer,
         {
-            #[derive(serde::Serialize)]
-            #[serde(tag = "scheme")]
-            #[serde(rename_all = "lowercase")]
-            enum Sig<'a> {
-                Ed25519 {
-                    signature: &'a Ed25519Signature,
-                    public_key: &'a Ed25519PublicKey,
-                },
-                Secp256k1 {
-                    signature: &'a Secp256k1Signature,
-                    public_key: &'a Secp256k1PublicKey,
-                },
-                Secp256r1 {
-                    signature: &'a Secp256r1Signature,
-                    public_key: &'a Secp256r1PublicKey,
-                },
-            }
-
             if serializer.is_human_readable() {
-                let sig = match self {
-                    SimpleSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    } => Sig::Ed25519 {
-                        signature,
-                        public_key,
-                    },
-                    SimpleSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    } => Sig::Secp256k1 {
-                        signature,
-                        public_key,
-                    },
-                    SimpleSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    } => Sig::Secp256r1 {
-                        signature,
-                        public_key,
-                    },
-                };
-
-                sig.serialize(serializer)
+                ReadableSimpleSignature::from(self).serialize(serializer)
             } else {
-                match self {
-                    SimpleSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    } => {
-                        let mut buf = [0; 1 + Ed25519Signature::LENGTH + Ed25519PublicKey::LENGTH];
-                        buf[0] = SignatureScheme::Ed25519 as u8;
-                        buf[1..(1 + Ed25519Signature::LENGTH)].copy_from_slice(signature.as_ref());
-                        buf[(1 + Ed25519Signature::LENGTH)..].copy_from_slice(public_key.as_ref());
-
-                        serializer.serialize_bytes(&buf)
-                    }
-                    SimpleSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    } => {
-                        let mut buf =
-                            [0; 1 + Secp256k1Signature::LENGTH + Secp256k1PublicKey::LENGTH];
-                        buf[0] = SignatureScheme::Secp256k1 as u8;
-                        buf[1..(1 + Secp256k1Signature::LENGTH)]
-                            .copy_from_slice(signature.as_ref());
-                        buf[(1 + Secp256k1Signature::LENGTH)..]
-                            .copy_from_slice(public_key.as_ref());
-
-                        serializer.serialize_bytes(&buf)
-                    }
-                    SimpleSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    } => {
-                        let mut buf =
-                            [0; 1 + Secp256r1Signature::LENGTH + Secp256r1PublicKey::LENGTH];
-                        buf[0] = SignatureScheme::Secp256r1 as u8;
-                        buf[1..(1 + Secp256r1Signature::LENGTH)]
-                            .copy_from_slice(signature.as_ref());
-                        buf[(1 + Secp256r1Signature::LENGTH)..]
-                            .copy_from_slice(public_key.as_ref());
-
-                        serializer.serialize_bytes(&buf)
-                    }
-                }
+                serializer.serialize_bytes(&self.to_bytes())
             }
         }
     }
@@ -609,112 +620,104 @@ mod serialization {
         where
             D: serde::Deserializer<'de>,
         {
-            #[derive(serde::Deserialize)]
-            #[serde(tag = "scheme")]
-            #[serde(rename_all = "lowercase")]
-            enum Sig {
-                Ed25519 {
-                    signature: Ed25519Signature,
-                    public_key: Ed25519PublicKey,
-                },
-                Secp256k1 {
-                    signature: Secp256k1Signature,
-                    public_key: Secp256k1PublicKey,
-                },
-                Secp256r1 {
-                    signature: Secp256r1Signature,
-                    public_key: Secp256r1PublicKey,
-                },
-            }
-
             if deserializer.is_human_readable() {
-                let sig = Sig::deserialize(deserializer)?;
-                Ok(match sig {
-                    Sig::Ed25519 {
-                        signature,
-                        public_key,
-                    } => SimpleSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    },
-                    Sig::Secp256k1 {
-                        signature,
-                        public_key,
-                    } => SimpleSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    },
-                    Sig::Secp256r1 {
-                        signature,
-                        public_key,
-                    } => SimpleSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    },
-                })
+                ReadableSimpleSignature::deserialize(deserializer).map(Into::into)
             } else {
-                let bytes: std::borrow::Cow<'de, [u8]> =
-                    std::borrow::Cow::deserialize(deserializer)?;
-                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
+                let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
+                Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
             }
         }
     }
 
-    impl UserSignature {
-        pub fn to_bytes(&self) -> Vec<u8> {
-            match self {
-                UserSignature::Simple(s) => s.to_bytes(),
-                UserSignature::Multisig(m) => m.to_bytes(),
-                UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
-                UserSignature::MoveAuthenticator(m) => m.to_bytes(),
-            }
-        }
+    // -----------------------------------------------------------------------
+    // UserSignature
+    // -----------------------------------------------------------------------
 
-        pub fn to_base64(&self) -> String {
-            use base64ct::Encoding;
+    /// Decode-side wire shape for `UserSignature`: the flat
+    /// `scheme-flag || payload` body inside the outer length prefix.
+    ///
+    /// Variant order matches the eight scheme flags so the BCS variant tag is
+    /// the scheme byte. `Bls12381Reserved` and `ZkLoginDeprecated` hold the
+    /// `0x04`/`0x05` slots (keeping `Passkey` at `0x06`); the `TryFrom`
+    /// conversion rejects both because they are not valid user signature
+    /// schemes, and they are `bcs_schema(skip)`ped from the generated grammar.
+    ///
+    /// The multisig and passkey variants hold the flat body pivots rather
+    /// than the public types, whose own serde emits the historical
+    /// `bytes`-wrapped `flag || body` form.
+    #[derive(serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    pub(crate) enum UserSignatureBody {
+        Ed25519 {
+            signature: Ed25519Signature,
+            public_key: Ed25519PublicKey,
+        },
+        Secp256k1 {
+            signature: Secp256k1Signature,
+            public_key: Secp256k1PublicKey,
+        },
+        Secp256r1 {
+            signature: Secp256r1Signature,
+            public_key: Secp256r1PublicKey,
+        },
+        Multisig(
+            #[cfg_attr(
+                feature = "bcs-schema",
+                bcs_schema(as_type = "multisig-aggregated-signature")
+            )]
+            crate::crypto::multisig::serialization::Multisig,
+        ),
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(skip))]
+        Bls12381Reserved,
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(skip))]
+        ZkLoginDeprecated,
+        Passkey(
+            #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "passkey-authenticator"))]
+            crate::crypto::passkey::serialization::Authenticator,
+        ),
+        Move(MoveAuthenticator),
+    }
 
-            base64ct::Base64::encode_string(&self.to_bytes())
-        }
+    impl TryFrom<UserSignatureBody> for UserSignature {
+        type Error = SignatureFromBytesError;
 
-        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
-            let bytes = bytes.as_ref();
-
-            let flag =
-                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                    SignatureFromBytesError::new("missing signature scheme flag")
-                })?)
-                .map_err(SignatureFromBytesError::new)?;
-            match flag {
-                SignatureScheme::Ed25519
-                | SignatureScheme::Secp256k1
-                | SignatureScheme::Secp256r1 => {
-                    let simple = SimpleSignature::from_bytes(bytes)?;
-                    Ok(Self::Simple(simple))
+        fn try_from(body: UserSignatureBody) -> Result<Self, Self::Error> {
+            Ok(match body {
+                UserSignatureBody::Ed25519 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                }),
+                UserSignatureBody::Secp256k1 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                }),
+                UserSignatureBody::Secp256r1 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                }),
+                UserSignatureBody::Multisig(m) => Self::Multisig(m.try_into()?),
+                UserSignatureBody::Bls12381Reserved => {
+                    return Err(SignatureFromBytesError::new(
+                        "bls not supported for user signatures",
+                    ));
                 }
-                SignatureScheme::Multisig => {
-                    let multisig = MultisigAggregatedSignature::from_bytes(bytes)?;
-                    Ok(Self::Multisig(multisig))
+                UserSignatureBody::ZkLoginDeprecated => {
+                    return Err(SignatureFromBytesError::new(
+                        "zklogin is not supported for user signatures",
+                    ));
                 }
-                SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
-                    "bls not supported for user signatures",
-                )),
-                SignatureScheme::PasskeyAuthenticator => {
-                    let passkey = PasskeyAuthenticator::from_bytes(bytes)?;
-                    Ok(Self::PasskeyAuthenticator(passkey))
-                }
-                SignatureScheme::MoveAuthenticator => {
-                    let move_auth = MoveAuthenticator::from_bytes(bytes)?;
-                    Ok(Self::MoveAuthenticator(move_auth))
-                }
-            }
-        }
-
-        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
-            use base64ct::Encoding;
-            use serde::de::Error;
-
-            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
-            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
+                UserSignatureBody::Passkey(p) => Self::PasskeyAuthenticator(p.try_into()?),
+                UserSignatureBody::Move(m) => Self::MoveAuthenticator(m),
+            })
         }
     }
 
@@ -760,57 +763,127 @@ mod serialization {
         Move(MoveAuthenticator),
     }
 
+    impl<'a> From<&'a UserSignature> for ReadableUserSignatureRef<'a> {
+        fn from(sig: &'a UserSignature) -> Self {
+            match sig {
+                UserSignature::Simple(SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                }) => Self::Ed25519 {
+                    signature,
+                    public_key,
+                },
+                UserSignature::Simple(SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                }) => Self::Secp256k1 {
+                    signature,
+                    public_key,
+                },
+                UserSignature::Simple(SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                }) => Self::Secp256r1 {
+                    signature,
+                    public_key,
+                },
+                UserSignature::Multisig(m) => Self::Multisig(m),
+                UserSignature::PasskeyAuthenticator(p) => Self::Passkey(p),
+                UserSignature::MoveAuthenticator(m) => Self::Move(m),
+            }
+        }
+    }
+
+    impl From<ReadableUserSignature> for UserSignature {
+        fn from(r: ReadableUserSignature) -> Self {
+            match r {
+                ReadableUserSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                }),
+                ReadableUserSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                }),
+                ReadableUserSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => Self::Simple(SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                }),
+                ReadableUserSignature::Multisig(m) => Self::Multisig(m),
+                ReadableUserSignature::Passkey(p) => Self::PasskeyAuthenticator(p),
+                ReadableUserSignature::Move(m) => Self::MoveAuthenticator(m),
+            }
+        }
+    }
+
+    impl UserSignature {
+        /// Encode this signature as `<scheme-flag> <payload>`.
+        ///
+        /// Note: this is the flat body shape — no outer length prefix.
+        pub fn to_bytes(&self) -> Vec<u8> {
+            match self {
+                UserSignature::Simple(s) => s.to_bytes(),
+                UserSignature::Multisig(m) => m.to_bytes(),
+                UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
+                UserSignature::MoveAuthenticator(m) => m.to_bytes(),
+            }
+        }
+
+        pub fn to_base64(&self) -> String {
+            use base64ct::Encoding;
+
+            base64ct::Base64::encode_string(&self.to_bytes())
+        }
+
+        /// Decode a `UserSignature` from its flat-body byte encoding.
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
+            let bytes = bytes.as_ref();
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
+            let body = bcs::from_bytes::<UserSignatureBody>(bytes).map_err(|_| {
+                SignatureFromBytesError::new(match flag {
+                    SignatureScheme::Ed25519 => "invalid ed25519 signature",
+                    SignatureScheme::Secp256k1 => "invalid secp25k1 signature",
+                    SignatureScheme::Secp256r1 => "invalid secp25r1 signature",
+                    SignatureScheme::Multisig => "invalid multisig",
+                    SignatureScheme::Bls12381 => "bls not supported for user signatures",
+                    SignatureScheme::PasskeyAuthenticator => "invalid passkey",
+                    SignatureScheme::MoveAuthenticator => "invalid move authenticator",
+                })
+            })?;
+            body.try_into()
+        }
+
+        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
+            use base64ct::Encoding;
+            use serde::de::Error;
+
+            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
+            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
+        }
+    }
+
     impl serde::Serialize for UserSignature {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: serde::Serializer,
         {
             if serializer.is_human_readable() {
-                let readable = match self {
-                    UserSignature::Simple(SimpleSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    }) => ReadableUserSignatureRef::Ed25519 {
-                        signature,
-                        public_key,
-                    },
-                    UserSignature::Simple(SimpleSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    }) => ReadableUserSignatureRef::Secp256k1 {
-                        signature,
-                        public_key,
-                    },
-                    UserSignature::Simple(SimpleSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    }) => ReadableUserSignatureRef::Secp256r1 {
-                        signature,
-                        public_key,
-                    },
-                    UserSignature::Multisig(multisig) => {
-                        ReadableUserSignatureRef::Multisig(multisig)
-                    }
-                    UserSignature::PasskeyAuthenticator(passkey) => {
-                        ReadableUserSignatureRef::Passkey(passkey)
-                    }
-                    UserSignature::MoveAuthenticator(move_auth) => {
-                        ReadableUserSignatureRef::Move(move_auth)
-                    }
-                };
-                readable.serialize(serializer)
+                ReadableUserSignatureRef::from(self).serialize(serializer)
             } else {
-                match self {
-                    UserSignature::Simple(simple) => simple.serialize(serializer),
-                    UserSignature::Multisig(multisig) => multisig.serialize(serializer),
-                    UserSignature::PasskeyAuthenticator(passkey) => passkey.serialize(serializer),
-                    // `MoveAuthenticator` derives `Serialize`, so delegating here would emit the
-                    // bare enum instead of the length-prefixed `flag || payload` byte blob every
-                    // other signature scheme uses (and that `from_bytes`/deserialize expect).
-                    UserSignature::MoveAuthenticator(move_auth) => {
-                        serializer.serialize_bytes(&move_auth.to_bytes())
-                    }
-                }
+                serializer.serialize_bytes(&self.to_bytes())
             }
         }
     }
@@ -821,39 +894,10 @@ mod serialization {
             D: serde::Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                let readable = ReadableUserSignature::deserialize(deserializer)?;
-                Ok(match readable {
-                    ReadableUserSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    } => Self::Simple(SimpleSignature::Ed25519 {
-                        signature,
-                        public_key,
-                    }),
-                    ReadableUserSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    } => Self::Simple(SimpleSignature::Secp256k1 {
-                        signature,
-                        public_key,
-                    }),
-                    ReadableUserSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    } => Self::Simple(SimpleSignature::Secp256r1 {
-                        signature,
-                        public_key,
-                    }),
-                    ReadableUserSignature::Multisig(multisig) => Self::Multisig(multisig),
-                    ReadableUserSignature::Passkey(passkey) => Self::PasskeyAuthenticator(passkey),
-                    ReadableUserSignature::Move(move_auth) => Self::MoveAuthenticator(move_auth),
-                })
+                ReadableUserSignature::deserialize(deserializer).map(Into::into)
             } else {
-                use serde_with::DeserializeAs;
-
-                let bytes: std::borrow::Cow<'de, [u8]> =
-                    serde_with::Bytes::deserialize_as(deserializer)?;
-                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
+                let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
+                Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
             }
         }
     }

@@ -60,8 +60,14 @@ pub enum SignatureScheme {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / passkey / move-authenticator
+/// user-signature = bytes ; where the contents of the bytes are defined by
+///                        ; <user-signature-body>
+/// user-signature-body = (%d00 ed25519-signature ed25519-public-key) /
+///                       (%d01 secp256k1-signature secp256k1-public-key) /
+///                       (%d02 secp256r1-signature secp256r1-public-key) /
+///                       (%d03 multisig-aggregated-signature) /
+///                       (%d06 passkey-authenticator) /
+///                       (%d07 move-authenticator)
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -220,10 +226,11 @@ impl UserSignature {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// simple-signature-bcs = bytes ; where the contents of the bytes are defined by <simple-signature>
-/// simple-signature = (ed25519-flag ed25519-signature ed25519-public-key) /
-///                    (secp256k1-flag secp256k1-signature secp256k1-public-key) /
-///                    (secp256r1-flag secp256r1-signature secp256r1-public-key)
+/// simple-signature = bytes ; where the contents of the bytes are defined by
+///                          ; <simple-signature-body>
+/// simple-signature-body = (ed25519-flag ed25519-signature ed25519-public-key) /
+///                         (secp256k1-flag secp256k1-signature secp256k1-public-key) /
+///                         (secp256r1-flag secp256r1-signature secp256r1-public-key)
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
