@@ -210,6 +210,27 @@ impl SimpleSignature {
             SimpleSignature::Secp256r1 { .. } => SignatureScheme::Secp256r1,
         }
     }
+
+    /// The raw signature bytes, without the scheme flag or the public key.
+    pub fn signature_bytes(&self) -> &[u8] {
+        match self {
+            SimpleSignature::Ed25519 { signature, .. } => signature.as_ref(),
+            SimpleSignature::Secp256k1 { signature, .. } => signature.as_ref(),
+            SimpleSignature::Secp256r1 { signature, .. } => signature.as_ref(),
+        }
+    }
+
+    /// The public key embedded in this signature.
+    ///
+    /// The raw public-key bytes are available via [`AsRef`] on the returned
+    /// [`PublicKey`].
+    pub fn to_public_key(&self) -> PublicKey {
+        match self {
+            SimpleSignature::Ed25519 { public_key, .. } => PublicKey::Ed25519(*public_key),
+            SimpleSignature::Secp256k1 { public_key, .. } => PublicKey::Secp256k1(*public_key),
+            SimpleSignature::Secp256r1 { public_key, .. } => PublicKey::Secp256r1(*public_key),
+        }
+    }
 }
 
 /// Flag use to disambiguate the signature schemes supported by IOTA.

@@ -207,11 +207,9 @@ mod keypair {
                     }
                     let mut arr = [0u8; crate::secp256r1::Secp256r1PrivateKey::LENGTH];
                     arr.copy_from_slice(key_bytes);
-                    Ok(Self {
-                        inner: InnerKeypair::Secp256r1(crate::secp256r1::Secp256r1PrivateKey::new(
-                            arr,
-                        )),
-                    })
+                    crate::secp256r1::Secp256r1PrivateKey::new(arr)
+                        .map(InnerKeypair::Secp256r1)
+                        .map(|inner| Self { inner })
                 }
                 _ => Err(SignatureError::from_source(
                     "unsupported signature scheme for SimpleKeypair",
@@ -233,11 +231,11 @@ mod keypair {
                 .map_err(SignatureError::from_source)?
             {
                 #[cfg(feature = "ed25519")]
-                (ed25519_dalek::pkcs8::ALGORITHM_OID, None) => private_key
+                (ed25519::pkcs8::ALGORITHM_OID, None) => private_key
                     .try_into()
-                    .map(crate::ed25519::Ed25519PrivateKey::from_dalek)
-                    .map(InnerKeypair::Ed25519)
-                    .map_err(SignatureError::from_source),
+                    .map_err(SignatureError::from_source)
+                    .and_then(crate::ed25519::Ed25519PrivateKey::from_pkcs8)
+                    .map(InnerKeypair::Ed25519),
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,
@@ -416,11 +414,11 @@ mod keypair {
                 .map_err(SignatureError::from_source)?
             {
                 #[cfg(feature = "ed25519")]
-                (ed25519_dalek::pkcs8::ALGORITHM_OID, None) => public_key
+                (ed25519::pkcs8::ALGORITHM_OID, None) => public_key
                     .try_into()
-                    .map(crate::ed25519::Ed25519VerifyingKey::from_dalek)
-                    .map(InnerVerifyingKey::Ed25519)
-                    .map_err(SignatureError::from_source),
+                    .map_err(SignatureError::from_source)
+                    .and_then(crate::ed25519::Ed25519VerifyingKey::from_pkcs8)
+                    .map(InnerVerifyingKey::Ed25519),
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,

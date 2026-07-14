@@ -30,6 +30,8 @@ impl Client {
     /// - `result.events()` - Get transaction events (if available)
     /// - `result.input_objects()` - Get input objects (if requested)
     /// - `result.output_objects()` - Get output objects (if requested)
+    /// - `result.balance_changes()` - Get balance changes (if requested)
+    /// - `result.object_changes()` - Get object changes (if requested)
     ///
     /// # Read Mask
     ///
