@@ -160,6 +160,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ execution-cancelled-due-to-randomness-unavailable
 ///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
+///                 =/ move-authentication-error
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -200,6 +201,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-cancelled-due-to-randomness-unavailable      = %d36
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
+/// move-authentication-error                              = %d39 execution-error
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -407,6 +409,13 @@ pub enum ExecutionError {
     /// of its commands.
     #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
+    /// The transaction's Move-based authentication failed while executing an
+    /// authenticator, before the programmable transaction was run. The
+    /// wrapped error is the failure produced by the authenticator's
+    /// execution.
+    #[error("Move authentication failed: {error}")]
+    #[cfg_attr(feature = "proptest", weight(0))]
+    MoveAuthenticationError { error: Box<ExecutionError> },
 }
 
 impl ExecutionError {
@@ -450,6 +459,7 @@ impl ExecutionError {
         ExecutionCancelledDueToRandomnessUnavailable,
         ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
+        MoveAuthenticationError,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
