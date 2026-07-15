@@ -40,7 +40,7 @@
 //! [`Coin`](crate::types::coin::Coin) binding already decodes coin objects
 //! of any coin type.
 
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use iota_sdk::move_types::iota_framework::iota::IOTA;
 
@@ -204,8 +204,8 @@ impl IotaSystemState {
 /// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV2`
 /// inner system state.
 ///
-/// Exposes the scalar epoch parameters; the nested validator-set and
-/// treasury data are not surfaced through the FFI yet.
+/// Exposes the scalar epoch parameters. The validator set and treasury are
+/// large nested structures not surfaced here.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct IotaSystemStateV2(
@@ -944,8 +944,8 @@ crate::ffi_move_object! {
     /// A typed view of the on-chain `0x2::random::Random` object (the `0x8`
     /// singleton holding the global randomness state).
     Random(iota_sdk::move_types::iota_framework::random::Random) {
-        // The `inner` field is a `Versioned` wrapper whose state lives in a
-        // dynamic field; it is not surfaced across the FFI.
+        // `inner` is a `Versioned` handle whose state lives in a dynamic
+        // field, not in this object's contents, so it cannot be surfaced here.
     }
 }
 
@@ -983,8 +983,9 @@ crate::ffi_move_object! {
             self.0.package_version
         }
 
-        // `modules_metadata` is a `VecMap` of per-module metadata; it is not
-        // surfaced across the FFI.
+        // `modules_metadata` maps each module name to a `ModuleMetadataV1`
+        // record; surfacing it over the FFI needs a dedicated record type, so
+        // it is omitted here.
     }
 }
 
@@ -1051,8 +1052,16 @@ crate::ffi_move_object_generic! {
             self.0.version
         }
 
-        // The `fields` `VecMap` of display templates is not surfaced across
-        // the FFI.
+        /// The display template as key/value pairs (e.g. `name`, `link`,
+        /// `image_url`, `description`).
+        pub fn fields(&self) -> HashMap<String, String> {
+            self.0
+                .fields
+                .contents
+                .iter()
+                .map(|e| (move_string_to_string(&e.key), move_string_to_string(&e.value)))
+                .collect()
+        }
     }
 }
 
@@ -1145,8 +1154,9 @@ crate::ffi_move_object_generic! {
             self.0.spent_balance.value()
         }
 
-        // The `rules` `VecMap` of per-action rule sets is not surfaced across
-        // the FFI.
+        // `rules` maps each action to a set of rule types; surfacing this
+        // nested map over the FFI needs a dedicated record type, so it is
+        // omitted here.
     }
 }
 
@@ -1169,8 +1179,10 @@ crate::ffi_move_object_generic! {
             self.0.balance.value()
         }
 
-        // The `rules` `VecSet` of attached rule types is not surfaced across
-        // the FFI.
+        /// Fully-qualified type names of the rules attached to this policy.
+        pub fn rules(&self) -> Vec<String> {
+            self.0.rules.contents.iter().map(|t| ascii_to_string(&t.name)).collect()
+        }
     }
 }
 
