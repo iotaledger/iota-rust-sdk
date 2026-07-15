@@ -30,6 +30,14 @@ impl MoveAuthenticator {
             Self::V1(_) => 1,
         }
     }
+
+    /// Returns the address of the object being authenticated, which acts as
+    /// the sender of the transaction.
+    pub fn address(&self) -> Address {
+        match self {
+            Self::V1(v1) => v1.address(),
+        }
+    }
 }
 
 #[cfg(feature = "serde")]

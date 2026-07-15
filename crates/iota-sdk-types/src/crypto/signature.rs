@@ -395,6 +395,13 @@ impl UserSignature {
 }
 
 #[cfg(feature = "serde")]
+impl std::hash::Hash for UserSignature {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.to_bytes().hash(state);
+    }
+}
+
+#[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use std::str::FromStr;

@@ -254,6 +254,18 @@ impl From<crate::MultisigCommittee> for Address {
     }
 }
 
+impl crate::UserSignature {
+    /// Derive the `Address` of the signer that this signature authenticates.
+    pub fn derive_address(&self) -> Address {
+        match self {
+            Self::Simple(simple) => simple.to_public_key().derive_address(),
+            Self::Multisig(multisig) => multisig.committee().derive_address(),
+            Self::PasskeyAuthenticator(passkey) => passkey.public_key().derive_address(),
+            Self::MoveAuthenticator(move_authenticator) => move_authenticator.address(),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
