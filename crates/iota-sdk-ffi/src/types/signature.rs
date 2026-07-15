@@ -276,6 +276,18 @@ impl SimpleSignature {
         self.0.to_bytes()
     }
 
+    /// Base64-encode this signature as its `flag || sig || pubkey` bytes.
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
+    }
+
+    /// Decode a signature from the Base64 form produced by `to_base64`, i.e.
+    /// base64 over the `flag || sig || pubkey` bytes.
+    #[uniffi::constructor]
+    pub fn from_base64(base64: String) -> Result<Self> {
+        Ok(iota_sdk::types::SimpleSignature::from_base64(&base64).map(Self)?)
+    }
+
     /// The raw signature bytes, without the scheme flag or the public key.
     pub fn signature_bytes(&self) -> Vec<u8> {
         self.0.signature_bytes().to_vec()
