@@ -22,7 +22,8 @@
 //! macro-generated shims (`ffi_move_object!` for non-generic mirrors,
 //! `ffi_move_object_generic!` for single-type-parameter mirrors instantiated
 //! at `IOTA`): [`DenyList`], [`Random`], [`AuthenticatorState`],
-//! [`PackageMetadataV1`],
+//! [`PackageMetadataV1`] (with its [`ModuleMetadataV1`] and
+//! [`AuthenticatorMetadataV1`] records),
 //! [`UnverifiedValidatorOperationCap`], [`TreasuryCap`],
 //! [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`], [`CoinManager`],
 //! [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`], [`Token`],
@@ -963,6 +964,47 @@ crate::ffi_move_object! {
     }
 }
 
+/// Metadata of a single module of a package
+/// (`0x2::package_metadata::ModuleMetadataV1`).
+#[derive(uniffi::Record)]
+pub struct ModuleMetadataV1 {
+    /// The authenticator functions the module declares.
+    pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::package_metadata::ModuleMetadataV1>
+    for ModuleMetadataV1
+{
+    fn from(m: &iota_sdk::move_types::iota_framework::package_metadata::ModuleMetadataV1) -> Self {
+        Self {
+            authenticator_metadata: m.authenticator_metadata.iter().map(Into::into).collect(),
+        }
+    }
+}
+
+/// An authenticator function declared by a module
+/// (`0x2::package_metadata::AuthenticatorMetadataV1`).
+#[derive(uniffi::Record)]
+pub struct AuthenticatorMetadataV1 {
+    /// Name of the authenticator function.
+    pub function_name: String,
+    /// Fully-qualified type name of the account type it authenticates.
+    pub account_type: String,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::package_metadata::AuthenticatorMetadataV1>
+    for AuthenticatorMetadataV1
+{
+    fn from(
+        m: &iota_sdk::move_types::iota_framework::package_metadata::AuthenticatorMetadataV1,
+    ) -> Self {
+        Self {
+            function_name: ascii_to_string(&m.function_name),
+            account_type: ascii_to_string(&m.account_type.name),
+        }
+    }
+}
+
 crate::ffi_move_object! {
     /// A typed view of an on-chain
     /// `0x2::package_metadata::PackageMetadataV1` object.
@@ -983,9 +1025,15 @@ crate::ffi_move_object! {
             self.0.package_version
         }
 
-        // `modules_metadata` maps each module name to a `ModuleMetadataV1`
-        // record; surfacing it over the FFI needs a dedicated record type, so
-        // it is omitted here.
+        /// Per-module metadata, keyed by module name.
+        pub fn modules_metadata(&self) -> HashMap<String, ModuleMetadataV1> {
+            self.0
+                .modules_metadata
+                .contents
+                .iter()
+                .map(|e| (ascii_to_string(&e.key), (&e.value).into()))
+                .collect()
+        }
     }
 }
 
@@ -1154,9 +1202,21 @@ crate::ffi_move_object_generic! {
             self.0.spent_balance.value()
         }
 
-        // `rules` maps each action to a set of rule types; surfacing this
-        // nested map over the FFI needs a dedicated record type, so it is
-        // omitted here.
+        /// Fully-qualified type names of the rules attached to each action,
+        /// keyed by action name.
+        pub fn rules(&self) -> HashMap<String, Vec<String>> {
+            self.0
+                .rules
+                .contents
+                .iter()
+                .map(|e| {
+                    (
+                        move_string_to_string(&e.key),
+                        e.value.contents.iter().map(|t| ascii_to_string(&t.name)).collect(),
+                    )
+                })
+                .collect()
+        }
     }
 }
 
