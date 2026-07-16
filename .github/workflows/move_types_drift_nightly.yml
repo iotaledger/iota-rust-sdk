@@ -53,11 +53,27 @@ jobs:
                 }' > head_published_api.txt
 
       - name: Diff pinned type surface against develop HEAD
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if ! diff -u \
             crates/iota-sdk-move-types/src/packages_compiled/published_api.txt \
             head_published_api.txt; then
             echo
+            # Best-effort pointer at the drift sources: upstream commits in
+            # pinned..develop that touched published_api.txt. May include
+            # commits that only changed the function surface (which the type
+            # diff above ignores).
+            pinned="$(grep --only-matching --perl-regexp 'iotaledger/iota\.git", rev = "\K[0-9a-f]{40}' crates/iota-sdk-move-types/Cargo.toml || true)"
+            if [ -n "$pinned" ]; then
+              echo "Upstream commits since the pinned rev that touched published_api.txt (likely drift sources):"
+              gh api --paginate "repos/iotaledger/iota/compare/${pinned}...develop" --jq '.commits[].sha' > range_shas.txt || true
+              gh api "repos/iotaledger/iota/commits?path=crates/iota-framework/published_api.txt&sha=develop&per_page=100" \
+                --jq '.[] | .sha + " " + (.commit.message | split("\n")[0])' \
+                | { grep --fixed-strings --file=range_shas.txt || true; } \
+                | sed 's|^|  https://github.com/iotaledger/iota/commit/|'
+              echo
+            fi
             echo "::error::Move framework type drift detected."
             echo "Upstream iotaledger/iota@develop changed the public type surface of crates/iota-framework since the pinned rev (the move-binary-format rev in crates/iota-sdk-move-types/Cargo.toml)."
             echo "Review the diff above, add/update the Rust mirrors, bump that rev to the new monorepo SHA, run 'make update-compiled-packages' + 'make test' locally, and open a PR."
