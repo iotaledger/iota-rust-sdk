@@ -1641,7 +1641,9 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain `0x2::config::Config<WriteCap>` object.
+    /// A typed view of an on-chain `0x2::config::Config<WriteCap>` object,
+    /// where `WriteCap` is the phantom type parameter from the Move
+    /// declaration, not a concrete type.
     Config(iota_sdk::move_types::iota_framework::config::Config<IOTA>) {
         // The config's settings live in dynamic fields off its `UID`, not in
         // the struct itself.
