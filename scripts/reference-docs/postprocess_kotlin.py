@@ -15,6 +15,10 @@ type's ``index.md`` already lists every member with its signature and
 documentation, so only the ``index.md`` pages are kept and links to the
 dropped member pages are replaced by their text.
 
+Companion object members are inlined into the parent type's page (as
+kotlinlang.org and the Android reference do) instead of living on a
+separate nested ``Companion`` page.
+
 Usage: postprocess_kotlin.py <dokka-gfm-dir> <output-dir>
 """
 
@@ -99,18 +103,85 @@ def strip_breadcrumbs(text: str) -> str:
     return "\n".join(lines) + "\n"
 
 
+COMPANION_ROW_RE = re.compile(r"^\|\s*\[Companion\]\(Companion/index\.md\)\s*\|.*\|\s*$")
+
+
+def sections(text: str) -> list[tuple[str, str]]:
+    """Split a page into its ``## `` sections as (heading, body) pairs."""
+    result = []
+    for part in text.split("\n## ")[1:]:
+        heading, _, body = part.partition("\n")
+        result.append((heading.strip(), body.strip("\n")))
+    return result
+
+
+def companion_sections(text: str) -> list[str]:
+    """Extract a companion page's member sections, retitled and with links
+    adjusted for living one directory level higher."""
+    out = []
+    for heading, body in sections(text):
+        if not body:
+            continue
+        # The moved content sits in the parent's directory, so links lose
+        # one leading "../" (companions have no nested pages of their own).
+        body = body.replace("](../", "](")
+        out.append(f"## Companion object {heading.lower()}\n\n{body}")
+    return out
+
+
+def remove_companion_type_row(text: str) -> str:
+    """Drop the ``Companion`` row from the parent's Types table, and the
+    whole Types section if that row was its only entry."""
+    lines = [line for line in text.splitlines() if not COMPANION_ROW_RE.match(line)]
+    out = []
+    i = 0
+    while i < len(lines):
+        if lines[i].strip() == "## Types":
+            j = i + 1
+            while j < len(lines) and not lines[j].startswith("## "):
+                j += 1
+            block = lines[i + 1 : j]
+            if not any(re.match(r"^\|\s*\[", line) for line in block):
+                i = j
+                continue
+        out.append(lines[i])
+        i += 1
+    return "\n".join(out) + "\n"
+
+
+def merge_companions(pages: dict[str, str]) -> dict[str, str]:
+    """Fold each ``<Type>/Companion/index.md`` page into ``<Type>/index.md``."""
+    out = dict(pages)
+    for path, text in pages.items():
+        parts = path.split("/")
+        if len(parts) < 3 or parts[-2:] != ["Companion", "index.md"]:
+            continue
+        parent = "/".join(parts[:-2]) + "/index.md"
+        if parent not in out:
+            continue
+        merged = remove_companion_type_row(out[parent]).rstrip("\n")
+        for section in companion_sections(text):
+            merged += f"\n\n{section}"
+        out[parent] = merged + "\n"
+        del out[path]
+    return out
+
+
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     module_dirs.update(p.name for p in src.iterdir() if p.is_dir())
+    pages = {
+        decode_path(str(path.relative_to(src))): strip_platform_labels(
+            strip_breadcrumbs(rewrite_links(path.read_text()))
+        )
+        for path in sorted(src.rglob("index.md"))
+    }
     if dst.exists():
         shutil.rmtree(dst)
-    for path in sorted(src.rglob("index.md")):
-        rel = path.relative_to(src)
-        out_path = dst / decode_path(str(rel))
+    for rel, text in merge_companions(pages).items():
+        out_path = dst / rel
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(
-            strip_platform_labels(strip_breadcrumbs(rewrite_links(path.read_text())))
-        )
+        out_path.write_text(text)
 
 
 if __name__ == "__main__":
