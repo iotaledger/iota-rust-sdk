@@ -80,6 +80,14 @@ def rewrite_links(text: str) -> str:
     return common.strip_empty_links(LINK_RE.sub(repl, text))
 
 
+def strip_platform_labels(text: str) -> str:
+    """Drop Dokka's ``[jvm]`` platform labels. They only disambiguate
+    targets in multiplatform projects; these bindings are JVM-only."""
+    text = text.replace("[jvm]<br>", "")
+    lines = [line for line in text.splitlines() if line.strip() not in ("[jvm]", "[jvm]\\")]
+    return "\n".join(lines) + "\n"
+
+
 def strip_breadcrumbs(text: str) -> str:
     """Drop Dokka's leading ``//[module](...)`` breadcrumb line; the site
     renders its own breadcrumbs."""
@@ -100,7 +108,9 @@ def main():
         rel = path.relative_to(src)
         out_path = dst / decode_path(str(rel))
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(strip_breadcrumbs(rewrite_links(path.read_text())))
+        out_path.write_text(
+            strip_platform_labels(strip_breadcrumbs(rewrite_links(path.read_text())))
+        )
 
 
 if __name__ == "__main__":
