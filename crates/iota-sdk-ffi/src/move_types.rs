@@ -8,7 +8,9 @@
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
 //! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`],
-//!   [`IotaSystemState`], [`IotaSystemStateV2`].
+//!   [`IotaSystemState`], [`IotaSystemStateV2`] (with its embedded
+//!   [`ValidatorSetV2`], [`ValidatorV1`], [`ValidatorMetadataV1`],
+//!   [`StakingPoolV1`], [`SystemParametersV1`], and [`StorageFundV1`]).
 //! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
 //!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
 //!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
@@ -205,8 +207,9 @@ impl IotaSystemState {
 /// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV2`
 /// inner system state.
 ///
-/// Exposes the scalar epoch parameters. The validator set and treasury are
-/// large nested structures not surfaced here.
+/// Exposes the scalar epoch parameters plus the nested validator set
+/// ([`ValidatorSetV2`]), storage fund ([`StorageFundV1`]), system parameters
+/// ([`SystemParametersV1`]), and the treasury's total supply.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct IotaSystemStateV2(
@@ -255,6 +258,423 @@ impl IotaSystemStateV2 {
     /// Unix timestamp (ms) of the current epoch start.
     pub fn epoch_start_timestamp_ms(&self) -> u64 {
         self.0.epoch_start_timestamp_ms
+    }
+
+    /// Total IOTA supply controlled by the system treasury, in nanos.
+    pub fn iota_total_supply(&self) -> u64 {
+        self.0.iota_treasury_cap.inner.total_supply.value
+    }
+
+    /// The validator set.
+    pub fn validators(&self) -> ValidatorSetV2 {
+        ValidatorSetV2(self.0.validators.clone())
+    }
+
+    /// The storage fund.
+    pub fn storage_fund(&self) -> StorageFundV1 {
+        StorageFundV1(self.0.storage_fund.clone())
+    }
+
+    /// The system parameters.
+    pub fn parameters(&self) -> SystemParametersV1 {
+        SystemParametersV1(self.0.parameters.clone())
+    }
+
+    /// Validator report records: each reported validator's address mapped to
+    /// the addresses of the validators reporting it, as canonical hex
+    /// strings.
+    pub fn validator_report_records(&self) -> HashMap<String, Vec<String>> {
+        self.0
+            .validator_report_records
+            .contents
+            .iter()
+            .map(|e| {
+                (
+                    e.key.to_string(),
+                    e.value.contents.iter().map(|a| a.to_string()).collect(),
+                )
+            })
+            .collect()
+    }
+
+    /// Storage charges accumulated during safe mode, in nanos.
+    pub fn safe_mode_storage_charges(&self) -> u64 {
+        self.0.safe_mode_storage_charges.value()
+    }
+
+    /// Computation charges accumulated during safe mode, in nanos.
+    pub fn safe_mode_computation_charges(&self) -> u64 {
+        self.0.safe_mode_computation_charges.value()
+    }
+
+    /// Computation charges burned during safe mode, in nanos.
+    pub fn safe_mode_computation_charges_burned(&self) -> u64 {
+        self.0.safe_mode_computation_charges_burned
+    }
+
+    /// Storage rebates accumulated during safe mode, in nanos.
+    pub fn safe_mode_storage_rebates(&self) -> u64 {
+        self.0.safe_mode_storage_rebates
+    }
+
+    /// Non-refundable storage fees accumulated during safe mode, in nanos.
+    pub fn safe_mode_non_refundable_storage_fee(&self) -> u64 {
+        self.0.safe_mode_non_refundable_storage_fee
+    }
+}
+
+/// A typed view of the `0x3::validator_set::ValidatorSetV2` embedded in the
+/// system state.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct ValidatorSetV2(pub iota_sdk::move_types::iota_system::validator_set::ValidatorSetV2);
+
+#[uniffi::export]
+impl ValidatorSetV2 {
+    /// Total stake from all committee validators at the beginning of the
+    /// epoch, in nanos.
+    pub fn total_stake(&self) -> u64 {
+        self.0.total_stake
+    }
+
+    /// The current list of active validators.
+    pub fn active_validators(&self) -> Vec<Arc<ValidatorV1>> {
+        self.0
+            .active_validators
+            .iter()
+            .map(|v| Arc::new(ValidatorV1(v.clone())))
+            .collect()
+    }
+
+    /// Indices into `active_validators` of the validators responsible for
+    /// consensus.
+    pub fn committee_members(&self) -> Vec<u64> {
+        self.0.committee_members.clone()
+    }
+
+    /// Indices into `active_validators` with pending removal requests.
+    pub fn pending_removals(&self) -> Vec<u64> {
+        self.0.pending_removals.clone()
+    }
+
+    /// Number of pending validator candidates. The candidates themselves are
+    /// stored in dynamic fields and are not part of this struct's contents.
+    pub fn pending_active_validators_size(&self) -> u64 {
+        self.0.pending_active_validators.contents.size
+    }
+
+    /// Number of epochs each at-risk validator (keyed by canonical address
+    /// string) has had stake below the low-stake threshold.
+    pub fn at_risk_validators(&self) -> HashMap<String, u64> {
+        self.0
+            .at_risk_validators
+            .contents
+            .iter()
+            .map(|e| (e.key.to_string(), e.value))
+            .collect()
+    }
+
+    // `staking_pool_mappings`, `inactive_validators` and
+    // `validator_candidates` are table handles whose entries live in dynamic
+    // fields, not in this struct's contents.
+}
+
+/// A typed view of a `0x3::validator::ValidatorV1` from the active validator
+/// set.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct ValidatorV1(pub iota_sdk::move_types::iota_system::validator::ValidatorV1);
+
+#[uniffi::export]
+impl ValidatorV1 {
+    /// The validator's metadata (addresses, keys, and descriptive info).
+    pub fn metadata(&self) -> ValidatorMetadataV1 {
+        ValidatorMetadataV1(self.0.metadata.clone())
+    }
+
+    /// The voting power of this validator, which may differ from its stake
+    /// amount.
+    pub fn voting_power(&self) -> u64 {
+        self.0.voting_power
+    }
+
+    /// Object ID of this validator's current valid
+    /// `UnverifiedValidatorOperationCap`.
+    pub fn operation_cap_id(&self) -> ObjectId {
+        self.0.operation_cap_id.bytes.into()
+    }
+
+    /// Gas price quote, updated only at end of epoch.
+    pub fn gas_price(&self) -> u64 {
+        self.0.gas_price
+    }
+
+    /// Staking pool for this validator.
+    pub fn staking_pool(&self) -> StakingPoolV1 {
+        StakingPoolV1(self.0.staking_pool.clone())
+    }
+
+    /// Commission rate of the validator, in basis points.
+    pub fn commission_rate(&self) -> u64 {
+        self.0.commission_rate
+    }
+
+    /// Total amount of stake that would be active in the next epoch, in
+    /// nanos.
+    pub fn next_epoch_stake(&self) -> u64 {
+        self.0.next_epoch_stake
+    }
+
+    /// This validator's gas price quote for the next epoch.
+    pub fn next_epoch_gas_price(&self) -> u64 {
+        self.0.next_epoch_gas_price
+    }
+
+    /// The commission rate of the validator starting next epoch, in basis
+    /// points.
+    pub fn next_epoch_commission_rate(&self) -> u64 {
+        self.0.next_epoch_commission_rate
+    }
+}
+
+/// A typed view of a `0x3::validator::ValidatorMetadataV1`.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct ValidatorMetadataV1(
+    pub iota_sdk::move_types::iota_system::validator::ValidatorMetadataV1,
+);
+
+#[uniffi::export]
+impl ValidatorMetadataV1 {
+    /// The IOTA address of the validator.
+    pub fn iota_address(&self) -> Address {
+        Address(self.0.iota_address)
+    }
+
+    /// Public key bytes for signing transactions (also serves as the
+    /// authority name).
+    pub fn authority_pubkey_bytes(&self) -> Vec<u8> {
+        self.0.authority_pubkey_bytes.clone()
+    }
+
+    /// Public key bytes for TLS connections.
+    pub fn network_pubkey_bytes(&self) -> Vec<u8> {
+        self.0.network_pubkey_bytes.clone()
+    }
+
+    /// Public key bytes for signing consensus blocks.
+    pub fn protocol_pubkey_bytes(&self) -> Vec<u8> {
+        self.0.protocol_pubkey_bytes.clone()
+    }
+
+    /// Proof that the validator owns the private key.
+    pub fn proof_of_possession(&self) -> Vec<u8> {
+        self.0.proof_of_possession.clone()
+    }
+
+    /// A unique human-readable validator name.
+    pub fn name(&self) -> String {
+        move_string_to_string(&self.0.name)
+    }
+
+    pub fn description(&self) -> String {
+        move_string_to_string(&self.0.description)
+    }
+
+    pub fn image_url(&self) -> String {
+        url_to_string(&self.0.image_url)
+    }
+
+    pub fn project_url(&self) -> String {
+        url_to_string(&self.0.project_url)
+    }
+
+    /// Network address of the validator.
+    pub fn net_address(&self) -> String {
+        move_string_to_string(&self.0.net_address)
+    }
+
+    /// Address of the validator used for p2p activities such as state sync.
+    pub fn p2p_address(&self) -> String {
+        move_string_to_string(&self.0.p2p_address)
+    }
+
+    /// Primary address of the consensus.
+    pub fn primary_address(&self) -> String {
+        move_string_to_string(&self.0.primary_address)
+    }
+
+    /// `next_epoch_*` metadata only takes effect in the next epoch. If
+    /// `None`, the current value stays unchanged.
+    pub fn next_epoch_authority_pubkey_bytes(&self) -> Option<Vec<u8>> {
+        self.0.next_epoch_authority_pubkey_bytes.clone()
+    }
+
+    pub fn next_epoch_proof_of_possession(&self) -> Option<Vec<u8>> {
+        self.0.next_epoch_proof_of_possession.clone()
+    }
+
+    pub fn next_epoch_network_pubkey_bytes(&self) -> Option<Vec<u8>> {
+        self.0.next_epoch_network_pubkey_bytes.clone()
+    }
+
+    pub fn next_epoch_protocol_pubkey_bytes(&self) -> Option<Vec<u8>> {
+        self.0.next_epoch_protocol_pubkey_bytes.clone()
+    }
+
+    pub fn next_epoch_net_address(&self) -> Option<String> {
+        self.0
+            .next_epoch_net_address
+            .as_ref()
+            .map(move_string_to_string)
+    }
+
+    pub fn next_epoch_p2p_address(&self) -> Option<String> {
+        self.0
+            .next_epoch_p2p_address
+            .as_ref()
+            .map(move_string_to_string)
+    }
+
+    pub fn next_epoch_primary_address(&self) -> Option<String> {
+        self.0
+            .next_epoch_primary_address
+            .as_ref()
+            .map(move_string_to_string)
+    }
+}
+
+/// A typed view of a `0x3::staking_pool::StakingPoolV1` embedded in a
+/// validator.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct StakingPoolV1(pub iota_sdk::move_types::iota_system::staking_pool::StakingPoolV1);
+
+#[uniffi::export]
+impl StakingPoolV1 {
+    pub fn id(&self) -> ObjectId {
+        (*self.0.id.object_id()).into()
+    }
+
+    /// The epoch at which this pool became active. `None` while pre-active;
+    /// `Some(epoch)` once active or inactive.
+    pub fn activation_epoch(&self) -> Option<u64> {
+        self.0.activation_epoch
+    }
+
+    /// The epoch at which this pool ceased to be active. `None` while
+    /// pre-active or active; `Some(epoch)` once inactive.
+    pub fn deactivation_epoch(&self) -> Option<u64> {
+        self.0.deactivation_epoch
+    }
+
+    /// The total number of IOTA tokens in this pool, including the rewards
+    /// and the principal of every `StakedIota`, in nanos; updated at epoch
+    /// boundaries.
+    pub fn iota_balance(&self) -> u64 {
+        self.0.iota_balance
+    }
+
+    /// Epoch stake rewards accumulated in the pool, in nanos.
+    pub fn rewards_pool(&self) -> u64 {
+        self.0.rewards_pool.value()
+    }
+
+    /// Total number of pool tokens issued by the pool.
+    pub fn pool_token_balance(&self) -> u64 {
+        self.0.pool_token_balance
+    }
+
+    /// Number of exchange-rate history entries. The entries themselves are
+    /// stored in dynamic fields and are not part of this struct's contents.
+    pub fn exchange_rates_size(&self) -> u64 {
+        self.0.exchange_rates.size
+    }
+
+    /// Pending stake amount for this epoch, emptied at epoch boundaries.
+    pub fn pending_stake(&self) -> u64 {
+        self.0.pending_stake
+    }
+
+    /// Pending stake withdrawn during the current epoch, including both
+    /// principal and rewards; emptied at epoch boundaries.
+    pub fn pending_total_iota_withdraw(&self) -> u64 {
+        self.0.pending_total_iota_withdraw
+    }
+
+    /// Pending pool tokens withdrawn during the current epoch, emptied at
+    /// epoch boundaries.
+    pub fn pending_pool_token_withdraw(&self) -> u64 {
+        self.0.pending_pool_token_withdraw
+    }
+}
+
+/// A typed view of the `0x3::iota_system_state_inner::SystemParametersV1`
+/// embedded in the system state.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct SystemParametersV1(
+    pub iota_sdk::move_types::iota_system::iota_system_state_inner::SystemParametersV1,
+);
+
+#[uniffi::export]
+impl SystemParametersV1 {
+    /// The duration of an epoch, in milliseconds.
+    pub fn epoch_duration_ms(&self) -> u64 {
+        self.0.epoch_duration_ms
+    }
+
+    /// Minimum number of active validators at any moment.
+    pub fn min_validator_count(&self) -> u64 {
+        self.0.min_validator_count
+    }
+
+    /// Maximum number of active validators at any moment.
+    pub fn max_validator_count(&self) -> u64 {
+        self.0.max_validator_count
+    }
+
+    /// Lower bound on the amount of stake required to become a validator, in
+    /// nanos.
+    pub fn min_validator_joining_stake(&self) -> u64 {
+        self.0.min_validator_joining_stake
+    }
+
+    /// Validators with stake below this threshold (in nanos) are considered
+    /// to have low stake and may be removed from the validator set.
+    pub fn validator_low_stake_threshold(&self) -> u64 {
+        self.0.validator_low_stake_threshold
+    }
+
+    /// Validators with stake below this threshold (in nanos) are removed
+    /// immediately at epoch change with no grace period.
+    pub fn validator_very_low_stake_threshold(&self) -> u64 {
+        self.0.validator_very_low_stake_threshold
+    }
+
+    /// A validator can have stake below `validator_low_stake_threshold` for
+    /// this many epochs before being removed.
+    pub fn validator_low_stake_grace_period(&self) -> u64 {
+        self.0.validator_low_stake_grace_period
+    }
+}
+
+/// A typed view of the `0x3::storage_fund::StorageFundV1` embedded in the
+/// system state.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct StorageFundV1(pub iota_sdk::move_types::iota_system::storage_fund::StorageFundV1);
+
+#[uniffi::export]
+impl StorageFundV1 {
+    /// The sum of the storage rebates of all live objects, in nanos.
+    pub fn total_object_storage_rebates(&self) -> u64 {
+        self.0.total_object_storage_rebates.value()
+    }
+
+    /// The non-refundable portion of the storage fund, in nanos.
+    pub fn non_refundable_balance(&self) -> u64 {
+        self.0.non_refundable_balance.value()
     }
 }
 
