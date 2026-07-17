@@ -59,7 +59,18 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
-#[cfg_attr(feature = "serde", derive(serde::Deserialize))]
+/// A [`SignedTransaction`] in its intent-message serialized form.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// sender-signed-transaction = %d01 intent-signed-transaction
+/// ```
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
         feature = "serde",
@@ -68,6 +79,25 @@ pub struct SenderSignedTransaction(
     pub SignedTransaction,
 );
 
+impl From<SignedTransaction> for SenderSignedTransaction {
+    fn from(transaction: SignedTransaction) -> Self {
+        Self(transaction)
+    }
+}
+
+impl From<SenderSignedTransaction> for SignedTransaction {
+    fn from(transaction: SenderSignedTransaction) -> Self {
+        transaction.0
+    }
+}
+
+#[cfg(feature = "serde")]
+impl std::hash::Hash for SenderSignedTransaction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -75,6 +105,15 @@ pub struct SenderSignedTransaction(
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+// `UserSignature` only implements `Hash` when the `serde` feature is enabled.
+#[cfg(feature = "serde")]
+impl std::hash::Hash for SignedTransaction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.transaction.hash(state);
+        self.signatures.hash(state);
+    }
 }
 
 /// A TTL for a transaction
