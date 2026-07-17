@@ -20,10 +20,12 @@
 //!   unlock-condition records [`TimelockUnlockCondition`],
 //!   [`ExpirationUnlockCondition`], [`StorageDepositReturnUnlockCondition`].
 //!
-//! The remaining `key`-ability Move-object mirrors are covered by
-//! macro-generated shims (`ffi_move_object!` for non-generic mirrors,
-//! `ffi_move_object_generic!` for single-type-parameter mirrors instantiated
-//! at `IOTA`): [`DenyList`], [`Random`], [`AuthenticatorState`],
+//! Shims for `key`-object mirrors are macro-generated: `ffi_move_object!`
+//! for mirrors decoded at a fixed Move type tag (including the `<IOTA>`
+//! instantiations above), `ffi_move_object_generic!` for mirrors whose type
+//! parameter is validated at runtime against a caller-provided `TypeTag`.
+//! Besides the types above, they cover:
+//! [`DenyList`], [`Random`], [`AuthenticatorState`],
 //! [`PackageMetadataV1`] (with its [`ModuleMetadataV1`] and
 //! [`AuthenticatorMetadataV1`] records),
 //! [`UnverifiedValidatorOperationCap`], [`TreasuryCap`],
@@ -49,10 +51,7 @@ use iota_sdk::move_types::iota_framework::iota::IOTA;
 
 use crate::{
     error::Result,
-    types::{
-        address::Address,
-        object::{Object, ObjectId},
-    },
+    types::{address::Address, object::ObjectId},
 };
 
 fn ascii_to_string(s: &iota_sdk::move_types::move_stdlib::ascii::String) -> String {
@@ -71,136 +70,55 @@ fn url_to_string(u: &iota_sdk::move_types::iota_framework::url::Url) -> String {
 // 0x3 — IOTA system
 // =====================================================================
 
-/// A typed view of an on-chain `0x3::staking_pool::StakedIota` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct StakedIota(pub iota_sdk::move_types::iota_system::staking_pool::StakedIota);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x3::staking_pool::StakedIota` object.
+    StakedIota(iota_sdk::move_types::iota_system::staking_pool::StakedIota) {
+        pub fn pool_id(&self) -> ObjectId {
+            (*self.0.pool_id()).into()
+        }
 
-#[uniffi::export]
-impl StakedIota {
-    /// Decode a `StakedIota` from an on-chain object, validating that the
-    /// object's type tag matches `0x3::staking_pool::StakedIota`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::staking_pool::StakedIota::try_from(&object.0)?
-                .into(),
-        )
-    }
+        pub fn stake_activation_epoch(&self) -> u64 {
+            self.0.stake_activation_epoch()
+        }
 
-    /// Decode a `StakedIota` from raw BCS bytes. Skips type-tag validation;
-    /// prefer [`Self::try_from_object`] when an [`Object`] is available.
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_system::staking_pool::StakedIota::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id()).into()
-    }
-
-    pub fn pool_id(&self) -> ObjectId {
-        (*self.0.pool_id()).into()
-    }
-
-    pub fn stake_activation_epoch(&self) -> u64 {
-        self.0.stake_activation_epoch()
-    }
-
-    /// Staked principal in nanos.
-    pub fn principal(&self) -> u64 {
-        self.0.principal()
+        /// Staked principal in nanos.
+        pub fn principal(&self) -> u64 {
+            self.0.principal()
+        }
     }
 }
 
-/// A typed view of an on-chain
-/// `0x3::timelocked_staking::TimelockedStakedIota` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct TimelockedStakedIota(
-    pub iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota,
-);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain
+    /// `0x3::timelocked_staking::TimelockedStakedIota` object.
+    TimelockedStakedIota(iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota) {
+        /// The wrapped `StakedIota` carrying the staked principal.
+        pub fn staked_iota(&self) -> StakedIota {
+            StakedIota(self.0.staked_iota.clone())
+        }
 
-#[uniffi::export]
-impl TimelockedStakedIota {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::try_from(
-                &object.0,
-            )?
-            .into(),
-        )
-    }
+        /// Epoch timestamp (ms) of when the lock expires.
+        pub fn expiration_timestamp_ms(&self) -> u64 {
+            self.0.expiration_timestamp_ms()
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota::from_bcs(
-                &bytes,
-            )?
-            .into(),
-        )
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id()).into()
-    }
-
-    /// The wrapped `StakedIota` carrying the staked principal.
-    pub fn staked_iota(&self) -> StakedIota {
-        StakedIota(self.0.staked_iota.clone())
-    }
-
-    /// Epoch timestamp (ms) of when the lock expires.
-    pub fn expiration_timestamp_ms(&self) -> u64 {
-        self.0.expiration_timestamp_ms()
-    }
-
-    pub fn label(&self) -> Option<String> {
-        self.0.label.as_ref().map(move_string_to_string)
+        pub fn label(&self) -> Option<String> {
+            self.0.label.as_ref().map(move_string_to_string)
+        }
     }
 }
 
-/// A typed view of the on-chain `0x3::iota_system::IotaSystemState` object
-/// (the `0x5` singleton).
-///
-/// This is only the versioned wrapper; the actual state lives in a dynamic
-/// field holding e.g. an `IotaSystemStateV2`.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct IotaSystemState(pub iota_sdk::move_types::iota_system::iota_system::IotaSystemState);
-
-#[uniffi::export]
-impl IotaSystemState {
-    /// Decode an `IotaSystemState` from an on-chain object, validating that
-    /// the object's type tag matches `0x3::iota_system::IotaSystemState`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::try_from(&object.0)?
-                .into(),
-        )
-    }
-
-    /// Decode an `IotaSystemState` from raw BCS bytes. Skips type-tag
-    /// validation; prefer [`Self::try_from_object`] when an [`Object`] is
-    /// available.
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_system::iota_system::IotaSystemState::from_bcs(&bytes)?
-                .into(),
-        )
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// Version selecting which inner state layout the dynamic field holds.
-    pub fn version(&self) -> u64 {
-        self.0.version
+crate::ffi_move_object! {
+    /// A typed view of the on-chain `0x3::iota_system::IotaSystemState` object
+    /// (the `0x5` singleton).
+    ///
+    /// This is only the versioned wrapper; the actual state lives in a dynamic
+    /// field holding e.g. an `IotaSystemStateV2`.
+    IotaSystemState(iota_sdk::move_types::iota_system::iota_system::IotaSystemState) {
+        /// Version selecting which inner state layout the dynamic field holds.
+        pub fn version(&self) -> u64 {
+            self.0.version
+        }
     }
 }
 
@@ -682,54 +600,28 @@ impl StorageFundV1 {
 // 0x2 — IOTA framework
 // =====================================================================
 
-/// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct IotaCoinMetadata(pub iota_sdk::move_types::iota_framework::coin::CoinMetadata<IOTA>);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
+    IotaCoinMetadata(iota_sdk::move_types::iota_framework::coin::CoinMetadata<IOTA>) {
+        pub fn decimals(&self) -> u8 {
+            self.0.decimals
+        }
 
-#[uniffi::export]
-impl IotaCoinMetadata {
-    /// Decode a `CoinMetadata` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::coin::CoinMetadata<0x2::iota::IOTA>`,
-    /// including the coin marker.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::try_from(&object.0)?
-                .into(),
-        )
-    }
+        pub fn name(&self) -> String {
+            move_string_to_string(&self.0.name)
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::iota_framework::coin::CoinMetadata::<IOTA>::from_bcs(&bytes)?
-                .into(),
-        )
-    }
+        pub fn symbol(&self) -> String {
+            ascii_to_string(&self.0.symbol)
+        }
 
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
+        pub fn description(&self) -> String {
+            move_string_to_string(&self.0.description)
+        }
 
-    pub fn decimals(&self) -> u8 {
-        self.0.decimals
-    }
-
-    pub fn name(&self) -> String {
-        move_string_to_string(&self.0.name)
-    }
-
-    pub fn symbol(&self) -> String {
-        ascii_to_string(&self.0.symbol)
-    }
-
-    pub fn description(&self) -> String {
-        move_string_to_string(&self.0.description)
-    }
-
-    pub fn icon_url(&self) -> Option<String> {
-        self.0.icon_url.as_ref().map(url_to_string)
+        pub fn icon_url(&self) -> Option<String> {
+            self.0.icon_url.as_ref().map(url_to_string)
+        }
     }
 }
 
@@ -765,215 +657,100 @@ impl ImmutableCoinMetadata {
     }
 }
 
-/// A typed view of the on-chain `0x2::clock::Clock` object (the `0x6`
-/// singleton carrying the consensus timestamp).
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct Clock(pub iota_sdk::move_types::iota_framework::clock::Clock);
-
-#[uniffi::export]
-impl Clock {
-    /// Decode a `Clock` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::clock::Clock`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::clock::Clock::try_from(&object.0)?.into())
-    }
-
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::clock::Clock::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// The clock's timestamp (ms), set by consensus every commit.
-    pub fn timestamp_ms(&self) -> u64 {
-        self.0.timestamp_ms
+crate::ffi_move_object! {
+    /// A typed view of the on-chain `0x2::clock::Clock` object (the `0x6`
+    /// singleton carrying the consensus timestamp).
+    Clock(iota_sdk::move_types::iota_framework::clock::Clock) {
+        /// The clock's timestamp (ms), set by consensus every commit.
+        pub fn timestamp_ms(&self) -> u64 {
+            self.0.timestamp_ms
+        }
     }
 }
 
-/// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>`
-/// object — a time-locked IOTA balance, e.g. Stardust vested rewards.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct TimelockedIotaBalance(
-    pub  iota_sdk::move_types::iota_framework::timelock::TimeLock<
-        iota_sdk::move_types::iota_framework::balance::Balance<IOTA>,
-    >,
-);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>`
+    /// object — a time-locked IOTA balance, e.g. Stardust vested rewards.
+    TimelockedIotaBalance(
+        iota_sdk::move_types::iota_framework::timelock::TimeLock<
+            iota_sdk::move_types::iota_framework::balance::Balance<IOTA>,
+        >
+    ) {
+        /// The locked IOTA amount in nanos.
+        pub fn locked(&self) -> u64 {
+            self.0.locked.value()
+        }
 
-#[uniffi::export]
-impl TimelockedIotaBalance {
-    /// Decode a `TimeLock<Balance<IOTA>>` from an on-chain object,
-    /// validating that the object's type tag matches
-    /// `0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::try_from(&object.0)?.into())
-    }
+        /// Epoch timestamp (ms) of when the lock expires.
+        pub fn expiration_timestamp_ms(&self) -> u64 {
+            self.0.expiration_timestamp_ms
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::timelock::TimeLock::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// The locked IOTA amount in nanos.
-    pub fn locked(&self) -> u64 {
-        self.0.locked.value()
-    }
-
-    /// Epoch timestamp (ms) of when the lock expires.
-    pub fn expiration_timestamp_ms(&self) -> u64 {
-        self.0.expiration_timestamp_ms
-    }
-
-    pub fn label(&self) -> Option<String> {
-        self.0.label.as_ref().map(move_string_to_string)
+        pub fn label(&self) -> Option<String> {
+            self.0.label.as_ref().map(move_string_to_string)
+        }
     }
 }
 
-/// A typed view of an on-chain `0x2::package::UpgradeCap` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct UpgradeCap(pub iota_sdk::move_types::iota_framework::package::UpgradeCap);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::package::UpgradeCap` object.
+    UpgradeCap(iota_sdk::move_types::iota_framework::package::UpgradeCap) {
+        /// ID of the package that can be upgraded.
+        pub fn package(&self) -> ObjectId {
+            self.0.package.bytes.into()
+        }
 
-#[uniffi::export]
-impl UpgradeCap {
-    /// Decode an `UpgradeCap` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::package::UpgradeCap`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::try_from(&object.0)?.into())
-    }
+        /// Number of upgrades applied to the original package.
+        pub fn version(&self) -> u64 {
+            self.0.version
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::UpgradeCap::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// ID of the package that can be upgraded.
-    pub fn package(&self) -> ObjectId {
-        self.0.package.bytes.into()
-    }
-
-    /// Number of upgrades applied to the original package.
-    pub fn version(&self) -> u64 {
-        self.0.version
-    }
-
-    /// What kind of upgrades are allowed.
-    pub fn policy(&self) -> u8 {
-        self.0.policy
+        /// What kind of upgrades are allowed.
+        pub fn policy(&self) -> u8 {
+            self.0.policy
+        }
     }
 }
 
-/// A typed view of an on-chain `0x2::package::Publisher` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct Publisher(pub iota_sdk::move_types::iota_framework::package::Publisher);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::package::Publisher` object.
+    Publisher(iota_sdk::move_types::iota_framework::package::Publisher) {
+        pub fn package(&self) -> String {
+            ascii_to_string(&self.0.package)
+        }
 
-#[uniffi::export]
-impl Publisher {
-    /// Decode a `Publisher` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::package::Publisher`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::Publisher::try_from(&object.0)?.into())
-    }
-
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::package::Publisher::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    pub fn package(&self) -> String {
-        ascii_to_string(&self.0.package)
-    }
-
-    pub fn module_name(&self) -> String {
-        ascii_to_string(&self.0.module_name)
+        pub fn module_name(&self) -> String {
+            ascii_to_string(&self.0.module_name)
+        }
     }
 }
 
-/// A typed view of an on-chain `0x2::kiosk::Kiosk` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct Kiosk(pub iota_sdk::move_types::iota_framework::kiosk::Kiosk);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::kiosk::Kiosk` object.
+    Kiosk(iota_sdk::move_types::iota_framework::kiosk::Kiosk) {
+        /// Accumulated sale profits in nanos.
+        pub fn profits(&self) -> u64 {
+            self.0.profits.value()
+        }
 
-#[uniffi::export]
-impl Kiosk {
-    /// Decode a `Kiosk` from an on-chain object, validating that the
-    /// object's type tag matches `0x2::kiosk::Kiosk`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::try_from(&object.0)?.into())
-    }
+        pub fn owner(&self) -> Arc<Address> {
+            Arc::new(Address(self.0.owner))
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::Kiosk::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// Accumulated sale profits in nanos.
-    pub fn profits(&self) -> u64 {
-        self.0.profits.value()
-    }
-
-    pub fn owner(&self) -> Arc<Address> {
-        Arc::new(Address(self.0.owner))
-    }
-
-    /// Number of items stored in the kiosk.
-    pub fn item_count(&self) -> u32 {
-        self.0.item_count
+        /// Number of items stored in the kiosk.
+        pub fn item_count(&self) -> u32 {
+            self.0.item_count
+        }
     }
 }
 
-/// A typed view of an on-chain `0x2::kiosk::KioskOwnerCap` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct KioskOwnerCap(pub iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap);
-
-#[uniffi::export]
-impl KioskOwnerCap {
-    /// Decode a `KioskOwnerCap` from an on-chain object, validating that
-    /// the object's type tag matches `0x2::kiosk::KioskOwnerCap`.
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::try_from(&object.0)?.into())
-    }
-
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap::from_bcs(&bytes)?.into())
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    /// ID of the kiosk this cap controls (the Move `for` field).
-    pub fn kiosk_id(&self) -> ObjectId {
-        self.0.r#for.bytes.into()
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::kiosk::KioskOwnerCap` object.
+    KioskOwnerCap(iota_sdk::move_types::iota_framework::kiosk::KioskOwnerCap) {
+        /// ID of the kiosk this cap controls (the Move `for` field).
+        pub fn kiosk_id(&self) -> ObjectId {
+            self.0.r#for.bytes.into()
+        }
     }
 }
 
@@ -981,45 +758,28 @@ impl KioskOwnerCap {
 // 0x107a — Stardust
 // =====================================================================
 
-/// A typed view of an on-chain `0x107a::nft::Nft` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct Nft(pub iota_sdk::move_types::stardust::nft::Nft);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x107a::nft::Nft` object.
+    Nft(iota_sdk::move_types::stardust::nft::Nft) {
+        pub fn legacy_sender(&self) -> Option<Arc<Address>> {
+            self.0.legacy_sender.map(|a| Arc::new(Address(a)))
+        }
 
-#[uniffi::export]
-impl Nft {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::nft::Nft::try_from(&object.0)?.into())
-    }
+        pub fn metadata(&self) -> Option<Vec<u8>> {
+            self.0.metadata.clone()
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::nft::Nft::from_bcs(&bytes)?.into())
-    }
+        pub fn tag(&self) -> Option<Vec<u8>> {
+            self.0.tag.clone()
+        }
 
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
+        pub fn immutable_issuer(&self) -> Option<Arc<Address>> {
+            self.0.immutable_issuer.map(|a| Arc::new(Address(a)))
+        }
 
-    pub fn legacy_sender(&self) -> Option<Arc<Address>> {
-        self.0.legacy_sender.map(|a| Arc::new(Address(a)))
-    }
-
-    pub fn metadata(&self) -> Option<Vec<u8>> {
-        self.0.metadata.clone()
-    }
-
-    pub fn tag(&self) -> Option<Vec<u8>> {
-        self.0.tag.clone()
-    }
-
-    pub fn immutable_issuer(&self) -> Option<Arc<Address>> {
-        self.0.immutable_issuer.map(|a| Arc::new(Address(a)))
-    }
-
-    pub fn immutable_metadata(&self) -> Irc27Metadata {
-        Irc27Metadata(self.0.immutable_metadata.clone())
+        pub fn immutable_metadata(&self) -> Irc27Metadata {
+            Irc27Metadata(self.0.immutable_metadata.clone())
+        }
     }
 }
 
@@ -1069,217 +829,134 @@ impl Irc27Metadata {
     }
 }
 
-/// A typed view of an on-chain
-/// `0x107a::basic_output::BasicOutput<IOTA>` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct BasicOutput(pub iota_sdk::move_types::stardust::basic_output::BasicOutput<IOTA>);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain
+    /// `0x107a::basic_output::BasicOutput<IOTA>` object.
+    BasicOutput(iota_sdk::move_types::stardust::basic_output::BasicOutput<IOTA>) {
+        /// IOTA balance held by the output, in nanos.
+        pub fn balance(&self) -> u64 {
+            self.0.balance.value()
+        }
 
-#[uniffi::export]
-impl BasicOutput {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::try_from(&object.0)?
-                .into(),
-        )
-    }
+        /// Object ID of the `Bag` of native tokens. Use the GraphQL client to
+        /// list dynamic fields if you need to enumerate the tokens.
+        pub fn native_tokens_bag_id(&self) -> ObjectId {
+            (*self.0.native_tokens.id.object_id()).into()
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::basic_output::BasicOutput::<IOTA>::from_bcs(&bytes)?
-                .into(),
-        )
-    }
+        pub fn storage_deposit_return_uc(&self) -> Option<Arc<StorageDepositReturnUnlockCondition>> {
+            self.0
+                .storage_deposit_return_uc
+                .clone()
+                .map(|c| Arc::new(StorageDepositReturnUnlockCondition(c)))
+        }
 
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
+        pub fn timelock_uc(&self) -> Option<Arc<TimelockUnlockCondition>> {
+            self.0
+                .timelock_uc
+                .clone()
+                .map(|c| Arc::new(TimelockUnlockCondition(c)))
+        }
 
-    /// IOTA balance held by the output, in nanos.
-    pub fn balance(&self) -> u64 {
-        self.0.balance.value()
-    }
+        pub fn expiration_uc(&self) -> Option<Arc<ExpirationUnlockCondition>> {
+            self.0
+                .expiration_uc
+                .clone()
+                .map(|c| Arc::new(ExpirationUnlockCondition(c)))
+        }
 
-    /// Object ID of the `Bag` of native tokens. Use the GraphQL client to
-    /// list dynamic fields if you need to enumerate the tokens.
-    pub fn native_tokens_bag_id(&self) -> ObjectId {
-        (*self.0.native_tokens.id.object_id()).into()
-    }
+        pub fn metadata(&self) -> Option<Vec<u8>> {
+            self.0.metadata.clone()
+        }
 
-    pub fn storage_deposit_return_uc(&self) -> Option<Arc<StorageDepositReturnUnlockCondition>> {
-        self.0
-            .storage_deposit_return_uc
-            .clone()
-            .map(|c| Arc::new(StorageDepositReturnUnlockCondition(c)))
-    }
+        pub fn tag(&self) -> Option<Vec<u8>> {
+            self.0.tag.clone()
+        }
 
-    pub fn timelock_uc(&self) -> Option<Arc<TimelockUnlockCondition>> {
-        self.0
-            .timelock_uc
-            .clone()
-            .map(|c| Arc::new(TimelockUnlockCondition(c)))
-    }
-
-    pub fn expiration_uc(&self) -> Option<Arc<ExpirationUnlockCondition>> {
-        self.0
-            .expiration_uc
-            .clone()
-            .map(|c| Arc::new(ExpirationUnlockCondition(c)))
-    }
-
-    pub fn metadata(&self) -> Option<Vec<u8>> {
-        self.0.metadata.clone()
-    }
-
-    pub fn tag(&self) -> Option<Vec<u8>> {
-        self.0.tag.clone()
-    }
-
-    pub fn sender(&self) -> Option<Arc<Address>> {
-        self.0.sender.map(|a| Arc::new(Address(a)))
+        pub fn sender(&self) -> Option<Arc<Address>> {
+            self.0.sender.map(|a| Arc::new(Address(a)))
+        }
     }
 }
 
-/// A typed view of an on-chain `0x107a::nft_output::NftOutput<IOTA>` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct NftOutput(pub iota_sdk::move_types::stardust::nft_output::NftOutput<IOTA>);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x107a::nft_output::NftOutput<IOTA>` object.
+    NftOutput(iota_sdk::move_types::stardust::nft_output::NftOutput<IOTA>) {
+        pub fn balance(&self) -> u64 {
+            self.0.balance.value()
+        }
 
-#[uniffi::export]
-impl NftOutput {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::try_from(&object.0)?
-                .into(),
-        )
-    }
+        pub fn native_tokens_bag_id(&self) -> ObjectId {
+            (*self.0.native_tokens.id.object_id()).into()
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::nft_output::NftOutput::<IOTA>::from_bcs(&bytes)?.into())
-    }
+        pub fn storage_deposit_return_uc(&self) -> Option<Arc<StorageDepositReturnUnlockCondition>> {
+            self.0
+                .storage_deposit_return_uc
+                .clone()
+                .map(|c| Arc::new(StorageDepositReturnUnlockCondition(c)))
+        }
 
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
+        pub fn timelock_uc(&self) -> Option<Arc<TimelockUnlockCondition>> {
+            self.0
+                .timelock_uc
+                .clone()
+                .map(|c| Arc::new(TimelockUnlockCondition(c)))
+        }
 
-    pub fn balance(&self) -> u64 {
-        self.0.balance.value()
-    }
-
-    pub fn native_tokens_bag_id(&self) -> ObjectId {
-        (*self.0.native_tokens.id.object_id()).into()
-    }
-
-    pub fn storage_deposit_return_uc(&self) -> Option<Arc<StorageDepositReturnUnlockCondition>> {
-        self.0
-            .storage_deposit_return_uc
-            .clone()
-            .map(|c| Arc::new(StorageDepositReturnUnlockCondition(c)))
-    }
-
-    pub fn timelock_uc(&self) -> Option<Arc<TimelockUnlockCondition>> {
-        self.0
-            .timelock_uc
-            .clone()
-            .map(|c| Arc::new(TimelockUnlockCondition(c)))
-    }
-
-    pub fn expiration_uc(&self) -> Option<Arc<ExpirationUnlockCondition>> {
-        self.0
-            .expiration_uc
-            .clone()
-            .map(|c| Arc::new(ExpirationUnlockCondition(c)))
+        pub fn expiration_uc(&self) -> Option<Arc<ExpirationUnlockCondition>> {
+            self.0
+                .expiration_uc
+                .clone()
+                .map(|c| Arc::new(ExpirationUnlockCondition(c)))
+        }
     }
 }
 
-/// A typed view of an on-chain
-/// `0x107a::alias_output::AliasOutput<IOTA>` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct AliasOutput(pub iota_sdk::move_types::stardust::alias_output::AliasOutput<IOTA>);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain
+    /// `0x107a::alias_output::AliasOutput<IOTA>` object.
+    AliasOutput(iota_sdk::move_types::stardust::alias_output::AliasOutput<IOTA>) {
+        pub fn balance(&self) -> u64 {
+            self.0.balance.value()
+        }
 
-#[uniffi::export]
-impl AliasOutput {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::try_from(&object.0)?
-                .into(),
-        )
-    }
-
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(
-            iota_sdk::move_types::stardust::alias_output::AliasOutput::<IOTA>::from_bcs(&bytes)?
-                .into(),
-        )
-    }
-
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
-
-    pub fn balance(&self) -> u64 {
-        self.0.balance.value()
-    }
-
-    pub fn native_tokens_bag_id(&self) -> ObjectId {
-        (*self.0.native_tokens.id.object_id()).into()
+        pub fn native_tokens_bag_id(&self) -> ObjectId {
+            (*self.0.native_tokens.id.object_id()).into()
+        }
     }
 }
 
-/// A typed view of an on-chain `0x107a::alias::Alias` object.
-#[derive(Debug, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug)]
-pub struct Alias(pub iota_sdk::move_types::stardust::alias::Alias);
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x107a::alias::Alias` object.
+    Alias(iota_sdk::move_types::stardust::alias::Alias) {
+        pub fn legacy_state_controller(&self) -> Address {
+            Address(self.0.legacy_state_controller)
+        }
 
-#[uniffi::export]
-impl Alias {
-    #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::alias::Alias::try_from(&object.0)?.into())
-    }
+        pub fn state_index(&self) -> u32 {
+            self.0.state_index
+        }
 
-    #[uniffi::constructor]
-    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_sdk::move_types::stardust::alias::Alias::from_bcs(&bytes)?.into())
-    }
+        pub fn state_metadata(&self) -> Option<Vec<u8>> {
+            self.0.state_metadata.clone()
+        }
 
-    pub fn id(&self) -> ObjectId {
-        (*self.0.id.object_id()).into()
-    }
+        pub fn sender(&self) -> Option<Arc<Address>> {
+            self.0.sender.map(|a| Arc::new(Address(a)))
+        }
 
-    pub fn legacy_state_controller(&self) -> Address {
-        Address(self.0.legacy_state_controller)
-    }
+        pub fn metadata(&self) -> Option<Vec<u8>> {
+            self.0.metadata.clone()
+        }
 
-    pub fn state_index(&self) -> u32 {
-        self.0.state_index
-    }
+        pub fn immutable_issuer(&self) -> Option<Arc<Address>> {
+            self.0.immutable_issuer.map(|a| Arc::new(Address(a)))
+        }
 
-    pub fn state_metadata(&self) -> Option<Vec<u8>> {
-        self.0.state_metadata.clone()
-    }
-
-    pub fn sender(&self) -> Option<Arc<Address>> {
-        self.0.sender.map(|a| Arc::new(Address(a)))
-    }
-
-    pub fn metadata(&self) -> Option<Vec<u8>> {
-        self.0.metadata.clone()
-    }
-
-    pub fn immutable_issuer(&self) -> Option<Arc<Address>> {
-        self.0.immutable_issuer.map(|a| Arc::new(Address(a)))
-    }
-
-    pub fn immutable_metadata(&self) -> Option<Vec<u8>> {
-        self.0.immutable_metadata.clone()
+        pub fn immutable_metadata(&self) -> Option<Vec<u8>> {
+            self.0.immutable_metadata.clone()
+        }
     }
 }
 
@@ -1345,10 +1022,8 @@ impl StorageDepositReturnUnlockCondition {
 }
 
 // =====================================================================
-// Macro-generated shims (`ffi_move_object!` / `ffi_move_object_generic!`)
-// for the remaining `key` Move-object mirrors, plus the record types
-// their accessors return. The hand-written shims above predate these
-// macros and also include `key` objects.
+// Remaining `key` Move-object mirrors, plus the record types their
+// accessors return
 // =====================================================================
 
 // --- Non-generic `key` mirrors ---
