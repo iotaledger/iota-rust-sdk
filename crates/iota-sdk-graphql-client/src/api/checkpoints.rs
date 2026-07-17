@@ -266,9 +266,8 @@ mod tests {
             .unwrap()
             .unwrap();
 
-        let digest = chckp.digest();
         let total_transaction_blocks_by_digest = client
-            .total_transaction_blocks_by_digest(digest)
+            .total_transaction_blocks_by_digest(chckp.digest())
             .await
             .unwrap()
             .unwrap();
