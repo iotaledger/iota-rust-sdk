@@ -57,6 +57,7 @@ struct FieldAttrs {
 }
 
 struct VariantAttrs {
+    skip: bool,
     as_type: Option<String>,
 }
 
@@ -89,19 +90,25 @@ fn parse_type_attrs(input: &DeriveInput) -> syn::Result<TypeAttrs> {
 }
 
 fn parse_variant_attrs(variant: &syn::Variant) -> syn::Result<VariantAttrs> {
-    let mut attrs = VariantAttrs { as_type: None };
+    let mut attrs = VariantAttrs {
+        skip: false,
+        as_type: None,
+    };
     for attr in &variant.attrs {
         if !attr.path().is_ident("bcs_schema") {
             continue;
         }
         attr.parse_nested_meta(|meta| {
-            if meta.path.is_ident("as_type") {
+            if meta.path.is_ident("skip") {
+                attrs.skip = true;
+                Ok(())
+            } else if meta.path.is_ident("as_type") {
                 let value = meta.value()?;
                 let s: syn::LitStr = value.parse()?;
                 attrs.as_type = Some(s.value());
                 Ok(())
             } else {
-                Err(meta.error("expected `as_type`"))
+                Err(meta.error("expected `skip` or `as_type`"))
             }
         })?;
     }
@@ -376,9 +383,16 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
     let mut rows: Vec<(String, String, String)> = Vec::new(); // (prefix, fields_str, variant_name)
 
     for (idx, variant) in data.variants.iter().enumerate() {
+        let va = parse_variant_attrs(variant)?;
+        // A skipped variant is omitted from the grammar but still consumes its
+        // discriminant, so the following variants keep their `%dNN` tags. This
+        // is how reserved/deprecated slots (which deserialization rejects) are
+        // held without appearing as valid input in the schema.
+        if va.skip {
+            continue;
+        }
         let variant_name = variant.ident.to_string();
         let prefix = format!("%d{idx:02}");
-        let va = parse_variant_attrs(variant)?;
 
         let fields_str = match &variant.fields {
             Fields::Unit => {
@@ -618,5 +632,37 @@ mod tests {
         );
         assert_eq!(to_kebab_case("UQ32_32"), "uq32-32");
         assert_eq!(to_kebab_case("UQ64_64"), "uq64-64");
+    }
+
+    fn enum_schema(source: &str) -> String {
+        let input: DeriveInput = syn::parse_str(source).unwrap();
+        let name = to_kebab_case(&input.ident.to_string());
+        let Data::Enum(data) = &input.data else {
+            panic!("expected an enum");
+        };
+        gen_enum(&name, data).unwrap()
+    }
+
+    #[test]
+    fn skip_variant_holds_its_discriminant() {
+        // The skipped variant is omitted from the grammar, but the variants
+        // after it keep the `%dNN` tag matching their discriminant.
+        let schema = enum_schema(
+            r#"
+            enum Scheme {
+                Ed25519(Ed25519Signature),
+                #[bcs_schema(skip)]
+                Bls12381Reserved,
+                Passkey(PasskeyAuthenticator),
+            }
+            "#,
+        );
+        // `Passkey` keeps tag `%d02` even though it is the second emitted
+        // alternative, and the skipped variant contributes no `%d01` line.
+        assert_eq!(
+            schema,
+            "scheme = %d00 ed25519-signature       ; Ed25519\n\
+             \x20      / %d02 passkey-authenticator   ; Passkey"
+        );
     }
 }

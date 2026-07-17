@@ -45,6 +45,14 @@ impl Client {
     /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// constants with [`ReadMask::from`] for field selection.
     ///
+    /// The `input_objects`, `output_objects`, `balance_changes` and
+    /// `object_changes` fields (also included by wildcard masks) require the
+    /// serving node to still have the transaction's objects. If one has been
+    /// pruned, the transaction's result is a `FAILED_PRECONDITION` error
+    /// instead of a silently incomplete answer — narrow the read mask, or
+    /// fetch objects individually via
+    /// [`get_objects`](Client::get_objects) for best-effort retrieval.
+    ///
     /// # Example
     ///
     /// ```no_run

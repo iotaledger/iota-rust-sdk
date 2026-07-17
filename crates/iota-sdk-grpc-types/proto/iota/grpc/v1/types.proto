@@ -40,6 +40,23 @@ message ObjectReference {
   optional Digest digest = 3;
 }
 
+// Ownership information for an object.
+message Owner {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof kind {
+    // Object is exclusively owned by a single address, and is mutable.
+    Address address_owner = 1;
+    // Object is exclusively owned by a single object, and is mutable.
+    ObjectId object_owner = 2;
+    // Object is shared and can be used by any address. The value is the
+    // version at which the object became shared.
+    uint64 shared = 3;
+    // Object is immutable, and hence ownership doesn't matter.
+    bool immutable = 4;
+  }
+}
+
 message TypeTagVector {
   TypeTag inner_type = 1;
 }

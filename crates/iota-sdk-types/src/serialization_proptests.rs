@@ -45,6 +45,7 @@ where
 serialization_test!(Address);
 serialization_test!(CheckpointCommitment);
 serialization_test!(CheckpointContents);
+serialization_test!(CheckpointContentsV1);
 serialization_test!(CheckpointData);
 serialization_test!(CheckpointSequenceNumber);
 serialization_test!(CheckpointSummary);

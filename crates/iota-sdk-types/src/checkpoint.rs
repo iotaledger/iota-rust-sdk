@@ -224,6 +224,102 @@ impl crate::TreeDisplay for CheckpointSummary {
     }
 }
 
+impl CheckpointSummary {
+    /// Construct a `CheckpointSummary` from its constituent parts.
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        sequence_number: CheckpointSequenceNumber,
+        network_total_transactions: u64,
+        content_digest: CheckpointContentsDigest,
+        previous_digest: Option<CheckpointDigest>,
+        epoch_rolling_gas_cost_summary: GasCostSummary,
+        timestamp_ms: CheckpointTimestamp,
+        checkpoint_commitments: Vec<CheckpointCommitment>,
+        end_of_epoch_data: Option<EndOfEpochData>,
+        version_specific_data: Vec<u8>,
+    ) -> Self {
+        Self {
+            epoch,
+            sequence_number,
+            network_total_transactions,
+            content_digest,
+            previous_digest,
+            epoch_rolling_gas_cost_summary,
+            timestamp_ms,
+            checkpoint_commitments,
+            end_of_epoch_data,
+            version_specific_data,
+        }
+    }
+
+    /// The epoch that this checkpoint belongs to.
+    pub fn epoch(&self) -> EpochId {
+        self.epoch
+    }
+
+    /// The height of this checkpoint.
+    pub fn sequence_number(&self) -> CheckpointSequenceNumber {
+        self.sequence_number
+    }
+
+    /// Total number of transactions committed since genesis, including those in
+    /// this checkpoint.
+    pub fn network_total_transactions(&self) -> u64 {
+        self.network_total_transactions
+    }
+
+    /// The hash of the [`CheckpointContents`] for this checkpoint.
+    pub fn content_digest(&self) -> CheckpointContentsDigest {
+        self.content_digest
+    }
+
+    /// The hash of the previous `CheckpointSummary`, or `None` for the genesis
+    /// checkpoint.
+    pub fn previous_digest(&self) -> Option<CheckpointDigest> {
+        self.previous_digest
+    }
+
+    /// The running total gas costs of all transactions included in the current
+    /// epoch so far until this checkpoint.
+    pub fn epoch_rolling_gas_cost_summary(&self) -> &GasCostSummary {
+        &self.epoch_rolling_gas_cost_summary
+    }
+
+    /// Timestamp of the checkpoint, in milliseconds from the Unix epoch.
+    pub fn timestamp_ms(&self) -> CheckpointTimestamp {
+        self.timestamp_ms
+    }
+
+    /// Commitments to checkpoint-specific state.
+    pub fn checkpoint_commitments(&self) -> &[CheckpointCommitment] {
+        &self.checkpoint_commitments
+    }
+
+    /// Extra data present only in the final checkpoint of an epoch.
+    pub fn end_of_epoch_data(&self) -> Option<&EndOfEpochData> {
+        self.end_of_epoch_data.as_ref()
+    }
+
+    /// Opaque, protocol-version-specific data carried by the checkpoint.
+    pub fn version_specific_data(&self) -> &[u8] {
+        &self.version_specific_data
+    }
+
+    /// The validator committee that takes effect in the next epoch, present
+    /// only on the final checkpoint of an epoch.
+    pub fn next_epoch_committee(&self) -> Option<&[ValidatorCommitteeMember]> {
+        self.end_of_epoch_data
+            .as_ref()
+            .map(|data| data.next_epoch_committee.as_slice())
+    }
+
+    /// Whether this is the final checkpoint of an epoch.
+    pub fn is_last_checkpoint_of_epoch(&self) -> bool {
+        self.end_of_epoch_data.is_some()
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -253,7 +349,63 @@ impl crate::TreeDisplay for SignedCheckpointSummary {
 ///
 /// ```text
 /// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
+/// ```
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum CheckpointContents {
+    V1(CheckpointContentsV1),
+}
+
+impl CheckpointContents {
+    pub fn new_v1(contents: CheckpointContentsV1) -> Self {
+        Self::V1(contents)
+    }
+
+    crate::def_is_as_into_opt!(V1(CheckpointContentsV1));
+
+    /// Returns a reference to the list of transactions in this checkpoint.
+    pub fn transactions(&self) -> &[CheckpointTransactionInfo] {
+        match self {
+            CheckpointContents::V1(v1) => v1.transactions(),
+        }
+    }
+
+    /// Consumes the `CheckpointContentsV1` and returns the list of
+    /// transactions.
+    pub fn into_transactions(self) -> Vec<CheckpointTransactionInfo> {
+        match self {
+            CheckpointContents::V1(v1) => v1.into_transactions(),
+        }
+    }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> usize {
+        match self {
+            CheckpointContents::V1(v1) => v1.len(),
+        }
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        match self {
+            CheckpointContents::V1(v1) => v1.is_empty(),
+        }
+    }
+}
+
+/// CheckpointContents are the transactions included in an upcoming checkpoint.
+/// They must have already been causally ordered. Since the causal order
+/// algorithm is the same among validators, we expect all honest validators to
+/// come up with the same order for each checkpoint content.
 ///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
 /// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
 ///                          (vector (vector user-signature)) ; set of user signatures for each
 ///                                                           ; transaction. MUST be the same
@@ -263,28 +415,41 @@ impl crate::TreeDisplay for SignedCheckpointSummary {
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct CheckpointContents(
+pub struct CheckpointContentsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-    pub  Vec<CheckpointTransactionInfo>,
-);
+    transactions: Vec<CheckpointTransactionInfo>,
+}
 
-impl CheckpointContents {
+impl CheckpointContentsV1 {
     pub fn new(transactions: Vec<CheckpointTransactionInfo>) -> Self {
-        Self(transactions)
+        Self { transactions }
     }
 
+    /// Returns a reference to the list of transactions in this checkpoint.
     pub fn transactions(&self) -> &[CheckpointTransactionInfo] {
-        &self.0
+        &self.transactions
     }
 
-    pub fn into_v1(self) -> Vec<CheckpointTransactionInfo> {
-        self.0
+    /// Consumes the `CheckpointContentsV1` and returns the list of
+    /// transactions.
+    pub fn into_transactions(self) -> Vec<CheckpointTransactionInfo> {
+        self.transactions
+    }
+
+    /// The number of transactions in this checkpoint.
+    pub fn len(&self) -> usize {
+        self.transactions.len()
+    }
+
+    /// Whether this checkpoint has no transactions.
+    pub fn is_empty(&self) -> bool {
+        self.transactions.is_empty()
     }
 }
 
 impl std::fmt::Display for CheckpointContents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "CheckpointContents({} transactions)", self.0.len())
+        write!(f, "CheckpointContents({} transactions)", self.len())
     }
 }
 
@@ -383,15 +548,15 @@ mod serialization {
 
     use super::*;
 
-    impl Serialize for CheckpointContents {
+    impl Serialize for CheckpointContentsV1 {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
-            use serde::ser::{SerializeSeq, SerializeTupleVariant};
+            use serde::ser::{SerializeSeq, SerializeTuple};
 
             if serializer.is_human_readable() {
-                serializer.serialize_newtype_struct("CheckpointContents", &self.0)
+                serializer.serialize_newtype_struct("CheckpointContentsV1", &self.transactions)
             } else {
                 #[derive(serde::Serialize)]
                 struct Digests<'a> {
@@ -399,14 +564,14 @@ mod serialization {
                     effects: &'a TransactionEffectsDigest,
                 }
 
-                struct DigestSeq<'a>(&'a CheckpointContents);
+                struct DigestSeq<'a>(&'a CheckpointContentsV1);
                 impl Serialize for DigestSeq<'_> {
                     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
-                        for txn in &self.0.0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.len()))?;
+                        for txn in &self.0.transactions {
                             let digests = Digests {
                                 transaction: &txn.transaction,
                                 effects: &txn.effects,
@@ -417,23 +582,23 @@ mod serialization {
                     }
                 }
 
-                struct SignatureSeq<'a>(&'a CheckpointContents);
+                struct SignatureSeq<'a>(&'a CheckpointContentsV1);
                 impl Serialize for SignatureSeq<'_> {
                     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
-                        for txn in &self.0.0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.len()))?;
+                        for txn in &self.0.transactions {
                             seq.serialize_element(&txn.signatures)?;
                         }
                         seq.end()
                     }
                 }
 
-                let mut s = serializer.serialize_tuple_variant("CheckpointContents", 0, "V1", 2)?;
-                s.serialize_field(&DigestSeq(self))?;
-                s.serialize_field(&SignatureSeq(self))?;
+                let mut s = serializer.serialize_tuple(2)?;
+                s.serialize_element(&DigestSeq(self))?;
+                s.serialize_element(&SignatureSeq(self))?;
                 s.end()
             }
         }
@@ -457,34 +622,20 @@ mod serialization {
         signatures: Vec<Vec<UserSignature>>,
     }
 
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "CheckpointContents")]
-    #[cfg_attr(
-        feature = "bcs-schema",
-        derive(iota_bcs_schema::BcsSchema),
-        bcs_schema(name = "checkpoint-contents")
-    )]
-    enum BinaryContents {
-        V1(
-            #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "checkpoint-contents-v1"))]
-            BinaryContentsV1,
-        ),
-    }
-
-    impl<'de> Deserialize<'de> for CheckpointContents {
+    impl<'de> Deserialize<'de> for CheckpointContentsV1 {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                let contents: Vec<CheckpointTransactionInfo> =
+                let transactions: Vec<CheckpointTransactionInfo> =
                     Deserialize::deserialize(deserializer)?;
-                Ok(Self(contents))
+                Ok(Self { transactions })
             } else {
-                let BinaryContents::V1(BinaryContentsV1 {
+                let BinaryContentsV1 {
                     digests,
                     signatures,
-                }) = Deserialize::deserialize(deserializer)?;
+                } = Deserialize::deserialize(deserializer)?;
 
                 if digests.len() != signatures.len() {
                     return Err(serde::de::Error::custom(
@@ -492,8 +643,8 @@ mod serialization {
                     ));
                 }
 
-                Ok(Self(
-                    digests
+                Ok(Self {
+                    transactions: digests
                         .into_iter()
                         .zip(signatures)
                         .map(
@@ -510,7 +661,7 @@ mod serialization {
                             },
                         )
                         .collect(),
-                ))
+                })
             }
         }
     }

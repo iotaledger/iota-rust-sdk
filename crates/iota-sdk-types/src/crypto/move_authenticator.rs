@@ -198,7 +198,6 @@ mod serialization {
 
 #[cfg(test)]
 mod tests {
-
     use base64ct::{Base64, Encoding};
 
     use super::*;
