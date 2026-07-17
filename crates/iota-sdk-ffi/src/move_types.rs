@@ -1345,7 +1345,10 @@ impl StorageDepositReturnUnlockCondition {
 }
 
 // =====================================================================
-// Macro-generated shims for the Move-object mirror constructors
+// Macro-generated shims (`ffi_move_object!` / `ffi_move_object_generic!`)
+// for the remaining `key` Move-object mirrors, plus the record types
+// their accessors return. The hand-written shims above predate these
+// macros and also include `key` objects.
 // =====================================================================
 
 // --- Non-generic `key` mirrors ---
