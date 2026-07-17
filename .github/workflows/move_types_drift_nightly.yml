@@ -63,8 +63,9 @@ jobs:
             # Best-effort pointer at the drift sources: upstream commits in
             # pinned..develop that touched published_api.txt. May include
             # commits that only changed the function surface (which the type
-            # diff above ignores).
-            pinned="$(grep --only-matching --perl-regexp 'iotaledger/iota\.git", rev = "\K[0-9a-f]{40}' crates/iota-sdk-move-types/Cargo.toml || true)"
+            # diff above ignores). The fetch step above resolved the pin via
+            # `cargo metadata` and recorded it in `.fetched-ref`.
+            pinned="$(cat crates/iota-sdk-move-types/src/packages_compiled/.fetched-ref 2>/dev/null || true)"
             if [ -n "$pinned" ]; then
               echo "Upstream commits since the pinned rev that touched published_api.txt (likely drift sources):"
               gh api --paginate "repos/iotaledger/iota/compare/${pinned}...develop" --jq '.commits[].sha' > range_shas.txt || true
