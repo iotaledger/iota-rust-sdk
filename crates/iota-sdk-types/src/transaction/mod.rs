@@ -671,6 +671,11 @@ impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
         w.leaf(
             "Consensus Commit Digest",
             &self.consensus_commit_digest,
+            false,
+        )?;
+        w.child(
+            "Consensus Determined Version Assignments",
+            &self.consensus_determined_version_assignments,
             true,
         )
     }

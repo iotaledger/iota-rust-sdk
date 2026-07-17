@@ -453,6 +453,12 @@ impl std::fmt::Display for CheckpointContents {
     }
 }
 
+impl std::fmt::Display for CheckpointContentsV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CheckpointContentsV1({} transactions)", self.len())
+    }
+}
+
 /// Transaction information committed to in a checkpoint
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
