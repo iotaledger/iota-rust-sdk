@@ -4,8 +4,8 @@
 
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
-    ObjectId, ObjectReference, ProtocolVersion, RandomnessRound, TransactionDigest, TypeTag,
-    UserSignature, Version,
+    Intent, IntentMessage, ObjectId, ObjectReference, ProtocolVersion, RandomnessRound,
+    TransactionDigest, TypeTag, UserSignature, Version,
 };
 use crate::utils::write_sep;
 
@@ -40,6 +40,12 @@ pub enum Transaction {
 
 impl Transaction {
     crate::def_is_as_into_opt!(V1(TransactionV1));
+
+    /// Wraps a reference to this transaction in the transaction signing
+    /// intent, producing the message that user signatures commit to.
+    pub fn intent_message(&self) -> IntentMessage<&Self> {
+        IntentMessage::new(Intent::iota_transaction(), self)
+    }
 }
 
 impl From<TransactionV1> for Transaction {
@@ -93,6 +99,12 @@ impl SenderSignedTransaction {
 
     pub fn signatures(&self) -> &[UserSignature] {
         &self.0.signatures
+    }
+
+    /// Wraps a reference to the transaction in the transaction signing
+    /// intent, producing the message that the signatures commit to.
+    pub fn intent_message(&self) -> IntentMessage<&Transaction> {
+        self.0.transaction.intent_message()
     }
 }
 
