@@ -245,7 +245,8 @@ go-example:
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
-	@for example in $$(find bindings/go/examples/* -type d -not -name release -exec basename {} \;); do \
+	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/go/examples/* -type d -not -name release -not -name move_view_call -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
@@ -283,7 +284,8 @@ kotlin-android: ## Build Android native libraries for all ABIs
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -exec basename {} .kt \;); do \
+	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -not -name "MoveViewCall.kt" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
@@ -309,7 +311,8 @@ python-example:
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
-	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -exec basename {} .py \;); do \
+	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -not -name "move_view_call.py" -exec basename {} .py \;); do \
 		$(MAKE) python-example "$$example" || exit $$?; \
 	done
 
@@ -333,7 +336,8 @@ csharp-example:
 
 .PHONY: csharp-examples
 csharp-examples: ## Run all C# bindings examples
-	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -exec dirname {} \; | xargs -n 1 basename); do \
+	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -not -path "*/MoveViewCall/*" -exec dirname {} \; | xargs -n 1 basename); do \
 		$(MAKE) csharp-example "$$example" || exit $$?; \
 	done
 
@@ -367,7 +371,8 @@ swift-example:
 
 .PHONY: swift-examples
 swift-examples: ## Run all Swift bindings examples
-	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
+	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -not -name "MoveViewCall.swift" -exec basename {} .swift \;); do \
 		$(MAKE) swift-example "$$example" || exit $$?; \
 	done
 
@@ -392,7 +397,8 @@ wasm-example:
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
-	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
+	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -not -name "move_view_call.mjs" -exec basename {} .mjs \;); do \
 		$(MAKE) wasm-example "$$example" || exit $$?; \
 	done
 
