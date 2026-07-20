@@ -198,9 +198,9 @@ impl IotaSystemStateV2 {
     }
 
     /// Validator report records: each reported validator's address mapped to
-    /// the addresses of the validators reporting it, as canonical hex
-    /// strings.
-    pub fn validator_report_records(&self) -> HashMap<String, Vec<String>> {
+    /// the addresses of the validators reporting it. The keys are canonical
+    /// hex strings because FFI map keys cannot be objects.
+    pub fn validator_report_records(&self) -> HashMap<String, Vec<Arc<Address>>> {
         self.0
             .validator_report_records
             .contents
@@ -208,7 +208,11 @@ impl IotaSystemStateV2 {
             .map(|e| {
                 (
                     e.key.to_string(),
-                    e.value.contents.iter().map(|a| a.to_string()).collect(),
+                    e.value
+                        .contents
+                        .iter()
+                        .map(|a| Arc::new(Address(*a)))
+                        .collect(),
                 )
             })
             .collect()
@@ -280,8 +284,9 @@ impl ValidatorSetV2 {
         self.0.pending_active_validators.contents.size
     }
 
-    /// Number of epochs each at-risk validator (keyed by canonical address
-    /// string) has had stake below the low-stake threshold.
+    /// Number of epochs each at-risk validator has had stake below the
+    /// low-stake threshold. The keys are canonical hex strings because FFI
+    /// map keys cannot be objects.
     pub fn at_risk_validators(&self) -> HashMap<String, u64> {
         self.0
             .at_risk_validators
