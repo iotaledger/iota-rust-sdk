@@ -255,7 +255,9 @@ impl SimpleSignature {
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
 /// skipped.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display)]
+#[derive(
+    Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display, strum::EnumString,
+)]
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
@@ -957,6 +959,33 @@ mod serialization {
                 SignatureScheme::from_byte(0x05).is_err(),
                 "0x05 (deprecated zklogin) must be rejected"
             );
+        }
+
+        /// `FromStr` must accept exactly the lowercase strings produced by
+        /// `Display`.
+        #[test]
+        fn signature_scheme_string_roundtrip() {
+            use std::str::FromStr as _;
+
+            for scheme in [
+                SignatureScheme::Ed25519,
+                SignatureScheme::Secp256k1,
+                SignatureScheme::Secp256r1,
+                SignatureScheme::Multisig,
+                SignatureScheme::Bls12381,
+                SignatureScheme::PasskeyAuthenticator,
+                SignatureScheme::MoveAuthenticator,
+            ] {
+                assert_eq!(
+                    SignatureScheme::from_str(&scheme.to_string()),
+                    Ok(scheme),
+                    "{scheme} must parse back to itself"
+                );
+            }
+
+            assert_eq!(SignatureScheme::from_str("ed25519").unwrap().to_u8(), 0x00);
+            assert!(SignatureScheme::from_str("Ed25519").is_err());
+            assert!(SignatureScheme::from_str("zklogin").is_err());
         }
 
         /// A bare `0x05` flag previously decoded to the (removed) zklogin
