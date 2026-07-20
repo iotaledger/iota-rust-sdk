@@ -1,10 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-/// Define the FFI wrapper for a non-generic `key` Move-object mirror: the
-/// `uniffi::Object` newtype plus its `try_from_object` / `try_from_bcs`
-/// constructors. Type-specific field accessors go in the trailing block and
-/// are spliced into the exported impl.
+/// Define the FFI wrapper for a `key` Move-object mirror decoded at a fixed
+/// Move type tag (a non-generic mirror, or a fixed instantiation such as
+/// `<IOTA>`): the `uniffi::Object` newtype plus its `try_from_object` /
+/// `try_from_bcs` constructors. Type-specific field accessors go in the
+/// trailing block and are spliced into the exported impl. For mirrors whose
+/// type parameter is chosen by the caller at runtime, use
+/// [`crate::ffi_move_object_generic`].
 #[macro_export]
 macro_rules! ffi_move_object {
     (
