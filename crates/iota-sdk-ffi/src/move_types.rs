@@ -28,11 +28,6 @@
 //!   unlock-condition records [`TimelockUnlockCondition`],
 //!   [`ExpirationUnlockCondition`], [`StorageDepositReturnUnlockCondition`].
 //!
-//! Shims for `key`-object mirrors are macro-generated: `ffi_move_object!`
-//! for mirrors decoded at a fixed Move type tag (including the `<IOTA>`
-//! instantiations), `ffi_move_object_generic!` for mirrors whose type
-//! parameter is validated at runtime against a caller-provided `TypeTag`.
-//!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
 //! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
 //! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`, and
