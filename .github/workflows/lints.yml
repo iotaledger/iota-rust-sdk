@@ -96,14 +96,13 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install cargo-udeps
-        uses: taiki-e/install-action@7a79fe8c3a13344501c80d99cae481c1c9085912 # v2.81.10
+        # Built from source (cached) because the prebuilt musl-static binary
+        # intermittently segfaults while unpacking the large iota monorepo
+        # git dependency.
+        uses: taiki-e/cache-cargo-install-action@417450f3c33ee20393705369577571770643d4c7 # v3.0.7
         with:
-          tool: cargo-udeps
+          tool: cargo-udeps@0.1.61
       - name: Run Cargo Udeps
-        # The prebuilt cargo-udeps binary is statically linked against musl and
-        # intermittently segfaults in its in-process git fetch of large git
-        # dependencies (the iota monorepo). Shelling out to the system git
-        # avoids that code path.
         env:
           CARGO_NET_GIT_FETCH_WITH_CLI: "true"
         run: cargo +nightly-2026-06-29 udeps ${{ matrix.flags }}
