@@ -155,7 +155,18 @@ lock = id   ; id
 
 metadata-ownership-renounced = string   ; coin-name
 
+module-metadata = uid   ; id
+                  u64   ; size
+
+module-metadata-key = string
+
 module-metadata-v1 = (size *authenticator-metadata-v1)   ; authenticator-metadata
+
+module-metadata-v1-field-name = bool   ; dummy-field
+
+module-name = string
+
+modules-metadata-field-name = bool   ; dummy-field
 
 nft = bool   ; dummy-field
 
@@ -163,6 +174,8 @@ object-bag = uid   ; id
              u64   ; size
 
 package-metadata-key = bool   ; dummy-field
+
+package-metadata-version-field-name = bool   ; dummy-field
 
 per-type-config-created = config-key   ; key
                           id           ; config-id
@@ -396,6 +409,8 @@ version-change-cap = id    ; versioned-id
 
 versioned = uid   ; id
             u64   ; version
+
+view-function-metadata-v1-field-name = bool   ; dummy-field
 
 voting-power-info-v1 = u64   ; validator-index
                        u64   ; voting-power
