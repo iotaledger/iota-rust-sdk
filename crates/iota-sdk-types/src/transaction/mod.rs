@@ -79,6 +79,23 @@ pub struct SenderSignedTransaction(
     pub SignedTransaction,
 );
 
+impl SenderSignedTransaction {
+    pub fn new(transaction: Transaction, signatures: Vec<UserSignature>) -> Self {
+        Self(SignedTransaction {
+            transaction,
+            signatures,
+        })
+    }
+
+    pub fn transaction(&self) -> &Transaction {
+        &self.0.transaction
+    }
+
+    pub fn signatures(&self) -> &[UserSignature] {
+        &self.0.signatures
+    }
+}
+
 impl From<SignedTransaction> for SenderSignedTransaction {
     fn from(transaction: SignedTransaction) -> Self {
         Self(transaction)
