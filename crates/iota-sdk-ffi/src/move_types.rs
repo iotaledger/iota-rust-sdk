@@ -18,11 +18,11 @@
 //!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`], [`DenyList`],
 //!   [`Random`], [`AuthenticatorState`], [`PackageMetadataV1`] (with its
 //!   [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records),
-//!   [`TreasuryCap`], [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`],
-//!   [`CoinManager`], [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`],
-//!   [`Token`], [`TokenPolicyCap`], [`TokenPolicy`], [`Config`],
-//!   [`TransferPolicy`], [`TransferPolicyCap`], [`LabelerCap`],
-//!   [`PurchaseCap`].
+//!   [`ModuleMetadata`], [`TreasuryCap`], [`RegulatedCoinMetadata`],
+//!   [`DenyCapV1`], [`Display`], [`CoinManager`], [`CoinManagerTreasuryCap`],
+//!   [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
+//!   [`TokenPolicy`], [`Config`], [`TransferPolicy`], [`TransferPolicyCap`],
+//!   [`LabelerCap`], [`PurchaseCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -867,6 +867,20 @@ crate::ffi_move_object! {
                 .iter()
                 .map(|e| (ascii_to_string(&e.key), (&e.value).into()))
                 .collect()
+        }
+    }
+}
+
+crate::ffi_move_object! {
+    /// A typed view of an on-chain `0x2::module_metadata::ModuleMetadata`
+    /// object, the per-module key-value store owned by a package's
+    /// `PackageMetadataV1`.
+    ModuleMetadata(iota_sdk::move_types::iota_framework::module_metadata::ModuleMetadata) {
+        /// The number of key-value pairs stored in the metadata's dynamic
+        /// fields. The entries themselves (e.g. the view-function names) live
+        /// in dynamic fields, not in this object's contents.
+        pub fn size(&self) -> u64 {
+            self.0.size
         }
     }
 }
