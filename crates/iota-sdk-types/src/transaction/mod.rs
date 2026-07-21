@@ -136,7 +136,6 @@ pub struct SignedTransaction {
     pub signatures: Vec<UserSignature>,
 }
 
-// `UserSignature` only implements `Hash` when the `serde` feature is enabled.
 #[cfg(feature = "serde")]
 impl std::hash::Hash for SignedTransaction {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
