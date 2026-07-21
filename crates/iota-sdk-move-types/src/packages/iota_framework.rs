@@ -2258,6 +2258,67 @@ pub mod test_scenario {
     }
 }
 
+/// Types from `0x2::module_metadata`.
+pub mod module_metadata {
+    use super::object::UID;
+    use crate::move_stdlib::ascii;
+
+    /// Rust version of the Move `iota::module_metadata::ModuleMetadata`
+    /// type.
+    ///
+    /// On-chain metadata associated with a single module of a package: a
+    /// key-value store backed by dynamic fields, owned by the package's
+    /// [`PackageMetadataV1`](super::package_metadata::PackageMetadataV1)
+    /// object. Like the other dynamic-field containers, the mirror carries
+    /// only the handle and an entry count.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ModuleMetadata {
+        pub id: UID,
+        /// The number of key-value pairs stored in the metadata's dynamic
+        /// fields.
+        pub size: u64,
+    }
+
+    impl_try_from_object!(ModuleMetadata);
+
+    /// Rust version of the Move `iota::module_metadata::ModuleMetadataKey`
+    /// type.
+    ///
+    /// Key used to derive the address of a [`ModuleMetadata`] object from
+    /// the owning package ID and the module name.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ModuleMetadataKey(pub ascii::String);
+
+    /// Rust version of the Move
+    /// `iota::module_metadata::ViewFunctionMetadataV1FieldName` type.
+    ///
+    /// Dynamic-field key for the list of view function names of the module.
+    /// The Move struct is empty; the Rust mirror carries a `dummy_field` to
+    /// preserve the BCS wire format.
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ViewFunctionMetadataV1FieldName {
+        dummy_field: bool,
+    }
+}
+
 /// Types from `0x2::package_metadata`.
 pub mod package_metadata {
     use super::{
@@ -2283,6 +2344,65 @@ pub mod package_metadata {
     }
 
     /// Rust version of the Move
+    /// `iota::package_metadata::PackageMetadataVersionFieldName` type.
+    ///
+    /// Dynamic-field key for the package metadata version. Empty in Move;
+    /// the Rust mirror carries a `dummy_field` for BCS shape.
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PackageMetadataVersionFieldName {
+        dummy_field: bool,
+    }
+
+    /// Rust version of the Move
+    /// `iota::package_metadata::ModuleMetadataV1FieldName` type.
+    ///
+    /// Dynamic-field key for a module's [`ModuleMetadataV1`]. Empty in Move;
+    /// the Rust mirror carries a `dummy_field` for BCS shape.
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ModuleMetadataV1FieldName {
+        dummy_field: bool,
+    }
+
+    /// Rust version of the Move
+    /// `iota::package_metadata::ModulesMetadataFieldName` type.
+    ///
+    /// Dynamic-field key for the map from module names to
+    /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata) objects.
+    /// Empty in Move; the Rust mirror carries a `dummy_field` for BCS shape.
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ModulesMetadataFieldName {
+        dummy_field: bool,
+    }
+
+    /// Rust version of the Move `iota::package_metadata::ModuleName` type.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct ModuleName(pub ascii::String);
+
+    /// Rust version of the Move
     /// `iota::package_metadata::PackageMetadataV1` type.
     ///
     /// Represents the metadata of a Move package, including storage ID,
@@ -2300,6 +2420,10 @@ pub mod package_metadata {
         /// Runtime ID of the package — the storage ID of the first version.
         pub runtime_id: ID,
         pub package_version: u64,
+        /// Per-module metadata, keyed by module name. Deprecated upstream in
+        /// favor of a dynamic field attached to this object that maps module
+        /// names to [`ModuleMetadata`](super::module_metadata::ModuleMetadata)
+        /// objects.
         pub modules_metadata: VecMap<ascii::String, ModuleMetadataV1>,
     }
 
@@ -2308,7 +2432,9 @@ pub mod package_metadata {
     /// Rust version of the Move
     /// `iota::package_metadata::ModuleMetadataV1` type.
     ///
-    /// V1 includes only the authenticator function information.
+    /// V1 includes only the authenticator function information. Deprecated
+    /// upstream in favor of
+    /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

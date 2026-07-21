@@ -44,7 +44,7 @@ iota-bcs-schema = { workspace = true, features = ["move-shape"] }
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 # `update_compiled_packages.sh` reads this rev via `cargo metadata` so the
 # parser matches the fetched blobs.
-move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "433865dc51241ebf738ca127d9fd6b4463e1ec60" }
+move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "2e0ad64996fc65d9eec2aa64732a09609f76c7cb" }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test.workspace = true
