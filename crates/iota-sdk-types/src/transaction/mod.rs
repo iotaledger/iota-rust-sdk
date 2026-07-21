@@ -74,7 +74,7 @@ pub struct TransactionV1 {
 /// ```text
 /// sender-signed-transaction = %d01 intent-signed-transaction
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Deref, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SenderSignedTransaction(
@@ -91,20 +91,6 @@ impl SenderSignedTransaction {
             transaction,
             signatures,
         })
-    }
-
-    pub fn transaction(&self) -> &Transaction {
-        &self.0.transaction
-    }
-
-    pub fn signatures(&self) -> &[UserSignature] {
-        &self.0.signatures
-    }
-
-    /// Wraps a reference to the transaction in the transaction signing
-    /// intent, producing the message that the signatures commit to.
-    pub fn intent_message(&self) -> IntentMessage<&Transaction> {
-        self.0.transaction.intent_message()
     }
 }
 
@@ -134,6 +120,22 @@ impl std::hash::Hash for SenderSignedTransaction {
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+impl SignedTransaction {
+    pub fn transaction(&self) -> &Transaction {
+        &self.transaction
+    }
+
+    pub fn signatures(&self) -> &[UserSignature] {
+        &self.signatures
+    }
+
+    /// Wraps a reference to the transaction in the transaction signing
+    /// intent, producing the message that the signatures commit to.
+    pub fn intent_message(&self) -> IntentMessage<&Transaction> {
+        self.transaction.intent_message()
+    }
 }
 
 #[cfg(feature = "serde")]
