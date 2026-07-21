@@ -279,8 +279,8 @@ mod type_digest {
 
     use super::Hasher;
     use crate::{
-        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, TransactionDigest,
-        TransactionEffectsDigest, TransactionEventsDigest,
+        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, SenderSignedDataDigest,
+        TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest,
     };
 
     impl crate::Object {
@@ -363,6 +363,19 @@ mod type_digest {
             let decoded = base64ct::Base64::decode_vec(bytes)
                 .map_err(|e| bcs::Error::Custom(e.to_string()))?;
             Self::from_bcs(&decoded)
+        }
+    }
+
+    impl crate::SenderSignedTransaction {
+        /// Calculate the digest of the full message, committing to the signing
+        /// intent, the transaction, and all signatures.
+        ///
+        /// Unlike the other type digests, this hashes the BCS bytes directly,
+        /// without a salt prefix.
+        pub fn digest(&self) -> SenderSignedDataDigest {
+            let mut hasher = Hasher::new();
+            bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
+            hasher.finalize().into()
         }
     }
 
