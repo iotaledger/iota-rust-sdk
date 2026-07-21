@@ -100,12 +100,6 @@ impl From<SignedTransaction> for SenderSignedTransaction {
     }
 }
 
-impl From<SenderSignedTransaction> for SignedTransaction {
-    fn from(transaction: SenderSignedTransaction) -> Self {
-        transaction.0
-    }
-}
-
 #[cfg(feature = "serde")]
 impl std::hash::Hash for SenderSignedTransaction {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
@@ -167,6 +161,12 @@ impl SignedTransaction {
         } else {
             None
         }
+    }
+}
+
+impl From<SenderSignedTransaction> for SignedTransaction {
+    fn from(transaction: SenderSignedTransaction) -> Self {
+        transaction.0
     }
 }
 
