@@ -4,8 +4,8 @@
 
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
-    Intent, IntentMessage, ObjectId, ObjectReference, ProtocolVersion, RandomnessRound,
-    TransactionDigest, TypeTag, UserSignature, Version,
+    Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
+    RandomnessRound, TransactionDigest, TypeTag, UserSignature, Version,
 };
 use crate::utils::write_sep;
 
@@ -135,6 +135,38 @@ impl SignedTransaction {
     /// intent, producing the message that the signatures commit to.
     pub fn intent_message(&self) -> IntentMessage<&Transaction> {
         self.transaction.intent_message()
+    }
+
+    /// Returns all [`MoveAuthenticator`] signatures.
+    pub fn move_authenticators(&self) -> Vec<&MoveAuthenticator> {
+        self.signatures
+            .iter()
+            .filter_map(|signature| signature.as_opt_move_authenticator())
+            .collect()
+    }
+
+    /// Returns the sender's [`MoveAuthenticator`], if the sender uses one.
+    pub fn sender_move_authenticator(&self) -> Option<&MoveAuthenticator> {
+        let Transaction::V1(transaction) = &self.transaction;
+
+        self.move_authenticators()
+            .into_iter()
+            .find(|authenticator| authenticator.address() == transaction.sender)
+    }
+
+    /// Returns the sponsor's [`MoveAuthenticator`], if the transaction is
+    /// sponsored and the sponsor uses one.
+    pub fn sponsor_move_authenticator(&self) -> Option<&MoveAuthenticator> {
+        let Transaction::V1(transaction) = &self.transaction;
+        let gas_owner = transaction.gas_payment.owner;
+
+        if gas_owner != transaction.sender {
+            self.move_authenticators()
+                .into_iter()
+                .find(|authenticator| authenticator.address() == gas_owner)
+        } else {
+            None
+        }
     }
 }
 

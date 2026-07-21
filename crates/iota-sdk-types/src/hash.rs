@@ -272,6 +272,18 @@ impl From<crate::UserSignature> for Address {
     }
 }
 
+/// Error returned when no signature in a
+/// [`SignedTransaction`](crate::SignedTransaction) commits to an expected
+/// signer address.
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[error("no signature found for address {address}")]
+pub struct MissingSignatureError {
+    /// The address no signature commits to.
+    pub address: Address,
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
@@ -397,6 +409,57 @@ mod type_digest {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "MoveAuthenticator::";
             type_digest(SALT, self)
+        }
+    }
+
+    impl crate::UserSignature {
+        /// Calculate the auth digest for this signature.
+        ///
+        /// For [`MoveAuthenticator`](crate::MoveAuthenticator) signatures this
+        /// equals
+        /// [`MoveAuthenticator::digest()`](crate::MoveAuthenticator::digest).
+        /// For all other signature types it is the Blake2b256 of the
+        /// serialized (flag-prefixed) signature bytes.
+        pub fn auth_digest(&self) -> Digest {
+            match self {
+                Self::MoveAuthenticator(authenticator) => authenticator.digest(),
+                Self::Simple(_) | Self::Multisig(_) | Self::PasskeyAuthenticator(_) => {
+                    Hasher::digest(self.to_bytes())
+                }
+            }
+        }
+    }
+
+    impl crate::SignedTransaction {
+        /// Computes the auth digest for the sender and, if sponsored, for the
+        /// sponsor. See
+        /// [`UserSignature::auth_digest`](crate::UserSignature::auth_digest)
+        /// for the per-signature logic.
+        ///
+        /// Returns an error if no signature commits to the sender or sponsor
+        /// address.
+        pub fn compute_auth_digests(
+            &self,
+        ) -> Result<(Digest, Option<Digest>), super::MissingSignatureError> {
+            let crate::Transaction::V1(transaction) = &self.transaction;
+
+            let digest_for_address = |address| {
+                self.signatures
+                    .iter()
+                    .find(|signature| signature.derive_address() == address)
+                    .map(crate::UserSignature::auth_digest)
+                    .ok_or(super::MissingSignatureError { address })
+            };
+
+            let sender_auth_digest = digest_for_address(transaction.sender)?;
+            let gas_owner = transaction.gas_payment.owner;
+            let sponsor_auth_digest = if gas_owner != transaction.sender {
+                Some(digest_for_address(gas_owner)?)
+            } else {
+                None
+            };
+
+            Ok((sender_auth_digest, sponsor_auth_digest))
         }
     }
 
