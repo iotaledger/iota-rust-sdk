@@ -329,6 +329,19 @@ impl EpochField {
     pub const PROTOCOL_CONFIG_FEATURE_FLAGS: &str = "protocol_config.feature_flags";
     /// All protocol attributes.
     pub const PROTOCOL_CONFIG_ATTRIBUTES: &str = "protocol_config.attributes";
+    /// All epoch-close-proof fields.
+    pub const EPOCH_CLOSE_PROOF: &str = "epoch_close_proof";
+    /// The certified checkpoint that closed the epoch.
+    pub const EPOCH_CLOSE_PROOF_CHECKPOINT: &str = "epoch_close_proof.checkpoint";
+    /// Effects of the epoch-change transaction.
+    pub const EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS: &str =
+        "epoch_close_proof.end_of_epoch_transaction_effects";
+    /// Events emitted by the epoch-change transaction.
+    pub const EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS: &str =
+        "epoch_close_proof.end_of_epoch_transaction_events";
+    /// Raw BCS of the next epoch's start-of-epoch system-state objects.
+    pub const EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS: &str =
+        "epoch_close_proof.bcs_next_epoch_system_state_objects";
 
     /// Field path for a specific feature flag by key.
     ///
@@ -588,6 +601,23 @@ mod tests {
         assert_eq!(
             EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS,
             "protocol_config.feature_flags"
+        );
+        assert_eq!(EpochField::EPOCH_CLOSE_PROOF, "epoch_close_proof");
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_CHECKPOINT,
+            "epoch_close_proof.checkpoint"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS,
+            "epoch_close_proof.end_of_epoch_transaction_effects"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS,
+            "epoch_close_proof.end_of_epoch_transaction_events"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS,
+            "epoch_close_proof.bcs_next_epoch_system_state_objects"
         );
     }
 

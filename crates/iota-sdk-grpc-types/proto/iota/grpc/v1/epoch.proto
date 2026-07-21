@@ -10,6 +10,8 @@ import "google/protobuf/timestamp.proto";
 
 import "iota/grpc/options.proto";
 import "iota/grpc/v1/bcs.proto";
+import "iota/grpc/v1/checkpoint.proto";
+import "iota/grpc/v1/transaction.proto";
 
 // A member of a validator committee.
 message ValidatorCommitteeMember {
@@ -84,4 +86,33 @@ message Epoch {
   optional uint64 reference_gas_price = 8;
 
   optional ProtocolConfig protocol_config = 9;
+
+  // Proof of how this epoch closed: the certified closing checkpoint, the
+  // epoch-change transaction's effects and events, and the system-state
+  // objects it wrote for the next epoch's start state.
+  //
+  // Absent until the epoch closes.
+  optional EpochCloseProof epoch_close_proof = 10;
+}
+
+message EpochCloseProof {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The certified checkpoint that closed the epoch.
+  optional iota.grpc.v1.checkpoint.Checkpoint checkpoint = 1;
+
+  // Effects of the epoch-change transaction (the last transaction of the
+  // closing checkpoint).
+  optional iota.grpc.v1.transaction.TransactionEffects end_of_epoch_transaction_effects = 2;
+
+  // Events emitted by the epoch-change transaction. Empty on safe-mode
+  // boundaries, which mutate the system state without emitting events.
+  optional iota.grpc.v1.transaction.TransactionEvents end_of_epoch_transaction_events = 3;
+
+  // Raw BCS bytes of the system-state wrapper object (`0x5`) and its inner
+  // state object, as written by this epoch boundary — byte-for-byte as
+  // originally written (not wrapped, unlike `Object.bcs` elsewhere in this
+  // API), so their digests can be verified against the written-object
+  // digests in `end_of_epoch_transaction_effects`.
+  repeated iota.grpc.v1.bcs.BcsData bcs_next_epoch_system_state_objects = 4;
 }
