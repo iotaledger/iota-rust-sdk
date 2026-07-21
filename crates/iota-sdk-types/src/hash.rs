@@ -372,7 +372,7 @@ mod type_digest {
         ///
         /// Unlike the other type digests, this hashes the BCS bytes directly,
         /// without a salt prefix.
-        pub fn digest(&self) -> SenderSignedDataDigest {
+        pub fn full_message_digest(&self) -> SenderSignedDataDigest {
             let mut hasher = Hasher::new();
             bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
             hasher.finalize().into()
