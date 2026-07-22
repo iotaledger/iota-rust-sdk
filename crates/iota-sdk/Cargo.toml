@@ -44,20 +44,12 @@ mnemonic = ["crypto", "iota-crypto/mnemonic"]
 move-types = ["dep:iota-move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
-# gRPC
-# TLS is enabled so that the HTTPS constructors (`new_mainnet`,
-# `new_testnet`, ...) work out of the box. The bundled webpki roots are used
-# instead of the platform's native certificate store because the latter is
-# unavailable on mobile targets (Android/iOS bindings); this also matches the
-# behavior of the GraphQL client (reqwest with `rustls-tls`).
-grpc = [
-  "dep:iota-grpc-client",
-  "dep:iota-grpc-types",
-  "iota-grpc-client/tls-ring",
-  "iota-grpc-client/tls-webpki-roots",
-]
-# TLS support for the gRPC client (required to reach `https://` endpoints
-# such as the public testnet/mainnet nodes).
+# gRPC. TLS for the HTTPS constructors (`new_mainnet`, ...) is added by the
+# non-wasm target dependency below rather than here, since enabling tls-ring
+# would break the wasm32 build; wasm relies on the browser for TLS.
+grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
+# Opt into the platform's native certificate store on top of the bundled webpki
+# roots (native targets only).
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 # Transaction Builder
@@ -77,6 +69,16 @@ iota-grpc-types = { workspace = true, optional = true }
 iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
 iota-types = { workspace = true, features = ["rand"], optional = true }
+
+# TLS applies only to the native gRPC transport; on wasm the browser handles TLS
+# and pulling tls-ring/rustls would break the wasm32 build. Webpki roots (rather
+# than the native store) keep the published mobile bindings working, matching the
+# GraphQL client.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+iota-grpc-client = { workspace = true, optional = true, features = [
+  "tls-ring",
+  "tls-webpki-roots",
+] }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }

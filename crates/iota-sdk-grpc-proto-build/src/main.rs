@@ -107,6 +107,11 @@ fn main() {
     let mut tonic_prost_builder = tonic_prost_build::configure()
         .build_client(true)
         .build_server(true)
+        // The generated `connect()` helper is the only part of the client that
+        // pulls in `tonic::transport`, which does not build for wasm32. The
+        // `iota-sdk-grpc-client` `Client` never uses it, so dropping it lets the
+        // generated types compile for the browser.
+        .build_transport(false)
         .bytes(".");
 
     // apply all boxed types

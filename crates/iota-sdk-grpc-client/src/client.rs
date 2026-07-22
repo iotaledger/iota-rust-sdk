@@ -2,6 +2,7 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(not(target_arch = "wasm32"))]
 use std::time::Duration;
 
 use iota_grpc_types::v1::{
@@ -10,6 +11,7 @@ use iota_grpc_types::v1::{
     state_service::state_service_client::StateServiceClient,
     transaction_execution_service::transaction_execution_service_client::TransactionExecutionServiceClient,
 };
+#[cfg(not(target_arch = "wasm32"))]
 use tonic::codec::CompressionEncoding;
 
 use crate::{api::Result, interceptors::HeadersInterceptor};
@@ -21,8 +23,18 @@ pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:9000";
 
+/// Underlying gRPC transport.
+///
+/// Native builds use tonic's HTTP/2 [`tonic::transport::Channel`]. On wasm32
+/// the client speaks gRPC-Web over the browser `fetch` API, the only transport
+/// a browser can offer; this requires the server to expose gRPC-Web.
+#[cfg(not(target_arch = "wasm32"))]
+pub type GrpcChannel = tonic::transport::Channel;
+#[cfg(target_arch = "wasm32")]
+pub type GrpcChannel = tonic_web_wasm_client::Client;
+
 pub type InterceptedChannel =
-    tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
+    tonic::service::interceptor::InterceptedService<GrpcChannel, HeadersInterceptor>;
 
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
@@ -30,7 +42,7 @@ pub struct Client {
     /// Target URI of the gRPC server
     uri: http::Uri,
     /// Shared gRPC channel for all service clients
-    channel: tonic::transport::Channel,
+    channel: GrpcChannel,
     /// Headers interceptor for adding custom headers to requests
     headers: HeadersInterceptor,
     /// Maximum decoding message size for responses
@@ -49,36 +61,46 @@ impl Client {
             .map_err(Into::into)
             .map_err(tonic::Status::from_error)?;
 
-        let endpoint = tonic::transport::Endpoint::from(uri.clone());
+        #[cfg(not(target_arch = "wasm32"))]
+        let channel = {
+            let endpoint = tonic::transport::Endpoint::from(uri.clone());
 
-        #[cfg(all(
-            feature = "tls-ring",
-            any(feature = "tls-native-roots", feature = "tls-webpki-roots")
-        ))]
-        let endpoint = if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
+            #[cfg(all(
+                feature = "tls-ring",
+                any(feature = "tls-native-roots", feature = "tls-webpki-roots")
+            ))]
+            let endpoint = if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
+                endpoint
+                    .tls_config(
+                        tonic::transport::channel::ClientTlsConfig::new().with_enabled_roots(),
+                    )
+                    .map_err(Into::into)
+                    .map_err(tonic::Status::from_error)?
+            } else {
+                endpoint
+            };
+
+            #[cfg(not(all(
+                feature = "tls-ring",
+                any(feature = "tls-native-roots", feature = "tls-webpki-roots")
+            )))]
+            if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
+                return Err(tonic::Status::failed_precondition(
+                    "HTTPS requires the `tls-ring` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
+                )
+                .into());
+            }
+
             endpoint
-                .tls_config(tonic::transport::channel::ClientTlsConfig::new().with_enabled_roots())
-                .map_err(Into::into)
-                .map_err(tonic::Status::from_error)?
-        } else {
-            endpoint
+                .connect_timeout(Duration::from_secs(5))
+                .http2_keep_alive_interval(Duration::from_secs(5))
+                .connect_lazy()
         };
 
-        #[cfg(not(all(
-            feature = "tls-ring",
-            any(feature = "tls-native-roots", feature = "tls-webpki-roots")
-        )))]
-        if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
-            return Err(tonic::Status::failed_precondition(
-                "HTTPS requires the `tls-ring` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
-            )
-            .into());
-        }
-
-        let channel = endpoint
-            .connect_timeout(Duration::from_secs(5))
-            .http2_keep_alive_interval(Duration::from_secs(5))
-            .connect_lazy();
+        // The browser handles TLS and connection management; gRPC-Web only needs
+        // the target URL.
+        #[cfg(target_arch = "wasm32")]
+        let channel = tonic_web_wasm_client::Client::new(uri.to_string());
 
         Ok(Self {
             uri,
@@ -120,7 +142,7 @@ impl Client {
     ///
     /// This can be useful for creating additional service clients that aren't
     /// yet integrated into Client.
-    pub fn channel(&self) -> &tonic::transport::Channel {
+    pub fn channel(&self) -> &GrpcChannel {
         &self.channel
     }
 
@@ -178,6 +200,9 @@ impl Client {
 
     /// Apply common client configuration (compression, message size limits).
     fn configure_client<C: GrpcClientConfig>(&self, client: C) -> C {
+        // zstd pulls a C dependency that does not build for wasm32, and gRPC-Web
+        // responses are not compressed, so only negotiate compression natively.
+        #[cfg(not(target_arch = "wasm32"))]
         let client = client.accept_compressed(CompressionEncoding::Zstd);
         if let Some(limit) = self.max_decoding_message_size {
             client.max_decoding_message_size(limit)
@@ -193,6 +218,7 @@ impl Client {
 /// tonic-generated service clients, allowing `configure_client` to work
 /// generically.
 trait GrpcClientConfig: Sized {
+    #[cfg(not(target_arch = "wasm32"))]
     fn accept_compressed(self, encoding: CompressionEncoding) -> Self;
     fn max_decoding_message_size(self, limit: usize) -> Self;
 }
@@ -202,6 +228,7 @@ macro_rules! impl_grpc_client_config {
     ($($client:ty),* $(,)?) => {
         $(
             impl GrpcClientConfig for $client {
+                #[cfg(not(target_arch = "wasm32"))]
                 fn accept_compressed(self, encoding: CompressionEncoding) -> Self {
                     self.accept_compressed(encoding)
                 }

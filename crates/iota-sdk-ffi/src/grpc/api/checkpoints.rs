@@ -3,9 +3,9 @@
 
 //! Checkpoints API implementation.
 
-use std::{pin::Pin, sync::Arc};
+use std::sync::Arc;
 
-use futures::{Stream, StreamExt};
+use futures::StreamExt;
 use iota_sdk::grpc_client::read_mask_fields::CheckpointResponseReadMask;
 use tokio::sync::Mutex;
 
@@ -37,14 +37,8 @@ fn to_proto_events_filter(
 #[derive(uniffi::Object)]
 pub struct CheckpointStream(
     Mutex<
-        Pin<
-            Box<
-                dyn Stream<
-                        Item = iota_sdk::grpc_client::Result<
-                            iota_sdk::grpc_client::CheckpointResponse,
-                        >,
-                    > + Send,
-            >,
+        iota_sdk::grpc_client::BoxStream<
+            iota_sdk::grpc_client::Result<iota_sdk::grpc_client::CheckpointResponse>,
         >,
     >,
 );
@@ -104,14 +98,8 @@ impl TryFrom<iota_sdk::grpc_client::CheckpointStreamItem> for CheckpointStreamIt
 #[derive(uniffi::Object)]
 pub struct FilteredCheckpointStream(
     Mutex<
-        Pin<
-            Box<
-                dyn Stream<
-                        Item = iota_sdk::grpc_client::Result<
-                            iota_sdk::grpc_client::CheckpointStreamItem,
-                        >,
-                    > + Send,
-            >,
+        iota_sdk::grpc_client::BoxStream<
+            iota_sdk::grpc_client::Result<iota_sdk::grpc_client::CheckpointStreamItem>,
         >,
     >,
 );

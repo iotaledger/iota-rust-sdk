@@ -14,7 +14,10 @@ mod metadata;
 pub mod move_package;
 pub mod state;
 
-pub use common::{CheckpointStreamError, Error, Page, ProtocolError, ReadMask, Result, RpcStatus};
+pub use common::{
+    BoxFuture, BoxStream, CheckpointStreamError, Error, Page, ProtocolError, ReadMask, Result,
+    RpcStatus,
+};
 pub(crate) use common::{
     TryFromProtoError, build_proto_transaction, check_object_identity, check_result_count,
     check_transaction_identity, collect_stream, define_list_query, into_item_results,

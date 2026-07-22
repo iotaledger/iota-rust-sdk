@@ -52,6 +52,12 @@ pub mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
+// Re-export types for convenience
+pub use api::{
+    BoxFuture, BoxStream, CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error,
+    MetadataEnvelope, Page, ProtocolError, ReadMask, Result, RpcStatus,
+    execution::simulate::SimulateTransactionInput,
+};
 pub use api::{
     // CheckpointResponse per-method masks
     CHECKPOINT_CONTENTS_BCS,
@@ -100,11 +106,6 @@ pub use api::{
     TRANSACTION_EFFECTS_DIGEST,
     TRANSACTION_EVENTS_BCS,
     TRANSACTION_EVENTS_DIGEST,
-};
-// Re-export types for convenience
-pub use api::{
-    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope, Page,
-    ProtocolError, ReadMask, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{

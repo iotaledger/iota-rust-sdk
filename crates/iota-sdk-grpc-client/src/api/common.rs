@@ -185,6 +185,24 @@ pub enum CheckpointStreamError {
 /// Result type alias for API operations.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Boxed future returned by the fluent query builders.
+///
+/// Browser (`wasm32`) futures are not `Send`, so the bound is only required off
+/// the browser.
+#[cfg(not(target_arch = "wasm32"))]
+pub type BoxFuture<T> = std::pin::Pin<Box<dyn std::future::Future<Output = T> + Send>>;
+#[cfg(target_arch = "wasm32")]
+pub type BoxFuture<T> = std::pin::Pin<Box<dyn std::future::Future<Output = T>>>;
+
+/// Boxed stream returned by the checkpoint streaming APIs.
+///
+/// Browser (`wasm32`) streams are not `Send`, so the bound is only required off
+/// the browser.
+#[cfg(not(target_arch = "wasm32"))]
+pub type BoxStream<T> = std::pin::Pin<Box<dyn futures::Stream<Item = T> + Send>>;
+#[cfg(target_arch = "wasm32")]
+pub type BoxStream<T> = std::pin::Pin<Box<dyn futures::Stream<Item = T>>>;
+
 // =============================================================================
 // Field Masks
 // =============================================================================
@@ -692,9 +710,7 @@ macro_rules! define_list_query {
             type Output = $crate::api::Result<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
             >;
-            type IntoFuture = ::std::pin::Pin<
-                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
-            >;
+            type IntoFuture = $crate::api::BoxFuture<Self::Output>;
 
             fn into_future(self) -> Self::IntoFuture {
                 Box::pin(async move {

@@ -16,7 +16,9 @@ prost-types.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tap = "1.0"
-tonic.workspace = true
+# Only the client/server codegen support is needed here; the transport layer
+# (hyper/tokio net) does not build for wasm32 and lives in `iota-sdk-grpc-client`.
+tonic = { workspace = true, default-features = false, features = ["codegen"] }
 tonic-prost = "0.14"
 
 # internal dependencies

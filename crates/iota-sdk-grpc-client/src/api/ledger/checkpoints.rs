@@ -11,8 +11,6 @@
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
 //! (or any slice/array/vec of fields) — conversion is automatic.
 
-use std::pin::Pin;
-
 use futures::{Stream, StreamExt};
 use iota_grpc_types::{
     read_mask_fields::{CheckpointResponseReadMask, IntoReadMask},
@@ -30,8 +28,8 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 use crate::{
     Client, Error,
     api::{
-        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, MetadataEnvelope,
-        ProtocolError, Result, TryFromProtoError, saturating_usize_to_u32,
+        BoxStream, CheckpointResponse, CheckpointStreamError, CheckpointStreamItem,
+        MetadataEnvelope, ProtocolError, Result, TryFromProtoError, saturating_usize_to_u32,
     },
 };
 
@@ -294,8 +292,7 @@ impl Client {
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
-    {
+    ) -> Result<MetadataEnvelope<BoxStream<Result<CheckpointResponse>>>> {
         self.stream_checkpoints_internal(
             start_sequence_number.into(),
             end_sequence_number.into(),
@@ -313,8 +310,7 @@ impl Client {
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
         read_mask: CheckpointResponseReadMask,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
-    {
+    ) -> Result<MetadataEnvelope<BoxStream<Result<CheckpointResponse>>>> {
         let envelope = self
             .stream_checkpoints_raw(
                 start_sequence_number,
@@ -426,8 +422,7 @@ impl Client {
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         progress_interval_ms: impl Into<Option<u32>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
-    {
+    ) -> Result<MetadataEnvelope<BoxStream<Result<CheckpointStreamItem>>>> {
         self.stream_checkpoints_raw(
             start_sequence_number.into(),
             end_sequence_number.into(),
@@ -452,8 +447,7 @@ impl Client {
         filter_checkpoints: bool,
         progress_interval_ms: Option<u32>,
         read_mask: CheckpointResponseReadMask,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
-    {
+    ) -> Result<MetadataEnvelope<BoxStream<Result<CheckpointStreamItem>>>> {
         let mut request = StreamCheckpointsRequest::default().with_read_mask(read_mask);
 
         if let Some(start) = start_sequence_number {

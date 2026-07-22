@@ -18,14 +18,24 @@ prost.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
-tonic = { workspace = true, features = ["zstd"] }
+tonic = { workspace = true, default-features = false, features = ["codegen"] }
 
 # internal dependencies
 iota-grpc-types.workspace = true
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
+# The `tonic` transport (hyper/tokio net) and zstd compression do not build for
+# wasm32, so they are only pulled in off the browser.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tonic = { workspace = true, features = ["transport", "zstd"] }
+
+# On wasm32 the client talks gRPC-Web over the browser `fetch` API instead.
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+tonic-web-wasm-client = "0.9"
+
 [features]
+# TLS applies only to the native transport; on wasm the browser handles TLS.
 default = ["tls-ring", "tls-native-roots"]
 tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]

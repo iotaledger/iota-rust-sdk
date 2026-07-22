@@ -5,12 +5,13 @@ use tokio::sync::RwLock;
 
 use crate::error::Result;
 
-/// The tokio runtime that backs the gRPC channels.
+/// The tokio runtime that backs the native gRPC channels.
 ///
 /// Creating a tonic channel spawns background tasks, which requires a running
 /// tokio runtime. The uniffi constructors are synchronous and run outside of
 /// the uniffi tokio runtime, so the channels are backed by this dedicated
 /// runtime instead.
+#[cfg(not(target_arch = "wasm32"))]
 fn tokio_runtime() -> &'static tokio::runtime::Runtime {
     static RUNTIME: std::sync::OnceLock<tokio::runtime::Runtime> = std::sync::OnceLock::new();
     RUNTIME.get_or_init(|| {
@@ -21,6 +22,16 @@ fn tokio_runtime() -> &'static tokio::runtime::Runtime {
             .build()
             .expect("failed to build tokio runtime")
     })
+}
+
+/// Build a gRPC client inside the runtime its channel needs.
+///
+/// Native channels are created inside [`tokio_runtime`]; the wasm gRPC-Web
+/// transport uses the browser `fetch` API and needs no runtime.
+fn build_in_runtime<T>(f: impl FnOnce() -> T) -> T {
+    #[cfg(not(target_arch = "wasm32"))]
+    let _guard = tokio_runtime().enter();
+    f()
 }
 
 /// The gRPC client for interacting with the IOTA blockchain.
@@ -42,47 +53,52 @@ impl GrpcClient {
     /// Create a new gRPC client with the provided server URI.
     #[uniffi::constructor]
     pub fn new(uri: String) -> Result<Self> {
-        let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(iota_sdk::grpc_client::Client::new(
-            uri.as_str(),
-        )?)))
+        build_in_runtime(|| {
+            Ok(Self(RwLock::new(iota_sdk::grpc_client::Client::new(
+                uri.as_str(),
+            )?)))
+        })
     }
 
     /// Create a new gRPC client connected to the `mainnet` gRPC server.
     #[uniffi::constructor]
     pub fn new_mainnet() -> Result<Self> {
-        let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_mainnet()?,
-        )))
+        build_in_runtime(|| {
+            Ok(Self(RwLock::new(
+                iota_sdk::grpc_client::Client::new_mainnet()?,
+            )))
+        })
     }
 
     /// Create a new gRPC client connected to the `testnet` gRPC server.
     #[uniffi::constructor]
     pub fn new_testnet() -> Result<Self> {
-        let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_testnet()?,
-        )))
+        build_in_runtime(|| {
+            Ok(Self(RwLock::new(
+                iota_sdk::grpc_client::Client::new_testnet()?,
+            )))
+        })
     }
 
     /// Create a new gRPC client connected to the `devnet` gRPC server.
     #[uniffi::constructor]
     pub fn new_devnet() -> Result<Self> {
-        let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_devnet()?,
-        )))
+        build_in_runtime(|| {
+            Ok(Self(RwLock::new(
+                iota_sdk::grpc_client::Client::new_devnet()?,
+            )))
+        })
     }
 
     /// Create a new gRPC client connected to a `localnet` gRPC server:
     /// <http://localhost:9000>.
     #[uniffi::constructor]
     pub fn new_localnet() -> Result<Self> {
-        let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_localnet()?,
-        )))
+        build_in_runtime(|| {
+            Ok(Self(RwLock::new(
+                iota_sdk::grpc_client::Client::new_localnet()?,
+            )))
+        })
     }
 
     /// Set a basic auth `Authorization` header that is sent with every
