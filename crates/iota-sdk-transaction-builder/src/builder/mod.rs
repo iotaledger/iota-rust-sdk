@@ -710,17 +710,17 @@ impl<C, L> TransactionBuilder<C, L> {
         amounts: U,
     ) -> &mut TransactionBuilder<C> {
         let mut coin_args = self.apply_arguments(coins);
-        let coin = if coin_args.is_empty() {
-            return self.reset();
-        } else if let [coin] = coin_args[..] {
-            coin
-        } else {
-            let primary_coin = coin_args.remove(0);
-            self.command(Command::MergeCoins(MergeCoins {
-                coin: primary_coin,
-                coins_to_merge: coin_args,
-            }));
-            primary_coin
+        let coin = match coin_args[..] {
+            [] => return self.reset(),
+            [coin] => coin,
+            _ => {
+                let primary_coin = coin_args.remove(0);
+                self.command(Command::MergeCoins(MergeCoins {
+                    coin: primary_coin,
+                    coins_to_merge: coin_args,
+                }));
+                primary_coin
+            }
         };
         let amount_args = self.apply_arguments(amounts);
         assert_eq!(
