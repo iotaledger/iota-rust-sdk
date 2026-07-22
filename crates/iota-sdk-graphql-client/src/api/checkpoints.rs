@@ -239,7 +239,7 @@ mod tests {
             .unwrap();
         assert!(total_transaction_blocks > 0);
 
-        let chckp_id = client
+        let checkpoint_seq_num = client
             .latest_checkpoint_sequence_number()
             .await
             .map_err(|e| {
@@ -251,7 +251,7 @@ mod tests {
             .unwrap()
             .unwrap();
         let total_transaction_blocks_by_seq_num = client
-            .total_transaction_blocks_by_seq_num(chckp_id)
+            .total_transaction_blocks_by_seq_num(checkpoint_seq_num)
             .await
             .unwrap()
             .unwrap();
@@ -260,14 +260,14 @@ mod tests {
             "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_seq_num}"
         );
 
-        let chckp = client
-            .checkpoint(None, Some(chckp_id))
+        let checkpoint = client
+            .checkpoint(None, Some(checkpoint_seq_num))
             .await
             .unwrap()
             .unwrap();
 
         let total_transaction_blocks_by_digest = client
-            .total_transaction_blocks_by_digest(chckp.digest())
+            .total_transaction_blocks_by_digest(checkpoint.digest())
             .await
             .unwrap()
             .unwrap();
