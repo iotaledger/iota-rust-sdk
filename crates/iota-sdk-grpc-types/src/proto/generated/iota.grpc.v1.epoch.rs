@@ -85,4 +85,39 @@ pub struct Epoch {
     pub reference_gas_price: ::core::option::Option<u64>,
     #[prost(message, optional, tag = "9")]
     pub protocol_config: ::core::option::Option<ProtocolConfig>,
+    /// Proof of how this epoch closed: the certified closing checkpoint, the
+    /// epoch-change transaction's effects and events, and the system-state
+    /// objects it wrote for the next epoch's start state.
+    ///
+    /// Absent until the epoch closes.
+    #[prost(message, optional, tag = "10")]
+    pub epoch_close_proof: ::core::option::Option<EpochCloseProof>,
+}
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EpochCloseProof {
+    /// The certified checkpoint that closed the epoch.
+    #[prost(message, optional, tag = "1")]
+    pub checkpoint: ::core::option::Option<super::checkpoint::Checkpoint>,
+    /// Effects of the epoch-change transaction (the last transaction of the
+    /// closing checkpoint).
+    #[prost(message, optional, tag = "2")]
+    pub end_of_epoch_transaction_effects: ::core::option::Option<
+        super::transaction::TransactionEffects,
+    >,
+    /// Events emitted by the epoch-change transaction. Empty on safe-mode
+    /// boundaries, which mutate the system state without emitting events.
+    #[prost(message, optional, tag = "3")]
+    pub end_of_epoch_transaction_events: ::core::option::Option<
+        super::transaction::TransactionEvents,
+    >,
+    /// Raw BCS bytes of the system-state wrapper object (`0x5`) and its inner
+    /// state object, as written by this epoch boundary — byte-for-byte as
+    /// originally written (not wrapped, unlike `Object.bcs` elsewhere in this
+    /// API), so their digests can be verified against the written-object
+    /// digests in `end_of_epoch_transaction_effects`.
+    #[prost(message, repeated, tag = "4")]
+    pub bcs_next_epoch_system_state_objects: ::prost::alloc::vec::Vec<
+        super::bcs::BcsData,
+    >,
 }

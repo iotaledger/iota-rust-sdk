@@ -425,7 +425,8 @@ impl StructTag {
         object_bag::ObjectBag,
         tx_context::TxContext,
         deny_list::DenyList,
-        package_metadata::PackageMetadataV1
+        package_metadata::PackageMetadataV1,
+        module_metadata::ModuleMetadata
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
     add_struct_tag_ctor!(
