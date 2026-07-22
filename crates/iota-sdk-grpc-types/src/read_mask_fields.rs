@@ -141,6 +141,28 @@ impl TransactionField {
     pub const OUTPUT_OBJECTS_REFERENCE_DIGEST: &str = "output_objects.reference.digest";
     /// The full BCS-encoded output object.
     pub const OUTPUT_OBJECTS_BCS: &str = "output_objects.bcs";
+    /// Balance changes (all sub-fields).
+    pub const BALANCE_CHANGES: &str = "balance_changes";
+    /// The owner whose balance changed.
+    pub const BALANCE_CHANGES_OWNER: &str = "balance_changes.owner";
+    /// The coin type of the balance change.
+    pub const BALANCE_CHANGES_COIN_TYPE: &str = "balance_changes.coin_type";
+    /// The signed amount of the balance change.
+    pub const BALANCE_CHANGES_AMOUNT: &str = "balance_changes.amount";
+    /// Object changes (all sub-fields).
+    pub const OBJECT_CHANGES: &str = "object_changes";
+    /// Published-package object changes.
+    pub const OBJECT_CHANGES_PUBLISHED: &str = "object_changes.published";
+    /// Mutated-object changes.
+    pub const OBJECT_CHANGES_MUTATED: &str = "object_changes.mutated";
+    /// Deleted-object changes.
+    pub const OBJECT_CHANGES_DELETED: &str = "object_changes.deleted";
+    /// Wrapped-object changes.
+    pub const OBJECT_CHANGES_WRAPPED: &str = "object_changes.wrapped";
+    /// Unwrapped-object changes.
+    pub const OBJECT_CHANGES_UNWRAPPED: &str = "object_changes.unwrapped";
+    /// Created-object changes.
+    pub const OBJECT_CHANGES_CREATED: &str = "object_changes.created";
 }
 
 // =============================================================================
@@ -187,6 +209,10 @@ impl CheckpointTransactionField {
     pub const OUTPUT_OBJECTS: &str = "transactions.output_objects";
     /// The full BCS-encoded output object.
     pub const OUTPUT_OBJECTS_BCS: &str = "transactions.output_objects.bcs";
+    /// Balance changes (all sub-fields).
+    pub const BALANCE_CHANGES: &str = "transactions.balance_changes";
+    /// Object changes (all sub-fields).
+    pub const OBJECT_CHANGES: &str = "transactions.object_changes";
 }
 
 // =============================================================================
@@ -235,6 +261,10 @@ impl SimulateExecutedTransactionField {
     pub const OUTPUT_OBJECTS: &str = "executed_transaction.output_objects";
     /// The full BCS-encoded output object.
     pub const OUTPUT_OBJECTS_BCS: &str = "executed_transaction.output_objects.bcs";
+    /// Balance changes (all sub-fields).
+    pub const BALANCE_CHANGES: &str = "executed_transaction.balance_changes";
+    /// Object changes (all sub-fields).
+    pub const OBJECT_CHANGES: &str = "executed_transaction.object_changes";
 }
 
 // =============================================================================
@@ -299,6 +329,19 @@ impl EpochField {
     pub const PROTOCOL_CONFIG_FEATURE_FLAGS: &str = "protocol_config.feature_flags";
     /// All protocol attributes.
     pub const PROTOCOL_CONFIG_ATTRIBUTES: &str = "protocol_config.attributes";
+    /// All epoch-close-proof fields.
+    pub const EPOCH_CLOSE_PROOF: &str = "epoch_close_proof";
+    /// The certified checkpoint that closed the epoch.
+    pub const EPOCH_CLOSE_PROOF_CHECKPOINT: &str = "epoch_close_proof.checkpoint";
+    /// Effects of the epoch-change transaction.
+    pub const EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS: &str =
+        "epoch_close_proof.end_of_epoch_transaction_effects";
+    /// Events emitted by the epoch-change transaction.
+    pub const EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS: &str =
+        "epoch_close_proof.end_of_epoch_transaction_events";
+    /// Raw BCS of the next epoch's start-of-epoch system-state objects.
+    pub const EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS: &str =
+        "epoch_close_proof.bcs_next_epoch_system_state_objects";
 
     /// Field path for a specific feature flag by key.
     ///
@@ -482,6 +525,16 @@ mod tests {
         assert_eq!(TransactionField::CHECKPOINT, "checkpoint");
         assert_eq!(TransactionField::INPUT_OBJECTS_BCS, "input_objects.bcs");
         assert_eq!(TransactionField::OUTPUT_OBJECTS_BCS, "output_objects.bcs");
+        assert_eq!(TransactionField::BALANCE_CHANGES, "balance_changes");
+        assert_eq!(
+            TransactionField::BALANCE_CHANGES_AMOUNT,
+            "balance_changes.amount"
+        );
+        assert_eq!(TransactionField::OBJECT_CHANGES, "object_changes");
+        assert_eq!(
+            TransactionField::OBJECT_CHANGES_CREATED,
+            "object_changes.created"
+        );
     }
 
     #[test]
@@ -494,6 +547,14 @@ mod tests {
         assert_eq!(
             CheckpointTransactionField::EFFECTS_BCS,
             "transactions.effects.bcs"
+        );
+        assert_eq!(
+            CheckpointTransactionField::BALANCE_CHANGES,
+            "transactions.balance_changes"
+        );
+        assert_eq!(
+            CheckpointTransactionField::OBJECT_CHANGES,
+            "transactions.object_changes"
         );
     }
 
@@ -510,6 +571,14 @@ mod tests {
         assert_eq!(
             SimulateExecutedTransactionField::EFFECTS_BCS,
             "executed_transaction.effects.bcs"
+        );
+        assert_eq!(
+            SimulateExecutedTransactionField::BALANCE_CHANGES,
+            "executed_transaction.balance_changes"
+        );
+        assert_eq!(
+            SimulateExecutedTransactionField::OBJECT_CHANGES,
+            "executed_transaction.object_changes"
         );
     }
 
@@ -532,6 +601,23 @@ mod tests {
         assert_eq!(
             EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS,
             "protocol_config.feature_flags"
+        );
+        assert_eq!(EpochField::EPOCH_CLOSE_PROOF, "epoch_close_proof");
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_CHECKPOINT,
+            "epoch_close_proof.checkpoint"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS,
+            "epoch_close_proof.end_of_epoch_transaction_effects"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS,
+            "epoch_close_proof.end_of_epoch_transaction_events"
+        );
+        assert_eq!(
+            EpochField::EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS,
+            "epoch_close_proof.bcs_next_epoch_system_state_objects"
         );
     }
 

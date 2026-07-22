@@ -3,5 +3,6 @@
 
 # Swift Package Manager package resolution
 .swiftpm
+Package.resolved
 
 Sources

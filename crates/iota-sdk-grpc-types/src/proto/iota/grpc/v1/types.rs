@@ -186,6 +186,54 @@ impl ObjectReference {
     }
 }
 
+// Owner conversions
+impl From<iota_types::Owner> for Owner {
+    fn from(value: iota_types::Owner) -> Self {
+        let kind = match value {
+            iota_types::Owner::Address(address) => Some(owner::Kind::AddressOwner(address.into())),
+            iota_types::Owner::Object(object_id) => {
+                Some(owner::Kind::ObjectOwner(object_id.into()))
+            }
+            iota_types::Owner::Shared(version) => Some(owner::Kind::Shared(version.as_u64())),
+            iota_types::Owner::Immutable => Some(owner::Kind::Immutable(true)),
+            // `iota_types::Owner` is `#[non_exhaustive]`; an unknown future
+            // variant maps to an unset oneof ("unspecified ownership kind").
+            _ => None,
+        };
+
+        Self { kind }
+    }
+}
+
+impl TryFrom<&Owner> for iota_types::Owner {
+    type Error = TryFromProtoError;
+
+    fn try_from(value: &Owner) -> Result<Self, Self::Error> {
+        match &value.kind {
+            Some(owner::Kind::AddressOwner(address)) => Ok(iota_types::Owner::Address(
+                address
+                    .address()
+                    .map_err(|e| e.nested(Owner::ADDRESS_OWNER_FIELD.name))?,
+            )),
+            Some(owner::Kind::ObjectOwner(object_id)) => Ok(iota_types::Owner::Object(
+                object_id
+                    .object_id()
+                    .map_err(|e| e.nested(Owner::OBJECT_OWNER_FIELD.name))?,
+            )),
+            Some(owner::Kind::Shared(version)) => Ok(iota_types::Owner::Shared((*version).into())),
+            Some(owner::Kind::Immutable(_)) => Ok(iota_types::Owner::Immutable),
+            None => Err(TryFromProtoError::missing("kind")),
+        }
+    }
+}
+
+impl Owner {
+    /// Deserialize the owner to SDK type.
+    pub fn owner(&self) -> Result<iota_types::Owner, TryFromProtoError> {
+        self.try_into()
+    }
+}
+
 impl From<&iota_types::TypeTag> for TypeTag {
     fn from(ty: &iota_types::TypeTag) -> Self {
         let type_tag = match ty {

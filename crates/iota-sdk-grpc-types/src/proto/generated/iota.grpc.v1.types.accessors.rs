@@ -45,4 +45,30 @@ mod _accessor_impls {
             self
         }
     }
+    impl super::Owner {
+        /// Sets `address_owner` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_address_owner<T: Into<super::Address>>(mut self, field: T) -> Self {
+            self.kind = Some(super::owner::Kind::AddressOwner(field.into()));
+            self
+        }
+        /// Sets `object_owner` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_object_owner<T: Into<super::ObjectId>>(mut self, field: T) -> Self {
+            self.kind = Some(super::owner::Kind::ObjectOwner(field.into()));
+            self
+        }
+        /// Sets `shared` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_shared(mut self, field: u64) -> Self {
+            self.kind = Some(super::owner::Kind::Shared(field));
+            self
+        }
+        /// Sets `immutable` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_immutable(mut self, field: bool) -> Self {
+            self.kind = Some(super::owner::Kind::Immutable(field));
+            self
+        }
+    }
 }

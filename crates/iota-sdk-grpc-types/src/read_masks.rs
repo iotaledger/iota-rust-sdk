@@ -231,13 +231,43 @@ pub const EXECUTED_TRANSACTION_TIMESTAMP: &str = "timestamp";
 /// [`ExecutedTransaction::input_objects()`](crate::v1::transaction::ExecutedTransaction::input_objects).
 ///
 /// Includes object references and BCS for all input objects.
+///
+/// If the serving node no longer has one of the objects (e.g. pruned),
+/// `get_transactions` requests including this field fail with
+/// `FAILED_PRECONDITION`; narrow the read mask, or fetch objects individually
+/// via `get_objects` for best-effort retrieval.
 pub const EXECUTED_TRANSACTION_INPUT_OBJECTS: &str = "input_objects";
 
 /// Read mask for
 /// [`ExecutedTransaction::output_objects()`](crate::v1::transaction::ExecutedTransaction::output_objects).
 ///
 /// Includes object references and BCS for all output objects.
+///
+/// If the serving node no longer has one of the objects (e.g. pruned),
+/// `get_transactions` requests including this field fail with
+/// `FAILED_PRECONDITION`; narrow the read mask, or fetch objects individually
+/// via `get_objects` for best-effort retrieval.
 pub const EXECUTED_TRANSACTION_OUTPUT_OBJECTS: &str = "output_objects";
+
+/// Read mask for
+/// [`ExecutedTransaction::balance_changes()`](crate::v1::transaction::ExecutedTransaction::balance_changes).
+///
+/// Not included in any default read mask; must be requested explicitly.
+///
+/// If the serving node no longer has a required object (e.g. pruned),
+/// `get_transactions` requests including this field fail with
+/// `FAILED_PRECONDITION`; retry without it in the read mask.
+pub const EXECUTED_TRANSACTION_BALANCE_CHANGES: &str = "balance_changes";
+
+/// Read mask for
+/// [`ExecutedTransaction::object_changes()`](crate::v1::transaction::ExecutedTransaction::object_changes).
+///
+/// Not included in any default read mask; must be requested explicitly.
+///
+/// If the serving node no longer has a required object (e.g. pruned),
+/// `get_transactions` requests including this field fail with
+/// `FAILED_PRECONDITION`; retry without it in the read mask.
+pub const EXECUTED_TRANSACTION_OBJECT_CHANGES: &str = "object_changes";
 
 // ---------------------------------------------------------------------------
 // Transaction — sub-field constants (relative to ExecutedTransaction)

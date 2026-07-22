@@ -234,6 +234,48 @@ fn expected_entries() -> Vec<Entry> {
         ),
         entry!(
             IotaFramework,
+            "package_metadata",
+            "PackageMetadataVersionFieldName",
+            iota_framework::package_metadata::PackageMetadataVersionFieldName
+        ),
+        entry!(
+            IotaFramework,
+            "package_metadata",
+            "ModuleMetadataV1FieldName",
+            iota_framework::package_metadata::ModuleMetadataV1FieldName
+        ),
+        entry!(
+            IotaFramework,
+            "package_metadata",
+            "ModulesMetadataFieldName",
+            iota_framework::package_metadata::ModulesMetadataFieldName
+        ),
+        entry!(
+            IotaFramework,
+            "package_metadata",
+            "ModuleName",
+            iota_framework::package_metadata::ModuleName
+        ),
+        entry!(
+            IotaFramework,
+            "module_metadata",
+            "ModuleMetadata",
+            iota_framework::module_metadata::ModuleMetadata
+        ),
+        entry!(
+            IotaFramework,
+            "module_metadata",
+            "ModuleMetadataKey",
+            iota_framework::module_metadata::ModuleMetadataKey
+        ),
+        entry!(
+            IotaFramework,
+            "module_metadata",
+            "ViewFunctionMetadataV1FieldName",
+            iota_framework::module_metadata::ViewFunctionMetadataV1FieldName
+        ),
+        entry!(
+            IotaFramework,
             "deny_list",
             "ConfigWriteCap",
             iota_framework::deny_list::ConfigWriteCap

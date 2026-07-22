@@ -45,6 +45,7 @@ where
 serialization_test!(Address);
 serialization_test!(CheckpointCommitment);
 serialization_test!(CheckpointContents);
+serialization_test!(CheckpointContentsV1);
 serialization_test!(CheckpointData);
 serialization_test!(CheckpointSequenceNumber);
 serialization_test!(CheckpointSummary);
@@ -140,6 +141,7 @@ serialization_test!(ProgrammableTransaction);
 serialization_test!(Publish);
 serialization_test!(RandomnessStateUpdate);
 serialization_test!(SignedTransaction);
+serialization_test!(SenderSignedTransaction);
 serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);
 serialization_test!(Transaction);

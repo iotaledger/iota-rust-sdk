@@ -11,6 +11,18 @@ mod _field_impls {
     use crate::v1::bcs::BcsData;
     #[allow(unused_imports)]
     use crate::v1::bcs::BcsDataFieldPathBuilder;
+    #[allow(unused_imports)]
+    use crate::v1::checkpoint::Checkpoint;
+    #[allow(unused_imports)]
+    use crate::v1::checkpoint::CheckpointFieldPathBuilder;
+    #[allow(unused_imports)]
+    use crate::v1::transaction::TransactionEffects;
+    #[allow(unused_imports)]
+    use crate::v1::transaction::TransactionEffectsFieldPathBuilder;
+    #[allow(unused_imports)]
+    use crate::v1::transaction::TransactionEvents;
+    #[allow(unused_imports)]
+    use crate::v1::transaction::TransactionEventsFieldPathBuilder;
     impl ValidatorCommitteeMember {
         pub const PUBLIC_KEY_FIELD: &'static MessageField = &MessageField {
             name: "public_key",
@@ -370,6 +382,14 @@ mod _field_impls {
             is_map: false,
             message_fields: Some(ProtocolConfig::FIELDS),
         };
+        pub const EPOCH_CLOSE_PROOF_FIELD: &'static MessageField = &MessageField {
+            name: "epoch_close_proof",
+            json_name: "epochCloseProof",
+            number: 10i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: Some(EpochCloseProof::FIELDS),
+        };
     }
     impl MessageFields for Epoch {
         const FIELDS: &'static [&'static MessageField] = &[
@@ -382,6 +402,7 @@ mod _field_impls {
             Self::END_FIELD,
             Self::REFERENCE_GAS_PRICE_FIELD,
             Self::PROTOCOL_CONFIG_FIELD,
+            Self::EPOCH_CLOSE_PROOF_FIELD,
         ];
     }
     impl Epoch {
@@ -439,6 +460,94 @@ mod _field_impls {
         pub fn protocol_config(mut self) -> ProtocolConfigFieldPathBuilder {
             self.path.push(Epoch::PROTOCOL_CONFIG_FIELD.name);
             ProtocolConfigFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn epoch_close_proof(mut self) -> EpochCloseProofFieldPathBuilder {
+            self.path.push(Epoch::EPOCH_CLOSE_PROOF_FIELD.name);
+            EpochCloseProofFieldPathBuilder::new_with_base(self.path)
+        }
+    }
+    impl EpochCloseProof {
+        pub const CHECKPOINT_FIELD: &'static MessageField = &MessageField {
+            name: "checkpoint",
+            json_name: "checkpoint",
+            number: 1i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: Some(Checkpoint::FIELDS),
+        };
+        pub const END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD: &'static MessageField = &MessageField {
+            name: "end_of_epoch_transaction_effects",
+            json_name: "endOfEpochTransactionEffects",
+            number: 2i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: Some(TransactionEffects::FIELDS),
+        };
+        pub const END_OF_EPOCH_TRANSACTION_EVENTS_FIELD: &'static MessageField = &MessageField {
+            name: "end_of_epoch_transaction_events",
+            json_name: "endOfEpochTransactionEvents",
+            number: 3i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: Some(TransactionEvents::FIELDS),
+        };
+        pub const BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS_FIELD: &'static MessageField = &MessageField {
+            name: "bcs_next_epoch_system_state_objects",
+            json_name: "bcsNextEpochSystemStateObjects",
+            number: 4i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(BcsData::FIELDS),
+        };
+    }
+    impl MessageFields for EpochCloseProof {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::CHECKPOINT_FIELD,
+            Self::END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD,
+            Self::END_OF_EPOCH_TRANSACTION_EVENTS_FIELD,
+            Self::BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS_FIELD,
+        ];
+    }
+    impl EpochCloseProof {
+        pub fn path_builder() -> EpochCloseProofFieldPathBuilder {
+            EpochCloseProofFieldPathBuilder::new()
+        }
+    }
+    pub struct EpochCloseProofFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl EpochCloseProofFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn checkpoint(mut self) -> CheckpointFieldPathBuilder {
+            self.path.push(EpochCloseProof::CHECKPOINT_FIELD.name);
+            CheckpointFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn end_of_epoch_transaction_effects(
+            mut self,
+        ) -> TransactionEffectsFieldPathBuilder {
+            self.path.push(EpochCloseProof::END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD.name);
+            TransactionEffectsFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn end_of_epoch_transaction_events(
+            mut self,
+        ) -> TransactionEventsFieldPathBuilder {
+            self.path.push(EpochCloseProof::END_OF_EPOCH_TRANSACTION_EVENTS_FIELD.name);
+            TransactionEventsFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn bcs_next_epoch_system_state_objects(mut self) -> BcsDataFieldPathBuilder {
+            self.path
+                .push(EpochCloseProof::BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS_FIELD.name);
+            BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
 }

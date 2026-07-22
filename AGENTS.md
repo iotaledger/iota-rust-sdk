@@ -110,7 +110,32 @@ cargo test --doc                 # Direct doc test invocation
 - **Naming**: crates `iota-sdk-*`, modules `snake_case`, types `PascalCase`, constants `UPPER_SNAKE_CASE`
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
 - **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]` and `#[cfg_attr(doc_cfg, doc(cfg(feature = "…")))]` for docs.rs visibility
-- **Comments**: Write comments for a future reader of the code — document what the code does and the invariants it relies on. Do not narrate the change being made, nor explain why a problem was fixed when that problem was only introduced within the same change. Keep comments concise and durable, not a changelog of in-session edits.
+- **Comments**: see [Writing style](#writing-style) below
+
+## Writing style
+
+These rules cover everything you write: function and variable names, code comments, commit messages, and PR and issue descriptions.
+
+### Code comments
+
+Write comments for a future reader of the code, and keep them concise and durable — not a changelog of in-session edits.
+
+- Doc comments are for the **caller** — what they need to know to call it correctly, not how it works inside.
+- Inline comments explain a non-obvious **why**, never a **what**; default to none.
+- Never embed conversational or change history ("added for X", "as discussed", PR/issue numbers), nor explain why a problem was fixed when that problem was only introduced within the same change — that belongs in the PR description or commit message, not the code.
+
+### PR and issue descriptions
+
+- Keep them compact and concise; bullet points over full paragraphs (see also **Keep PR descriptions short and skimmable** in the critical development notes).
+- Say at a high level _what_ the change does and _why_ — the code-level details belong in the diff, not the description.
+
+### Plain language, no coined terms
+
+Applies to all of the above, and to review comments and reports — all prose, not just code.
+
+Use plain words and terms already used in the codebase or the established domain, so a reader can follow the text without terminology the project doesn't already use. Do not invent a label for a concept and then reuse it as if it were established vocabulary — this is a recurring problem, treat it as a hard rule. Before naming a concept, check whether the repo already has a word for it and reuse that. If a phrase wouldn't appear in the code or a standard reference, drop the label and describe the thing directly.
+
+Self-check before submitting: scan for any noun phrase acting as a _name_ for an idea. If you coined it — not the codebase, not the domain — delete the label and state the idea in plain words.
 
 ## Important Files
 
