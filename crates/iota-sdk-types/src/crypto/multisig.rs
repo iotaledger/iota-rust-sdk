@@ -1067,24 +1067,31 @@ mod tests {
     fn multisig_standalone_bcs_framing() {
         use base64ct::{Base64, Encoding};
 
-        // A multisig fixture from mainnet, as the `bytes`-wrapped
-        // `UserSignature` form: `[uleb-len][0x03 flag][body]`.
-        let multisig_b64 = "sgIDAwCTLgVngjC4yeuvpAGKVkgcvIKVFUJnL1r6oFZScQVE5DNIz6kfxAGDRcVUczE9CUb7/sN/EuFJ8ot86Sdb8pAFASoQ91stRHXdW5dLy0BQ6v+7XWptawy2ItMyPk508p+PHdtZcm2aKl3lZGIvXe6MPY73E+1Hakv/xJbTYsw5SPMC5dx3gBwxds2GV12c7VUSqkyXamliSF1W/QBMufqrlmdIOZ1ox9gbsvIPtXYahfvKm8ozA7rsZWwRv8atsnyfYgcAAwANfas1jI2tqk76AEmnWwdDZVWxCjaCGbtoD3BXE0nXdQEBAg4XzVk55GsZZkGWjNdZkQuiV34n+nP944dtub7FvOsrAQIDR/uvI/A4q8TDCKJxEXoqTP+u3bxf+Bx1F7xsdKfttDABAgA=";
-        let user_signature_bcs = Base64::decode_vec(multisig_b64).unwrap();
-        let UserSignature::Multisig(sig) =
-            bcs::from_bytes::<UserSignature>(&user_signature_bcs).unwrap()
+        // A multisig `UserSignature` from a mainnet transaction, in the flat
+        // `[0x03 flag][body]` wire form (the `to_bytes` / explorer encoding):
+        // https://explorer.iota.org/txblock/BUPSmkG8QZgr1NtVNjFaJMYsArkaWMECs7RHbEZRZUEU?network=https%3A%2F%2Findexer.mainnet.iota.cafe
+        let multisig_b64 = "AwIA+zI2waYMirpLgCXsqGcuy+VPNToMkxYeBxkQVSgFdIS/TnAHQKs9FFAzHTfV2iSJuO25oIw5dnu9KEBSZwiqBQAf+R79IrKzolrY7mAM6TmE8T9sKk496ztesq0ao6a5BDFeH0QrIXJ68PZFAdEE86k3wh1WkeIYjxAMrIBpy9YBGAAFALurCXoe8wunaE2g6O2CtIZW4lSIf/fImJrdqRvZtlphAQCpMi2gCtRO9jNLl3bwc1x8IB/YYs1P6XpUEQbwzh2lGAEABYLKuo/1LUczMu80FayRheNYXavDC8l+QLX/s4S9i7QBAJYYQ5QWs/aT8+VwA+Vh3wswa90eqAaf6N4yzYUSXuTCAQBR6+eXlJ4GViO9z7QXRPSUaRPR9DlyDjc6S9lz61JNLgECAA==";
+        let flag_and_body = Base64::decode_vec(multisig_b64).unwrap();
+        let UserSignature::Multisig(sig) = UserSignature::from_bytes(&flag_and_body).unwrap()
         else {
             panic!("expected multisig signature");
         };
 
-        // The standalone BCS form of the inner multisig is the same
-        // `bytes`-wrapped `flag || body` blob as the whole `UserSignature`.
+        // `to_bytes` is the flat `flag || body`; the standalone BCS form wraps
+        // that same blob in a ULEB length prefix (identical to BCS-encoding the
+        // bytes themselves).
+        assert_eq!(
+            sig.to_bytes(),
+            flag_and_body,
+            "multisig `to_bytes` must be the flat `flag || body` wire form"
+        );
         assert_eq!(
             bcs::to_bytes(&sig).unwrap(),
-            user_signature_bcs,
-            "standalone BCS must be the length-prefixed `flag || body` wire form"
+            bcs::to_bytes(&flag_and_body).unwrap(),
+            "standalone BCS must be the ULEB-length-prefixed `flag || body` wire form"
         );
-        let decoded: MultisigAggregatedSignature = bcs::from_bytes(&user_signature_bcs).unwrap();
+        let decoded: MultisigAggregatedSignature =
+            bcs::from_bytes(&bcs::to_bytes(&sig).unwrap()).unwrap();
         assert_eq!(sig, decoded);
     }
 
