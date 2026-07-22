@@ -644,6 +644,116 @@ impl<C, L> TransactionBuilder<C, L> {
         self.reset()
     }
 
+    /// Send coins to multiple recipients, following the specified amount
+    /// list. The length of the recipients and amounts must be the same.
+    ///
+    /// The amounts specify quantities in the coins' smallest unit (NANOS for
+    /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
+    ///
+    /// The coins are merged into the first one, the amounts are split off it
+    /// in a single command, and each split coin is transferred to its
+    /// corresponding recipient, with one transfer command per unique
+    /// recipient. The remainder stays in the first coin.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// Passing [`unresolved::Argument::Gas`](Argument::Gas) as the only coin
+    /// splits the amounts off the gas coin, so no separate input coins are
+    /// needed.
+    ///
+    /// For a single recipient, consider using
+    /// [`TransactionBuilder::send_coins()`] or
+    /// [`TransactionBuilder::send_iota()`] instead.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the number of recipients does not match the number of
+    /// amounts.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let from_address =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address_0 =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let to_address_1 =
+    ///     Address::from_hex("0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c")?;
+    ///
+    /// // This is a coin of type
+    /// // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
+    /// let coin =
+    ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.pay(
+    ///     [coin],
+    ///     vec![to_address_0, to_address_1],
+    ///     [50000000000u64, 25000000000],
+    /// );
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn pay<T: PTBArgumentList, U: PTBArgumentList>(
+        &mut self,
+        coins: T,
+        recipients: Vec<Address>,
+        amounts: U,
+    ) -> &mut TransactionBuilder<C> {
+        let mut coin_args = self.apply_arguments(coins);
+        let coin = if coin_args.is_empty() {
+            return self.reset();
+        } else if let [coin] = coin_args[..] {
+            coin
+        } else {
+            let primary_coin = coin_args.remove(0);
+            self.command(Command::MergeCoins(MergeCoins {
+                coin: primary_coin,
+                coins_to_merge: coin_args,
+            }));
+            primary_coin
+        };
+        let amount_args = self.apply_arguments(amounts);
+        assert_eq!(
+            recipients.len(),
+            amount_args.len(),
+            "recipients and amounts length mismatch"
+        );
+        let Argument::Result(split) = self.command(Command::SplitCoins(SplitCoins {
+            coin,
+            amounts: amount_args,
+        })) else {
+            unreachable!("command() always returns a result argument");
+        };
+        // Group repeated recipients to minimize the number of transfer
+        // commands.
+        let mut transfers: Vec<(Address, Vec<Argument>)> = Vec::new();
+        for (i, recipient) in recipients.into_iter().enumerate() {
+            let arg = Argument::NestedResult(split, i as u16);
+            match transfers.iter_mut().find(|(r, _)| *r == recipient) {
+                Some((_, objects)) => objects.push(arg),
+                None => transfers.push((recipient, vec![arg])),
+            }
+        }
+        for (recipient, objects) in transfers {
+            let address = self.pure(recipient);
+            self.command(Command::TransferObjects(TransferObjects {
+                objects,
+                address,
+            }));
+        }
+        self.reset()
+    }
+
     /// Merge multiple coins into one.
     ///
     /// This method combines the balances of multiple coins of the same coin
@@ -1562,5 +1672,123 @@ mod tests {
         assert!(matches!(split.coin, Argument::Input(1)));
         assert!(matches!(split.amounts[0], Argument::Input(2)));
         assert!(matches!(split.amounts[1], Argument::Input(0)));
+    }
+
+    /// `pay` merges all coins into the first one, splits all amounts off it
+    /// in a single command, and groups repeated recipients into one transfer
+    /// command each.
+    #[test]
+    fn pay_merges_into_first_coin_and_groups_recipients() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient_a: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+        let recipient_b: Address =
+            "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c"
+                .parse()
+                .unwrap();
+        let coin_id = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectId::new(id_bytes)
+        };
+        let coins = [coin_id(0), coin_id(1), coin_id(2)];
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay(
+            coins,
+            vec![recipient_a, recipient_b, recipient_a],
+            [100u64, 200, 300],
+        );
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 4);
+
+        // The remaining coins are merged into the first one.
+        let Command::MergeCoins(merge) = &commands[0] else {
+            panic!("expected MergeCoins command");
+        };
+        let Argument::Input(primary) = merge.coin else {
+            panic!("expected the primary coin to be an input");
+        };
+        assert_eq!(
+            builder.data.inputs[&primary].kind.object_id(),
+            Some(coins[0])
+        );
+        assert_eq!(merge.coins_to_merge.len(), 2);
+
+        // All amounts are split off the merged coin in a single command.
+        let Command::SplitCoins(split) = &commands[1] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Input(i) if i == primary));
+        assert_eq!(split.amounts.len(), 3);
+
+        // The repeated recipient gets a single transfer command with both of
+        // its split coins.
+        let Command::TransferObjects(transfer_a) = &commands[2] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer_a.objects[..],
+            [Argument::NestedResult(1, 0), Argument::NestedResult(1, 2)]
+        ));
+        let Command::TransferObjects(transfer_b) = &commands[3] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer_b.objects[..],
+            [Argument::NestedResult(1, 1)]
+        ));
+    }
+
+    /// `pay` with [`Argument::Gas`] as the only coin splits the amounts off
+    /// the gas coin without a merge command.
+    #[test]
+    fn pay_from_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay([Argument::Gas], vec![recipient, recipient], [100u64, 200]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 2);
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer.objects[..],
+            [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
+        ));
+    }
+
+    /// `pay` panics on a recipients/amounts length mismatch.
+    #[test]
+    #[should_panic(expected = "recipients and amounts length mismatch")]
+    fn pay_length_mismatch_panics() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay([Argument::Gas], vec![recipient], [100u64, 200]);
     }
 }
