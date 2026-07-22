@@ -19,6 +19,14 @@ pub struct Table {
     pub size: u64,
 }
 
+impl crate::TreeDisplay for Table {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Table")?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Size", &self.size, true)
+    }
+}
+
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Registry {
@@ -30,6 +38,14 @@ pub struct Registry {
     pub reverse_registry: Table,
 }
 
+impl crate::TreeDisplay for Registry {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Registry")?;
+        w.child("Registry", &self.registry, false)?;
+        w.child("Reverse Registry", &self.reverse_registry, true)
+    }
+}
+
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct RegistryEntry {
@@ -38,12 +54,30 @@ pub struct RegistryEntry {
     pub name_record: NameRecord,
 }
 
+impl crate::TreeDisplay for RegistryEntry {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Registry Entry")?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Name", &self.name, false)?;
+        w.child("Name Record", &self.name_record, true)
+    }
+}
+
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct ReverseRegistryEntry {
     pub id: ObjectId,
     pub address: Address,
     pub name: Name,
+}
+
+impl crate::TreeDisplay for ReverseRegistryEntry {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Reverse Registry Entry")?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Address", &self.address, false)?;
+        w.leaf("Name", &self.name, true)
+    }
 }
 
 /// A single record in the registry.
@@ -66,6 +100,36 @@ pub struct NameRecord {
     #[cfg_attr(feature = "serde", serde(with = "serde_vecmap"))]
     pub data: HashMap<String, String>,
 }
+
+impl crate::TreeDisplay for NameRecord {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Name Record")?;
+        w.leaf("NFT ID", &self.nft_id, false)?;
+        w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
+        w.option("Target Address", &self.target_address, false)?;
+        w.branch("Data", true, |w| {
+            if self.data.is_empty() {
+                w.leaf("Entries", &"[]", true)
+            } else {
+                let mut entries: Vec<_> = self.data.iter().collect();
+                entries.sort_by_key(|(k, _)| *k);
+                let last_idx = entries.len() - 1;
+                for (i, (k, v)) in entries.iter().enumerate() {
+                    w.leaf(k, v, i == last_idx)?;
+                }
+                Ok(())
+            }
+        })
+    }
+}
+
+crate::impl_tree_display!(
+    Table,
+    Registry,
+    RegistryEntry,
+    ReverseRegistryEntry,
+    NameRecord
+);
 
 #[cfg(feature = "serde")]
 mod serde_vecmap {

@@ -71,6 +71,15 @@ impl ObjectReference {
     }
 }
 
+impl crate::TreeDisplay for ObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Reference")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("Digest", &self.digest, true)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -190,6 +199,15 @@ impl ObjectData {
         match self {
             Self::Struct(v) => v.id(),
             Self::Package(m) => m.id(),
+        }
+    }
+}
+
+impl crate::TreeDisplay for ObjectData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            ObjectData::Struct(s) => s.fmt_tree(w),
+            ObjectData::Package(p) => p.fmt_tree(w),
         }
     }
 }
@@ -414,6 +432,15 @@ impl MoveStruct {
     #[cfg(feature = "serde")]
     pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Result<T, bcs::Error> {
         bcs::from_bytes(self.contents())
+    }
+}
+
+impl crate::TreeDisplay for MoveStruct {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Struct")?;
+        w.leaf("Type", &self.object_type, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("Contents", &hex::encode(&self.contents), true)
     }
 }
 
@@ -645,6 +672,18 @@ impl Object {
     }
 }
 
+impl crate::TreeDisplay for Object {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object")?;
+        w.leaf("Object ID", &self.id(), false)?;
+        w.leaf("Version", &self.version(), false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Type", &self.object_type(), false)?;
+        w.leaf("Previous Tx", &self.previous_transaction, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, true)
+    }
+}
+
 /// An object part of the initial chain state
 ///
 /// `GenesisObject`'s are included as a part of genesis, the initial
@@ -702,6 +741,24 @@ impl GenesisObject {
         self.data.id()
     }
 }
+
+impl crate::TreeDisplay for GenesisObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Genesis Object")?;
+        w.leaf("Object ID", &self.object_id(), false)?;
+        w.leaf("Version", &self.version(), false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Type", &self.object_type(), true)
+    }
+}
+
+crate::impl_tree_display!(
+    ObjectReference,
+    ObjectData,
+    MoveStruct,
+    Object,
+    GenesisObject
+);
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]

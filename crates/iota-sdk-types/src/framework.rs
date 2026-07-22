@@ -53,6 +53,17 @@ impl Coin {
     }
 }
 
+impl crate::TreeDisplay for Coin {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Coin")?;
+        w.leaf("Coin Type", &self.coin_type, false)?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Balance", &self.balance, true)
+    }
+}
+
+crate::impl_tree_display!(Coin);
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum CoinFromObjectError {

@@ -67,6 +67,14 @@ mod tests {
     }
 }
 
+impl std::fmt::Display for TransactionEffects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransactionEffects::V1(v1) => write!(f, "{v1}"),
+        }
+    }
+}
+
 /// Defines what happened to an ObjectId during execution
 ///
 /// # BCS
@@ -78,7 +86,7 @@ mod tests {
 ///              / %d01   ; Created
 ///              / %d02   ; Deleted
 /// ```
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Deserialize, serde::Serialize),

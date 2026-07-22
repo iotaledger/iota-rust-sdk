@@ -50,13 +50,17 @@ pub enum PublicKeyError {
 ///                      (secp256r1-flag secp256r1-public-key) /
 ///                      (passkey-flag passkey-public-key)
 /// ```
-#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum PublicKey {
+    #[display("Ed25519({_0})")]
     Ed25519(Ed25519PublicKey),
+    #[display("Secp256k1({_0})")]
     Secp256k1(Secp256k1PublicKey),
+    #[display("Secp256r1({_0})")]
     Secp256r1(Secp256r1PublicKey),
+    #[display("Passkey({_0})")]
     Passkey(PasskeyPublicKey),
 }
 

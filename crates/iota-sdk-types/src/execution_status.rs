@@ -83,6 +83,21 @@ impl ExecutionStatus {
     }
 }
 
+impl std::fmt::Display for ExecutionStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionStatus::Success => write!(f, "Success"),
+            ExecutionStatus::Failure { error, command } => {
+                write!(f, "Failure: {error}")?;
+                if let Some(cmd) = command {
+                    write!(f, " (command {cmd})")?;
+                }
+                Ok(())
+            }
+        }
+    }
+}
+
 fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
     struct W<'a>(&'a Option<MoveLocation>);
     impl core::fmt::Display for W<'_> {

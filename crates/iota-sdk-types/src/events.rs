@@ -19,6 +19,13 @@ use super::{Address, Identifier, ObjectId, StructTag};
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TransactionEvents(pub Vec<Event>);
 
+impl crate::TreeDisplay for TransactionEvents {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Events")?;
+        w.vec_children("Events", &self.0, true)
+    }
+}
+
 /// An event
 ///
 /// # BCS
@@ -78,3 +85,16 @@ impl Event {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
     }
 }
+
+impl crate::TreeDisplay for Event {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Event")?;
+        w.leaf("Package ID", &self.package_id, false)?;
+        w.leaf("Module", &self.module, false)?;
+        w.leaf("Sender", &self.sender, false)?;
+        w.leaf("Type", &self.type_, false)?;
+        w.leaf("Contents", &hex::encode(&self.contents), true)
+    }
+}
+
+crate::impl_tree_display!(TransactionEvents, Event);

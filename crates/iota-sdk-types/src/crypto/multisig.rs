@@ -100,6 +100,14 @@ impl MultisigMember {
     }
 }
 
+impl crate::TreeDisplay for MultisigMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Member")?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Weight", &self.weight, true)
+    }
+}
+
 /// A multisig committee
 ///
 /// A `MultisigCommittee` is a set of members who collectively control a single
@@ -244,6 +252,14 @@ impl MultisigCommittee {
         }
 
         Ok(())
+    }
+}
+
+impl crate::TreeDisplay for MultisigCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Committee")?;
+        w.vec_children("Members", &self.members, false)?;
+        w.leaf("Threshold", &self.threshold, true)
     }
 }
 
@@ -428,6 +444,21 @@ impl MultisigAggregatedSignature {
     }
 }
 
+impl crate::TreeDisplay for MultisigAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Aggregated Signature")?;
+        w.leaf("Committee", &self.committee, false)?;
+        w.vec_inline("Signatures", &self.signatures, false)?;
+        w.leaf("Bitmap", &self.bitmap, true)
+    }
+}
+
+crate::impl_tree_display!(
+    MultisigMember,
+    MultisigCommittee,
+    MultisigAggregatedSignature
+);
+
 /// Interpret a bitmap of 01s as a list of indices that is set to 1s.
 /// e.g. 22 = 0b10110, then the result is [1, 2, 4].
 fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
@@ -460,13 +491,17 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
+    #[display("Ed25519({_0})")]
     Ed25519(Ed25519Signature),
+    #[display("Secp256k1({_0})")]
     Secp256k1(Secp256k1Signature),
+    #[display("Secp256r1({_0})")]
     Secp256r1(Secp256r1Signature),
+    #[display("Passkey({_0})")]
     Passkey(PasskeyAuthenticator),
 }
 

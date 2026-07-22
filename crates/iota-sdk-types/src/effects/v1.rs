@@ -70,6 +70,27 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<EffectsAuxDataDigest>,
 }
 
+impl crate::TreeDisplay for TransactionEffectsV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Effects")?;
+        w.leaf("Status", &self.status, false)?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.child("Gas Cost Summary", &self.gas_cost_summary, false)?;
+        w.leaf("Transaction Digest", &self.transaction_digest, false)?;
+        w.option("Gas Object Index", &self.gas_object_index, false)?;
+        w.option("Events Digest", &self.events_digest, false)?;
+        w.vec_inline("Dependencies", &self.dependencies, false)?;
+        w.leaf("Lamport Version", &self.lamport_version, false)?;
+        w.vec_children("Changed Objects", &self.changed_objects, false)?;
+        w.vec_children(
+            "Unchanged Shared Objects",
+            &self.unchanged_shared_objects,
+            false,
+        )?;
+        w.option("Auxiliary Data Digest", &self.auxiliary_data_digest, true)
+    }
+}
+
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -96,6 +117,16 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
+impl crate::TreeDisplay for ChangedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Changed Object")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Input State", &self.input_state, false)?;
+        w.leaf("Output State", &self.output_state, false)?;
+        w.leaf("ID Operation", &self.id_operation, true)
+    }
+}
+
 /// A shared object that wasn't changed during execution
 ///
 /// # BCS
@@ -114,6 +145,16 @@ pub struct UnchangedSharedObject {
     pub object_id: ObjectId,
     pub kind: UnchangedSharedKind,
 }
+
+impl crate::TreeDisplay for UnchangedSharedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Unchanged Shared Object")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Kind", &self.kind, true)
+    }
+}
+
+crate::impl_tree_display!(TransactionEffectsV1, ChangedObject, UnchangedSharedObject);
 
 /// Type of unchanged shared object
 ///
@@ -161,6 +202,28 @@ impl UnchangedSharedKind {
         Cancelled,
         PerEpochConfig
     );
+}
+
+impl std::fmt::Display for UnchangedSharedKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                write!(f, "ReadOnlyRoot(version: {version}, digest: {digest})")
+            }
+            UnchangedSharedKind::MutateDeleted { version } => {
+                write!(f, "MutateDeleted(version: {version})")
+            }
+            UnchangedSharedKind::ReadDeleted { version } => {
+                write!(f, "ReadDeleted(version: {version})")
+            }
+            UnchangedSharedKind::Cancelled { version } => {
+                write!(f, "Cancelled(version: {version})")
+            }
+            UnchangedSharedKind::PerEpochConfig => {
+                write!(f, "PerEpochConfig")
+            }
+        }
+    }
 }
 
 /// State of an object prior to execution
@@ -229,6 +292,24 @@ impl ObjectIn {
 
     pub fn owner(&self) -> Owner {
         self.owner_opt().expect("object does not exist")
+    }
+}
+
+impl std::fmt::Display for ObjectIn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectIn::Missing => write!(f, "Missing"),
+            ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            } => {
+                write!(
+                    f,
+                    "Data(version: {version}, digest: {digest}, owner: {owner})"
+                )
+            }
+        }
     }
 }
 
@@ -310,5 +391,19 @@ impl ObjectOut {
 
     pub fn package_digest(&self) -> ObjectDigest {
         self.package_digest_opt().expect("package does not exist")
+    }
+}
+
+impl std::fmt::Display for ObjectOut {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectOut::Missing => write!(f, "Missing"),
+            ObjectOut::ObjectWrite { digest, owner } => {
+                write!(f, "ObjectWrite(digest: {digest}, owner: {owner})")
+            }
+            ObjectOut::PackageWrite { version, digest } => {
+                write!(f, "PackageWrite(version: {version}, digest: {digest})")
+            }
+        }
     }
 }

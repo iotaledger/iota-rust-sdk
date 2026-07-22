@@ -5,6 +5,8 @@
 #[cfg(feature = "serde")]
 use std::str::FromStr;
 
+use crate::TreeDisplay;
+
 pub const INTENT_PREFIX_LENGTH: usize = 3;
 
 #[derive(Debug, thiserror::Error)]
@@ -121,6 +123,17 @@ impl Intent {
     }
 }
 
+impl crate::TreeDisplay for Intent {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Intent")?;
+        w.leaf("Scope", &self.scope, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("App ID", &self.app_id, true)
+    }
+}
+
+crate::impl_tree_display!(Intent);
+
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
     type Err = IntentError;
@@ -145,7 +158,7 @@ impl FromStr for Intent {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
@@ -205,7 +218,7 @@ impl TryFrom<u8> for IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
@@ -245,7 +258,7 @@ impl TryFrom<u8> for IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
@@ -292,11 +305,26 @@ impl<T> IntentMessage<T> {
     }
 }
 
+impl<T: std::fmt::Display> crate::TreeDisplay for IntentMessage<T> {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Intent Message")?;
+        w.child("Intent", &self.intent, false)?;
+        w.leaf("Value", &self.value, true)
+    }
+}
+
+impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
+    }
+}
+
 /// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`. See
 /// `iota_types::crypto::SignatureScheme::flag()`.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Deserialize_repr, serde_repr::Serialize_repr)
@@ -312,3 +340,9 @@ pub enum HashingIntentScope {
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
+
+impl std::fmt::Display for PersonalMessage<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "PersonalMessage({})", hex::encode(&self.0))
+    }
+}
