@@ -224,6 +224,14 @@ pub enum PTBArgument {
     Gas,
 }
 
+/// A single recipient paired with the amount to send it, used by the `pay`
+/// methods. Pairing the two keeps them from getting out of sync.
+#[derive(uniffi::Record)]
+pub struct Payment {
+    pub recipient: Arc<Address>,
+    pub amount: Arc<PTBArgument>,
+}
+
 #[uniffi::export]
 impl PTBArgument {
     #[uniffi::constructor]

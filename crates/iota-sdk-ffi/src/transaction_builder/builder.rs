@@ -12,7 +12,7 @@ use crate::{
     error::Result,
     graphql::client::GraphQLClient,
     transaction_builder::{
-        ptb_arg::{MoveArg, PTBArgument},
+        ptb_arg::{MoveArg, PTBArgument, Payment},
         signer::TransactionSigner,
     },
     types::{
@@ -239,34 +239,43 @@ impl TransactionBuilder {
         self
     }
 
-    /// Send coins to multiple recipients, following the specified amount
-    /// list. The length of the recipients and amounts must be the same.
+    /// Send coins to multiple recipients, one amount per recipient.
     ///
-    /// The amounts specify quantities in the coins' smallest unit (NANOS for
-    /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
+    /// Each payment pairs a recipient with the amount to send it, so the two
+    /// can never get out of sync. The amounts specify quantities in the coins'
+    /// smallest unit (NANOS for IOTA coins, where 1 IOTA equals 1_000_000_000
+    /// NANOS).
     ///
     /// The coins are merged into the first one, the amounts are split off it
     /// in a single command, and each split coin is transferred to its
-    /// corresponding recipient, with one transfer command per unique
-    /// recipient. The remainder stays in the first coin.
+    /// recipient, with one transfer command per unique recipient. The
+    /// remainder stays in the first coin.
     ///
     /// All provided coins must have the same coin type. Mixing coins of
     /// different types will result in an error.
     ///
     /// Passing the gas coin as the only coin splits the amounts off it, so no
-    /// separate input coins are needed.
+    /// separate input coins are needed; `pay_iota` is a shorthand for that.
     ///
     /// For a single recipient, consider using
     /// `TransactionBuilder::send_coins()` or `TransactionBuilder::send_iota()`
     /// instead.
-    pub fn pay(
-        self: Arc<Self>,
-        coins: Vec<Arc<PTBArgument>>,
-        recipients: Vec<Arc<Address>>,
-        amounts: Vec<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
         self.write(|builder| {
-            builder.pay(coins, recipients.iter().map(|r| ***r).collect(), amounts);
+            builder.pay(
+                coins,
+                payments.into_iter().map(|p| (**p.recipient, p.amount)),
+            );
+        });
+        self
+    }
+
+    /// Send IOTA to multiple recipients, splitting the amounts off the gas
+    /// coin. Shorthand for `pay` with the gas coin, so no input coins need to
+    /// be provided.
+    pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
         });
         self
     }
