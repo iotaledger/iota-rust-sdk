@@ -8,7 +8,14 @@ include!("../../../generated/iota.grpc.v1.epoch.accessors.rs");
 
 use tap::Pipe;
 
-use crate::{proto::TryFromProtoError, v1::bcs::BcsData};
+use crate::{
+    proto::TryFromProtoError,
+    v1::{
+        bcs::BcsData,
+        checkpoint::Checkpoint,
+        transaction::{TransactionEffects, TransactionEvents},
+    },
+};
 
 // ValidatorCommitteeMember
 
@@ -177,6 +184,73 @@ impl Epoch {
         self.protocol_config
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing(Self::PROTOCOL_CONFIG_FIELD.name))
+    }
+
+    /// Get the proof of how this epoch closed.
+    ///
+    /// Returns `Ok(None)` for the current in-progress epoch (field not yet
+    /// set).
+    ///
+    /// Requires `epoch_close_proof` in the read_mask.
+    pub fn epoch_close_proof(&self) -> Result<Option<&EpochCloseProof>, TryFromProtoError> {
+        Ok(self.epoch_close_proof.as_ref())
+    }
+}
+
+// EpochCloseProof
+
+impl EpochCloseProof {
+    /// Get the certified checkpoint that closed the epoch.
+    ///
+    /// Requires `epoch_close_proof.checkpoint` in the read_mask.
+    pub fn checkpoint(&self) -> Result<&Checkpoint, TryFromProtoError> {
+        self.checkpoint
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::CHECKPOINT_FIELD.name))
+    }
+
+    /// Get the effects of the epoch-change transaction.
+    ///
+    /// Requires `epoch_close_proof.end_of_epoch_transaction_effects` in the
+    /// read_mask.
+    pub fn end_of_epoch_transaction_effects(
+        &self,
+    ) -> Result<&TransactionEffects, TryFromProtoError> {
+        self.end_of_epoch_transaction_effects
+            .as_ref()
+            .ok_or_else(|| {
+                TryFromProtoError::missing(Self::END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD.name)
+            })
+    }
+
+    /// Get the events emitted by the epoch-change transaction.
+    ///
+    /// May be empty on safe-mode boundaries, which mutate the system state
+    /// without emitting events.
+    ///
+    /// Requires `epoch_close_proof.end_of_epoch_transaction_events` in the
+    /// read_mask.
+    pub fn end_of_epoch_transaction_events(&self) -> Result<&TransactionEvents, TryFromProtoError> {
+        self.end_of_epoch_transaction_events
+            .as_ref()
+            .ok_or_else(|| {
+                TryFromProtoError::missing(Self::END_OF_EPOCH_TRANSACTION_EVENTS_FIELD.name)
+            })
+    }
+
+    /// Get the raw BCS bytes of the system-state wrapper object (`0x5`) and
+    /// its inner state object, as written by this epoch boundary for the
+    /// next epoch's start state.
+    ///
+    /// Each entry is preserved byte-for-byte as originally written (not
+    /// wrapped, unlike `Object.bcs` elsewhere in this API), so their digests
+    /// can be verified against the written-object digests in
+    /// `end_of_epoch_transaction_effects`.
+    ///
+    /// Requires `epoch_close_proof.bcs_next_epoch_system_state_objects` in
+    /// the read_mask.
+    pub fn bcs_next_epoch_system_state_objects(&self) -> &[BcsData] {
+        &self.bcs_next_epoch_system_state_objects
     }
 }
 
