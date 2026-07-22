@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
 
 ### Example for custom faucet service.
 
-Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `https://faucet.example.com`).
+Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `http://localhost:9123`).
 
 ```rust, ignore
 use iota_graphql_client::faucet::FaucetClient;
@@ -82,7 +82,7 @@ use std::str::FromStr;
 async fn main() -> Result<()> {
     let address = Address::from_str("IOTA_ADDRESS_HERE")?;
     // Request gas from the faucet and wait until a coin is received
-    let faucet = FaucetClient::new("https://faucet.example.com").request_and_wait(address).await?;
+    let faucet = FaucetClient::new("http://localhost:9123").request_and_wait(address).await?;
     if let Some(resp) = faucet {
         let coins = resp.sent;
         for coin in coins {
