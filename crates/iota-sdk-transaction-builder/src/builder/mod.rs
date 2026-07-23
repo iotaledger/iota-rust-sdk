@@ -658,9 +658,9 @@ impl<C, L> TransactionBuilder<C, L> {
     /// All provided coins must have the same coin type. Mixing coins of
     /// different types will result in an error.
     ///
-    /// Passing [`unresolved::Argument::Gas`](Argument::Gas) as the only coin
-    /// splits the amounts off the gas coin, so no separate input coins are
-    /// needed.
+    /// To pay IOTA directly from the gas coin, use
+    /// [`TransactionBuilder::pay_iota()`], or pass
+    /// [`unresolved::Argument::Gas`](Argument::Gas) as the only coin.
     ///
     /// For a single recipient, consider using
     /// [`TransactionBuilder::send_coins()`] or
@@ -752,6 +752,57 @@ impl<C, L> TransactionBuilder<C, L> {
             }));
         }
         self.reset()
+    }
+
+    /// Send IOTA to multiple recipients, following the specified amount
+    /// list. The length of the recipients and amounts must be the same.
+    ///
+    /// The amounts specify quantities in NANOS, where 1 IOTA equals
+    /// 1_000_000_000 NANOS. They are split off the gas coin in a single
+    /// command, and each split coin is transferred to its corresponding
+    /// recipient, with one transfer command per unique recipient.
+    ///
+    /// To pay with specific coins, or with a coin type other than IOTA, use
+    /// [`TransactionBuilder::pay()`]. For a single recipient, consider using
+    /// [`TransactionBuilder::send_iota()`] instead.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the number of recipients does not match the number of
+    /// amounts.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::Address;
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let from_address =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address_0 =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let to_address_1 =
+    ///     Address::from_hex("0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.pay_iota(
+    ///     vec![to_address_0, to_address_1],
+    ///     [50000000000u64, 25000000000],
+    /// );
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn pay_iota<U: PTBArgumentList>(
+        &mut self,
+        recipients: Vec<Address>,
+        amounts: U,
+    ) -> &mut TransactionBuilder<C> {
+        self.pay([Argument::Gas], recipients, amounts)
     }
 
     /// Merge multiple coins into one.
@@ -1742,6 +1793,37 @@ mod tests {
         assert!(matches!(
             transfer_b.objects[..],
             [Argument::NestedResult(1, 1)]
+        ));
+    }
+
+    /// `pay_iota` splits the amounts off the gas coin without a merge
+    /// command.
+    #[test]
+    fn pay_iota_from_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay_iota(vec![recipient, recipient], [100u64, 200]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 2);
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer.objects[..],
+            [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
         ));
     }
 
