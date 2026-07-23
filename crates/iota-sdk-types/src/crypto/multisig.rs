@@ -74,9 +74,11 @@ pub enum MultisigError {
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigMember {
     public_key: PublicKey,
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u8"))]
     weight: WeightUnit,
 }
 
@@ -124,11 +126,13 @@ impl MultisigMember {
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigCommittee {
     /// A list of committee members and their corresponding weight.
     members: Vec<MultisigMember>,
     /// If the total weight of the public keys corresponding to verified
     /// signatures is larger than threshold, the Multisig is verified.
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u16"))]
     threshold: ThresholdUnit,
 }
 
@@ -273,6 +277,7 @@ impl MultisigCommittee {
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
@@ -281,6 +286,7 @@ pub struct MultisigAggregatedSignature {
     signatures: Vec<MultisigMemberSignature>,
     /// A bitmap that indicates the position of which public key the signature
     /// should be authenticated with.
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u16"))]
     bitmap: BitmapUnit,
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
@@ -585,7 +591,7 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-mod serialization {
+pub(crate) mod serialization {
     use std::{
         borrow::Cow,
         hash::{Hash, Hasher},
@@ -599,18 +605,40 @@ mod serialization {
     use super::*;
     use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
+    /// Owned wire shape of an aggregated multisig: the flat
+    /// `signatures || bitmap || committee` body without the scheme flag or
+    /// length prefix. `UserSignatureBody::Multisig` embeds this type directly
+    /// (the enum tag supplies the flag and the outer `UserSignature` the
+    /// length prefix), while `MultisigAggregatedSignature`'s own serde keeps
+    /// the historical `bytes`-wrapped `flag || body` form.
     #[derive(serde::Deserialize)]
-    pub struct Multisig {
+    pub(crate) struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
         committee: MultisigCommittee,
     }
 
     #[derive(serde::Serialize)]
-    pub struct MultisigRef<'a> {
+    struct MultisigRef<'a> {
         signatures: &'a [MultisigMemberSignature],
         bitmap: BitmapUnit,
         committee: &'a MultisigCommittee,
+    }
+
+    impl TryFrom<Multisig> for MultisigAggregatedSignature {
+        type Error = SignatureFromBytesError;
+
+        fn try_from(multisig: Multisig) -> Result<Self, Self::Error> {
+            let multisig = Self {
+                signatures: multisig.signatures,
+                bitmap: multisig.bitmap,
+                committee: multisig.committee,
+            };
+            multisig
+                .validate()
+                .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
+            Ok(multisig)
+        }
     }
 
     #[derive(serde::Deserialize)]
@@ -668,10 +696,10 @@ mod serialization {
     }
 
     impl MultisigAggregatedSignature {
+        /// Encode this aggregated signature as `flag || bcs-body`, where
+        /// `flag` is the multisig scheme byte (`0x03`).
         pub fn to_bytes(&self) -> Vec<u8> {
-            let mut buf = Vec::new();
-            buf.push(SignatureScheme::Multisig as u8);
-
+            let mut buf = vec![SignatureScheme::Multisig as u8];
             let multisig = MultisigRef {
                 signatures: &self.signatures,
                 bitmap: self.bitmap,
@@ -692,29 +720,33 @@ mod serialization {
                 return Err(SignatureFromBytesError::new("invalid multisig flag"));
             }
 
-            if let Ok(multisig) = bcs::from_bytes::<Multisig>(tail) {
-                let multisig = Self {
-                    signatures: multisig.signatures,
-                    bitmap: multisig.bitmap,
-                    committee: multisig.committee,
-                };
-                multisig
-                    .validate()
-                    .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
-                Ok(multisig)
-            } else {
-                Err(SignatureFromBytesError::new("invalid multisig"))
-            }
+            bcs::from_bytes::<Multisig>(tail)
+                .map_err(|_| SignatureFromBytesError::new("invalid multisig"))?
+                .try_into()
         }
     }
 
+    /// Wire shape for `MultisigMemberSignature`.
+    ///
+    /// The `ZkLoginDeprecated` placeholder pins `Passkey` at flag `%d04`; it
+    /// is rejected on deserialization. The passkey arm serializes through
+    /// `PasskeyAuthenticator`'s own serde, i.e. as length-prefixed `bytes`
+    /// containing `passkey-flag || passkey-authenticator`.
     #[derive(serde::Deserialize, serde::Serialize)]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "multisig-member-signature")
+    )]
     enum MemberSignature {
         Ed25519(Ed25519Signature),
         Secp256k1(Secp256k1Signature),
         Secp256r1(Secp256r1Signature),
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(skip))]
         ZkLoginDeprecated,
-        Passkey(PasskeyAuthenticator),
+        Passkey(
+            #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "bytes"))] PasskeyAuthenticator,
+        ),
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -1024,6 +1056,72 @@ mod tests {
         assert_eq!(
             sig, decoded,
             "to_base64/from_base64 must be inverses of each other"
+        );
+    }
+
+    /// A standalone `MultisigAggregatedSignature` BCS-serializes as
+    /// length-prefixed bytes containing `multisig-flag || body`, exactly the
+    /// `to_bytes` form. A round-trip test cannot detect losing (or doubling)
+    /// that framing, so it is pinned here byte-by-byte.
+    #[test]
+    fn multisig_standalone_bcs_framing() {
+        use base64ct::{Base64, Encoding};
+
+        // A multisig `UserSignature` from a mainnet transaction, in the flat
+        // `[0x03 flag][body]` wire form (the `to_bytes` / explorer encoding):
+        // https://explorer.iota.org/txblock/BUPSmkG8QZgr1NtVNjFaJMYsArkaWMECs7RHbEZRZUEU?network=https%3A%2F%2Findexer.mainnet.iota.cafe
+        let multisig_b64 = "AwIA+zI2waYMirpLgCXsqGcuy+VPNToMkxYeBxkQVSgFdIS/TnAHQKs9FFAzHTfV2iSJuO25oIw5dnu9KEBSZwiqBQAf+R79IrKzolrY7mAM6TmE8T9sKk496ztesq0ao6a5BDFeH0QrIXJ68PZFAdEE86k3wh1WkeIYjxAMrIBpy9YBGAAFALurCXoe8wunaE2g6O2CtIZW4lSIf/fImJrdqRvZtlphAQCpMi2gCtRO9jNLl3bwc1x8IB/YYs1P6XpUEQbwzh2lGAEABYLKuo/1LUczMu80FayRheNYXavDC8l+QLX/s4S9i7QBAJYYQ5QWs/aT8+VwA+Vh3wswa90eqAaf6N4yzYUSXuTCAQBR6+eXlJ4GViO9z7QXRPSUaRPR9DlyDjc6S9lz61JNLgECAA==";
+        let flag_and_body = Base64::decode_vec(multisig_b64).unwrap();
+        let UserSignature::Multisig(sig) = UserSignature::from_bytes(&flag_and_body).unwrap()
+        else {
+            panic!("expected multisig signature");
+        };
+
+        // `to_bytes` is the flat `flag || body`; the standalone BCS form wraps
+        // that same blob in a ULEB length prefix (identical to BCS-encoding the
+        // bytes themselves).
+        assert_eq!(
+            sig.to_bytes(),
+            flag_and_body,
+            "multisig `to_bytes` must be the flat `flag || body` wire form"
+        );
+        assert_eq!(
+            bcs::to_bytes(&sig).unwrap(),
+            bcs::to_bytes(&flag_and_body).unwrap(),
+            "standalone BCS must be the ULEB-length-prefixed `flag || body` wire form"
+        );
+        let decoded: MultisigAggregatedSignature =
+            bcs::from_bytes(&bcs::to_bytes(&sig).unwrap()).unwrap();
+        assert_eq!(sig, decoded);
+    }
+
+    /// A passkey member signature is BCS-framed as `%d04` followed by
+    /// length-prefixed bytes containing `passkey-flag || passkey body` — the
+    /// historical wrapping produced by `PasskeyAuthenticator`'s serde. A
+    /// round-trip test cannot detect losing (or doubling) that framing, so it
+    /// is pinned here byte-by-byte.
+    #[test]
+    fn member_signature_passkey_bcs_framing() {
+        use base64ct::{Base64, Encoding};
+
+        let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let passkey_wire = Base64::decode_vec(passkey_b64).unwrap();
+        let UserSignature::PasskeyAuthenticator(passkey_authenticator) =
+            UserSignature::from_base64(passkey_b64).unwrap()
+        else {
+            panic!("expected passkey authenticator");
+        };
+
+        let bytes =
+            bcs::to_bytes(&MultisigMemberSignature::Passkey(passkey_authenticator)).unwrap();
+        // `%d04` member tag, then the passkey as length-prefixed bytes whose
+        // contents are exactly the standalone `flag || body` wire form.
+        assert_eq!(bytes[0], 0x04, "passkey member signature must use tag 4");
+        let expected = bcs::to_bytes(&passkey_wire).unwrap();
+        assert_eq!(
+            bytes[1..],
+            expected[..],
+            "passkey member payload must be the length-prefixed standalone wire form"
         );
     }
 
