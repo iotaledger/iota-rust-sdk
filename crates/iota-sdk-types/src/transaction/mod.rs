@@ -1396,7 +1396,11 @@ impl crate::TreeDisplay for SharedObjectReference {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Shared Object Reference")?;
         w.leaf("Object ID", &self.object_id, false)?;
-        w.leaf("Initial Shared Version", &self.initial_shared_version, false)?;
+        w.leaf(
+            "Initial Shared Version",
+            &self.initial_shared_version,
+            false,
+        )?;
         w.leaf("Mutable", &self.mutable, true)
     }
 }
