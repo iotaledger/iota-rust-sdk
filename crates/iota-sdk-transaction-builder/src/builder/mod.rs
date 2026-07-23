@@ -1842,4 +1842,29 @@ mod tests {
             [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
         ));
     }
+
+    /// `pay_iota` splits the amounts off the gas coin, matching `pay` with
+    /// [`Argument::Gas`] as the only coin.
+    #[test]
+    fn pay_iota_splits_off_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay_iota([(recipient, 100u64)]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 1);
+        assert!(matches!(commands[1], Command::TransferObjects(_)));
+    }
 }
