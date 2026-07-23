@@ -644,8 +644,8 @@ impl<C, L> TransactionBuilder<C, L> {
         self.reset()
     }
 
-    /// Send coins to multiple recipients, following the specified amount
-    /// list. The length of the recipients and amounts must be the same.
+    /// Send coins to multiple recipients, each paired with the amount to
+    /// send.
     ///
     /// The amounts specify quantities in the coins' smallest unit (NANOS for
     /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
@@ -665,11 +665,6 @@ impl<C, L> TransactionBuilder<C, L> {
     /// For a single recipient, consider using
     /// [`TransactionBuilder::send_coins()`] or
     /// [`TransactionBuilder::send_iota()`] instead.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the number of recipients does not match the number of
-    /// amounts.
     ///
     /// # Example
     ///
@@ -696,18 +691,16 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
     /// builder.pay(
     ///     [coin],
-    ///     vec![to_address_0, to_address_1],
-    ///     [50000000000u64, 25000000000],
+    ///     [(to_address_0, 50000000000u64), (to_address_1, 25000000000)],
     /// );
     /// let txn = builder.finish().await?;
     /// #   Ok(())
     /// # }
     /// ```
-    pub fn pay<T: PTBArgumentList, U: PTBArgumentList>(
+    pub fn pay<T: PTBArgumentList, U: PTBArgument>(
         &mut self,
         coins: T,
-        recipients: Vec<Address>,
-        amounts: U,
+        payments: impl IntoIterator<Item = (Address, U)>,
     ) -> &mut TransactionBuilder<C> {
         let mut coin_args = self.apply_arguments(coins);
         let coin = match coin_args[..] {
@@ -722,12 +715,10 @@ impl<C, L> TransactionBuilder<C, L> {
                 primary_coin
             }
         };
-        let amount_args = self.apply_arguments(amounts);
-        assert_eq!(
-            recipients.len(),
-            amount_args.len(),
-            "recipients and amounts length mismatch"
-        );
+        let (recipients, amount_args): (Vec<_>, Vec<_>) = payments
+            .into_iter()
+            .map(|(recipient, amount)| (recipient, self.apply_argument(amount)))
+            .unzip();
         let Argument::Result(split) = self.command(Command::SplitCoins(SplitCoins {
             coin,
             amounts: amount_args,
@@ -754,8 +745,8 @@ impl<C, L> TransactionBuilder<C, L> {
         self.reset()
     }
 
-    /// Send IOTA to multiple recipients, following the specified amount
-    /// list. The length of the recipients and amounts must be the same.
+    /// Send IOTA to multiple recipients, each paired with the amount to
+    /// send.
     ///
     /// The amounts specify quantities in NANOS, where 1 IOTA equals
     /// 1_000_000_000 NANOS. They are split off the gas coin in a single
@@ -765,11 +756,6 @@ impl<C, L> TransactionBuilder<C, L> {
     /// To pay with specific coins, or with a coin type other than IOTA, use
     /// [`TransactionBuilder::pay()`]. For a single recipient, consider using
     /// [`TransactionBuilder::send_iota()`] instead.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the number of recipients does not match the number of
-    /// amounts.
     ///
     /// # Example
     ///
@@ -789,20 +775,16 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     Address::from_hex("0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c")?;
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    /// builder.pay_iota(
-    ///     vec![to_address_0, to_address_1],
-    ///     [50000000000u64, 25000000000],
-    /// );
+    /// builder.pay_iota([(to_address_0, 50000000000u64), (to_address_1, 25000000000)]);
     /// let txn = builder.finish().await?;
     /// #   Ok(())
     /// # }
     /// ```
-    pub fn pay_iota<U: PTBArgumentList>(
+    pub fn pay_iota<U: PTBArgument>(
         &mut self,
-        recipients: Vec<Address>,
-        amounts: U,
+        payments: impl IntoIterator<Item = (Address, U)>,
     ) -> &mut TransactionBuilder<C> {
-        self.pay([Argument::Gas], recipients, amounts)
+        self.pay([Argument::Gas], payments)
     }
 
     /// Merge multiple coins into one.
@@ -1751,8 +1733,11 @@ mod tests {
         let mut builder = TransactionBuilder::new(sender);
         builder.pay(
             coins,
-            vec![recipient_a, recipient_b, recipient_a],
-            [100u64, 200, 300],
+            [
+                (recipient_a, 100u64),
+                (recipient_b, 200),
+                (recipient_a, 300),
+            ],
         );
 
         let commands = &builder.data.commands;
@@ -1809,7 +1794,7 @@ mod tests {
                 .unwrap();
 
         let mut builder = TransactionBuilder::new(sender);
-        builder.pay_iota(vec![recipient, recipient], [100u64, 200]);
+        builder.pay_iota([(recipient, 100u64), (recipient, 200)]);
 
         let commands = &builder.data.commands;
         assert_eq!(commands.len(), 2);
@@ -1840,7 +1825,7 @@ mod tests {
                 .unwrap();
 
         let mut builder = TransactionBuilder::new(sender);
-        builder.pay([Argument::Gas], vec![recipient, recipient], [100u64, 200]);
+        builder.pay([Argument::Gas], [(recipient, 100u64), (recipient, 200)]);
 
         let commands = &builder.data.commands;
         assert_eq!(commands.len(), 2);
@@ -1856,21 +1841,5 @@ mod tests {
             transfer.objects[..],
             [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
         ));
-    }
-
-    /// `pay` panics on a recipients/amounts length mismatch.
-    #[test]
-    #[should_panic(expected = "recipients and amounts length mismatch")]
-    fn pay_length_mismatch_panics() {
-        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
-            .parse()
-            .unwrap();
-        let recipient: Address =
-            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-                .parse()
-                .unwrap();
-
-        let mut builder = TransactionBuilder::new(sender);
-        builder.pay([Argument::Gas], vec![recipient], [100u64, 200]);
     }
 }

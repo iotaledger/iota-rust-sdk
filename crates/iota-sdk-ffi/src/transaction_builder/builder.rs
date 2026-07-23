@@ -12,6 +12,7 @@ use crate::{
     error::Result,
     graphql::client::GraphQLClient,
     transaction_builder::{
+        Payment,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
     },
@@ -239,8 +240,8 @@ impl TransactionBuilder {
         self
     }
 
-    /// Send coins to multiple recipients, following the specified amount
-    /// list. The length of the recipients and amounts must be the same.
+    /// Send coins to multiple recipients, each paired with the amount to
+    /// send.
     ///
     /// The amounts specify quantities in the coins' smallest unit (NANOS for
     /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
@@ -259,20 +260,18 @@ impl TransactionBuilder {
     /// For a single recipient, consider using
     /// `TransactionBuilder::send_coins()` or `TransactionBuilder::send_iota()`
     /// instead.
-    pub fn pay(
-        self: Arc<Self>,
-        coins: Vec<Arc<PTBArgument>>,
-        recipients: Vec<Arc<Address>>,
-        amounts: Vec<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
         self.write(|builder| {
-            builder.pay(coins, recipients.iter().map(|r| ***r).collect(), amounts);
+            builder.pay(
+                coins,
+                payments.into_iter().map(|p| (**p.recipient, p.amount)),
+            );
         });
         self
     }
 
-    /// Send IOTA to multiple recipients, following the specified amount
-    /// list. The length of the recipients and amounts must be the same.
+    /// Send IOTA to multiple recipients, each paired with the amount to
+    /// send.
     ///
     /// The amounts specify quantities in NANOS, where 1 IOTA equals
     /// 1_000_000_000 NANOS. They are split off the gas coin in a single
@@ -282,13 +281,9 @@ impl TransactionBuilder {
     /// To pay with specific coins, or with a coin type other than IOTA, use
     /// `TransactionBuilder::pay()`. For a single recipient, consider using
     /// `TransactionBuilder::send_iota()` instead.
-    pub fn pay_iota(
-        self: Arc<Self>,
-        recipients: Vec<Arc<Address>>,
-        amounts: Vec<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
         self.write(|builder| {
-            builder.pay_iota(recipients.iter().map(|r| ***r).collect(), amounts);
+            builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
         });
         self
     }
