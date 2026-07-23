@@ -18,6 +18,11 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "33OCTET")
+)]
 pub struct Secp256k1PublicKey(
     #[cfg_attr(
         feature = "serde",
@@ -134,6 +139,11 @@ impl std::fmt::Debug for Secp256k1PublicKey {
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "64OCTET")
+)]
 pub struct Secp256k1Signature(
     #[cfg_attr(
         feature = "serde",

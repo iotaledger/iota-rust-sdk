@@ -139,6 +139,11 @@ impl crate::TreeDisplay for PasskeyAuthenticator {
     derive(serde::Deserialize, serde::Serialize),
     serde(transparent)
 )]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "secp256r1-public-key")
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct PasskeyPublicKey(Secp256r1PublicKey);
 
@@ -167,7 +172,7 @@ impl AsRef<[u8]> for PasskeyPublicKey {
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-mod serialization {
+pub(crate) mod serialization {
     use std::borrow::Cow;
 
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -183,12 +188,34 @@ mod serialization {
         signature: SimpleSignature,
     }
 
+    /// Owned wire shape of a passkey authenticator: the three fields that
+    /// are actually serialized (the public type's `public_key`, `signature`
+    /// and derived `challenge` are folded into / recovered from these).
+    ///
+    /// `UserSignatureBody::Passkey` decodes through this type so that a
+    /// `UserSignature` carries the flat passkey body behind its own scheme
+    /// tag, while `PasskeyAuthenticator`'s standalone serde keeps the
+    /// historical `bytes`-wrapped `flag || body` form used when a passkey is
+    /// nested in a multisig member signature.
     #[derive(serde::Deserialize)]
     #[serde(rename = "PasskeyAuthenticator")]
-    struct Authenticator {
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "passkey-authenticator")
+    )]
+    pub(crate) struct Authenticator {
         authenticator_data: Vec<u8>,
         client_data_json: String,
         signature: SimpleSignature,
+    }
+
+    impl TryFrom<Authenticator> for PasskeyAuthenticator {
+        type Error = SignatureFromBytesError;
+
+        fn try_from(authenticator: Authenticator) -> Result<Self, Self::Error> {
+            Self::try_from_raw(authenticator)
+        }
     }
 
     impl Serialize for PasskeyAuthenticator {
