@@ -9,10 +9,11 @@ use std::{
     time::Duration,
 };
 
+use futures::{Stream, TryStreamExt};
 use iota_types::{
-    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
+    Address, Coin, GasPayment, Identifier, MovePackageData, Object, ObjectId, ObjectReference,
+    Owner, ProgrammableTransaction, SharedObjectReference, StructTag, Transaction,
+    TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -662,8 +663,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Passing [`unresolved::Argument::Gas`](Argument::Gas) as the only coin
     /// splits the amounts off the gas coin, so no separate input coins are
     /// needed; [`TransactionBuilder::pay_iota()`] is a shorthand for that. To
-    /// pay a custom coin without listing its coins by hand, use
-    /// [`TransactionBuilder::pay_coin_type()`], which fetches them for you.
+    /// pay a custom coin without listing its coins by hand, gather them with
+    /// [`TransactionBuilder::objects_stream()`] and pass them as the coins.
     ///
     /// For a single recipient, consider using
     /// [`TransactionBuilder::send_coins()`] or
@@ -1211,20 +1212,25 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         self
     }
 
-    /// Send a custom coin to multiple recipients without listing its coins by
-    /// hand: fetch every coin of `coin_type` owned by the sender (or sponsor,
-    /// if set) and use them as the input coins.
+    /// Stream every object of the given type owned by `owner`, transparently
+    /// paging through the results so the caller never handles cursors.
     ///
-    /// `coin_type` is the coin's inner type (e.g. `0x2::iota::IOTA`), not the
-    /// wrapping `0x2::coin::Coin<..>`. This is the online counterpart of
-    /// [`TransactionBuilder::pay()`]; see it for how the amounts are split and
-    /// transferred. For IOTA, [`TransactionBuilder::pay_iota()`] avoids the
-    /// fetch entirely by splitting off the gas coin.
+    /// `struct_tag` filters by object type — for a coin, pass its wrapping
+    /// `0x2::coin::Coin<..>` type (e.g. via [`StructTag::new_coin`]); `None`
+    /// yields all of the owner's objects. `owner` defaults to the sponsor, or
+    /// the sender if no sponsor is set.
+    ///
+    /// This is the easy way to gather the input coins for
+    /// [`TransactionBuilder::pay()`] when paying a custom coin: collect the
+    /// object references off the stream and pass them as the coins, instead of
+    /// looking them up by hand. Because it is a stream, you can also stop early
+    /// once enough balance is gathered.
     ///
     /// # Example
     ///
     /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
+    /// use futures::TryStreamExt;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, StructTag};
     ///
@@ -1236,44 +1242,50 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
-    /// let coin_type: StructTag =
+    /// let cert: StructTag =
     ///     "0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT".parse()?;
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    /// builder
-    ///     .pay_coin_type(coin_type, [(to_address, 50000000000u64)])
+    ///
+    /// // Gather the sender's CERT coins, then pay from them.
+    /// let coins: Vec<_> = builder
+    ///     .objects_stream(Some(StructTag::new_coin(cert)), None)
+    ///     .map_ok(|obj| obj.object_ref())
+    ///     .try_collect()
     ///     .await?;
+    /// builder.pay(coins, [(to_address, 50000000000u64)]);
     /// #   Ok(())
     /// # }
     /// ```
-    pub async fn pay_coin_type<U: PTBArgument>(
-        &mut self,
-        coin_type: impl Into<TypeTag>,
-        payments: impl IntoIterator<Item = (Address, U)>,
-    ) -> Result<&mut TransactionBuilder<C>, Error> {
-        let struct_tag = StructTag::new_coin(coin_type);
-        let owner = self.data.sponsor.unwrap_or(self.data.sender);
-        let mut coins = Vec::new();
-        let mut cursor = None;
-        loop {
-            let page = self
-                .client
-                .objects(Some(struct_tag.clone()), owner, cursor, None)
-                .await
-                .map_err(Error::client)?;
-            coins.extend(page.data.iter().map(|obj| obj.object_ref()));
-            if page.next_cursor.is_none() {
-                break;
+    pub fn objects_stream(
+        &self,
+        struct_tag: Option<StructTag>,
+        owner: impl Into<Option<Address>>,
+    ) -> impl Stream<Item = Result<Object, Error>> + '_ {
+        let owner = owner
+            .into()
+            .unwrap_or_else(|| self.data.sponsor.unwrap_or(self.data.sender));
+        // State is the cursor for the next page, wrapped so `None` ends the
+        // stream: `Some(cursor)` fetches a page, `None` stops.
+        futures::stream::try_unfold(Some(None), move |state| {
+            let struct_tag = struct_tag.clone();
+            async move {
+                let Some(cursor) = state else {
+                    return Ok(None);
+                };
+                let page = self
+                    .client
+                    .objects(struct_tag, owner, cursor, None)
+                    .await
+                    .map_err(Error::client)?;
+                let next = page.next_cursor.map(Some);
+                Ok::<_, Error>(Some((
+                    futures::stream::iter(page.data.into_iter().map(Ok::<Object, Error>)),
+                    next,
+                )))
             }
-            cursor = page.next_cursor;
-        }
-        if coins.is_empty() {
-            return Err(Error::Input(format!(
-                "sender {owner} owns no coins of type {struct_tag}"
-            )));
-        }
-        let coin_args = self.apply_arguments(coins);
-        Ok(self.pay_split_transfer(coin_args, payments))
+        })
+        .try_flatten()
     }
 
     async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {

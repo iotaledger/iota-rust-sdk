@@ -18,7 +18,7 @@ use crate::{
     },
     types::{
         address::Address,
-        move_core::{Identifier, StructTag, TypeTag},
+        move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::ObjectId,
         transaction::{Transaction, TransactionEffects},
@@ -220,8 +220,8 @@ impl ClientTransactionBuilder {
     ///
     /// Passing the gas coin as the only coin splits the amounts off it, so no
     /// separate input coins are needed; `pay_iota` is a shorthand for that. To
-    /// pay a custom coin without listing its coins by hand, use
-    /// `pay_coin_type`, which fetches them for you.
+    /// pay a custom coin, fetch its coins with the GraphQL client (e.g.
+    /// `GraphQLClient::coins`) and pass them as the coins.
     ///
     /// For a single recipient, consider using
     /// `ClientTransactionBuilder::send_coins()` or
@@ -244,29 +244,6 @@ impl ClientTransactionBuilder {
             builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
         });
         self
-    }
-
-    /// Send a custom coin to multiple recipients without listing its coins by
-    /// hand: fetch every coin of `coin_type` owned by the sender (or sponsor,
-    /// if set) and use them as the input coins.
-    ///
-    /// `coin_type` is the coin's inner type (e.g. `0x2::iota::IOTA`), not the
-    /// wrapping `0x2::coin::Coin<..>`. For IOTA, `pay_iota` avoids the fetch
-    /// entirely by splitting off the gas coin.
-    pub async fn pay_coin_type(
-        self: Arc<Self>,
-        coin_type: &StructTag,
-        payments: Vec<Payment>,
-    ) -> Result<Arc<Self>> {
-        let mut builder = self.read(|builder| builder.clone());
-        builder
-            .pay_coin_type(
-                coin_type.0.clone(),
-                payments.into_iter().map(|p| (**p.recipient, p.amount)),
-            )
-            .await?;
-        *self.0.write().expect("error writing to builder") = builder;
-        Ok(self)
     }
 
     /// Split a coin into many.
