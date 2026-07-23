@@ -678,10 +678,20 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
-    /// let to_address_0 =
-    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
-    /// let to_address_1 =
-    ///     Address::from_hex("0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c")?;
+    /// let payments = [
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///         )?,
+    ///         50000000000u64,
+    ///     ),
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c",
+    ///         )?,
+    ///         25000000000,
+    ///     ),
+    /// ];
     ///
     /// // This is a coin of type
     /// // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
@@ -689,10 +699,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    /// builder.pay(
-    ///     [coin],
-    ///     [(to_address_0, 50000000000u64), (to_address_1, 25000000000)],
-    /// );
+    /// builder.pay([coin], payments);
     /// let txn = builder.finish().await?;
     /// #   Ok(())
     /// # }
@@ -769,13 +776,23 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
-    /// let to_address_0 =
-    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
-    /// let to_address_1 =
-    ///     Address::from_hex("0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c")?;
+    /// let payments = [
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///         )?,
+    ///         50000000000u64,
+    ///     ),
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c",
+    ///         )?,
+    ///         25000000000,
+    ///     ),
+    /// ];
     ///
     /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    /// builder.pay_iota([(to_address_0, 50000000000u64), (to_address_1, 25000000000)]);
+    /// builder.pay_iota(payments);
     /// let txn = builder.finish().await?;
     /// #   Ok(())
     /// # }
