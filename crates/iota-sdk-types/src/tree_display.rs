@@ -91,7 +91,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             write!(self.f, "{label}:")?;
             let extension = if is_last { "    " } else { "│   " };
             for line in value.lines() {
-                write!(self.f, "\n{}{}{}", self.prefix, extension, line)?;
+                write!(self.f, "\n{}{extension}{line}", self.prefix)?;
             }
             Ok(())
         } else {
