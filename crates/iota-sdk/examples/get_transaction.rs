@@ -7,8 +7,6 @@ use iota_sdk::graphql_client::{Client, error::Result, pagination::PaginationFilt
 async fn main() -> Result<()> {
     let client = Client::new_localnet();
 
-    // Fetch a recent transaction from the network so the example does not
-    // depend on a specific digest that may have been pruned.
     let transactions = client
         .transactions(None, PaginationFilter::default())
         .await?;
