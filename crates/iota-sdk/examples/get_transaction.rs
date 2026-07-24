@@ -1,15 +1,21 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    graphql_client::{Client, error::Result},
-    types::TransactionDigest,
-};
+use iota_sdk::graphql_client::{Client, error::Result, pagination::PaginationFilter};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
-    let digest = TransactionDigest::from_base58("FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj")?;
+    let client = Client::new_localnet();
+
+    let transactions = client
+        .transactions(None, PaginationFilter::default())
+        .await?;
+    let digest = transactions
+        .data()
+        .first()
+        .expect("no transactions found")
+        .transaction
+        .digest();
 
     let signed_transaction = client.transaction(digest).await?.expect("tx not found");
     println!("Signed Transaction: {signed_transaction:#?}\n");
