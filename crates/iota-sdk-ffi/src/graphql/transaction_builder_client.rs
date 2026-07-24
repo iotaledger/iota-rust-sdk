@@ -3,7 +3,9 @@
 
 use iota_sdk::{
     graphql_client::{Client, DryRunResult, WaitForTx},
-    transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient},
+    transaction_builder::{
+        ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderResolveClient,
+    },
     types::{
         Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
         Version,
@@ -12,16 +14,15 @@ use iota_sdk::{
 
 use crate::graphql::client::GraphQLClient;
 
-impl TransactionBuilderClient for GraphQLClient {
-    type Error = <Client as TransactionBuilderClient>::Error;
-    type DryRunResult = DryRunResult;
+impl TransactionBuilderResolveClient for GraphQLClient {
+    type Error = <Client as TransactionBuilderResolveClient>::Error;
 
     async fn object(
         &self,
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
-        TransactionBuilderClient::object(&*self.0.read().await, object_id, version).await
+        TransactionBuilderResolveClient::object(&*self.0.read().await, object_id, version).await
     }
 
     async fn objects(
@@ -31,13 +32,34 @@ impl TransactionBuilderClient for GraphQLClient {
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
-        TransactionBuilderClient::objects(&*self.0.read().await, struct_tag, owner, cursor, limit)
-            .await
+        TransactionBuilderResolveClient::objects(
+            &*self.0.read().await,
+            struct_tag,
+            owner,
+            cursor,
+            limit,
+        )
+        .await
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        TransactionBuilderClient::protocol_config(&*self.0.read().await).await
+        TransactionBuilderResolveClient::protocol_config(&*self.0.read().await).await
     }
+
+    async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderResolveClient::reference_gas_price(&*self.0.read().await, epoch).await
+    }
+
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderResolveClient::estimate_tx_budget(&*self.0.read().await, tx).await
+    }
+}
+
+impl TransactionBuilderClient for GraphQLClient {
+    type DryRunResult = DryRunResult;
 
     async fn transaction(
         &self,
@@ -51,17 +73,6 @@ impl TransactionBuilderClient for GraphQLClient {
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         TransactionBuilderClient::transaction_effects(&*self.0.read().await, digest).await
-    }
-
-    async fn reference_gas_price(
-        &self,
-        epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>, Self::Error> {
-        TransactionBuilderClient::reference_gas_price(&*self.0.read().await, epoch).await
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        TransactionBuilderClient::estimate_tx_budget(&*self.0.read().await, tx).await
     }
 
     async fn dry_run_tx(

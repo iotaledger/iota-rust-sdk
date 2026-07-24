@@ -18,7 +18,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderResolveClient, WaitForTx,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -50,9 +50,9 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderClient::protocol_config`] and falls back to
-/// this if the implementation does not expose protocol config or the value
-/// cannot be parsed.
+/// value via [`TransactionBuilderResolveClient::protocol_config`] and falls
+/// back to this if the implementation does not expose protocol config or the
+/// value cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -1015,7 +1015,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1442,7 +1442,9 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
+}
 
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
@@ -1554,19 +1556,7 @@ impl<C> TransactionBuilder<C, MoveCall> {
     }
 }
 
-impl TransactionBuilder<(), Publish> {
-    /// Get the package ID from the UpgradeCap so that it can be used for future
-    /// commands.
-    pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder {
-        let cap = self.arg();
-        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
-            .arguments([cap])
-            .assign(name)
-            .reset()
-    }
-}
-
-impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
+impl<C> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
@@ -1576,9 +1566,7 @@ impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
             .assign(name)
             .reset()
     }
-}
 
-impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
     pub fn upgrade_cap(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
         name.push_assigned_results(&mut self.data);
