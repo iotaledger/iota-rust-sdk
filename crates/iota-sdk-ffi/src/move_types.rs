@@ -38,6 +38,11 @@
 //! `0x2::coin::Coin` deliberately has no shim here: the existing
 //! [`Coin`](crate::types::coin::Coin) binding already decodes coin objects
 //! of any coin type.
+//!
+//! Move **event** mirrors are exposed the same way but via `ffi_move_event!`,
+//! which generates only a `try_from_bcs` constructor (events are not objects,
+//! so there is no `try_from_object` or `id`); decode them from the BCS
+//! `contents` of an event query result.
 
 use std::{collections::HashMap, sync::Arc};
 
@@ -1384,5 +1389,534 @@ impl StorageDepositReturnUnlockCondition {
 
     pub fn return_amount(&self) -> u64 {
         self.0.return_amount
+    }
+}
+
+// =====================================================================
+// Event mirrors
+//
+// Events are not objects (no `key`, no `UID`); they are decoded from the
+// BCS `contents` of an event query result via `ffi_move_event!`. Generic
+// events carry a phantom (`serde(skip)`) type parameter, so their BCS layout
+// is instantiation-independent and they are wrapped at `<IOTA>` like the
+// generic object shims.
+// =====================================================================
+
+/// A reference to an authenticator function
+/// (`0x2::authenticator_function::AuthenticatorFunctionRefV1`), carried by the
+/// account-abstraction events.
+#[derive(uniffi::Record)]
+pub struct AuthenticatorFunctionRef {
+    /// Object ID of the package declaring the function.
+    pub package: Arc<ObjectId>,
+    pub module_name: String,
+    pub function_name: String,
+}
+
+impl<Account>
+    From<
+        &iota_sdk::move_types::iota_framework::authenticator_function::AuthenticatorFunctionRefV1<
+            Account,
+        >,
+    > for AuthenticatorFunctionRef
+{
+    fn from(
+        r: &iota_sdk::move_types::iota_framework::authenticator_function::AuthenticatorFunctionRefV1<Account>,
+    ) -> Self {
+        Self {
+            package: Arc::new(r.package.bytes.into()),
+            module_name: ascii_to_string(&r.module_name),
+            function_name: ascii_to_string(&r.function_name),
+        }
+    }
+}
+
+/// A validator's pool-token exchange rate at an epoch boundary
+/// (`0x3::staking_pool::PoolTokenExchangeRate`).
+#[derive(uniffi::Record)]
+pub struct PoolTokenExchangeRate {
+    pub iota_amount: u64,
+    pub pool_token_amount: u64,
+}
+
+impl From<&iota_sdk::move_types::iota_system::staking_pool::PoolTokenExchangeRate>
+    for PoolTokenExchangeRate
+{
+    fn from(r: &iota_sdk::move_types::iota_system::staking_pool::PoolTokenExchangeRate) -> Self {
+        Self {
+            iota_amount: r.iota_amount,
+            pool_token_amount: r.pool_token_amount,
+        }
+    }
+}
+
+/// Key identifying a per-type deny-list config
+/// (`0x2::deny_list::ConfigKey`).
+#[derive(uniffi::Record)]
+pub struct ConfigKey {
+    pub per_type_index: u64,
+    pub per_type_key: Vec<u8>,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::deny_list::ConfigKey> for ConfigKey {
+    fn from(k: &iota_sdk::move_types::iota_framework::deny_list::ConfigKey) -> Self {
+        Self {
+            per_type_index: k.per_type_index,
+            per_type_key: k.per_type_key.clone(),
+        }
+    }
+}
+
+// --- 0x3 events ---
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator::StakingRequestEvent`.
+    StakingRequestEvent(iota_sdk::move_types::iota_system::validator::StakingRequestEvent) {
+        pub fn pool_id(&self) -> ObjectId {
+            self.0.pool_id.bytes.into()
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staker_address(&self) -> Address {
+            Address(self.0.staker_address)
+        }
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        /// Staked amount, in nanos.
+        pub fn amount(&self) -> u64 {
+            self.0.amount
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator::UnstakingRequestEvent`.
+    UnstakingRequestEvent(iota_sdk::move_types::iota_system::validator::UnstakingRequestEvent) {
+        pub fn pool_id(&self) -> ObjectId {
+            self.0.pool_id.bytes.into()
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staker_address(&self) -> Address {
+            Address(self.0.staker_address)
+        }
+        pub fn stake_activation_epoch(&self) -> u64 {
+            self.0.stake_activation_epoch
+        }
+        pub fn unstaking_epoch(&self) -> u64 {
+            self.0.unstaking_epoch
+        }
+        /// Withdrawn principal, in nanos.
+        pub fn principal_amount(&self) -> u64 {
+            self.0.principal_amount
+        }
+        /// Withdrawn reward, in nanos.
+        pub fn reward_amount(&self) -> u64 {
+            self.0.reward_amount
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
+    SystemEpochInfoEventV1(
+        iota_sdk::move_types::iota_system::iota_system_state_inner::SystemEpochInfoEventV1
+    ) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn protocol_version(&self) -> u64 {
+            self.0.protocol_version
+        }
+        /// Reference gas price for the epoch, in nanos.
+        pub fn reference_gas_price(&self) -> u64 {
+            self.0.reference_gas_price
+        }
+        pub fn total_stake(&self) -> u64 {
+            self.0.total_stake
+        }
+        pub fn storage_charge(&self) -> u64 {
+            self.0.storage_charge
+        }
+        pub fn storage_rebate(&self) -> u64 {
+            self.0.storage_rebate
+        }
+        pub fn storage_fund_balance(&self) -> u64 {
+            self.0.storage_fund_balance
+        }
+        pub fn total_gas_fees(&self) -> u64 {
+            self.0.total_gas_fees
+        }
+        pub fn total_stake_rewards_distributed(&self) -> u64 {
+            self.0.total_stake_rewards_distributed
+        }
+        pub fn burnt_tokens_amount(&self) -> u64 {
+            self.0.burnt_tokens_amount
+        }
+        pub fn minted_tokens_amount(&self) -> u64 {
+            self.0.minted_tokens_amount
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a
+    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
+    SystemEpochInfoEventV2(
+        iota_sdk::move_types::iota_system::iota_system_state_inner::SystemEpochInfoEventV2
+    ) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn protocol_version(&self) -> u64 {
+            self.0.protocol_version
+        }
+        pub fn total_stake(&self) -> u64 {
+            self.0.total_stake
+        }
+        pub fn storage_charge(&self) -> u64 {
+            self.0.storage_charge
+        }
+        pub fn storage_rebate(&self) -> u64 {
+            self.0.storage_rebate
+        }
+        pub fn storage_fund_balance(&self) -> u64 {
+            self.0.storage_fund_balance
+        }
+        pub fn total_gas_fees(&self) -> u64 {
+            self.0.total_gas_fees
+        }
+        pub fn total_stake_rewards_distributed(&self) -> u64 {
+            self.0.total_stake_rewards_distributed
+        }
+        pub fn burnt_tokens_amount(&self) -> u64 {
+            self.0.burnt_tokens_amount
+        }
+        pub fn minted_tokens_amount(&self) -> u64 {
+            self.0.minted_tokens_amount
+        }
+        pub fn tips_amount(&self) -> u64 {
+            self.0.tips_amount
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator_set::ValidatorEpochInfoEventV1`.
+    ValidatorEpochInfoEventV1(
+        iota_sdk::move_types::iota_system::validator_set::ValidatorEpochInfoEventV1
+    ) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn reference_gas_survey_quote(&self) -> u64 {
+            self.0.reference_gas_survey_quote
+        }
+        pub fn stake(&self) -> u64 {
+            self.0.stake
+        }
+        pub fn voting_power(&self) -> u64 {
+            self.0.voting_power
+        }
+        pub fn commission_rate(&self) -> u64 {
+            self.0.commission_rate
+        }
+        pub fn pool_staking_reward(&self) -> u64 {
+            self.0.pool_staking_reward
+        }
+        pub fn pool_token_exchange_rate(&self) -> PoolTokenExchangeRate {
+            (&self.0.pool_token_exchange_rate).into()
+        }
+        /// Addresses of the validators that reported this one this epoch.
+        pub fn tallying_rule_reporters(&self) -> Vec<Arc<Address>> {
+            self.0
+                .tallying_rule_reporters
+                .iter()
+                .map(|a| Arc::new(Address(*a)))
+                .collect()
+        }
+        pub fn tallying_rule_global_score(&self) -> u64 {
+            self.0.tallying_rule_global_score
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator_set::ValidatorJoinEvent`.
+    ValidatorJoinEvent(iota_sdk::move_types::iota_system::validator_set::ValidatorJoinEvent) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staking_pool_id(&self) -> ObjectId {
+            self.0.staking_pool_id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator_set::ValidatorLeaveEvent`.
+    ValidatorLeaveEvent(iota_sdk::move_types::iota_system::validator_set::ValidatorLeaveEvent) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staking_pool_id(&self) -> ObjectId {
+            self.0.staking_pool_id.bytes.into()
+        }
+        /// Whether the validator left voluntarily (vs. being removed).
+        pub fn is_voluntary(&self) -> bool {
+            self.0.is_voluntary
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator_set::CommitteeValidatorJoinEvent`.
+    CommitteeValidatorJoinEvent(
+        iota_sdk::move_types::iota_system::validator_set::CommitteeValidatorJoinEvent
+    ) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staking_pool_id(&self) -> ObjectId {
+            self.0.staking_pool_id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x3::validator_set::CommitteeValidatorLeaveEvent`.
+    CommitteeValidatorLeaveEvent(
+        iota_sdk::move_types::iota_system::validator_set::CommitteeValidatorLeaveEvent
+    ) {
+        pub fn epoch(&self) -> u64 {
+            self.0.epoch
+        }
+        pub fn validator_address(&self) -> Address {
+            Address(self.0.validator_address)
+        }
+        pub fn staking_pool_id(&self) -> ObjectId {
+            self.0.staking_pool_id.bytes.into()
+        }
+    }
+}
+
+// --- 0x2 events ---
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::account::ImmutableAccountCreated`.
+    ImmutableAccountCreated(
+        iota_sdk::move_types::iota_framework::account::ImmutableAccountCreated<IOTA>
+    ) {
+        pub fn account_id(&self) -> ObjectId {
+            self.0.account_id.bytes.into()
+        }
+        pub fn authenticator(&self) -> AuthenticatorFunctionRef {
+            (&self.0.authenticator).into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::account::MutableAccountCreated`.
+    MutableAccountCreated(
+        iota_sdk::move_types::iota_framework::account::MutableAccountCreated<IOTA>
+    ) {
+        pub fn account_id(&self) -> ObjectId {
+            self.0.account_id.bytes.into()
+        }
+        pub fn authenticator(&self) -> AuthenticatorFunctionRef {
+            (&self.0.authenticator).into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::account::AuthenticatorFunctionRefV1Rotated`.
+    AuthenticatorFunctionRefV1Rotated(
+        iota_sdk::move_types::iota_framework::account::AuthenticatorFunctionRefV1Rotated<IOTA>
+    ) {
+        pub fn account_id(&self) -> ObjectId {
+            self.0.account_id.bytes.into()
+        }
+        pub fn from(&self) -> AuthenticatorFunctionRef {
+            (&self.0.from).into()
+        }
+        pub fn to(&self) -> AuthenticatorFunctionRef {
+            (&self.0.to).into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::coin_manager::CoinManaged`.
+    CoinManaged(iota_sdk::move_types::iota_framework::coin_manager::CoinManaged) {
+        pub fn coin_name(&self) -> String {
+            ascii_to_string(&self.0.coin_name)
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::coin_manager::TreasuryOwnershipRenounced`.
+    TreasuryOwnershipRenounced(
+        iota_sdk::move_types::iota_framework::coin_manager::TreasuryOwnershipRenounced
+    ) {
+        pub fn coin_name(&self) -> String {
+            ascii_to_string(&self.0.coin_name)
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::coin_manager::MetadataOwnershipRenounced`.
+    MetadataOwnershipRenounced(
+        iota_sdk::move_types::iota_framework::coin_manager::MetadataOwnershipRenounced
+    ) {
+        pub fn coin_name(&self) -> String {
+            ascii_to_string(&self.0.coin_name)
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::deny_list::PerTypeConfigCreated`.
+    PerTypeConfigCreated(iota_sdk::move_types::iota_framework::deny_list::PerTypeConfigCreated) {
+        pub fn key(&self) -> ConfigKey {
+            (&self.0.key).into()
+        }
+        pub fn config_id(&self) -> ObjectId {
+            self.0.config_id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::display::DisplayCreated`.
+    DisplayCreated(iota_sdk::move_types::iota_framework::display::DisplayCreated<IOTA>) {
+        /// Object ID of the created `Display`.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::display::VersionUpdated`.
+    VersionUpdated(iota_sdk::move_types::iota_framework::display::VersionUpdated<IOTA>) {
+        /// Object ID of the `Display`.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+        pub fn version(&self) -> u16 {
+            self.0.version
+        }
+        /// The display template as key/value pairs.
+        pub fn fields(&self) -> HashMap<String, String> {
+            self.0
+                .fields
+                .contents
+                .iter()
+                .map(|e| (move_string_to_string(&e.key), move_string_to_string(&e.value)))
+                .collect()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::kiosk::ItemListed`.
+    ItemListed(iota_sdk::move_types::iota_framework::kiosk::ItemListed<IOTA>) {
+        /// Object ID of the kiosk.
+        pub fn kiosk(&self) -> ObjectId {
+            self.0.kiosk.bytes.into()
+        }
+        /// Object ID of the listed item.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+        /// Listing price, in nanos.
+        pub fn price(&self) -> u64 {
+            self.0.price
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::kiosk::ItemPurchased`.
+    ItemPurchased(iota_sdk::move_types::iota_framework::kiosk::ItemPurchased<IOTA>) {
+        pub fn kiosk(&self) -> ObjectId {
+            self.0.kiosk.bytes.into()
+        }
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+        /// Purchase price, in nanos.
+        pub fn price(&self) -> u64 {
+            self.0.price
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::kiosk::ItemDelisted`.
+    ItemDelisted(iota_sdk::move_types::iota_framework::kiosk::ItemDelisted<IOTA>) {
+        pub fn kiosk(&self) -> ObjectId {
+            self.0.kiosk.bytes.into()
+        }
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::token::TokenPolicyCreated`.
+    TokenPolicyCreated(iota_sdk::move_types::iota_framework::token::TokenPolicyCreated<IOTA>) {
+        /// Object ID of the created `TokenPolicy`.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+        pub fn is_mutable(&self) -> bool {
+            self.0.is_mutable
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::transfer_policy::TransferPolicyCreated`.
+    TransferPolicyCreated(
+        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicyCreated<IOTA>
+    ) {
+        /// Object ID of the created `TransferPolicy`.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
+    }
+}
+
+crate::ffi_move_event! {
+    /// A typed view of a `0x2::transfer_policy::TransferPolicyDestroyed`.
+    TransferPolicyDestroyed(
+        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicyDestroyed<IOTA>
+    ) {
+        /// Object ID of the destroyed `TransferPolicy`.
+        pub fn id(&self) -> ObjectId {
+            self.0.id.bytes.into()
+        }
     }
 }
