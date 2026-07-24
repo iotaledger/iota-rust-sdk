@@ -161,6 +161,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
+///                 =/ invalid-attestation
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -202,6 +203,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
+/// invalid-attestation                                    = %d40
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -416,6 +418,11 @@ pub enum ExecutionError {
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
     MoveAuthenticationError { error: Box<ExecutionError> },
+    /// The transaction's attestation was invalid: the attestor vouched for a
+    /// transaction it should have rejected. The attestor is accountable, so the
+    /// issuer's owned objects and gas are left untouched.
+    #[error("The transaction attestation is invalid")]
+    InvalidAttestation,
 }
 
 impl ExecutionError {
@@ -460,6 +467,7 @@ impl ExecutionError {
         ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
         MoveAuthenticationError,
+        InvalidAttestation,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
