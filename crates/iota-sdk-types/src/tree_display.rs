@@ -272,7 +272,8 @@ mod tests {
 
     #[test]
     fn transaction_renders_as_nested_tree() {
-        let expected = "Transaction
+        let expected = "
+Transaction
 ├── Kind: Programmable Transaction
 │   ├── Inputs
 │   │   └── 0: Pure
@@ -294,7 +295,10 @@ mod tests {
 │   └── Budget: 5000000
 └── Expiration: None";
 
-        assert_eq!(sample_transaction().to_string(), expected);
+        assert_eq!(
+            sample_transaction().to_string(),
+            expected.strip_prefix('\n').unwrap()
+        );
     }
 
     #[test]
@@ -316,7 +320,8 @@ mod tests {
             committee,
         );
 
-        let expected = "Multisig Aggregated Signature
+        let expected = "
+Multisig Aggregated Signature
 ├── Committee: Multisig Committee
 │   ├── Members
 │   │   └── 0: Multisig Member
@@ -327,7 +332,7 @@ mod tests {
 │   └── 0: Ed25519(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
 └── Bitmap: 1";
 
-        assert_eq!(signature.to_string(), expected);
+        assert_eq!(signature.to_string(), expected.strip_prefix('\n').unwrap());
     }
 
     #[test]
@@ -343,7 +348,8 @@ mod tests {
             sample_transaction(),
         );
 
-        let expected = "Intent Message
+        let expected = "
+Intent Message
 ├── Intent
 │   ├── Scope: TransactionData
 │   ├── Version: V0
@@ -371,6 +377,6 @@ mod tests {
     │   └── Budget: 5000000
     └── Expiration: None";
 
-        assert_eq!(message.to_string(), expected);
+        assert_eq!(message.to_string(), expected.strip_prefix('\n').unwrap());
     }
 }
