@@ -324,17 +324,19 @@ mod tests {
 
     #[cfg(feature = "test-client")]
     mod resolve_client {
-        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+        use iota_types::{Object, ObjectId, StructTag, Version};
 
         use crate::{
             ObjectsPage, TestClient, TestClientError, TransactionBuilder,
-            TransactionBuilderResolveClient,
+            TransactionBuilderResolveClient, error::Error,
         };
 
         /// Implements only [`TransactionBuilderResolveClient`] by forwarding to
         /// [`TestClient`], to verify that building a transaction does not
         /// require the full
         /// [`TransactionBuilderClient`](crate::TransactionBuilderClient).
+        /// It relies on the default `estimate_tx_budget`, so no transaction
+        /// simulation is needed.
         struct ResolveOnlyClient(TestClient);
 
         impl TransactionBuilderResolveClient for ResolveOnlyClient {
@@ -364,13 +366,6 @@ mod tests {
             ) -> Result<Option<u64>, Self::Error> {
                 self.0.reference_gas_price(epoch).await
             }
-
-            async fn estimate_tx_budget(
-                &self,
-                tx: &Transaction,
-            ) -> Result<Option<u64>, Self::Error> {
-                self.0.estimate_tx_budget(tx).await
-            }
         }
 
         #[tokio::test]
@@ -386,9 +381,21 @@ mod tests {
                     .parse()
                     .unwrap();
 
+            // Without simulation there is no budget estimation, so an explicit
+            // gas budget is required.
             let mut builder =
                 TransactionBuilder::new(sender).with_client(ResolveOnlyClient(TestClient));
             builder.send_coins([coin], recipient, 1000u64);
+            assert!(matches!(
+                builder.finish().await,
+                Err(Error::MissingGasBudget)
+            ));
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(ResolveOnlyClient(TestClient));
+            builder
+                .send_coins([coin], recipient, 1000u64)
+                .gas_budget(50_000_000);
             builder.finish().await.unwrap();
         }
     }
