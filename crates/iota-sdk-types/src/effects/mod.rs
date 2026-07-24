@@ -67,13 +67,15 @@ mod tests {
     }
 }
 
-impl std::fmt::Display for TransactionEffects {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for TransactionEffects {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            TransactionEffects::V1(v1) => write!(f, "{v1}"),
+            Self::V1(v1) => v1.fmt_tree(w),
         }
     }
 }
+
+crate::impl_tree_display!(TransactionEffects);
 
 /// Defines what happened to an ObjectId during execution
 ///

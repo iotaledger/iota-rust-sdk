@@ -531,7 +531,7 @@ impl crate::TreeDisplay for CheckpointTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Checkpoint Transaction")?;
         w.child("Transaction", &self.transaction, false)?;
-        w.leaf("Effects", &self.effects, false)?;
+        w.child("Effects", &self.effects, false)?;
         w.option_child("Events", &self.events, false)?;
         w.vec_children("Input Objects", &self.input_objects, false)?;
         w.vec_children("Output Objects", &self.output_objects, true)
