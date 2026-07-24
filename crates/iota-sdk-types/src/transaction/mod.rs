@@ -1196,24 +1196,7 @@ pub struct ProgrammableTransaction {
 impl crate::TreeDisplay for ProgrammableTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Programmable Transaction")?;
-        if self.inputs.is_empty() {
-            w.leaf("Inputs", &"[]", false)?;
-        } else {
-            w.branch("Inputs", false, |w| {
-                let last_idx = self.inputs.len() - 1;
-                for (i, input) in self.inputs.iter().enumerate() {
-                    let variant = match input {
-                        Input::Pure(_) => "Pure",
-                        Input::ImmutableOrOwned(_) => "ImmutableOrOwned",
-                        Input::Shared(_) => "Shared",
-                        Input::Receiving(_) => "Receiving",
-                    };
-                    let label = format!("{i}: {variant}");
-                    w.child(&label, input, i == last_idx)?;
-                }
-                Ok(())
-            })?;
-        }
+        w.vec_children("Inputs", &self.inputs, false)?;
         w.vec_children("Commands", &self.commands, true)
     }
 }
@@ -1811,7 +1794,7 @@ pub enum Argument {
 impl std::fmt::Display for Argument {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Argument::Gas => write!(f, "GasCoin"),
+            Argument::Gas => write!(f, "Gas"),
             Argument::Input(i) => write!(f, "Input({i})"),
             Argument::Result(i) => write!(f, "Result({i})"),
             Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),

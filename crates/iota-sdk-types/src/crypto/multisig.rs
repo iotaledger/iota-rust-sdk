@@ -453,7 +453,7 @@ impl MultisigAggregatedSignature {
 impl crate::TreeDisplay for MultisigAggregatedSignature {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Multisig Aggregated Signature")?;
-        w.leaf("Committee", &self.committee, false)?;
+        w.child("Committee", &self.committee, false)?;
         w.vec_inline("Signatures", &self.signatures, false)?;
         w.leaf("Bitmap", &self.bitmap, true)
     }

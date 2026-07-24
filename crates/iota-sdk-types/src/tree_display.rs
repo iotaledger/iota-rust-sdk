@@ -33,7 +33,7 @@ pub(crate) struct TreeWriter<'f, 'a> {
     f: &'f mut std::fmt::Formatter<'a>,
     prefix: String,
     needs_newline: bool,
-    skip_header: bool,
+    inline_label: Option<String>,
 }
 
 impl<'f, 'a> TreeWriter<'f, 'a> {
@@ -42,16 +42,19 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             f,
             prefix: String::new(),
             needs_newline: false,
-            skip_header: false,
+            inline_label: None,
         }
     }
 
     /// Write the root label without connectors. When called as a child
-    /// (via [`child`](Self::child)), this is a no-op because the parent
-    /// already wrote the label.
+    /// (via [`child`](Self::child)), the parent already wrote the field
+    /// label, so the header is appended to it as `Label: Header` (or
+    /// omitted when it repeats the label).
     pub fn header(&mut self, text: &str) -> std::fmt::Result {
-        if self.skip_header {
-            self.skip_header = false;
+        if let Some(label) = self.inline_label.take() {
+            if label != text {
+                write!(self.f, ": {text}")?;
+            }
             return Ok(());
         }
         if self.needs_newline {
@@ -72,7 +75,10 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         Ok(())
     }
 
-    /// Write a leaf node: `├── Label: value` or `└── Label: value`
+    /// Write a leaf node: `├── Label: value` or `└── Label: value`.
+    ///
+    /// A multi-line value keeps the tree readable: it starts on its own line
+    /// below the label, with all its lines indented equally.
     pub fn leaf(
         &mut self,
         label: &str,
@@ -80,7 +86,17 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         is_last: bool,
     ) -> std::fmt::Result {
         self.write_connector(is_last)?;
-        write!(self.f, "{label}: {value}")
+        let value = value.to_string();
+        if value.contains('\n') {
+            write!(self.f, "{label}:")?;
+            let extension = if is_last { "    " } else { "│   " };
+            for line in value.lines() {
+                write!(self.f, "\n{}{}{}", self.prefix, extension, line)?;
+            }
+            Ok(())
+        } else {
+            write!(self.f, "{label}: {value}")
+        }
     }
 
     /// Write a branch with children rendered by a closure.
@@ -108,7 +124,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         is_last: bool,
     ) -> std::fmt::Result {
         self.branch(label, is_last, |w| {
-            w.skip_header = true;
+            w.inline_label = Some(label.to_string());
             child.fmt_tree(w)
         })
     }
@@ -226,5 +242,135 @@ mod tests {
         .to_string();
 
         assert_eq!(output, "└── Key: value");
+    }
+
+    fn sample_transaction() -> crate::Transaction {
+        use crate::transaction::*;
+
+        Transaction::V1(TransactionV1 {
+            kind: TransactionKind::Programmable(ProgrammableTransaction {
+                inputs: vec![Input::Pure(vec![1, 2, 3])],
+                commands: vec![Command::SplitCoins(SplitCoins {
+                    coin: Argument::Gas,
+                    amounts: vec![Argument::Input(0)],
+                })],
+            }),
+            sender: crate::Address::ZERO,
+            gas_payment: GasPayment {
+                objects: vec![crate::ObjectReference::new(
+                    crate::ObjectId::ZERO,
+                    crate::Version::from_u64(42),
+                    crate::ObjectDigest::ZERO,
+                )],
+                owner: crate::Address::ZERO,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: TransactionExpiration::None,
+        })
+    }
+
+    #[test]
+    fn transaction_renders_as_nested_tree() {
+        let expected = "Transaction
+├── Kind: Programmable Transaction
+│   ├── Inputs
+│   │   └── 0: Pure
+│   │       └── Value: 010203
+│   └── Commands
+│       └── 0: Split Coins
+│           ├── Coin: Gas
+│           └── Amounts
+│               └── 0: Input(0)
+├── Sender: 0x0000000000000000000000000000000000000000000000000000000000000000
+├── Gas Payment
+│   ├── Objects
+│   │   └── 0: Object Reference
+│   │       ├── Object ID: 0x0000000000000000000000000000000000000000000000000000000000000000
+│   │       ├── Version: 42
+│   │       └── Digest: 11111111111111111111111111111111
+│   ├── Owner: 0x0000000000000000000000000000000000000000000000000000000000000000
+│   ├── Price: 1000
+│   └── Budget: 5000000
+└── Expiration: None";
+
+        assert_eq!(sample_transaction().to_string(), expected);
+    }
+
+    #[test]
+    fn tree_typed_field_renders_as_indented_sub_tree() {
+        use crate::crypto::{
+            Ed25519PublicKey, Ed25519Signature, MultisigAggregatedSignature, MultisigCommittee,
+            MultisigMember, MultisigMemberSignature,
+        };
+
+        let committee = MultisigCommittee::new_unchecked(
+            vec![MultisigMember::new(Ed25519PublicKey::new([0; 32]), 1)],
+            1,
+        );
+        let signature = MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::Ed25519(Ed25519Signature::new(
+                [0; 64],
+            ))],
+            1,
+            committee,
+        );
+
+        let expected = "Multisig Aggregated Signature
+├── Committee: Multisig Committee
+│   ├── Members
+│   │   └── 0: Multisig Member
+│   │       ├── Public Key: Ed25519(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=)
+│   │       └── Weight: 1
+│   └── Threshold: 1
+├── Signatures
+│   └── 0: Ed25519(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
+└── Bitmap: 1";
+
+        assert_eq!(signature.to_string(), expected);
+    }
+
+    #[test]
+    fn multi_line_leaf_value_is_indented_under_its_label() {
+        use crate::crypto::{Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion};
+
+        let message = IntentMessage::new(
+            Intent::new(
+                IntentScope::TransactionData,
+                IntentVersion::V0,
+                IntentAppId::Iota,
+            ),
+            sample_transaction(),
+        );
+
+        let expected = "Intent Message
+├── Intent
+│   ├── Scope: TransactionData
+│   ├── Version: V0
+│   └── App ID: Iota
+└── Value:
+    Transaction
+    ├── Kind: Programmable Transaction
+    │   ├── Inputs
+    │   │   └── 0: Pure
+    │   │       └── Value: 010203
+    │   └── Commands
+    │       └── 0: Split Coins
+    │           ├── Coin: Gas
+    │           └── Amounts
+    │               └── 0: Input(0)
+    ├── Sender: 0x0000000000000000000000000000000000000000000000000000000000000000
+    ├── Gas Payment
+    │   ├── Objects
+    │   │   └── 0: Object Reference
+    │   │       ├── Object ID: 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │       ├── Version: 42
+    │   │       └── Digest: 11111111111111111111111111111111
+    │   ├── Owner: 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   ├── Price: 1000
+    │   └── Budget: 5000000
+    └── Expiration: None";
+
+        assert_eq!(message.to_string(), expected);
     }
 }
