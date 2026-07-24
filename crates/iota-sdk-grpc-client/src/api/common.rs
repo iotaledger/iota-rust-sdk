@@ -13,12 +13,13 @@ use iota_grpc_types::{
     proto::GrpcConversionError,
     v1::{
         bcs::BcsData,
+        command::CommandOutputs,
         ledger_service::{ObjectResult, TransactionResult, object_result, transaction_result},
         object::Object as ProtoObject,
         transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
         transaction_execution_service::{
             ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
-            execute_transaction_result, simulate_transaction_result,
+            ViewFunctionCallResult, execute_transaction_result, simulate_transaction_result,
         },
         types::ObjectId as ProtoObjectId,
     },
@@ -431,6 +432,17 @@ impl ProtoResult for SimulateTransactionResult {
             Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
                 "simulate transaction result",
             ))),
+        }
+    }
+}
+
+impl ProtoResult for ViewFunctionCallResult {
+    type Value = CommandOutputs;
+
+    fn into_result(self) -> Result<Self::Value> {
+        match self.view_function_call_result {
+            Some(r) => Ok(r),
+            None => Err(TryFromProtoError::missing("function_call_result").into()),
         }
     }
 }

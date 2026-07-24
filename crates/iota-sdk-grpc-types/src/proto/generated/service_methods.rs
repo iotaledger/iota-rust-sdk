@@ -26,12 +26,13 @@ pub const STATE_SERVICE: [&str; 3usize] = [
     "/iota.grpc.v1.state_service.StateService/GetCoinInfo",
 ];
 /// Known gRPC method paths for `TransactionExecutionService`.
-pub const TRANSACTION_EXECUTION_SERVICE: [&str; 2usize] = [
+pub const TRANSACTION_EXECUTION_SERVICE: [&str; 3usize] = [
     "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ExecuteTransactions",
     "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/SimulateTransactions",
+    "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ViewFunctionCalls",
 ];
 /// All known gRPC method paths across all services.
-pub const ALL_METHOD_PATHS: [&str; 13usize] = [
+pub const ALL_METHOD_PATHS: [&str; 14usize] = [
     "/iota.grpc.v1.ledger_service.LedgerService/GetHealth",
     "/iota.grpc.v1.ledger_service.LedgerService/GetServiceInfo",
     "/iota.grpc.v1.ledger_service.LedgerService/GetObjects",
@@ -45,4 +46,5 @@ pub const ALL_METHOD_PATHS: [&str; 13usize] = [
     "/iota.grpc.v1.state_service.StateService/GetCoinInfo",
     "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ExecuteTransactions",
     "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/SimulateTransactions",
+    "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ViewFunctionCalls",
 ];

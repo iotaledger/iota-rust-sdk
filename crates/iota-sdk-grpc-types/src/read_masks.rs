@@ -110,6 +110,9 @@ pub const SIMULATE_TRANSACTIONS_READ_MASK: &str = field_mask!(
     "execution_result",
 );
 
+/// Default read mask for `view_function_calls`.
+pub const VIEW_FUNCTION_CALLS_READ_MASK: &str = field_mask!("view_function_call_result");
+
 // ---------------------------------------------------------------------------
 // CheckpointResponse — per-method field constants
 //

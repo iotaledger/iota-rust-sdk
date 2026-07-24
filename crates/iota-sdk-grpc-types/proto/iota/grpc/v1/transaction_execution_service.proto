@@ -15,10 +15,12 @@ import "iota/grpc/v1/bcs.proto";
 import "iota/grpc/v1/command.proto";
 import "iota/grpc/v1/signatures.proto";
 import "iota/grpc/v1/transaction.proto";
+import "iota/grpc/v1/types.proto";
 
 service TransactionExecutionService {
   rpc ExecuteTransactions(ExecuteTransactionsRequest) returns (ExecuteTransactionsResponse);
   rpc SimulateTransactions(SimulateTransactionsRequest) returns (SimulateTransactionsResponse);
+  rpc ViewFunctionCalls(ViewFunctionCallsRequest) returns (ViewFunctionCallsResponse);
 }
 
 // A single transaction to execute, along with its authorizing signatures.
@@ -142,4 +144,44 @@ message SimulateTransactionsResponse {
 
   // Results for each transaction in the request, in the same order.
   repeated SimulateTransactionResult transaction_results = 1;
+}
+
+message ViewFunctionCallArgument {
+  option (iota.grpc.message_accessors) = "with";
+
+  optional iota.grpc.v1.bcs.BcsData bcs = 1;
+  optional google.protobuf.Value json = 2;
+}
+
+// A single view function to call.
+message ViewFunctionCallItem {
+  option (iota.grpc.message_accessors) = "with";
+
+  string fq_function_name = 1;
+  repeated iota.grpc.v1.types.TypeTag type_args = 2;
+  repeated ViewFunctionCallArgument arguments = 3;
+}
+
+message ViewFunctionCallsRequest {
+  option (iota.grpc.message_accessors) = "with";
+
+  // List of view functions to call. Function calls are simulated sequentially in order.
+  // For a single function call, provide a list with one item.
+  repeated ViewFunctionCallItem function_calls = 1;
+
+  // Mask specifying which fields to read, applied to each ViewedFunctionCall in the response.
+  optional google.protobuf.FieldMask read_mask = 2;
+}
+
+message ViewFunctionCallResult {
+  option (iota.grpc.message_accessors) = "with";
+
+  iota.grpc.v1.command.CommandOutputs view_function_call_result = 1;    
+}
+
+// Response message for `TransactionExecutionService.ViewFunctionCall`.
+message ViewFunctionCallsResponse {
+  option (iota.grpc.message_accessors) = "with";
+
+  repeated ViewFunctionCallResult view_function_call_results = 1;
 }

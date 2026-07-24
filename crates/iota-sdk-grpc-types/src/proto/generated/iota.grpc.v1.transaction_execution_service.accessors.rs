@@ -207,4 +207,79 @@ mod _accessor_impls {
             self
         }
     }
+    impl super::ViewFunctionCallArgument {
+        /// Sets `bcs` with the provided value.
+        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.bcs = Some(field.into());
+            self
+        }
+        /// Sets `json` with the provided value.
+        pub fn with_json<T: Into<::prost_types::Value>>(mut self, field: T) -> Self {
+            self.json = Some(field.into());
+            self
+        }
+    }
+    impl super::ViewFunctionCallItem {
+        /// Sets `fq_function_name` with the provided value.
+        pub fn with_fq_function_name<T: Into<String>>(mut self, field: T) -> Self {
+            self.fq_function_name = field.into();
+            self
+        }
+        /// Sets `type_args` with the provided value.
+        pub fn with_type_args(
+            mut self,
+            field: Vec<super::super::types::TypeTag>,
+        ) -> Self {
+            self.type_args = field;
+            self
+        }
+        /// Sets `arguments` with the provided value.
+        pub fn with_arguments(
+            mut self,
+            field: Vec<super::ViewFunctionCallArgument>,
+        ) -> Self {
+            self.arguments = field;
+            self
+        }
+    }
+    impl super::ViewFunctionCallsRequest {
+        /// Sets `function_calls` with the provided value.
+        pub fn with_function_calls(
+            mut self,
+            field: Vec<super::ViewFunctionCallItem>,
+        ) -> Self {
+            self.function_calls = field;
+            self
+        }
+        /// Sets `read_mask` with the provided value.
+        pub fn with_read_mask<T: Into<::prost_types::FieldMask>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.read_mask = Some(field.into());
+            self
+        }
+    }
+    impl super::ViewFunctionCallResult {
+        /// Sets `view_function_call_result` with the provided value.
+        pub fn with_view_function_call_result<
+            T: Into<super::super::command::CommandOutputs>,
+        >(mut self, field: T) -> Self {
+            self.view_function_call_result = Some(field.into());
+            self
+        }
+    }
+    impl super::ViewFunctionCallsResponse {
+        /// Sets `view_function_call_results` with the provided value.
+        pub fn with_view_function_call_results(
+            mut self,
+            field: Vec<super::ViewFunctionCallResult>,
+        ) -> Self {
+            self.view_function_call_results = field;
+            self
+        }
+    }
 }
