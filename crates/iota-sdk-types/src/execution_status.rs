@@ -178,6 +178,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
+///                 =/ invalid-attestation
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -220,6 +221,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
+/// invalid-attestation                                    = %d41
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -444,6 +446,11 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         suggested_gas_price: u64,
     },
+    /// The transaction's attestation was invalid: the attestor vouched for a
+    /// transaction it should have rejected. The attestor is accountable, so the
+    /// issuer's owned objects and gas are left untouched.
+    #[error("The transaction attestation is invalid")]
+    InvalidAttestation,
 }
 
 impl ExecutionError {
@@ -489,6 +496,7 @@ impl ExecutionError {
         InvalidLinkage,
         MoveAuthentication,
         ExecutionCanceledDueToExecutionWorkerCongestion,
+        InvalidAttestation,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {

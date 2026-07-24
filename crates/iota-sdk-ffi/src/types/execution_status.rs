@@ -285,6 +285,10 @@ pub enum ExecutionError {
     /// suggested gas price can be used to give this certificate more priority.
     /// No individual object is responsible, so none is reported.
     ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
+    /// The transaction's attestation was invalid: the attestor vouched for a
+    /// transaction it should have rejected. The attestor is accountable, so the
+    /// issuer's owned objects and gas are left untouched.
+    InvalidAttestation,
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -452,6 +456,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
                 suggested_gas_price,
             },
+            iota_sdk::types::ExecutionError::InvalidAttestation => Self::InvalidAttestation,
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -580,6 +585,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
                 suggested_gas_price,
             },
+            ExecutionError::InvalidAttestation => Self::InvalidAttestation,
         }
     }
 }
