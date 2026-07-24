@@ -1,7 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of [`TransactionBuilderResolveClient`] and
+//! [`TransactionBuilderClient`] for the GRPC [`Client`].
 
 use std::time::Duration;
 
@@ -13,7 +14,8 @@ use iota_grpc_types::{
     v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient,
+    TransactionBuilderResolveClient, WaitForTx,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -60,9 +62,8 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderResolveClient for Client {
     type Error = crate::api::Error;
-    type DryRunResult = SimulatedTransaction;
 
     async fn object(
         &self,
@@ -145,6 +146,41 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
+    async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>, Self::Error> {
+        let epoch = self
+            .get_epoch(
+                epoch.into(),
+                Some(ReadMask::from(EpochField::REFERENCE_GAS_PRICE)),
+            )
+            .await?
+            .into_inner();
+        Ok(epoch.reference_gas_price)
+    }
+
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+        // Simulate with relaxed checks and read the gas used from the resulting
+        // effects.
+        let simulated = self.simulate_transaction(tx.clone(), true, None).await?;
+        let effects = simulated
+            .into_inner()
+            .executed_transaction()?
+            .effects()?
+            .effects()?;
+        Ok(match effects {
+            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
+        })
+    }
+}
+
+impl TransactionBuilderClient for Client {
+    type DryRunResult = SimulatedTransaction;
+
     async fn transaction(
         &self,
         digest: TransactionDigest,
@@ -187,39 +223,6 @@ impl TransactionBuilderClient for Client {
             Some(tx) => Ok(Some(tx.effects()?.effects()?)),
             None => Ok(None),
         }
-    }
-
-    async fn reference_gas_price(
-        &self,
-        epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>, Self::Error> {
-        let epoch = self
-            .get_epoch(
-                epoch.into(),
-                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
-            )
-            .await?
-            .into_inner();
-        Ok(epoch.reference_gas_price)
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        // Simulate with relaxed checks and read the gas used from the resulting
-        // effects.
-        let simulated = self
-            .simulate_transaction(tx.clone(), true, SimulateReadMask::default())
-            .await?;
-        let effects = simulated
-            .into_inner()
-            .executed_transaction()?
-            .effects()?
-            .effects()?;
-        Ok(match effects {
-            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
-            _ => unimplemented!(
-                "a new TransactionEffects enum variant was added and needs to be handled"
-            ),
-        })
     }
 
     async fn dry_run_tx(

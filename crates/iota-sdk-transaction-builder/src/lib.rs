@@ -15,9 +15,12 @@
 //! ## Online vs. Offline Builder
 //!
 //! The Transaction Builder can be used with or without a client implementing
-//! [TransactionBuilderClient]. When one is provided via the
+//! [TransactionBuilderResolveClient]. When one is provided via the
 //! [with_client](TransactionBuilder::with_client) method, the resulting builder
-//! will use it to find and validate provided IDs.
+//! will use it to find and validate provided IDs. Clients that also implement
+//! [TransactionBuilderClient] additionally enable
+//! [dry_run](TransactionBuilder::dry_run) and
+//! [execute](TransactionBuilder::execute).
 //!
 //! ### Example with Client Resolution
 //!
@@ -302,7 +305,10 @@ pub use self::builder::client::test_client::{RecordingClient, TestClient, TestCl
 pub use self::{
     builder::{
         TransactionBuilder,
-        client::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx},
+        client::{
+            ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderResolveClient,
+            WaitForTx,
+        },
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
@@ -315,6 +321,77 @@ mod tests {
     use iota_types::{Address, ObjectReference, Transaction, Version};
 
     use crate::TransactionBuilder;
+
+    #[cfg(feature = "test-client")]
+    mod resolve_client {
+        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+
+        use crate::{
+            ObjectsPage, TestClient, TestClientError, TransactionBuilder,
+            TransactionBuilderResolveClient,
+        };
+
+        /// Implements only [`TransactionBuilderResolveClient`] by forwarding to
+        /// [`TestClient`], to verify that building a transaction does not
+        /// require the full
+        /// [`TransactionBuilderClient`](crate::TransactionBuilderClient).
+        struct ResolveOnlyClient(TestClient);
+
+        impl TransactionBuilderResolveClient for ResolveOnlyClient {
+            type Error = TestClientError;
+
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                self.0.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: iota_types::Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                self.0.objects(struct_tag, owner, cursor, limit).await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                self.0.reference_gas_price(epoch).await
+            }
+
+            async fn estimate_tx_budget(
+                &self,
+                tx: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                self.0.estimate_tx_budget(tx).await
+            }
+        }
+
+        #[tokio::test]
+        async fn finish_requires_only_the_resolve_client() {
+            let sender = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                .parse()
+                .unwrap();
+            let recipient = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+            let coin: ObjectId =
+                "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                    .parse()
+                    .unwrap();
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(ResolveOnlyClient(TestClient));
+            builder.send_coins([coin], recipient, 1000u64);
+            builder.finish().await.unwrap();
+        }
+    }
 
     #[tokio::test]
     async fn test_finish() {

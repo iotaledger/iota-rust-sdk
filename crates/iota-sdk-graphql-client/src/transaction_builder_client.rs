@@ -1,10 +1,12 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
+//! Implementation of [`TransactionBuilderResolveClient`] and
+//! [`TransactionBuilderClient`] for the GraphQL [`Client`].
 
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient,
+    TransactionBuilderResolveClient, WaitForTx,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -24,9 +26,8 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderResolveClient for Client {
     type Error = crate::error::Error;
-    type DryRunResult = DryRunResult;
 
     async fn object(
         &self,
@@ -84,20 +85,6 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.transaction_effects(digest).await
-    }
-
     async fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
@@ -113,6 +100,24 @@ impl TransactionBuilderClient for Client {
                 "a new TransactionEffects enum variant was added and needs to be handled"
             ),
         }))
+    }
+}
+
+impl TransactionBuilderClient for Client {
+    type DryRunResult = DryRunResult;
+
+    async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>, Self::Error> {
+        self.transaction(digest).await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        self.transaction_effects(digest).await
     }
 
     async fn dry_run_tx(
