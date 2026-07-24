@@ -119,11 +119,18 @@ pub trait TransactionBuilderResolveClient {
         epoch: impl Into<Option<u64>>,
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
 
-    /// Estimate the gas budget needed for a transaction
+    /// Estimate the gas budget needed for a transaction.
+    ///
+    /// Estimation typically requires simulating the transaction, which not
+    /// every client can do. The default impl returns `Ok(None)`, in which
+    /// case the gas budget must be set explicitly on the builder for
+    /// [`finish`](crate::TransactionBuilder::finish) to succeed.
     fn estimate_tx_budget(
         &self,
-        tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
+        _tx: &Transaction,
+    ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>> {
+        std::future::ready(Ok(None))
+    }
 }
 
 /// A trait which defines methods needed from the client for the Transaction
@@ -532,9 +539,8 @@ pub(crate) mod test_client {
         }
     }
 
-    impl TransactionBuilderClient for RecordingClient {
+    impl TransactionBuilderResolveClient for RecordingClient {
         type Error = crate::TestClientError;
-        type DryRunResult = ();
 
         async fn object(
             &self,
@@ -579,6 +585,21 @@ pub(crate) mod test_client {
                 .await
         }
 
+        async fn reference_gas_price(
+            &self,
+            epoch: impl Into<Option<u64>>,
+        ) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.reference_gas_price(epoch).await
+        }
+
+        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.estimate_tx_budget(tx).await
+        }
+    }
+
+    impl TransactionBuilderClient for RecordingClient {
+        type DryRunResult = ();
+
         async fn transaction(
             &self,
             digest: iota_types::TransactionDigest,
@@ -591,17 +612,6 @@ pub(crate) mod test_client {
             digest: iota_types::TransactionDigest,
         ) -> Result<Option<TransactionEffects>, Self::Error> {
             crate::TestClient.transaction_effects(digest).await
-        }
-
-        async fn reference_gas_price(
-            &self,
-            epoch: impl Into<Option<u64>>,
-        ) -> Result<Option<u64>, Self::Error> {
-            crate::TestClient.reference_gas_price(epoch).await
-        }
-
-        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-            crate::TestClient.estimate_tx_budget(tx).await
         }
 
         async fn dry_run_tx(
