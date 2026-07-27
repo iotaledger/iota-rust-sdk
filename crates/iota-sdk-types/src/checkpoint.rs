@@ -207,7 +207,7 @@ impl crate::TreeDisplay for CheckpointSummary {
             &self.network_total_transactions,
             false,
         )?;
-        w.leaf("Content Digest", &self.content_digest, false)?;
+        w.leaf("Contents Digest", &self.contents_digest, false)?;
         w.option("Previous Digest", &self.previous_digest, false)?;
         w.child(
             "Epoch Rolling Gas Cost",
