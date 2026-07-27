@@ -244,6 +244,213 @@ mod tests {
         assert_eq!(output, "└── Key: value");
     }
 
+    /// Renders the output a closure writes into a fresh [`TreeWriter`].
+    fn render(body: impl Fn(&mut TreeWriter<'_, '_>) -> fmt::Result) -> String {
+        AfterText(move |f| body(&mut TreeWriter::new(f))).to_string()
+    }
+
+    /// Minimal [`TreeDisplay`] type for exercising sub-tree rendering.
+    struct Point {
+        x: u8,
+        y: u8,
+    }
+
+    impl TreeDisplay for Point {
+        fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> fmt::Result {
+            w.header("Point")?;
+            w.leaf("X", &self.x, false)?;
+            w.leaf("Y", &self.y, true)
+        }
+    }
+
+    impl_tree_display!(Point);
+
+    #[test]
+    fn header_writes_root_label_without_connector() {
+        assert_eq!(render(|w| w.header("Root")), "Root");
+
+        let expected = "
+Root
+└── Key: value";
+        assert_eq!(
+            render(|w| {
+                w.header("Root")?;
+                w.leaf("Key", &"value", true)
+            }),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn leaf_connector_depends_on_sibling_position() {
+        let expected = "
+├── First: 1
+└── Last: 2";
+        assert_eq!(
+            render(|w| {
+                w.leaf("First", &1, false)?;
+                w.leaf("Last", &2, true)
+            }),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn leaf_indents_multi_line_value_below_its_label() {
+        let expected = "
+└── Label:
+    line1
+    line2";
+        assert_eq!(
+            render(|w| w.leaf("Label", &"line1\nline2", true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+
+        let expected = "
+├── Label:
+│   line1
+│   line2
+└── Last: x";
+        assert_eq!(
+            render(|w| {
+                w.leaf("Label", &"line1\nline2", false)?;
+                w.leaf("Last", &"x", true)
+            }),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn branch_extends_prefix_for_children() {
+        let expected = "
+└── Parent
+    └── Child: v";
+        assert_eq!(
+            render(|w| w.branch("Parent", true, |w| w.leaf("Child", &"v", true))),
+            expected.strip_prefix('\n').unwrap()
+        );
+
+        let expected = "
+├── Parent
+│   └── Child: v
+└── Last: x";
+        assert_eq!(
+            render(|w| {
+                w.branch("Parent", false, |w| w.leaf("Child", &"v", true))?;
+                w.leaf("Last", &"x", true)
+            }),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn child_appends_header_to_the_label_line() {
+        let expected = "
+└── Origin: Point
+    ├── X: 1
+    └── Y: 2";
+        assert_eq!(
+            render(|w| w.child("Origin", &Point { x: 1, y: 2 }, true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn child_omits_header_equal_to_the_label() {
+        let expected = "
+└── Point
+    ├── X: 1
+    └── Y: 2";
+        assert_eq!(
+            render(|w| w.child("Point", &Point { x: 1, y: 2 }, true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn vec_inline_renders_indexed_leaves() {
+        let empty: &[u8] = &[];
+        assert_eq!(
+            render(|w| w.vec_inline("Items", empty, true)),
+            "└── Items: []"
+        );
+        let expected = "
+└── Items
+    ├── 0: 10
+    └── 1: 20";
+        assert_eq!(
+            render(|w| w.vec_inline("Items", &[10, 20], true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn vec_children_renders_indexed_sub_trees() {
+        let empty: &[Point] = &[];
+        assert_eq!(
+            render(|w| w.vec_children("Points", empty, true)),
+            "└── Points: []"
+        );
+        let expected = "
+└── Points
+    └── 0: Point
+        ├── X: 1
+        └── Y: 2";
+        assert_eq!(
+            render(|w| w.vec_children("Points", &[Point { x: 1, y: 2 }], true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn option_renders_value_or_none() {
+        assert_eq!(render(|w| w.option("Opt", &Some(5), true)), "└── Opt: 5");
+        assert_eq!(
+            render(|w| w.option("Opt", &None::<u8>, true)),
+            "└── Opt: None"
+        );
+    }
+
+    #[test]
+    fn option_child_renders_sub_tree_or_none() {
+        let expected = "
+└── Origin: Point
+    ├── X: 1
+    └── Y: 2";
+        assert_eq!(
+            render(|w| w.option_child("Origin", &Some(Point { x: 1, y: 2 }), true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+        assert_eq!(
+            render(|w| w.option_child("Origin", &None::<Point>, true)),
+            "└── Origin: None"
+        );
+    }
+
+    #[test]
+    fn bytes_vec_renders_base64_leaves() {
+        assert_eq!(render(|w| w.bytes_vec("Data", &[], true)), "└── Data: []");
+        let expected = "
+└── Data
+    └── 0: AQID";
+        assert_eq!(
+            render(|w| w.bytes_vec("Data", &[vec![1, 2, 3]], true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn impl_tree_display_generates_display_from_fmt_tree() {
+        let expected = "
+Point
+├── X: 1
+└── Y: 2";
+        assert_eq!(
+            Point { x: 1, y: 2 }.to_string(),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
     fn sample_transaction() -> crate::Transaction {
         use crate::transaction::*;
 
