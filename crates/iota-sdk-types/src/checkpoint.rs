@@ -133,7 +133,7 @@ impl crate::TreeDisplay for EndOfEpochData {
 /// checkpoint-summary = u64                            ; epoch
 ///                      u64                            ; sequence_number
 ///                      u64                            ; network_total_transactions
-///                      checkpoint-contents-digest     ; content_digest
+///                      checkpoint-contents-digest     ; contents_digest
 ///                      (option checkpoint-digest)     ; previous_digest
 ///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
 ///                      u64                            ; timestamp_ms
@@ -159,7 +159,7 @@ pub struct CheckpointSummary {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
-    pub content_digest: CheckpointContentsDigest,
+    pub contents_digest: CheckpointContentsDigest,
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
@@ -231,7 +231,7 @@ impl CheckpointSummary {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
         network_total_transactions: u64,
-        content_digest: CheckpointContentsDigest,
+        contents_digest: CheckpointContentsDigest,
         previous_digest: Option<CheckpointDigest>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         timestamp_ms: CheckpointTimestamp,
@@ -243,7 +243,7 @@ impl CheckpointSummary {
             epoch,
             sequence_number,
             network_total_transactions,
-            content_digest,
+            contents_digest,
             previous_digest,
             epoch_rolling_gas_cost_summary,
             timestamp_ms,
@@ -270,8 +270,8 @@ impl CheckpointSummary {
     }
 
     /// The hash of the [`CheckpointContents`] for this checkpoint.
-    pub fn content_digest(&self) -> CheckpointContentsDigest {
-        self.content_digest
+    pub fn contents_digest(&self) -> CheckpointContentsDigest {
+        self.contents_digest
     }
 
     /// The hash of the previous `CheckpointSummary`, or `None` for the genesis
