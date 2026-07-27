@@ -51,7 +51,7 @@ pub type ProtocolVersion = u64;
 /// checkpoint-summary = u64                            ; epoch
 ///                      u64                            ; sequence_number
 ///                      u64                            ; network_total_transactions
-///                      digest                         ; content_digest
+///                      digest                         ; contents_digest
 ///                      (option digest)                ; previous_digest
 ///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
 ///                      u64                            ; timestamp_ms
@@ -70,7 +70,7 @@ impl CheckpointSummary {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
         network_total_transactions: u64,
-        content_digest: &CheckpointContentsDigest,
+        contents_digest: &CheckpointContentsDigest,
         previous_digest: Option<Arc<CheckpointDigest>>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         timestamp_ms: CheckpointTimestamp,
@@ -82,7 +82,7 @@ impl CheckpointSummary {
             epoch,
             sequence_number,
             network_total_transactions,
-            **content_digest,
+            **contents_digest,
             previous_digest.map(|v| **v),
             epoch_rolling_gas_cost_summary,
             timestamp_ms,
@@ -112,8 +112,8 @@ impl CheckpointSummary {
     }
 
     /// The hash of the `CheckpointContents` for this checkpoint.
-    pub fn content_digest(&self) -> CheckpointContentsDigest {
-        self.0.content_digest.into()
+    pub fn contents_digest(&self) -> CheckpointContentsDigest {
+        self.0.contents_digest.into()
     }
 
     /// The hash of the previous `CheckpointSummary`.
