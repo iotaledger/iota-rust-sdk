@@ -1754,10 +1754,12 @@ crate::ffi_move_event! {
         pub fn account_id(&self) -> ObjectId {
             self.0.account_id.bytes.into()
         }
-        pub fn from(&self) -> AuthenticatorFunctionRef {
+        /// The authenticator function reference before the rotation.
+        pub fn from_ref(&self) -> AuthenticatorFunctionRef {
             (&self.0.from).into()
         }
-        pub fn to(&self) -> AuthenticatorFunctionRef {
+        /// The authenticator function reference after the rotation.
+        pub fn to_ref(&self) -> AuthenticatorFunctionRef {
             (&self.0.to).into()
         }
     }
