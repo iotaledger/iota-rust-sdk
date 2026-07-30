@@ -86,8 +86,15 @@ impl Client {
     ///     .await?;
     ///
     /// for tx in txs.body() {
-    ///     // Skip the transactions the node could not serve
-    ///     let Ok(tx) = tx else { continue };
+    ///     let tx = match tx {
+    ///         Ok(tx) => tx,
+    ///         // Only this digest failed; the remaining transactions are still
+    ///         // usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read transaction: {e}");
+    ///             continue;
+    ///         }
+    ///     };
     ///
     ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;

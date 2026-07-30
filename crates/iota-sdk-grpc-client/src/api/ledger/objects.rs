@@ -53,21 +53,28 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("http://localhost:9000")?;
     /// let object_id: ObjectId = "0x2".parse()?;
+    /// let refs = [(object_id, None)];
     ///
     /// // Get objects with default mask
-    /// let objs = client.get_objects(&[(object_id, None)], None).await?;
+    /// let objs = client.get_objects(&refs, None).await?;
     ///
     /// // Get objects with field mask (only reference object ID, no BCS)
     /// let objs = client
     ///     .get_objects(
-    ///         &[(object_id, None)],
+    ///         &refs,
     ///         Some(ReadMask::from(ObjectField::REFERENCE_OBJECT_ID)),
     ///     )
     ///     .await?;
     ///
     /// for obj in objs.body() {
-    ///     // Skip the objects the node could not serve
-    ///     let Ok(obj) = obj else { continue };
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ref failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
     ///
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
@@ -75,6 +82,18 @@ impl Client {
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }
+    ///
+    /// // Results line up with the requested refs, so pair them to find out
+    /// // which objects the node does not have
+    /// let missing: Vec<ObjectId> = refs
+    ///     .iter()
+    ///     .zip(objs.body())
+    ///     .filter_map(|((id, _), result)| match result {
+    ///         Err(e) if e.is_not_found() => Some(*id),
+    ///         _ => None,
+    ///     })
+    ///     .collect();
+    /// println!("Missing objects: {missing:?}");
     /// # Ok(())
     /// # }
     /// ```
