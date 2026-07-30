@@ -16,17 +16,19 @@
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
 //! let client = Client::new("http://localhost:9000")?;
 //!
-//! // Get a transaction with full details (None = use default field mask)
+//! // Get a transaction with full details (None = use default field mask).
+//! // The batched reads return one result per request, so a transaction the
+//! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
 //! let txs = client.get_transactions(&[digest], None).await?;
-//! if let Some(tx) = txs.body().first() {
+//! if let Some(Ok(tx)) = txs.body().first() {
 //!     println!("Transaction digest: {:?}", tx.transaction()?.digest()?);
 //! }
 //!
 //! // Get an object (None = use default field mask)
 //! let object_id: ObjectId = "0x2".parse()?;
 //! let objects = client.get_objects(&[(object_id, None)], None).await?;
-//! if let Some(object) = objects.body().first() {
+//! if let Some(Ok(object)) = objects.body().first() {
 //!     println!("Object version: {:?}", object.object_reference()?.version());
 //! }
 //! # Ok(())

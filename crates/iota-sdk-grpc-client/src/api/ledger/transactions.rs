@@ -12,8 +12,8 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ProtoResult, ReadMask, Result,
-        collect_stream, field_mask_with_default, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, collect_stream,
+        field_mask_with_default, into_item_results, saturating_usize_to_u32,
     },
 };
 
@@ -30,12 +30,20 @@ impl Client {
     /// - `tx.checkpoint_sequence_number()` - Get checkpoint number
     /// - `tx.timestamp_ms()` - Get timestamp
     ///
-    /// Results are returned in the same order as the input digests.
-    /// If a transaction is not found, an error is returned.
+    /// Results are returned in the same order as the input digests, one per
+    /// digest.
     ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `digests` is empty.
+    ///
+    /// Each digest gets its own result: a transaction the node does not have
+    /// (never executed, or pruned) yields [`Error::Server`] with code
+    /// `NOT_FOUND` in that slot only, leaving the other transactions intact. A
+    /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
+    /// present but an object a requested field needs is gone, as described
+    /// under Read Mask below. The outer `Result` is reserved for failures
+    /// of the call itself, such as a transport error.
     ///
     /// # Read Mask
     ///
@@ -78,6 +86,9 @@ impl Client {
     ///     .await?;
     ///
     /// for tx in txs.body() {
+    ///     // Skip the transactions the node could not serve
+    ///     let Ok(tx) = tx else { continue };
+    ///
     ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
     ///     println!("Status: {:?}", effects.as_v1().status);
@@ -93,7 +104,7 @@ impl Client {
         &self,
         digests: &[TransactionDigest],
         read_mask: Option<ReadMask<'_>>,
-    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if digests.is_empty() {
             return Err(Error::EmptyRequest);
         }
@@ -123,12 +134,7 @@ impl Client {
 
         // Server guarantees results are returned in request order
         collect_stream(stream, metadata, |msg| {
-            let items = msg
-                .transaction_results
-                .into_iter()
-                .map(|r| r.into_result())
-                .collect::<Result<Vec<_>>>()?;
-            Ok((msg.has_next, items))
+            Ok((msg.has_next, into_item_results(msg.transaction_results)))
         })
         .await
     }

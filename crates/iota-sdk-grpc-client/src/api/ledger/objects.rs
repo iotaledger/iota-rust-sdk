@@ -13,8 +13,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ProtoResult, ReadMask, Result,
-        collect_stream, field_mask_with_default, proto_object_id, saturating_usize_to_u32,
+        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, collect_stream,
+        field_mask_with_default, into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -24,12 +24,17 @@ impl Client {
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
     /// type, or use `obj.object_reference()` to get the object reference.
     ///
-    /// Results are returned in the same order as the input refs.
-    /// If an object is not found, an error is returned.
+    /// Results are returned in the same order as the input refs, one per ref.
     ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// Each ref gets its own result: an object that is not found (never
+    /// existed, was deleted, or has been pruned by the serving node) yields
+    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
+    /// other objects intact. The outer `Result` is reserved for failures of the
+    /// call itself, such as a transport error.
     ///
     /// # Read Mask
     ///
@@ -61,6 +66,9 @@ impl Client {
     ///     .await?;
     ///
     /// for obj in objs.body() {
+    ///     // Skip the objects the node could not serve
+    ///     let Ok(obj) = obj else { continue };
+    ///
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
     ///     println!("Got object ID: {:?}", sdk_obj.id());
@@ -74,7 +82,7 @@ impl Client {
         &self,
         refs: &[(ObjectId, Option<Version>)],
         read_mask: Option<ReadMask<'_>>,
-    ) -> Result<MetadataEnvelope<Vec<Object>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);
         }
@@ -109,12 +117,7 @@ impl Client {
 
         // Server guarantees results are returned in request order
         collect_stream(stream, metadata, |msg| {
-            let items = msg
-                .objects
-                .into_iter()
-                .map(|r| r.into_result())
-                .collect::<Result<Vec<_>>>()?;
-            Ok((msg.has_next, items))
+            Ok((msg.has_next, into_item_results(msg.objects)))
         })
         .await
     }

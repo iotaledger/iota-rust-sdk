@@ -18,7 +18,7 @@ use crate::{
     Client,
     api::{
         EXECUTED_TRANSACTION_CHECKPOINT, EXECUTED_TRANSACTION_SIGNATURES,
-        EXECUTED_TRANSACTION_TRANSACTION, Error, ReadMask, TRANSACTION_DIGEST,
+        EXECUTED_TRANSACTION_TRANSACTION, Error, MetadataEnvelope, ReadMask, TRANSACTION_DIGEST,
         TRANSACTION_EFFECTS_BCS, saturating_usize_to_u32,
     },
 };
@@ -28,14 +28,20 @@ const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
 /// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
 const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
-/// Returns `true` if the error represents a "not found" response from the
-/// server. Used to map a missing object/transaction to `Ok(None)` (and to keep
-/// polling while waiting for a transaction to be indexed).
-fn is_not_found(err: &Error) -> bool {
-    match err {
-        Error::Server(status) => status.code == tonic::Code::NotFound as i32,
-        Error::Grpc(status) => status.code() == tonic::Code::NotFound,
-        _ => false,
+/// Extract the result for the single item of a one-item batch request.
+///
+/// A `NOT_FOUND` for the item maps to `None`, since these callers treat a
+/// missing object or transaction as an absence rather than a failure. A failure
+/// of the call itself still propagates — including a `NOT_FOUND`, which says
+/// the endpoint is wrong rather than that the item is absent.
+fn single_item<T>(
+    response: Result<MetadataEnvelope<Vec<Result<T, Error>>>, Error>,
+) -> Result<Option<T>, Error> {
+    match response?.into_inner().into_iter().next() {
+        Some(Ok(item)) => Ok(Some(item)),
+        Some(Err(e)) if e.is_not_found() => Ok(None),
+        Some(Err(e)) => Err(e),
+        None => Ok(None),
     }
 }
 
@@ -50,13 +56,11 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Option<Object>, Self::Error> {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
-        match self.get_objects(&[(object_id, version.into())], None).await {
-            Ok(envelope) => match envelope.into_inner().first() {
-                Some(obj) => Ok(Some(obj.object()?)),
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+        let response = self.get_objects(&[(object_id, version.into())], None).await;
+
+        match single_item(response)? {
+            Some(obj) => Ok(Some(obj.object()?)),
+            None => Ok(None),
         }
     }
 
@@ -106,7 +110,7 @@ impl TransactionBuilderClient for Client {
         &self,
         digest: TransactionDigest,
     ) -> Result<Option<SignedTransaction>, Self::Error> {
-        match self
+        let response = self
             .get_transactions(
                 &[digest],
                 Some(ReadMask::from(&[
@@ -114,21 +118,18 @@ impl TransactionBuilderClient for Client {
                     EXECUTED_TRANSACTION_SIGNATURES,
                 ])),
             )
-            .await
-        {
-            Ok(envelope) => match envelope.into_inner().into_iter().next() {
-                Some(tx) => {
-                    let transaction = tx.transaction()?.transaction()?;
-                    let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                    Ok(Some(SignedTransaction {
-                        transaction,
-                        signatures,
-                    }))
-                }
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => {
+                let transaction = tx.transaction()?.transaction()?;
+                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
+                Ok(Some(SignedTransaction {
+                    transaction,
+                    signatures,
+                }))
+            }
+            None => Ok(None),
         }
     }
 
@@ -136,16 +137,13 @@ impl TransactionBuilderClient for Client {
         &self,
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
-        match self
+        let response = self
             .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
-            .await
-        {
-            Ok(envelope) => match envelope.into_inner().into_iter().next() {
-                Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
         }
     }
 
@@ -236,22 +234,18 @@ impl TransactionBuilderClient for Client {
             let mut interval = tokio::time::interval(WAIT_FOR_TX_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                match self.get_transactions(&[digest], Some(mask.clone())).await {
-                    Ok(envelope) => {
-                        if let Some(tx) = envelope.into_inner().first() {
-                            let ready = match wait_for {
-                                WaitForTx::IndexedOnNode => true,
-                                WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
-                                _ => unreachable!("checked above"),
-                            };
-                            if ready {
-                                return Ok(());
-                            }
-                        }
+                let response = self.get_transactions(&[digest], Some(mask.clone())).await;
+
+                // An absent transaction is not indexed yet — keep polling.
+                if let Some(tx) = single_item(response)? {
+                    let ready = match wait_for {
+                        WaitForTx::IndexedOnNode => true,
+                        WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
+                        _ => unreachable!("checked above"),
+                    };
+                    if ready {
+                        return Ok(());
                     }
-                    // Not indexed yet — keep polling.
-                    Err(e) if is_not_found(&e) => {}
-                    Err(e) => return Err(e),
                 }
             }
         };
@@ -264,5 +258,44 @@ impl TransactionBuilderClient for Client {
                     WAIT_FOR_TX_TIMEOUT.as_secs()
                 )))
             })?
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use tonic::metadata::MetadataMap;
+
+    use super::{Error, MetadataEnvelope, single_item};
+    use crate::api::RpcStatus;
+
+    fn not_found_status() -> RpcStatus {
+        RpcStatus {
+            code: tonic::Code::NotFound.into(),
+            message: String::new(),
+            details: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn a_not_found_for_the_call_itself_is_not_an_absent_item() {
+        let response: Result<MetadataEnvelope<Vec<Result<u32, Error>>>, Error> =
+            Err(Error::from(tonic::Status::not_found("no such route")));
+
+        assert!(
+            single_item(response).is_err(),
+            "a call-level not-found means the endpoint is wrong, not that the item is absent"
+        );
+    }
+
+    #[test]
+    fn a_not_found_for_the_item_is_an_absent_item() {
+        let items: Vec<Result<u32, Error>> = vec![Err(Error::Server(not_found_status()))];
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            single_item(response)
+                .expect("an absent item is not an error")
+                .is_none()
+        );
     }
 }
