@@ -12,8 +12,8 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, collect_stream,
-        field_mask_with_default, into_item_results, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
+        collect_stream, field_mask_with_default, into_item_results, saturating_usize_to_u32,
     },
 };
 
@@ -43,7 +43,12 @@ impl Client {
     /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
     /// present but an object a requested field needs is gone, as described
     /// under Read Mask below. The outer `Result` is reserved for failures
-    /// of the call itself, such as a transport error.
+    /// of the call itself, such as a transport error, and for a server that
+    /// answered with a different number of results than digests requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
+    /// each result belongs to.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     ///
     /// # Read Mask
     ///
@@ -140,9 +145,12 @@ impl Client {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         // Server guarantees results are returned in request order
-        collect_stream(stream, metadata, |msg| {
+        let response = collect_stream(stream, metadata, |msg| {
             Ok((msg.has_next, into_item_results(msg.transaction_results)))
         })
-        .await
+        .await?;
+        check_result_count(response.body(), digests.len())?;
+
+        Ok(response)
     }
 }

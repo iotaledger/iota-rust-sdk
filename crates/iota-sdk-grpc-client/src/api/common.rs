@@ -133,6 +133,11 @@ pub enum ProtocolError {
     /// Error during checkpoint data stream reassembly.
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
+
+    /// A batched read returned a number of results that does not match the
+    /// number of requested items.
+    #[error("expected {expected} results, got {actual}")]
+    UnexpectedResultCount { expected: usize, actual: usize },
 }
 
 /// Errors during checkpoint data stream reassembly.
@@ -265,6 +270,21 @@ pub trait ProtoResult {
 /// while one that tolerates gaps can inspect each slot.
 pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>> {
     batch.into_iter().map(ProtoResult::into_result).collect()
+}
+
+/// Check that a batched read answered every requested item.
+///
+/// Callers pair results with requests by position, so a count that does not
+/// match the request leaves no way to tell which item each result belongs to.
+pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
+    if results.len() == expected {
+        Ok(())
+    } else {
+        Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+            expected,
+            actual: results.len(),
+        }))
+    }
 }
 
 impl ProtoResult for ObjectResult {

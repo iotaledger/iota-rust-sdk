@@ -19,7 +19,7 @@ use crate::{
     api::{
         EXECUTED_TRANSACTION_CHECKPOINT, EXECUTED_TRANSACTION_SIGNATURES,
         EXECUTED_TRANSACTION_TRANSACTION, Error, MetadataEnvelope, ReadMask, TRANSACTION_DIGEST,
-        TRANSACTION_EFFECTS_BCS, saturating_usize_to_u32,
+        TRANSACTION_EFFECTS_BCS, check_result_count, saturating_usize_to_u32,
     },
 };
 
@@ -34,14 +34,20 @@ const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 /// missing object or transaction as an absence rather than a failure. A failure
 /// of the call itself still propagates — including a `NOT_FOUND`, which says
 /// the endpoint is wrong rather than that the item is absent.
+///
+/// Anything other than exactly one result is a protocol error, not an absent
+/// item: the batched reads answer every request, so an empty batch says the
+/// server broke that promise rather than that the item is missing.
 fn single_item<T>(
     response: Result<MetadataEnvelope<Vec<Result<T, Error>>>, Error>,
 ) -> Result<Option<T>, Error> {
-    match response?.into_inner().into_iter().next() {
-        Some(Ok(item)) => Ok(Some(item)),
-        Some(Err(e)) if e.is_not_found() => Ok(None),
-        Some(Err(e)) => Err(e),
-        None => Ok(None),
+    let mut items = response?.into_inner();
+    check_result_count(&items, 1)?;
+
+    match items.pop().expect("count checked above") {
+        Ok(item) => Ok(Some(item)),
+        Err(e) if e.is_not_found() => Ok(None),
+        Err(e) => Err(e),
     }
 }
 
@@ -266,7 +272,7 @@ mod tests {
     use tonic::metadata::MetadataMap;
 
     use super::{Error, MetadataEnvelope, single_item};
-    use crate::api::RpcStatus;
+    use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
         RpcStatus {
@@ -296,6 +302,40 @@ mod tests {
             single_item(response)
                 .expect("an absent item is not an error")
                 .is_none()
+        );
+    }
+
+    #[test]
+    fn an_empty_batch_is_not_an_absent_item() {
+        let items: Vec<Result<u32, Error>> = Vec::new();
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            matches!(
+                single_item(response),
+                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                    expected: 1,
+                    actual: 0
+                }))
+            ),
+            "a batch with no results means the server did not answer the request"
+        );
+    }
+
+    #[test]
+    fn a_batch_with_more_results_than_requested_is_an_error() {
+        let items: Vec<Result<u32, Error>> = vec![Ok(1), Ok(2)];
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            matches!(
+                single_item(response),
+                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                    expected: 1,
+                    actual: 2
+                }))
+            ),
+            "results can no longer be paired with the request, so the first one is not usable"
         );
     }
 }

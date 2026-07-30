@@ -13,8 +13,9 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, collect_stream,
-        field_mask_with_default, into_item_results, proto_object_id, saturating_usize_to_u32,
+        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
+        collect_stream, field_mask_with_default, into_item_results, proto_object_id,
+        saturating_usize_to_u32,
     },
 };
 
@@ -34,7 +35,12 @@ impl Client {
     /// existed, was deleted, or has been pruned by the serving node) yields
     /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
     /// other objects intact. The outer `Result` is reserved for failures of the
-    /// call itself, such as a transport error.
+    /// call itself, such as a transport error, and for a server that answered
+    /// with a different number of results than refs requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ref each
+    /// result belongs to.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     ///
     /// # Read Mask
     ///
@@ -135,9 +141,12 @@ impl Client {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         // Server guarantees results are returned in request order
-        collect_stream(stream, metadata, |msg| {
+        let response = collect_stream(stream, metadata, |msg| {
             Ok((msg.has_next, into_item_results(msg.objects)))
         })
-        .await
+        .await?;
+        check_result_count(response.body(), refs.len())?;
+
+        Ok(response)
     }
 }
