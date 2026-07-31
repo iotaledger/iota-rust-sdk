@@ -114,44 +114,15 @@ cargo test --doc                 # Direct doc test invocation
 
 ## Writing style
 
-Covers everything you write: names, code comments, commit messages, PR and issue descriptions, review comments, chat replies.
+All prose — PR/issue descriptions, reviews, chat replies, comments, commit messages:
 
-**Write what the reader cannot get from the code or the diff** — reasoning, constraints, trade-offs, the shape of a change. Not what the diff already shows: renamed symbols, touched files, what each function now does. Length follows scope; the rule constrains content, not size.
+- One sentence naming the change, then only what the reader can't get from the diff: the problem, the reasoning, real trade-offs. Usually that's a few sentences; long only when the change is genuinely large.
+- No diff inventory — no per-file bullets, no symbol lists, no restating code in prose. Applies to reasons too: a "why" whose content is visible in the diff is inventory.
+- No invented motives — never "X because Y" unless Y came from the issue or task.
+- No filler — no lead-ins, headings-for-show, verdict paragraphs, or notes about these rules. Reviews: start with the first finding, one point per comment.
+- Plain language — only terms already in the codebase or domain; never coin a label and reuse it as vocabulary.
 
-Never state a motive you do not have. A true fact about a dependency is not the reason it was picked: don't write "X because Y" unless Y came from the issue or the task. Where the reason isn't recoverable, say what the change does and link the issue.
-
-An example — the difference is not any single sentence, it is what the description is organised around. Not this, organised by file, where each bullet is true and the whole still restates the diff:
-
-> Extends the writing conventions beyond code comments to cover PR/issue descriptions, reviews, and reports.
->
-> - `RUST_CONVENTIONS.md`: new "Plain Language, No Coined Terms" rule under Comments — applies to all prose; use vocabulary already in the codebase/domain, don't invent-and-reuse labels, self-check before submitting.
-> - `AGENTS.md`: promote "Comment style" to a "Writing style" section covering code comments, PR/issue descriptions (compact, bullet points over prose, still state why), and the plain-language rule.
-> - `REVIEW.md`: review-output guidance now points to the plain-language rule.
-
-This, organised around the problem:
-
-> AI-generated comments and PR/issue text tend to be too long and lean on invented terminology. This extends the writing conventions to push back on that: keep prose concise, use plain language, and stick to terms already used in the project.
->
-> Applies to code comments (as before) plus PR/issue descriptions, reviews, and reports.
-
-### Per surface
-
-- **Code comments** — doc comments tell the caller what they need in order to call it correctly; inline comments give a non-obvious _why_, and default to none. No change history ("added for X", "as discussed", PR numbers).
-- **PR and issue descriptions** — why the change exists, what changes at the level of concepts, real trade-offs, and where to look hardest. For issues: the problem and why it matters, not a patch written out in prose.
-- **Review comments** — start with the first finding. No heading, no lead-in, and no "overall" paragraph describing the change back to the author; a verdict is allowed only if it is a judgement they don't already have. One point per comment; if it contains "also", it is two.
-- **Chat replies** — the change, and anything the user has to decide or act on. Mention verification only where it is informative: a routine `clippy`/`fmt`/`cargo check` pass is not, an unrun test suite or an unverified behaviour change is. Don't replay the session or restate the request.
-
-### Before posting
-
-1. Draft from the problem and the reasoning, not by reading back over the diff for material.
-2. Delete every sentence the reader could have got from the diff, except the one naming what the change is — every description needs that, however obvious, so the reasoning has something to attach to.
-3. Repeat step 2 until a pass cuts nothing.
-
-Being asked to make something shorter means step 2 was skipped.
-
-### Plain language
-
-Use words already in the codebase or the established domain. Don't coin a label for a concept and then reuse it as if it were vocabulary — describe the thing directly. Before submitting, scan for any noun phrase acting as a _name_ for an idea; if you coined it, delete the label and state the idea plainly.
+Before posting: delete every sentence the reader could get from the diff; repeat until a pass cuts nothing.
 
 ## Important Files
 
