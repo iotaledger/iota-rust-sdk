@@ -45,6 +45,36 @@ macro_rules! ffi_move_object {
     };
 }
 
+/// Define the FFI wrapper for a Move event mirror: the `uniffi::Object`
+/// newtype plus a `try_from_bcs` constructor. Events are not objects (no
+/// `key` ability, no `UID`), so there is no `try_from_object` and no `id`;
+/// they are decoded from the BCS `contents` of an event query result.
+/// Type-specific field accessors go in the trailing block and are spliced
+/// into the exported impl.
+#[macro_export]
+macro_rules! ffi_move_event {
+    (
+        $(#[$meta:meta])*
+        $name:ident($core:ty) { $($accessors:tt)* }
+    ) => {
+        $(#[$meta])*
+        #[derive(Debug, derive_more::From, uniffi::Object)]
+        #[uniffi::export(Debug)]
+        pub struct $name(pub $core);
+
+        #[uniffi::export]
+        impl $name {
+            /// Decode from the BCS contents of an emitted event.
+            #[uniffi::constructor]
+            pub fn try_from_bcs(bytes: Vec<u8>) -> $crate::error::Result<Self> {
+                Ok(::bcs::from_bytes::<$core>(&bytes)?.into())
+            }
+
+            $($accessors)*
+        }
+    };
+}
+
 /// Like [`ffi_move_object`], but for a mirror with a single (phantom) type
 /// parameter. `$core` is the type instantiated at `IOTA` (a phantom marker, so
 /// the BCS layout is the same for every coin type); the object constructor
