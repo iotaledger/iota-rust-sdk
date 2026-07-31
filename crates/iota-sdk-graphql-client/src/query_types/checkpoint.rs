@@ -124,7 +124,7 @@ impl TryInto<CheckpointSummary> for Checkpoint {
         let timestamp_ms = ChronoDT::parse_from_rfc3339(&self.timestamp.0)?
             .timestamp_millis()
             .try_into()?;
-        let content_digest = CheckpointContentsDigest::from_base58(&self.digest)?;
+        let contents_digest = CheckpointContentsDigest::from_base58(&self.digest)?;
         let previous_digest = self
             .previous_checkpoint_digest
             .map(|d| CheckpointDigest::from_base58(&d))
@@ -143,7 +143,7 @@ impl TryInto<CheckpointSummary> for Checkpoint {
             sequence_number,
             network_total_transactions,
             timestamp_ms,
-            content_digest,
+            contents_digest,
             previous_digest,
             epoch_rolling_gas_cost_summary,
             checkpoint_commitments: vec![],

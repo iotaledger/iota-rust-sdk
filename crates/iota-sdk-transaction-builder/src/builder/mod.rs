@@ -10,9 +10,9 @@ use std::{
 };
 
 use iota_types::{
-    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
+    Address, Coin, GasPayment, Identifier, MovePackageData, Object, ObjectId, ObjectReference,
+    Owner, ProgrammableTransaction, SharedObjectReference, StructTag, Transaction,
+    TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -1224,12 +1224,70 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         self
     }
 
-    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
-        let mut inputs = Vec::new();
-        let mut gas = Vec::new();
-        let mut input_map = HashMap::new();
+    /// Add gas coins that will be consumed, by reference. Optional.
+    ///
+    /// Same as [`gas`](Self::gas), but for coins the caller has already
+    /// resolved: the builder takes the references as given instead of looking
+    /// the objects up. Setting either one stops the builder from picking gas
+    /// coins on its own.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, unresolved};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let gas_coin1 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     version: Version::from_u64(473053811),
+    /// };
+    /// let gas_coin2 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     version: Version::from_u64(473053810),
+    /// };
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas_refs([gas_coin1, gas_coin2])
+    ///     .gas_budget(1000000000)
+    ///     .gas_price(100);
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn gas_refs(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+        for obj_ref in obj_refs {
+            self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                true,
+            );
+        }
+        self
+    }
 
-        if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+    /// Pick gas coins owned by the sponsor (or the sender) unless the caller
+    /// already set some with [`gas`](Self::gas) or
+    /// [`gas_refs`](Self::gas_refs).
+    async fn select_default_gas(&mut self) -> Result<(), Error> {
+        if !self.data.inputs.values().any(|i| i.is_gas) {
             // Some commands have arguments which cannot safely be replaced by
             // `Argument::Gas`, so we need to find any instances of
             // these and ensure that we don't use those coins
@@ -1314,15 +1372,78 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 );
             }
         }
-        for (id, input) in std::mem::take(&mut self.data.inputs) {
+        Ok(())
+    }
+
+    /// Fetch every object that `inputs` refers to by id, in a single request.
+    ///
+    /// Inputs are de-duplicated by object id, so each id is fetched once.
+    async fn fetch_input_objects(
+        &self,
+        inputs: &[(InputId, Input)],
+    ) -> Result<HashMap<ObjectId, Object>, Error> {
+        let mut requests = Vec::new();
+        for (_, input) in inputs {
+            if let InputKind::ImmutableOrOwned(object_id)
+            | InputKind::Receiving(object_id)
+            | InputKind::Shared { object_id, .. } = &input.kind
+            {
+                requests.push((*object_id, None));
+            }
+        }
+        if requests.is_empty() {
+            return Ok(HashMap::new());
+        }
+        let fetched = self
+            .client
+            .objects_by_id(&requests)
+            .await
+            .map_err(Error::client)?;
+        if fetched.len() != requests.len() {
+            return Err(Error::Input(format!(
+                "asked the client for {} objects but got {} back",
+                requests.len(),
+                fetched.len()
+            )));
+        }
+        requests
+            .into_iter()
+            .zip(fetched)
+            .map(|((object_id, _), object)| {
+                let object =
+                    object.ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                // Answering in request order is part of `objects_by_id`'s
+                // contract, but a transaction gets signed over whatever comes
+                // back, so check it rather than assume it.
+                if object.id() != object_id {
+                    return Err(Error::Input(format!(
+                        "asked the client for object {object_id} but got {}",
+                        object.id()
+                    )));
+                }
+                Ok((object_id, object))
+            })
+            .collect()
+    }
+
+    /// Resolve the inputs and commands into a [`TransactionKind`], returning it
+    /// together with the gas coins currently set on the builder.
+    async fn resolve_kind(&mut self) -> Result<(TransactionKind, Vec<ObjectReference>), Error> {
+        let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
+        let objects = self.fetch_input_objects(&taken_inputs).await?;
+        let object = |object_id: ObjectId| {
+            objects
+                .get(&object_id)
+                .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+        };
+
+        let mut inputs = Vec::new();
+        let mut gas = Vec::new();
+        let mut input_map = HashMap::new();
+        for (id, input) in taken_inputs {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
-                    let obj = self
-                        .client
-                        .object(object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    let obj = object(object_id)?;
 
                     if input.is_gas {
                         let obj_ref = match obj.owner() {
@@ -1359,12 +1480,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     }
                 }
                 InputKind::Shared { object_id, mutable } => {
-                    let obj = self
-                        .client
-                        .object(object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    let obj = object(object_id)?;
 
                     let input = match obj.owner() {
                         Owner::Shared(version) => {
@@ -1405,6 +1521,16 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
+        let kind =
+            iota_types::TransactionKind::Programmable(ProgrammableTransaction { inputs, commands });
+        Ok((kind, gas))
+    }
+
+    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
+        if default_gas {
+            self.select_default_gas().await?;
+        }
+        let (kind, gas) = self.resolve_kind().await?;
         let price = match self.data.gas_price {
             Some(price) => price,
             None => self
@@ -1415,10 +1541,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
-                inputs,
-                commands,
-            }),
+            kind,
             sender: self.data.sender,
             gas_payment: GasPayment {
                 objects: gas,
@@ -1456,6 +1579,49 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         self.finish_internal().await
+    }
+
+    /// Convert this builder into a [`TransactionKind`], resolving the inputs
+    /// with the client but leaving the gas alone.
+    ///
+    /// Use this when the gas payment is decided elsewhere — a wallet that picks
+    /// the gas coins itself, or a caller that needs the kind to estimate a
+    /// budget before it can pick them. Unlike [`finish`](Self::finish), no gas
+    /// coins are selected, no budget is estimated and no gas price is fetched,
+    /// so this costs nothing beyond resolving the inputs. Any gas set with
+    /// [`gas`](Self::gas) or [`gas_refs`](Self::gas_refs), and the sponsor,
+    /// price, budget and expiration, are not part of a
+    /// [`TransactionKind`] and are dropped.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId, TransactionKind};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address =
+    ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let coin =
+    ///     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.transfer_objects(to_address, [coin]);
+    ///
+    /// let kind: TransactionKind = builder.finish_kind().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn finish_kind(mut self) -> Result<TransactionKind, Error> {
+        let (kind, _gas) = self.resolve_kind().await?;
+        Ok(kind)
     }
 
     /// Dry run the transaction.
@@ -1905,5 +2071,317 @@ mod tests {
 
         assert!(builder.data.commands.is_empty());
         assert!(builder.data.inputs.is_empty());
+    }
+    /// A [`TestClient`] that records how the builder asked for objects, and can
+    /// report chosen ids as missing.
+    #[cfg(feature = "test-client")]
+    #[derive(Clone, Default)]
+    struct RecordingClient {
+        /// The ids of each `objects_by_id` call, in call order.
+        batches: std::sync::Arc<std::sync::Mutex<Vec<Vec<ObjectId>>>>,
+        /// The ids of each single-object `object` call, in call order.
+        singles: std::sync::Arc<std::sync::Mutex<Vec<ObjectId>>>,
+        /// Ids to report as missing instead of fabricating an object.
+        missing: Vec<ObjectId>,
+    }
+
+    #[cfg(feature = "test-client")]
+    impl RecordingClient {
+        fn batches(&self) -> Vec<Vec<ObjectId>> {
+            self.batches.lock().unwrap().clone()
+        }
+
+        fn singles(&self) -> Vec<ObjectId> {
+            self.singles.lock().unwrap().clone()
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    impl TransactionBuilderClient for RecordingClient {
+        type Error = crate::TestClientError;
+        type DryRunResult = ();
+
+        async fn object(
+            &self,
+            object_id: ObjectId,
+            version: impl Into<Option<Version>>,
+        ) -> Result<Option<Object>, Self::Error> {
+            self.singles.lock().unwrap().push(object_id);
+            if self.missing.contains(&object_id) {
+                return Ok(None);
+            }
+            crate::TestClient.object(object_id, version).await
+        }
+
+        async fn objects_by_id(
+            &self,
+            object_ids: &[(ObjectId, Option<Version>)],
+        ) -> Result<Vec<Option<Object>>, Self::Error> {
+            self.batches
+                .lock()
+                .unwrap()
+                .push(object_ids.iter().map(|(id, _)| *id).collect());
+            let mut objects = Vec::with_capacity(object_ids.len());
+            for (object_id, _) in object_ids {
+                objects.push(if self.missing.contains(object_id) {
+                    None
+                } else {
+                    crate::TestClient.object(*object_id, None).await?
+                });
+            }
+            Ok(objects)
+        }
+
+        async fn objects(
+            &self,
+            struct_tag: Option<StructTag>,
+            owner: Address,
+            cursor: Option<Vec<u8>>,
+            limit: Option<usize>,
+        ) -> Result<crate::ObjectsPage, Self::Error> {
+            crate::TestClient
+                .objects(struct_tag, owner, cursor, limit)
+                .await
+        }
+
+        async fn transaction(
+            &self,
+            digest: iota_types::TransactionDigest,
+        ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
+            crate::TestClient.transaction(digest).await
+        }
+
+        async fn transaction_effects(
+            &self,
+            digest: iota_types::TransactionDigest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            crate::TestClient.transaction_effects(digest).await
+        }
+
+        async fn reference_gas_price(
+            &self,
+            epoch: impl Into<Option<u64>>,
+        ) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.reference_gas_price(epoch).await
+        }
+
+        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.estimate_tx_budget(tx).await
+        }
+
+        async fn dry_run_tx(
+            &self,
+            tx: &Transaction,
+            skip_checks: bool,
+        ) -> Result<Self::DryRunResult, Self::Error> {
+            crate::TestClient.dry_run_tx(tx, skip_checks).await
+        }
+
+        async fn execute_tx(
+            &self,
+            signatures: &[iota_types::UserSignature],
+            tx: &Transaction,
+            wait_for: impl Into<Option<WaitForTx>>,
+        ) -> Result<TransactionEffects, Self::Error> {
+            crate::TestClient.execute_tx(signatures, tx, wait_for).await
+        }
+
+        async fn wait_for_tx(
+            &self,
+            digest: iota_types::TransactionDigest,
+            wait_for: WaitForTx,
+        ) -> Result<(), Self::Error> {
+            crate::TestClient.wait_for_tx(digest, wait_for).await
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod input_resolution {
+        use iota_types::Version;
+
+        use super::{super::*, RecordingClient};
+
+        fn object_id(seed: u8) -> ObjectId {
+            ObjectId::new([seed; ObjectId::LENGTH])
+        }
+
+        /// Every object input is fetched in one batch, and none of them fall
+        /// back to a single-object request.
+        #[tokio::test]
+        async fn all_inputs_are_fetched_in_one_request() {
+            let sender = Address::generate(rand::thread_rng());
+            let client = RecordingClient::default();
+
+            let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+            builder.transfer_objects(sender, [object_id(1), object_id(2), object_id(3)]);
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments([crate::Shared(ObjectId::CLOCK)]);
+            builder.gas_refs([ObjectReference::new(
+                object_id(9),
+                Version::from_u64(1),
+                iota_types::ObjectDigest::new([9; 32]),
+            )]);
+
+            builder.finish_kind().await.unwrap();
+
+            assert_eq!(
+                client.batches(),
+                vec![vec![
+                    object_id(1),
+                    object_id(2),
+                    object_id(3),
+                    ObjectId::CLOCK,
+                ]],
+                "expected a single batch holding every object input"
+            );
+            assert!(
+                client.singles().is_empty(),
+                "no input should need a single-object request"
+            );
+        }
+
+        /// Batched objects are matched back to the input that asked for them,
+        /// so the shared object keeps its shared kind.
+        #[tokio::test]
+        async fn batched_objects_are_matched_to_their_inputs() {
+            let sender = Address::generate(rand::thread_rng());
+            let coin = object_id(1);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments((crate::Shared(ObjectId::CLOCK), coin));
+
+            let TransactionKind::Programmable(ptb) = builder.finish_kind().await.unwrap() else {
+                panic!("expected a programmable transaction");
+            };
+            let iota_types::Input::Shared(shared) = &ptb.inputs[0] else {
+                panic!("expected the clock to resolve as a shared input");
+            };
+            assert_eq!(shared.object_id, ObjectId::CLOCK);
+            let iota_types::Input::ImmutableOrOwned(owned) = &ptb.inputs[1] else {
+                panic!("expected the coin to resolve as an owned input");
+            };
+            assert_eq!(owned.object_id, coin);
+        }
+
+        /// A missing object is still reported by its own id.
+        #[tokio::test]
+        async fn a_missing_object_is_named_in_the_error() {
+            let sender = Address::generate(rand::thread_rng());
+            let absent = object_id(2);
+            let client = RecordingClient {
+                missing: vec![absent],
+                ..Default::default()
+            };
+
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1), absent]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(
+                err.to_string().contains(&absent.to_string()),
+                "error should name the missing object, got: {err}"
+            );
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod finish_kind {
+        use iota_types::{ObjectDigest, Version};
+
+        use super::super::*;
+        use crate::TestClient;
+
+        /// The gas coin id [`TestClient`] hands out to gas selection.
+        const SELECTABLE_GAS_COIN: ObjectId = ObjectId::new([0xee; ObjectId::LENGTH]);
+
+        fn object_ref(seed: u8, version: u64) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([seed; ObjectId::LENGTH]),
+                Version::from_u64(version),
+                ObjectDigest::new([seed; 32]),
+            )
+        }
+
+        fn split_coin_arg(kind: &TransactionKind) -> iota_types::Argument {
+            let TransactionKind::Programmable(ptb) = kind else {
+                panic!("expected a programmable transaction");
+            };
+            let [iota_types::Command::SplitCoins(split)] = &ptb.commands[..] else {
+                panic!("expected a single SplitCoins command");
+            };
+            split.coin
+        }
+
+        /// Automatic gas selection may claim a coin the caller named, which
+        /// turns the command's `Argument::Input` into `Argument::Gas`.
+        /// `finish_kind` selects no gas, so the command keeps pointing at the
+        /// coin.
+        #[tokio::test]
+        async fn keeps_the_coin_that_gas_selection_would_claim() {
+            let sender = Address::generate(rand::thread_rng());
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            let kind = builder.finish_kind().await.unwrap();
+            assert_eq!(split_coin_arg(&kind), iota_types::Argument::Input(0));
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            builder.gas_budget(5_000_000).gas_price(1000);
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(split_coin_arg(&txn.kind), iota_types::Argument::Gas);
+        }
+
+        /// Gas coins, sponsor, price, budget and expiration are not part of a
+        /// [`TransactionKind`], so setting them makes no difference.
+        #[tokio::test]
+        async fn ignores_gas_and_transaction_metadata() {
+            let sender = Address::generate(rand::thread_rng());
+            let recipient = Address::generate(rand::thread_rng());
+            let coin = ObjectId::new([7; ObjectId::LENGTH]);
+
+            let mut plain = TransactionBuilder::new(sender).with_client(TestClient);
+            plain.transfer_objects(recipient, [coin]);
+            let expected = plain.finish_kind().await.unwrap();
+
+            let mut decorated = TransactionBuilder::new(sender).with_client(TestClient);
+            decorated.transfer_objects(recipient, [coin]);
+            decorated
+                .gas_refs([object_ref(99, 7)])
+                .gas_budget(5_000_000)
+                .gas_price(1000)
+                .sponsor(Address::generate(rand::thread_rng()))
+                .expiration(42);
+
+            assert_eq!(decorated.finish_kind().await.unwrap(), expected);
+        }
+
+        /// `gas_refs` takes the references as given — no object lookup — and
+        /// stops the builder from picking gas coins of its own.
+        #[tokio::test]
+        async fn gas_refs_are_used_as_given() {
+            let sender = Address::generate(rand::thread_rng());
+            // A version the test client never fabricates, so a lookup that
+            // overwrote the reference would be visible.
+            let gas_coin = object_ref(3, 4242);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            builder
+                .gas_refs([gas_coin])
+                .gas_budget(5_000_000)
+                .gas_price(1000);
+
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.objects, vec![gas_coin]);
+        }
     }
 }

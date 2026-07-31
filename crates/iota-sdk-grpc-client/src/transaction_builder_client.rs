@@ -60,6 +60,36 @@ impl TransactionBuilderClient for Client {
         }
     }
 
+    async fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> Result<Vec<Option<Object>>, Self::Error> {
+        if object_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+        // Default read mask (`reference` + `bcs`) provides everything needed to
+        // reconstruct the SDK objects, which the server returns in request
+        // order.
+        match self.get_objects(object_ids, None).await {
+            Ok(envelope) => envelope
+                .into_inner()
+                .iter()
+                .map(|obj| obj.object().map(Some).map_err(Error::from))
+                .collect(),
+            // A batch request fails as a whole when any of the objects is
+            // missing, and does not say which, so fall back to one request per
+            // object to find out.
+            Err(e) if is_not_found(&e) => {
+                let mut objects = Vec::with_capacity(object_ids.len());
+                for (object_id, version) in object_ids {
+                    objects.push(self.object(*object_id, *version).await?);
+                }
+                Ok(objects)
+            }
+            Err(e) => Err(e),
+        }
+    }
+
     async fn objects(
         &self,
         struct_tag: Option<StructTag>,

@@ -71,6 +71,25 @@ pub trait TransactionBuilderClient {
         version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
+    /// Fetch several objects at once, returning them in the order they were
+    /// requested with `None` in place of any object that does not exist.
+    ///
+    /// The default impl calls [`object`](Self::object) once per entry, costing
+    /// one round trip each. Clients whose transport can fetch a batch (such as
+    /// gRPC's `GetObjects`) should override it.
+    fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<Object>>, Self::Error>> {
+        async move {
+            let mut objects = Vec::with_capacity(object_ids.len());
+            for (object_id, version) in object_ids {
+                objects.push(self.object(*object_id, *version).await?);
+            }
+            Ok(objects)
+        }
+    }
+
     /// Fetch one page of objects matching the filter, returning the page
     /// contents and a continuation cursor (when more pages exist).
     ///
@@ -154,6 +173,13 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
         (*self).object(object_id, version)
     }
 
+    fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<Object>>, Self::Error>> {
+        (*self).objects_by_id(object_ids)
+    }
+
     fn objects(
         &self,
         struct_tag: Option<StructTag>,
@@ -234,6 +260,13 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
         version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>> {
         self.as_ref().object(object_id, version)
+    }
+
+    fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<Object>>, Self::Error>> {
+        self.as_ref().objects_by_id(object_ids)
     }
 
     fn objects(

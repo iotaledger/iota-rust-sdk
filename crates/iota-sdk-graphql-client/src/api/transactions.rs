@@ -311,11 +311,7 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use iota_types::TransactionDigest;
-
-    use crate::{
-        Client, PaginationFilter, query_types::TransactionsFilter, test_utils::test_client,
-    };
+    use crate::{PaginationFilter, query_types::TransactionsFilter, test_utils::test_client};
 
     #[tokio::test]
     async fn test_transaction_effects_query() {
@@ -370,13 +366,15 @@ mod tests {
 
     #[tokio::test]
     async fn test_transaction_data_effects() {
-        let client = Client::new_testnet();
+        let client = test_client();
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .unwrap();
+        let digest = transactions.data()[0].transaction.digest();
 
         client
-            .transaction_data_effects(
-                TransactionDigest::from_base58("FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj")
-                    .unwrap(),
-            )
+            .transaction_data_effects(digest)
             .await
             .unwrap()
             .unwrap();
@@ -384,14 +382,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_transactions_data_effects() {
-        let client = Client::new_testnet();
+        let client = test_client();
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .unwrap();
+        let digest = transactions.data()[0].transaction.digest();
 
         client
             .transactions_data_effects(
                 TransactionsFilter {
-                    transaction_ids: Some(vec![
-                        "FczF9bnUpcizyZscYV2djwSqKMWaKngiGA5bUdGjAroj".to_string(),
-                    ]),
+                    transaction_ids: Some(vec![digest.to_string()]),
                     ..Default::default()
                 },
                 PaginationFilter::default(),
