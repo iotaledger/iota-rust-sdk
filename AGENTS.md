@@ -114,70 +114,38 @@ cargo test --doc                 # Direct doc test invocation
 
 ## Writing style
 
-These rules cover everything you write: function and variable names, code comments, commit messages, PR and issue descriptions, review comments, and replies in a chat session.
+Covers everything you write: names, code comments, commit messages, PR and issue descriptions, review comments, chat replies.
 
-The rule they all follow: **write what the reader cannot get from the code or the diff.** Reasoning, constraints, trade-offs and the shape of a change are worth writing. Restating what the code already shows — which symbols were renamed, which files were touched, what each function now does — is not, no matter how well organised it is.
+**Write what the reader cannot get from the code or the diff** — reasoning, constraints, trade-offs, the shape of a change. Not what the diff already shows: renamed symbols, touched files, what each function now does. Length follows scope; the rule constrains content, not size.
 
-Length follows scope, and there is no word limit — the rule constrains content, not size. A large change may need a long description; a small one is a few sentences.
+Never state a motive you do not have. A true fact about a dependency is not the reason it was picked: don't write "X because Y" unless Y came from the issue or the task. Where the reason isn't recoverable, say what the change does and link the issue.
 
-Filler counts as content the reader can't use, and is cut on the same grounds. Don't write sentences that state the absence of a rule, hedge about how long something should be, announce what you are about to say, or note that a section was skipped — leave it out instead.
+| Don't                                                                        | Do                                                             |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `base64ct` was chosen because it is constant-time                              | Base64 is pulled in by each key-scheme feature                   |
+| Renames `content_digest` to `contents_digest` across the crate                 | The field now matches the type it holds, `CheckpointContentsDigest` |
+| Adds `to_base64`/`from_base64` to `Ed25519PrivateKey`, `Secp256k1PrivateKey`, … | Any key type with byte conversions gets base64 for free          |
+| "Review comments on the diff:" / "Here is what I changed:"                     | delete it and start with the first point                         |
+| "There is no length limit — a small change is a few sentences"                 | delete it; don't write about the rules                           |
 
-### Code comments
+### Per surface
 
-Write comments for a future reader of the code, and keep them concise and durable — not a changelog of in-session edits.
+- **Code comments** — doc comments tell the caller what they need in order to call it correctly; inline comments give a non-obvious _why_, and default to none. No change history ("added for X", "as discussed", PR numbers).
+- **PR and issue descriptions** — why the change exists, what changes at the level of concepts, real trade-offs, and where to look hardest. For issues: the problem and why it matters, not a patch written out in prose.
+- **Review comments** — open with the problem, not a summary of the author's own code. One point per comment; if it contains "also", it is two.
+- **Chat replies** — what changed, what is verified and what is not, what the user has to decide. Don't replay the session or restate the request.
 
-- Doc comments are for the **caller** — what they need to know to call it correctly, not how it works inside.
-- Inline comments explain a non-obvious **why**, never a **what**; default to none.
-- Never embed conversational or change history ("added for X", "as discussed", PR/issue numbers), nor explain why a problem was fixed when that problem was only introduced within the same change — that belongs in the PR description or commit message, not the code.
+### Before posting
 
-### PR and issue descriptions
+1. Draft from the problem and the reasoning, not by reading back over the diff for material.
+2. Delete every sentence the reader could have got from the diff.
+3. Repeat step 2 until a pass cuts nothing.
 
-A PR description answers what a reviewer cannot get by reading the diff:
+Being asked to make something shorter means step 2 was skipped.
 
-- **Why** the change exists — the problem, the constraint, the decision behind it.
-- **What** it does at the level of concepts, not symbols: which behaviour changes, which invariant now holds, what the new shape is.
-- **Trade-offs and rejected alternatives**, where a real choice was made.
-- **What to look at hardest**, if some part of the change deserves more attention than the rest.
+### Plain language
 
-State only reasoning you actually know — from the issue, the task you were given, or the code itself. Do not infer a plausible motivation and present it as the reason: an invented rationale is harder for a reviewer to catch than a verbose description, because it reads exactly like a real one. Where the reason is not recoverable, say what the change does and link the issue instead of filling the gap.
-
-Knowing a fact about a dependency or an approach is not the same as knowing it was the reason for the choice. That a crate is constant-time or already in the tree may be true and still not be why it was picked — do not write "X was used because Y" unless Y came from the issue or the task. Where a property matters to the reader on its own, state the property, not the motive.
-
-Leave out the mechanics of the diff: per-file walkthroughs, lists of renamed or added symbols, "moved X to Y" inventories, and summaries that restate the code in prose. The reviewer has the diff.
-
-Issue descriptions follow the same split: the problem and why it matters, not a proposed patch written out in prose.
-
-How to write one:
-
-1. Write it from the problem and the reasoning, not by reading back over the diff for material. Consulting the diff to decide what to write produces an inventory.
-2. Then delete: take each sentence and ask _could the reader have learned this from the diff?_ If yes, cut it.
-3. Repeat step 2 until a pass cuts nothing. The first pass never catches everything.
-
-Do this before posting. Being asked to make a description shorter means step 2 was skipped.
-
-### Chat replies and reports
-
-The same rule applies when reporting work back in a session, not just on GitHub:
-
-- Say what changed and why, what is verified and what is not, and anything the user has to decide or act on.
-- Don't replay the work: no narration of each file edited, no summary of code the user can read, no listing of steps already visible in the session.
-- Don't restate the request back before answering it, and don't close with a recap of what was just said.
-- Where a table or bullet list is only reformatting the diff, drop it entirely rather than tidying it.
-- Run the same delete pass before replying.
-
-### Review comments
-
-- Say what is wrong and why it matters. Open with the problem, not with a summary of what the code does — the author knows what they wrote.
-- One point per comment. If a comment contains "also" or "additionally", it is two comments.
-- Don't restate the same suggestion in several forms, and don't introduce a set of comments with a line announcing that comments follow.
-
-### Plain language, no coined terms
-
-Applies to all of the above — all prose, not just code.
-
-Use plain words and terms already used in the codebase or the established domain, so a reader can follow the text without terminology the project doesn't already use. Do not invent a label for a concept and then reuse it as if it were established vocabulary — this is a recurring problem, treat it as a hard rule. Before naming a concept, check whether the repo already has a word for it and reuse that. If a phrase wouldn't appear in the code or a standard reference, drop the label and describe the thing directly.
-
-Self-check before submitting: scan for any noun phrase acting as a _name_ for an idea. If you coined it — not the codebase, not the domain — delete the label and state the idea in plain words.
+Use words already in the codebase or the established domain. Don't coin a label for a concept and then reuse it as if it were vocabulary — describe the thing directly. Before submitting, scan for any noun phrase acting as a _name_ for an idea; if you coined it, delete the label and state the idea plainly.
 
 ## Important Files
 
