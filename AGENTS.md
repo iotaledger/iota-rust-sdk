@@ -139,7 +139,9 @@ A PR description answers what a reviewer cannot get by reading the diff:
 - **Trade-offs and rejected alternatives**, where a real choice was made.
 - **What to look at hardest**, if some part of the change deserves more attention than the rest.
 
-State only reasoning you actually know — from the issue, the task you were given, or the code itself. Do not infer a plausible motivation and present it as the reason: an invented rationale is harder for a reviewer to catch than a verbose description, because it reads exactly like a real one. Where the reason is not recoverable, say what the change does and link the issue instead of filling the gap. The same applies to justifying a dependency or design choice you did not make.
+State only reasoning you actually know — from the issue, the task you were given, or the code itself. Do not infer a plausible motivation and present it as the reason: an invented rationale is harder for a reviewer to catch than a verbose description, because it reads exactly like a real one. Where the reason is not recoverable, say what the change does and link the issue instead of filling the gap.
+
+Knowing a fact about a dependency or an approach is not the same as knowing it was the reason for the choice. That a crate is constant-time or already in the tree may be true and still not be why it was picked — do not write "X was used because Y" unless Y came from the issue or the task. Where a property matters to the reader on its own, state the property, not the motive.
 
 Leave out the mechanics of the diff: per-file walkthroughs, lists of renamed or added symbols, "moved X to Y" inventories, and summaries that restate the code in prose. The reviewer has the diff.
 
@@ -165,8 +167,9 @@ The same rule applies when reporting work back in a session, not just on GitHub:
 
 ### Review comments
 
-- Say what is wrong and why it matters. One point per comment.
-- Don't re-explain the author's own code back to them, and don't restate the same suggestion in several forms.
+- Say what is wrong and why it matters. Open with the problem, not with a summary of what the code does — the author knows what they wrote.
+- One point per comment. If a comment contains "also" or "additionally", it is two comments.
+- Don't restate the same suggestion in several forms, and don't introduce a set of comments with a line announcing that comments follow.
 
 ### Plain language, no coined terms
 
