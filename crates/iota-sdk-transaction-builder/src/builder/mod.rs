@@ -658,6 +658,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// All provided coins must have the same coin type. Mixing coins of
     /// different types will result in an error.
     ///
+    /// Adds no commands if either list is empty.
+    ///
     /// To pay IOTA directly from the gas coin, use
     /// [`TransactionBuilder::pay_iota()`], or pass
     /// [`unresolved::Argument::Gas`](Argument::Gas) as the only coin.
@@ -709,6 +711,12 @@ impl<C, L> TransactionBuilder<C, L> {
         coins: T,
         payments: impl IntoIterator<Item = (Address, U)>,
     ) -> &mut TransactionBuilder<C> {
+        // Collected before the coins are applied so that an empty list adds
+        // nothing at all, rather than a merge and an empty split.
+        let payments: Vec<_> = payments.into_iter().collect();
+        if payments.is_empty() {
+            return self.reset();
+        }
         let mut coin_args = self.apply_arguments(coins);
         let coin = match coin_args[..] {
             [] => return self.reset(),
@@ -1883,5 +1891,19 @@ mod tests {
         assert!(matches!(split.coin, Argument::Gas));
         assert_eq!(split.amounts.len(), 1);
         assert!(matches!(commands[1], Command::TransferObjects(_)));
+    }
+
+    /// With nothing to pay there is nothing to merge or split either, so no
+    /// commands and no inputs are added.
+    #[test]
+    fn pay_without_payments_adds_nothing() {
+        let sender = Address::generate(rand::thread_rng());
+        let coin_id = |seed: u8| ObjectId::new([seed; ObjectId::LENGTH]);
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay([coin_id(1), coin_id(2)], [] as [(Address, u64); 0]);
+
+        assert!(builder.data.commands.is_empty());
+        assert!(builder.data.inputs.is_empty());
     }
 }
