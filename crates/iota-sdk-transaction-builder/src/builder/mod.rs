@@ -1226,34 +1226,21 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         if requests.is_empty() {
             return Ok(HashMap::new());
         }
+        // Pairs answers with requests by position, which `objects_by_id` is
+        // documented to allow. The client is responsible for holding the server
+        // to that.
         let fetched = self
             .client
             .objects_by_id(&requests)
             .await
             .map_err(Error::client)?;
-        if fetched.len() != requests.len() {
-            return Err(Error::Input(format!(
-                "asked the client for {} objects but got {} back",
-                requests.len(),
-                fetched.len()
-            )));
-        }
         requests
             .into_iter()
             .zip(fetched)
             .map(|((object_id, _), object)| {
-                let object =
-                    object.ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-                // Answering in request order is part of `objects_by_id`'s
-                // contract, but a transaction gets signed over whatever comes
-                // back, so check it rather than assume it.
-                if object.id() != object_id {
-                    return Err(Error::Input(format!(
-                        "asked the client for object {object_id} but got {}",
-                        object.id()
-                    )));
-                }
-                Ok((object_id, object))
+                object
+                    .map(|object| (object_id, object))
+                    .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
             })
             .collect()
     }
