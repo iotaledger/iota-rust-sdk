@@ -14,7 +14,10 @@ use iota_types::TransactionDigest;
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, ProtoResult, Result, collect_stream, saturating_usize_to_u32},
+    api::{
+        Error, MetadataEnvelope, Result, check_result_count, collect_stream, into_item_results,
+        saturating_usize_to_u32,
+    },
 };
 
 impl Client {
@@ -30,8 +33,27 @@ impl Client {
     /// - `tx.checkpoint_sequence_number()` - Get checkpoint number
     /// - `tx.timestamp_ms()` - Get timestamp
     ///
-    /// Results are returned in the same order as the input digests.
-    /// If a transaction is not found, an error is returned.
+    /// Results are returned in the same order as the input digests, one per
+    /// digest.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::EmptyRequest`] if `digests` is empty.
+    ///
+    /// Each digest gets its own result: a transaction the node does not have
+    /// (never executed, or pruned) yields [`Error::Server`] with code
+    /// `NOT_FOUND` in that slot only, leaving the other transactions intact. A
+    /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
+    /// present but an object a requested field needs is gone, as described
+    /// under Read Mask below. The outer `Result` is reserved for failures
+    /// of the call itself, such as a transport error, and for a server that
+    /// answered with a different number of results than digests requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
+    /// each result belongs to.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    ///
+    /// # Read Mask
     ///
     /// The `read_mask` controls which fields the server returns; use
     /// `TransactionReadMask::default()` for the default field mask, or pass a
@@ -48,10 +70,6 @@ impl Client {
     /// fetch objects individually via
     /// [`get_objects`](Client::get_objects) for best-effort retrieval.
     ///
-    /// # Errors
-    ///
-    /// Returns [`Error::EmptyRequest`] if `digests` is empty.
-    ///
     /// # Example
     ///
     /// ```no_run
@@ -67,6 +85,17 @@ impl Client {
     ///     .get_transactions([digest], TransactionReadMask::default())
     ///     .await?;
     /// for tx in txs.body() {
+    ///     let tx = match tx {
+    ///         Ok(tx) => tx,
+    ///         // Only this digest failed; the remaining transactions are still
+    ///         // usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read transaction: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
+    ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
     ///     println!("Status: {:?}", effects.as_v1().status);
     ///
@@ -89,29 +118,21 @@ impl Client {
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl IntoReadMask<TransactionReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
-        let requests = digests
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+        let requested = digests
             .into_iter()
             .map(|d| TransactionRequest::default().with_digest(d))
             .collect::<Vec<_>>();
-        self.get_transactions_internal(requests, read_mask.into_read_mask())
-            .await
-    }
-
-    async fn get_transactions_internal(
-        &self,
-        requests: Vec<TransactionRequest>,
-        read_mask: TransactionReadMask,
-    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
-        if requests.is_empty() {
+        if requested.is_empty() {
             return Err(Error::EmptyRequest);
         }
+        let requested_count = requested.len();
 
-        let requests = TransactionRequests::default().with_requests(requests);
+        let requests = TransactionRequests::default().with_requests(requested);
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
-            .with_read_mask(read_mask);
+            .with_read_mask(read_mask.into_read_mask());
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
@@ -123,14 +144,12 @@ impl Client {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         // Server guarantees results are returned in request order
-        collect_stream(stream, metadata, |msg| {
-            let items = msg
-                .transaction_results
-                .into_iter()
-                .map(|r| r.into_result())
-                .collect::<Result<Vec<_>>>()?;
-            Ok((msg.has_next, items))
+        let response = collect_stream(stream, metadata, |msg| {
+            Ok((msg.has_next, into_item_results(msg.transaction_results)))
         })
-        .await
+        .await?;
+        check_result_count(response.body(), requested_count)?;
+
+        Ok(response)
     }
 }

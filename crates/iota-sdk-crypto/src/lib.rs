@@ -17,6 +17,9 @@ pub enum PrivateKeyError {
     /// Invalid signature scheme
     #[error("invalid signature scheme: {0}")]
     InvalidScheme(String),
+    /// Base64 encoding/decoding error
+    #[error("base64 error: {0}")]
+    Base64(String),
     /// Bech32 encoding/decoding error
     #[error("bech32 error: {0}")]
     Bech32(String),
@@ -240,6 +243,50 @@ where
 
         let key_bytes = &bytes[1..];
         Self::from_bytes(key_bytes)
+    }
+}
+
+/// Defines a type which can be converted to and from a base64 string of its
+/// raw bytes
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg_attr(
+    doc_cfg,
+    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
+)]
+pub trait ToFromBase64 {
+    type Error;
+
+    /// Encode this private key as a base64 string of its raw bytes, without a
+    /// signature scheme flag
+    fn to_base64(&self) -> String;
+
+    /// Decode a private key from a base64 string of its raw bytes, without a
+    /// signature scheme flag
+    fn from_base64(value: &str) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
+}
+
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+impl<T: ToFromBytes<Error = PrivateKeyError>> ToFromBase64 for T
+where
+    T::ByteArray: AsRef<[u8]>,
+{
+    type Error = PrivateKeyError;
+
+    fn to_base64(&self) -> String {
+        use base64ct::Encoding;
+
+        base64ct::Base64::encode_string(self.to_bytes().as_ref())
+    }
+
+    fn from_base64(value: &str) -> Result<Self, Self::Error> {
+        use base64ct::Encoding;
+
+        let bytes = base64ct::Base64::decode_vec(value)
+            .map_err(|e| PrivateKeyError::Base64(format!("decoding failed: {e}")))?;
+
+        Self::from_bytes(bytes)
     }
 }
 

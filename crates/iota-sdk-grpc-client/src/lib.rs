@@ -20,12 +20,17 @@
 //! let client = Client::new_localnet()?;
 //!
 //! // Get a transaction with the default field mask.
+//! // The batched reads return one result per request, so a transaction the
+//! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
 //! let txs = client
 //!     .get_transactions([digest], TransactionReadMask::default())
 //!     .await?;
-//! if let Some(tx) = txs.body().first() {
-//!     println!("Transaction digest: {:?}", tx.transaction()?.digest()?);
+//! for tx in txs.body() {
+//!     match tx {
+//!         Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
+//!         Err(e) => eprintln!("could not read transaction: {e}"),
+//!     }
 //! }
 //!
 //! // Get an object with the default field mask.
@@ -33,8 +38,11 @@
 //! let objects = client
 //!     .get_objects([object_id], ObjectReadMask::default())
 //!     .await?;
-//! if let Some(object) = objects.body().first() {
-//!     println!("Object version: {:?}", object.object_reference()?.version());
+//! for object in objects.body() {
+//!     match object {
+//!         Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),
+//!         Err(e) => eprintln!("could not read object: {e}"),
+//!     }
 //! }
 //! # Ok(())
 //! # }

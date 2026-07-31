@@ -91,7 +91,7 @@ checkpoint-digest = digest
 checkpoint-summary = u64                               ; epoch
                      u64                               ; sequence-number
                      u64                               ; network-total-transactions
-                     checkpoint-contents-digest        ; content-digest
+                     checkpoint-contents-digest        ; contents-digest
                      (%d00 / %d01 checkpoint-digest)   ; previous-digest
                      gas-cost-summary                  ; epoch-rolling-gas-cost-summary
                      u64                               ; timestamp-ms

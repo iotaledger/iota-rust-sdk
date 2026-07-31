@@ -459,4 +459,14 @@ mod tests {
         let err = Secp256r1PrivateKey::from_bytes([0u8; Secp256r1PrivateKey::LENGTH]);
         assert!(err.is_err());
     }
+
+    #[proptest]
+    fn base64_roundtrip(signer: Secp256r1PrivateKey) {
+        use crate::{ToFromBase64, ToFromBytes};
+
+        let b64 = signer.to_base64();
+        let decoded = Secp256r1PrivateKey::from_base64(&b64).unwrap();
+        assert_eq!(decoded.to_bytes(), signer.to_bytes());
+        assert_eq!(decoded.to_base64(), b64);
+    }
 }

@@ -25,10 +25,13 @@ async fn main() -> Result<()> {
     let response = client
         .get_objects([object_id], ObjectReadMask::default())
         .await?;
-    let proto_obj = response
-        .body()
-        .first()
-        .ok_or_else(|| eyre::eyre!("missing object"))?;
+    // Each requested id gets its own result, so a failure here concerns only
+    // this object.
+    let proto_obj = match response.body().first() {
+        Some(Ok(obj)) => obj,
+        Some(Err(e)) => bail!("could not read object: {e}"),
+        None => bail!("missing object"),
+    };
 
     // Deserialize the proto Object into the SDK Object type.
     let obj = proto_obj.object()?;

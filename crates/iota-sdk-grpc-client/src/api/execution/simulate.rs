@@ -14,7 +14,9 @@ use iota_types::Transaction;
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, ProtoResult, ProtocolError, Result, build_proto_transaction},
+    api::{
+        Error, MetadataEnvelope, ProtocolError, Result, build_proto_transaction, into_item_results,
+    },
 };
 
 /// A single transaction with simulation options for use in batch simulation.
@@ -144,12 +146,7 @@ impl Client {
             .simulate_transactions(request)
             .await?;
 
-        MetadataEnvelope::from(response).try_map(|r| {
-            Ok(r.transaction_results
-                .into_iter()
-                .map(ProtoResult::into_result)
-                .collect())
-        })
+        Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results)))
     }
 }
 

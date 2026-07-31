@@ -15,7 +15,9 @@ use iota_types::SignedTransaction;
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, ProtoResult, ProtocolError, Result, build_proto_transaction},
+    api::{
+        Error, MetadataEnvelope, ProtocolError, Result, build_proto_transaction, into_item_results,
+    },
 };
 
 impl Client {
@@ -141,12 +143,7 @@ impl Client {
             .execute_transactions(request)
             .await?;
 
-        MetadataEnvelope::from(response).try_map(|r| {
-            Ok(r.transaction_results
-                .into_iter()
-                .map(ProtoResult::into_result)
-                .collect())
-        })
+        Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results)))
     }
 }
 

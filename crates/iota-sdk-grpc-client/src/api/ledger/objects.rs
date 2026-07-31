@@ -16,8 +16,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, ProtoResult, Result, collect_stream, proto_object_id,
-        saturating_usize_to_u32,
+        Error, MetadataEnvelope, Result, check_result_count, collect_stream, into_item_results,
+        proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -27,12 +27,22 @@ impl Client {
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
     /// type, or use `obj.object_reference()` to get the object reference.
     ///
-    /// Results are returned in the same order as the input refs.
-    /// If an object is not found, an error is returned.
+    /// Results are returned in the same order as the input IDs, one per ID.
     ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// Each ID gets its own result: an object that is not found (never
+    /// existed, was deleted, or has been pruned by the serving node) yields
+    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
+    /// other objects intact. The outer `Result` is reserved for failures of the
+    /// call itself, such as a transport error, and for a server that answered
+    /// with a different number of results than IDs requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
+    /// result belongs to.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     ///
     /// # Read Mask
     ///
@@ -52,27 +62,47 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
+    /// let ids = [object_id];
     ///
     /// // Default mask
-    /// let objs = client
-    ///     .get_objects([object_id], ObjectReadMask::default())
-    ///     .await?;
+    /// let objs = client.get_objects(ids, ObjectReadMask::default()).await?;
     ///
     /// // Selected fields
     /// let objs = client
     ///     .get_objects(
-    ///         [object_id],
+    ///         ids,
     ///         ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]),
     ///     )
     ///     .await?;
     ///
     /// for obj in objs.body() {
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ID failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
     ///     println!("Got object ID: {:?}", sdk_obj.id());
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }
+    ///
+    /// // Results line up with the requested IDs, so pair them to find out
+    /// // which objects the node does not have
+    /// let missing: Vec<ObjectId> = ids
+    ///     .iter()
+    ///     .zip(objs.body())
+    ///     .filter_map(|(id, result)| match result {
+    ///         Err(e) if e.is_not_found() => Some(*id),
+    ///         _ => None,
+    ///     })
+    ///     .collect();
+    /// println!("Missing objects: {missing:?}");
     /// # Ok(())
     /// # }
     /// ```
@@ -80,7 +110,7 @@ impl Client {
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Object>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         let refs = refs
             .into_iter()
             .map(|id| {
@@ -98,12 +128,15 @@ impl Client {
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
     /// type, or use `obj.object_reference()` to get the object reference.
     ///
-    /// Results are returned in the same order as the input refs.
-    /// If an object is not found, an error is returned.
+    /// Results are returned in the same order as the input refs, one per ref.
     ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// Each ref gets its own result, with the same meaning as in
+    /// [`get_objects`](Client::get_objects): a requested version the serving
+    /// node does not have fails only its own slot.
     ///
     /// # Read Mask
     ///
@@ -138,6 +171,15 @@ impl Client {
     ///     .await?;
     ///
     /// for obj in objs.body() {
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ref failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
     ///     // Convert proto object to SDK type
     ///     let sdk_obj = obj.object()?;
     ///     println!("Got object ID: {:?}", sdk_obj.id());
@@ -151,7 +193,7 @@ impl Client {
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Object>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         let refs = refs
             .into_iter()
             .map(|(id, version)| {
@@ -173,10 +215,11 @@ impl Client {
         &self,
         refs: Vec<ObjectRequest>,
         read_mask: ObjectReadMask,
-    ) -> Result<MetadataEnvelope<Vec<Object>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);
         }
+        let requested_count = refs.len();
 
         let requests = ObjectRequests::default().with_requests(refs);
 
@@ -194,14 +237,12 @@ impl Client {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         // Server guarantees results are returned in request order
-        collect_stream(stream, metadata, |msg| {
-            let items = msg
-                .objects
-                .into_iter()
-                .map(|r| r.into_result())
-                .collect::<Result<Vec<_>>>()?;
-            Ok((msg.has_next, items))
+        let response = collect_stream(stream, metadata, |msg| {
+            Ok((msg.has_next, into_item_results(msg.objects)))
         })
-        .await
+        .await?;
+        check_result_count(response.body(), requested_count)?;
+
+        Ok(response)
     }
 }

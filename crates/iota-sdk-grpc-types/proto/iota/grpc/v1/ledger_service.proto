@@ -26,8 +26,26 @@ service LedgerService {
   // Query the service for general information about its current state.
   rpc GetServiceInfo(GetServiceInfoRequest) returns (GetServiceInfoResponse);
 
+  // Fetch objects by ID, each at a given version or the latest when no version
+  // is set.
+  //
+  // Concatenating `objects` across the response stream yields exactly one
+  // `ObjectResult` per `ObjectRequest`, in the order the requests were sent, so
+  // a client can pair a result with its request by position.
+  //
+  // A request the node cannot serve fails only its own result; the results for
+  // the other requests are unaffected.
   rpc GetObjects(GetObjectsRequest) returns (stream GetObjectsResponse);
 
+  // Fetch transactions by digest.
+  //
+  // Concatenating `transaction_results` across the response stream yields
+  // exactly one `TransactionResult` per `TransactionRequest`, in the order the
+  // requests were sent, so a client can pair a result with its request by
+  // position.
+  //
+  // A request the node cannot serve fails only its own result; the results for
+  // the other requests are unaffected.
   rpc GetTransactions(GetTransactionsRequest) returns (stream GetTransactionsResponse);
 
   // Checkpoint operations
@@ -131,6 +149,9 @@ message GetObjectsRequest {
 message ObjectResult {
   option (iota.grpc.message_accessors) = "with";
 
+  // The outcome for a single `ObjectRequest`: either the object, or the status
+  // saying why the node could not serve it — for example `NOT_FOUND` when the
+  // object never existed, was deleted, or has been pruned.
   oneof result {
     iota.grpc.v1.object.Object object = 1;
     google.rpc.Status error = 2;
@@ -141,6 +162,10 @@ message GetObjectsResponse {
   option (iota.grpc.message_accessors) = "with";
 
   repeated ObjectResult objects = 1;
+
+  // True when more stream messages follow because this batch reached the
+  // message size limit. It does not indicate that more data exists beyond the
+  // requested objects.
   bool has_next = 2;
 }
 
@@ -174,6 +199,10 @@ message GetTransactionsRequest {
 message TransactionResult {
   option (iota.grpc.message_accessors) = "with";
 
+  // The outcome for a single `TransactionRequest`: either the transaction, or
+  // the status saying why the node could not serve it — `NOT_FOUND` when the
+  // node does not have the transaction, or `FAILED_PRECONDITION` when it has the
+  // transaction but an object a requested field needs has been pruned.
   oneof result {
     iota.grpc.v1.transaction.ExecutedTransaction executed_transaction = 1;
     google.rpc.Status error = 2;
@@ -184,6 +213,10 @@ message GetTransactionsResponse {
   option (iota.grpc.message_accessors) = "with";
 
   repeated TransactionResult transaction_results = 1;
+
+  // True when more stream messages follow because this batch reached the
+  // message size limit. It does not indicate that more data exists beyond the
+  // requested transactions.
   bool has_next = 2;
 }
 

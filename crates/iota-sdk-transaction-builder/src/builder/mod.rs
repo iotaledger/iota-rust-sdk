@@ -1056,12 +1056,70 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         self
     }
 
-    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
-        let mut inputs = Vec::new();
-        let mut gas = Vec::new();
-        let mut input_map = HashMap::new();
+    /// Add gas coins that will be consumed, by reference. Optional.
+    ///
+    /// Same as [`gas`](Self::gas), but for coins the caller has already
+    /// resolved: the builder takes the references as given instead of looking
+    /// the objects up. Setting either one stops the builder from picking gas
+    /// coins on its own.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, unresolved};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let gas_coin1 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     version: Version::from_u64(473053811),
+    /// };
+    /// let gas_coin2 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     version: Version::from_u64(473053810),
+    /// };
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas_refs([gas_coin1, gas_coin2])
+    ///     .gas_budget(1000000000)
+    ///     .gas_price(100);
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn gas_refs(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+        for obj_ref in obj_refs {
+            self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                true,
+            );
+        }
+        self
+    }
 
-        if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+    /// Pick gas coins owned by the sponsor (or the sender) unless the caller
+    /// already set some with [`gas`](Self::gas) or
+    /// [`gas_refs`](Self::gas_refs).
+    async fn select_default_gas(&mut self) -> Result<(), Error> {
+        if !self.data.inputs.values().any(|i| i.is_gas) {
             // Some commands have arguments which cannot safely be replaced by
             // `Argument::Gas`, so we need to find any instances of
             // these and ensure that we don't use those coins
@@ -1146,6 +1204,15 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 );
             }
         }
+        Ok(())
+    }
+
+    /// Resolve the inputs and commands into a [`TransactionKind`], returning it
+    /// together with the gas coins currently set on the builder.
+    async fn resolve_kind(&mut self) -> Result<(TransactionKind, Vec<ObjectReference>), Error> {
+        let mut inputs = Vec::new();
+        let mut gas = Vec::new();
+        let mut input_map = HashMap::new();
         for (id, input) in std::mem::take(&mut self.data.inputs) {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
@@ -1237,6 +1304,16 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
+        let kind =
+            iota_types::TransactionKind::Programmable(ProgrammableTransaction { inputs, commands });
+        Ok((kind, gas))
+    }
+
+    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
+        if default_gas {
+            self.select_default_gas().await?;
+        }
+        let (kind, gas) = self.resolve_kind().await?;
         let price = match self.data.gas_price {
             Some(price) => price,
             None => self
@@ -1247,10 +1324,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
-                inputs,
-                commands,
-            }),
+            kind,
             sender: self.data.sender,
             gas_payment: GasPayment {
                 objects: gas,
@@ -1288,6 +1362,49 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         self.finish_internal().await
+    }
+
+    /// Convert this builder into a [`TransactionKind`], resolving the inputs
+    /// with the client but leaving the gas alone.
+    ///
+    /// Use this when the gas payment is decided elsewhere — a wallet that picks
+    /// the gas coins itself, or a caller that needs the kind to estimate a
+    /// budget before it can pick them. Unlike [`finish`](Self::finish), no gas
+    /// coins are selected, no budget is estimated and no gas price is fetched,
+    /// so this costs nothing beyond resolving the inputs. Any gas set with
+    /// [`gas`](Self::gas) or [`gas_refs`](Self::gas_refs), and the sponsor,
+    /// price, budget and expiration, are not part of a
+    /// [`TransactionKind`] and are dropped.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId, TransactionKind};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address =
+    ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let coin =
+    ///     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.transfer_objects(to_address, [coin]);
+    ///
+    /// let kind: TransactionKind = builder.finish_kind().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn finish_kind(mut self) -> Result<TransactionKind, Error> {
+        let (kind, _gas) = self.resolve_kind().await?;
+        Ok(kind)
     }
 
     /// Dry run the transaction.
@@ -1562,5 +1679,102 @@ mod tests {
         assert!(matches!(split.coin, Argument::Input(1)));
         assert!(matches!(split.amounts[0], Argument::Input(2)));
         assert!(matches!(split.amounts[1], Argument::Input(0)));
+    }
+
+    #[cfg(feature = "test-client")]
+    mod finish_kind {
+        use iota_types::{ObjectDigest, Version};
+
+        use super::super::*;
+        use crate::TestClient;
+
+        /// The gas coin id [`TestClient`] hands out to gas selection.
+        const SELECTABLE_GAS_COIN: ObjectId = ObjectId::new([0xee; ObjectId::LENGTH]);
+
+        fn object_ref(seed: u8, version: u64) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([seed; ObjectId::LENGTH]),
+                Version::from_u64(version),
+                ObjectDigest::new([seed; 32]),
+            )
+        }
+
+        fn split_coin_arg(kind: &TransactionKind) -> iota_types::Argument {
+            let TransactionKind::Programmable(ptb) = kind else {
+                panic!("expected a programmable transaction");
+            };
+            let [iota_types::Command::SplitCoins(split)] = &ptb.commands[..] else {
+                panic!("expected a single SplitCoins command");
+            };
+            split.coin
+        }
+
+        /// Automatic gas selection may claim a coin the caller named, which
+        /// turns the command's `Argument::Input` into `Argument::Gas`.
+        /// `finish_kind` selects no gas, so the command keeps pointing at the
+        /// coin.
+        #[tokio::test]
+        async fn keeps_the_coin_that_gas_selection_would_claim() {
+            let sender = Address::generate(rand::thread_rng());
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            let kind = builder.finish_kind().await.unwrap();
+            assert_eq!(split_coin_arg(&kind), iota_types::Argument::Input(0));
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            builder.gas_budget(5_000_000).gas_price(1000);
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(split_coin_arg(&txn.kind), iota_types::Argument::Gas);
+        }
+
+        /// Gas coins, sponsor, price, budget and expiration are not part of a
+        /// [`TransactionKind`], so setting them makes no difference.
+        #[tokio::test]
+        async fn ignores_gas_and_transaction_metadata() {
+            let sender = Address::generate(rand::thread_rng());
+            let recipient = Address::generate(rand::thread_rng());
+            let coin = ObjectId::new([7; ObjectId::LENGTH]);
+
+            let mut plain = TransactionBuilder::new(sender).with_client(TestClient);
+            plain.transfer_objects(recipient, [coin]);
+            let expected = plain.finish_kind().await.unwrap();
+
+            let mut decorated = TransactionBuilder::new(sender).with_client(TestClient);
+            decorated.transfer_objects(recipient, [coin]);
+            decorated
+                .gas_refs([object_ref(99, 7)])
+                .gas_budget(5_000_000)
+                .gas_price(1000)
+                .sponsor(Address::generate(rand::thread_rng()))
+                .expiration(42);
+
+            assert_eq!(decorated.finish_kind().await.unwrap(), expected);
+        }
+
+        /// `gas_refs` takes the references as given — no object lookup — and
+        /// stops the builder from picking gas coins of its own.
+        #[tokio::test]
+        async fn gas_refs_are_used_as_given() {
+            let sender = Address::generate(rand::thread_rng());
+            // A version the test client never fabricates, so a lookup that
+            // overwrote the reference would be visible.
+            let gas_coin = object_ref(3, 4242);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            builder
+                .gas_refs([gas_coin])
+                .gas_budget(5_000_000)
+                .gas_price(1000);
+
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.objects, vec![gas_coin]);
+        }
     }
 }
