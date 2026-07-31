@@ -118,7 +118,9 @@ These rules cover everything you write: function and variable names, code commen
 
 The rule they all follow: **write what the reader cannot get from the code or the diff.** Reasoning, constraints, trade-offs and the shape of a change are worth writing. Restating what the code already shows — which symbols were renamed, which files were touched, what each function now does — is not, no matter how well organised it is.
 
-There is no word limit anywhere in this section, and none should be added. Length follows scope: a one-concept change is a few sentences, a change spanning several concepts gets a paragraph or bullet per concept, and a genuinely large change is allowed to be long. What is never allowed is padding a description with material the reader can already see.
+Length follows scope, and there is no word limit — the rule constrains content, not size. A large change may need a long description; a small one is a few sentences.
+
+Filler counts as content the reader can't use, and is cut on the same grounds. Don't write sentences that state the absence of a rule, hedge about how long something should be, announce what you are about to say, or note that a section was skipped — leave it out instead.
 
 ### Code comments
 
@@ -141,7 +143,13 @@ Leave out the mechanics of the diff: per-file walkthroughs, lists of renamed or 
 
 Issue descriptions follow the same split: the problem and why it matters, not a proposed patch written out in prose.
 
-Self-check before submitting — this replaces any notion of a length limit: take each sentence and ask _could the reader have learned this from the diff?_ If yes, delete it. What survives is the description. If that leaves two sentences, the description is two sentences.
+How to write one:
+
+1. Write it from the problem and the reasoning, not by reading back over the diff for material. Consulting the diff to decide what to write produces an inventory.
+2. Then delete: take each sentence and ask _could the reader have learned this from the diff?_ If yes, cut it.
+3. Repeat step 2 until a pass cuts nothing. The first pass never catches everything.
+
+Do this before posting. Being asked to make a description shorter means step 2 was skipped.
 
 ### Chat replies and reports
 
@@ -151,8 +159,7 @@ The same rule applies when reporting work back in a session, not just on GitHub:
 - Don't replay the work: no narration of each file edited, no summary of code the user can read, no listing of steps already visible in the session.
 - Don't restate the request back before answering it, and don't close with a recap of what was just said.
 - Where a table or bullet list is only reformatting the diff, drop it entirely rather than tidying it.
-
-Length follows the same principle as above: as long as the content genuinely requires, and no longer.
+- Run the same delete pass before replying.
 
 ### Review comments
 

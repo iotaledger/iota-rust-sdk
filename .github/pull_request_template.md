@@ -3,9 +3,8 @@ Write what a reviewer cannot get from the diff: the reasoning and the shape of t
 change. No per-file walkthroughs, no lists of renamed or added symbols, no prose
 restatement of the code.
 
-There is no length limit — a small change is a few sentences, a large one may need
-more. Before submitting, check each sentence: if the reader could have learned it
-from the diff, delete it.
+Before submitting, check each sentence: if the reader could have learned it from
+the diff, delete it. Repeat until a pass deletes nothing.
 
 Drop any section that does not apply.
 -->
