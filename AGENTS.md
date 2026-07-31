@@ -139,6 +139,8 @@ A PR description answers what a reviewer cannot get by reading the diff:
 - **Trade-offs and rejected alternatives**, where a real choice was made.
 - **What to look at hardest**, if some part of the change deserves more attention than the rest.
 
+State only reasoning you actually know — from the issue, the task you were given, or the code itself. Do not infer a plausible motivation and present it as the reason: an invented rationale is harder for a reviewer to catch than a verbose description, because it reads exactly like a real one. Where the reason is not recoverable, say what the change does and link the issue instead of filling the gap. The same applies to justifying a dependency or design choice you did not make.
+
 Leave out the mechanics of the diff: per-file walkthroughs, lists of renamed or added symbols, "moved X to Y" inventories, and summaries that restate the code in prose. The reviewer has the diff.
 
 Issue descriptions follow the same split: the problem and why it matters, not a proposed patch written out in prose.

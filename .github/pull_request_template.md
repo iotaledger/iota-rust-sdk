@@ -3,10 +3,15 @@ Write what a reviewer cannot get from the diff: the reasoning and the shape of t
 change. No per-file walkthroughs, no lists of renamed or added symbols, no prose
 restatement of the code.
 
+State only reasoning you know. Do not invent a motivation, or a justification for a
+dependency or design choice, to fill a section.
+
+Add a `## Trade-offs` section only if a real alternative was rejected, and a
+`## Review focus` section only if one part deserves more attention than the rest.
+Most changes need neither.
+
 Before submitting, check each sentence: if the reader could have learned it from
 the diff, delete it. Repeat until a pass deletes nothing.
-
-Drop any section that does not apply.
 -->
 
 ## Why
@@ -17,14 +22,6 @@ Drop any section that does not apply.
 
 <!-- The change at the level of concepts: behaviour that differs, invariants that now hold,
      the new shape. Not the symbols that moved. -->
-
-## Trade-offs
-
-<!-- Only if a real choice was made: what was rejected and why. -->
-
-## Review focus
-
-<!-- Only if some part deserves more attention than the rest. -->
 
 ## Test plan
 
