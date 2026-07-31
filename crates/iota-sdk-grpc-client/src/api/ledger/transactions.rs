@@ -13,7 +13,8 @@ use crate::{
     Client,
     api::{
         Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
-        collect_stream, field_mask_with_default, into_item_results, saturating_usize_to_u32,
+        check_transaction_identity, collect_stream, field_mask_with_default, into_item_results,
+        saturating_usize_to_u32,
     },
 };
 
@@ -46,9 +47,14 @@ impl Client {
     /// of the call itself, such as a transport error, and for a server that
     /// answered with a different number of results than digests requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
-    /// each result belongs to.
+    /// each result belongs to, or answered a position with a different
+    /// transaction than the one requested there ([`UnexpectedTransaction`]).
+    /// The answered digest is read from the response or computed from the
+    /// transaction's BCS, so a read mask that includes neither leaves nothing
+    /// to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedTransaction`]: crate::ProtocolError::UnexpectedTransaction
     ///
     /// # Read Mask
     ///
@@ -150,6 +156,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), digests.len())?;
+        check_transaction_identity(response.body(), digests)?;
 
         Ok(response)
     }

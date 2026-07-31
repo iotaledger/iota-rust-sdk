@@ -13,9 +13,9 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
-        collect_stream, field_mask_with_default, into_item_results, proto_object_id,
-        saturating_usize_to_u32,
+        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_object_identity,
+        check_result_count, collect_stream, field_mask_with_default, into_item_results,
+        proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -38,9 +38,13 @@ impl Client {
     /// call itself, such as a transport error, and for a server that answered
     /// with a different number of results than refs requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which ref each
-    /// result belongs to.
+    /// result belongs to, or answered a position with a different object than
+    /// the one requested there ([`UnexpectedObject`]). The answered id is read
+    /// from the object reference or its BCS, so a read mask that includes
+    /// neither leaves nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
     ///
     /// # Read Mask
     ///
@@ -146,6 +150,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), refs.len())?;
+        check_object_identity(response.body(), refs)?;
 
         Ok(response)
     }
