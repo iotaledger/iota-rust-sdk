@@ -267,7 +267,7 @@ mod tests {
             .unwrap();
 
         // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1211
-        let digest = chckp.content_digest.into_inner().into();
+        let digest = chckp.contents_digest.into_inner().into();
         let total_transaction_blocks_by_digest = client
             .total_transaction_blocks_by_digest(digest)
             .await

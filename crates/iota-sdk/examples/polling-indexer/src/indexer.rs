@@ -315,7 +315,7 @@ impl Indexer {
             "#,
         )
         .bind(sequence as i64)
-        .bind(checkpoint.content_digest.to_string())
+        .bind(checkpoint.contents_digest.to_string())
         .bind(checkpoint.timestamp_ms as i64)
         .bind(serde_json::to_value(&checkpoint)?)
         .execute(&self.pool)

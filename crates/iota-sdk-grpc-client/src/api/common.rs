@@ -63,6 +63,27 @@ pub enum Error {
     Grpc(Box<tonic::Status>),
 }
 
+impl Error {
+    /// Returns `true` if the error carries a `NOT_FOUND` status, whether the
+    /// server reported it for the call or for a single item of a batched
+    /// request.
+    ///
+    /// **Warning:** do not test the outer error of a batched read to decide
+    /// that an item is absent. Those calls report an absent item against the
+    /// request that asked for it, so a `NOT_FOUND` for the call means the
+    /// endpoint is wrong; treating it as a missing item turns a misconfigured
+    /// endpoint into a normal "not there" answer. Test the per-item result
+    /// instead. Calls returning a single response, such as fetching a
+    /// checkpoint, do report absence at the call level.
+    pub fn is_not_found(&self) -> bool {
+        match self {
+            Error::Server(status) => status.code == i32::from(tonic::Code::NotFound),
+            Error::Grpc(status) => status.code() == tonic::Code::NotFound,
+            _ => false,
+        }
+    }
+}
+
 impl From<TryFromProtoError> for Error {
     fn from(err: TryFromProtoError) -> Self {
         Error::ProtoConversion(Box::new(err))
@@ -112,6 +133,11 @@ pub enum ProtocolError {
     /// Error during checkpoint data stream reassembly.
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
+
+    /// A batched read returned a number of results that does not match the
+    /// number of requested items.
+    #[error("expected {expected} results, got {actual}")]
+    UnexpectedResultCount { expected: usize, actual: usize },
 }
 
 /// Errors during checkpoint data stream reassembly.
@@ -233,6 +259,32 @@ pub trait ProtoResult {
 
     /// Extract the result, converting to our error types.
     fn into_result(self) -> Result<Self::Value>;
+}
+
+/// Convert a batch of proto results into one result per requested item,
+/// preserving request order.
+///
+/// The batched RPCs report a failure for a single item as a `google.rpc.Status`
+/// in that item's slot, so the outcome for one item is independent of the
+/// others: a caller that needs every item can `collect::<Result<Vec<_>>>()`,
+/// while one that tolerates gaps can inspect each slot.
+pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>> {
+    batch.into_iter().map(ProtoResult::into_result).collect()
+}
+
+/// Check that a batched read answered every requested item.
+///
+/// Callers pair results with requests by position, so a count that does not
+/// match the request leaves no way to tell which item each result belongs to.
+pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
+    if results.len() == expected {
+        Ok(())
+    } else {
+        Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+            expected,
+            actual: results.len(),
+        }))
+    }
 }
 
 impl ProtoResult for ObjectResult {
@@ -535,4 +587,61 @@ pub fn build_proto_transaction<T: Serialize>(
         .with_bcs(bcs);
 
     Ok(proto_transaction)
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::{google::rpc::Status, v1::object::Object};
+
+    use super::{Error, ObjectResult, into_item_results};
+
+    #[test]
+    fn a_per_item_error_keeps_the_surrounding_items() {
+        let batch = vec![
+            ObjectResult::default().with_object(Object::default()),
+            ObjectResult::default().with_error(Status {
+                code: tonic::Code::NotFound.into(),
+                message: "Object 0x2 not found".to_owned(),
+                details: Vec::new(),
+            }),
+            ObjectResult::default().with_object(Object::default()),
+        ];
+
+        let items = into_item_results(batch);
+
+        assert_eq!(items.len(), 3);
+        assert!(items[0].is_ok());
+        assert!(matches!(items[1], Err(Error::Server(_))));
+        assert!(items[2].is_ok());
+    }
+
+    #[test]
+    fn an_all_error_batch_still_yields_one_item_per_request() {
+        let batch = vec![
+            ObjectResult::default().with_error(Status::default()),
+            ObjectResult::default().with_error(Status::default()),
+        ];
+
+        assert_eq!(into_item_results(batch).len(), 2);
+    }
+
+    #[test]
+    fn not_found_is_recognised_at_the_call_and_item_level() {
+        let item_level = Error::Server(Status {
+            code: tonic::Code::NotFound.into(),
+            message: String::new(),
+            details: Vec::new(),
+        });
+        let call_level = Error::from(tonic::Status::not_found("gone"));
+        let other = Error::Server(Status {
+            code: tonic::Code::Internal.into(),
+            message: String::new(),
+            details: Vec::new(),
+        });
+
+        assert!(item_level.is_not_found());
+        assert!(call_level.is_not_found());
+        assert!(!other.is_not_found());
+        assert!(!Error::EmptyRequest.is_not_found());
+    }
 }
