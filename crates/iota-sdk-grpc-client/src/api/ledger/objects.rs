@@ -3,13 +3,10 @@
 
 //! High-level API for object queries.
 
-use iota_grpc_types::{
-    read_mask_fields::ObjectField,
-    v1::{
-        ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
-        object::Object,
-        types::ObjectReference,
-    },
+use iota_grpc_types::v1::{
+    ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
+    object::Object,
+    types::ObjectReference,
 };
 use iota_types::{ObjectId, Version};
 
@@ -41,9 +38,13 @@ impl Client {
     /// call itself, such as a transport error, and for a server that answered
     /// with a different number of results than refs requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which ref each
-    /// result belongs to.
+    /// result belongs to, or answered a position with a different object than
+    /// the one requested there ([`UnexpectedObject`]). The answered id is read
+    /// from the object reference or its BCS, so a read mask that includes
+    /// neither leaves nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
     ///
     /// # Read Mask
     ///
@@ -130,15 +131,9 @@ impl Client {
                 .collect(),
         );
 
-        // The ids are needed to check that each slot answers the object asked
-        // for in that position, so they are requested whatever the caller's
-        // mask says.
-        let mut mask = field_mask_with_default(read_mask, GET_OBJECTS_READ_MASK);
-        mask.paths.push(ObjectField::REFERENCE_OBJECT_ID.to_owned());
-
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
-            .with_read_mask(mask);
+            .with_read_mask(field_mask_with_default(read_mask, GET_OBJECTS_READ_MASK));
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));

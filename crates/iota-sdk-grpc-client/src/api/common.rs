@@ -16,6 +16,7 @@ use iota_grpc_types::{
     v1::{
         bcs::BcsData,
         ledger_service::{ObjectResult, TransactionResult, object_result, transaction_result},
+        object::Object as ProtoObject,
         transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
         transaction_execution_service::{
             ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
@@ -305,36 +306,20 @@ pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
     }
 }
 
-/// Check that each answered item is the one that was asked for.
-///
-/// A matching count only tells a caller how many results came back, not that
-/// slot `i` holds item `i`. Callers pair the two by position and go on to build
-/// and sign transactions over the result, so an out-of-order or substituted
-/// answer has to be caught here rather than trusted.
-///
 /// Check that each answered object is the one requested in that position.
 ///
 /// A matching count only says how many results came back, not that position `i`
-/// holds object `i`. Callers pair the two by position and go on to build and
-/// sign transactions over the result, so an out-of-order or substituted answer
-/// has to be caught rather than trusted.
-///
-/// Positions the server reported an error for are skipped: they carry a status,
-/// not an object, so there is no id to compare.
+/// holds object `i`, so the pairing callers rely on is checked rather than
+/// trusted.
 pub fn check_object_identity(
-    results: &[Result<iota_grpc_types::v1::object::Object>],
+    results: &[Result<ProtoObject>],
     requested: &[(ObjectId, Option<Version>)],
 ) -> Result<()> {
     for (position, (result, (expected, _))) in results.iter().zip(requested).enumerate() {
         let Ok(object) = result else { continue };
-        let actual: ObjectId = object
-            .reference
-            .as_ref()
-            .and_then(|reference| reference.object_id.as_ref())
-            .ok_or(Error::Protocol(ProtocolError::EmptyResponseField(
-                "reference.object_id",
-            )))?
-            .try_into()?;
+        let Some(actual) = answered_object_id(object)? else {
+            continue;
+        };
         if actual != *expected {
             return Err(Error::Protocol(ProtocolError::UnexpectedObject {
                 position,
@@ -356,14 +341,9 @@ pub fn check_transaction_identity(
 ) -> Result<()> {
     for (position, (result, expected)) in results.iter().zip(requested).enumerate() {
         let Ok(transaction) = result else { continue };
-        let actual: TransactionDigest = transaction
-            .transaction
-            .as_ref()
-            .and_then(|transaction| transaction.digest.as_ref())
-            .ok_or(Error::Protocol(ProtocolError::EmptyResponseField(
-                "transaction.digest",
-            )))?
-            .try_into()?;
+        let Some(actual) = answered_transaction_digest(transaction)? else {
+            continue;
+        };
         if actual != *expected {
             return Err(Error::Protocol(ProtocolError::UnexpectedTransaction {
                 position,
@@ -375,8 +355,43 @@ pub fn check_transaction_identity(
     Ok(())
 }
 
+/// The id of an answered object, taken from its reference or, when the read
+/// mask left that out, from its BCS. `None` when it carries neither, leaving
+/// nothing to compare.
+fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
+    if let Some(id) = object
+        .reference
+        .as_ref()
+        .and_then(|reference| reference.object_id.as_ref())
+    {
+        return Ok(Some(id.try_into()?));
+    }
+    if object.bcs.is_some() {
+        return Ok(Some(object.object()?.id()));
+    }
+    Ok(None)
+}
+
+/// The digest of an answered transaction, taken from the response or, when the
+/// read mask left it out, computed from the transaction's BCS. `None` when it
+/// carries neither, leaving nothing to compare.
+fn answered_transaction_digest(
+    transaction: &ExecutedTransaction,
+) -> Result<Option<TransactionDigest>> {
+    let Some(transaction) = transaction.transaction.as_ref() else {
+        return Ok(None);
+    };
+    if let Some(digest) = transaction.digest.as_ref() {
+        return Ok(Some(digest.try_into()?));
+    }
+    if transaction.bcs.is_some() {
+        return Ok(Some(transaction.transaction()?.digest()));
+    }
+    Ok(None)
+}
+
 impl ProtoResult for ObjectResult {
-    type Value = iota_grpc_types::v1::object::Object;
+    type Value = ProtoObject;
 
     fn into_result(self) -> Result<Self::Value> {
         match self.result {
@@ -681,13 +696,18 @@ pub fn build_proto_transaction<T: Serialize>(
 mod tests {
     use iota_grpc_types::{
         google::rpc::Status,
-        v1::{object::Object, types::ObjectReference as ProtoObjectReference},
+        v1::{
+            object::Object, types::ObjectReference as ProtoObjectReference,
+            versioned::VersionedObject,
+        },
     };
-    use iota_types::ObjectId;
+    use iota_types::{
+        Address, MoveStruct, ObjectData, ObjectId, Owner, StructTag, TransactionDigest, Version,
+    };
 
     use super::{
-        Error, ObjectResult, ProtocolError, Result, check_object_identity, into_item_results,
-        proto_object_id,
+        BcsData, Error, ExecutedTransaction, ObjectResult, ProtoTransaction, ProtocolError, Result,
+        check_object_identity, check_transaction_identity, into_item_results, proto_object_id,
     };
 
     #[test]
@@ -724,12 +744,47 @@ mod tests {
         ObjectId::new([byte; ObjectId::LENGTH])
     }
 
-    /// A proto object carrying just the id, as the read mask guarantees.
+    fn transaction_digest(byte: u8) -> TransactionDigest {
+        TransactionDigest::new([byte; TransactionDigest::LENGTH])
+    }
+
+    /// A proto object carrying just its reference, as the default read mask
+    /// requests.
     fn answered(id: ObjectId) -> Result<Object> {
         let mut object = Object::default();
         object.reference =
             Some(ProtoObjectReference::default().with_object_id(proto_object_id(id)));
         Ok(object)
+    }
+
+    /// A proto object carrying only BCS, as a `bcs`-only read mask requests.
+    fn answered_with_bcs_only(id: ObjectId) -> Object {
+        let mut contents = Vec::from(id);
+        contents.extend_from_slice(&0u64.to_le_bytes());
+        let move_struct = MoveStruct::new(
+            StructTag::new_gas_coin().into(),
+            Version::from_u64(1),
+            contents,
+        )
+        .expect("contents contain a full object id");
+        let object = iota_types::Object::new(
+            ObjectData::Struct(move_struct),
+            Owner::Address(Address::ZERO),
+            TransactionDigest::ZERO,
+            0,
+        );
+
+        let mut answered = Object::default();
+        answered.bcs =
+            Some(BcsData::serialize(&VersionedObject::V1(object)).expect("object serializes"));
+        answered
+    }
+
+    /// A proto transaction carrying just its digest, as the default read mask
+    /// requests.
+    fn answered_transaction(digest: TransactionDigest) -> ExecutedTransaction {
+        ExecutedTransaction::default()
+            .with_transaction(ProtoTransaction::default().with_digest(digest))
     }
 
     #[test]
@@ -775,18 +830,49 @@ mod tests {
     }
 
     #[test]
-    fn an_object_without_an_id_is_rejected() {
+    fn an_object_answered_with_bcs_only_is_checked_against_the_id_in_its_bcs() {
+        let requested = [(object_id(1), None)];
+        let results = vec![Ok(answered_with_bcs_only(object_id(9)))];
+
+        let err = check_object_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedObject {
+            expected, actual, ..
+        }) = err
+        else {
+            panic!("expected an UnexpectedObject error, got {err}");
+        };
+        assert_eq!(expected, object_id(1));
+        assert_eq!(actual, object_id(9));
+    }
+
+    #[test]
+    fn an_object_carrying_neither_a_reference_nor_bcs_has_nothing_to_check() {
         let requested = [(object_id(1), None)];
         let results = vec![Ok(Object::default())];
 
-        let err = check_object_identity(&results, &requested).unwrap_err();
-        assert!(
-            matches!(
-                err,
-                Error::Protocol(ProtocolError::EmptyResponseField("reference.object_id"))
-            ),
-            "got {err}"
-        );
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn a_substituted_transaction_is_rejected_with_both_digests() {
+        let requested = [transaction_digest(1), transaction_digest(2)];
+        let results = vec![
+            Ok(answered_transaction(transaction_digest(1))),
+            Ok(answered_transaction(transaction_digest(9))),
+        ];
+
+        let err = check_transaction_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedTransaction {
+            position,
+            expected,
+            actual,
+        }) = err
+        else {
+            panic!("expected an UnexpectedTransaction error, got {err}");
+        };
+        assert_eq!(position, 1);
+        assert_eq!(expected, transaction_digest(2));
+        assert_eq!(actual, transaction_digest(9));
     }
 
     #[test]

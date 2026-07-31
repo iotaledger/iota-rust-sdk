@@ -12,9 +12,9 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, TRANSACTION_DIGEST,
-        check_result_count, check_transaction_identity, collect_stream, field_mask_with_default,
-        into_item_results, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
+        check_transaction_identity, collect_stream, field_mask_with_default, into_item_results,
+        saturating_usize_to_u32,
     },
 };
 
@@ -47,9 +47,14 @@ impl Client {
     /// of the call itself, such as a transport error, and for a server that
     /// answered with a different number of results than digests requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
-    /// each result belongs to.
+    /// each result belongs to, or answered a position with a different
+    /// transaction than the one requested there ([`UnexpectedTransaction`]).
+    /// The answered digest is read from the response or computed from the
+    /// transaction's BCS, so a read mask that includes neither leaves nothing
+    /// to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedTransaction`]: crate::ProtocolError::UnexpectedTransaction
     ///
     /// # Read Mask
     ///
@@ -129,15 +134,12 @@ impl Client {
                 .collect(),
         );
 
-        // The digests are needed to check that each slot answers the
-        // transaction asked for in that position, so they are requested
-        // whatever the caller's mask says.
-        let mut mask = field_mask_with_default(read_mask, GET_TRANSACTIONS_READ_MASK);
-        mask.paths.push(TRANSACTION_DIGEST.to_owned());
-
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
-            .with_read_mask(mask);
+            .with_read_mask(field_mask_with_default(
+                read_mask,
+                GET_TRANSACTIONS_READ_MASK,
+            ));
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
