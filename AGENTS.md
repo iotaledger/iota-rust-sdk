@@ -22,7 +22,7 @@ The **IOTA Rust SDK** is a modular software development kit for integrating with
 5. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
 6. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
 7. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together. **Critically: when given multiple GitHub issues, ALWAYS create one PR per issue** — never bundle multiple issues into a single PR unless explicitly instructed or the issues are genuinely interdependent.
-8. **Keep PR descriptions short and skimmable** — write for a human reviewer who has 30 seconds. Cover the _why_ and the high-level _what_, and stop. Don't enumerate every line of the diff; reviewers can read the code. Avoid long wall-of-text summaries, exhaustive bullet lists of every renamed symbol, or restating what the diff obviously shows. A few crisp sentences (plus a test plan if relevant) is the goal.
+8. **Write only what the diff can't say** — PR descriptions, review comments and chat replies cover the reasoning and the high-level shape of a change, never a walkthrough of the diff. See [Writing style](#writing-style); this is the most frequently ignored rule in this file.
 9. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 10. **NEVER hand-edit generated gRPC types** under `crates/iota-sdk-grpc-types/src/proto/` — they are build output. Changes go into the proto sources / `update_grpc_types.sh`.
 
@@ -114,7 +114,11 @@ cargo test --doc                 # Direct doc test invocation
 
 ## Writing style
 
-These rules cover everything you write: function and variable names, code comments, commit messages, and PR and issue descriptions.
+These rules cover everything you write: function and variable names, code comments, commit messages, PR and issue descriptions, review comments, and replies in a chat session.
+
+The rule they all follow: **write what the reader cannot get from the code or the diff.** Reasoning, constraints, trade-offs and the shape of a change are worth writing. Restating what the code already shows — which symbols were renamed, which files were touched, what each function now does — is not, no matter how well organised it is.
+
+There is no word limit anywhere in this section, and none should be added. Length follows scope: a one-concept change is a few sentences, a change spanning several concepts gets a paragraph or bullet per concept, and a genuinely large change is allowed to be long. What is never allowed is padding a description with material the reader can already see.
 
 ### Code comments
 
@@ -126,12 +130,38 @@ Write comments for a future reader of the code, and keep them concise and durabl
 
 ### PR and issue descriptions
 
-- Keep them compact and concise; bullet points over full paragraphs (see also **Keep PR descriptions short and skimmable** in the critical development notes).
-- Say at a high level _what_ the change does and _why_ — the code-level details belong in the diff, not the description.
+A PR description answers what a reviewer cannot get by reading the diff:
+
+- **Why** the change exists — the problem, the constraint, the decision behind it.
+- **What** it does at the level of concepts, not symbols: which behaviour changes, which invariant now holds, what the new shape is.
+- **Trade-offs and rejected alternatives**, where a real choice was made.
+- **What to look at hardest**, if some part of the change deserves more attention than the rest.
+
+Leave out the mechanics of the diff: per-file walkthroughs, lists of renamed or added symbols, "moved X to Y" inventories, and summaries that restate the code in prose. The reviewer has the diff.
+
+Issue descriptions follow the same split: the problem and why it matters, not a proposed patch written out in prose.
+
+Self-check before submitting — this replaces any notion of a length limit: take each sentence and ask _could the reader have learned this from the diff?_ If yes, delete it. What survives is the description. If that leaves two sentences, the description is two sentences.
+
+### Chat replies and reports
+
+The same rule applies when reporting work back in a session, not just on GitHub:
+
+- Say what changed and why, what is verified and what is not, and anything the user has to decide or act on.
+- Don't replay the work: no narration of each file edited, no summary of code the user can read, no listing of steps already visible in the session.
+- Don't restate the request back before answering it, and don't close with a recap of what was just said.
+- Where a table or bullet list is only reformatting the diff, drop it entirely rather than tidying it.
+
+Length follows the same principle as above: as long as the content genuinely requires, and no longer.
+
+### Review comments
+
+- Say what is wrong and why it matters. One point per comment.
+- Don't re-explain the author's own code back to them, and don't restate the same suggestion in several forms.
 
 ### Plain language, no coined terms
 
-Applies to all of the above, and to review comments and reports — all prose, not just code.
+Applies to all of the above — all prose, not just code.
 
 Use plain words and terms already used in the codebase or the established domain, so a reader can follow the text without terminology the project doesn't already use. Do not invent a label for a concept and then reuse it as if it were established vocabulary — this is a recurring problem, treat it as a hard rule. Before naming a concept, check whether the repo already has a word for it and reuse that. If a phrase wouldn't appear in the code or a standard reference, drop the label and describe the thing directly.
 
