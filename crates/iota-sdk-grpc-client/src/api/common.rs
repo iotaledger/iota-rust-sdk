@@ -24,7 +24,7 @@ use iota_grpc_types::{
         types::ObjectId as ProtoObjectId,
     },
 };
-use iota_types::{ObjectId, TransactionDigest};
+use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
@@ -138,6 +138,24 @@ pub enum ProtocolError {
     /// number of requested items.
     #[error("expected {expected} results, got {actual}")]
     UnexpectedResultCount { expected: usize, actual: usize },
+
+    /// `get_objects` answered a position with a different object than the one
+    /// requested there.
+    #[error("requested object {expected} at position {position}, but got {actual}")]
+    UnexpectedObject {
+        position: usize,
+        expected: ObjectId,
+        actual: ObjectId,
+    },
+
+    /// `get_transactions` answered a position with a different transaction than
+    /// the one requested there.
+    #[error("requested transaction {expected} at position {position}, but got {actual}")]
+    UnexpectedTransaction {
+        position: usize,
+        expected: TransactionDigest,
+        actual: TransactionDigest,
+    },
 }
 
 /// Errors during checkpoint data stream reassembly.
@@ -285,6 +303,76 @@ pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
             actual: results.len(),
         }))
     }
+}
+
+/// Check that each answered item is the one that was asked for.
+///
+/// A matching count only tells a caller how many results came back, not that
+/// slot `i` holds item `i`. Callers pair the two by position and go on to build
+/// and sign transactions over the result, so an out-of-order or substituted
+/// answer has to be caught here rather than trusted.
+///
+/// Check that each answered object is the one requested in that position.
+///
+/// A matching count only says how many results came back, not that position `i`
+/// holds object `i`. Callers pair the two by position and go on to build and
+/// sign transactions over the result, so an out-of-order or substituted answer
+/// has to be caught rather than trusted.
+///
+/// Positions the server reported an error for are skipped: they carry a status,
+/// not an object, so there is no id to compare.
+pub fn check_object_identity(
+    results: &[Result<iota_grpc_types::v1::object::Object>],
+    requested: &[(ObjectId, Option<Version>)],
+) -> Result<()> {
+    for (position, (result, (expected, _))) in results.iter().zip(requested).enumerate() {
+        let Ok(object) = result else { continue };
+        let actual: ObjectId = object
+            .reference
+            .as_ref()
+            .and_then(|reference| reference.object_id.as_ref())
+            .ok_or(Error::Protocol(ProtocolError::EmptyResponseField(
+                "reference.object_id",
+            )))?
+            .try_into()?;
+        if actual != *expected {
+            return Err(Error::Protocol(ProtocolError::UnexpectedObject {
+                position,
+                expected: *expected,
+                actual,
+            }));
+        }
+    }
+    Ok(())
+}
+
+/// Check that each answered transaction is the one requested in that position.
+///
+/// See [`check_object_identity`] for why the pairing is checked rather than
+/// trusted.
+pub fn check_transaction_identity(
+    results: &[Result<ExecutedTransaction>],
+    requested: &[TransactionDigest],
+) -> Result<()> {
+    for (position, (result, expected)) in results.iter().zip(requested).enumerate() {
+        let Ok(transaction) = result else { continue };
+        let actual: TransactionDigest = transaction
+            .transaction
+            .as_ref()
+            .and_then(|transaction| transaction.digest.as_ref())
+            .ok_or(Error::Protocol(ProtocolError::EmptyResponseField(
+                "transaction.digest",
+            )))?
+            .try_into()?;
+        if actual != *expected {
+            return Err(Error::Protocol(ProtocolError::UnexpectedTransaction {
+                position,
+                expected: *expected,
+                actual,
+            }));
+        }
+    }
+    Ok(())
 }
 
 impl ProtoResult for ObjectResult {
@@ -591,9 +679,16 @@ pub fn build_proto_transaction<T: Serialize>(
 
 #[cfg(test)]
 mod tests {
-    use iota_grpc_types::{google::rpc::Status, v1::object::Object};
+    use iota_grpc_types::{
+        google::rpc::Status,
+        v1::{object::Object, types::ObjectReference as ProtoObjectReference},
+    };
+    use iota_types::ObjectId;
 
-    use super::{Error, ObjectResult, into_item_results};
+    use super::{
+        Error, ObjectResult, ProtocolError, Result, check_object_identity, into_item_results,
+        proto_object_id,
+    };
 
     #[test]
     fn a_per_item_error_keeps_the_surrounding_items() {
@@ -623,6 +718,75 @@ mod tests {
         ];
 
         assert_eq!(into_item_results(batch).len(), 2);
+    }
+
+    fn object_id(byte: u8) -> ObjectId {
+        ObjectId::new([byte; ObjectId::LENGTH])
+    }
+
+    /// A proto object carrying just the id, as the read mask guarantees.
+    fn answered(id: ObjectId) -> Result<Object> {
+        let mut object = Object::default();
+        object.reference =
+            Some(ProtoObjectReference::default().with_object_id(proto_object_id(id)));
+        Ok(object)
+    }
+
+    #[test]
+    fn objects_answered_in_request_order_are_accepted() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![answered(object_id(1)), answered(object_id(2))];
+
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn a_substituted_object_is_rejected_with_both_ids() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![answered(object_id(1)), answered(object_id(9))];
+
+        let err = check_object_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedObject {
+            position,
+            expected,
+            actual,
+        }) = err
+        else {
+            panic!("expected an UnexpectedObject error, got {err}");
+        };
+        assert_eq!(position, 1);
+        assert_eq!(expected, object_id(2));
+        assert_eq!(actual, object_id(9));
+    }
+
+    #[test]
+    fn a_position_the_server_errored_on_has_no_id_to_check() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![
+            answered(object_id(1)),
+            Err(Error::Server(Status {
+                code: tonic::Code::NotFound.into(),
+                message: String::new(),
+                details: Vec::new(),
+            })),
+        ];
+
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn an_object_without_an_id_is_rejected() {
+        let requested = [(object_id(1), None)];
+        let results = vec![Ok(Object::default())];
+
+        let err = check_object_identity(&results, &requested).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                Error::Protocol(ProtocolError::EmptyResponseField("reference.object_id"))
+            ),
+            "got {err}"
+        );
     }
 
     #[test]

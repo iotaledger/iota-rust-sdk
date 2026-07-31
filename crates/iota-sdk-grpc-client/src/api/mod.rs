@@ -16,9 +16,9 @@ pub mod state;
 
 pub use common::{CheckpointStreamError, Error, Page, ProtocolError, ReadMask, Result, RpcStatus};
 pub(crate) use common::{
-    TryFromProtoError, build_proto_transaction, check_result_count, collect_stream,
-    define_list_query, field_mask_with_default, into_item_results, proto_object_id,
-    saturating_usize_to_u32,
+    TryFromProtoError, build_proto_transaction, check_object_identity, check_result_count,
+    check_transaction_identity, collect_stream, define_list_query, field_mask_with_default,
+    into_item_results, proto_object_id, saturating_usize_to_u32,
 };
 pub use iota_grpc_types::read_masks::*;
 use iota_types::CheckpointSequenceNumber;

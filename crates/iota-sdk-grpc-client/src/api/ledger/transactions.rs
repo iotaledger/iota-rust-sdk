@@ -12,8 +12,9 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
-        collect_stream, field_mask_with_default, into_item_results, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, TRANSACTION_DIGEST,
+        check_result_count, check_transaction_identity, collect_stream, field_mask_with_default,
+        into_item_results, saturating_usize_to_u32,
     },
 };
 
@@ -128,12 +129,15 @@ impl Client {
                 .collect(),
         );
 
+        // The digests are needed to check that each slot answers the
+        // transaction asked for in that position, so they are requested
+        // whatever the caller's mask says.
+        let mut mask = field_mask_with_default(read_mask, GET_TRANSACTIONS_READ_MASK);
+        mask.paths.push(TRANSACTION_DIGEST.to_owned());
+
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
-            .with_read_mask(field_mask_with_default(
-                read_mask,
-                GET_TRANSACTIONS_READ_MASK,
-            ));
+            .with_read_mask(mask);
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
@@ -150,6 +154,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), digests.len())?;
+        check_transaction_identity(response.body(), digests)?;
 
         Ok(response)
     }

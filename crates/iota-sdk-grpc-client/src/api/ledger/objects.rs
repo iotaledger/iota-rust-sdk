@@ -3,19 +3,22 @@
 
 //! High-level API for object queries.
 
-use iota_grpc_types::v1::{
-    ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
-    object::Object,
-    types::ObjectReference,
+use iota_grpc_types::{
+    read_mask_fields::ObjectField,
+    v1::{
+        ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
+        object::Object,
+        types::ObjectReference,
+    },
 };
 use iota_types::{ObjectId, Version};
 
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
-        collect_stream, field_mask_with_default, into_item_results, proto_object_id,
-        saturating_usize_to_u32,
+        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_object_identity,
+        check_result_count, collect_stream, field_mask_with_default, into_item_results,
+        proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -127,9 +130,15 @@ impl Client {
                 .collect(),
         );
 
+        // The ids are needed to check that each slot answers the object asked
+        // for in that position, so they are requested whatever the caller's
+        // mask says.
+        let mut mask = field_mask_with_default(read_mask, GET_OBJECTS_READ_MASK);
+        mask.paths.push(ObjectField::REFERENCE_OBJECT_ID.to_owned());
+
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
-            .with_read_mask(field_mask_with_default(read_mask, GET_OBJECTS_READ_MASK));
+            .with_read_mask(mask);
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
@@ -146,6 +155,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), refs.len())?;
+        check_object_identity(response.body(), refs)?;
 
         Ok(response)
     }
