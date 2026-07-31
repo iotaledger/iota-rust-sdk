@@ -491,4 +491,126 @@ pub(crate) mod test_client {
             Ok(())
         }
     }
+
+    /// A [`TestClient`] that records how the builder asked for objects, and can
+    /// report chosen ids as missing.
+    #[derive(Clone, Default)]
+    pub struct RecordingClient {
+        /// The ids of each `objects_by_id` call, in call order.
+        pub batches: std::sync::Arc<std::sync::Mutex<Vec<Vec<ObjectId>>>>,
+        /// The ids of each single-object `object` call, in call order.
+        pub singles: std::sync::Arc<std::sync::Mutex<Vec<ObjectId>>>,
+        /// Ids to report as missing instead of fabricating an object.
+        pub missing: Vec<ObjectId>,
+    }
+
+    impl RecordingClient {
+        /// Returns the ids of each `objects_by_id` call, in call order.
+        pub fn batches(&self) -> Vec<Vec<ObjectId>> {
+            self.batches.lock().unwrap().clone()
+        }
+
+        /// Returns the ids of each single-object `object` call, in call order.
+        pub fn singles(&self) -> Vec<ObjectId> {
+            self.singles.lock().unwrap().clone()
+        }
+    }
+
+    impl TransactionBuilderClient for RecordingClient {
+        type Error = crate::TestClientError;
+        type DryRunResult = ();
+
+        async fn object(
+            &self,
+            object_id: ObjectId,
+            version: impl Into<Option<Version>>,
+        ) -> Result<Option<Object>, Self::Error> {
+            self.singles.lock().unwrap().push(object_id);
+            if self.missing.contains(&object_id) {
+                return Ok(None);
+            }
+            crate::TestClient.object(object_id, version).await
+        }
+
+        async fn objects_by_id(
+            &self,
+            object_ids: &[(ObjectId, Option<Version>)],
+        ) -> Result<Vec<Option<Object>>, Self::Error> {
+            self.batches
+                .lock()
+                .unwrap()
+                .push(object_ids.iter().map(|(id, _)| *id).collect());
+            let mut objects = Vec::with_capacity(object_ids.len());
+            for (object_id, _) in object_ids {
+                objects.push(if self.missing.contains(object_id) {
+                    None
+                } else {
+                    crate::TestClient.object(*object_id, None).await?
+                });
+            }
+            Ok(objects)
+        }
+
+        async fn objects(
+            &self,
+            struct_tag: Option<StructTag>,
+            owner: Address,
+            cursor: Option<Vec<u8>>,
+            limit: Option<usize>,
+        ) -> Result<crate::ObjectsPage, Self::Error> {
+            crate::TestClient
+                .objects(struct_tag, owner, cursor, limit)
+                .await
+        }
+
+        async fn transaction(
+            &self,
+            digest: iota_types::TransactionDigest,
+        ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
+            crate::TestClient.transaction(digest).await
+        }
+
+        async fn transaction_effects(
+            &self,
+            digest: iota_types::TransactionDigest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            crate::TestClient.transaction_effects(digest).await
+        }
+
+        async fn reference_gas_price(
+            &self,
+            epoch: impl Into<Option<u64>>,
+        ) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.reference_gas_price(epoch).await
+        }
+
+        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.estimate_tx_budget(tx).await
+        }
+
+        async fn dry_run_tx(
+            &self,
+            tx: &Transaction,
+            skip_checks: bool,
+        ) -> Result<Self::DryRunResult, Self::Error> {
+            crate::TestClient.dry_run_tx(tx, skip_checks).await
+        }
+
+        async fn execute_tx(
+            &self,
+            signatures: &[iota_types::UserSignature],
+            tx: &Transaction,
+            wait_for: impl Into<Option<WaitForTx>>,
+        ) -> Result<TransactionEffects, Self::Error> {
+            crate::TestClient.execute_tx(signatures, tx, wait_for).await
+        }
+
+        async fn wait_for_tx(
+            &self,
+            digest: iota_types::TransactionDigest,
+            wait_for: WaitForTx,
+        ) -> Result<(), Self::Error> {
+            crate::TestClient.wait_for_tx(digest, wait_for).await
+        }
+    }
 }
