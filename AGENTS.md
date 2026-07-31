@@ -139,7 +139,7 @@ This, organised around the problem:
 - **Code comments** — doc comments tell the caller what they need in order to call it correctly; inline comments give a non-obvious _why_, and default to none. No change history ("added for X", "as discussed", PR numbers).
 - **PR and issue descriptions** — why the change exists, what changes at the level of concepts, real trade-offs, and where to look hardest. For issues: the problem and why it matters, not a patch written out in prose.
 - **Review comments** — start with the first finding. No heading, no lead-in, and no "overall" paragraph describing the change back to the author; a verdict is allowed only if it is a judgement they don't already have. One point per comment; if it contains "also", it is two.
-- **Chat replies** — what changed, what is verified and what is not, what the user has to decide. Don't replay the session or restate the request.
+- **Chat replies** — the change, and anything the user has to decide or act on. Mention verification only where it is informative: a routine `clippy`/`fmt`/`cargo check` pass is not, an unrun test suite or an unverified behaviour change is. Don't replay the session or restate the request.
 
 ### Before posting
 
