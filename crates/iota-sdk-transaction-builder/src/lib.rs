@@ -293,7 +293,7 @@ pub mod types;
 pub mod unresolved;
 
 #[cfg(feature = "test-client")]
-pub use self::builder::client::test_client::{TestClient, TestClientError};
+pub use self::builder::client::test_client::{RecordingClient, TestClient, TestClientError};
 pub use self::{
     builder::{
         TransactionBuilder,
