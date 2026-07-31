@@ -121,6 +121,7 @@ All prose — PR/issue descriptions, reviews, chat replies, comments, commit mes
 - No invented motives — never "X because Y" unless Y came from the issue or task.
 - No filler — no lead-ins, headings-for-show, verdict paragraphs, or notes about these rules. Reviews: start with the first finding, one point per comment.
 - Plain language — only terms already in the codebase or domain; never coin a label and reuse it as vocabulary.
+- Match the answer's shape to the question — an enumerable question gets a bullet list, one line per item; prose only where an item needs actual reasoning.
 
 Before posting: delete every sentence the reader could get from the diff; repeat until a pass cuts nothing.
 
