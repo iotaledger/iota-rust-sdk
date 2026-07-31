@@ -123,7 +123,7 @@ Never state a motive you do not have. A true fact about a dependency is not the 
 | Don't                                                                        | Do                                                             |
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | `base64ct` was chosen because it is constant-time                              | Base64 is pulled in by each key-scheme feature                   |
-| Renames `content_digest` to `contents_digest` across the crate                 | The field now matches the type it holds, `CheckpointContentsDigest` |
+| Renames the field, its accessor, the FFI shim and the schema comment           | Renames `content_digest` to `contents_digest`, matching the type it holds, `CheckpointContentsDigest` |
 | Adds `to_base64`/`from_base64` to `Ed25519PrivateKey`, `Secp256k1PrivateKey`, … | Any key type with byte conversions gets base64 for free          |
 | "Review comments on the diff:" / "Here is what I changed:"                     | delete it and start with the first point                         |
 | "There is no length limit — a small change is a few sentences"                 | delete it; don't write about the rules                           |
@@ -138,7 +138,7 @@ Never state a motive you do not have. A true fact about a dependency is not the 
 ### Before posting
 
 1. Draft from the problem and the reasoning, not by reading back over the diff for material.
-2. Delete every sentence the reader could have got from the diff.
+2. Delete every sentence the reader could have got from the diff, except the one naming what the change is — every description needs that, however obvious, so the reasoning has something to attach to.
 3. Repeat step 2 until a pass cuts nothing.
 
 Being asked to make something shorter means step 2 was skipped.
