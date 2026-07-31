@@ -506,4 +506,14 @@ mod tests {
         // The high-S variant must be rejected even though it is algebraically valid.
         verifying_key.verify(message, &malleated).unwrap_err();
     }
+
+    #[proptest]
+    fn base64_roundtrip(signer: Secp256k1PrivateKey) {
+        use crate::{ToFromBase64, ToFromBytes};
+
+        let b64 = signer.to_base64();
+        let decoded = Secp256k1PrivateKey::from_base64(&b64).unwrap();
+        assert_eq!(decoded.to_bytes(), signer.to_bytes());
+        assert_eq!(decoded.to_base64(), b64);
+    }
 }

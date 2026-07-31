@@ -97,11 +97,17 @@ pub struct GetObjectsRequest {
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectResult {
+    /// The outcome for a single `ObjectRequest`: either the object, or the status
+    /// saying why the node could not serve it — for example `NOT_FOUND` when the
+    /// object never existed, was deleted, or has been pruned.
     #[prost(oneof = "object_result::Result", tags = "1, 2")]
     pub result: ::core::option::Option<object_result::Result>,
 }
 /// Nested message and enum types in `ObjectResult`.
 pub mod object_result {
+    /// The outcome for a single `ObjectRequest`: either the object, or the status
+    /// saying why the node could not serve it — for example `NOT_FOUND` when the
+    /// object never existed, was deleted, or has been pruned.
     #[non_exhaustive]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Result {
@@ -116,6 +122,9 @@ pub mod object_result {
 pub struct GetObjectsResponse {
     #[prost(message, repeated, tag = "1")]
     pub objects: ::prost::alloc::vec::Vec<ObjectResult>,
+    /// True when more stream messages follow because this batch reached the
+    /// message size limit. It does not indicate that more data exists beyond the
+    /// requested objects.
     #[prost(bool, tag = "2")]
     pub has_next: bool,
 }
@@ -149,11 +158,19 @@ pub struct GetTransactionsRequest {
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransactionResult {
+    /// The outcome for a single `TransactionRequest`: either the transaction, or
+    /// the status saying why the node could not serve it — `NOT_FOUND` when the
+    /// node does not have the transaction, or `FAILED_PRECONDITION` when it has the
+    /// transaction but an object a requested field needs has been pruned.
     #[prost(oneof = "transaction_result::Result", tags = "1, 2")]
     pub result: ::core::option::Option<transaction_result::Result>,
 }
 /// Nested message and enum types in `TransactionResult`.
 pub mod transaction_result {
+    /// The outcome for a single `TransactionRequest`: either the transaction, or
+    /// the status saying why the node could not serve it — `NOT_FOUND` when the
+    /// node does not have the transaction, or `FAILED_PRECONDITION` when it has the
+    /// transaction but an object a requested field needs has been pruned.
     #[non_exhaustive]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Result {
@@ -168,6 +185,9 @@ pub mod transaction_result {
 pub struct GetTransactionsResponse {
     #[prost(message, repeated, tag = "1")]
     pub transaction_results: ::prost::alloc::vec::Vec<TransactionResult>,
+    /// True when more stream messages follow because this batch reached the
+    /// message size limit. It does not indicate that more data exists beyond the
+    /// requested transactions.
     #[prost(bool, tag = "2")]
     pub has_next: bool,
 }
@@ -446,6 +466,15 @@ pub mod ledger_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// Fetch objects by ID, each at a given version or the latest when no version
+        /// is set.
+        ///
+        /// Concatenating `objects` across the response stream yields exactly one
+        /// `ObjectResult` per `ObjectRequest`, in the order the requests were sent, so
+        /// a client can pair a result with its request by position.
+        ///
+        /// A request the node cannot serve fails only its own result; the results for
+        /// the other requests are unaffected.
         pub async fn get_objects(
             &mut self,
             request: impl tonic::IntoRequest<super::GetObjectsRequest>,
@@ -475,6 +504,15 @@ pub mod ledger_service_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
+        /// Fetch transactions by digest.
+        ///
+        /// Concatenating `transaction_results` across the response stream yields
+        /// exactly one `TransactionResult` per `TransactionRequest`, in the order the
+        /// requests were sent, so a client can pair a result with its request by
+        /// position.
+        ///
+        /// A request the node cannot serve fails only its own result; the results for
+        /// the other requests are unaffected.
         pub async fn get_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTransactionsRequest>,
@@ -629,6 +667,15 @@ pub mod ledger_service_server {
             >
             + std::marker::Send
             + 'static;
+        /// Fetch objects by ID, each at a given version or the latest when no version
+        /// is set.
+        ///
+        /// Concatenating `objects` across the response stream yields exactly one
+        /// `ObjectResult` per `ObjectRequest`, in the order the requests were sent, so
+        /// a client can pair a result with its request by position.
+        ///
+        /// A request the node cannot serve fails only its own result; the results for
+        /// the other requests are unaffected.
         async fn get_objects(
             &self,
             request: tonic::Request<super::GetObjectsRequest>,
@@ -639,6 +686,15 @@ pub mod ledger_service_server {
             >
             + std::marker::Send
             + 'static;
+        /// Fetch transactions by digest.
+        ///
+        /// Concatenating `transaction_results` across the response stream yields
+        /// exactly one `TransactionResult` per `TransactionRequest`, in the order the
+        /// requests were sent, so a client can pair a result with its request by
+        /// position.
+        ///
+        /// A request the node cannot serve fails only its own result; the results for
+        /// the other requests are unaffected.
         async fn get_transactions(
             &self,
             request: tonic::Request<super::GetTransactionsRequest>,
