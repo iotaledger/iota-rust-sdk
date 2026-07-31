@@ -1410,9 +1410,18 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .into_iter()
             .zip(fetched)
             .map(|((object_id, _), object)| {
-                object
-                    .map(|object| (object_id, object))
-                    .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+                let object =
+                    object.ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                // Answering in request order is part of `objects_by_id`'s
+                // contract, but a transaction gets signed over whatever comes
+                // back, so check it rather than assume it.
+                if object.id() != object_id {
+                    return Err(Error::Input(format!(
+                        "asked the client for object {object_id} but got {}",
+                        object.id()
+                    )));
+                }
+                Ok((object_id, object))
             })
             .collect()
     }
