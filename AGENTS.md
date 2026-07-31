@@ -120,13 +120,19 @@ Covers everything you write: names, code comments, commit messages, PR and issue
 
 Never state a motive you do not have. A true fact about a dependency is not the reason it was picked: don't write "X because Y" unless Y came from the issue or the task. Where the reason isn't recoverable, say what the change does and link the issue.
 
-| Don't                                                                        | Do                                                             |
-| ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `base64ct` was chosen because it is constant-time                              | Base64 is pulled in by each key-scheme feature                   |
-| Renames the field, its accessor, the FFI shim and the schema comment           | Renames `content_digest` to `contents_digest`, matching the type it holds, `CheckpointContentsDigest` |
-| Adds `to_base64`/`from_base64` to `Ed25519PrivateKey`, `Secp256k1PrivateKey`, … | Any key type with byte conversions gets base64 for free          |
-| "Review comments on the diff:" / "Here is what I changed:"                     | delete it and start with the first point                         |
-| "There is no length limit — a small change is a few sentences"                 | delete it; don't write about the rules                           |
+An example — the difference is not any single sentence, it is what the description is organised around. Not this, organised by file, where each bullet is true and the whole still restates the diff:
+
+> Extends the writing conventions beyond code comments to cover PR/issue descriptions, reviews, and reports.
+>
+> - `RUST_CONVENTIONS.md`: new "Plain Language, No Coined Terms" rule under Comments — applies to all prose; use vocabulary already in the codebase/domain, don't invent-and-reuse labels, self-check before submitting.
+> - `AGENTS.md`: promote "Comment style" to a "Writing style" section covering code comments, PR/issue descriptions (compact, bullet points over prose, still state why), and the plain-language rule.
+> - `REVIEW.md`: review-output guidance now points to the plain-language rule.
+
+This, organised around the problem:
+
+> AI-generated comments and PR/issue text tend to be too long and lean on invented terminology. This extends the writing conventions to push back on that: keep prose concise, use plain language, and stick to terms already used in the project.
+>
+> Applies to code comments (as before) plus PR/issue descriptions, reviews, and reports.
 
 ### Per surface
 
