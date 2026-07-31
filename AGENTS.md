@@ -132,7 +132,7 @@ Never state a motive you do not have. A true fact about a dependency is not the 
 
 - **Code comments** — doc comments tell the caller what they need in order to call it correctly; inline comments give a non-obvious _why_, and default to none. No change history ("added for X", "as discussed", PR numbers).
 - **PR and issue descriptions** — why the change exists, what changes at the level of concepts, real trade-offs, and where to look hardest. For issues: the problem and why it matters, not a patch written out in prose.
-- **Review comments** — open with the problem, not a summary of the author's own code. One point per comment; if it contains "also", it is two.
+- **Review comments** — start with the first finding. No heading, no lead-in, and no "overall" paragraph describing the change back to the author; a verdict is allowed only if it is a judgement they don't already have. One point per comment; if it contains "also", it is two.
 - **Chat replies** — what changed, what is verified and what is not, what the user has to decide. Don't replay the session or restate the request.
 
 ### Before posting
