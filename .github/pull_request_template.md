@@ -6,10 +6,6 @@ restatement of the code.
 State only reasoning you know. Do not invent a motivation, or a justification for a
 dependency or design choice, to fill a section.
 
-Add a `## Trade-offs` section only if a real alternative was rejected, and a
-`## Review focus` section only if one part deserves more attention than the rest.
-Most changes need neither.
-
 Before submitting, check each sentence: if the reader could have learned it from
 the diff, delete it. Repeat until a pass deletes nothing.
 -->
