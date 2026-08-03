@@ -7,18 +7,42 @@
 // `StakedIota.tryFromObject(obj)` call gives typed, named-field access to
 // id / poolId / stakeActivationEpoch / principal.
 
+import iota_sdk.Direction
 import iota_sdk.GraphQlClient
 import iota_sdk.ObjectFilter
+import iota_sdk.PaginationFilter
 import iota_sdk.StakedIota
+import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newTestnet()
-        val page = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
+
+        // Filtering objects by type alone scans every object on the network, which the
+        // GraphQL server rejects with a timeout. Pick a recent staker and filter by owner
+        // as well, so only that address' objects are looked at.
+        val stakers =
+            client.transactions(
+                TransactionsFilter(function = "0x3::iota_system::request_add_stake"),
+                PaginationFilter(direction = Direction.BACKWARD, limit = 1),
+            )
+
+        val staker = stakers.data.lastOrNull()?.transaction?.sender()
+        if (staker == null) {
+            println("No staking transactions on testnet right now.")
+            return@runBlocking
+        }
+
+        println("Latest staker: ${staker.toHex()}\n")
+
+        val page =
+            client.objects(
+                ObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = staker)
+            )
 
         if (page.data.isEmpty()) {
-            println("No StakedIota objects on testnet right now.")
+            println("No StakedIota objects owned by ${staker.toHex()} right now.")
             return@runBlocking
         }
 
