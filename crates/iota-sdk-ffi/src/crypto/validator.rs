@@ -6,7 +6,7 @@ use std::sync::RwLock;
 use crate::{
     error::Result,
     types::{
-        checkpoint::CheckpointSummary,
+        checkpoint::{CheckpointSummary, EpochId, SignedCheckpointSummary},
         validator::{ValidatorAggregatedSignature, ValidatorCommittee, ValidatorSignature},
     },
 };
@@ -102,6 +102,54 @@ impl ValidatorCommitteeSignatureAggregator {
             .read()
             .expect("failed to read validator committee signature aggregator")
             .finish()?
+            .into())
+    }
+}
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct CommitteeChainVerifier(pub RwLock<iota_sdk::crypto::validator::CommitteeChainVerifier>);
+
+#[uniffi::export]
+impl CommitteeChainVerifier {
+    #[uniffi::constructor]
+    pub fn new(trusted_committee: ValidatorCommittee) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::crypto::validator::CommitteeChainVerifier::new(trusted_committee.into())?
+                .into(),
+        ))
+    }
+
+    /// The epoch whose closing checkpoint must be fed next.
+    pub fn epoch(&self) -> EpochId {
+        self.0
+            .read()
+            .expect("failed to read committee chain verifier")
+            .epoch()
+    }
+
+    /// The committee of the epoch whose closing checkpoint must be fed next.
+    pub fn committee(&self) -> ValidatorCommittee {
+        self.0
+            .read()
+            .expect("failed to read committee chain verifier")
+            .committee()
+            .clone()
+            .into()
+    }
+
+    /// Verify `summary` as the certified closing checkpoint of the current
+    /// epoch and advance to the committee it elects for the next epoch,
+    /// returning the now committee-verified summary.
+    pub fn verify_epoch_close(
+        &self,
+        summary: &SignedCheckpointSummary,
+    ) -> Result<CheckpointSummary> {
+        Ok(self
+            .0
+            .write()
+            .expect("failed to write committee chain verifier")
+            .verify_epoch_close(summary.0.clone())?
             .into())
     }
 }

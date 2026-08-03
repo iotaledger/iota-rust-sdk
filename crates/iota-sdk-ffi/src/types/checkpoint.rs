@@ -11,7 +11,7 @@ use crate::types::{
         TransactionEffectsDigest,
     },
     signature::UserSignature,
-    validator::ValidatorCommitteeMember,
+    validator::{ValidatorAggregatedSignature, ValidatorCommitteeMember},
 };
 
 pub type CheckpointSequenceNumber = u64;
@@ -172,6 +172,30 @@ impl CheckpointSummary {
 
     pub fn signing_message_hex(&self) -> String {
         self.0.signing_message_hex()
+    }
+}
+
+/// A [`CheckpointSummary`] together with an aggregated signature certifying it
+/// under its epoch's validator committee.
+#[derive(derive_more::From, uniffi::Object)]
+pub struct SignedCheckpointSummary(pub iota_sdk::types::SignedCheckpointSummary);
+
+#[uniffi::export]
+impl SignedCheckpointSummary {
+    #[uniffi::constructor]
+    pub fn new(checkpoint: &CheckpointSummary, signature: &ValidatorAggregatedSignature) -> Self {
+        Self(iota_sdk::types::SignedCheckpointSummary {
+            checkpoint: checkpoint.0.clone(),
+            signature: signature.0.clone(),
+        })
+    }
+
+    pub fn checkpoint(&self) -> CheckpointSummary {
+        self.0.checkpoint.clone().into()
+    }
+
+    pub fn signature(&self) -> ValidatorAggregatedSignature {
+        self.0.signature.clone().into()
     }
 }
 
@@ -409,6 +433,7 @@ impl From<EndOfEpochData> for iota_sdk::types::EndOfEpochData {
 crate::export_iota_types_bcs_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_bcs_conversion!(
     CheckpointSummary,
+    SignedCheckpointSummary,
     CheckpointContents,
     CheckpointContentsV1,
     CheckpointTransactionInfo,
@@ -417,6 +442,7 @@ crate::export_iota_types_objects_bcs_conversion!(
 crate::export_iota_types_json_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_json_conversion!(
     CheckpointSummary,
+    SignedCheckpointSummary,
     CheckpointContents,
     CheckpointContentsV1,
     CheckpointTransactionInfo,
