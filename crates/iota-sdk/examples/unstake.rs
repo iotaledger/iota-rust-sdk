@@ -5,17 +5,21 @@ use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{Client, query_types::ObjectFilter},
     transaction_builder::TransactionBuilder,
-    types::StructTag,
+    types::{Address, StructTag},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_testnet();
 
+    let owner: Address =
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
+
     let staked_iota = client
         .objects(
             ObjectFilter {
                 type_: Some(StructTag::new_staked_iota().to_string()),
+                owner: Some(owner),
                 ..Default::default()
             },
             Default::default(),

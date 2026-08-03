@@ -9,14 +9,14 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newTestnet()
 
-        val stakedIotas = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
+        val coins = client.objects(ObjectFilter(typeTag = "0x2::coin::Coin<0x2::iota::IOTA>"))
 
-        if (stakedIotas.data.isEmpty()) {
-            println("No StakedIota objects found")
+        if (coins.data.isEmpty()) {
+            println("No IOTA coin objects found")
         } else {
-            println("StakedIota object IDs:")
-            for (stakedIota in stakedIotas.data) {
-                println(stakedIota.id().toHex())
+            println("IOTA coin object IDs:")
+            for (coin in coins.data) {
+                println(coin.id().toHex())
             }
         }
     } catch (e: Exception) {

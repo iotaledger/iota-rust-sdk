@@ -9,15 +9,15 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
 
-    staked_iotas = await client.objects(filter=ObjectFilter(
-        type_tag="0x3::staking_pool::StakedIota"))
+    coins = await client.objects(filter=ObjectFilter(
+        type_tag="0x2::coin::Coin<0x2::iota::IOTA>"))
 
-    if len(staked_iotas.data) == 0:
-        print("No StakedIota objects found")
+    if len(coins.data) == 0:
+        print("No IOTA coin objects found")
     else:
-        print("StakedIota object IDs:")
-        for staked_iota in staked_iotas.data:
-            print(staked_iota.id().to_hex())
+        print("IOTA coin object IDs:")
+        for coin in coins.data:
+            print(coin.id().to_hex())
 
 
 if __name__ == "__main__":

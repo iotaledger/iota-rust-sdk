@@ -13,18 +13,18 @@ import (
 func main() {
 	client := iota_sdk.GraphQlClientNewTestnet()
 
-	stakedIotaType := "0x3::staking_pool::StakedIota"
-	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
+	coinType := "0x2::coin::Coin<0x2::iota::IOTA>"
+	coins, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &coinType}, nil)
 	if err != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 
-	if len(stakedIotas.Data) == 0 {
-		fmt.Println("No StakedIota objects found")
+	if len(coins.Data) == 0 {
+		fmt.Println("No IOTA coin objects found")
 	} else {
-		fmt.Println("StakedIota object IDs:")
-		for _, stakedIota := range stakedIotas.Data {
-			fmt.Printf("%s\n", stakedIota.Id().ToHex())
+		fmt.Println("IOTA coin object IDs:")
+		for _, coin := range coins.Data {
+			fmt.Printf("%s\n", coin.Id().ToHex())
 		}
 	}
 }

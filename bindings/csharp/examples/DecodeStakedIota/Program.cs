@@ -14,13 +14,15 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewTestnet();
-        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota");
+
+        var owner = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota", Owner: owner);
 
         var page = await client.Objects(filter);
 
         if (page.Data.Length == 0)
         {
-            Console.WriteLine("No StakedIota objects on testnet right now.");
+            Console.WriteLine($"No StakedIota objects owned by {owner.ToHex()} right now.");
             return;
         }
 
