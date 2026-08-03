@@ -22,7 +22,7 @@ The **IOTA Rust SDK** is a modular software development kit for integrating with
 5. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
 6. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
 7. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together. **Critically: when given multiple GitHub issues, ALWAYS create one PR per issue** — never bundle multiple issues into a single PR unless explicitly instructed or the issues are genuinely interdependent.
-8. **Keep PR descriptions short and skimmable** — write for a human reviewer who has 30 seconds. Cover the _why_ and the high-level _what_, and stop. Don't enumerate every line of the diff; reviewers can read the code. Avoid long wall-of-text summaries, exhaustive bullet lists of every renamed symbol, or restating what the diff obviously shows. A few crisp sentences (plus a test plan if relevant) is the goal.
+8. **Write only what the diff can't say** — PR descriptions, review comments and chat replies cover the reasoning and the high-level shape of a change, never a walkthrough of the diff. See [Writing style](#writing-style); this is the most frequently ignored rule in this file.
 9. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 10. **NEVER hand-edit generated gRPC types** under `crates/iota-sdk-grpc-types/src/proto/` — they are build output. Changes go into the proto sources / `update_grpc_types.sh`.
 
@@ -114,28 +114,16 @@ cargo test --doc                 # Direct doc test invocation
 
 ## Writing style
 
-These rules cover everything you write: function and variable names, code comments, commit messages, and PR and issue descriptions.
+All prose — PR/issue descriptions, reviews, chat replies, comments, commit messages:
 
-### Code comments
+- One sentence naming the change, then only what the reader can't get from the diff: the problem, the reasoning, real trade-offs. Default budget: 1–3 sentences per section — spend more only on a concern the reader would miss, never to cover the diff more completely.
+- No diff inventory — no per-file bullets, no symbol lists, no restating code in prose. Applies to reasons too: a "why" whose content is visible in the diff is inventory.
+- No invented motives — never "X because Y" unless Y came from the issue or task.
+- No filler — no lead-ins, headings-for-show, verdict paragraphs, or notes about these rules. Reviews: start with the first finding, one point per comment.
+- Plain language — only terms already in the codebase or domain; never coin a label and reuse it as vocabulary.
+- Match the answer's shape to the question — an enumerable question gets a bullet list, one line per item; prose only where an item needs actual reasoning.
 
-Write comments for a future reader of the code, and keep them concise and durable — not a changelog of in-session edits.
-
-- Doc comments are for the **caller** — what they need to know to call it correctly, not how it works inside.
-- Inline comments explain a non-obvious **why**, never a **what**; default to none.
-- Never embed conversational or change history ("added for X", "as discussed", PR/issue numbers), nor explain why a problem was fixed when that problem was only introduced within the same change — that belongs in the PR description or commit message, not the code.
-
-### PR and issue descriptions
-
-- Keep them compact and concise; bullet points over full paragraphs (see also **Keep PR descriptions short and skimmable** in the critical development notes).
-- Say at a high level _what_ the change does and _why_ — the code-level details belong in the diff, not the description.
-
-### Plain language, no coined terms
-
-Applies to all of the above, and to review comments and reports — all prose, not just code.
-
-Use plain words and terms already used in the codebase or the established domain, so a reader can follow the text without terminology the project doesn't already use. Do not invent a label for a concept and then reuse it as if it were established vocabulary — this is a recurring problem, treat it as a hard rule. Before naming a concept, check whether the repo already has a word for it and reuse that. If a phrase wouldn't appear in the code or a standard reference, drop the label and describe the thing directly.
-
-Self-check before submitting: scan for any noun phrase acting as a _name_ for an idea. If you coined it — not the codebase, not the domain — delete the label and state the idea in plain words.
+Before posting: delete every sentence the reader could get from the diff; repeat until a pass cuts nothing.
 
 ## Important Files
 
