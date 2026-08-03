@@ -202,6 +202,8 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
+/// move-vector-elem-too-big                               = %d40 u64 u64
+/// move-raw-value-too-big                                 = %d41 u64 u64
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -416,6 +418,29 @@ pub enum ExecutionError {
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
     MoveAuthenticationError { error: Box<ExecutionError> },
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the vector element.
+    #[error(
+        "Move vector element (passed to MakeMoveVec) with size {value_size} is larger than the maximum size {max_scaled_size}. Note that this maximum is scaled based on the type of the vector element."
+    )]
+    MoveVectorElemTooBig {
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        value_size: u64,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        max_scaled_size: u64,
+    },
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
+    /// than the maximum size. The maximum is scaled based on the type of the
+    /// value.
+    #[error(
+        "Move value (possibly an upgrade ticket or a dev-inspect value) with size {value_size} is larger than the maximum size {max_scaled_size}. Note that this maximum is scaled based on the type of the value."
+    )]
+    MoveRawValueTooBig {
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        value_size: u64,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        max_scaled_size: u64,
+    },
 }
 
 impl ExecutionError {
@@ -460,6 +485,8 @@ impl ExecutionError {
         ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
         MoveAuthenticationError,
+        MoveVectorElemTooBig,
+        MoveRawValueTooBig,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {

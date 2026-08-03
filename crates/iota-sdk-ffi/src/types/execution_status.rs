@@ -279,6 +279,19 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthenticationError { error: Arc<ExecutionErrorWrapper> },
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the vector element.
+    MoveVectorElemTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
+    /// than the maximum size. The maximum is scaled based on the type of the
+    /// value.
+    MoveRawValueTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -438,6 +451,20 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
+            iota_sdk::types::ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            iota_sdk::types::ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -559,6 +586,20 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             ExecutionError::MoveAuthenticationError { error } => Self::MoveAuthenticationError {
                 error: Box::new(error.0.clone()),
+            },
+            ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
             },
         }
     }
