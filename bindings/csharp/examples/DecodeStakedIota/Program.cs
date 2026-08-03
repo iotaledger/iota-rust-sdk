@@ -15,29 +15,16 @@ class Program
     {
         var client = GraphQlClient.NewTestnet();
 
-        // Filtering objects by type alone scans every object on the network, which
-        // the GraphQL server rejects with a timeout. Pick a recent staker and filter
-        // by owner as well, so only that address' objects are looked at.
-        var stakers = await client.Transactions(
-            new TransactionsFilter(Function: "0x3::iota_system::request_add_stake"),
-            new PaginationFilter(Direction.Backward, Limit: 1));
-
-        if (stakers.Data.Length == 0)
-        {
-            Console.WriteLine("No staking transactions on testnet right now.");
-            return;
-        }
-
-        var staker = stakers.Data[^1].Transaction.Sender();
-        Console.WriteLine($"Latest staker: {staker.ToHex()}\n");
-
-        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota", Owner: staker);
+        // Filtering by type alone scans every object on the network, which the
+        // GraphQL server rejects with a timeout, so filter by owner as well.
+        var owner = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota", Owner: owner);
 
         var page = await client.Objects(filter);
 
         if (page.Data.Length == 0)
         {
-            Console.WriteLine($"No StakedIota objects owned by {staker.ToHex()} right now.");
+            Console.WriteLine($"No StakedIota objects owned by {owner.ToHex()} right now.");
             return;
         }
 

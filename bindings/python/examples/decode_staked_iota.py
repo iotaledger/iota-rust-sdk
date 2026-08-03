@@ -15,27 +15,16 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
 
-    # Filtering objects by type alone scans every object on the network, which
-    # the GraphQL server rejects with a timeout. Pick a recent staker and filter
-    # by owner as well, so only that address' objects are looked at.
-    stake_filter = TransactionsFilter(
-        function="0x3::iota_system::request_add_stake")
-    latest = PaginationFilter(direction=Direction.BACKWARD, limit=1)
-    stakers = await client.transactions(filter=stake_filter,
-                                        pagination_filter=latest)
-
-    if len(stakers.data) == 0:
-        print("No staking transactions on testnet right now.")
-        return
-
-    staker = stakers.data[-1].transaction.sender()
-    print(f"Latest staker: {staker.to_hex()}\n")
+    # Filtering by type alone scans every object on the network, which the
+    # GraphQL server rejects with a timeout, so filter by owner as well.
+    owner = Address.from_hex(
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
     page = await client.objects(filter=ObjectFilter(
-        type_tag="0x3::staking_pool::StakedIota", owner=staker))
+        type_tag="0x3::staking_pool::StakedIota", owner=owner))
 
     if len(page.data) == 0:
-        print(f"No StakedIota objects owned by {staker.to_hex()} right now.")
+        print(f"No StakedIota objects owned by {owner.to_hex()} right now.")
         return
 
     print(f"Decoded {len(page.data)} StakedIota object(s):\n")

@@ -19,35 +19,21 @@ import (
 func main() {
 	client := iota_sdk.GraphQlClientNewTestnet()
 
-	// Filtering objects by type alone scans every object on the network, which
-	// the GraphQL server rejects with a timeout. Pick a recent staker and filter
-	// by owner as well, so only that address' objects are looked at.
-	stakeFunction := "0x3::iota_system::request_add_stake"
-	limit := int32(1)
-	stakers, err := client.Transactions(
-		&iota_sdk.TransactionsFilter{Function: &stakeFunction},
-		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionBackward, Limit: &limit},
-	)
+	// Filtering by type alone scans every object on the network, which the
+	// GraphQL server rejects with a timeout, so filter by owner as well.
+	owner, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	if err != nil {
-		log.Fatalf("Failed to fetch staking transactions: %v", err)
+		log.Fatalf("Failed to parse address: %v", err)
 	}
-
-	if len(stakers.Data) == 0 {
-		fmt.Println("No staking transactions on testnet right now.")
-		return
-	}
-
-	staker := stakers.Data[len(stakers.Data)-1].Transaction.Sender()
-	fmt.Printf("Latest staker: %s\n\n", staker.ToHex())
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
-	page, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &staker}, nil)
+	page, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch StakedIota objects: %v", err)
 	}
 
 	if len(page.Data) == 0 {
-		fmt.Printf("No StakedIota objects owned by %s right now.\n", staker.ToHex())
+		fmt.Printf("No StakedIota objects owned by %s right now.\n", owner.ToHex())
 		return
 	}
 
