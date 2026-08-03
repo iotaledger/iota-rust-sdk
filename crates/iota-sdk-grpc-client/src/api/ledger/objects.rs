@@ -16,8 +16,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, Result, check_result_count, collect_stream, into_item_results,
-        proto_object_id, saturating_usize_to_u32,
+        Error, MetadataEnvelope, Result, check_object_identity, check_result_count, collect_stream,
+        into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -40,9 +40,13 @@ impl Client {
     /// call itself, such as a transport error, and for a server that answered
     /// with a different number of results than IDs requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
-    /// result belongs to.
+    /// result belongs to, or answered a position with a different object than
+    /// the one requested there ([`UnexpectedObject`]). The answered id is read
+    /// from the object reference or its BCS, so a read mask that includes
+    /// neither leaves nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
     ///
     /// # Read Mask
     ///
@@ -111,13 +115,7 @@ impl Client {
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
-        let refs = refs
-            .into_iter()
-            .map(|id| {
-                ObjectRequest::default()
-                    .with_object_ref(ObjectReference::default().with_object_id(proto_object_id(id)))
-            })
-            .collect::<Vec<_>>();
+        let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
 
         self.get_objects_internal(refs, read_mask.into_read_mask())
             .await
@@ -194,34 +192,33 @@ impl Client {
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
-        let refs = refs
-            .into_iter()
-            .map(|(id, version)| {
-                let mut object_ref = ObjectReference::default().with_object_id(proto_object_id(id));
-
-                if let Some(v) = version {
-                    object_ref = object_ref.with_version(v.as_u64());
-                }
-
-                ObjectRequest::default().with_object_ref(object_ref)
-            })
-            .collect::<Vec<_>>();
-
-        self.get_objects_internal(refs, read_mask.into_read_mask())
+        self.get_objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
             .await
     }
 
     async fn get_objects_internal(
         &self,
-        refs: Vec<ObjectRequest>,
+        refs: Vec<(ObjectId, Option<Version>)>,
         read_mask: ObjectReadMask,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);
         }
-        let requested_count = refs.len();
 
-        let requests = ObjectRequests::default().with_requests(refs);
+        let requests = ObjectRequests::default().with_requests(
+            refs.iter()
+                .map(|(id, version)| {
+                    let mut object_ref =
+                        ObjectReference::default().with_object_id(proto_object_id(*id));
+
+                    if let Some(v) = version {
+                        object_ref = object_ref.with_version(v.as_u64());
+                    }
+
+                    ObjectRequest::default().with_object_ref(object_ref)
+                })
+                .collect(),
+        );
 
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
@@ -241,7 +238,8 @@ impl Client {
             Ok((msg.has_next, into_item_results(msg.objects)))
         })
         .await?;
-        check_result_count(response.body(), requested_count)?;
+        check_result_count(response.body(), refs.len())?;
+        check_object_identity(response.body(), &refs)?;
 
         Ok(response)
     }

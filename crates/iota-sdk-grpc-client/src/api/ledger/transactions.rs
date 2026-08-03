@@ -15,8 +15,8 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, Result, check_result_count, collect_stream, into_item_results,
-        saturating_usize_to_u32,
+        Error, MetadataEnvelope, Result, check_result_count, check_transaction_identity,
+        collect_stream, into_item_results, saturating_usize_to_u32,
     },
 };
 
@@ -49,9 +49,14 @@ impl Client {
     /// of the call itself, such as a transport error, and for a server that
     /// answered with a different number of results than digests requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
-    /// each result belongs to.
+    /// each result belongs to, or answered a position with a different
+    /// transaction than the one requested there ([`UnexpectedTransaction`]).
+    /// The answered digest is read from the response or computed from the
+    /// transaction's BCS, so a read mask that includes neither leaves nothing
+    /// to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedTransaction`]: crate::ProtocolError::UnexpectedTransaction
     ///
     /// # Read Mask
     ///
@@ -119,16 +124,17 @@ impl Client {
         digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl IntoReadMask<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
-        let requested = digests
-            .into_iter()
-            .map(|d| TransactionRequest::default().with_digest(d))
-            .collect::<Vec<_>>();
-        if requested.is_empty() {
+        let digests = digests.into_iter().collect::<Vec<_>>();
+        if digests.is_empty() {
             return Err(Error::EmptyRequest);
         }
-        let requested_count = requested.len();
 
-        let requests = TransactionRequests::default().with_requests(requested);
+        let requests = TransactionRequests::default().with_requests(
+            digests
+                .iter()
+                .map(|d| TransactionRequest::default().with_digest(*d))
+                .collect(),
+        );
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
@@ -148,7 +154,8 @@ impl Client {
             Ok((msg.has_next, into_item_results(msg.transaction_results)))
         })
         .await?;
-        check_result_count(response.body(), requested_count)?;
+        check_result_count(response.body(), digests.len())?;
+        check_transaction_identity(response.body(), &digests)?;
 
         Ok(response)
     }
