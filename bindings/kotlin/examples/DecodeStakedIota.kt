@@ -37,9 +37,7 @@ fun main() = runBlocking {
         println("Latest staker: ${staker.toHex()}\n")
 
         val page =
-            client.objects(
-                ObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = staker)
-            )
+            client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = staker))
 
         if (page.data.isEmpty()) {
             println("No StakedIota objects owned by ${staker.toHex()} right now.")
