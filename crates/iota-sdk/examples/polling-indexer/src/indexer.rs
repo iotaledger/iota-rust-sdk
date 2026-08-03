@@ -509,6 +509,9 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
             iota_sdk::types::transaction::TransactionKind::RandomnessStateUpdate(_) => {
                 "randomness_state_update".to_owned()
             }
+            iota_sdk::types::transaction::TransactionKind::TransactionDenyRulesUpdate(_) => {
+                "transaction_deny_rules_update".to_owned()
+            }
             _ => "unknown".to_owned(),
         },
         _ => "unknown".to_owned(),
