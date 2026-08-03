@@ -8,15 +8,15 @@ struct ObjectsByTypeExample {
   static func main() async throws {
     let client = GraphQlClient.newTestnet()
 
-    let stakedIotas = try await client.objects(
-      filter: ObjectFilter(typeTag: "0x3::staking_pool::StakedIota"))
+    let coins = try await client.objects(
+      filter: ObjectFilter(typeTag: "0x2::coin::Coin<0x2::iota::IOTA>"))
 
-    if stakedIotas.data.isEmpty {
-      print("No StakedIota objects found")
+    if coins.data.isEmpty {
+      print("No IOTA coin objects found")
     } else {
-      print("StakedIota object IDs:")
-      for stakedIota in stakedIotas.data {
-        print(stakedIota.id().toHex())
+      print("IOTA coin object IDs:")
+      for coin in coins.data {
+        print(coin.id().toHex())
       }
     }
   }

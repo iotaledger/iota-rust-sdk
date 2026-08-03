@@ -7,22 +7,22 @@ use iota_sdk::graphql_client::{Client, error::Result, query_types::ObjectFilter}
 async fn main() -> Result<()> {
     let client = Client::new_testnet();
 
-    let staked_iotas = client
+    let coins = client
         .objects(
             ObjectFilter {
-                type_: "0x3::staking_pool::StakedIota".to_owned().into(),
+                type_: "0x2::coin::Coin<0x2::iota::IOTA>".to_owned().into(),
                 ..Default::default()
             },
             Default::default(),
         )
         .await?;
 
-    if staked_iotas.data.is_empty() {
-        println!("No StakedIota objects found");
+    if coins.data.is_empty() {
+        println!("No IOTA coin objects found");
     } else {
-        println!("StakedIota object IDs:");
-        for staked_iota in staked_iotas.data {
-            println!("{}", staked_iota.id());
+        println!("IOTA coin object IDs:");
+        for coin in coins.data {
+            println!("{}", coin.id());
         }
     }
 
