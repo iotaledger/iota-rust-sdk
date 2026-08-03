@@ -19,7 +19,9 @@ pub enum Error {
     WrongGasObject,
     #[error("gas coin {object_id} cannot also be passed to a command")]
     GasCoinAsArgument { object_id: ObjectId },
-    #[error("transferring gas coin {transferred} would also transfer gas coin {missing}")]
+    #[error(
+        "transferring gas coin {transferred} would also transfer gas coin {missing} due to gas smashing; if this is intentional, add coin {missing} to the transferred objects"
+    )]
     IncompleteGasTransfer {
         transferred: ObjectId,
         missing: ObjectId,
