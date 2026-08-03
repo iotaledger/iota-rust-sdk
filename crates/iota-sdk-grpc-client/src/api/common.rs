@@ -16,6 +16,7 @@ use iota_grpc_types::{
     v1::{
         bcs::BcsData,
         ledger_service::{ObjectResult, TransactionResult, object_result, transaction_result},
+        object::Object as ProtoObject,
         transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
         transaction_execution_service::{
             ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
@@ -24,7 +25,7 @@ use iota_grpc_types::{
         types::ObjectId as ProtoObjectId,
     },
 };
-use iota_types::{ObjectId, TransactionDigest};
+use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
@@ -61,6 +62,27 @@ pub enum Error {
     /// gRPC transport or protocol error.
     #[error("grpc error: {0}")]
     Grpc(Box<tonic::Status>),
+}
+
+impl Error {
+    /// Returns `true` if the error carries a `NOT_FOUND` status, whether the
+    /// server reported it for the call or for a single item of a batched
+    /// request.
+    ///
+    /// **Warning:** do not test the outer error of a batched read to decide
+    /// that an item is absent. Those calls report an absent item against the
+    /// request that asked for it, so a `NOT_FOUND` for the call means the
+    /// endpoint is wrong; treating it as a missing item turns a misconfigured
+    /// endpoint into a normal "not there" answer. Test the per-item result
+    /// instead. Calls returning a single response, such as fetching a
+    /// checkpoint, do report absence at the call level.
+    pub fn is_not_found(&self) -> bool {
+        match self {
+            Error::Server(status) => status.code == i32::from(tonic::Code::NotFound),
+            Error::Grpc(status) => status.code() == tonic::Code::NotFound,
+            _ => false,
+        }
+    }
 }
 
 impl From<TryFromProtoError> for Error {
@@ -112,6 +134,29 @@ pub enum ProtocolError {
     /// Error during checkpoint data stream reassembly.
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
+
+    /// A batched read returned a number of results that does not match the
+    /// number of requested items.
+    #[error("expected {expected} results, got {actual}")]
+    UnexpectedResultCount { expected: usize, actual: usize },
+
+    /// `get_objects` answered a position with a different object than the one
+    /// requested there.
+    #[error("requested object {expected} at position {position}, but got {actual}")]
+    UnexpectedObject {
+        position: usize,
+        expected: ObjectId,
+        actual: ObjectId,
+    },
+
+    /// `get_transactions` answered a position with a different transaction than
+    /// the one requested there.
+    #[error("requested transaction {expected} at position {position}, but got {actual}")]
+    UnexpectedTransaction {
+        position: usize,
+        expected: TransactionDigest,
+        actual: TransactionDigest,
+    },
 }
 
 /// Errors during checkpoint data stream reassembly.
@@ -235,8 +280,118 @@ pub trait ProtoResult {
     fn into_result(self) -> Result<Self::Value>;
 }
 
+/// Convert a batch of proto results into one result per requested item,
+/// preserving request order.
+///
+/// The batched RPCs report a failure for a single item as a `google.rpc.Status`
+/// in that item's slot, so the outcome for one item is independent of the
+/// others: a caller that needs every item can `collect::<Result<Vec<_>>>()`,
+/// while one that tolerates gaps can inspect each slot.
+pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>> {
+    batch.into_iter().map(ProtoResult::into_result).collect()
+}
+
+/// Check that a batched read answered every requested item.
+///
+/// Callers pair results with requests by position, so a count that does not
+/// match the request leaves no way to tell which item each result belongs to.
+pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
+    if results.len() == expected {
+        Ok(())
+    } else {
+        Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+            expected,
+            actual: results.len(),
+        }))
+    }
+}
+
+/// Check that each answered object is the one requested in that position.
+///
+/// A matching count only says how many results came back, not that position `i`
+/// holds object `i`, so the pairing callers rely on is checked rather than
+/// trusted.
+pub fn check_object_identity(
+    results: &[Result<ProtoObject>],
+    requested: &[(ObjectId, Option<Version>)],
+) -> Result<()> {
+    for (position, (result, (expected, _))) in results.iter().zip(requested).enumerate() {
+        let Ok(object) = result else { continue };
+        let Some(actual) = answered_object_id(object)? else {
+            continue;
+        };
+        if actual != *expected {
+            return Err(Error::Protocol(ProtocolError::UnexpectedObject {
+                position,
+                expected: *expected,
+                actual,
+            }));
+        }
+    }
+    Ok(())
+}
+
+/// Check that each answered transaction is the one requested in that position.
+///
+/// See [`check_object_identity`] for why the pairing is checked rather than
+/// trusted.
+pub fn check_transaction_identity(
+    results: &[Result<ExecutedTransaction>],
+    requested: &[TransactionDigest],
+) -> Result<()> {
+    for (position, (result, expected)) in results.iter().zip(requested).enumerate() {
+        let Ok(transaction) = result else { continue };
+        let Some(actual) = answered_transaction_digest(transaction)? else {
+            continue;
+        };
+        if actual != *expected {
+            return Err(Error::Protocol(ProtocolError::UnexpectedTransaction {
+                position,
+                expected: *expected,
+                actual,
+            }));
+        }
+    }
+    Ok(())
+}
+
+/// The id of an answered object, taken from its reference or, when the read
+/// mask left that out, from its BCS. `None` when it carries neither, leaving
+/// nothing to compare.
+fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
+    if let Some(id) = object
+        .reference
+        .as_ref()
+        .and_then(|reference| reference.object_id.as_ref())
+    {
+        return Ok(Some(id.try_into()?));
+    }
+    if object.bcs.is_some() {
+        return Ok(Some(object.object()?.id()));
+    }
+    Ok(None)
+}
+
+/// The digest of an answered transaction, taken from the response or, when the
+/// read mask left it out, computed from the transaction's BCS. `None` when it
+/// carries neither, leaving nothing to compare.
+fn answered_transaction_digest(
+    transaction: &ExecutedTransaction,
+) -> Result<Option<TransactionDigest>> {
+    let Some(transaction) = transaction.transaction.as_ref() else {
+        return Ok(None);
+    };
+    if let Some(digest) = transaction.digest.as_ref() {
+        return Ok(Some(digest.try_into()?));
+    }
+    if transaction.bcs.is_some() {
+        return Ok(Some(transaction.transaction()?.digest()));
+    }
+    Ok(None)
+}
+
 impl ProtoResult for ObjectResult {
-    type Value = iota_grpc_types::v1::object::Object;
+    type Value = ProtoObject;
 
     fn into_result(self) -> Result<Self::Value> {
         match self.result {
@@ -535,4 +690,208 @@ pub fn build_proto_transaction<T: Serialize>(
         .with_bcs(bcs);
 
     Ok(proto_transaction)
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::{
+        google::rpc::Status,
+        v1::{
+            object::Object, types::ObjectReference as ProtoObjectReference,
+            versioned::VersionedObject,
+        },
+    };
+    use iota_types::{
+        Address, MoveStruct, ObjectData, ObjectId, Owner, StructTag, TransactionDigest, Version,
+    };
+
+    use super::{
+        BcsData, Error, ExecutedTransaction, ObjectResult, ProtoTransaction, ProtocolError, Result,
+        check_object_identity, check_transaction_identity, into_item_results, proto_object_id,
+    };
+
+    #[test]
+    fn a_per_item_error_keeps_the_surrounding_items() {
+        let batch = vec![
+            ObjectResult::default().with_object(Object::default()),
+            ObjectResult::default().with_error(Status {
+                code: tonic::Code::NotFound.into(),
+                message: "Object 0x2 not found".to_owned(),
+                details: Vec::new(),
+            }),
+            ObjectResult::default().with_object(Object::default()),
+        ];
+
+        let items = into_item_results(batch);
+
+        assert_eq!(items.len(), 3);
+        assert!(items[0].is_ok());
+        assert!(matches!(items[1], Err(Error::Server(_))));
+        assert!(items[2].is_ok());
+    }
+
+    #[test]
+    fn an_all_error_batch_still_yields_one_item_per_request() {
+        let batch = vec![
+            ObjectResult::default().with_error(Status::default()),
+            ObjectResult::default().with_error(Status::default()),
+        ];
+
+        assert_eq!(into_item_results(batch).len(), 2);
+    }
+
+    fn object_id(byte: u8) -> ObjectId {
+        ObjectId::new([byte; ObjectId::LENGTH])
+    }
+
+    fn transaction_digest(byte: u8) -> TransactionDigest {
+        TransactionDigest::new([byte; TransactionDigest::LENGTH])
+    }
+
+    /// A proto object carrying just its reference, as the default read mask
+    /// requests.
+    fn answered(id: ObjectId) -> Result<Object> {
+        let mut object = Object::default();
+        object.reference =
+            Some(ProtoObjectReference::default().with_object_id(proto_object_id(id)));
+        Ok(object)
+    }
+
+    /// A proto object carrying only BCS, as a `bcs`-only read mask requests.
+    fn answered_with_bcs_only(id: ObjectId) -> Object {
+        let mut contents = Vec::from(id);
+        contents.extend_from_slice(&0u64.to_le_bytes());
+        let move_struct = MoveStruct::new(
+            StructTag::new_gas_coin().into(),
+            Version::from_u64(1),
+            contents,
+        )
+        .expect("contents contain a full object id");
+        let object = iota_types::Object::new(
+            ObjectData::Struct(move_struct),
+            Owner::Address(Address::ZERO),
+            TransactionDigest::ZERO,
+            0,
+        );
+
+        let mut answered = Object::default();
+        answered.bcs =
+            Some(BcsData::serialize(&VersionedObject::V1(object)).expect("object serializes"));
+        answered
+    }
+
+    /// A proto transaction carrying just its digest, as the default read mask
+    /// requests.
+    fn answered_transaction(digest: TransactionDigest) -> ExecutedTransaction {
+        ExecutedTransaction::default()
+            .with_transaction(ProtoTransaction::default().with_digest(digest))
+    }
+
+    #[test]
+    fn objects_answered_in_request_order_are_accepted() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![answered(object_id(1)), answered(object_id(2))];
+
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn a_substituted_object_is_rejected_with_both_ids() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![answered(object_id(1)), answered(object_id(9))];
+
+        let err = check_object_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedObject {
+            position,
+            expected,
+            actual,
+        }) = err
+        else {
+            panic!("expected an UnexpectedObject error, got {err}");
+        };
+        assert_eq!(position, 1);
+        assert_eq!(expected, object_id(2));
+        assert_eq!(actual, object_id(9));
+    }
+
+    #[test]
+    fn a_position_the_server_errored_on_has_no_id_to_check() {
+        let requested = [(object_id(1), None), (object_id(2), None)];
+        let results = vec![
+            answered(object_id(1)),
+            Err(Error::Server(Status {
+                code: tonic::Code::NotFound.into(),
+                message: String::new(),
+                details: Vec::new(),
+            })),
+        ];
+
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn an_object_answered_with_bcs_only_is_checked_against_the_id_in_its_bcs() {
+        let requested = [(object_id(1), None)];
+        let results = vec![Ok(answered_with_bcs_only(object_id(9)))];
+
+        let err = check_object_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedObject {
+            expected, actual, ..
+        }) = err
+        else {
+            panic!("expected an UnexpectedObject error, got {err}");
+        };
+        assert_eq!(expected, object_id(1));
+        assert_eq!(actual, object_id(9));
+    }
+
+    #[test]
+    fn an_object_carrying_neither_a_reference_nor_bcs_has_nothing_to_check() {
+        let requested = [(object_id(1), None)];
+        let results = vec![Ok(Object::default())];
+
+        assert!(check_object_identity(&results, &requested).is_ok());
+    }
+
+    #[test]
+    fn a_substituted_transaction_is_rejected_with_both_digests() {
+        let requested = [transaction_digest(1), transaction_digest(2)];
+        let results = vec![
+            Ok(answered_transaction(transaction_digest(1))),
+            Ok(answered_transaction(transaction_digest(9))),
+        ];
+
+        let err = check_transaction_identity(&results, &requested).unwrap_err();
+        let Error::Protocol(ProtocolError::UnexpectedTransaction {
+            position,
+            expected,
+            actual,
+        }) = err
+        else {
+            panic!("expected an UnexpectedTransaction error, got {err}");
+        };
+        assert_eq!(position, 1);
+        assert_eq!(expected, transaction_digest(2));
+        assert_eq!(actual, transaction_digest(9));
+    }
+
+    #[test]
+    fn not_found_is_recognised_at_the_call_and_item_level() {
+        let item_level = Error::Server(Status {
+            code: tonic::Code::NotFound.into(),
+            message: String::new(),
+            details: Vec::new(),
+        });
+        let call_level = Error::from(tonic::Status::not_found("gone"));
+        let other = Error::Server(Status {
+            code: tonic::Code::Internal.into(),
+            message: String::new(),
+            details: Vec::new(),
+        });
+
+        assert!(item_level.is_not_found());
+        assert!(call_level.is_not_found());
+        assert!(!other.is_not_found());
+        assert!(!Error::EmptyRequest.is_not_found());
+    }
 }

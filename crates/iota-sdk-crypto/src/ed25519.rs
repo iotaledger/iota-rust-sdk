@@ -440,4 +440,24 @@ mod tests {
             .verify_personal_message(&message, &signature)
             .unwrap();
     }
+
+    #[proptest]
+    fn base64_roundtrip(signer: Ed25519PrivateKey) {
+        use crate::{ToFromBase64, ToFromBytes};
+
+        let b64 = signer.to_base64();
+        let decoded = Ed25519PrivateKey::from_base64(&b64).unwrap();
+        assert_eq!(decoded.to_bytes(), signer.to_bytes());
+        assert_eq!(decoded.to_base64(), b64);
+    }
+
+    #[test]
+    fn from_base64_rejects_invalid_input() {
+        use crate::ToFromBase64;
+
+        // not base64
+        Ed25519PrivateKey::from_base64("not-base64!").unwrap_err();
+        // valid base64 but wrong length
+        Ed25519PrivateKey::from_base64("aGVsbG8=").unwrap_err();
+    }
 }
