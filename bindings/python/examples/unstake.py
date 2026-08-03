@@ -9,8 +9,13 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
 
+    # Filtering by type alone scans every object on the network, which the
+    # GraphQL server rejects with a timeout, so filter by owner as well.
+    owner = Address.from_hex(
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+
     staked_iotas = await client.objects(filter=ObjectFilter(
-        type_tag=str(StructTag.new_staked_iota())))
+        type_tag=str(StructTag.new_staked_iota()), owner=owner))
     if len(staked_iotas.data) == 0:
         raise Exception("no staked iotas found")
     staked_iota = staked_iotas.data[0]
