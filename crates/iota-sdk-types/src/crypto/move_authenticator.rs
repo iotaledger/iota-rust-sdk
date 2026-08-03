@@ -12,6 +12,7 @@ use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectR
 /// authentication flow.
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MoveAuthenticator {
@@ -30,6 +31,14 @@ impl MoveAuthenticator {
             Self::V1(_) => 1,
         }
     }
+
+    /// Returns the address of the object being authenticated, which acts as
+    /// the sender of the transaction.
+    pub fn address(&self) -> Address {
+        match self {
+            Self::V1(v1) => v1.address(),
+        }
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -42,6 +51,7 @@ impl Hash for MoveAuthenticator {
 /// Version 1 of the [`MoveAuthenticator`].
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveAuthenticatorV1 {
     /// Input objects or primitive values

@@ -9,8 +9,12 @@ struct UnstakeExample {
   static func main() async throws {
     let client = GraphQlClient.newTestnet()
 
+    let owner = try Address.fromHex(
+      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+
     let stakedIotas = try await client.objects(
-      filter: ObjectFilter(typeTag: String(describing: StructTag.newStakedIota())))
+      filter: ObjectFilter(
+        typeTag: String(describing: StructTag.newStakedIota()), owner: owner))
     if stakedIotas.data.isEmpty {
       throw NSError(
         domain: "Unstake", code: 1,

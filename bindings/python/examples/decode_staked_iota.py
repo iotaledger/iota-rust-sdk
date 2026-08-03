@@ -15,11 +15,14 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
 
+    owner = Address.from_hex(
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+
     page = await client.objects(filter=ObjectFilter(
-        type_tag="0x3::staking_pool::StakedIota"))
+        type_tag="0x3::staking_pool::StakedIota", owner=owner))
 
     if len(page.data) == 0:
-        print("No StakedIota objects on testnet right now.")
+        print(f"No StakedIota objects owned by {owner.to_hex()} right now.")
         return
 
     print(f"Decoded {len(page.data)} StakedIota object(s):\n")

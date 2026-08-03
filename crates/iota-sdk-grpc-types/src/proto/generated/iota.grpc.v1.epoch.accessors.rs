@@ -62,6 +62,46 @@ mod _accessor_impls {
             self.protocol_config = Some(field.into());
             self
         }
+        /// Sets `epoch_close_proof` with the provided value.
+        pub fn with_epoch_close_proof<T: Into<super::EpochCloseProof>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.epoch_close_proof = Some(field.into());
+            self
+        }
+    }
+    impl super::EpochCloseProof {
+        /// Sets `checkpoint` with the provided value.
+        pub fn with_checkpoint<T: Into<super::super::checkpoint::Checkpoint>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.checkpoint = Some(field.into());
+            self
+        }
+        /// Sets `end_of_epoch_transaction_effects` with the provided value.
+        pub fn with_end_of_epoch_transaction_effects<
+            T: Into<super::super::transaction::TransactionEffects>,
+        >(mut self, field: T) -> Self {
+            self.end_of_epoch_transaction_effects = Some(field.into());
+            self
+        }
+        /// Sets `end_of_epoch_transaction_events` with the provided value.
+        pub fn with_end_of_epoch_transaction_events<
+            T: Into<super::super::transaction::TransactionEvents>,
+        >(mut self, field: T) -> Self {
+            self.end_of_epoch_transaction_events = Some(field.into());
+            self
+        }
+        /// Sets `bcs_next_epoch_system_state_objects` with the provided value.
+        pub fn with_bcs_next_epoch_system_state_objects(
+            mut self,
+            field: Vec<super::super::bcs::BcsData>,
+        ) -> Self {
+            self.bcs_next_epoch_system_state_objects = field;
+            self
+        }
     }
     impl super::ProtocolAttributes {
         /// Sets `attributes` with the provided value.

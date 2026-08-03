@@ -254,6 +254,36 @@ impl From<crate::MultisigCommittee> for Address {
     }
 }
 
+impl crate::UserSignature {
+    /// Derive the `Address` of the signer that this signature authenticates.
+    pub fn derive_address(&self) -> Address {
+        match self {
+            Self::Simple(simple) => simple.to_public_key().derive_address(),
+            Self::Multisig(multisig) => multisig.committee().derive_address(),
+            Self::PasskeyAuthenticator(passkey) => passkey.public_key().derive_address(),
+            Self::MoveAuthenticator(move_authenticator) => move_authenticator.address(),
+        }
+    }
+}
+
+impl From<crate::UserSignature> for Address {
+    fn from(signature: crate::UserSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
+/// Error returned when no signature in a
+/// [`SignedTransaction`](crate::SignedTransaction) commits to an expected
+/// signer address.
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[error("no signature found for address {address}")]
+pub struct MissingSignatureError {
+    /// The address no signature commits to.
+    pub address: Address,
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
@@ -261,8 +291,8 @@ mod type_digest {
 
     use super::Hasher;
     use crate::{
-        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, TransactionDigest,
-        TransactionEffectsDigest, TransactionEventsDigest,
+        CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, SenderSignedDataDigest,
+        TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest,
     };
 
     impl crate::Object {
@@ -348,6 +378,19 @@ mod type_digest {
         }
     }
 
+    impl crate::SenderSignedTransaction {
+        /// Calculate the digest of the full message, committing to the signing
+        /// intent, the transaction, and all signatures.
+        ///
+        /// Unlike the other type digests, this hashes the BCS bytes directly,
+        /// without a salt prefix.
+        pub fn full_message_digest(&self) -> SenderSignedDataDigest {
+            let mut hasher = Hasher::new();
+            bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
+            hasher.finalize().into()
+        }
+    }
+
     impl crate::TransactionEffects {
         pub fn digest(&self) -> TransactionEffectsDigest {
             const SALT: &str = "TransactionEffects::";
@@ -366,6 +409,57 @@ mod type_digest {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "MoveAuthenticator::";
             type_digest(SALT, self)
+        }
+    }
+
+    impl crate::UserSignature {
+        /// Calculate the auth digest for this signature.
+        ///
+        /// For [`MoveAuthenticator`](crate::MoveAuthenticator) signatures this
+        /// equals
+        /// [`MoveAuthenticator::digest()`](crate::MoveAuthenticator::digest).
+        /// For all other signature types it is the Blake2b256 of the
+        /// serialized (flag-prefixed) signature bytes.
+        pub fn auth_digest(&self) -> Digest {
+            match self {
+                Self::MoveAuthenticator(authenticator) => authenticator.digest(),
+                Self::Simple(_) | Self::Multisig(_) | Self::PasskeyAuthenticator(_) => {
+                    Hasher::digest(self.to_bytes())
+                }
+            }
+        }
+    }
+
+    impl crate::SignedTransaction {
+        /// Computes the auth digest for the sender and, if sponsored, for the
+        /// sponsor. See
+        /// [`UserSignature::auth_digest`](crate::UserSignature::auth_digest)
+        /// for the per-signature logic.
+        ///
+        /// Returns an error if no signature commits to the sender or sponsor
+        /// address.
+        pub fn compute_auth_digests(
+            &self,
+        ) -> Result<(Digest, Option<Digest>), super::MissingSignatureError> {
+            let crate::Transaction::V1(transaction) = &self.transaction;
+
+            let digest_for_address = |address| {
+                self.signatures
+                    .iter()
+                    .find(|signature| signature.derive_address() == address)
+                    .map(crate::UserSignature::auth_digest)
+                    .ok_or(super::MissingSignatureError { address })
+            };
+
+            let sender_auth_digest = digest_for_address(transaction.sender)?;
+            let gas_owner = transaction.gas_payment.owner;
+            let sponsor_auth_digest = if gas_owner != transaction.sender {
+                Some(digest_for_address(gas_owner)?)
+            } else {
+                None
+            };
+
+            Ok((sender_auth_digest, sponsor_auth_digest))
         }
     }
 
@@ -538,5 +632,60 @@ mod tests {
     #[proptest]
     fn roundtrip_hashing_intent(intent: HashingIntent) {
         assert_eq!(Ok(intent), HashingIntent::from_byte(intent as u8));
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use base64ct::Encoding;
+
+    use crate::UserSignature;
+
+    // Guards the address derivation from serialized signatures: every
+    // UserSignature kind, given as base64, must keep deriving the same address.
+    #[test]
+    fn test_address_from_user_signature() {
+        let fixtures = [
+            // Ed25519
+            (
+                "AO/2qtqkYPqq3UzI7dVLmqt7dy2B5Ta2Hv7F1ssYO9auPyrcRGpawALnzyNyPBT/v/PIxSbNTskTs+ts6kGtkQYNfas1jI2tqk76AEmnWwdDZVWxCjaCGbtoD3BXE0nXdQ==",
+                "0xebb23f93d022ac213e99ac7d85b7f7e1e4a18f045b379755565cffa08804c9a1",
+            ),
+            // Secp256k1
+            (
+                "ASWDBpw4ETzLiQlwS0kDKJA9PK47V8fp4e9S+7bpaJXfd4HfZ5oLSXTyezaHTRfcryQn3mdshteXwrEvj/ZAmiUCDhfNWTnkaxlmQZaM11mRC6JXfif6c/3jh225vsW86ys=",
+                "0xd9607cd03428c904949572b51471e7a9f60019aeb9a3d7ee5e72921cab8e8be7",
+            ),
+            // Secp256r1
+            (
+                "Ai1Hdv4ZtEslPN424BGG5+6BhzGrp4d4ykoyiQhG2hDzbGDdCPgXVLLv26sfFP77nhJi78OAWfD+ytdQRyYPpKcDR/uvI/A4q8TDCKJxEXoqTP+u3bxf+Bx1F7xsdKfttDA=",
+                "0x600b1081644fe46f76da3bdc19f8743b9f04458516364374c7d82959e790c19e",
+            ),
+            // MultiSig (2-of-3: Ed25519 + Secp256k1, over the pubkeys above)
+            (
+                "AwIArJTVgdzrD8V+em1zREsmT0jD/fduXgh/zo+Z+lZTYoBLZpaAw9PNO4YNDYBTK9vT646klVBV4ntBmFcYzdDVDQGia/pl6A/nh/uixuM1hc84fokvTk37j/DNq3/OtckvsV1Mg84ygJ7UXsuohtKjHc+zfuu2uwcjh2lOPVBgZotQAwADAA19qzWMja2qTvoASadbB0NlVbEKNoIZu2gPcFcTSdd1AQECDhfNWTnkaxlmQZaM11mRC6JXfif6c/3jh225vsW86ysBAgNH+68j8DirxMMIonEReipM/67dvF/4HHUXvGx0p+20MAECAA==",
+                "0x34b66b6d090baea4effa1d1bf22e1adff466c3fb9425ded9c5bbb605865b2560",
+            ),
+            // PasskeyAuthenticator (Secp256r1-backed)
+            (
+                "BgByeyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHBzOi8vdGVzdC5pb3RhLm9yZyJ9YgJsW7qQ7IeOJMhUEgb7PFfoHEFCbk7qLZ27Nhqxpq8OLCapbkIG0nOO1iQgY7KjGPykr/gcDF+FtKxxcebcDOPXA0f7ryPwOKvEwwiicRF6Kkz/rt28X/gcdRe8bHSn7bQw",
+                "0x79214f7090abbaf3d14fdbe357ea794650f41783ea64ece65314682144f658a7",
+            ),
+            // MoveAuthenticator
+            (
+                "BwAAAAEB7mKDoFTKsmYgpTHRjEnqNWAjnP2LqDo5O7qn1+7SCCoBAAAAAAAAAAA=",
+                "0xee6283a054cab26620a531d18c49ea3560239cfd8ba83a393bbaa7d7eed2082a",
+            ),
+        ];
+
+        for (b64, expected) in fixtures {
+            let sig = UserSignature::from_base64(b64).unwrap();
+            assert_eq!(sig.derive_address().to_string(), expected);
+        }
+
+        // zkLogin (flag 0x05) is deprecated: serialized signatures are rejected
+        // at deserialization.
+        let zklogin_b64 = base64ct::Base64::encode_string(&[0x05u8, 0, 0, 0]);
+        assert!(UserSignature::from_base64(&zklogin_b64).is_err());
     }
 }

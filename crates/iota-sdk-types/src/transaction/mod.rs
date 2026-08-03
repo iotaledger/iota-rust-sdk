@@ -4,8 +4,8 @@
 
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
-    ObjectId, ObjectReference, ProtocolVersion, RandomnessRound, TransactionDigest, TypeTag,
-    UserSignature, Version,
+    Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
+    RandomnessRound, TransactionDigest, TypeTag, UserSignature, Version,
 };
 use crate::utils::write_sep;
 
@@ -40,6 +40,12 @@ pub enum Transaction {
 
 impl Transaction {
     crate::def_is_as_into_opt!(V1(TransactionV1));
+
+    /// Wraps a reference to this transaction in the transaction signing
+    /// intent, producing the message that user signatures commit to.
+    pub fn intent_message(&self) -> IntentMessage<&Self> {
+        IntentMessage::new(Intent::iota_transaction(), self)
+    }
 }
 
 impl From<TransactionV1> for Transaction {
@@ -59,7 +65,18 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
-#[cfg_attr(feature = "serde", derive(serde::Deserialize))]
+/// A [`SignedTransaction`] in its intent-message serialized form.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// sender-signed-transaction = %d01 intent-signed-transaction
+/// ```
+#[derive(Clone, Debug, derive_more::Deref, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
         feature = "serde",
@@ -68,6 +85,28 @@ pub struct SenderSignedTransaction(
     pub SignedTransaction,
 );
 
+impl SenderSignedTransaction {
+    pub fn new(transaction: Transaction, signatures: Vec<UserSignature>) -> Self {
+        Self(SignedTransaction {
+            transaction,
+            signatures,
+        })
+    }
+}
+
+impl From<SignedTransaction> for SenderSignedTransaction {
+    fn from(transaction: SignedTransaction) -> Self {
+        Self(transaction)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl std::hash::Hash for SenderSignedTransaction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -75,6 +114,68 @@ pub struct SenderSignedTransaction(
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+impl SignedTransaction {
+    pub fn transaction(&self) -> &Transaction {
+        &self.transaction
+    }
+
+    pub fn signatures(&self) -> &[UserSignature] {
+        &self.signatures
+    }
+
+    /// Wraps a reference to the transaction in the transaction signing
+    /// intent, producing the message that the signatures commit to.
+    pub fn intent_message(&self) -> IntentMessage<&Transaction> {
+        self.transaction.intent_message()
+    }
+
+    /// Returns all [`MoveAuthenticator`] signatures.
+    pub fn move_authenticators(&self) -> Vec<&MoveAuthenticator> {
+        self.signatures
+            .iter()
+            .filter_map(|signature| signature.as_opt_move_authenticator())
+            .collect()
+    }
+
+    /// Returns the sender's [`MoveAuthenticator`], if the sender uses one.
+    pub fn sender_move_authenticator(&self) -> Option<&MoveAuthenticator> {
+        let Transaction::V1(transaction) = &self.transaction;
+
+        self.move_authenticators()
+            .into_iter()
+            .find(|authenticator| authenticator.address() == transaction.sender)
+    }
+
+    /// Returns the sponsor's [`MoveAuthenticator`], if the transaction is
+    /// sponsored and the sponsor uses one.
+    pub fn sponsor_move_authenticator(&self) -> Option<&MoveAuthenticator> {
+        let Transaction::V1(transaction) = &self.transaction;
+        let gas_owner = transaction.gas_payment.owner;
+
+        if gas_owner != transaction.sender {
+            self.move_authenticators()
+                .into_iter()
+                .find(|authenticator| authenticator.address() == gas_owner)
+        } else {
+            None
+        }
+    }
+}
+
+impl From<SenderSignedTransaction> for SignedTransaction {
+    fn from(transaction: SenderSignedTransaction) -> Self {
+        transaction.0
+    }
+}
+
+#[cfg(feature = "serde")]
+impl std::hash::Hash for SignedTransaction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.transaction.hash(state);
+        self.signatures.hash(state);
+    }
 }
 
 /// A TTL for a transaction

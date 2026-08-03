@@ -12,8 +12,9 @@ use iota_types::TransactionDigest;
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ProtoResult, ReadMask, Result,
-        collect_stream, field_mask_with_default, saturating_usize_to_u32,
+        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
+        check_transaction_identity, collect_stream, field_mask_with_default, into_item_results,
+        saturating_usize_to_u32,
     },
 };
 
@@ -30,12 +31,30 @@ impl Client {
     /// - `tx.checkpoint_sequence_number()` - Get checkpoint number
     /// - `tx.timestamp_ms()` - Get timestamp
     ///
-    /// Results are returned in the same order as the input digests.
-    /// If a transaction is not found, an error is returned.
+    /// Results are returned in the same order as the input digests, one per
+    /// digest.
     ///
     /// # Errors
     ///
     /// Returns [`Error::EmptyRequest`] if `digests` is empty.
+    ///
+    /// Each digest gets its own result: a transaction the node does not have
+    /// (never executed, or pruned) yields [`Error::Server`] with code
+    /// `NOT_FOUND` in that slot only, leaving the other transactions intact. A
+    /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
+    /// present but an object a requested field needs is gone, as described
+    /// under Read Mask below. The outer `Result` is reserved for failures
+    /// of the call itself, such as a transport error, and for a server that
+    /// answered with a different number of results than digests requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
+    /// each result belongs to, or answered a position with a different
+    /// transaction than the one requested there ([`UnexpectedTransaction`]).
+    /// The answered digest is read from the response or computed from the
+    /// transaction's BCS, so a read mask that includes neither leaves nothing
+    /// to check.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedTransaction`]: crate::ProtocolError::UnexpectedTransaction
     ///
     /// # Read Mask
     ///
@@ -78,6 +97,16 @@ impl Client {
     ///     .await?;
     ///
     /// for tx in txs.body() {
+    ///     let tx = match tx {
+    ///         Ok(tx) => tx,
+    ///         // Only this digest failed; the remaining transactions are still
+    ///         // usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read transaction: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
     ///     // Lazy conversion - only deserialize what you need
     ///     let effects = tx.effects()?.effects()?;
     ///     println!("Status: {:?}", effects.as_v1().status);
@@ -93,7 +122,7 @@ impl Client {
         &self,
         digests: &[TransactionDigest],
         read_mask: Option<ReadMask<'_>>,
-    ) -> Result<MetadataEnvelope<Vec<ExecutedTransaction>>> {
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if digests.is_empty() {
             return Err(Error::EmptyRequest);
         }
@@ -122,14 +151,13 @@ impl Client {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         // Server guarantees results are returned in request order
-        collect_stream(stream, metadata, |msg| {
-            let items = msg
-                .transaction_results
-                .into_iter()
-                .map(|r| r.into_result())
-                .collect::<Result<Vec<_>>>()?;
-            Ok((msg.has_next, items))
+        let response = collect_stream(stream, metadata, |msg| {
+            Ok((msg.has_next, into_item_results(msg.transaction_results)))
         })
-        .await
+        .await?;
+        check_result_count(response.body(), digests.len())?;
+        check_transaction_identity(response.body(), digests)?;
+
+        Ok(response)
     }
 }
