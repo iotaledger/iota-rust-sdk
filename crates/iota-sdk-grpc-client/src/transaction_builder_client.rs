@@ -70,6 +70,28 @@ impl TransactionBuilderClient for Client {
         }
     }
 
+    async fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> Result<Vec<Option<Object>>, Self::Error> {
+        if object_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+        // Default read mask (`reference` + `bcs`) provides everything needed to
+        // reconstruct the SDK objects, which the server returns in request
+        // order.
+        self.get_objects(object_ids, None)
+            .await?
+            .into_inner()
+            .into_iter()
+            .map(|result| match result {
+                Ok(obj) => obj.object().map(Some).map_err(Error::from),
+                Err(e) if e.is_not_found() => Ok(None),
+                Err(e) => Err(e),
+            })
+            .collect()
+    }
+
     async fn objects(
         &self,
         struct_tag: Option<StructTag>,
