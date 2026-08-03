@@ -4,7 +4,7 @@
 //! Builder for Programmable Transactions.
 
 use std::{
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     marker::PhantomData,
     time::Duration,
 };
@@ -134,6 +134,90 @@ impl TransactionBuildData {
                 }
             })
             .collect()
+    }
+
+    /// Settle the command arguments that name a gas coin, before the gas coins
+    /// are taken out of the inputs and paid as gas.
+    fn resolve_gas_arguments(&mut self) -> Result<(), Error> {
+        // Keyed by input id so the coin named in an error is stable.
+        let gas_coins: BTreeMap<InputId, ObjectId> = self
+            .inputs
+            .iter()
+            .filter(|(_, input)| input.is_gas)
+            .filter_map(|(id, input)| input.object_id().map(|coin| (*id, *coin)))
+            .collect();
+        if gas_coins.is_empty() {
+            return Ok(());
+        }
+
+        // The one `TransferObjects` allowed to take the gas coin, and the gas
+        // inputs it names.
+        let mut transfer: Option<(usize, BTreeSet<InputId>)> = None;
+        for (index, command) in self.commands.iter().enumerate() {
+            let Command::TransferObjects(TransferObjects { objects, .. }) = command else {
+                for argument in command.arguments_that_cannot_be_gas() {
+                    if let Argument::Input(id) = argument
+                        && let Some(coin) = gas_coins.get(id)
+                    {
+                        return Err(Error::GasCoinAsArgument { object_id: *coin });
+                    }
+                }
+                continue;
+            };
+
+            let mut takes_gas = false;
+            let mut transferred = BTreeSet::new();
+            for argument in objects {
+                match argument {
+                    Argument::Gas => takes_gas = true,
+                    Argument::Input(id) if gas_coins.contains_key(id) => {
+                        takes_gas = true;
+                        transferred.insert(*id);
+                    }
+                    _ => {}
+                }
+            }
+            if !takes_gas {
+                continue;
+            }
+            if transfer.is_some() {
+                return Err(Error::GasCoinTransferredMoreThanOnce);
+            }
+            // An explicit `Argument::Gas` already asks for the whole gas
+            // payment; only a transfer naming individual coins has to name all
+            // of them.
+            if let Some(first) = transferred.first()
+                && let Some((_, missing)) =
+                    gas_coins.iter().find(|(id, _)| !transferred.contains(id))
+            {
+                return Err(Error::IncompleteGasTransfer {
+                    transferred: gas_coins[first],
+                    missing: *missing,
+                });
+            }
+            transfer = Some((index, transferred));
+        }
+
+        // Every gas coin goes to the same recipient, so the smashed coin holds
+        // exactly what was asked for: collapse the coins into the single
+        // `Argument::Gas` that stands for it.
+        if let Some((index, transferred)) = transfer
+            && !transferred.is_empty()
+            && let Command::TransferObjects(TransferObjects { objects, .. }) =
+                &mut self.commands[index]
+        {
+            let mut kept_gas = false;
+            objects.retain_mut(|argument| {
+                match argument {
+                    Argument::Gas => {}
+                    Argument::Input(id) if transferred.contains(id) => *argument = Argument::Gas,
+                    _ => return true,
+                }
+                !std::mem::replace(&mut kept_gas, true)
+            });
+        }
+
+        Ok(())
     }
 
     /// Set the gas budget. Optional.
@@ -1053,6 +1137,13 @@ impl<C, L> TransactionBuilder<C, L> {
 impl<L> TransactionBuilder<(), L> {
     /// Add gas coins that will be consumed. Optional.
     ///
+    /// A gas coin is paid as gas instead of being passed as an input, so it
+    /// cannot also be passed to a command — building the transaction fails if
+    /// one is. The exception is transferring every gas coin to the same
+    /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
+    /// coins are smashed into one before the commands run, and that coin is
+    /// transferred with whatever balance is left after gas.
+    ///
     /// # Example
     ///
     /// ```
@@ -1105,6 +1196,7 @@ impl<L> TransactionBuilder<(), L> {
         let Some(price) = self.data.gas_price else {
             return Err(Error::MissingGasPrice);
         };
+        self.data.resolve_gas_arguments()?;
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
@@ -1186,6 +1278,13 @@ impl<C, L> TransactionBuilder<C, L> {
 impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
+    ///
+    /// A gas coin is paid as gas instead of being passed as an input, so it
+    /// cannot also be passed to a command — building the transaction fails if
+    /// one is. The exception is transferring every gas coin to the same
+    /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
+    /// coins are smashed into one before the commands run, and that coin is
+    /// transferred with whatever balance is left after gas.
     ///
     /// # Example
     ///
@@ -1294,14 +1393,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             // as gas.
             let mut unusable_object_ids = HashSet::new();
             for cmd in &self.data.commands {
-                for arg in match cmd {
-                    Command::MoveCall(MoveCall { arguments, .. }) => arguments.as_slice(),
-                    Command::TransferObjects(TransferObjects { objects, .. }) => objects.as_slice(),
-                    Command::MergeCoins(MergeCoins { coins_to_merge, .. }) => {
-                        coins_to_merge.as_slice()
-                    }
-                    _ => &[],
-                } {
+                for arg in cmd.arguments_that_cannot_be_gas() {
                     if let Argument::Input(idx) = arg
                         && let Some(obj_id) = self.data.inputs[idx].object_id()
                     {
@@ -1416,6 +1508,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Resolve the inputs and commands into a [`TransactionKind`], returning it
     /// together with the gas coins currently set on the builder.
     async fn resolve_kind(&mut self) -> Result<(TransactionKind, Vec<ObjectReference>), Error> {
+        self.data.resolve_gas_arguments()?;
         let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
         let objects = self.fetch_input_objects(&taken_inputs).await?;
         let object = |object_id: ObjectId| {
@@ -2058,6 +2151,210 @@ mod tests {
 
         assert!(builder.data.commands.is_empty());
         assert!(builder.data.inputs.is_empty());
+    }
+
+    /// A gas coin is paid as gas rather than passed as an input, so a command
+    /// argument naming one can only resolve to [`Argument::Gas`] — which stands
+    /// for every gas coin smashed together, not the one coin that was named.
+    mod gas_arguments {
+        use super::*;
+
+        fn sender() -> Address {
+            "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                .parse()
+                .unwrap()
+        }
+
+        fn recipient(seed: u8) -> Address {
+            Address::new([seed; 32])
+        }
+
+        fn coin(seed: u8) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([seed; ObjectId::LENGTH]),
+                Version::from_u64(seed as u64 + 1),
+                ObjectDigest::new([seed; 32]),
+            )
+        }
+
+        fn programmable(txn: Transaction) -> (ProgrammableTransaction, GasPayment) {
+            let Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            let TransactionKind::Programmable(ptb) = txn.kind else {
+                panic!("expected a programmable transaction");
+            };
+            (ptb, txn.gas_payment)
+        }
+
+        fn transfer_command(ptb: &ProgrammableTransaction) -> &iota_types::TransferObjects {
+            let [iota_types::Command::TransferObjects(transfer)] = &ptb.commands[..] else {
+                panic!("expected a single TransferObjects command");
+            };
+            transfer
+        }
+
+        /// Transferring one of two gas coins would transfer both, because they
+        /// are smashed into a single coin first. Report that instead of
+        /// widening the transfer.
+        #[test]
+        fn transferring_only_some_gas_coins_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let error = builder.finish().unwrap_err();
+            let Error::IncompleteGasTransfer {
+                transferred,
+                missing,
+            } = error
+            else {
+                panic!("expected IncompleteGasTransfer, got {error}");
+            };
+            assert_eq!(transferred, coin(10).object_id);
+            assert_eq!(missing, coin(11).object_id);
+        }
+
+        /// Transferring every gas coin is what the caller asked for: the
+        /// arguments collapse into the single [`Argument::Gas`] that stands for
+        /// the smashed coin, and the coins stay in the gas payment.
+        #[test]
+        fn transferring_every_gas_coin_collapses_to_one_gas_argument() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10), coin(11)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(transfer_command(&ptb).objects, [iota_types::Argument::Gas]);
+            // Only the recipient address is left as an input.
+            assert_eq!(ptb.inputs.len(), 1);
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
+
+        /// Objects transferred alongside the gas coins keep their own inputs,
+        /// and the gas coins collapse in place.
+        #[test]
+        fn transferring_every_gas_coin_alongside_other_objects() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10), coin(12), coin(11)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, _) = programmable(builder.finish().unwrap());
+            assert_eq!(
+                transfer_command(&ptb).objects,
+                [iota_types::Argument::Gas, iota_types::Argument::Input(0)]
+            );
+            assert_eq!(ptb.inputs[0], iota_types::Input::ImmutableOrOwned(coin(12)));
+        }
+
+        /// A caller that writes [`Argument::Gas`] itself has already asked for
+        /// the whole gas payment, so the transfer is left as it is.
+        #[test]
+        fn explicit_gas_argument_transfers_the_whole_payment() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [Argument::Gas]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(transfer_command(&ptb).objects, [iota_types::Argument::Gas]);
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
+
+        /// The smashed coin can only be transferred once, so two commands
+        /// cannot both transfer it.
+        #[test]
+        fn two_commands_transferring_the_gas_coin_are_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10)]);
+            builder.transfer_objects(recipient(2), [coin(10)]);
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            assert!(matches!(
+                builder.finish(),
+                Err(Error::GasCoinTransferredMoreThanOnce)
+            ));
+        }
+
+        /// A move call takes the coin it is given, so it cannot be handed the
+        /// whole gas payment in its place.
+        #[test]
+        fn gas_coin_as_move_call_argument_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            let arguments = builder.apply_arguments([coin(10)]);
+            builder.command(Command::MoveCall(MoveCall {
+                package: ObjectId::new([9; ObjectId::LENGTH]),
+                module: Identifier::new("module").unwrap(),
+                function: Identifier::new("function").unwrap(),
+                type_arguments: Vec::new(),
+                arguments,
+            }));
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            let error = builder.finish().unwrap_err();
+            let Error::GasCoinAsArgument { object_id } = error else {
+                panic!("expected GasCoinAsArgument, got {error}");
+            };
+            assert_eq!(object_id, coin(10).object_id);
+        }
+
+        /// Merging a gas coin into another coin destroys it, so the whole gas
+        /// payment cannot stand in for it.
+        #[test]
+        fn gas_coin_merged_into_another_coin_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            let arguments = builder.apply_arguments([coin(12), coin(10)]);
+            builder.command(Command::MergeCoins(MergeCoins {
+                coin: arguments[0],
+                coins_to_merge: vec![arguments[1]],
+            }));
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            assert!(matches!(
+                builder.finish(),
+                Err(Error::GasCoinAsArgument { .. })
+            ));
+        }
+
+        /// Splitting off a gas coin leaves it in place, so it still resolves to
+        /// the gas argument.
+        #[test]
+        fn splitting_a_gas_coin_resolves_to_the_gas_argument() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.split_coins(coin(10), [1000u64]);
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            let (ptb, _) = programmable(builder.finish().unwrap());
+            let [iota_types::Command::SplitCoins(split)] = &ptb.commands[..] else {
+                panic!("expected a single SplitCoins command");
+            };
+            assert_eq!(split.coin, iota_types::Argument::Gas);
+        }
+
+        /// Gas coins that no command names are the ordinary case and stay
+        /// untouched.
+        #[test]
+        fn gas_coins_kept_out_of_the_commands_are_untouched() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(12)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(
+                transfer_command(&ptb).objects,
+                [iota_types::Argument::Input(0)]
+            );
+            assert_eq!(ptb.inputs[0], iota_types::Input::ImmutableOrOwned(coin(12)));
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
     }
 
     #[cfg(feature = "test-client")]

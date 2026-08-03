@@ -17,6 +17,15 @@ pub enum Error {
     Input(String),
     #[error("Gas object should be an immutable or owned object")]
     WrongGasObject,
+    #[error("gas coin {object_id} cannot also be passed to a command")]
+    GasCoinAsArgument { object_id: ObjectId },
+    #[error("transferring gas coin {transferred} would also transfer gas coin {missing}")]
+    IncompleteGasTransfer {
+        transferred: ObjectId,
+        missing: ObjectId,
+    },
+    #[error("only one command can transfer the gas coin")]
+    GasCoinTransferredMoreThanOnce,
     #[error("BCS serialization error: {0}")]
     Bcs(bcs::Error),
     #[error("Decoding error: {0}")]
