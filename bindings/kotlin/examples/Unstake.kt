@@ -8,8 +8,6 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newTestnet()
 
-        // Filtering by type alone scans every object on the network, which the GraphQL
-        // server rejects with a timeout, so filter by owner as well.
         val owner =
             Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 

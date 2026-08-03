@@ -13,8 +13,6 @@ import IotaSDK
 struct DecodeStakedIotaExample {
   static func main() async throws {
     let client = GraphQlClient.newTestnet()
-    // Filtering by type alone scans every object on the network, which the
-    // GraphQL server rejects with a timeout, so filter by owner as well.
     let owner = try Address.fromHex(
       hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
