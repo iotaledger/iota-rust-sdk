@@ -54,6 +54,9 @@ iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features =
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 # sync for tokio::sync::RwLock used in the graphql client wrapper
 tokio = { workspace = true, features = ["sync"] }
+# GraphQL subscriptions are not built for wasm32
+async-stream.workspace = true
+futures.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # wasm additionally needs macros+rt for async
