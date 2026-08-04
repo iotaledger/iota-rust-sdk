@@ -1468,25 +1468,15 @@ impl crate::TreeDisplay for Input {
             }
             Self::ImmutableOrOwned(obj_ref) => {
                 w.header("ImmutableOrOwned")?;
-                w.leaf("Object ID", &obj_ref.object_id, false)?;
-                w.leaf("Version", &obj_ref.version, false)?;
-                w.leaf("Digest", &obj_ref.digest, true)
+                w.inline_child(obj_ref)
             }
             Self::Shared(shared) => {
                 w.header("Shared")?;
-                w.leaf("Object ID", &shared.object_id, false)?;
-                w.leaf(
-                    "Initial Shared Version",
-                    &shared.initial_shared_version,
-                    false,
-                )?;
-                w.leaf("Mutable", &shared.mutable, true)
+                w.inline_child(shared)
             }
             Self::Receiving(obj_ref) => {
                 w.header("Receiving")?;
-                w.leaf("Object ID", &obj_ref.object_id, false)?;
-                w.leaf("Version", &obj_ref.version, false)?;
-                w.leaf("Digest", &obj_ref.digest, true)
+                w.inline_child(obj_ref)
             }
         }
     }

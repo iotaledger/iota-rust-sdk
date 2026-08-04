@@ -34,6 +34,7 @@ pub(crate) struct TreeWriter<'f, 'a> {
     prefix: String,
     needs_newline: bool,
     inline_label: Option<String>,
+    skip_header: bool,
 }
 
 impl<'f, 'a> TreeWriter<'f, 'a> {
@@ -43,6 +44,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             prefix: String::new(),
             needs_newline: false,
             inline_label: None,
+            skip_header: false,
         }
     }
 
@@ -51,6 +53,9 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     /// label, so the header is appended to it as `Label: Header` (or
     /// omitted when it repeats the label).
     pub fn header(&mut self, text: &str) -> std::fmt::Result {
+        if std::mem::take(&mut self.skip_header) {
+            return Ok(());
+        }
         if let Some(label) = self.inline_label.take() {
             if label != text {
                 write!(self.f, ": {text}")?;
@@ -127,6 +132,13 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             w.inline_label = Some(label.to_string());
             child.fmt_tree(w)
         })
+    }
+
+    /// Render a [`TreeDisplay`] child's fields under the header just written,
+    /// dropping the child's own header and nesting level.
+    pub fn inline_child(&mut self, child: &dyn TreeDisplay) -> std::fmt::Result {
+        self.skip_header = true;
+        child.fmt_tree(self)
     }
 
     /// Display a `Vec` of `Display` items as indexed leaf nodes.
@@ -374,6 +386,21 @@ Root
     └── Y: 2";
         assert_eq!(
             render(|w| w.child("Point", &Point { x: 1, y: 2 }, true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
+    fn inline_child_renders_fields_without_a_level() {
+        let expected = "
+Origin
+├── X: 1
+└── Y: 2";
+        assert_eq!(
+            render(|w| {
+                w.header("Origin")?;
+                w.inline_child(&Point { x: 1, y: 2 })
+            }),
             expected.strip_prefix('\n').unwrap()
         );
     }
