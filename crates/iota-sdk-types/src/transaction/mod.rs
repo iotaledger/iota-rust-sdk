@@ -1536,8 +1536,6 @@ impl crate::TreeDisplay for SharedObjectReference {
     }
 }
 
-crate::impl_tree_display!(SharedObjectReference);
-
 /// A single command in a programmable transaction.
 ///
 /// # BCS
@@ -2071,6 +2069,7 @@ crate::impl_tree_display!(
     SystemPackage,
     GenesisTransaction,
     ProgrammableTransaction,
+    SharedObjectReference,
     Input,
     Command,
     TransferObjects,
