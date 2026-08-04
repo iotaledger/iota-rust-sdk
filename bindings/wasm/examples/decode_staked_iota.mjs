@@ -8,6 +8,7 @@
 // id / poolId / stakeActivationEpoch / principal.
 
 import {
+  Address,
   GraphQlClient,
   ObjectFilter,
   StakedIota,
@@ -18,12 +19,16 @@ await initAsync();
 
 const client = GraphQlClient.newTestnet();
 
+const owner = Address.fromHex(
+  "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
+);
+
 const page = await client.objects(
-  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota" }),
+  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota", owner }),
 );
 
 if (page.data.length === 0) {
-  console.log("No StakedIota objects on testnet right now.");
+  console.log(`No StakedIota objects owned by ${owner.toHex()} right now.`);
 } else {
   console.log(`Decoded ${page.data.length} StakedIota object(s):\n`);
   let totalPrincipal = 0n;
