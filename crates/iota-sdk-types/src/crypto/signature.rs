@@ -242,14 +242,23 @@ impl SimpleSignature {
 impl std::fmt::Display for SimpleSignature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SimpleSignature::Ed25519 { public_key, .. } => {
-                write!(f, "Ed25519(key: {public_key})")
+            SimpleSignature::Ed25519 {
+                signature,
+                public_key,
+            } => {
+                write!(f, "Ed25519(key: {public_key}, signature: {signature})")
             }
-            SimpleSignature::Secp256k1 { public_key, .. } => {
-                write!(f, "Secp256k1(key: {public_key})")
+            SimpleSignature::Secp256k1 {
+                signature,
+                public_key,
+            } => {
+                write!(f, "Secp256k1(key: {public_key}, signature: {signature})")
             }
-            SimpleSignature::Secp256r1 { public_key, .. } => {
-                write!(f, "Secp256r1(key: {public_key})")
+            SimpleSignature::Secp256r1 {
+                signature,
+                public_key,
+            } => {
+                write!(f, "Secp256r1(key: {public_key}, signature: {signature})")
             }
         }
     }

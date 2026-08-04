@@ -313,10 +313,9 @@ pub struct RandomnessStateUpdate {
 impl crate::TreeDisplay for RandomnessStateUpdate {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Randomness State Update")?;
-        let bytes_size = self.random_bytes.len();
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Randomness Round", &self.randomness_round, false)?;
-        w.leaf("Random Bytes Size", &bytes_size, false)?;
+        w.leaf("Random Bytes", &hex::encode(&self.random_bytes), false)?;
         w.leaf(
             "Randomness Obj Initial Shared Version",
             &self.randomness_obj_initial_shared_version,
