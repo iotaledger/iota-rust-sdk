@@ -355,7 +355,9 @@ fn parse_atom(token: &str) -> Expr {
 const MAX_DEPTH: usize = 8;
 
 /// Rule-name → generator overrides used for types whose BCS deserializer
-/// applies semantic validation (e.g. scheme bytes, bitmap magic).
+/// applies semantic validation (e.g. scheme bytes, bitmap magic) or
+/// normalizes its input (set-typed fields), beyond what the grammar
+/// expresses.
 type Overrides = HashMap<&'static str, fn(&mut TestHarness) -> Vec<u8>>;
 
 fn encode_uleb128(mut n: u64) -> Vec<u8> {
@@ -396,7 +398,8 @@ impl TestHarness {
         let grammar = parse_grammar(&content);
 
         // Rule-level overrides for types whose BCS deserializers apply semantic
-        // validation (valid scheme byte, roaring-bitmap magic) beyond the grammar.
+        // validation (valid scheme byte, roaring-bitmap magic) or normalize
+        // their input (set-typed deny lists) beyond the grammar.
         // The override generators are wired into gen_expr so they fire whenever the
         // named rule is referenced at any depth, fixing all cascade types too.
         let mut overrides: Overrides = Default::default();
@@ -411,6 +414,7 @@ impl TestHarness {
             Self::generate_checkpoint_transaction,
         );
         overrides.insert("move-struct", Self::gen_move_struct);
+        overrides.insert("deny-rule-set", Self::gen_deny_rule_set);
 
         Self {
             grammar,
@@ -526,6 +530,27 @@ impl TestHarness {
         self.rng.fill_bytes(&mut buf);
         out.extend(buf);
         out
+    }
+
+    /// Generate a canonical `deny-rule-set` in BCS wire form.
+    ///
+    /// The grammar expresses the wire shape (length-prefixed sequences) but
+    /// not the canonical element order of the set-typed deny lists, which is
+    /// a BCS-level semantic like map key order. Generate arbitrary bytes from
+    /// the grammar, then normalize them through the type itself: decoding
+    /// sorts and deduplicates into the sets, so re-encoding yields the
+    /// canonical bytes a producer emits. This also exercises that every
+    /// grammar-conformant encoding decodes.
+    fn gen_deny_rule_set(&mut self) -> Vec<u8> {
+        let expr = self
+            .grammar
+            .get("deny-rule-set")
+            .cloned()
+            .expect("deny-rule-set rule");
+        let bytes = self.gen_expr(expr, 0);
+        let value: iota_sdk_types::DenyRuleSet =
+            bcs::from_bytes(&bytes).expect("grammar-conformant deny-rule-set must decode");
+        bcs::to_bytes(&value).expect("serialize deny-rule-set")
     }
 
     /// Generate a valid `validator-aggregated-signature` in BCS wire form.
@@ -751,6 +776,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<ConsensusDeterminedVersionAssignments>(
         "consensus-determined-version-assignments",
     );
+    test.check_rule::<DenyRuleSet>("deny-rule-set");
     test.check_rule::<Digest>("digest");
     test.check_rule::<EndOfEpochData>("end-of-epoch-data");
     test.check_rule::<EndOfEpochTransactionKind>("end-of-epoch-transaction-kind");
@@ -785,6 +811,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<StructTag>("struct-tag");
     test.check_rule::<SystemPackage>("system-package");
     test.check_rule::<Transaction>("transaction");
+    test.check_rule::<TransactionDenyRulesUpdate>("transaction-deny-rules-update");
     test.check_rule::<TransactionEffects>("transaction-effects");
     test.check_rule::<TransactionEffectsV1>("transaction-effects-v1");
     test.check_rule::<TransactionEvents>("transaction-events");

@@ -193,6 +193,15 @@ fn type_to_schema(ty: &Type) -> String {
                     }
                     None => "(size *(unknown unknown))".into(),
                 },
+                // A BCS set has the same wire shape as a vector; the grammar
+                // cannot express the canonical (sorted, unique) element order,
+                // which is a BCS-level semantic like map key order.
+                "BTreeSet" => match extract_single_generic(seg) {
+                    Some(inner) => {
+                        format!("(size {})", wrap_for_repetition(&type_to_schema(&inner)))
+                    }
+                    None => "(size *unknown)".into(),
+                },
                 other => to_kebab_case(other),
             }
         }

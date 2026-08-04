@@ -143,6 +143,16 @@ consensus-commit-prologue-v1 = u64                                        ; epoc
 
 consensus-determined-version-assignments = %d00 (size *cancelled-transaction)   ; CancelledTransactions
 
+deny-rule-set = (size *address)     ; denied-addresses
+                (size *object-id)   ; denied-objects
+                (size *object-id)   ; denied-packages
+                bool                ; package-publish-disabled
+                bool                ; package-upgrade-disabled
+                bool                ; shared-object-disabled
+                bool                ; user-transaction-disabled
+                bool                ; receiving-objects-disabled
+                bool                ; move-authenticator-disabled
+
 digest = %d32 32OCTET
 
 ed25519-public-key = 32OCTET
@@ -160,6 +170,7 @@ end-of-epoch-transaction-kind = %d00 change-epoch      ; ChangeEpoch
                               / %d01 change-epoch-v2   ; ChangeEpochV2
                               / %d02 change-epoch-v3   ; ChangeEpochV3
                               / %d03 change-epoch-v4   ; ChangeEpochV4
+                              / %d04                   ; TransactionDenyRulesCreate
 
 event = object-id    ; package-id
         identifier   ; module
@@ -420,6 +431,11 @@ system-package = version             ; version
 
 transaction = %d00 transaction-v1   ; V1
 
+transaction-deny-rules-update = u64             ; epoch
+                                u64             ; round
+                                deny-rule-set   ; deny-rules
+                                version         ; deny-rules-obj-initial-shared-version
+
 transaction-digest = digest
 
 transaction-effects = %d00 transaction-effects-v1   ; V1
@@ -451,6 +467,7 @@ transaction-kind = %d00 programmable-transaction                ; Programmable
                  / %d03                                         ; AuthenticatorStateUpdateV1Deprecated
                  / %d04 (size *end-of-epoch-transaction-kind)   ; EndOfEpoch
                  / %d05 randomness-state-update                 ; RandomnessStateUpdate
+                 / %d06 transaction-deny-rules-update           ; TransactionDenyRulesUpdate
 
 transaction-v1 = transaction-kind         ; kind
                  address                  ; sender
