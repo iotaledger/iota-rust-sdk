@@ -464,9 +464,9 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
 
 /// Open a live transactions subscription and assert it delivers a transaction.
 /// A transfer is executed on a background task once the subscription has had a
-/// moment to connect, so the live stream observes it (localnet also produces
-/// system transactions continuously). This exercises the WebSocket transport,
-/// payload decoding, and resume-cursor tracking shared by `events_stream`.
+/// moment to connect, so the live stream observes it. This exercises the
+/// WebSocket transport, payload decoding, and resume-cursor tracking shared by
+/// `events_stream`.
 #[tokio::test]
 async fn test_transactions_subscription() {
     use futures::StreamExt;

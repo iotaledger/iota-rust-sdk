@@ -82,7 +82,11 @@ pub struct SubscriptionEventFilter {
 pub struct SubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
     pub kind: Option<TransactionBlockKindInput>,
-    /// Filter incoming transactions by signing address.
+    /// Filter incoming transactions by sender address.
+    ///
+    /// Only the sender is compared, despite the name — a sponsored
+    /// transaction is not matched by its sponsor's (gas owner's) address,
+    /// even though the sponsor also signed it.
     pub signing_address: Option<Address>,
     /// Filter incoming transactions by package, module, or function name, e.g.
     /// `"0x03"`, `"0x03::iota_system"`, or
