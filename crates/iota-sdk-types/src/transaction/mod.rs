@@ -1467,7 +1467,7 @@ impl crate::TreeDisplay for Input {
                 w.leaf("Value", &hex::encode(value), true)
             }
             Self::ImmutableOrOwned(obj_ref) => {
-                w.header("ImmutableOrOwned")?;
+                w.header("Immutable Or Owned")?;
                 w.inline_child(obj_ref)
             }
             Self::Shared(shared) => {
