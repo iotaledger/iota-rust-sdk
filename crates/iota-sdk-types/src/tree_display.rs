@@ -399,7 +399,7 @@ Root
     fn iter_inline_renders_indexed_leaves_from_any_collection() {
         let set = std::collections::BTreeSet::from([20, 10]);
         assert_eq!(
-            render(|w| w.iter_inline("Items", &std::collections::BTreeSet::<u8>::new(), true)),
+            render(|w| w.iter_inline("Items", std::collections::BTreeSet::<u8>::new(), true)),
             "└── Items: []"
         );
         let expected = "
