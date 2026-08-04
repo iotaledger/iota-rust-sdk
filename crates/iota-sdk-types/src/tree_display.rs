@@ -396,6 +396,23 @@ Root
     }
 
     #[test]
+    fn iter_inline_renders_indexed_leaves_from_any_collection() {
+        let set = std::collections::BTreeSet::from([20, 10]);
+        assert_eq!(
+            render(|w| w.iter_inline("Items", &std::collections::BTreeSet::<u8>::new(), true)),
+            "└── Items: []"
+        );
+        let expected = "
+└── Items
+    ├── 0: 10
+    └── 1: 20";
+        assert_eq!(
+            render(|w| w.iter_inline("Items", &set, true)),
+            expected.strip_prefix('\n').unwrap()
+        );
+    }
+
+    #[test]
     fn vec_children_renders_indexed_sub_trees() {
         let empty: &[Point] = &[];
         assert_eq!(
@@ -551,41 +568,6 @@ Multisig Aggregated Signature
 └── Bitmap: 1";
 
         assert_eq!(signature.to_string(), expected.strip_prefix('\n').unwrap());
-    }
-
-    #[test]
-    fn deny_rules_update_renders_sets_as_indexed_leaves() {
-        use crate::transaction::{DenyRuleSet, TransactionDenyRulesUpdate};
-
-        let mut deny_rules = DenyRuleSet::default();
-        deny_rules.denied_addresses.insert(crate::Address::ZERO);
-        deny_rules.user_transaction_disabled = true;
-
-        let expected = "
-Transaction Deny Rules Update
-├── Epoch: 7
-├── Round: 3
-├── Deny Rules: Deny Rule Set
-│   ├── Denied Addresses
-│   │   └── 0: 0x0000000000000000000000000000000000000000000000000000000000000000
-│   ├── Denied Objects: []
-│   ├── Denied Packages: []
-│   ├── Package Publish Disabled: false
-│   ├── Package Upgrade Disabled: false
-│   ├── Shared Object Disabled: false
-│   ├── User Transaction Disabled: true
-│   ├── Receiving Objects Disabled: false
-│   └── Move Authenticator Disabled: false
-└── Deny Rules Obj Initial Shared Version: 1";
-
-        let update = TransactionDenyRulesUpdate {
-            epoch: 7,
-            round: 3,
-            deny_rules,
-            deny_rules_obj_initial_shared_version: crate::Version::from_u64(1),
-        };
-
-        assert_eq!(update.to_string(), expected.strip_prefix('\n').unwrap());
     }
 
     #[test]
