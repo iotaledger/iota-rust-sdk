@@ -89,8 +89,11 @@ macro_rules! define_field_paths {
             }
 
             /// The underlying field path string.
-            pub fn as_str(&self) -> &str {
-                &self.0
+            pub const fn as_str(&self) -> &str {
+                match &self.0 {
+                    Cow::Borrowed(s) => s,
+                    Cow::Owned(s) => s.as_str(),
+                }
             }
         }
 
@@ -959,6 +962,18 @@ mod tests {
         assert_eq!(DynamicFieldField::KIND, "kind");
         assert_eq!(DynamicFieldField::NAME, "name");
         assert_eq!(DynamicFieldField::CHILD_OBJECT, "child_object");
+    }
+
+    #[test]
+    fn field_paths_usable_in_consts() {
+        // Field paths of different kinds can be collected into a single
+        // constant by going through `as_str`.
+        const PATHS: &[&str] = &[
+            ObjectField::BCS.as_str(),
+            TransactionField::EFFECTS_BCS.as_str(),
+            CheckpointEventField::MODULE.as_str(),
+        ];
+        assert_eq!(PATHS, ["bcs", "effects.bcs", "events.module"]);
     }
 
     #[test]
