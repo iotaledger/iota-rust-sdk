@@ -165,23 +165,24 @@ impl Client {
     /// upgrading the scheme (`http` → `ws`, `https` → `wss`).
     fn ws_url(&self) -> Result<Url> {
         let mut url = self.rpc.clone();
-        let scheme = match url.scheme() {
-            "https" => "wss",
-            "http" => "ws",
-            "ws" | "wss" => return Ok(url),
+        match url.scheme() {
+            "https" => url.set_scheme("wss"),
+            "http" => url.set_scheme("ws"),
+            "ws" | "wss" => Ok(()),
             other => {
                 return Err(Error::from_message(
                     Kind::Subscription,
                     format!("unsupported RPC scheme for subscriptions: {other}"),
                 ));
             }
-        };
-        url.set_scheme(scheme).map_err(|_| {
+        }
+        .map_err(|_| {
             Error::from_message(
                 Kind::Subscription,
                 "failed to derive the WebSocket URL".to_string(),
             )
         })?;
+        url.set_path("/subscriptions");
         Ok(url)
     }
 
