@@ -2,9 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "serde")]
-use std::hash::{Hash, Hasher};
-
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 use crate::SigningDigest;
 
@@ -37,7 +34,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, derive_more::Debug, Eq, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -101,13 +98,6 @@ impl PasskeyAuthenticator {
     }
 }
 
-#[cfg(feature = "serde")]
-impl Hash for PasskeyAuthenticator {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.to_bytes().hash(state);
-    }
-}
-
 /// Public key of a `PasskeyAuthenticator`.
 ///
 /// This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
@@ -119,7 +109,7 @@ impl Hash for PasskeyAuthenticator {
 /// ```text
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Deserialize, serde::Serialize),
