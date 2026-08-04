@@ -117,15 +117,30 @@ impl Cancel {
 }
 
 macro_rules! define_subscription {
-    ($name:ident, $item:ty, $ffi_item:ty, $convert:expr) => {
+    ($name:ident, $update:ident, $variant:ident, $field:ident, $item:ty, $ffi_item:ty, $convert:expr) => {
+        /// An item delivered by a subscription.
+        ///
+        /// A subscription recovers from a lost connection or from falling behind
+        /// the server on its own, so those interruptions are delivered as
+        /// updates rather than raised as errors: a caller that does not care
+        /// about the gap can ignore them and keep reading.
+        #[derive(uniffi::Enum)]
+        pub enum $update {
+            $variant {
+                $field: $ffi_item,
+            },
+            /// Delivery was interrupted and has recovered — the connection
+            /// dropped, or the server dropped payloads because this client
+            /// could not keep up. Items in the gap may have been missed.
+            Interrupted {
+                message: String,
+            },
+        }
+
         /// A live subscription.
         ///
-        /// Call `next` in a loop to receive items; it only returns `None` once
+        /// Call `next` in a loop to receive updates; it only returns `None` once
         /// `cancel` has been called, since the subscription itself never ends.
-        ///
-        /// Errors are not terminal. A dropped connection or a server-side lag
-        /// is reported through `next` and the subscription reconnects, so a
-        /// caller that wants to keep going can simply call `next` again.
         #[derive(uniffi::Object)]
         pub struct $name {
             stream: Mutex<BoxStream<'static, GqlResult<$item>>>,
@@ -134,12 +149,17 @@ macro_rules! define_subscription {
 
         #[uniffi::export(async_runtime = "tokio")]
         impl $name {
-            /// Wait for the next item.
+            /// Wait for the next update.
             ///
             /// Returns `None` once the subscription has been cancelled.
             /// Concurrent calls are serialized; there is no ordering guarantee
             /// between them.
-            pub async fn next(&self) -> Result<Option<$ffi_item>> {
+            ///
+            /// Raises for errors the subscription cannot recover from by
+            /// itself, such as a rejected filter. The subscription stays
+            /// usable afterwards, so a caller that considers the error
+            /// transient can keep calling `next`.
+            pub async fn next(&self) -> Result<Option<$update>> {
                 if self.cancel.is_cancelled() {
                     return Ok(None);
                 }
@@ -153,7 +173,12 @@ macro_rules! define_subscription {
                     futures::future::Either::Right((item, _)) => item,
                 };
                 match item {
-                    Some(Ok(item)) => Ok(Some(($convert)(item)?)),
+                    Some(Ok(item)) => Ok(Some($update::$variant {
+                        $field: ($convert)(item)?,
+                    })),
+                    Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
+                        message: error.to_string(),
+                    })),
                     Some(Err(error)) => Err(error.into()),
                     None => Ok(None),
                 }
@@ -201,16 +226,35 @@ macro_rules! define_subscription {
 
 define_subscription!(
     EventSubscription,
+    EventUpdate,
+    Event,
+    event,
     iota_sdk::graphql_client::query_types::Event,
     GraphQlEvent,
     GraphQlEvent::try_from
 );
 define_subscription!(
     TransactionSubscription,
+    TransactionUpdate,
+    Transaction,
+    transaction,
     iota_sdk::types::SignedTransaction,
     SignedTransaction,
     |transaction| Result::<SignedTransaction>::Ok(SignedTransaction::from(transaction))
 );
+
+/// Whether the subscription recovers from `error` on its own, in which case it
+/// is reported as an interruption instead of being raised.
+///
+/// [`Kind::Subscription`] covers exactly the transport-level failures the
+/// reconnect loop handles — a dropped WebSocket, a failed handshake, or the
+/// server dropping payloads for a client that fell behind.
+fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
+    matches!(
+        error.kind(),
+        iota_sdk::graphql_client::error::Kind::Subscription
+    )
+}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {

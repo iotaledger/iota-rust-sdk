@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetTransaction", "GetTransa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faucet", "Faucet\Faucet.csproj", "{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeTransactions", "SubscribeTransactions\SubscribeTransactions.csproj", "{E18D4EE2-A13D-496C-8203-8787F864334E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DryRunBytes", "DryRunBytes\DryRunBytes.csproj", "{F4F415AC-365B-472B-8659-C62028B2C4E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBalances", "CoinBalances\CoinBalances.csproj", "{543C4CF3-FE53-4348-A38C-0A22485220DF}"
@@ -219,6 +221,10 @@ Global
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
