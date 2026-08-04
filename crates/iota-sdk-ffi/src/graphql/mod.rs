@@ -9,7 +9,6 @@ pub mod faucet;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
-#[cfg(not(target_arch = "wasm32"))]
 pub mod subscription;
 pub mod transaction_builder_client;
 

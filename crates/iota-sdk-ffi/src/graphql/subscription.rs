@@ -9,7 +9,11 @@
 //! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
 //! opened.
 //!
-//! Not available on wasm32: the transport relies on `tokio-tungstenite`.
+//! The WebSocket transport is not built for wasm32, but the API is still
+//! exported there: the wasm bindings are generated from the same interface as
+//! the native ones, so leaving the methods out would leave the generated glue
+//! referencing symbols the wasm library does not export. On wasm `next` raises
+//! instead of delivering anything.
 
 use std::sync::{
     Arc,
@@ -37,6 +41,7 @@ pub struct SubscriptionEventFilter {
     pub emitting_module: Option<String>,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 impl From<SubscriptionEventFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionEventFilter
 {
@@ -68,6 +73,7 @@ pub struct SubscriptionTransactionFilter {
     pub function: Option<String>,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 impl From<SubscriptionTransactionFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionTransactionFilter
 {
@@ -103,6 +109,7 @@ impl Cancel {
     }
 
     /// Resolve once [`Cancel::cancel`] has been called.
+    #[cfg(not(target_arch = "wasm32"))]
     async fn wait(&self) {
         loop {
             // Register for a wake-up before reading the flag, so a `cancel`
@@ -160,28 +167,7 @@ macro_rules! define_subscription {
             /// usable afterwards, so a caller that considers the error
             /// transient can keep calling `next`.
             pub async fn next(&self) -> Result<Option<$update>> {
-                if self.cancel.is_cancelled() {
-                    return Ok(None);
-                }
-                let mut stream = self.stream.lock().await;
-                let cancelled = std::pin::pin!(self.cancel.wait());
-                let item = match futures::future::select(cancelled, stream.next()).await {
-                    futures::future::Either::Left(((), _)) => {
-                        *stream = Self::drained();
-                        None
-                    }
-                    futures::future::Either::Right((item, _)) => item,
-                };
-                match item {
-                    Some(Ok(item)) => Ok(Some($update::$variant {
-                        $field: ($convert)(item)?,
-                    })),
-                    Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
-                        message: error.to_string(),
-                    })),
-                    Some(Err(error)) => Err(error.into()),
-                    None => Ok(None),
-                }
+                self.next_update().await
             }
 
             /// Cancel the subscription, dropping the connection and unblocking
@@ -220,6 +206,37 @@ macro_rules! define_subscription {
             fn drained() -> BoxStream<'static, GqlResult<$item>> {
                 futures::stream::empty().boxed()
             }
+
+            #[cfg(not(target_arch = "wasm32"))]
+            async fn next_update(&self) -> Result<Option<$update>> {
+                if self.cancel.is_cancelled() {
+                    return Ok(None);
+                }
+                let mut stream = self.stream.lock().await;
+                let cancelled = std::pin::pin!(self.cancel.wait());
+                let item = match futures::future::select(cancelled, stream.next()).await {
+                    futures::future::Either::Left(((), _)) => {
+                        *stream = Self::drained();
+                        None
+                    }
+                    futures::future::Either::Right((item, _)) => item,
+                };
+                match item {
+                    Some(Ok(item)) => Ok(Some($update::$variant {
+                        $field: ($convert)(item)?,
+                    })),
+                    Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
+                        message: error.to_string(),
+                    })),
+                    Some(Err(error)) => Err(error.into()),
+                    None => Ok(None),
+                }
+            }
+
+            #[cfg(target_arch = "wasm32")]
+            async fn next_update(&self) -> Result<Option<$update>> {
+                Err(unsupported())
+            }
         }
     };
 }
@@ -249,11 +266,77 @@ define_subscription!(
 /// [`Kind::Subscription`] covers exactly the transport-level failures the
 /// reconnect loop handles — a dropped WebSocket, a failed handshake, or the
 /// server dropping payloads for a client that fell behind.
+#[cfg(not(target_arch = "wasm32"))]
 fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
     matches!(
         error.kind(),
         iota_sdk::graphql_client::error::Kind::Subscription
     )
+}
+
+#[cfg(target_arch = "wasm32")]
+fn unsupported() -> crate::error::SdkFfiError {
+    crate::error::SdkFfiError::custom(
+        "GraphQL subscriptions are unavailable in this build: the WebSocket transport they rely on is not built for wasm32",
+    )
+}
+
+/// Open the event stream a subscription handle reads from.
+#[cfg(not(target_arch = "wasm32"))]
+fn open_events(
+    client: iota_sdk::graphql_client::Client,
+    filter: Option<SubscriptionEventFilter>,
+    start_after: Option<String>,
+) -> BoxStream<'static, GqlResult<iota_sdk::graphql_client::query_types::Event>> {
+    let filter = filter.map(Into::into);
+    async_stream::stream! {
+        let client = client;
+        let mut stream = std::pin::pin!(client.events_stream(filter, start_after));
+        while let Some(item) = stream.next().await {
+            yield item;
+        }
+    }
+    .boxed()
+}
+
+/// Stand-in for the wasm build, where `next` raises instead of reading a
+/// stream.
+#[cfg(target_arch = "wasm32")]
+fn open_events(
+    _client: iota_sdk::graphql_client::Client,
+    _filter: Option<SubscriptionEventFilter>,
+    _start_after: Option<String>,
+) -> BoxStream<'static, GqlResult<iota_sdk::graphql_client::query_types::Event>> {
+    futures::stream::empty().boxed()
+}
+
+/// Open the transaction stream a subscription handle reads from.
+#[cfg(not(target_arch = "wasm32"))]
+fn open_transactions(
+    client: iota_sdk::graphql_client::Client,
+    filter: Option<SubscriptionTransactionFilter>,
+    start_after: Option<String>,
+) -> BoxStream<'static, GqlResult<iota_sdk::types::SignedTransaction>> {
+    let filter = filter.map(Into::into);
+    async_stream::stream! {
+        let client = client;
+        let mut stream = std::pin::pin!(client.transactions_stream(filter, start_after));
+        while let Some(item) = stream.next().await {
+            yield item;
+        }
+    }
+    .boxed()
+}
+
+/// Stand-in for the wasm build, where `next` raises instead of reading a
+/// stream.
+#[cfg(target_arch = "wasm32")]
+fn open_transactions(
+    _client: iota_sdk::graphql_client::Client,
+    _filter: Option<SubscriptionTransactionFilter>,
+    _start_after: Option<String>,
+) -> BoxStream<'static, GqlResult<iota_sdk::types::SignedTransaction>> {
+    futures::stream::empty().boxed()
 }
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -265,7 +348,8 @@ impl GraphQLClient {
     /// tracks its own resume point across reconnects.
     ///
     /// Note: subscriptions are served over a WebSocket and are currently
-    /// supported on devnet and localnet only.
+    /// supported on devnet and localnet only. They are unavailable altogether
+    /// in the wasm build, where `next` raises.
     #[uniffi::method(default(filter = None, start_after = None))]
     pub async fn events_subscription(
         &self,
@@ -273,17 +357,7 @@ impl GraphQLClient {
         start_after: Option<String>,
     ) -> EventSubscription {
         let client = self.0.read().await.clone();
-        let filter = filter.map(Into::into);
-        EventSubscription::new(
-            async_stream::stream! {
-                let client = client;
-                let mut stream = std::pin::pin!(client.events_stream(filter, start_after));
-                while let Some(item) = stream.next().await {
-                    yield item;
-                }
-            }
-            .boxed(),
-        )
+        EventSubscription::new(open_events(client, filter, start_after))
     }
 
     /// Subscribe to a live stream of transactions matching the (optional)
@@ -294,7 +368,8 @@ impl GraphQLClient {
     /// resume point across reconnects.
     ///
     /// Note: subscriptions are served over a WebSocket and are currently
-    /// supported on devnet and localnet only.
+    /// supported on devnet and localnet only. They are unavailable altogether
+    /// in the wasm build, where `next` raises.
     #[uniffi::method(default(filter = None, start_after = None))]
     pub async fn transactions_subscription(
         &self,
@@ -302,16 +377,6 @@ impl GraphQLClient {
         start_after: Option<String>,
     ) -> TransactionSubscription {
         let client = self.0.read().await.clone();
-        let filter = filter.map(Into::into);
-        TransactionSubscription::new(
-            async_stream::stream! {
-                let client = client;
-                let mut stream = std::pin::pin!(client.transactions_stream(filter, start_after));
-                while let Some(item) = stream.next().await {
-                    yield item;
-                }
-            }
-            .boxed(),
-        )
+        TransactionSubscription::new(open_transactions(client, filter, start_after))
     }
 }
