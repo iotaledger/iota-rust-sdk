@@ -29,6 +29,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::CommandArgumentError>();
     assert_display::<iota_sdk_types::ConsensusCommitPrologueV1>();
     assert_display::<iota_sdk_types::ConsensusDeterminedVersionAssignments>();
+    assert_display::<iota_sdk_types::DenyRuleSet>();
     assert_display::<iota_sdk_types::Digest>();
     assert_display::<iota_sdk_types::DigestParseError>();
     assert_display::<iota_sdk_types::Ed25519PublicKey>();
@@ -47,6 +48,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Identifier>();
     assert_display::<iota_sdk_types::Input>();
     assert_display::<iota_sdk_types::Intent>();
+    assert_display::<iota_sdk_types::IntentMessage<iota_sdk_types::Transaction>>();
+    assert_display::<iota_sdk_types::PersonalMessage<'static>>();
     assert_display::<iota_sdk_types::IntentAppId>();
     assert_display::<iota_sdk_types::IntentError>();
     assert_display::<iota_sdk_types::IntentScope>();
@@ -111,6 +114,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::SystemPackage>();
     assert_display::<iota_sdk_types::iota_names::registry::Table>();
     assert_display::<iota_sdk_types::Transaction>();
+    assert_display::<iota_sdk_types::TransactionDenyRulesUpdate>();
     assert_display::<iota_sdk_types::TransactionEffects>();
     assert_display::<iota_sdk_types::TransactionEffectsV1>();
     assert_display::<iota_sdk_types::TransactionEvents>();
@@ -132,6 +136,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ValidatorCommittee>();
     assert_display::<iota_sdk_types::ValidatorCommitteeMember>();
     assert_display::<iota_sdk_types::ValidatorSignature>();
+    assert_display::<iota_sdk_types::VersionAssignment>();
     assert_display::<iota_sdk_types::Version>();
     assert_display::<iota_sdk_types::version::VersionError>();
 }

@@ -180,7 +180,8 @@ named_object_id!(
     AUTHENTICATOR_STATE,
     RANDOMNESS_STATE,
     GENESIS_IOTA_BRIDGE,
-    DENY_LIST
+    DENY_LIST,
+    TRANSACTION_DENY_RULES
 );
 
 /// Reference to an object

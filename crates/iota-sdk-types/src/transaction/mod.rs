@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::collections::BTreeSet;
+
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
     Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
@@ -323,6 +325,141 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
     }
 }
 
+/// A complete set of transaction deny rules.
+///
+/// The set-typed deny lists encode in canonical form — ascending order
+/// without duplicates — by construction, like BCS map keys. Note that
+/// decoding normalizes: a non-canonical sequence encoding (unsorted or
+/// duplicated elements) is accepted and sorted/deduplicated into the set, so
+/// re-encoding it does not reproduce the original bytes.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// deny-rule-set = (vector address)   ; denied addresses
+///                 (vector object-id) ; denied objects
+///                 (vector object-id) ; denied packages
+///                 bool               ; package publish disabled
+///                 bool               ; package upgrade disabled
+///                 bool               ; shared object disabled
+///                 bool               ; user transaction disabled
+///                 bool               ; receiving objects disabled
+///                 bool               ; move authenticator disabled
+/// ```
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct DenyRuleSet {
+    /// Addresses denied as transaction sender or gas sponsor. A denied
+    /// address can still receive objects.
+    pub denied_addresses: BTreeSet<Address>,
+    /// Objects denied as transaction inputs or receiving objects.
+    pub denied_objects: BTreeSet<ObjectId>,
+    /// Packages denied as a (transitive) dependency of any command; upgrading
+    /// a denied package is denied too.
+    pub denied_packages: BTreeSet<ObjectId>,
+    /// Denies all package publishing.
+    pub package_publish_disabled: bool,
+    /// Denies all package upgrades.
+    pub package_upgrade_disabled: bool,
+    /// Denies transactions that use shared objects as inputs.
+    pub shared_object_disabled: bool,
+    /// Denies all user transactions (kill switch).
+    pub user_transaction_disabled: bool,
+    /// Denies transactions that contain receiving objects.
+    pub receiving_objects_disabled: bool,
+    /// Denies transactions signed with a Move authenticator.
+    pub move_authenticator_disabled: bool,
+}
+
+/// Update of the on-chain transaction deny rules.
+///
+/// Carries the full active set of deny rules, replacing the previous contents
+/// of the deny-rules object.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-deny-rules-update = u64             ; epoch
+///                                 u64             ; round
+///                                 deny-rule-set   ; deny rules
+///                                 version         ; initial shared version
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct TransactionDenyRulesUpdate {
+    /// Epoch of the deny-rules update transaction
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub epoch: u64,
+    /// Consensus round of the update
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub round: u64,
+    /// The full active set of deny rules
+    pub deny_rules: DenyRuleSet,
+    /// The initial version of the deny-rules object that it was shared at.
+    pub deny_rules_obj_initial_shared_version: Version,
+}
+
+impl crate::TreeDisplay for DenyRuleSet {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Deny Rule Set")?;
+        w.iter_inline("Denied Addresses", &self.denied_addresses, false)?;
+        w.iter_inline("Denied Objects", &self.denied_objects, false)?;
+        w.iter_inline("Denied Packages", &self.denied_packages, false)?;
+        w.leaf(
+            "Package Publish Disabled",
+            &self.package_publish_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Package Upgrade Disabled",
+            &self.package_upgrade_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Shared Object Disabled",
+            &self.shared_object_disabled,
+            false,
+        )?;
+        w.leaf(
+            "User Transaction Disabled",
+            &self.user_transaction_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Receiving Objects Disabled",
+            &self.receiving_objects_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Move Authenticator Disabled",
+            &self.move_authenticator_disabled,
+            true,
+        )
+    }
+}
+
+impl crate::TreeDisplay for TransactionDenyRulesUpdate {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Deny Rules Update")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Round", &self.round, false)?;
+        w.child("Deny Rules", &self.deny_rules, false)?;
+        w.leaf(
+            "Deny Rules Obj Initial Shared Version",
+            &self.deny_rules_obj_initial_shared_version,
+            true,
+        )
+    }
+}
+
 /// Transaction type
 ///
 /// # BCS
@@ -336,6 +473,7 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 transaction-deny-rules-update          ; TransactionDenyRulesUpdate
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -359,12 +497,15 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// Update of the on-chain transaction deny rules
+    TransactionDenyRulesUpdate(TransactionDenyRulesUpdate),
 }
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
         ConsensusCommitPrologueV1,
         RandomnessStateUpdate,
+        TransactionDenyRulesUpdate,
     }
 
     crate::def_is_as_into_opt! {
@@ -398,6 +539,11 @@ impl TransactionKind {
         Self::RandomnessStateUpdate(tx)
     }
 
+    /// Create a [`TransactionKind::TransactionDenyRulesUpdate`].
+    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
+        Self::TransactionDenyRulesUpdate(tx)
+    }
+
     /// Returns `true` if this is a system transaction.
     pub fn is_system(&self) -> bool {
         match self {
@@ -405,6 +551,7 @@ impl TransactionKind {
             | TransactionKind::ConsensusCommitPrologueV1(_)
             | TransactionKind::AuthenticatorStateUpdateV1Deprecated
             | TransactionKind::RandomnessStateUpdate(_)
+            | TransactionKind::TransactionDenyRulesUpdate(_)
             | TransactionKind::EndOfEpoch(_) => true,
             TransactionKind::Programmable(_) => false,
         }
@@ -441,6 +588,7 @@ impl crate::TreeDisplay for TransactionKind {
                 w.vec_children("Transactions", items, true)
             }
             Self::RandomnessStateUpdate(v) => v.fmt_tree(w),
+            Self::TransactionDenyRulesUpdate(v) => v.fmt_tree(w),
         }
     }
 }
@@ -456,6 +604,7 @@ impl crate::TreeDisplay for TransactionKind {
 ///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
 ///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
+///                               =/ %d04                  ; TransactionDenyRulesCreate
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -471,10 +620,14 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
+    /// Create and share the transaction deny rules object
+    TransactionDenyRulesCreate,
 }
 
 impl EndOfEpochTransactionKind {
     crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,);
+
+    crate::def_is!(TransactionDenyRulesCreate);
 
     /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
     #[expect(clippy::too_many_arguments)]
@@ -586,6 +739,12 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates a [`Self::TransactionDenyRulesCreate`] end-of-epoch transaction
+    /// kind.
+    pub fn new_transaction_deny_rules_create() -> Self {
+        Self::TransactionDenyRulesCreate
+    }
+
     /// Returns an iterator over the shared input objects required by this
     /// transaction kind.
     pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
@@ -596,6 +755,9 @@ impl EndOfEpochTransactionKind {
             | Self::ChangeEpochV4(_) => {
                 vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter()
             }
+            // The deny-rules object is created by this transaction, so there
+            // is no shared input to reference yet.
+            Self::TransactionDenyRulesCreate => vec![].into_iter(),
         }
     }
 }
@@ -607,6 +769,7 @@ impl crate::TreeDisplay for EndOfEpochTransactionKind {
             Self::ChangeEpochV2(v) => v.fmt_tree(w),
             Self::ChangeEpochV3(v) => v.fmt_tree(w),
             Self::ChangeEpochV4(v) => v.fmt_tree(w),
+            Self::TransactionDenyRulesCreate => w.header("Transaction Deny Rules Create"),
         }
     }
 }
@@ -1889,6 +2052,8 @@ impl crate::TreeDisplay for MoveCall {
 
 crate::impl_tree_display!(
     Transaction,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
     TransactionV1,
     SignedTransaction,
     GasPayment,

@@ -136,12 +136,23 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         items: &[impl std::fmt::Display],
         is_last: bool,
     ) -> std::fmt::Result {
-        if items.is_empty() {
+        self.iter_inline(label, items, is_last)
+    }
+
+    /// Display a collection of `Display` items as indexed leaf nodes.
+    pub fn iter_inline<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
+    where
+        I: IntoIterator,
+        I::Item: std::fmt::Display,
+        I::IntoIter: ExactSizeIterator,
+    {
+        let items = items.into_iter();
+        if items.len() == 0 {
             self.leaf(label, &"[]", is_last)
         } else {
             self.branch(label, is_last, |w| {
                 let last_idx = items.len() - 1;
-                for (i, item) in items.iter().enumerate() {
+                for (i, item) in items.enumerate() {
                     w.leaf(&i.to_string(), &item, i == last_idx)?;
                 }
                 Ok(())
@@ -540,6 +551,41 @@ Multisig Aggregated Signature
 └── Bitmap: 1";
 
         assert_eq!(signature.to_string(), expected.strip_prefix('\n').unwrap());
+    }
+
+    #[test]
+    fn deny_rules_update_renders_sets_as_indexed_leaves() {
+        use crate::transaction::{DenyRuleSet, TransactionDenyRulesUpdate};
+
+        let mut deny_rules = DenyRuleSet::default();
+        deny_rules.denied_addresses.insert(crate::Address::ZERO);
+        deny_rules.user_transaction_disabled = true;
+
+        let expected = "
+Transaction Deny Rules Update
+├── Epoch: 7
+├── Round: 3
+├── Deny Rules: Deny Rule Set
+│   ├── Denied Addresses
+│   │   └── 0: 0x0000000000000000000000000000000000000000000000000000000000000000
+│   ├── Denied Objects: []
+│   ├── Denied Packages: []
+│   ├── Package Publish Disabled: false
+│   ├── Package Upgrade Disabled: false
+│   ├── Shared Object Disabled: false
+│   ├── User Transaction Disabled: true
+│   ├── Receiving Objects Disabled: false
+│   └── Move Authenticator Disabled: false
+└── Deny Rules Obj Initial Shared Version: 1";
+
+        let update = TransactionDenyRulesUpdate {
+            epoch: 7,
+            round: 3,
+            deny_rules,
+            deny_rules_obj_initial_shared_version: crate::Version::from_u64(1),
+        };
+
+        assert_eq!(update.to_string(), expected.strip_prefix('\n').unwrap());
     }
 
     #[test]
