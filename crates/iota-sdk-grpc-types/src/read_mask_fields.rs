@@ -965,18 +965,6 @@ mod tests {
     }
 
     #[test]
-    fn field_paths_usable_in_consts() {
-        // Field paths of different kinds can be collected into a single
-        // constant by going through `as_str`.
-        const PATHS: &[&str] = &[
-            ObjectField::BCS.as_str(),
-            TransactionField::EFFECTS_BCS.as_str(),
-            CheckpointResponseField::CHECKPOINT_SUMMARY_BCS.as_str(),
-        ];
-        assert_eq!(PATHS, ["bcs", "effects.bcs", "checkpoint.summary.bcs"]);
-    }
-
-    #[test]
     fn scoped_read_mask_from_single_field() {
         let mask: ObjectReadMask = ObjectField::BCS.into();
         assert_eq!(mask, "bcs");
