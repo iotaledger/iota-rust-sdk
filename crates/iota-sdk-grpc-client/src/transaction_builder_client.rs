@@ -80,7 +80,7 @@ impl TransactionBuilderClient for Client {
             return Ok(Vec::new());
         }
         // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK objects, which the server returns in request
+        // reconstruct the SDK objects, which `get_objects` returns in request
         // order.
         self.get_objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
             .await?
