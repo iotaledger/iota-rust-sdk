@@ -354,13 +354,6 @@ mod tests {
                 self.0.objects(struct_tag, owner, cursor, limit).await
             }
 
-            async fn transaction(
-                &self,
-                digest: iota_types::TransactionDigest,
-            ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
-                self.0.transaction(digest).await
-            }
-
             async fn transaction_effects(
                 &self,
                 digest: iota_types::TransactionDigest,

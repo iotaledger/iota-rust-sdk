@@ -36,13 +36,6 @@ impl TransactionBuilderRead for GraphQLClient {
             .await
     }
 
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<iota_sdk::types::SignedTransaction>, Self::Error> {
-        TransactionBuilderRead::transaction(&*self.0.read().await, digest).await
-    }
-
     async fn transaction_effects(
         &self,
         digest: TransactionDigest,

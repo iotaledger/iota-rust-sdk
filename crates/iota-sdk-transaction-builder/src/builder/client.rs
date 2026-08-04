@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -104,12 +104,6 @@ pub trait TransactionBuilderRead {
         limit: Option<usize>,
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
-    /// Fetch a transaction
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>>;
-
     /// Fetch transaction effects
     fn transaction_effects(
         &self,
@@ -203,13 +197,6 @@ impl<T: TransactionBuilderRead> TransactionBuilderRead for &T {
         (*self).objects(struct_tag, owner, cursor, limit)
     }
 
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
-        (*self).transaction(digest)
-    }
-
     fn transaction_effects(
         &self,
         digest: TransactionDigest,
@@ -295,13 +282,6 @@ impl<T: TransactionBuilderRead> TransactionBuilderRead for std::sync::Arc<T> {
         self.as_ref().objects(struct_tag, owner, cursor, limit)
     }
 
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
-        self.as_ref().transaction(digest)
-    }
-
     fn transaction_effects(
         &self,
         digest: TransactionDigest,
@@ -364,8 +344,8 @@ pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
     use iota_types::{
-        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction, StructTag,
-        Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
+        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag, Transaction,
+        TransactionDigest, TransactionEffects, UserSignature, Version,
     };
 
     use super::{TransactionBuilderRead, TransactionBuilderWrite, WaitForTx};
@@ -456,13 +436,6 @@ pub(crate) mod test_client {
                 data: vec![fabricated_coin(gas_coin_id, owner, FABRICATED_COIN_BALANCE)],
                 next_cursor: None,
             })
-        }
-
-        async fn transaction(
-            &self,
-            _digest: TransactionDigest,
-        ) -> Result<Option<SignedTransaction>, Self::Error> {
-            Ok(None)
         }
 
         async fn transaction_effects(
@@ -583,13 +556,6 @@ pub(crate) mod test_client {
             crate::TestClient
                 .objects(struct_tag, owner, cursor, limit)
                 .await
-        }
-
-        async fn transaction(
-            &self,
-            digest: iota_types::TransactionDigest,
-        ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
-            crate::TestClient.transaction(digest).await
         }
 
         async fn transaction_effects(

@@ -8,8 +8,8 @@ use iota_transaction_builder::{
     ObjectsPage, ProtocolConfig, TransactionBuilderRead, TransactionBuilderWrite, WaitForTx,
 };
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 use crate::{
@@ -65,13 +65,6 @@ impl TransactionBuilderRead for Client {
             .flatten()
             .map(String::into_bytes);
         Ok(ObjectsPage { data, next_cursor })
-    }
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
     }
 
     async fn transaction_effects(

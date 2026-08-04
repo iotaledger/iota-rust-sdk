@@ -20,8 +20,7 @@ use iota_types::{
 use crate::{
     Client,
     api::{
-        EXECUTED_TRANSACTION_CHECKPOINT, EXECUTED_TRANSACTION_SIGNATURES,
-        EXECUTED_TRANSACTION_TRANSACTION, Error, MetadataEnvelope, ReadMask, TRANSACTION_DIGEST,
+        EXECUTED_TRANSACTION_CHECKPOINT, Error, MetadataEnvelope, ReadMask, TRANSACTION_DIGEST,
         TRANSACTION_EFFECTS_BCS, check_result_count, saturating_usize_to_u32,
     },
 };
@@ -118,33 +117,6 @@ impl TransactionBuilderRead for Client {
             .collect::<Result<Vec<_>, _>>()?;
         let next_cursor = page.next_page_token.map(|token| token.to_vec());
         Ok(ObjectsPage { data, next_cursor })
-    }
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                &[digest],
-                Some(ReadMask::from(&[
-                    EXECUTED_TRANSACTION_TRANSACTION,
-                    EXECUTED_TRANSACTION_SIGNATURES,
-                ])),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
-            }
-            None => Ok(None),
-        }
     }
 
     async fn transaction_effects(
