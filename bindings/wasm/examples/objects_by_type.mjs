@@ -7,15 +7,15 @@ await initAsync();
 
 const client = GraphQlClient.newTestnet();
 
-const stakedIotas = await client.objects(
-  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota" }),
+const coins = await client.objects(
+  ObjectFilter.new({ typeTag: "0x2::coin::Coin<0x2::iota::IOTA>" }),
 );
 
-if (stakedIotas.data.length === 0) {
-  console.log("No StakedIota objects found");
+if (coins.data.length === 0) {
+  console.log("No IOTA coin objects found");
 } else {
-  console.log("StakedIota object IDs:");
-  for (const stakedIota of stakedIotas.data) {
-    console.log(stakedIota.id().toHex());
+  console.log("IOTA coin object IDs:");
+  for (const coin of coins.data) {
+    console.log(coin.id().toHex());
   }
 }
