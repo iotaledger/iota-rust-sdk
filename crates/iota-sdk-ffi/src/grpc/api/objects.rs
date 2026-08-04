@@ -6,7 +6,7 @@
 use std::sync::Arc;
 
 use crate::{
-    error::{Result, SdkFfiError},
+    error::Result,
     grpc::{client::GrpcClient, output_types::ObjectRequest},
     types::object::Object,
 };
@@ -16,7 +16,8 @@ impl GrpcClient {
     /// Get objects by their ids and optional versions.
     ///
     /// Results are returned in the same order as the input requests.
-    /// If an object is not found, an error is returned.
+    /// If any object cannot be read — because it is not found, was deleted, or
+    /// has been pruned by the serving node — the whole call fails.
     pub async fn get_objects(&self, requests: Vec<ObjectRequest>) -> Result<Vec<Arc<Object>>> {
         let refs = requests
             .iter()
@@ -27,19 +28,14 @@ impl GrpcClient {
                 )
             })
             .collect::<Vec<_>>();
-        Ok(self
-            .0
+        self.0
             .read()
             .await
             .get_objects(&refs, None)
             .await?
             .into_inner()
-            .iter()
-            .map(|object| object.object().map_err(SdkFfiError::new))
-            .collect::<std::result::Result<Vec<_>, _>>()?
             .into_iter()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect())
+            .map(|object| Ok(Arc::new(object?.object()?.into())))
+            .collect()
     }
 }

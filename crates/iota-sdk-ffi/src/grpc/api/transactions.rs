@@ -16,7 +16,8 @@ impl GrpcClient {
     /// Get transactions by their digests.
     ///
     /// Results are returned in the same order as the input digests.
-    /// If a transaction is not found, an error is returned.
+    /// If any transaction cannot be read — because it is not found or has been
+    /// pruned by the serving node — the whole call fails.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction, signatures, checkpoint, and timestamp are
@@ -34,8 +35,8 @@ impl GrpcClient {
             .get_transactions(&digests, super::read_mask(&read_mask))
             .await?
             .into_inner()
-            .iter()
-            .map(TryInto::try_into)
+            .into_iter()
+            .map(|transaction| ExecutedTransaction::try_from(&transaction?))
             .collect()
     }
 }
