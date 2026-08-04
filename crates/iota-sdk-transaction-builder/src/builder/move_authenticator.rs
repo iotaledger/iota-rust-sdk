@@ -11,8 +11,7 @@ use iota_types::{
 };
 
 use crate::{
-    PTBArgumentList, TransactionBuilderResolveClient, error::Error, types::MoveTypes,
-    unresolved::InputKind,
+    PTBArgumentList, TransactionBuilderRead, error::Error, types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
@@ -59,7 +58,7 @@ impl MoveAuthenticatorBuilder {
     /// which can be used to execute the given transaction.
     pub async fn finish(
         self,
-        client: impl TransactionBuilderResolveClient,
+        client: impl TransactionBuilderRead,
     ) -> Result<MoveAuthenticator, Error> {
         let account = client
             .object(self.account_id, None)

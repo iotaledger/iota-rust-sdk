@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderResolveClient`] and
-//! [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of [`TransactionBuilderRead`] and
+//! [`TransactionBuilderWrite`] for the GRPC [`Client`].
 
 use std::time::Duration;
 
@@ -10,8 +10,7 @@ use iota_grpc_types::{
     read_mask_fields::EpochField, v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderResolveClient,
-    WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilderRead, TransactionBuilderWrite, WaitForTx,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -27,9 +26,9 @@ use crate::{
     },
 };
 
-/// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
+/// How long [`TransactionBuilderWrite::wait_for_tx`] polls before giving up.
 const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
+/// Interval between polls in [`TransactionBuilderWrite::wait_for_tx`].
 const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
@@ -55,7 +54,7 @@ fn single_item<T>(
     }
 }
 
-impl TransactionBuilderResolveClient for Client {
+impl TransactionBuilderRead for Client {
     type Error = crate::api::Error;
 
     async fn object(
@@ -121,6 +120,47 @@ impl TransactionBuilderResolveClient for Client {
         Ok(ObjectsPage { data, next_cursor })
     }
 
+    async fn transaction(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<SignedTransaction>, Self::Error> {
+        let response = self
+            .get_transactions(
+                &[digest],
+                Some(ReadMask::from(&[
+                    EXECUTED_TRANSACTION_TRANSACTION,
+                    EXECUTED_TRANSACTION_SIGNATURES,
+                ])),
+            )
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => {
+                let transaction = tx.transaction()?.transaction()?;
+                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
+                Ok(Some(SignedTransaction {
+                    transaction,
+                    signatures,
+                }))
+            }
+            None => Ok(None),
+        }
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        let response = self
+            .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
+        }
+    }
+
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
             .get_epoch(
@@ -169,49 +209,8 @@ impl TransactionBuilderResolveClient for Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderWrite for Client {
     type DryRunResult = SimulatedTransaction;
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                &[digest],
-                Some(ReadMask::from(&[
-                    EXECUTED_TRANSACTION_TRANSACTION,
-                    EXECUTED_TRANSACTION_SIGNATURES,
-                ])),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
-            }
-            None => Ok(None),
-        }
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        let response = self
-            .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-            None => Ok(None),
-        }
-    }
 
     async fn dry_run_tx(
         &self,

@@ -18,7 +18,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderResolveClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderRead, TransactionBuilderWrite, WaitForTx,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -50,7 +50,7 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderResolveClient::protocol_config`] and falls
+/// value via [`TransactionBuilderRead::protocol_config`] and falls
 /// back to this if the implementation does not expose protocol config or the
 /// value cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
@@ -1015,7 +1015,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderRead, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1444,7 +1444,7 @@ impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderWrite, L> TransactionBuilder<C, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;

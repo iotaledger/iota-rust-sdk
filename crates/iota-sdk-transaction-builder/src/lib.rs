@@ -15,10 +15,10 @@
 //! ## Online vs. Offline Builder
 //!
 //! The Transaction Builder can be used with or without a client implementing
-//! [TransactionBuilderResolveClient]. When one is provided via the
+//! [TransactionBuilderRead]. When one is provided via the
 //! [with_client](TransactionBuilder::with_client) method, the resulting builder
 //! will use it to find and validate provided IDs. Clients that also implement
-//! [TransactionBuilderClient] additionally enable
+//! [TransactionBuilderWrite] additionally enable
 //! [dry_run](TransactionBuilder::dry_run) and
 //! [execute](TransactionBuilder::execute).
 //!
@@ -301,8 +301,7 @@ pub use self::{
     builder::{
         TransactionBuilder,
         client::{
-            ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderResolveClient,
-            WaitForTx,
+            ObjectsPage, ProtocolConfig, TransactionBuilderRead, TransactionBuilderWrite, WaitForTx,
         },
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
@@ -318,23 +317,23 @@ mod tests {
     use crate::TransactionBuilder;
 
     #[cfg(feature = "test-client")]
-    mod resolve_client {
+    mod read_client {
         use iota_types::{Object, ObjectId, StructTag, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilder,
-            TransactionBuilderResolveClient, error::Error,
+            ObjectsPage, TestClient, TestClientError, TransactionBuilder, TransactionBuilderRead,
+            error::Error,
         };
 
-        /// Implements only [`TransactionBuilderResolveClient`] by forwarding to
+        /// Implements only [`TransactionBuilderRead`] by forwarding to
         /// [`TestClient`], to verify that building a transaction does not
         /// require the full
-        /// [`TransactionBuilderClient`](crate::TransactionBuilderClient).
+        /// [`TransactionBuilderWrite`](crate::TransactionBuilderWrite).
         /// It relies on the default `estimate_tx_budget`, so no transaction
         /// simulation is needed.
-        struct ResolveOnlyClient(TestClient);
+        struct ReadOnlyClient(TestClient);
 
-        impl TransactionBuilderResolveClient for ResolveOnlyClient {
+        impl TransactionBuilderRead for ReadOnlyClient {
             type Error = TestClientError;
 
             async fn object(
@@ -355,6 +354,20 @@ mod tests {
                 self.0.objects(struct_tag, owner, cursor, limit).await
             }
 
+            async fn transaction(
+                &self,
+                digest: iota_types::TransactionDigest,
+            ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
+                self.0.transaction(digest).await
+            }
+
+            async fn transaction_effects(
+                &self,
+                digest: iota_types::TransactionDigest,
+            ) -> Result<Option<iota_types::TransactionEffects>, Self::Error> {
+                self.0.transaction_effects(digest).await
+            }
+
             async fn reference_gas_price(
                 &self,
                 epoch: impl Into<Option<u64>>,
@@ -364,7 +377,7 @@ mod tests {
         }
 
         #[tokio::test]
-        async fn finish_requires_only_the_resolve_client() {
+        async fn finish_requires_only_the_read_client() {
             let sender = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
                 .parse()
                 .unwrap();
@@ -379,7 +392,7 @@ mod tests {
             // Without simulation there is no budget estimation, so an explicit
             // gas budget is required.
             let mut builder =
-                TransactionBuilder::new(sender).with_client(ResolveOnlyClient(TestClient));
+                TransactionBuilder::new(sender).with_client(ReadOnlyClient(TestClient));
             builder.send_coins([coin], recipient, 1000u64);
             assert!(matches!(
                 builder.finish().await,
@@ -387,7 +400,7 @@ mod tests {
             ));
 
             let mut builder =
-                TransactionBuilder::new(sender).with_client(ResolveOnlyClient(TestClient));
+                TransactionBuilder::new(sender).with_client(ReadOnlyClient(TestClient));
             builder
                 .send_coins([coin], recipient, 1000u64)
                 .gas_budget(50_000_000);
