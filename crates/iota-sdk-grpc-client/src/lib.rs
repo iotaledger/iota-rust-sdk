@@ -10,17 +10,22 @@
 //! # Example
 //!
 //! ```no_run
-//! use iota_sdk_grpc_client::Client;
+//! use iota_sdk_grpc_client::{
+//!     Client,
+//!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
+//! };
 //! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = Client::new("http://localhost:9000")?;
+//! let client = Client::new_localnet()?;
 //!
-//! // Get a transaction with full details (None = use default field mask).
+//! // Get a transaction with the default field mask.
 //! // The batched reads return one result per request, so a transaction the
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
-//! let txs = client.get_transactions(&[digest], None).await?;
+//! let txs = client
+//!     .get_transactions([digest], TransactionReadMask::default())
+//!     .await?;
 //! for tx in txs.body() {
 //!     match tx {
 //!         Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
@@ -28,9 +33,11 @@
 //!     }
 //! }
 //!
-//! // Get an object (None = use default field mask)
+//! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
-//! let objects = client.get_objects(&[(object_id, None)], None).await?;
+//! let objects = client
+//!     .get_objects([object_id], ObjectReadMask::default())
+//!     .await?;
 //! for object in objects.body() {
 //!     match object {
 //!         Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),
@@ -115,7 +122,10 @@ pub use api::{
 // Re-export query builders for convenience
 pub use api::{
     move_package::package_versions::ListPackageVersionsQuery,
-    state::{dynamic_fields::ListDynamicFieldsQuery, owned_objects::ListOwnedObjectsQuery},
+    state::{
+        coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
+        owned_objects::ListOwnedObjectsQuery,
+    },
 };
 // Re-export typed read mask field enums
 pub use iota_grpc_types::read_mask_fields;

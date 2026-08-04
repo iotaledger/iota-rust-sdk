@@ -28,10 +28,10 @@ impl Client {
     ///   If `None`, the server applies its default threshold (5 seconds).
     pub async fn get_health(
         &self,
-        threshold_ms: Option<u64>,
+        threshold_ms: impl Into<Option<u64>>,
     ) -> Result<MetadataEnvelope<GetHealthResponse>> {
         let mut request = GetHealthRequest::default();
-        if let Some(ms) = threshold_ms {
+        if let Some(ms) = threshold_ms.into() {
             request = request.with_threshold_ms(ms);
         }
 

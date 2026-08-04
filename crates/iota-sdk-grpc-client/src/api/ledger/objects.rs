@@ -3,23 +3,124 @@
 
 //! High-level API for object queries.
 
-use iota_grpc_types::v1::{
-    ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
-    object::Object,
-    types::ObjectReference,
+use iota_grpc_types::{
+    read_mask_fields::{IntoReadMask, ObjectReadMask},
+    v1::{
+        ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
+        object::Object,
+        types::ObjectReference,
+    },
 };
 use iota_types::{ObjectId, Version};
 
 use crate::{
     Client,
     api::{
-        Error, GET_OBJECTS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_object_identity,
-        check_result_count, collect_stream, field_mask_with_default, into_item_results,
-        proto_object_id, saturating_usize_to_u32,
+        Error, MetadataEnvelope, Result, check_object_identity, check_result_count, collect_stream,
+        into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
 impl Client {
+    /// Get objects by their IDs.
+    ///
+    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
+    /// type, or use `obj.object_reference()` to get the object reference.
+    ///
+    /// Results are returned in the same order as the input IDs, one per ID.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// Each ID gets its own result: an object that is not found (never
+    /// existed, was deleted, or has been pruned by the serving node) yields
+    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
+    /// other objects intact. The outer `Result` is reserved for failures of the
+    /// call itself, such as a transport error, and for a server that answered
+    /// with a different number of results than IDs requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
+    /// result belongs to, or answered a position with a different object than
+    /// the one requested there ([`UnexpectedObject`]). The answered id is read
+    /// from the object reference or its BCS, so a read mask that includes
+    /// neither leaves nothing to check.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
+    ///
+    /// # Read Mask
+    ///
+    /// The `read_mask` parameter controls which fields the server returns; use
+    /// `ObjectReadMask::default()` for the default mask, or pass an
+    /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
+    /// built from an
+    /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
+    /// slice/array/vec of fields.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
+    /// # use iota_types::ObjectId;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new_localnet()?;
+    /// let object_id: ObjectId = "0x2".parse()?;
+    /// let ids = [object_id];
+    ///
+    /// // Default mask
+    /// let objs = client.get_objects(ids, ObjectReadMask::default()).await?;
+    ///
+    /// // Selected fields
+    /// let objs = client
+    ///     .get_objects(
+    ///         ids,
+    ///         ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]),
+    ///     )
+    ///     .await?;
+    ///
+    /// for obj in objs.body() {
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ID failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
+    ///     // Convert proto object to SDK type
+    ///     let sdk_obj = obj.object()?;
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
+    ///     let obj_ref = obj.object_reference()?;
+    ///     println!("Object version: {:?}", obj_ref.version());
+    /// }
+    ///
+    /// // Results line up with the requested IDs, so pair them to find out
+    /// // which objects the node does not have
+    /// let missing: Vec<ObjectId> = ids
+    ///     .iter()
+    ///     .zip(objs.body())
+    ///     .filter_map(|(id, result)| match result {
+    ///         Err(e) if e.is_not_found() => Some(*id),
+    ///         _ => None,
+    ///     })
+    ///     .collect();
+    /// println!("Missing objects: {missing:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_objects(
+        &self,
+        refs: impl IntoIterator<Item = ObjectId>,
+        read_mask: impl IntoReadMask<ObjectReadMask>,
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+        let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
+
+        self.get_objects_internal(refs, read_mask.into_read_mask())
+            .await
+    }
+
     /// Get objects by their IDs and optional versions.
     ///
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
@@ -31,48 +132,39 @@ impl Client {
     ///
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
     ///
-    /// Each ref gets its own result: an object that is not found (never
-    /// existed, was deleted, or has been pruned by the serving node) yields
-    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
-    /// other objects intact. The outer `Result` is reserved for failures of the
-    /// call itself, such as a transport error, and for a server that answered
-    /// with a different number of results than refs requested
-    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ref each
-    /// result belongs to, or answered a position with a different object than
-    /// the one requested there ([`UnexpectedObject`]). The answered id is read
-    /// from the object reference or its BCS, so a read mask that includes
-    /// neither leaves nothing to check.
-    ///
-    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
-    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
+    /// Each ref gets its own result, with the same meaning as in
+    /// [`get_objects`](Client::get_objects): a requested version the serving
+    /// node does not have fails only its own slot.
     ///
     /// # Read Mask
     ///
-    /// The optional `read_mask` parameter controls which fields the server
-    /// returns. If `None`, uses [`GET_OBJECTS_READ_MASK`].
-    ///
-    /// Use [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// The `read_mask` parameter controls which fields the server returns; use
+    /// `ObjectReadMask::default()` for the default mask, or pass an
+    /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
+    /// built from an
+    /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
+    /// slice/array/vec of fields.
     ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
-    /// let refs = [(object_id, None)];
     ///
-    /// // Get objects with default mask
-    /// let objs = client.get_objects(&refs, None).await?;
-    ///
-    /// // Get objects with field mask (only reference object ID, no BCS)
+    /// // Default mask
     /// let objs = client
-    ///     .get_objects(
-    ///         &refs,
-    ///         Some(ReadMask::from(ObjectField::REFERENCE_OBJECT_ID)),
+    ///     .get_objects_with_versions([(object_id, None)], ObjectReadMask::default())
+    ///     .await?;
+    ///
+    /// // Selected fields
+    /// let objs = client
+    ///     .get_objects_with_versions(
+    ///         [(object_id, None)],
+    ///         ObjectReadMask::from(ObjectField::REFERENCE_OBJECT_ID),
     ///     )
     ///     .await?;
     ///
@@ -92,25 +184,22 @@ impl Client {
     ///     let obj_ref = obj.object_reference()?;
     ///     println!("Object version: {:?}", obj_ref.version());
     /// }
-    ///
-    /// // Results line up with the requested refs, so pair them to find out
-    /// // which objects the node does not have
-    /// let missing: Vec<ObjectId> = refs
-    ///     .iter()
-    ///     .zip(objs.body())
-    ///     .filter_map(|((id, _), result)| match result {
-    ///         Err(e) if e.is_not_found() => Some(*id),
-    ///         _ => None,
-    ///     })
-    ///     .collect();
-    /// println!("Missing objects: {missing:?}");
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects(
+    pub async fn get_objects_with_versions(
         &self,
-        refs: &[(ObjectId, Option<Version>)],
-        read_mask: Option<ReadMask<'_>>,
+        refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
+        read_mask: impl IntoReadMask<ObjectReadMask>,
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+        self.get_objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
+            .await
+    }
+
+    async fn get_objects_internal(
+        &self,
+        refs: Vec<(ObjectId, Option<Version>)>,
+        read_mask: ObjectReadMask,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         if refs.is_empty() {
             return Err(Error::EmptyRequest);
@@ -133,7 +222,7 @@ impl Client {
 
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
-            .with_read_mask(field_mask_with_default(read_mask, GET_OBJECTS_READ_MASK));
+            .with_read_mask(read_mask);
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
@@ -150,7 +239,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), refs.len())?;
-        check_object_identity(response.body(), refs)?;
+        check_object_identity(response.body(), &refs)?;
 
         Ok(response)
     }
