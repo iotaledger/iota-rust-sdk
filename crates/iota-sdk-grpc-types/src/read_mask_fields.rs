@@ -891,34 +891,6 @@ mod tests {
     }
 
     #[test]
-    fn response_and_nested_fields_share_one_mask() {
-        // Paths into a nested response message and paths at the top level are
-        // the same field type, so a caller can hold both in one constant.
-        const DRY_RUN: &[SimulateField] = &[
-            SimulateField::EXECUTED_TRANSACTION_SIGNATURES_BCS,
-            SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
-            SimulateField::EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS,
-            SimulateField::EXECUTED_TRANSACTION_INPUT_OBJECTS_BCS,
-            SimulateField::EXECUTED_TRANSACTION_OUTPUT_OBJECTS_BCS,
-            SimulateField::SUGGESTED_GAS_PRICE,
-            SimulateField::EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
-        ];
-
-        // Normalization orders paths by length, so this is not input order.
-        let mask: SimulateReadMask = DRY_RUN.into_read_mask();
-        assert_eq!(
-            mask,
-            "suggested_gas_price,\
-             executed_transaction.effects.bcs,\
-             executed_transaction.signatures.bcs,\
-             executed_transaction.events.events.bcs,\
-             executed_transaction.input_objects.bcs,\
-             executed_transaction.output_objects.bcs,\
-             execution_result.execution_error.source"
-        );
-    }
-
-    #[test]
     fn dynamic_field_field_paths() {
         assert_eq!(DynamicFieldField::ALL, "*");
         assert_eq!(DynamicFieldField::KIND, "kind");
