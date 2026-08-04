@@ -280,8 +280,8 @@ impl CommitteeChainVerifier {
     /// data).
     pub fn verify_epoch_close(
         &mut self,
-        summary: SignedCheckpointSummary,
-    ) -> Result<CheckpointSummary, CommitteeChainError> {
+        summary: &SignedCheckpointSummary,
+    ) -> Result<(), CommitteeChainError> {
         let SignedCheckpointSummary {
             checkpoint,
             signature,
@@ -317,7 +317,7 @@ impl CommitteeChainVerifier {
         };
         self.verifier = ValidatorCommitteeSignatureVerifier::new(next_committee)?;
 
-        Ok(checkpoint)
+        Ok(())
     }
 }
 
@@ -564,14 +564,13 @@ mod tests {
 
         // Closing epoch 0 elects the epoch 1 committee and advances the walk.
         let signed0 = certify(&keys0, committee0, close_epoch(summary0, 0, &committee1));
-        let verified0 = verifier.verify_epoch_close(signed0.clone()).unwrap();
-        assert_eq!(verified0, signed0.checkpoint);
+        verifier.verify_epoch_close(&signed0).unwrap();
         assert_eq!(verifier.epoch(), 1);
         assert_eq!(verifier.committee(), &committee1);
 
         // The newly-elected committee verifies the next epoch's close.
         let signed1 = certify(&keys1, committee1, close_epoch(summary1, 1, &committee2));
-        verifier.verify_epoch_close(signed1).unwrap();
+        verifier.verify_epoch_close(&signed1).unwrap();
         assert_eq!(verifier.epoch(), 2);
         assert_eq!(verifier.committee(), &committee2);
     }
@@ -585,7 +584,7 @@ mod tests {
 
         // A summary for epoch 1 while the verifier is still at epoch 0.
         let signed = certify(&keys, committee(&keys, 1), close_epoch(summary, 1, &next));
-        let err = verifier.verify_epoch_close(signed).unwrap_err();
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
         assert!(matches!(
             err,
             CommitteeChainError::WrongEpoch {
@@ -608,7 +607,7 @@ mod tests {
         summary.epoch = 0;
         summary.end_of_epoch_data = None;
         let signed = certify(&keys, committee0.clone(), summary);
-        let err = verifier.verify_epoch_close(signed).unwrap_err();
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
         assert!(matches!(
             err,
             CommitteeChainError::NotEndOfEpoch { epoch: 0, .. }
@@ -632,7 +631,7 @@ mod tests {
             committee(&wrong_keys, 0),
             close_epoch(summary, 0, &next),
         );
-        let err = verifier.verify_epoch_close(signed).unwrap_err();
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
         assert!(matches!(err, CommitteeChainError::Signature(_)));
         assert_eq!(verifier.committee(), &committee0);
     }

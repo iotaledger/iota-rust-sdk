@@ -139,17 +139,12 @@ impl CommitteeChainVerifier {
     }
 
     /// Verify `summary` as the certified closing checkpoint of the current
-    /// epoch and advance to the committee it elects for the next epoch,
-    /// returning the now committee-verified summary.
-    pub fn verify_epoch_close(
-        &self,
-        summary: &SignedCheckpointSummary,
-    ) -> Result<CheckpointSummary> {
+    /// epoch and advance to the committee it elects for the next epoch.
+    pub fn verify_epoch_close(&self, summary: &SignedCheckpointSummary) -> Result<()> {
         Ok(self
             .0
             .write()
             .expect("failed to write committee chain verifier")
-            .verify_epoch_close(summary.0.clone())?
-            .into())
+            .verify_epoch_close(&summary.0)?)
     }
 }
