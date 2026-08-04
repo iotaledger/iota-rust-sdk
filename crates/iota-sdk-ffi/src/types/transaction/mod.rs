@@ -1542,18 +1542,31 @@ impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
 
 /// Update of the on-chain transaction deny rules.
 ///
-/// Carries the full active set of deny rules, replacing the previous contents
-/// of the deny-rules object.
+/// Carries an add/remove delta for each deny list plus the absolute switch
+/// states. The added and removed sets of a list are disjoint by producer
+/// contract; converting into the underlying set-typed Rust representation
+/// sorts and deduplicates the lists.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-deny-rules-update = u64             ; epoch
-///                                 u64             ; round
-///                                 deny-rule-set   ; deny rules
-///                                 version         ; initial shared version
+/// transaction-deny-rules-update = u64               ; epoch
+///                                 u64               ; round
+///                                 (vector address)  ; added addresses
+///                                 (vector address)  ; removed addresses
+///                                 (vector object-id) ; added objects
+///                                 (vector object-id) ; removed objects
+///                                 (vector object-id) ; added packages
+///                                 (vector object-id) ; removed packages
+///                                 bool              ; package publish disabled
+///                                 bool              ; package upgrade disabled
+///                                 bool              ; shared object disabled
+///                                 bool              ; user transaction disabled
+///                                 bool              ; receiving objects disabled
+///                                 bool              ; move authenticator disabled
+///                                 version           ; initial shared version
 /// ```
 #[derive(uniffi::Record)]
 pub struct TransactionDenyRulesUpdate {
@@ -1561,8 +1574,30 @@ pub struct TransactionDenyRulesUpdate {
     pub epoch: u64,
     /// Consensus round of the update
     pub round: u64,
-    /// The full active set of deny rules
-    pub deny_rules: DenyRuleSet,
+    /// Addresses added to the sender-or-sponsor deny list.
+    pub added_addresses: Vec<Arc<Address>>,
+    /// Addresses removed from the sender-or-sponsor deny list.
+    pub removed_addresses: Vec<Arc<Address>>,
+    /// Objects added to the input-or-receiving deny list.
+    pub added_objects: Vec<Arc<ObjectId>>,
+    /// Objects removed from the input-or-receiving deny list.
+    pub removed_objects: Vec<Arc<ObjectId>>,
+    /// Packages added to the dependency deny list.
+    pub added_packages: Vec<Arc<ObjectId>>,
+    /// Packages removed from the dependency deny list.
+    pub removed_packages: Vec<Arc<ObjectId>>,
+    /// Denies all package publishing.
+    pub package_publish_disabled: bool,
+    /// Denies all package upgrades.
+    pub package_upgrade_disabled: bool,
+    /// Denies transactions that use shared objects as inputs.
+    pub shared_object_disabled: bool,
+    /// Denies all user transactions (kill switch).
+    pub user_transaction_disabled: bool,
+    /// Denies transactions that contain receiving objects.
+    pub receiving_objects_disabled: bool,
+    /// Denies transactions signed with a Move authenticator.
+    pub move_authenticator_disabled: bool,
     /// The initial version of the deny-rules object that it was shared at
     pub deny_rules_obj_initial_shared_version: Arc<Version>,
 }
@@ -1572,7 +1607,18 @@ impl From<TransactionDenyRulesUpdate> for iota_sdk::types::TransactionDenyRulesU
         Self {
             epoch: value.epoch,
             round: value.round,
-            deny_rules: value.deny_rules.into(),
+            added_addresses: value.added_addresses.iter().map(|a| a.0).collect(),
+            removed_addresses: value.removed_addresses.iter().map(|a| a.0).collect(),
+            added_objects: value.added_objects.iter().map(|o| o.0).collect(),
+            removed_objects: value.removed_objects.iter().map(|o| o.0).collect(),
+            added_packages: value.added_packages.iter().map(|o| o.0).collect(),
+            removed_packages: value.removed_packages.iter().map(|o| o.0).collect(),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
             deny_rules_obj_initial_shared_version: **value.deny_rules_obj_initial_shared_version,
         }
     }
@@ -1580,10 +1626,24 @@ impl From<TransactionDenyRulesUpdate> for iota_sdk::types::TransactionDenyRulesU
 
 impl From<iota_sdk::types::TransactionDenyRulesUpdate> for TransactionDenyRulesUpdate {
     fn from(value: iota_sdk::types::TransactionDenyRulesUpdate) -> Self {
+        fn arcs<T, U: From<T>>(items: impl IntoIterator<Item = T>) -> Vec<Arc<U>> {
+            items.into_iter().map(|x| Arc::new(x.into())).collect()
+        }
         Self {
             epoch: value.epoch,
             round: value.round,
-            deny_rules: value.deny_rules.into(),
+            added_addresses: arcs(value.added_addresses),
+            removed_addresses: arcs(value.removed_addresses),
+            added_objects: arcs(value.added_objects),
+            removed_objects: arcs(value.removed_objects),
+            added_packages: arcs(value.added_packages),
+            removed_packages: arcs(value.removed_packages),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
             deny_rules_obj_initial_shared_version: Arc::new(
                 value.deny_rules_obj_initial_shared_version.into(),
             ),

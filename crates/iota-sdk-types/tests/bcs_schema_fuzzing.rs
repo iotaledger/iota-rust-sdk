@@ -415,6 +415,10 @@ impl TestHarness {
         );
         overrides.insert("move-struct", Self::gen_move_struct);
         overrides.insert("deny-rule-set", Self::gen_deny_rule_set);
+        overrides.insert(
+            "transaction-deny-rules-update",
+            Self::gen_transaction_deny_rules_update,
+        );
 
         Self {
             grammar,
@@ -551,6 +555,23 @@ impl TestHarness {
         let value: iota_sdk_types::DenyRuleSet =
             bcs::from_bytes(&bytes).expect("grammar-conformant deny-rule-set must decode");
         bcs::to_bytes(&value).expect("serialize deny-rule-set")
+    }
+
+    /// Generate a canonical `transaction-deny-rules-update` in BCS wire form.
+    ///
+    /// Its six delta lists are set-typed like `deny-rule-set`'s, so the same
+    /// normalization applies: generate from the grammar, decode through the
+    /// type, re-encode.
+    fn gen_transaction_deny_rules_update(&mut self) -> Vec<u8> {
+        let expr = self
+            .grammar
+            .get("transaction-deny-rules-update")
+            .cloned()
+            .expect("transaction-deny-rules-update rule");
+        let bytes = self.gen_expr(expr, 0);
+        let value: iota_sdk_types::TransactionDenyRulesUpdate = bcs::from_bytes(&bytes)
+            .expect("grammar-conformant transaction-deny-rules-update must decode");
+        bcs::to_bytes(&value).expect("serialize transaction-deny-rules-update")
     }
 
     /// Generate a valid `validator-aggregated-signature` in BCS wire form.

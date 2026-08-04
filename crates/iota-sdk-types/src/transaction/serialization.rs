@@ -276,8 +276,8 @@ mod tests {
     use crate::{
         Address, ObjectDigest, ObjectId, ObjectReference, Version,
         transaction::{
-            Argument, DenyRuleSet, EndOfEpochTransactionKind, Input, SharedObjectReference,
-            Transaction, TransactionDenyRulesUpdate, TransactionKind,
+            Argument, EndOfEpochTransactionKind, Input, SharedObjectReference, Transaction,
+            TransactionDenyRulesUpdate, TransactionKind,
         },
     };
 
@@ -380,7 +380,7 @@ mod tests {
     /// [`TransactionKind::TransactionDenyRulesUpdate`].
     ///
     /// Runs one sample per switch (one-hot) so swapping any two bool fields
-    /// changes some expected byte string; the three deny lists carry distinct
+    /// changes some expected byte string; the six delta lists carry distinct
     /// contents and lengths for the same reason.
     #[test]
     fn transaction_deny_rules_update_bcs_pin() {
@@ -404,37 +404,44 @@ mod tests {
             let kind = TransactionKind::TransactionDenyRulesUpdate(TransactionDenyRulesUpdate {
                 epoch: 7,
                 round: 11,
-                deny_rules: DenyRuleSet {
-                    denied_addresses: [Address::new([1; 32]), Address::new([2; 32])].into(),
-                    denied_objects: [ObjectId::new([3; 32])].into(),
-                    denied_packages: [
-                        ObjectId::new([4; 32]),
-                        ObjectId::new([5; 32]),
-                        ObjectId::new([6; 32]),
-                    ]
-                    .into(),
-                    package_publish_disabled,
-                    package_upgrade_disabled,
-                    shared_object_disabled,
-                    user_transaction_disabled,
-                    receiving_objects_disabled,
-                    move_authenticator_disabled,
-                },
+                added_addresses: [Address::new([1; 32]), Address::new([2; 32])].into(),
+                removed_addresses: [Address::new([3; 32])].into(),
+                added_objects: [ObjectId::new([4; 32])].into(),
+                removed_objects: [ObjectId::new([5; 32]), ObjectId::new([6; 32])].into(),
+                added_packages: [
+                    ObjectId::new([7; 32]),
+                    ObjectId::new([8; 32]),
+                    ObjectId::new([9; 32]),
+                ]
+                .into(),
+                removed_packages: [].into(),
+                package_publish_disabled,
+                package_upgrade_disabled,
+                shared_object_disabled,
+                user_transaction_disabled,
+                receiving_objects_disabled,
+                move_authenticator_disabled,
                 deny_rules_obj_initial_shared_version: Version::from_u64(42),
             });
 
             let mut expected = vec![6]; // TransactionKind variant tag
             expected.extend(7u64.to_le_bytes()); // epoch
             expected.extend(11u64.to_le_bytes()); // round
-            expected.push(2); // denied_addresses length
+            expected.push(2); // added_addresses length
             expected.extend([1; 32]);
             expected.extend([2; 32]);
-            expected.push(1); // denied_objects length
+            expected.push(1); // removed_addresses length
             expected.extend([3; 32]);
-            expected.push(3); // denied_packages length
+            expected.push(1); // added_objects length
             expected.extend([4; 32]);
+            expected.push(2); // removed_objects length
             expected.extend([5; 32]);
             expected.extend([6; 32]);
+            expected.push(3); // added_packages length
+            expected.extend([7; 32]);
+            expected.extend([8; 32]);
+            expected.extend([9; 32]);
+            expected.push(0); // removed_packages length
             expected.extend(switches.map(u8::from));
             expected.extend(42u64.to_le_bytes()); // deny_rules_obj_initial_shared_version
 

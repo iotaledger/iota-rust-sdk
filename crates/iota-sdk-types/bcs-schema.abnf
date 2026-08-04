@@ -431,10 +431,21 @@ system-package = version             ; version
 
 transaction = %d00 transaction-v1   ; V1
 
-transaction-deny-rules-update = u64             ; epoch
-                                u64             ; round
-                                deny-rule-set   ; deny-rules
-                                version         ; deny-rules-obj-initial-shared-version
+transaction-deny-rules-update = u64                 ; epoch
+                                u64                 ; round
+                                (size *address)     ; added-addresses
+                                (size *address)     ; removed-addresses
+                                (size *object-id)   ; added-objects
+                                (size *object-id)   ; removed-objects
+                                (size *object-id)   ; added-packages
+                                (size *object-id)   ; removed-packages
+                                bool                ; package-publish-disabled
+                                bool                ; package-upgrade-disabled
+                                bool                ; shared-object-disabled
+                                bool                ; user-transaction-disabled
+                                bool                ; receiving-objects-disabled
+                                bool                ; move-authenticator-disabled
+                                version             ; deny-rules-obj-initial-shared-version
 
 transaction-digest = digest
 
