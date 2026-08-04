@@ -971,9 +971,9 @@ mod tests {
         const PATHS: &[&str] = &[
             ObjectField::BCS.as_str(),
             TransactionField::EFFECTS_BCS.as_str(),
-            CheckpointEventField::MODULE.as_str(),
+            CheckpointResponseField::CHECKPOINT_SUMMARY_BCS.as_str(),
         ];
-        assert_eq!(PATHS, ["bcs", "effects.bcs", "events.module"]);
+        assert_eq!(PATHS, ["bcs", "effects.bcs", "checkpoint.summary.bcs"]);
     }
 
     #[test]
