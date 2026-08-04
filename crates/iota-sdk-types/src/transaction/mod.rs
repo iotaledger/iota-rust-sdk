@@ -91,7 +91,7 @@ impl crate::TreeDisplay for TransactionV1 {
 /// ```text
 /// sender-signed-transaction = %d01 intent-signed-transaction
 /// ```
-#[derive(Clone, Debug, derive_more::Deref, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Deref, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SenderSignedTransaction(
@@ -117,20 +117,13 @@ impl From<SignedTransaction> for SenderSignedTransaction {
     }
 }
 
-#[cfg(feature = "serde")]
-impl std::hash::Hash for SenderSignedTransaction {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.hash(state);
-    }
-}
-
 impl std::fmt::Display for SenderSignedTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -190,14 +183,6 @@ impl SignedTransaction {
 impl From<SenderSignedTransaction> for SignedTransaction {
     fn from(transaction: SenderSignedTransaction) -> Self {
         transaction.0
-    }
-}
-
-#[cfg(feature = "serde")]
-impl std::hash::Hash for SignedTransaction {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.transaction.hash(state);
-        self.signatures.hash(state);
     }
 }
 

@@ -361,7 +361,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -420,13 +420,6 @@ impl UserSignature {
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
-    }
-}
-
-#[cfg(feature = "serde")]
-impl std::hash::Hash for UserSignature {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.to_bytes().hash(state);
     }
 }
 

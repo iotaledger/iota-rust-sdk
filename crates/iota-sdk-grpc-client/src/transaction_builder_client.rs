@@ -6,7 +6,11 @@
 use std::time::Duration;
 
 use iota_grpc_types::{
-    read_mask_fields::EpochField, v1::transaction_execution_service::SimulatedTransaction,
+    read_mask_fields::{
+        EpochField, EpochReadMask, ObjectReadMask, OwnedObjectReadMask, SimulateReadMask,
+        TransactionField, TransactionReadMask,
+    },
+    v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
 use iota_types::{
@@ -16,11 +20,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    api::{
-        EXECUTED_TRANSACTION_CHECKPOINT, EXECUTED_TRANSACTION_SIGNATURES,
-        EXECUTED_TRANSACTION_TRANSACTION, Error, ReadMask, TRANSACTION_DIGEST,
-        TRANSACTION_EFFECTS_BCS, saturating_usize_to_u32,
-    },
+    api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
 /// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
@@ -28,14 +28,26 @@ const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
 /// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
 const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
-/// Returns `true` if the error represents a "not found" response from the
-/// server. Used to map a missing object/transaction to `Ok(None)` (and to keep
-/// polling while waiting for a transaction to be indexed).
-fn is_not_found(err: &Error) -> bool {
-    match err {
-        Error::Server(status) => status.code == tonic::Code::NotFound as i32,
-        Error::Grpc(status) => status.code() == tonic::Code::NotFound,
-        _ => false,
+/// Extract the result for the single item of a one-item batch request.
+///
+/// A `NOT_FOUND` for the item maps to `None`, since these callers treat a
+/// missing object or transaction as an absence rather than a failure. A failure
+/// of the call itself still propagates — including a `NOT_FOUND`, which says
+/// the endpoint is wrong rather than that the item is absent.
+///
+/// Anything other than exactly one result is a protocol error, not an absent
+/// item: the batched reads answer every request, so an empty batch says the
+/// server broke that promise rather than that the item is missing.
+fn single_item<T>(
+    response: Result<MetadataEnvelope<Vec<Result<T, Error>>>, Error>,
+) -> Result<Option<T>, Error> {
+    let mut items = response?.into_inner();
+    check_result_count(&items, 1)?;
+
+    match items.pop().expect("count checked above") {
+        Ok(item) => Ok(Some(item)),
+        Err(e) if e.is_not_found() => Ok(None),
+        Err(e) => Err(e),
     }
 }
 
@@ -50,14 +62,36 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Option<Object>, Self::Error> {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
-        match self.get_objects(&[(object_id, version.into())], None).await {
-            Ok(envelope) => match envelope.into_inner().first() {
-                Some(obj) => Ok(Some(obj.object()?)),
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+        let response = self
+            .get_objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
+            .await;
+
+        match single_item(response)? {
+            Some(obj) => Ok(Some(obj.object()?)),
+            None => Ok(None),
         }
+    }
+
+    async fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> Result<Vec<Option<Object>>, Self::Error> {
+        if object_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+        // Default read mask (`reference` + `bcs`) provides everything needed to
+        // reconstruct the SDK objects, which `get_objects` returns in request
+        // order.
+        self.get_objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
+            .await?
+            .into_inner()
+            .into_iter()
+            .map(|result| match result {
+                Ok(obj) => obj.object().map(Some).map_err(Error::from),
+                Err(e) if e.is_not_found() => Ok(None),
+                Err(e) => Err(e),
+            })
+            .collect()
     }
 
     async fn objects(
@@ -73,7 +107,7 @@ impl TransactionBuilderClient for Client {
                 struct_tag,
                 limit.map(saturating_usize_to_u32),
                 cursor.map(prost::bytes::Bytes::from),
-                None,
+                OwnedObjectReadMask::default(),
             )
             .await?
             .into_inner();
@@ -90,7 +124,7 @@ impl TransactionBuilderClient for Client {
         let epoch = self
             .get_epoch(
                 None,
-                Some(ReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES)),
+                EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
             )
             .await?
             .into_inner();
@@ -106,29 +140,26 @@ impl TransactionBuilderClient for Client {
         &self,
         digest: TransactionDigest,
     ) -> Result<Option<SignedTransaction>, Self::Error> {
-        match self
+        let response = self
             .get_transactions(
-                &[digest],
-                Some(ReadMask::from(&[
-                    EXECUTED_TRANSACTION_TRANSACTION,
-                    EXECUTED_TRANSACTION_SIGNATURES,
-                ])),
+                [digest],
+                TransactionReadMask::from([
+                    TransactionField::TRANSACTION,
+                    TransactionField::SIGNATURES,
+                ]),
             )
-            .await
-        {
-            Ok(envelope) => match envelope.into_inner().into_iter().next() {
-                Some(tx) => {
-                    let transaction = tx.transaction()?.transaction()?;
-                    let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                    Ok(Some(SignedTransaction {
-                        transaction,
-                        signatures,
-                    }))
-                }
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => {
+                let transaction = tx.transaction()?.transaction()?;
+                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
+                Ok(Some(SignedTransaction {
+                    transaction,
+                    signatures,
+                }))
+            }
+            None => Ok(None),
         }
     }
 
@@ -136,16 +167,16 @@ impl TransactionBuilderClient for Client {
         &self,
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
-        match self
-            .get_transactions(&[digest], Some(ReadMask::from(TRANSACTION_EFFECTS_BCS)))
-            .await
-        {
-            Ok(envelope) => match envelope.into_inner().into_iter().next() {
-                Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-                None => Ok(None),
-            },
-            Err(e) if is_not_found(&e) => Ok(None),
-            Err(e) => Err(e),
+        let response = self
+            .get_transactions(
+                [digest],
+                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
+            )
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
         }
     }
 
@@ -156,7 +187,7 @@ impl TransactionBuilderClient for Client {
         let epoch = self
             .get_epoch(
                 epoch.into(),
-                Some(ReadMask::from(EpochField::REFERENCE_GAS_PRICE)),
+                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
             )
             .await?
             .into_inner();
@@ -166,7 +197,9 @@ impl TransactionBuilderClient for Client {
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
-        let simulated = self.simulate_transaction(tx.clone(), true, None).await?;
+        let simulated = self
+            .simulate_transaction(tx.clone(), true, SimulateReadMask::default())
+            .await?;
         let effects = simulated
             .into_inner()
             .executed_transaction()?
@@ -186,7 +219,7 @@ impl TransactionBuilderClient for Client {
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, None)
+            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
             .await?
             .into_inner())
     }
@@ -204,7 +237,7 @@ impl TransactionBuilderClient for Client {
         };
         // The default execute read mask includes `effects`.
         let result = self
-            .execute_transaction(signed_transaction, None, None)
+            .execute_transaction(signed_transaction, None, TransactionReadMask::default())
             .await?
             .into_inner();
         let effects = result.effects()?.effects()?;
@@ -225,8 +258,10 @@ impl TransactionBuilderClient for Client {
         // transaction field confirms it is indexed on the node, while
         // `checkpoint` is only populated once it has been finalized.
         let mask = match wait_for {
-            WaitForTx::IndexedOnNode => ReadMask::from(TRANSACTION_DIGEST),
-            WaitForTx::Finalized => ReadMask::from(EXECUTED_TRANSACTION_CHECKPOINT),
+            WaitForTx::IndexedOnNode => {
+                TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
+            }
+            WaitForTx::Finalized => TransactionReadMask::from(TransactionField::CHECKPOINT),
             _ => {
                 unimplemented!("a new WaitForTx enum variant was added and needs to be handled")
             }
@@ -236,22 +271,18 @@ impl TransactionBuilderClient for Client {
             let mut interval = tokio::time::interval(WAIT_FOR_TX_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                match self.get_transactions(&[digest], Some(mask.clone())).await {
-                    Ok(envelope) => {
-                        if let Some(tx) = envelope.into_inner().first() {
-                            let ready = match wait_for {
-                                WaitForTx::IndexedOnNode => true,
-                                WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
-                                _ => unreachable!("checked above"),
-                            };
-                            if ready {
-                                return Ok(());
-                            }
-                        }
+                let response = self.get_transactions([digest], mask.clone()).await;
+
+                // An absent transaction is not indexed yet — keep polling.
+                if let Some(tx) = single_item(response)? {
+                    let ready = match wait_for {
+                        WaitForTx::IndexedOnNode => true,
+                        WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
+                        _ => unreachable!("checked above"),
+                    };
+                    if ready {
+                        return Ok(());
                     }
-                    // Not indexed yet — keep polling.
-                    Err(e) if is_not_found(&e) => {}
-                    Err(e) => return Err(e),
                 }
             }
         };
@@ -264,5 +295,78 @@ impl TransactionBuilderClient for Client {
                     WAIT_FOR_TX_TIMEOUT.as_secs()
                 )))
             })?
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use tonic::metadata::MetadataMap;
+
+    use super::{Error, MetadataEnvelope, single_item};
+    use crate::api::{ProtocolError, RpcStatus};
+
+    fn not_found_status() -> RpcStatus {
+        RpcStatus {
+            code: tonic::Code::NotFound.into(),
+            message: String::new(),
+            details: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn a_not_found_for_the_call_itself_is_not_an_absent_item() {
+        let response: Result<MetadataEnvelope<Vec<Result<u32, Error>>>, Error> =
+            Err(Error::from(tonic::Status::not_found("no such route")));
+
+        assert!(
+            single_item(response).is_err(),
+            "a call-level not-found means the endpoint is wrong, not that the item is absent"
+        );
+    }
+
+    #[test]
+    fn a_not_found_for_the_item_is_an_absent_item() {
+        let items: Vec<Result<u32, Error>> = vec![Err(Error::Server(not_found_status()))];
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            single_item(response)
+                .expect("an absent item is not an error")
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn an_empty_batch_is_not_an_absent_item() {
+        let items: Vec<Result<u32, Error>> = Vec::new();
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            matches!(
+                single_item(response),
+                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                    expected: 1,
+                    actual: 0
+                }))
+            ),
+            "a batch with no results means the server did not answer the request"
+        );
+    }
+
+    #[test]
+    fn a_batch_with_more_results_than_requested_is_an_error() {
+        let items: Vec<Result<u32, Error>> = vec![Ok(1), Ok(2)];
+        let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
+
+        assert!(
+            matches!(
+                single_item(response),
+                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                    expected: 1,
+                    actual: 2
+                }))
+            ),
+            "results can no longer be paired with the request, so the first one is not usable"
+        );
     }
 }

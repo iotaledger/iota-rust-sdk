@@ -49,7 +49,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
     /// let page = client.list_package_versions(package_id, None, None).await?;
@@ -65,7 +65,7 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
+    /// let client = Client::new_localnet()?;
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
@@ -81,8 +81,8 @@ impl Client {
     pub fn list_package_versions(
         &self,
         package_id: ObjectId,
-        page_size: Option<u32>,
-        page_token: Option<prost::bytes::Bytes>,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
     ) -> ListPackageVersionsQuery {
         let base_request =
             ListPackageVersionsRequest::default().with_package_id(proto_object_id(package_id));
@@ -91,8 +91,8 @@ impl Client {
             self.move_package_service_client(),
             base_request,
             self.max_decoding_message_size(),
-            page_size,
-            page_token,
+            page_size.into(),
+            page_token.into(),
         )
     }
 }

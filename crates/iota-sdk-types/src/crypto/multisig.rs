@@ -72,7 +72,7 @@ pub enum MultisigError {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -132,7 +132,7 @@ impl crate::TreeDisplay for MultisigMember {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigCommittee {
@@ -292,7 +292,7 @@ impl crate::TreeDisplay for MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
@@ -497,7 +497,7 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
@@ -627,11 +627,7 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) mod serialization {
-    use std::{
-        borrow::Cow,
-        hash::{Hash, Hasher},
-        str::FromStr,
-    };
+    use std::{borrow::Cow, str::FromStr};
 
     use base64ct::{Base64, Encoding};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -881,12 +877,6 @@ pub(crate) mod serialization {
     impl From<&MultisigCommittee> for crate::Address {
         fn from(committee: &MultisigCommittee) -> Self {
             committee.derive_address()
-        }
-    }
-
-    impl Hash for MultisigAggregatedSignature {
-        fn hash<H: Hasher>(&self, state: &mut H) {
-            self.to_bytes().hash(state);
         }
     }
 

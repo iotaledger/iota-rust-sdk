@@ -113,6 +113,10 @@
 //!   address.
 //! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a
 //!   recipient address.
+//! - [pay](TransactionBuilder::pay): Send coins of any type to several
+//!   recipients, each paired with the amount to send.
+//! - [pay_iota](TransactionBuilder::pay_iota): Send IOTA coins from the gas
+//!   coin to several recipients.
 //! - [merge_coins](TransactionBuilder::merge_coins): Merge a list of coins into
 //!   a single primary coin.
 //! - [split_coins](TransactionBuilder::split_coins): Split a coin into coins of
@@ -130,6 +134,8 @@
 //! These methods set various metadata which may be needed for the execution.
 //!
 //! - [gas](TransactionBuilder::gas): Add gas coins to pay for the execution.
+//! - [gas_refs](TransactionBuilder::gas_refs): Add gas coins that the caller
+//!   has already resolved to references.
 //! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
 //!   to spend.
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
@@ -163,6 +169,12 @@
 //! Additionally, when a client is provided, the builder can directly
 //! [dry_run](TransactionBuilder::dry_run) or
 //! [execute](TransactionBuilder::execute) the transaction.
+//!
+//! When the gas payment is decided elsewhere,
+//! [finish_kind](TransactionBuilder::finish_kind) returns just the
+//! [TransactionKind](iota_types::TransactionKind): the inputs are resolved with
+//! the client, but no gas coins are selected, no budget is estimated and no gas
+//! price is fetched.
 //!
 //! When the transaction is resolved, the builder will try to ensure a valid
 //! state by de-duplicating and converting appropriate inputs into references to
@@ -285,7 +297,7 @@ pub mod types;
 pub mod unresolved;
 
 #[cfg(feature = "test-client")]
-pub use self::builder::client::test_client::{TestClient, TestClientError};
+pub use self::builder::client::test_client::{RecordingClient, TestClient, TestClientError};
 pub use self::{
     builder::{
         TransactionBuilder,

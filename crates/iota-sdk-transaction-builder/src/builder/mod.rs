@@ -4,15 +4,15 @@
 //! Builder for Programmable Transactions.
 
 use std::{
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     marker::PhantomData,
     time::Duration,
 };
 
 use iota_types::{
-    Address, Coin, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, SharedObjectReference, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
+    Address, Coin, GasPayment, Identifier, MovePackageData, Object, ObjectId, ObjectReference,
+    Owner, ProgrammableTransaction, SharedObjectReference, StructTag, Transaction,
+    TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -134,6 +134,90 @@ impl TransactionBuildData {
                 }
             })
             .collect()
+    }
+
+    /// Settle the command arguments that name a gas coin, before the gas coins
+    /// are taken out of the inputs and paid as gas.
+    fn resolve_gas_arguments(&mut self) -> Result<(), Error> {
+        // Keyed by input id so the coin named in an error is stable.
+        let gas_coins: BTreeMap<InputId, ObjectId> = self
+            .inputs
+            .iter()
+            .filter(|(_, input)| input.is_gas)
+            .filter_map(|(id, input)| input.object_id().map(|coin| (*id, *coin)))
+            .collect();
+        if gas_coins.is_empty() {
+            return Ok(());
+        }
+
+        // The one `TransferObjects` allowed to take the gas coin, and the gas
+        // inputs it names.
+        let mut transfer: Option<(usize, BTreeSet<InputId>)> = None;
+        for (index, command) in self.commands.iter().enumerate() {
+            let Command::TransferObjects(TransferObjects { objects, .. }) = command else {
+                for argument in command.arguments_that_cannot_be_gas() {
+                    if let Argument::Input(id) = argument
+                        && let Some(coin) = gas_coins.get(id)
+                    {
+                        return Err(Error::GasCoinAsArgument { object_id: *coin });
+                    }
+                }
+                continue;
+            };
+
+            let mut takes_gas = false;
+            let mut transferred = BTreeSet::new();
+            for argument in objects {
+                match argument {
+                    Argument::Gas => takes_gas = true,
+                    Argument::Input(id) if gas_coins.contains_key(id) => {
+                        takes_gas = true;
+                        transferred.insert(*id);
+                    }
+                    _ => {}
+                }
+            }
+            if !takes_gas {
+                continue;
+            }
+            if transfer.is_some() {
+                return Err(Error::GasCoinTransferredMoreThanOnce);
+            }
+            // An explicit `Argument::Gas` already asks for the whole gas
+            // payment; only a transfer naming individual coins has to name all
+            // of them.
+            if let Some(first) = transferred.first()
+                && let Some((_, missing)) =
+                    gas_coins.iter().find(|(id, _)| !transferred.contains(id))
+            {
+                return Err(Error::IncompleteGasTransfer {
+                    transferred: gas_coins[first],
+                    missing: *missing,
+                });
+            }
+            transfer = Some((index, transferred));
+        }
+
+        // Every gas coin goes to the same recipient, so the smashed coin holds
+        // exactly what was asked for: collapse the coins into the single
+        // `Argument::Gas` that stands for it.
+        if let Some((index, transferred)) = transfer
+            && !transferred.is_empty()
+            && let Command::TransferObjects(TransferObjects { objects, .. }) =
+                &mut self.commands[index]
+        {
+            let mut kept_gas = false;
+            objects.retain_mut(|argument| {
+                match argument {
+                    Argument::Gas => {}
+                    Argument::Input(id) if transferred.contains(id) => *argument = Argument::Gas,
+                    _ => return true,
+                }
+                !std::mem::replace(&mut kept_gas, true)
+            });
+        }
+
+        Ok(())
     }
 
     /// Set the gas budget. Optional.
@@ -644,6 +728,174 @@ impl<C, L> TransactionBuilder<C, L> {
         self.reset()
     }
 
+    /// Send coins to multiple recipients, each paired with the amount to
+    /// send.
+    ///
+    /// The amounts specify quantities in the coins' smallest unit (NANOS for
+    /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
+    ///
+    /// The coins are merged into the first one, the amounts are split off it
+    /// in a single command, and each split coin is transferred to its
+    /// corresponding recipient, with one transfer command per unique
+    /// recipient. The remainder stays in the first coin.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// Adds no commands if either list is empty.
+    ///
+    /// To pay IOTA directly from the gas coin, use
+    /// [`TransactionBuilder::pay_iota()`], or pass
+    /// [`unresolved::Argument::Gas`](Argument::Gas) as the only coin.
+    ///
+    /// For a single recipient, consider using
+    /// [`TransactionBuilder::send_coins()`] or
+    /// [`TransactionBuilder::send_iota()`] instead.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let from_address =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let payments = [
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///         )?,
+    ///         50000000000u64,
+    ///     ),
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c",
+    ///         )?,
+    ///         25000000000,
+    ///     ),
+    /// ];
+    ///
+    /// // This is a coin of type
+    /// // 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
+    /// let coin =
+    ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.pay([coin], payments);
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn pay<T: PTBArgumentList, U: PTBArgument>(
+        &mut self,
+        coins: T,
+        payments: impl IntoIterator<Item = (Address, U)>,
+    ) -> &mut TransactionBuilder<C> {
+        // Collected before the coins are applied so that an empty list adds
+        // nothing at all, rather than a merge and an empty split.
+        let payments: Vec<_> = payments.into_iter().collect();
+        if payments.is_empty() {
+            return self.reset();
+        }
+        let mut coin_args = self.apply_arguments(coins);
+        let coin = match coin_args[..] {
+            [] => return self.reset(),
+            [coin] => coin,
+            _ => {
+                let primary_coin = coin_args.remove(0);
+                self.command(Command::MergeCoins(MergeCoins {
+                    coin: primary_coin,
+                    coins_to_merge: coin_args,
+                }));
+                primary_coin
+            }
+        };
+        let (recipients, amount_args): (Vec<_>, Vec<_>) = payments
+            .into_iter()
+            .map(|(recipient, amount)| (recipient, self.apply_argument(amount)))
+            .unzip();
+        let Argument::Result(split) = self.command(Command::SplitCoins(SplitCoins {
+            coin,
+            amounts: amount_args,
+        })) else {
+            unreachable!("command() always returns a result argument");
+        };
+        // Group repeated recipients to minimize the number of transfer
+        // commands.
+        let mut transfers: Vec<(Address, Vec<Argument>)> = Vec::new();
+        for (i, recipient) in recipients.into_iter().enumerate() {
+            let arg = Argument::NestedResult(split, i as u16);
+            match transfers.iter_mut().find(|(r, _)| *r == recipient) {
+                Some((_, objects)) => objects.push(arg),
+                None => transfers.push((recipient, vec![arg])),
+            }
+        }
+        for (recipient, objects) in transfers {
+            let address = self.pure(recipient);
+            self.command(Command::TransferObjects(TransferObjects {
+                objects,
+                address,
+            }));
+        }
+        self.reset()
+    }
+
+    /// Send IOTA to multiple recipients, each paired with the amount to
+    /// send.
+    ///
+    /// The amounts specify quantities in NANOS, where 1 IOTA equals
+    /// 1_000_000_000 NANOS. They are split off the gas coin in a single
+    /// command, and each split coin is transferred to its corresponding
+    /// recipient, with one transfer command per unique recipient.
+    ///
+    /// To pay with specific coins, or with a coin type other than IOTA, use
+    /// [`TransactionBuilder::pay()`]. For a single recipient, consider using
+    /// [`TransactionBuilder::send_iota()`] instead.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::Address;
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let from_address =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let payments = [
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///         )?,
+    ///         50000000000u64,
+    ///     ),
+    ///     (
+    ///         Address::from_hex(
+    ///             "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c",
+    ///         )?,
+    ///         25000000000,
+    ///     ),
+    /// ];
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.pay_iota(payments);
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn pay_iota<U: PTBArgument>(
+        &mut self,
+        payments: impl IntoIterator<Item = (Address, U)>,
+    ) -> &mut TransactionBuilder<C> {
+        self.pay([Argument::Gas], payments)
+    }
+
     /// Merge multiple coins into one.
     ///
     /// This method combines the balances of multiple coins of the same coin
@@ -885,6 +1137,13 @@ impl<C, L> TransactionBuilder<C, L> {
 impl<L> TransactionBuilder<(), L> {
     /// Add gas coins that will be consumed. Optional.
     ///
+    /// A gas coin is paid as gas instead of being passed as an input, so it
+    /// cannot also be passed to a command — building the transaction fails if
+    /// one is. The exception is transferring every gas coin to the same
+    /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
+    /// coins are smashed into one before the commands run, and that coin is
+    /// transferred with whatever balance is left after gas.
+    ///
     /// # Example
     ///
     /// ```
@@ -937,6 +1196,7 @@ impl<L> TransactionBuilder<(), L> {
         let Some(price) = self.data.gas_price else {
             return Err(Error::MissingGasPrice);
         };
+        self.data.resolve_gas_arguments()?;
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
@@ -1019,6 +1279,13 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
+    /// A gas coin is paid as gas instead of being passed as an input, so it
+    /// cannot also be passed to a command — building the transaction fails if
+    /// one is. The exception is transferring every gas coin to the same
+    /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
+    /// coins are smashed into one before the commands run, and that coin is
+    /// transferred with whatever balance is left after gas.
+    ///
     /// # Example
     ///
     /// ```
@@ -1056,26 +1323,77 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         self
     }
 
-    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
-        let mut inputs = Vec::new();
-        let mut gas = Vec::new();
-        let mut input_map = HashMap::new();
+    /// Add gas coins that will be consumed, by reference. Optional.
+    ///
+    /// Same as [`gas`](Self::gas), but for coins the caller has already
+    /// resolved: the builder takes the references as given instead of looking
+    /// the objects up. Setting either one stops the builder from picking gas
+    /// coins on its own.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, unresolved};
+    /// use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let gas_coin1 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     version: Version::from_u64(473053811),
+    /// };
+    /// let gas_coin2 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+    ///     )?,
+    ///     digest: ObjectDigest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     version: Version::from_u64(473053810),
+    /// };
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas_refs([gas_coin1, gas_coin2])
+    ///     .gas_budget(1000000000)
+    ///     .gas_price(100);
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn gas_refs(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+        for obj_ref in obj_refs {
+            self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                true,
+            );
+        }
+        self
+    }
 
-        if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+    /// Pick gas coins owned by the sponsor (or the sender) unless the caller
+    /// already set some with [`gas`](Self::gas) or
+    /// [`gas_refs`](Self::gas_refs).
+    async fn select_default_gas(&mut self) -> Result<(), Error> {
+        if !self.data.inputs.values().any(|i| i.is_gas) {
             // Some commands have arguments which cannot safely be replaced by
             // `Argument::Gas`, so we need to find any instances of
             // these and ensure that we don't use those coins
             // as gas.
             let mut unusable_object_ids = HashSet::new();
             for cmd in &self.data.commands {
-                for arg in match cmd {
-                    Command::MoveCall(MoveCall { arguments, .. }) => arguments.as_slice(),
-                    Command::TransferObjects(TransferObjects { objects, .. }) => objects.as_slice(),
-                    Command::MergeCoins(MergeCoins { coins_to_merge, .. }) => {
-                        coins_to_merge.as_slice()
-                    }
-                    _ => &[],
-                } {
+                for arg in cmd.arguments_that_cannot_be_gas() {
                     if let Argument::Input(idx) = arg
                         && let Some(obj_id) = self.data.inputs[idx].object_id()
                     {
@@ -1146,15 +1464,66 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 );
             }
         }
-        for (id, input) in std::mem::take(&mut self.data.inputs) {
+        Ok(())
+    }
+
+    /// Fetch every object that `inputs` refers to by id, in a single request.
+    ///
+    /// Inputs are de-duplicated by object id, so each id is fetched once.
+    async fn fetch_input_objects(
+        &self,
+        inputs: &[(InputId, Input)],
+    ) -> Result<HashMap<ObjectId, Object>, Error> {
+        let mut requests = Vec::new();
+        for (_, input) in inputs {
+            if let InputKind::ImmutableOrOwned(object_id)
+            | InputKind::Receiving(object_id)
+            | InputKind::Shared { object_id, .. } = &input.kind
+            {
+                requests.push((*object_id, None));
+            }
+        }
+        if requests.is_empty() {
+            return Ok(HashMap::new());
+        }
+        // Pairs answers with requests by position, which `objects_by_id` is
+        // documented to allow. The client is responsible for holding the server
+        // to that.
+        let fetched = self
+            .client
+            .objects_by_id(&requests)
+            .await
+            .map_err(Error::client)?;
+        requests
+            .into_iter()
+            .zip(fetched)
+            .map(|((object_id, _), object)| {
+                object
+                    .map(|object| (object_id, object))
+                    .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+            })
+            .collect()
+    }
+
+    /// Resolve the inputs and commands into a [`TransactionKind`], returning it
+    /// together with the gas coins currently set on the builder.
+    async fn resolve_kind(&mut self) -> Result<(TransactionKind, Vec<ObjectReference>), Error> {
+        self.data.resolve_gas_arguments()?;
+        let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
+        let objects = self.fetch_input_objects(&taken_inputs).await?;
+        let object = |object_id: ObjectId| {
+            objects
+                .get(&object_id)
+                .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+        };
+
+        let mut inputs = Vec::new();
+        let mut gas = Vec::new();
+        let mut input_map = HashMap::new();
+        for (id, input) in taken_inputs {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
-                    let obj = self
-                        .client
-                        .object(object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    let obj = object(object_id)?;
 
                     if input.is_gas {
                         let obj_ref = match obj.owner() {
@@ -1191,12 +1560,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     }
                 }
                 InputKind::Shared { object_id, mutable } => {
-                    let obj = self
-                        .client
-                        .object(object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    let obj = object(object_id)?;
 
                     let input = match obj.owner() {
                         Owner::Shared(version) => {
@@ -1237,6 +1601,16 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
+        let kind =
+            iota_types::TransactionKind::Programmable(ProgrammableTransaction { inputs, commands });
+        Ok((kind, gas))
+    }
+
+    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
+        if default_gas {
+            self.select_default_gas().await?;
+        }
+        let (kind, gas) = self.resolve_kind().await?;
         let price = match self.data.gas_price {
             Some(price) => price,
             None => self
@@ -1247,10 +1621,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
-                inputs,
-                commands,
-            }),
+            kind,
             sender: self.data.sender,
             gas_payment: GasPayment {
                 objects: gas,
@@ -1288,6 +1659,49 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         self.finish_internal().await
+    }
+
+    /// Convert this builder into a [`TransactionKind`], resolving the inputs
+    /// with the client but leaving the gas alone.
+    ///
+    /// Use this when the gas payment is decided elsewhere — a wallet that picks
+    /// the gas coins itself, or a caller that needs the kind to estimate a
+    /// budget before it can pick them. Unlike [`finish`](Self::finish), no gas
+    /// coins are selected, no budget is estimated and no gas price is fetched,
+    /// so this costs nothing beyond resolving the inputs. Any gas set with
+    /// [`gas`](Self::gas) or [`gas_refs`](Self::gas_refs), and the sponsor,
+    /// price, budget and expiration, are not part of a
+    /// [`TransactionKind`] and are dropped.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId, TransactionKind};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address =
+    ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let coin =
+    ///     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.transfer_objects(to_address, [coin]);
+    ///
+    /// let kind: TransactionKind = builder.finish_kind().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn finish_kind(mut self) -> Result<TransactionKind, Error> {
+        let (kind, _gas) = self.resolve_kind().await?;
+        Ok(kind)
     }
 
     /// Dry run the transaction.
@@ -1562,5 +1976,575 @@ mod tests {
         assert!(matches!(split.coin, Argument::Input(1)));
         assert!(matches!(split.amounts[0], Argument::Input(2)));
         assert!(matches!(split.amounts[1], Argument::Input(0)));
+    }
+
+    /// `pay` merges all coins into the first one, splits all amounts off it
+    /// in a single command, and groups repeated recipients into one transfer
+    /// command each.
+    #[test]
+    fn pay_merges_into_first_coin_and_groups_recipients() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient_a: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+        let recipient_b: Address =
+            "0x111ff11c96e2c9b19d2c47ab973012483b136dfbfee55f79b32ed4980e6ef11c"
+                .parse()
+                .unwrap();
+        let coin_id = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectId::new(id_bytes)
+        };
+        let coins = [coin_id(0), coin_id(1), coin_id(2)];
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay(
+            coins,
+            [
+                (recipient_a, 100u64),
+                (recipient_b, 200),
+                (recipient_a, 300),
+            ],
+        );
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 4);
+
+        // The remaining coins are merged into the first one.
+        let Command::MergeCoins(merge) = &commands[0] else {
+            panic!("expected MergeCoins command");
+        };
+        let Argument::Input(primary) = merge.coin else {
+            panic!("expected the primary coin to be an input");
+        };
+        assert_eq!(
+            builder.data.inputs[&primary].kind.object_id(),
+            Some(coins[0])
+        );
+        assert_eq!(merge.coins_to_merge.len(), 2);
+
+        // All amounts are split off the merged coin in a single command.
+        let Command::SplitCoins(split) = &commands[1] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Input(i) if i == primary));
+        assert_eq!(split.amounts.len(), 3);
+
+        // The repeated recipient gets a single transfer command with both of
+        // its split coins.
+        let Command::TransferObjects(transfer_a) = &commands[2] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer_a.objects[..],
+            [Argument::NestedResult(1, 0), Argument::NestedResult(1, 2)]
+        ));
+        let Command::TransferObjects(transfer_b) = &commands[3] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer_b.objects[..],
+            [Argument::NestedResult(1, 1)]
+        ));
+    }
+
+    /// `pay_iota` splits the amounts off the gas coin without a merge
+    /// command.
+    #[test]
+    fn pay_iota_from_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay_iota([(recipient, 100u64), (recipient, 200)]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 2);
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer.objects[..],
+            [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
+        ));
+    }
+
+    /// `pay` with [`Argument::Gas`] as the only coin splits the amounts off
+    /// the gas coin without a merge command.
+    #[test]
+    fn pay_from_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay([Argument::Gas], [(recipient, 100u64), (recipient, 200)]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 2);
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(
+            transfer.objects[..],
+            [Argument::NestedResult(0, 0), Argument::NestedResult(0, 1)]
+        ));
+    }
+
+    /// `pay_iota` splits the amounts off the gas coin, matching `pay` with
+    /// [`Argument::Gas`] as the only coin.
+    #[test]
+    fn pay_iota_splits_off_gas_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay_iota([(recipient, 100u64)]);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::SplitCoins(split) = &commands[0] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Gas));
+        assert_eq!(split.amounts.len(), 1);
+        assert!(matches!(commands[1], Command::TransferObjects(_)));
+    }
+
+    /// With nothing to pay there is nothing to merge or split either, so no
+    /// commands and no inputs are added.
+    #[test]
+    fn pay_without_payments_adds_nothing() {
+        let sender = Address::generate(rand::thread_rng());
+        let coin_id = |seed: u8| ObjectId::new([seed; ObjectId::LENGTH]);
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.pay([coin_id(1), coin_id(2)], [] as [(Address, u64); 0]);
+
+        assert!(builder.data.commands.is_empty());
+        assert!(builder.data.inputs.is_empty());
+    }
+
+    /// A gas coin is paid as gas rather than passed as an input, so a command
+    /// argument naming one can only resolve to [`Argument::Gas`] — which stands
+    /// for every gas coin smashed together, not the one coin that was named.
+    mod gas_arguments {
+        use super::*;
+
+        fn sender() -> Address {
+            "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                .parse()
+                .unwrap()
+        }
+
+        fn recipient(seed: u8) -> Address {
+            Address::new([seed; 32])
+        }
+
+        fn coin(seed: u8) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([seed; ObjectId::LENGTH]),
+                Version::from_u64(seed as u64 + 1),
+                ObjectDigest::new([seed; 32]),
+            )
+        }
+
+        fn programmable(txn: Transaction) -> (ProgrammableTransaction, GasPayment) {
+            let Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            let TransactionKind::Programmable(ptb) = txn.kind else {
+                panic!("expected a programmable transaction");
+            };
+            (ptb, txn.gas_payment)
+        }
+
+        fn transfer_command(ptb: &ProgrammableTransaction) -> &iota_types::TransferObjects {
+            let [iota_types::Command::TransferObjects(transfer)] = &ptb.commands[..] else {
+                panic!("expected a single TransferObjects command");
+            };
+            transfer
+        }
+
+        /// Transferring one of two gas coins would transfer both, because they
+        /// are smashed into a single coin first. Report that instead of
+        /// widening the transfer.
+        #[test]
+        fn transferring_only_some_gas_coins_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let error = builder.finish().unwrap_err();
+            let Error::IncompleteGasTransfer {
+                transferred,
+                missing,
+            } = error
+            else {
+                panic!("expected IncompleteGasTransfer, got {error}");
+            };
+            assert_eq!(transferred, coin(10).object_id);
+            assert_eq!(missing, coin(11).object_id);
+        }
+
+        /// Transferring every gas coin is what the caller asked for: the
+        /// arguments collapse into the single [`Argument::Gas`] that stands for
+        /// the smashed coin, and the coins stay in the gas payment.
+        #[test]
+        fn transferring_every_gas_coin_collapses_to_one_gas_argument() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10), coin(11)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(transfer_command(&ptb).objects, [iota_types::Argument::Gas]);
+            // Only the recipient address is left as an input.
+            assert_eq!(ptb.inputs.len(), 1);
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
+
+        /// Objects transferred alongside the gas coins keep their own inputs,
+        /// and the gas coins collapse in place.
+        #[test]
+        fn transferring_every_gas_coin_alongside_other_objects() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10), coin(12), coin(11)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, _) = programmable(builder.finish().unwrap());
+            assert_eq!(
+                transfer_command(&ptb).objects,
+                [iota_types::Argument::Gas, iota_types::Argument::Input(0)]
+            );
+            assert_eq!(ptb.inputs[0], iota_types::Input::ImmutableOrOwned(coin(12)));
+        }
+
+        /// A caller that writes [`Argument::Gas`] itself has already asked for
+        /// the whole gas payment, so the transfer is left as it is.
+        #[test]
+        fn explicit_gas_argument_transfers_the_whole_payment() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [Argument::Gas]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(transfer_command(&ptb).objects, [iota_types::Argument::Gas]);
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
+
+        /// The smashed coin can only be transferred once, so two commands
+        /// cannot both transfer it.
+        #[test]
+        fn two_commands_transferring_the_gas_coin_are_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(10)]);
+            builder.transfer_objects(recipient(2), [coin(10)]);
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            assert!(matches!(
+                builder.finish(),
+                Err(Error::GasCoinTransferredMoreThanOnce)
+            ));
+        }
+
+        /// A move call takes the coin it is given, so it cannot be handed the
+        /// whole gas payment in its place.
+        #[test]
+        fn gas_coin_as_move_call_argument_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            let arguments = builder.apply_arguments([coin(10)]);
+            builder.command(Command::MoveCall(MoveCall {
+                package: ObjectId::new([9; ObjectId::LENGTH]),
+                module: Identifier::new("module").unwrap(),
+                function: Identifier::new("function").unwrap(),
+                type_arguments: Vec::new(),
+                arguments,
+            }));
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            let error = builder.finish().unwrap_err();
+            let Error::GasCoinAsArgument { object_id } = error else {
+                panic!("expected GasCoinAsArgument, got {error}");
+            };
+            assert_eq!(object_id, coin(10).object_id);
+        }
+
+        /// Merging a gas coin into another coin destroys it, so the whole gas
+        /// payment cannot stand in for it.
+        #[test]
+        fn gas_coin_merged_into_another_coin_is_rejected() {
+            let mut builder = TransactionBuilder::new(sender());
+            let arguments = builder.apply_arguments([coin(12), coin(10)]);
+            builder.command(Command::MergeCoins(MergeCoins {
+                coin: arguments[0],
+                coins_to_merge: vec![arguments[1]],
+            }));
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            assert!(matches!(
+                builder.finish(),
+                Err(Error::GasCoinAsArgument { .. })
+            ));
+        }
+
+        /// Splitting off a gas coin leaves it in place, so it still resolves to
+        /// the gas argument.
+        #[test]
+        fn splitting_a_gas_coin_resolves_to_the_gas_argument() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.split_coins(coin(10), [1000u64]);
+            builder.gas([coin(10)]);
+            builder.gas_price(1000);
+
+            let (ptb, _) = programmable(builder.finish().unwrap());
+            let [iota_types::Command::SplitCoins(split)] = &ptb.commands[..] else {
+                panic!("expected a single SplitCoins command");
+            };
+            assert_eq!(split.coin, iota_types::Argument::Gas);
+        }
+
+        /// Gas coins that no command names are the ordinary case and stay
+        /// untouched.
+        #[test]
+        fn gas_coins_kept_out_of_the_commands_are_untouched() {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.transfer_objects(recipient(1), [coin(12)]);
+            builder.gas([coin(10), coin(11)]);
+            builder.gas_price(1000);
+
+            let (ptb, gas_payment) = programmable(builder.finish().unwrap());
+            assert_eq!(
+                transfer_command(&ptb).objects,
+                [iota_types::Argument::Input(0)]
+            );
+            assert_eq!(ptb.inputs[0], iota_types::Input::ImmutableOrOwned(coin(12)));
+            assert_eq!(gas_payment.objects, [coin(10), coin(11)]);
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod input_resolution {
+        use iota_types::Version;
+
+        use super::*;
+        use crate::RecordingClient;
+
+        fn object_id(seed: u8) -> ObjectId {
+            ObjectId::new([seed; ObjectId::LENGTH])
+        }
+
+        /// Every object input is fetched in one batch, and none of them fall
+        /// back to a single-object request.
+        #[tokio::test]
+        async fn all_inputs_are_fetched_in_one_request() {
+            let sender = Address::generate(rand::thread_rng());
+            let client = RecordingClient::default();
+
+            let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+            builder.transfer_objects(sender, [object_id(1), object_id(2), object_id(3)]);
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments([crate::Shared(ObjectId::CLOCK)]);
+            builder.gas_refs([ObjectReference::new(
+                object_id(9),
+                Version::from_u64(1),
+                iota_types::ObjectDigest::new([9; 32]),
+            )]);
+
+            builder.finish_kind().await.unwrap();
+
+            assert_eq!(
+                client.batches(),
+                vec![vec![
+                    object_id(1),
+                    object_id(2),
+                    object_id(3),
+                    ObjectId::CLOCK,
+                ]],
+                "expected a single batch holding every object input"
+            );
+            assert!(
+                client.singles().is_empty(),
+                "no input should need a single-object request"
+            );
+        }
+
+        /// Batched objects are matched back to the input that asked for them,
+        /// so the shared object keeps its shared kind.
+        #[tokio::test]
+        async fn batched_objects_are_matched_to_their_inputs() {
+            let sender = Address::generate(rand::thread_rng());
+            let coin = object_id(1);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments((crate::Shared(ObjectId::CLOCK), coin));
+
+            let TransactionKind::Programmable(ptb) = builder.finish_kind().await.unwrap() else {
+                panic!("expected a programmable transaction");
+            };
+            let iota_types::Input::Shared(shared) = &ptb.inputs[0] else {
+                panic!("expected the clock to resolve as a shared input");
+            };
+            assert_eq!(shared.object_id, ObjectId::CLOCK);
+            let iota_types::Input::ImmutableOrOwned(owned) = &ptb.inputs[1] else {
+                panic!("expected the coin to resolve as an owned input");
+            };
+            assert_eq!(owned.object_id, coin);
+        }
+
+        /// A missing object is still reported by its own id.
+        #[tokio::test]
+        async fn a_missing_object_is_named_in_the_error() {
+            let sender = Address::generate(rand::thread_rng());
+            let absent = object_id(2);
+            let client = RecordingClient {
+                missing: vec![absent],
+                ..Default::default()
+            };
+
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1), absent]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(
+                err.to_string().contains(&absent.to_string()),
+                "error should name the missing object, got: {err}"
+            );
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod finish_kind {
+        use iota_types::{ObjectDigest, Version};
+
+        use super::super::*;
+        use crate::TestClient;
+
+        /// The gas coin id [`TestClient`] hands out to gas selection.
+        const SELECTABLE_GAS_COIN: ObjectId = ObjectId::new([0xee; ObjectId::LENGTH]);
+
+        fn object_ref(seed: u8, version: u64) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([seed; ObjectId::LENGTH]),
+                Version::from_u64(version),
+                ObjectDigest::new([seed; 32]),
+            )
+        }
+
+        fn split_coin_arg(kind: &TransactionKind) -> iota_types::Argument {
+            let TransactionKind::Programmable(ptb) = kind else {
+                panic!("expected a programmable transaction");
+            };
+            let [iota_types::Command::SplitCoins(split)] = &ptb.commands[..] else {
+                panic!("expected a single SplitCoins command");
+            };
+            split.coin
+        }
+
+        /// Automatic gas selection may claim a coin the caller named, which
+        /// turns the command's `Argument::Input` into `Argument::Gas`.
+        /// `finish_kind` selects no gas, so the command keeps pointing at the
+        /// coin.
+        #[tokio::test]
+        async fn keeps_the_coin_that_gas_selection_would_claim() {
+            let sender = Address::generate(rand::thread_rng());
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            let kind = builder.finish_kind().await.unwrap();
+            assert_eq!(split_coin_arg(&kind), iota_types::Argument::Input(0));
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
+            builder.gas_budget(5_000_000).gas_price(1000);
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(split_coin_arg(&txn.kind), iota_types::Argument::Gas);
+        }
+
+        /// Gas coins, sponsor, price, budget and expiration are not part of a
+        /// [`TransactionKind`], so setting them makes no difference.
+        #[tokio::test]
+        async fn ignores_gas_and_transaction_metadata() {
+            let sender = Address::generate(rand::thread_rng());
+            let recipient = Address::generate(rand::thread_rng());
+            let coin = ObjectId::new([7; ObjectId::LENGTH]);
+
+            let mut plain = TransactionBuilder::new(sender).with_client(TestClient);
+            plain.transfer_objects(recipient, [coin]);
+            let expected = plain.finish_kind().await.unwrap();
+
+            let mut decorated = TransactionBuilder::new(sender).with_client(TestClient);
+            decorated.transfer_objects(recipient, [coin]);
+            decorated
+                .gas_refs([object_ref(99, 7)])
+                .gas_budget(5_000_000)
+                .gas_price(1000)
+                .sponsor(Address::generate(rand::thread_rng()))
+                .expiration(42);
+
+            assert_eq!(decorated.finish_kind().await.unwrap(), expected);
+        }
+
+        /// `gas_refs` takes the references as given — no object lookup — and
+        /// stops the builder from picking gas coins of its own.
+        #[tokio::test]
+        async fn gas_refs_are_used_as_given() {
+            let sender = Address::generate(rand::thread_rng());
+            // A version the test client never fabricates, so a lookup that
+            // overwrote the reference would be visible.
+            let gas_coin = object_ref(3, 4242);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            builder
+                .gas_refs([gas_coin])
+                .gas_budget(5_000_000)
+                .gas_price(1000);
+
+            let Transaction::V1(txn) = builder.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.objects, vec![gas_coin]);
+        }
     }
 }
