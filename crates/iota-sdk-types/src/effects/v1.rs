@@ -121,8 +121,8 @@ impl crate::TreeDisplay for ChangedObject {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Changed Object")?;
         w.leaf("Object ID", &self.object_id, false)?;
-        w.leaf("Input State", &self.input_state, false)?;
-        w.leaf("Output State", &self.output_state, false)?;
+        w.child("Input State", &self.input_state, false)?;
+        w.child("Output State", &self.output_state, false)?;
         w.leaf("ID Operation", &self.id_operation, true)
     }
 }
@@ -150,11 +150,18 @@ impl crate::TreeDisplay for UnchangedSharedObject {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Unchanged Shared Object")?;
         w.leaf("Object ID", &self.object_id, false)?;
-        w.leaf("Kind", &self.kind, true)
+        w.child("Kind", &self.kind, true)
     }
 }
 
-crate::impl_tree_display!(TransactionEffectsV1, ChangedObject, UnchangedSharedObject);
+crate::impl_tree_display!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut
+);
 
 /// Type of unchanged shared object
 ///
@@ -204,24 +211,27 @@ impl UnchangedSharedKind {
     );
 }
 
-impl std::fmt::Display for UnchangedSharedKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for UnchangedSharedKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
-                write!(f, "ReadOnlyRoot(version: {version}, digest: {digest})")
+                w.header("Read Only Root")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, true)
             }
             UnchangedSharedKind::MutateDeleted { version } => {
-                write!(f, "MutateDeleted(version: {version})")
+                w.header("Mutate Deleted")?;
+                w.leaf("Version", version, true)
             }
             UnchangedSharedKind::ReadDeleted { version } => {
-                write!(f, "ReadDeleted(version: {version})")
+                w.header("Read Deleted")?;
+                w.leaf("Version", version, true)
             }
             UnchangedSharedKind::Cancelled { version } => {
-                write!(f, "Cancelled(version: {version})")
+                w.header("Cancelled")?;
+                w.leaf("Version", version, true)
             }
-            UnchangedSharedKind::PerEpochConfig => {
-                write!(f, "PerEpochConfig")
-            }
+            UnchangedSharedKind::PerEpochConfig => w.header("Per Epoch Config"),
         }
     }
 }
@@ -295,19 +305,19 @@ impl ObjectIn {
     }
 }
 
-impl std::fmt::Display for ObjectIn {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for ObjectIn {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            ObjectIn::Missing => write!(f, "Missing"),
+            ObjectIn::Missing => w.header("Missing"),
             ObjectIn::Data {
                 version,
                 digest,
                 owner,
             } => {
-                write!(
-                    f,
-                    "Data(version: {version}, digest: {digest}, owner: {owner})"
-                )
+                w.header("Data")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, false)?;
+                w.leaf("Owner", owner, true)
             }
         }
     }
@@ -394,15 +404,19 @@ impl ObjectOut {
     }
 }
 
-impl std::fmt::Display for ObjectOut {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for ObjectOut {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            ObjectOut::Missing => write!(f, "Missing"),
+            ObjectOut::Missing => w.header("Missing"),
             ObjectOut::ObjectWrite { digest, owner } => {
-                write!(f, "ObjectWrite(digest: {digest}, owner: {owner})")
+                w.header("Object Write")?;
+                w.leaf("Digest", digest, false)?;
+                w.leaf("Owner", owner, true)
             }
             ObjectOut::PackageWrite { version, digest } => {
-                write!(f, "PackageWrite(version: {version}, digest: {digest})")
+                w.header("Package Write")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, true)
             }
         }
     }

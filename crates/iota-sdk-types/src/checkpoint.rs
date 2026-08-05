@@ -447,15 +447,18 @@ impl CheckpointContentsV1 {
     }
 }
 
-impl std::fmt::Display for CheckpointContents {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "CheckpointContents({} transactions)", self.len())
+impl crate::TreeDisplay for CheckpointContents {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
     }
 }
 
-impl std::fmt::Display for CheckpointContentsV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "CheckpointContentsV1({} transactions)", self.len())
+impl crate::TreeDisplay for CheckpointContentsV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Contents")?;
+        w.vec_children("Transactions", self.transactions(), true)
     }
 }
 
@@ -494,7 +497,7 @@ impl crate::TreeDisplay for CheckpointData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Checkpoint Data")?;
         w.child("Checkpoint Summary", &self.checkpoint_summary, false)?;
-        w.leaf("Contents", &self.checkpoint_contents, false)?;
+        w.child("Contents", &self.checkpoint_contents, false)?;
         w.vec_children("Transactions", &self.transactions, true)
     }
 }
@@ -542,6 +545,8 @@ crate::impl_tree_display!(
     EndOfEpochData,
     CheckpointSummary,
     SignedCheckpointSummary,
+    CheckpointContents,
+    CheckpointContentsV1,
     CheckpointTransactionInfo,
     CheckpointData,
     CheckpointTransaction
