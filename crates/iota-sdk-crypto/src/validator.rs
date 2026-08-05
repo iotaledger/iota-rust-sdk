@@ -306,7 +306,7 @@ impl CommitteeChainVerifier {
         };
 
         self.verifier
-            .verify_checkpoint_summary(&checkpoint, &signature)?;
+            .verify_checkpoint_summary(checkpoint, signature)?;
 
         // Signatures verified; the elected committee is now trusted.
         let next_committee = ValidatorCommittee {
