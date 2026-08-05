@@ -591,6 +591,8 @@ define_field_paths! {
         TRANSACTIONS_EVENTS = "transactions.events",
         /// The events digest.
         TRANSACTIONS_EVENTS_DIGEST = "transactions.events.digest",
+        /// Individual events — full BCS-encoded.
+        TRANSACTIONS_EVENTS_EVENTS_BCS = "transactions.events.events.bcs",
         /// Checkpoint sequence number of the transaction.
         TRANSACTIONS_CHECKPOINT = "transactions.checkpoint",
         /// Timestamp of the transaction.
