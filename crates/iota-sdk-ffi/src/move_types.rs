@@ -8,21 +8,22 @@
 //! returned by the GraphQL client. Currently the bindings cover:
 //!
 //! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`],
-//!   [`IotaSystemState`], [`IotaSystemStateV2`] (with its embedded
-//!   [`ValidatorSetV2`], [`ValidatorV1`], [`ValidatorMetadataV1`],
-//!   [`StakingPoolV1`], [`SystemParametersV1`], and [`StorageFundV1`]),
-//!   [`UnverifiedValidatorOperationCap`].
+//!   [`IotaSystemState`], [`IotaSystemStateV2`] and [`IotaSystemStateV1`] (with
+//!   their embedded [`ValidatorSetV2`] / [`ValidatorSetV1`], [`ValidatorV1`],
+//!   [`ValidatorMetadataV1`], [`StakingPoolV1`], [`SystemParametersV1`], and
+//!   [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
 //! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
 //!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
 //!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
-//!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`], [`DenyList`],
-//!   [`Random`] (with [`RandomInner`]), [`AuthenticatorState`] (with
-//!   [`AuthenticatorStateInner`] and its [`ActiveJwk`] records),
-//!   [`PackageMetadataV1`] (with its [`ModuleMetadataV1`] and
-//!   [`AuthenticatorMetadataV1`] records), [`ModuleMetadata`], [`TreasuryCap`],
-//!   [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`], [`CoinManager`],
-//!   [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`], [`Token`],
-//!   [`TokenPolicyCap`], [`TokenPolicy`], [`Config`], [`TransferPolicy`],
+//!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`],
+//!   [`KioskExtension`], [`DenyList`], [`Random`] (with [`RandomInner`]),
+//!   [`AuthenticatorState`] (with [`AuthenticatorStateInner`] and its
+//!   [`ActiveJwk`] records), [`PackageMetadataV1`] (with its
+//!   [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records),
+//!   [`ModuleMetadata`], [`TreasuryCap`], [`RegulatedCoinMetadata`],
+//!   [`DenyCapV1`], [`Display`], [`CoinManager`], [`CoinManagerTreasuryCap`],
+//!   [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
+//!   [`TokenPolicy`], [`Config`] (with [`BoolSetting`]), [`TransferPolicy`],
 //!   [`TransferPolicyCap`], [`LabelerCap`], [`PurchaseCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
@@ -244,6 +245,122 @@ impl IotaSystemStateV2 {
     }
 }
 
+/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV1`
+/// inner system state, the layout selected by
+/// [`IotaSystemState::version`] 1.
+///
+/// Exposes the same parameters as [`IotaSystemStateV2`], except that safe-mode
+/// computation is accounted as rewards rather than charges, and the validator
+/// set is a [`ValidatorSetV1`].
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct IotaSystemStateV1(
+    pub iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV1,
+);
+
+#[uniffi::export]
+impl IotaSystemStateV1 {
+    /// Decode an `IotaSystemStateV1` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: the inner state is stored as
+    /// a dynamic field of the `0x5` wrapper, not as a top-level object
+    /// with its own type tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(bcs::from_bytes::<
+            iota_sdk::move_types::iota_system::iota_system_state_inner::IotaSystemStateV1,
+        >(&bytes)?
+        .into())
+    }
+
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    pub fn protocol_version(&self) -> u64 {
+        self.0.protocol_version
+    }
+
+    pub fn system_state_version(&self) -> u64 {
+        self.0.system_state_version
+    }
+
+    /// The reference gas price for the current epoch, in nanos.
+    pub fn reference_gas_price(&self) -> u64 {
+        self.0.reference_gas_price
+    }
+
+    /// Whether the system is running in a downgraded safe mode.
+    pub fn safe_mode(&self) -> bool {
+        self.0.safe_mode
+    }
+
+    /// Unix timestamp (ms) of the current epoch start.
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+
+    /// Total IOTA supply controlled by the system treasury, in nanos.
+    pub fn iota_total_supply(&self) -> u64 {
+        self.0.iota_treasury_cap.inner.total_supply.value
+    }
+
+    /// The validator set.
+    pub fn validators(&self) -> ValidatorSetV1 {
+        ValidatorSetV1(self.0.validators.clone())
+    }
+
+    /// The storage fund.
+    pub fn storage_fund(&self) -> StorageFundV1 {
+        StorageFundV1(self.0.storage_fund.clone())
+    }
+
+    /// The system parameters.
+    pub fn parameters(&self) -> SystemParametersV1 {
+        SystemParametersV1(self.0.parameters.clone())
+    }
+
+    /// Validator report records: each reported validator's address mapped to
+    /// the addresses of the validators reporting it.
+    pub fn validator_report_records(&self) -> HashMap<Arc<Address>, Vec<Arc<Address>>> {
+        self.0
+            .validator_report_records
+            .contents
+            .iter()
+            .map(|e| {
+                (
+                    Arc::new(Address(e.key)),
+                    e.value
+                        .contents
+                        .iter()
+                        .map(|a| Arc::new(Address(*a)))
+                        .collect(),
+                )
+            })
+            .collect()
+    }
+
+    /// Storage charges accumulated during safe mode, in nanos.
+    pub fn safe_mode_storage_charges(&self) -> u64 {
+        self.0.safe_mode_storage_charges.value()
+    }
+
+    /// Computation rewards accumulated during safe mode, in nanos.
+    pub fn safe_mode_computation_rewards(&self) -> u64 {
+        self.0.safe_mode_computation_rewards.value()
+    }
+
+    /// Storage rebates accumulated during safe mode, in nanos.
+    pub fn safe_mode_storage_rebates(&self) -> u64 {
+        self.0.safe_mode_storage_rebates
+    }
+
+    /// Non-refundable storage fees accumulated during safe mode, in nanos.
+    pub fn safe_mode_non_refundable_storage_fee(&self) -> u64 {
+        self.0.safe_mode_non_refundable_storage_fee
+    }
+}
+
 /// A typed view of the `0x3::validator_set::ValidatorSetV2` embedded in the
 /// system state.
 #[derive(Debug, derive_more::From, uniffi::Object)]
@@ -271,6 +388,59 @@ impl ValidatorSetV2 {
     /// consensus.
     pub fn committee_members(&self) -> Vec<u64> {
         self.0.committee_members.clone()
+    }
+
+    /// Indices into `active_validators` with pending removal requests.
+    pub fn pending_removals(&self) -> Vec<u64> {
+        self.0.pending_removals.clone()
+    }
+
+    /// Number of pending validator candidates. The candidates themselves are
+    /// stored in dynamic fields and are not part of this struct's contents.
+    pub fn pending_active_validators_size(&self) -> u64 {
+        self.0.pending_active_validators.contents.size
+    }
+
+    /// Number of epochs each at-risk validator has had stake below the
+    /// low-stake threshold.
+    pub fn at_risk_validators(&self) -> HashMap<Arc<Address>, u64> {
+        self.0
+            .at_risk_validators
+            .contents
+            .iter()
+            .map(|e| (Arc::new(Address(e.key)), e.value))
+            .collect()
+    }
+
+    // `staking_pool_mappings`, `inactive_validators` and
+    // `validator_candidates` are table handles whose entries live in dynamic
+    // fields, not in this struct's contents.
+}
+
+/// A typed view of the `0x3::validator_set::ValidatorSetV1` embedded in
+/// [`IotaSystemStateV1`].
+///
+/// Unlike [`ValidatorSetV2`] there are no committee members: in this layout
+/// every active validator is part of the committee.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct ValidatorSetV1(pub iota_sdk::move_types::iota_system::validator_set::ValidatorSetV1);
+
+#[uniffi::export]
+impl ValidatorSetV1 {
+    /// Total stake from all active validators at the beginning of the epoch,
+    /// in nanos.
+    pub fn total_stake(&self) -> u64 {
+        self.0.total_stake
+    }
+
+    /// The current list of active validators.
+    pub fn active_validators(&self) -> Vec<Arc<ValidatorV1>> {
+        self.0
+            .active_validators
+            .iter()
+            .map(|v| Arc::new(ValidatorV1(v.clone())))
+            .collect()
     }
 
     /// Indices into `active_validators` with pending removal requests.
@@ -770,6 +940,50 @@ crate::ffi_move_object! {
     }
 }
 
+/// A typed view of a `0x2::kiosk_extension::Extension` held in a dynamic field
+/// of a [`Kiosk`] object.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct KioskExtension(pub iota_sdk::move_types::iota_framework::kiosk_extension::Extension);
+
+#[uniffi::export]
+impl KioskExtension {
+    /// Decode an `Extension` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: an extension is stored as a
+    /// dynamic field of the kiosk, not as a top-level object with its own type
+    /// tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(
+            bcs::from_bytes::<iota_sdk::move_types::iota_framework::kiosk_extension::Extension>(
+                &bytes,
+            )?
+            .into(),
+        )
+    }
+
+    /// Object ID of the `Bag` holding the extension's own storage.
+    pub fn storage_id(&self) -> ObjectId {
+        (*self.0.storage.id.object_id()).into()
+    }
+
+    /// Whether the extension may place items into the kiosk.
+    pub fn can_place(&self) -> bool {
+        self.0.permissions & 1 != 0
+    }
+
+    /// Whether the extension may lock and place items in the kiosk.
+    pub fn can_lock(&self) -> bool {
+        self.0.permissions & 2 != 0
+    }
+
+    /// Whether the extension is currently allowed to call protected actions.
+    pub fn is_enabled(&self) -> bool {
+        self.0.is_enabled
+    }
+}
+
 crate::ffi_move_object! {
     /// A typed view of an on-chain `0x2::deny_list::DenyList` object (the
     /// `0x403` singleton tracking regulated-coin deny lists).
@@ -1198,7 +1412,49 @@ crate::ffi_move_object_generic! {
     /// declaration, not a concrete type.
     Config(iota_sdk::move_types::iota_framework::config::Config<IOTA>) {
         // The config's settings live in dynamic fields off its `UID`, not in
-        // the struct itself.
+        // the struct itself. Decode a `bool`-valued one with
+        // [`BoolSetting::try_from_bcs`].
+    }
+}
+
+/// A typed view of a `0x2::config::Setting<bool>` held in a dynamic field of a
+/// [`Config`] object — the shape used by the deny list for its per-address and
+/// global-pause entries.
+///
+/// A setting carries the value for the epoch it was last written in plus the
+/// value that preceded it, so a reader can tell which one applies to the epoch
+/// it cares about.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct BoolSetting(pub iota_sdk::move_types::iota_framework::config::Setting<bool>);
+
+#[uniffi::export]
+impl BoolSetting {
+    /// Decode a `Setting<bool>` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: a setting is stored as a dynamic
+    /// field of the config, not as a top-level object with its own type tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(
+            bcs::from_bytes::<iota_sdk::move_types::iota_framework::config::Setting<bool>>(&bytes)?
+                .into(),
+        )
+    }
+
+    /// The epoch `newer_value` was written in, if the setting holds data.
+    pub fn newer_value_epoch(&self) -> Option<u64> {
+        self.0.data.as_ref().map(|d| d.newer_value_epoch)
+    }
+
+    /// The value written in `newer_value_epoch`.
+    pub fn newer_value(&self) -> Option<bool> {
+        self.0.data.as_ref().and_then(|d| d.newer_value)
+    }
+
+    /// The value that applied before `newer_value_epoch`.
+    pub fn older_value(&self) -> Option<bool> {
+        self.0.data.as_ref().and_then(|d| d.older_value_opt)
     }
 }
 
