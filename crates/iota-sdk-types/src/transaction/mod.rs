@@ -312,18 +312,32 @@ pub struct DenyRuleSet {
 
 /// Update of the on-chain transaction deny rules.
 ///
-/// Carries the full active set of deny rules, replacing the previous contents
-/// of the deny-rules object.
+/// Carries an add/remove delta for each deny list plus the absolute switch
+/// states. The added and removed sets of a list are disjoint by producer
+/// contract (validators compute them as a diff); a delta too large for one
+/// transaction arrives split across several update transactions in the same
+/// commit. Set-typed fields decode normalizing, like [`DenyRuleSet`]'s.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-deny-rules-update = u64             ; epoch
-///                                 u64             ; round
-///                                 deny-rule-set   ; deny rules
-///                                 version         ; initial shared version
+/// transaction-deny-rules-update = u64               ; epoch
+///                                 u64               ; round
+///                                 (vector address)  ; added addresses
+///                                 (vector address)  ; removed addresses
+///                                 (vector object-id) ; added objects
+///                                 (vector object-id) ; removed objects
+///                                 (vector object-id) ; added packages
+///                                 (vector object-id) ; removed packages
+///                                 bool              ; package publish disabled
+///                                 bool              ; package upgrade disabled
+///                                 bool              ; shared object disabled
+///                                 bool              ; user transaction disabled
+///                                 bool              ; receiving objects disabled
+///                                 bool              ; move authenticator disabled
+///                                 version           ; initial shared version
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -336,8 +350,30 @@ pub struct TransactionDenyRulesUpdate {
     /// Consensus round of the update
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub round: u64,
-    /// The full active set of deny rules
-    pub deny_rules: DenyRuleSet,
+    /// Addresses added to the sender-or-sponsor deny list.
+    pub added_addresses: BTreeSet<Address>,
+    /// Addresses removed from the sender-or-sponsor deny list.
+    pub removed_addresses: BTreeSet<Address>,
+    /// Objects added to the input-or-receiving deny list.
+    pub added_objects: BTreeSet<ObjectId>,
+    /// Objects removed from the input-or-receiving deny list.
+    pub removed_objects: BTreeSet<ObjectId>,
+    /// Packages added to the dependency deny list.
+    pub added_packages: BTreeSet<ObjectId>,
+    /// Packages removed from the dependency deny list.
+    pub removed_packages: BTreeSet<ObjectId>,
+    /// Denies all package publishing.
+    pub package_publish_disabled: bool,
+    /// Denies all package upgrades.
+    pub package_upgrade_disabled: bool,
+    /// Denies transactions that use shared objects as inputs.
+    pub shared_object_disabled: bool,
+    /// Denies all user transactions (kill switch).
+    pub user_transaction_disabled: bool,
+    /// Denies transactions that contain receiving objects.
+    pub receiving_objects_disabled: bool,
+    /// Denies transactions signed with a Move authenticator.
+    pub move_authenticator_disabled: bool,
     /// The initial version of the deny-rules object that it was shared at.
     pub deny_rules_obj_initial_shared_version: Version,
 }
