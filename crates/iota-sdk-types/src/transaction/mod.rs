@@ -486,7 +486,42 @@ impl crate::TreeDisplay for TransactionDenyRulesUpdate {
         w.header("Transaction Deny Rules Update")?;
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Round", &self.round, false)?;
-        w.child("Deny Rules", &self.deny_rules, false)?;
+        w.iter_inline("Added Addresses", &self.added_addresses, false)?;
+        w.iter_inline("Removed Addresses", &self.removed_addresses, false)?;
+        w.iter_inline("Added Objects", &self.added_objects, false)?;
+        w.iter_inline("Removed Objects", &self.removed_objects, false)?;
+        w.iter_inline("Added Packages", &self.added_packages, false)?;
+        w.iter_inline("Removed Packages", &self.removed_packages, false)?;
+        w.leaf(
+            "Package Publish Disabled",
+            &self.package_publish_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Package Upgrade Disabled",
+            &self.package_upgrade_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Shared Object Disabled",
+            &self.shared_object_disabled,
+            false,
+        )?;
+        w.leaf(
+            "User Transaction Disabled",
+            &self.user_transaction_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Receiving Objects Disabled",
+            &self.receiving_objects_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Move Authenticator Disabled",
+            &self.move_authenticator_disabled,
+            false,
+        )?;
         w.leaf(
             "Deny Rules Obj Initial Shared Version",
             &self.deny_rules_obj_initial_shared_version,
