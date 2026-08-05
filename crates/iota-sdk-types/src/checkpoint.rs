@@ -97,7 +97,7 @@ impl crate::TreeDisplay for EndOfEpochData {
             &self.next_epoch_protocol_version,
             false,
         )?;
-        w.vec_inline("Epoch Commitments", &self.epoch_commitments, false)?;
+        w.iter_inline("Epoch Commitments", &self.epoch_commitments, false)?;
         w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
     }
 }
@@ -215,7 +215,7 @@ impl crate::TreeDisplay for CheckpointSummary {
             false,
         )?;
         w.leaf("Timestamp (ms)", &self.timestamp_ms, false)?;
-        w.vec_inline(
+        w.iter_inline(
             "Checkpoint Commitments",
             &self.checkpoint_commitments,
             false,
@@ -475,7 +475,7 @@ impl crate::TreeDisplay for CheckpointTransactionInfo {
         w.header("Checkpoint Transaction Info")?;
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
-        w.vec_inline("Signatures", &self.signatures, true)
+        w.iter_inline("Signatures", &self.signatures, true)
     }
 }
 

@@ -79,7 +79,7 @@ impl crate::TreeDisplay for TransactionEffectsV1 {
         w.leaf("Transaction Digest", &self.transaction_digest, false)?;
         w.option("Gas Object Index", &self.gas_object_index, false)?;
         w.option("Events Digest", &self.events_digest, false)?;
-        w.vec_inline("Dependencies", &self.dependencies, false)?;
+        w.iter_inline("Dependencies", &self.dependencies, false)?;
         w.leaf("Lamport Version", &self.lamport_version, false)?;
         w.vec_children("Changed Objects", &self.changed_objects, false)?;
         w.vec_children(

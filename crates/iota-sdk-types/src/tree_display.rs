@@ -6,8 +6,15 @@
 /// Types implementing this trait can render their fields as a tree structure
 /// with box-drawing characters (`├──`, `└──`, `│`).
 ///
-/// Each `fmt_tree` impl should start with `w.header("TypeName")` to define
-/// the root label. Use [`impl_tree_display`] to generate the `Display` impl.
+/// Each `fmt_tree` impl must call [`TreeWriter::header`] before any other
+/// writer method, on every arm of an enum dispatch. [`TreeWriter::child`] and
+/// [`TreeWriter::inline_child`] leave state behind for the child's `header`
+/// call to consume; writing a leaf or branch first leaves it pending and
+/// applies it to some later, unrelated node. An impl that only delegates
+/// (`Self::V1(v1) => v1.fmt_tree(w)`) satisfies this through the type it
+/// delegates to.
+///
+/// Use [`impl_tree_display`] to generate the `Display` impl.
 pub(crate) trait TreeDisplay {
     fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
 }
@@ -141,16 +148,6 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         child.fmt_tree(self)
     }
 
-    /// Display a `Vec` of `Display` items as indexed leaf nodes.
-    pub fn vec_inline(
-        &mut self,
-        label: &str,
-        items: &[impl std::fmt::Display],
-        is_last: bool,
-    ) -> std::fmt::Result {
-        self.iter_inline(label, items, is_last)
-    }
-
     /// Display a collection of `Display` items as indexed leaf nodes.
     pub fn iter_inline<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
     where
@@ -248,17 +245,17 @@ mod tests {
 
     /// Helper that captures formatted output by implementing Display with a
     /// closure.
-    struct AfterText<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
+    struct FmtFn<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
 
-    impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for AfterText<F> {
+    impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for FmtFn<F> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             (self.0)(f)
         }
     }
 
     #[test]
-    fn new_without_after_text_has_no_leading_newline() {
-        let output = AfterText(|f| {
+    fn writer_starts_without_a_leading_newline() {
+        let output = FmtFn(|f| {
             let mut w = TreeWriter::new(f);
             w.leaf("Key", &"value", true)
         })
@@ -269,7 +266,7 @@ mod tests {
 
     /// Renders the output a closure writes into a fresh [`TreeWriter`].
     fn render(body: impl Fn(&mut TreeWriter<'_, '_>) -> fmt::Result) -> String {
-        AfterText(move |f| body(&mut TreeWriter::new(f))).to_string()
+        FmtFn(move |f| body(&mut TreeWriter::new(f))).to_string()
     }
 
     /// Minimal [`TreeDisplay`] type for exercising sub-tree rendering.
@@ -406,10 +403,10 @@ Origin
     }
 
     #[test]
-    fn vec_inline_renders_indexed_leaves() {
+    fn iter_inline_renders_indexed_leaves() {
         let empty: &[u8] = &[];
         assert_eq!(
-            render(|w| w.vec_inline("Items", empty, true)),
+            render(|w| w.iter_inline("Items", empty, true)),
             "└── Items: []"
         );
         let expected = "
@@ -417,7 +414,7 @@ Origin
     ├── 0: 10
     └── 1: 20";
         assert_eq!(
-            render(|w| w.vec_inline("Items", &[10, 20], true)),
+            render(|w| w.iter_inline("Items", [10, 20], true)),
             expected.strip_prefix('\n').unwrap()
         );
     }

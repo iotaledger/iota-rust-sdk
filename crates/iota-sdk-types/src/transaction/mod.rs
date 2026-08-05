@@ -192,7 +192,7 @@ impl crate::TreeDisplay for SignedTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Signed Transaction")?;
         w.child("Transaction", &self.transaction, false)?;
-        w.vec_inline("Signatures", &self.signatures, true)
+        w.iter_inline("Signatures", &self.signatures, true)
     }
 }
 
@@ -1229,7 +1229,7 @@ impl crate::TreeDisplay for ChangeEpochV3 {
             false,
         )?;
         w.vec_children("System Packages", &self.system_packages, false)?;
-        w.vec_inline(
+        w.iter_inline(
             "Eligible Active Validators",
             &self.eligible_active_validators,
             true,
@@ -1310,12 +1310,12 @@ impl crate::TreeDisplay for ChangeEpochV4 {
             false,
         )?;
         w.vec_children("System Packages", &self.system_packages, false)?;
-        w.vec_inline(
+        w.iter_inline(
             "Eligible Active Validators",
             &self.eligible_active_validators,
             false,
         )?;
-        w.vec_inline("Scores", &self.scores, false)?;
+        w.iter_inline("Scores", &self.scores, false)?;
         w.leaf(
             "Adjust Rewards By Score",
             &self.adjust_rewards_by_score,
@@ -1353,7 +1353,7 @@ impl crate::TreeDisplay for SystemPackage {
         w.header("System Package")?;
         w.leaf("Version", &self.version, false)?;
         w.bytes_vec("Modules", &self.modules, false)?;
-        w.vec_inline("Dependencies", &self.dependencies, true)
+        w.iter_inline("Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1769,7 +1769,7 @@ pub struct TransferObjects {
 impl crate::TreeDisplay for TransferObjects {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Transfer Objects")?;
-        w.vec_inline("Objects", &self.objects, false)?;
+        w.iter_inline("Objects", &self.objects, false)?;
         w.leaf("Address", &self.address, true)
     }
 }
@@ -1799,7 +1799,7 @@ impl crate::TreeDisplay for SplitCoins {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Split Coins")?;
         w.leaf("Coin", &self.coin, false)?;
-        w.vec_inline("Amounts", &self.amounts, true)
+        w.iter_inline("Amounts", &self.amounts, true)
     }
 }
 
@@ -1830,7 +1830,7 @@ impl crate::TreeDisplay for MergeCoins {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Merge Coins")?;
         w.leaf("Coin", &self.coin, false)?;
-        w.vec_inline("Coins To Merge", &self.coins_to_merge, true)
+        w.iter_inline("Coins To Merge", &self.coins_to_merge, true)
     }
 }
 
@@ -1872,7 +1872,7 @@ impl crate::TreeDisplay for Publish {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Publish")?;
         w.bytes_vec("Modules", &self.modules, false)?;
-        w.vec_inline("Dependencies", &self.dependencies, true)
+        w.iter_inline("Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1905,7 +1905,7 @@ impl crate::TreeDisplay for MakeMoveVector {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Make Move Vector")?;
         w.option("Type", &self.type_, false)?;
-        w.vec_inline("Elements", &self.elements, true)
+        w.iter_inline("Elements", &self.elements, true)
     }
 }
 
@@ -1953,7 +1953,7 @@ impl crate::TreeDisplay for Upgrade {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Upgrade")?;
         w.bytes_vec("Modules", &self.modules, false)?;
-        w.vec_inline("Dependencies", &self.dependencies, false)?;
+        w.iter_inline("Dependencies", &self.dependencies, false)?;
         w.leaf("Package", &self.package, false)?;
         w.leaf("Ticket", &self.ticket, true)
     }
@@ -2103,8 +2103,8 @@ impl crate::TreeDisplay for MoveCall {
         w.leaf("Package", &self.package, false)?;
         w.leaf("Module", &self.module, false)?;
         w.leaf("Function", &self.function, false)?;
-        w.vec_inline("Type Arguments", &self.type_arguments, false)?;
-        w.vec_inline("Arguments", &self.arguments, true)
+        w.iter_inline("Type Arguments", &self.type_arguments, false)?;
+        w.iter_inline("Arguments", &self.arguments, true)
     }
 }
 
