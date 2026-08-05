@@ -289,17 +289,24 @@ impl std::fmt::Display for SimpleSignature {
 #[derive(
     Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display, strum::EnumString,
 )]
-#[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum SignatureScheme {
+    #[strum(to_string = "Ed25519", serialize = "ed25519")]
     Ed25519 = 0x00,
+    #[strum(to_string = "Secp256k1", serialize = "secp256k1")]
     Secp256k1 = 0x01,
+    #[strum(to_string = "Secp256r1", serialize = "secp256r1")]
     Secp256r1 = 0x02,
+    #[strum(to_string = "Multisig", serialize = "multisig")]
     Multisig = 0x03,
-    Bls12381 = 0x04, // This is currently not supported for user addresses
+    // This is currently not supported for user addresses
+    #[strum(to_string = "Bls12381", serialize = "bls12381")]
+    Bls12381 = 0x04,
+    #[strum(to_string = "PasskeyAuthenticator", serialize = "passkeyauthenticator")]
     PasskeyAuthenticator = 0x06,
+    #[strum(to_string = "MoveAuthenticator", serialize = "moveauthenticator")]
     MoveAuthenticator = 0x07,
 }
 
@@ -1050,7 +1057,7 @@ mod serialization {
             }
 
             assert_eq!(SignatureScheme::from_str("ed25519").unwrap().to_u8(), 0x00);
-            assert!(SignatureScheme::from_str("Ed25519").is_err());
+            assert_eq!(SignatureScheme::from_str("Ed25519").unwrap().to_u8(), 0x00);
             assert!(SignatureScheme::from_str("zklogin").is_err());
         }
 

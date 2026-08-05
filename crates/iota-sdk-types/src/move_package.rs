@@ -13,7 +13,6 @@ use crate::{
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
-#[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 pub enum UpgradePolicy {
     /// The least restrictive policy. Permits changes to all function
