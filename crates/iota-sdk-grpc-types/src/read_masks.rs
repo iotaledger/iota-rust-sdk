@@ -14,7 +14,8 @@
 //!
 //! Constants like [`GET_CHECKPOINT_READ_MASK`] are the canonical defaults used
 //! by both the server (as fallback when no mask is provided) and the client
-//! (when `None` is passed as the mask).
+//! (as the `Default` of the endpoint's mask type in
+//! [`read_mask_fields`](crate::read_mask_fields)).
 //!
 //! ## Per-method field constants
 //!
