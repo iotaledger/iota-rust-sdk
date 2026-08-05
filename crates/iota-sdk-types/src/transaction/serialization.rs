@@ -274,8 +274,11 @@ mod tests {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        ObjectDigest, ObjectId, ObjectReference, Version,
-        transaction::{Argument, Input, SharedObjectReference, Transaction},
+        Address, ObjectDigest, ObjectId, ObjectReference, Version,
+        transaction::{
+            Argument, EndOfEpochTransactionKind, Input, SharedObjectReference, Transaction,
+            TransactionDenyRulesUpdate, TransactionKind,
+        },
     };
 
     #[test]
@@ -371,5 +374,99 @@ mod tests {
             println!("{json}");
             assert_eq!(tx, serde_json::from_str(&json).unwrap());
         }
+    }
+
+    /// Pins the BCS wire format of
+    /// [`TransactionKind::TransactionDenyRulesUpdate`].
+    ///
+    /// Runs one sample per switch (one-hot) so swapping any two bool fields
+    /// changes some expected byte string; the six delta lists carry distinct
+    /// contents and lengths for the same reason.
+    #[test]
+    fn transaction_deny_rules_update_bcs_pin() {
+        // Field order: package_publish, package_upgrade, shared_object,
+        // user_transaction, receiving_objects, move_authenticator.
+        let mut samples: Vec<[bool; 6]> = (0..6)
+            .map(|hot| std::array::from_fn(|i| i == hot))
+            .collect();
+        samples.push([false; 6]);
+        samples.push([true; 6]);
+
+        for switches in samples {
+            let [
+                package_publish_disabled,
+                package_upgrade_disabled,
+                shared_object_disabled,
+                user_transaction_disabled,
+                receiving_objects_disabled,
+                move_authenticator_disabled,
+            ] = switches;
+            let kind = TransactionKind::TransactionDenyRulesUpdate(TransactionDenyRulesUpdate {
+                epoch: 7,
+                round: 11,
+                added_addresses: [Address::new([1; 32]), Address::new([2; 32])].into(),
+                removed_addresses: [Address::new([3; 32])].into(),
+                added_objects: [ObjectId::new([4; 32])].into(),
+                removed_objects: [ObjectId::new([5; 32]), ObjectId::new([6; 32])].into(),
+                added_packages: [
+                    ObjectId::new([7; 32]),
+                    ObjectId::new([8; 32]),
+                    ObjectId::new([9; 32]),
+                ]
+                .into(),
+                removed_packages: [].into(),
+                package_publish_disabled,
+                package_upgrade_disabled,
+                shared_object_disabled,
+                user_transaction_disabled,
+                receiving_objects_disabled,
+                move_authenticator_disabled,
+                deny_rules_obj_initial_shared_version: Version::from_u64(42),
+            });
+
+            let mut expected = vec![6]; // TransactionKind variant tag
+            expected.extend(7u64.to_le_bytes()); // epoch
+            expected.extend(11u64.to_le_bytes()); // round
+            expected.push(2); // added_addresses length
+            expected.extend([1; 32]);
+            expected.extend([2; 32]);
+            expected.push(1); // removed_addresses length
+            expected.extend([3; 32]);
+            expected.push(1); // added_objects length
+            expected.extend([4; 32]);
+            expected.push(2); // removed_objects length
+            expected.extend([5; 32]);
+            expected.extend([6; 32]);
+            expected.push(3); // added_packages length
+            expected.extend([7; 32]);
+            expected.extend([8; 32]);
+            expected.extend([9; 32]);
+            expected.push(0); // removed_packages length
+            expected.extend(switches.map(u8::from));
+            expected.extend(42u64.to_le_bytes()); // deny_rules_obj_initial_shared_version
+
+            assert_eq!(bcs::to_bytes(&kind).unwrap(), expected);
+            assert_eq!(bcs::from_bytes::<TransactionKind>(&expected).unwrap(), kind);
+        }
+    }
+
+    /// Pins the BCS wire format of
+    /// [`EndOfEpochTransactionKind::TransactionDenyRulesCreate`].
+    #[test]
+    fn transaction_deny_rules_create_bcs_pin() {
+        let kind = EndOfEpochTransactionKind::TransactionDenyRulesCreate;
+        assert_eq!(bcs::to_bytes(&kind).unwrap(), [4]);
+        assert_eq!(
+            bcs::from_bytes::<EndOfEpochTransactionKind>(&[4]).unwrap(),
+            kind
+        );
+
+        let tx_kind = TransactionKind::EndOfEpoch(vec![kind]);
+        let expected = [4, 1, 4]; // EndOfEpoch tag, list length, create tag
+        assert_eq!(bcs::to_bytes(&tx_kind).unwrap(), expected);
+        assert_eq!(
+            bcs::from_bytes::<TransactionKind>(&expected).unwrap(),
+            tx_kind
+        );
     }
 }
