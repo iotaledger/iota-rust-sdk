@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 //! Guards that every public type in this crate implements `Display`.
 //!
 //! `every_public_type_implements_display` proves it for the listed types: a
