@@ -89,8 +89,11 @@ macro_rules! define_field_paths {
             }
 
             /// The underlying field path string.
-            pub fn as_str(&self) -> &str {
-                &self.0
+            pub const fn as_str(&self) -> &str {
+                match &self.0 {
+                    Cow::Borrowed(s) => s,
+                    Cow::Owned(s) => s.as_str(),
+                }
             }
         }
 
