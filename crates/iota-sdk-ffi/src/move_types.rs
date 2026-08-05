@@ -16,13 +16,14 @@
 //!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
 //!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
 //!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`], [`DenyList`],
-//!   [`Random`], [`AuthenticatorState`], [`PackageMetadataV1`] (with its
-//!   [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records),
-//!   [`ModuleMetadata`], [`TreasuryCap`], [`RegulatedCoinMetadata`],
-//!   [`DenyCapV1`], [`Display`], [`CoinManager`], [`CoinManagerTreasuryCap`],
-//!   [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
-//!   [`TokenPolicy`], [`Config`], [`TransferPolicy`], [`TransferPolicyCap`],
-//!   [`LabelerCap`], [`PurchaseCap`].
+//!   [`Random`] (with [`RandomInner`]), [`AuthenticatorState`] (with
+//!   [`AuthenticatorStateInner`] and its [`ActiveJwk`] records),
+//!   [`PackageMetadataV1`] (with its [`ModuleMetadataV1`] and
+//!   [`AuthenticatorMetadataV1`] records), [`ModuleMetadata`], [`TreasuryCap`],
+//!   [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`], [`CoinManager`],
+//!   [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`], [`Token`],
+//!   [`TokenPolicyCap`], [`TokenPolicy`], [`Config`], [`TransferPolicy`],
+//!   [`TransferPolicyCap`], [`LabelerCap`], [`PurchaseCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
@@ -786,6 +787,46 @@ crate::ffi_move_object! {
     Random(iota_sdk::move_types::iota_framework::random::Random) {
         // `inner` is a `Versioned` handle whose state lives in a dynamic
         // field, not in this object's contents, so it cannot be surfaced here.
+        // Decode that field's contents with [`RandomInner::try_from_bcs`].
+    }
+}
+
+/// A typed view of the `0x2::random::RandomInner` state held in the dynamic
+/// field of the [`Random`] singleton.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct RandomInner(pub iota_sdk::move_types::iota_framework::random::RandomInner);
+
+#[uniffi::export]
+impl RandomInner {
+    /// Decode a `RandomInner` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: the state is stored as a dynamic
+    /// field of the `0x8` wrapper, not as a top-level object with its own type
+    /// tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(
+            bcs::from_bytes::<iota_sdk::move_types::iota_framework::random::RandomInner>(&bytes)?
+                .into(),
+        )
+    }
+
+    pub fn version(&self) -> u64 {
+        self.0.version
+    }
+
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    /// The randomness round the current `random_bytes` were produced for.
+    pub fn randomness_round(&self) -> u64 {
+        self.0.randomness_round
+    }
+
+    pub fn random_bytes(&self) -> Vec<u8> {
+        self.0.random_bytes.clone()
     }
 }
 
@@ -797,8 +838,101 @@ crate::ffi_move_object! {
         iota_sdk::move_types::iota_framework::authenticator_state::AuthenticatorState
     ) {
         /// Version selecting which inner state layout the dynamic field holds.
+        ///
+        /// Decode that field's contents with
+        /// [`AuthenticatorStateInner::try_from_bcs`].
         pub fn version(&self) -> u64 {
             self.0.version
+        }
+    }
+}
+
+/// A typed view of the `0x2::authenticator_state::AuthenticatorStateInner`
+/// state held in the dynamic field of the [`AuthenticatorState`] singleton.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct AuthenticatorStateInner(
+    pub iota_sdk::move_types::iota_framework::authenticator_state::AuthenticatorStateInner,
+);
+
+#[uniffi::export]
+impl AuthenticatorStateInner {
+    /// Decode an `AuthenticatorStateInner` from raw BCS bytes.
+    ///
+    /// There is no object-based constructor: the state is stored as a dynamic
+    /// field of the `0x7` wrapper, not as a top-level object with its own type
+    /// tag.
+    #[uniffi::constructor]
+    pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(bcs::from_bytes::<
+            iota_sdk::move_types::iota_framework::authenticator_state::AuthenticatorStateInner,
+        >(&bytes)?
+        .into())
+    }
+
+    pub fn version(&self) -> u64 {
+        self.0.version
+    }
+
+    /// The currently active JWKs, ordered as stored on chain.
+    pub fn active_jwks(&self) -> Vec<ActiveJwk> {
+        self.0.active_jwks.iter().map(Into::into).collect()
+    }
+}
+
+/// A JWK active in a given epoch (`0x2::authenticator_state::ActiveJwk`).
+#[derive(uniffi::Record)]
+pub struct ActiveJwk {
+    pub jwk_id: JwkId,
+    pub jwk: Jwk,
+    /// The epoch the key was added in.
+    pub epoch: u64,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::authenticator_state::ActiveJwk> for ActiveJwk {
+    fn from(jwk: &iota_sdk::move_types::iota_framework::authenticator_state::ActiveJwk) -> Self {
+        Self {
+            jwk_id: (&jwk.jwk_id).into(),
+            jwk: (&jwk.jwk).into(),
+            epoch: jwk.epoch,
+        }
+    }
+}
+
+/// Identifier of a JWK (`0x2::authenticator_state::JwkId`).
+#[derive(uniffi::Record)]
+pub struct JwkId {
+    /// The OIDC provider that issued the key.
+    pub iss: String,
+    /// The key ID within the issuer's key set.
+    pub kid: String,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::authenticator_state::JwkId> for JwkId {
+    fn from(id: &iota_sdk::move_types::iota_framework::authenticator_state::JwkId) -> Self {
+        Self {
+            iss: move_string_to_string(&id.iss),
+            kid: move_string_to_string(&id.kid),
+        }
+    }
+}
+
+/// An RSA JWK as stored on chain (`0x2::authenticator_state::JWK`).
+#[derive(uniffi::Record)]
+pub struct Jwk {
+    pub kty: String,
+    pub e: String,
+    pub n: String,
+    pub alg: String,
+}
+
+impl From<&iota_sdk::move_types::iota_framework::authenticator_state::JWK> for Jwk {
+    fn from(jwk: &iota_sdk::move_types::iota_framework::authenticator_state::JWK) -> Self {
+        Self {
+            kty: move_string_to_string(&jwk.kty),
+            e: move_string_to_string(&jwk.e),
+            n: move_string_to_string(&jwk.n),
+            alg: move_string_to_string(&jwk.alg),
         }
     }
 }
