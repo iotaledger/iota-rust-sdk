@@ -89,8 +89,11 @@ macro_rules! define_field_paths {
             }
 
             /// The underlying field path string.
-            pub fn as_str(&self) -> &str {
-                &self.0
+            pub const fn as_str(&self) -> &str {
+                match &self.0 {
+                    Cow::Borrowed(s) => s,
+                    Cow::Owned(s) => s.as_str(),
+                }
             }
         }
 
@@ -419,110 +422,6 @@ define_scoped_read_mask! {
 }
 
 // =============================================================================
-// Checkpoint transactions (prefixed with "transactions.")
-// =============================================================================
-
-define_field_paths! {
-    /// Field paths for executed transactions within checkpoint responses.
-    ///
-    /// All paths are prefixed with `transactions.`. Use these with
-    /// [`CheckpointResponseReadMask`].
-    pub struct CheckpointTransactionField {
-        /// All transaction fields within the checkpoint.
-        ALL = "transactions",
-        /// Transaction data (all sub-fields).
-        TRANSACTION = "transactions.transaction",
-        /// The transaction digest.
-        TRANSACTION_DIGEST = "transactions.transaction.digest",
-        /// The full BCS-encoded transaction.
-        TRANSACTION_BCS = "transactions.transaction.bcs",
-        /// User signatures (all sub-fields).
-        SIGNATURES = "transactions.signatures",
-        /// The full BCS-encoded signatures.
-        SIGNATURES_BCS = "transactions.signatures.bcs",
-        /// Transaction effects (all sub-fields).
-        EFFECTS = "transactions.effects",
-        /// The effects digest.
-        EFFECTS_DIGEST = "transactions.effects.digest",
-        /// The full BCS-encoded effects.
-        EFFECTS_BCS = "transactions.effects.bcs",
-        /// Transaction events (all sub-fields).
-        EVENTS = "transactions.events",
-        /// The events digest.
-        EVENTS_DIGEST = "transactions.events.digest",
-        /// Checkpoint sequence number.
-        CHECKPOINT = "transactions.checkpoint",
-        /// Timestamp.
-        TIMESTAMP = "transactions.timestamp",
-        /// Input objects (all sub-fields).
-        INPUT_OBJECTS = "transactions.input_objects",
-        /// The full BCS-encoded input object.
-        INPUT_OBJECTS_BCS = "transactions.input_objects.bcs",
-        /// Output objects (all sub-fields).
-        OUTPUT_OBJECTS = "transactions.output_objects",
-        /// The full BCS-encoded output object.
-        OUTPUT_OBJECTS_BCS = "transactions.output_objects.bcs",
-        /// Balance changes (all sub-fields).
-        BALANCE_CHANGES = "transactions.balance_changes",
-        /// Object changes (all sub-fields).
-        OBJECT_CHANGES = "transactions.object_changes",
-    }
-}
-
-// =============================================================================
-// Simulate executed transaction (prefixed with "executed_transaction.")
-// =============================================================================
-
-define_field_paths! {
-    /// Field paths for the executed transaction within simulate responses.
-    ///
-    /// All paths are prefixed with `executed_transaction.`. Use these with
-    /// [`SimulateReadMask`].
-    pub struct SimulateExecutedTransactionField {
-        /// All executed transaction fields.
-        ALL = "executed_transaction",
-        /// Transaction data (all sub-fields).
-        TRANSACTION = "executed_transaction.transaction",
-        /// The transaction digest.
-        TRANSACTION_DIGEST = "executed_transaction.transaction.digest",
-        /// The full BCS-encoded transaction.
-        TRANSACTION_BCS = "executed_transaction.transaction.bcs",
-        /// User signatures (all sub-fields).
-        SIGNATURES = "executed_transaction.signatures",
-        /// The full BCS-encoded signatures.
-        SIGNATURES_BCS = "executed_transaction.signatures.bcs",
-        /// Transaction effects (all sub-fields).
-        EFFECTS = "executed_transaction.effects",
-        /// The effects digest.
-        EFFECTS_DIGEST = "executed_transaction.effects.digest",
-        /// The full BCS-encoded effects.
-        EFFECTS_BCS = "executed_transaction.effects.bcs",
-        /// Transaction events (all sub-fields).
-        EVENTS = "executed_transaction.events",
-        /// The events digest.
-        EVENTS_DIGEST = "executed_transaction.events.digest",
-        /// Individual events — full BCS-encoded.
-        EVENTS_EVENTS_BCS = "executed_transaction.events.events.bcs",
-        /// Checkpoint sequence number.
-        CHECKPOINT = "executed_transaction.checkpoint",
-        /// Timestamp.
-        TIMESTAMP = "executed_transaction.timestamp",
-        /// Input objects (all sub-fields).
-        INPUT_OBJECTS = "executed_transaction.input_objects",
-        /// The full BCS-encoded input object.
-        INPUT_OBJECTS_BCS = "executed_transaction.input_objects.bcs",
-        /// Output objects (all sub-fields).
-        OUTPUT_OBJECTS = "executed_transaction.output_objects",
-        /// The full BCS-encoded output object.
-        OUTPUT_OBJECTS_BCS = "executed_transaction.output_objects.bcs",
-        /// Balance changes (all sub-fields).
-        BALANCE_CHANGES = "executed_transaction.balance_changes",
-        /// Object changes (all sub-fields).
-        OBJECT_CHANGES = "executed_transaction.object_changes",
-    }
-}
-
-// =============================================================================
 // get_service_info
 // =============================================================================
 
@@ -675,8 +574,60 @@ define_field_paths! {
         CHECKPOINT_SIGNATURE = "checkpoint.signature",
         /// All transactions in the checkpoint.
         TRANSACTIONS = "transactions",
+        /// Transaction data of a checkpoint transaction (all sub-fields).
+        TRANSACTIONS_TRANSACTION = "transactions.transaction",
+        /// The transaction digest.
+        TRANSACTIONS_TRANSACTION_DIGEST = "transactions.transaction.digest",
+        /// The full BCS-encoded transaction.
+        TRANSACTIONS_TRANSACTION_BCS = "transactions.transaction.bcs",
+        /// User signatures (all sub-fields).
+        TRANSACTIONS_SIGNATURES = "transactions.signatures",
+        /// The full BCS-encoded signatures.
+        TRANSACTIONS_SIGNATURES_BCS = "transactions.signatures.bcs",
+        /// Transaction effects (all sub-fields).
+        TRANSACTIONS_EFFECTS = "transactions.effects",
+        /// The effects digest.
+        TRANSACTIONS_EFFECTS_DIGEST = "transactions.effects.digest",
+        /// The full BCS-encoded effects.
+        TRANSACTIONS_EFFECTS_BCS = "transactions.effects.bcs",
+        /// Transaction events (all sub-fields).
+        TRANSACTIONS_EVENTS = "transactions.events",
+        /// The events digest.
+        TRANSACTIONS_EVENTS_DIGEST = "transactions.events.digest",
+        /// Individual events — full BCS-encoded.
+        TRANSACTIONS_EVENTS_EVENTS_BCS = "transactions.events.events.bcs",
+        /// Checkpoint sequence number of the transaction.
+        TRANSACTIONS_CHECKPOINT = "transactions.checkpoint",
+        /// Timestamp of the transaction.
+        TRANSACTIONS_TIMESTAMP = "transactions.timestamp",
+        /// Input objects (all sub-fields).
+        TRANSACTIONS_INPUT_OBJECTS = "transactions.input_objects",
+        /// The full BCS-encoded input object.
+        TRANSACTIONS_INPUT_OBJECTS_BCS = "transactions.input_objects.bcs",
+        /// Output objects (all sub-fields).
+        TRANSACTIONS_OUTPUT_OBJECTS = "transactions.output_objects",
+        /// The full BCS-encoded output object.
+        TRANSACTIONS_OUTPUT_OBJECTS_BCS = "transactions.output_objects.bcs",
+        /// Balance changes (all sub-fields).
+        TRANSACTIONS_BALANCE_CHANGES = "transactions.balance_changes",
+        /// Object changes (all sub-fields).
+        TRANSACTIONS_OBJECT_CHANGES = "transactions.object_changes",
         /// All events in the checkpoint.
         EVENTS = "events",
+        /// Full BCS-encoded event.
+        EVENTS_BCS = "events.bcs",
+        /// The ID of the package that emitted the event.
+        EVENTS_PACKAGE_ID = "events.package_id",
+        /// The module that emitted the event.
+        EVENTS_MODULE = "events.module",
+        /// The sender that triggered the event.
+        EVENTS_SENDER = "events.sender",
+        /// The type of the event.
+        EVENTS_EVENT_TYPE = "events.event_type",
+        /// The full BCS-encoded contents of the event.
+        EVENTS_BCS_CONTENTS = "events.bcs_contents",
+        /// The JSON-encoded contents of the event.
+        EVENTS_JSON_CONTENTS = "events.json_contents",
     }
 }
 
@@ -684,31 +635,6 @@ define_scoped_read_mask! {
     /// Scoped read mask for checkpoint queries (`get_checkpoint_*`,
     /// `stream_checkpoints`, `stream_checkpoints_filtered`).
     pub struct CheckpointResponseReadMask from CheckpointResponseField default GET_CHECKPOINT_READ_MASK;
-}
-
-define_field_paths! {
-    /// Field paths for checkpoint-level events.
-    ///
-    /// All paths are prefixed with `events.`. Use these with
-    /// [`CheckpointResponseReadMask`].
-    pub struct CheckpointEventField {
-        /// All event fields.
-        ALL = "events",
-        /// Full BCS-encoded event.
-        BCS = "events.bcs",
-        /// The ID of the package that emitted the event.
-        PACKAGE_ID = "events.package_id",
-        /// The module that emitted the event.
-        MODULE = "events.module",
-        /// The sender that triggered the event.
-        SENDER = "events.sender",
-        /// The type of the event.
-        EVENT_TYPE = "events.event_type",
-        /// The full BCS-encoded contents of the event.
-        BCS_CONTENTS = "events.bcs_contents",
-        /// The JSON-encoded contents of the event.
-        JSON_CONTENTS = "events.json_contents",
-    }
 }
 
 // =============================================================================
@@ -722,6 +648,44 @@ define_field_paths! {
         ALL = "*",
         /// The simulated executed transaction (all sub-fields).
         EXECUTED_TRANSACTION = "executed_transaction",
+        /// Transaction data of the executed transaction (all sub-fields).
+        EXECUTED_TRANSACTION_TRANSACTION = "executed_transaction.transaction",
+        /// The transaction digest.
+        EXECUTED_TRANSACTION_TRANSACTION_DIGEST = "executed_transaction.transaction.digest",
+        /// The full BCS-encoded transaction.
+        EXECUTED_TRANSACTION_TRANSACTION_BCS = "executed_transaction.transaction.bcs",
+        /// User signatures (all sub-fields).
+        EXECUTED_TRANSACTION_SIGNATURES = "executed_transaction.signatures",
+        /// The full BCS-encoded signatures.
+        EXECUTED_TRANSACTION_SIGNATURES_BCS = "executed_transaction.signatures.bcs",
+        /// Transaction effects (all sub-fields).
+        EXECUTED_TRANSACTION_EFFECTS = "executed_transaction.effects",
+        /// The effects digest.
+        EXECUTED_TRANSACTION_EFFECTS_DIGEST = "executed_transaction.effects.digest",
+        /// The full BCS-encoded effects.
+        EXECUTED_TRANSACTION_EFFECTS_BCS = "executed_transaction.effects.bcs",
+        /// Transaction events (all sub-fields).
+        EXECUTED_TRANSACTION_EVENTS = "executed_transaction.events",
+        /// The events digest.
+        EXECUTED_TRANSACTION_EVENTS_DIGEST = "executed_transaction.events.digest",
+        /// Individual events — full BCS-encoded.
+        EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS = "executed_transaction.events.events.bcs",
+        /// Checkpoint sequence number that included the transaction.
+        EXECUTED_TRANSACTION_CHECKPOINT = "executed_transaction.checkpoint",
+        /// Timestamp of the transaction.
+        EXECUTED_TRANSACTION_TIMESTAMP = "executed_transaction.timestamp",
+        /// Input objects (all sub-fields).
+        EXECUTED_TRANSACTION_INPUT_OBJECTS = "executed_transaction.input_objects",
+        /// The full BCS-encoded input object.
+        EXECUTED_TRANSACTION_INPUT_OBJECTS_BCS = "executed_transaction.input_objects.bcs",
+        /// Output objects (all sub-fields).
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS = "executed_transaction.output_objects",
+        /// The full BCS-encoded output object.
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS_BCS = "executed_transaction.output_objects.bcs",
+        /// Balance changes (all sub-fields).
+        EXECUTED_TRANSACTION_BALANCE_CHANGES = "executed_transaction.balance_changes",
+        /// Object changes (all sub-fields).
+        EXECUTED_TRANSACTION_OBJECT_CHANGES = "executed_transaction.object_changes",
         /// The suggested gas price (in NANOS).
         SUGGESTED_GAS_PRICE = "suggested_gas_price",
         /// Execution result (all sub-fields).
@@ -825,51 +789,6 @@ mod tests {
     }
 
     #[test]
-    fn checkpoint_transaction_field_paths() {
-        assert_eq!(CheckpointTransactionField::ALL, "transactions");
-        assert_eq!(
-            CheckpointTransactionField::TRANSACTION_DIGEST,
-            "transactions.transaction.digest"
-        );
-        assert_eq!(
-            CheckpointTransactionField::EFFECTS_BCS,
-            "transactions.effects.bcs"
-        );
-        assert_eq!(
-            CheckpointTransactionField::BALANCE_CHANGES,
-            "transactions.balance_changes"
-        );
-        assert_eq!(
-            CheckpointTransactionField::OBJECT_CHANGES,
-            "transactions.object_changes"
-        );
-    }
-
-    #[test]
-    fn simulate_executed_transaction_field_paths() {
-        assert_eq!(
-            SimulateExecutedTransactionField::ALL,
-            "executed_transaction"
-        );
-        assert_eq!(
-            SimulateExecutedTransactionField::EFFECTS,
-            "executed_transaction.effects"
-        );
-        assert_eq!(
-            SimulateExecutedTransactionField::EFFECTS_BCS,
-            "executed_transaction.effects.bcs"
-        );
-        assert_eq!(
-            SimulateExecutedTransactionField::BALANCE_CHANGES,
-            "executed_transaction.balance_changes"
-        );
-        assert_eq!(
-            SimulateExecutedTransactionField::OBJECT_CHANGES,
-            "executed_transaction.object_changes"
-        );
-    }
-
-    #[test]
     fn service_info_field_paths() {
         assert_eq!(ServiceInfoField::ALL, "*");
         assert_eq!(ServiceInfoField::CHAIN_ID, "chain_id");
@@ -929,14 +848,24 @@ mod tests {
             "checkpoint.summary.bcs"
         );
         assert_eq!(CheckpointResponseField::TRANSACTIONS, "transactions");
+        assert_eq!(
+            CheckpointResponseField::TRANSACTIONS_TRANSACTION_DIGEST,
+            "transactions.transaction.digest"
+        );
+        assert_eq!(
+            CheckpointResponseField::TRANSACTIONS_EFFECTS_BCS,
+            "transactions.effects.bcs"
+        );
+        assert_eq!(
+            CheckpointResponseField::TRANSACTIONS_OBJECT_CHANGES,
+            "transactions.object_changes"
+        );
         assert_eq!(CheckpointResponseField::EVENTS, "events");
-    }
-
-    #[test]
-    fn checkpoint_event_field_paths() {
-        assert_eq!(CheckpointEventField::ALL, "events");
-        assert_eq!(CheckpointEventField::BCS, "events.bcs");
-        assert_eq!(CheckpointEventField::PACKAGE_ID, "events.package_id");
+        assert_eq!(CheckpointResponseField::EVENTS_BCS, "events.bcs");
+        assert_eq!(
+            CheckpointResponseField::EVENTS_PACKAGE_ID,
+            "events.package_id"
+        );
     }
 
     #[test]
@@ -950,6 +879,19 @@ mod tests {
         assert_eq!(
             SimulateField::EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
             "execution_result.execution_error.bcs_kind"
+        );
+        assert_eq!(SimulateField::EXECUTED_TRANSACTION, "executed_transaction");
+        assert_eq!(
+            SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
+            "executed_transaction.effects.bcs"
+        );
+        assert_eq!(
+            SimulateField::EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS,
+            "executed_transaction.events.events.bcs"
+        );
+        assert_eq!(
+            SimulateField::EXECUTED_TRANSACTION_OBJECT_CHANGES,
+            "executed_transaction.object_changes"
         );
     }
 
