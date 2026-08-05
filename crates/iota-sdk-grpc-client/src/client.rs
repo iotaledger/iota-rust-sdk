@@ -75,9 +75,15 @@ impl Client {
             .into());
         }
 
+        // Without this, h2's fixed 64KiB flow-control windows cap each
+        // stream's throughput at window/RTT (~130KB/s on a 500ms link),
+        // which starves high-volume streams such as checkpoint
+        // subscriptions. The adaptive window sizes both windows from a
+        // live bandwidth-delay-product estimate instead.
         let channel = endpoint
             .connect_timeout(Duration::from_secs(5))
             .http2_keep_alive_interval(Duration::from_secs(5))
+            .http2_adaptive_window(true)
             .connect_lazy();
 
         Ok(Self {
