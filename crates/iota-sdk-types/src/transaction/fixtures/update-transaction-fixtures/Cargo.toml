@@ -9,7 +9,7 @@ edition = "2024"
 bcs.workspace = true
 fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "5f2c63266a065996d53f98156f0412782b468597" }
 futures.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 iota-json-rpc-types = { path = "../../../../../../../iota/crates/iota-json-rpc-types" }
 iota-types = { path = "../../../../../../../iota/crates/iota-types" }

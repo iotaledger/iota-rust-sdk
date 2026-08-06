@@ -1,1 +1,2 @@
 * @iotaledger/dev-tools
+/crates/iota-sdk-grpc-*/ @iotaledger/node

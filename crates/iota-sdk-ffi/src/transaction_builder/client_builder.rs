@@ -13,6 +13,7 @@ use crate::{
     error::Result,
     graphql::{client::GraphQLClient, output_types::DryRunResult},
     transaction_builder::{
+        Payment,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
     },
@@ -244,6 +245,54 @@ impl ClientTransactionBuilder {
             with_builder!(inner, |builder| {
                 builder.transfer_objects(**recipient, objects);
             })
+        });
+        self
+    }
+
+    /// Send coins to multiple recipients, each paired with the amount to
+    /// send.
+    ///
+    /// The amounts specify quantities in the coins' smallest unit (NANOS for
+    /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
+    ///
+    /// The coins are merged into the first one, the amounts are split off it
+    /// in a single command, and each split coin is transferred to its
+    /// corresponding recipient, with one transfer command per unique
+    /// recipient. The remainder stays in the first coin.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// To pay IOTA directly from the gas coin, use
+    /// `ClientTransactionBuilder::pay_iota()` instead.
+    ///
+    /// For a single recipient, consider using
+    /// `ClientTransactionBuilder::send_coins()` or
+    /// `ClientTransactionBuilder::send_iota()` instead.
+    pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.pay(
+                coins,
+                payments.into_iter().map(|p| (**p.recipient, p.amount)),
+            );
+        });
+        self
+    }
+
+    /// Send IOTA to multiple recipients, each paired with the amount to
+    /// send.
+    ///
+    /// The amounts specify quantities in NANOS, where 1 IOTA equals
+    /// 1_000_000_000 NANOS. They are split off the gas coin in a single
+    /// command, and each split coin is transferred to its corresponding
+    /// recipient, with one transfer command per unique recipient.
+    ///
+    /// To pay with specific coins, or with a coin type other than IOTA, use
+    /// `ClientTransactionBuilder::pay()`. For a single recipient, consider
+    /// using `ClientTransactionBuilder::send_iota()` instead.
+    pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
         });
         self
     }

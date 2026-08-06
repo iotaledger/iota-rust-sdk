@@ -3,18 +3,20 @@
 
 //! High-level API for transaction queries.
 
-use iota_grpc_types::v1::{
-    ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
-    transaction::ExecutedTransaction,
+use iota_grpc_types::{
+    read_mask_fields::{IntoReadMask, TransactionReadMask},
+    v1::{
+        ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
+        transaction::ExecutedTransaction,
+    },
 };
 use iota_types::TransactionDigest;
 
 use crate::{
     Client,
     api::{
-        Error, GET_TRANSACTIONS_READ_MASK, MetadataEnvelope, ReadMask, Result, check_result_count,
-        check_transaction_identity, collect_stream, field_mask_with_default, into_item_results,
-        saturating_usize_to_u32,
+        Error, MetadataEnvelope, Result, check_result_count, check_transaction_identity,
+        collect_stream, into_item_results, saturating_usize_to_u32,
     },
 };
 
@@ -58,11 +60,12 @@ impl Client {
     ///
     /// # Read Mask
     ///
-    /// The optional `read_mask` parameter controls which fields the server
-    /// returns. If `None`, uses [`GET_TRANSACTIONS_READ_MASK`].
-    ///
-    /// Use [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// constants with [`ReadMask::from`] for field selection.
+    /// The `read_mask` controls which fields the server returns; use
+    /// `TransactionReadMask::default()` for the default field mask, or pass a
+    /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask)
+    /// built from a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields.
     ///
     /// The `input_objects`, `output_objects`, `balance_changes` and
     /// `object_changes` fields (also included by wildcard masks) require the
@@ -75,27 +78,17 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::{Client, ReadMask};
-    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionField;
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{TransactionField, TransactionReadMask};
     /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new("http://localhost:9000")?;
-    /// let digest: TransactionDigest = todo!();
+    /// let client = Client::new_localnet()?;
+    /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
-    /// // Get transactions with default mask
-    /// let txs = client.get_transactions(&[digest], None).await?;
-    ///
-    /// // Get transactions with field mask
+    /// // Default mask
     /// let txs = client
-    ///     .get_transactions(
-    ///         &[digest],
-    ///         Some(ReadMask::from(&[
-    ///             TransactionField::EFFECTS,
-    ///             TransactionField::CHECKPOINT,
-    ///         ])),
-    ///     )
+    ///     .get_transactions([digest], TransactionReadMask::default())
     ///     .await?;
-    ///
     /// for tx in txs.body() {
     ///     let tx = match tx {
     ///         Ok(tx) => tx,
@@ -115,14 +108,23 @@ impl Client {
     ///     let checkpoint = tx.checkpoint_sequence_number()?;
     ///     println!("Checkpoint: {}", checkpoint);
     /// }
+    ///
+    /// // Selected fields
+    /// let txs = client
+    ///     .get_transactions(
+    ///         [digest],
+    ///         TransactionReadMask::from([TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
+    ///     )
+    ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_transactions(
         &self,
-        digests: &[TransactionDigest],
-        read_mask: Option<ReadMask<'_>>,
+        digests: impl IntoIterator<Item = TransactionDigest>,
+        read_mask: impl IntoReadMask<TransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+        let digests = digests.into_iter().collect::<Vec<_>>();
         if digests.is_empty() {
             return Err(Error::EmptyRequest);
         }
@@ -136,10 +138,7 @@ impl Client {
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
-            .with_read_mask(field_mask_with_default(
-                read_mask,
-                GET_TRANSACTIONS_READ_MASK,
-            ));
+            .with_read_mask(read_mask.into_read_mask());
 
         if let Some(max_size) = self.max_decoding_message_size() {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
@@ -156,7 +155,7 @@ impl Client {
         })
         .await?;
         check_result_count(response.body(), digests.len())?;
-        check_transaction_identity(response.body(), digests)?;
+        check_transaction_identity(response.body(), &digests)?;
 
         Ok(response)
     }

@@ -43,6 +43,7 @@ impl ObjectId {
     pub const RANDOMNESS_STATE: Self = Self(Address::RANDOMNESS_STATE);
     pub const GENESIS_IOTA_BRIDGE: Self = Self(Address::GENESIS_IOTA_BRIDGE);
     pub const DENY_LIST: Self = Self(Address::DENY_LIST);
+    pub const TRANSACTION_DENY_RULES: Self = Self(Address::TRANSACTION_DENY_RULES);
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
