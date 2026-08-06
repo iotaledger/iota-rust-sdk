@@ -6,6 +6,7 @@
 use std::{pin::Pin, sync::Arc};
 
 use futures::{Stream, StreamExt};
+use iota_sdk::grpc_client::read_mask_fields::CheckpointResponseReadMask;
 use tokio::sync::Mutex;
 
 use crate::{
@@ -87,9 +88,9 @@ impl GrpcClient {
             .read()
             .await
             .get_checkpoint_latest(
-                super::read_mask(&read_mask),
                 to_proto_transactions_filter(&transactions_filter),
                 to_proto_events_filter(&events_filter),
+                super::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
             .into_inner())
@@ -117,9 +118,9 @@ impl GrpcClient {
             .await
             .get_checkpoint_by_sequence_number(
                 sequence_number,
-                super::read_mask(&read_mask),
                 to_proto_transactions_filter(&transactions_filter),
                 to_proto_events_filter(&events_filter),
+                super::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
             .into_inner())
@@ -147,9 +148,9 @@ impl GrpcClient {
             .await
             .get_checkpoint_by_digest(
                 **digest,
-                super::read_mask(&read_mask),
                 to_proto_transactions_filter(&transactions_filter),
                 to_proto_events_filter(&events_filter),
+                super::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
             .into_inner())
@@ -189,9 +190,9 @@ impl GrpcClient {
             .stream_checkpoints(
                 start_sequence_number,
                 end_sequence_number,
-                super::read_mask(&read_mask),
                 to_proto_transactions_filter(&transactions_filter),
                 to_proto_events_filter(&events_filter),
+                super::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
             .into_inner();

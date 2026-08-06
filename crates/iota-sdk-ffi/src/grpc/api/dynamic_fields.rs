@@ -3,6 +3,8 @@
 
 //! Dynamic fields API implementation.
 
+use iota_sdk::grpc_client::read_mask_fields::DynamicFieldReadMask;
+
 use crate::{
     error::Result,
     grpc::{
@@ -32,7 +34,7 @@ impl GrpcClient {
             **parent,
             page_size,
             page_token.map(Into::into),
-            super::read_mask(&read_mask),
+            super::read_mask::<DynamicFieldReadMask>(&read_mask),
         );
         let page = query.await?.into_inner();
         Ok(DynamicFieldPage {
@@ -61,7 +63,7 @@ impl GrpcClient {
             **parent,
             None,
             None,
-            super::read_mask(&read_mask),
+            super::read_mask::<DynamicFieldReadMask>(&read_mask),
         );
         query
             .collect(limit)

@@ -5,6 +5,8 @@
 
 use std::sync::Arc;
 
+use iota_sdk::grpc_client::read_mask_fields::TransactionReadMask;
+
 use crate::{
     error::Result,
     grpc::{client::GrpcClient, output_types::ExecutedTransaction},
@@ -32,7 +34,7 @@ impl GrpcClient {
         self.0
             .read()
             .await
-            .get_transactions(&digests, super::read_mask(&read_mask))
+            .get_transactions(digests, super::read_mask::<TransactionReadMask>(&read_mask))
             .await?
             .into_inner()
             .into_iter()

@@ -7,7 +7,7 @@ use eyre::Result;
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
     graphql_client::{Client as GraphQlClient, faucet::FaucetClient},
-    grpc_client::Client,
+    grpc_client::{Client, read_mask_fields::TransactionReadMask},
     transaction_builder::TransactionBuilder,
     types::{Address, SignedTransaction},
 };
@@ -43,7 +43,7 @@ async fn main() -> Result<()> {
     };
 
     let executed = client
-        .execute_transaction(signed_transaction, None, None)
+        .execute_transaction(signed_transaction, None, TransactionReadMask::default())
         .await?
         .into_inner();
 

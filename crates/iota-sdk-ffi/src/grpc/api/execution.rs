@@ -3,6 +3,8 @@
 
 //! Transaction execution API implementation.
 
+use iota_sdk::grpc_client::read_mask_fields::{SimulateReadMask, TransactionReadMask};
+
 use crate::{
     error::Result,
     grpc::{
@@ -39,8 +41,8 @@ impl GrpcClient {
             .await
             .execute_transaction(
                 signed_transaction.into(),
-                super::read_mask(&read_mask),
                 checkpoint_inclusion_timeout_ms,
+                super::read_mask::<TransactionReadMask>(&read_mask),
             )
             .await?
             .into_inner())
@@ -71,8 +73,8 @@ impl GrpcClient {
             .await
             .execute_transactions(
                 transactions.into_iter().map(Into::into).collect(),
-                super::read_mask(&read_mask),
                 checkpoint_inclusion_timeout_ms,
+                super::read_mask::<TransactionReadMask>(&read_mask),
             )
             .await?
             .into_inner()
@@ -112,7 +114,7 @@ impl GrpcClient {
             .simulate_transaction(
                 transaction.0.clone(),
                 skip_checks,
-                super::read_mask(&read_mask),
+                super::read_mask::<SimulateReadMask>(&read_mask),
             )
             .await?
             .into_inner())
@@ -140,7 +142,7 @@ impl GrpcClient {
                         skip_checks: input.skip_checks,
                     })
                     .collect(),
-                super::read_mask(&read_mask),
+                super::read_mask::<SimulateReadMask>(&read_mask),
             )
             .await?
             .into_inner()

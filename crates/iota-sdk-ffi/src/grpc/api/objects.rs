@@ -5,6 +5,8 @@
 
 use std::sync::Arc;
 
+use iota_sdk::grpc_client::read_mask_fields::ObjectReadMask;
+
 use crate::{
     error::Result,
     grpc::{client::GrpcClient, output_types::ObjectRequest},
@@ -31,7 +33,7 @@ impl GrpcClient {
         self.0
             .read()
             .await
-            .get_objects(&refs, None)
+            .get_objects_with_versions(refs, ObjectReadMask::default())
             .await?
             .into_inner()
             .into_iter()

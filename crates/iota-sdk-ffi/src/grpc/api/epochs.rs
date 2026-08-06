@@ -3,6 +3,8 @@
 
 //! Epochs API implementation.
 
+use iota_sdk::grpc_client::read_mask_fields::EpochReadMask;
+
 use crate::{
     error::Result,
     grpc::{client::GrpcClient, output_types::EpochInfo},
@@ -24,7 +26,7 @@ impl GrpcClient {
             .0
             .read()
             .await
-            .get_epoch(epoch, super::read_mask(&read_mask))
+            .get_epoch(epoch, super::read_mask::<EpochReadMask>(&read_mask))
             .await?
             .into_inner())
             .try_into()

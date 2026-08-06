@@ -3,6 +3,8 @@
 
 //! Network information API implementation.
 
+use iota_sdk::grpc_client::read_mask_fields::ServiceInfoReadMask;
+
 use crate::{
     error::Result,
     grpc::{
@@ -39,7 +41,7 @@ impl GrpcClient {
             .0
             .read()
             .await
-            .get_service_info(super::read_mask(&read_mask))
+            .get_service_info(super::read_mask::<ServiceInfoReadMask>(&read_mask))
             .await?
             .into_inner())
             .try_into()

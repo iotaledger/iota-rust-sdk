@@ -270,11 +270,13 @@ impl ClientTransactionBuilder {
     /// `ClientTransactionBuilder::send_coins()` or
     /// `ClientTransactionBuilder::send_iota()` instead.
     pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.pay(
-                coins,
-                payments.into_iter().map(|p| (**p.recipient, p.amount)),
-            );
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.pay(
+                    coins,
+                    payments.into_iter().map(|p| (**p.recipient, p.amount)),
+                );
+            })
         });
         self
     }
@@ -291,8 +293,10 @@ impl ClientTransactionBuilder {
     /// `ClientTransactionBuilder::pay()`. For a single recipient, consider
     /// using `ClientTransactionBuilder::send_iota()` instead.
     pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
+            })
         });
         self
     }

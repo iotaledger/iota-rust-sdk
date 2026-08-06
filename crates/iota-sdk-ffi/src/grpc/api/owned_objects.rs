@@ -5,6 +5,8 @@
 
 use std::sync::Arc;
 
+use iota_sdk::grpc_client::read_mask_fields::OwnedObjectReadMask;
+
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{client::GrpcClient, output_types::OwnedObjectPage},
@@ -43,7 +45,7 @@ impl GrpcClient {
             object_type.map(|object_type| object_type.0.clone()),
             page_size,
             page_token.map(Into::into),
-            None,
+            OwnedObjectReadMask::default(),
         );
         let page = query.await?.into_inner();
         Ok(OwnedObjectPage {
@@ -67,7 +69,7 @@ impl GrpcClient {
             object_type.map(|object_type| object_type.0.clone()),
             None,
             None,
-            None,
+            OwnedObjectReadMask::default(),
         );
         convert_objects(query.collect(limit).await?.into_inner())
     }
