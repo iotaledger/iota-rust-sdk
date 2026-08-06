@@ -32,9 +32,10 @@ use std::borrow::Cow;
 use crate::{
     field_mask_normalize,
     read_masks::{
-        GET_CHECKPOINT_READ_MASK, GET_EPOCH_READ_MASK, GET_OBJECTS_READ_MASK,
-        GET_SERVICE_INFO_READ_MASK, GET_TRANSACTIONS_READ_MASK, LIST_DYNAMIC_FIELDS_READ_MASK,
-        LIST_OWNED_OBJECTS_READ_MASK, SIMULATE_TRANSACTIONS_READ_MASK,
+        EXECUTE_TRANSACTIONS_READ_MASK, GET_CHECKPOINT_READ_MASK, GET_EPOCH_READ_MASK,
+        GET_OBJECTS_READ_MASK, GET_SERVICE_INFO_READ_MASK, GET_TRANSACTIONS_READ_MASK,
+        LIST_DYNAMIC_FIELDS_READ_MASK, LIST_OWNED_OBJECTS_READ_MASK,
+        SIMULATE_TRANSACTIONS_READ_MASK,
     },
 };
 
@@ -417,8 +418,17 @@ define_field_paths! {
 }
 
 define_scoped_read_mask! {
-    /// Scoped read mask for `get_transactions` and `execute_transaction(s)`.
+    /// Scoped read mask for `get_transactions`.
     pub struct TransactionReadMask from TransactionField default GET_TRANSACTIONS_READ_MASK;
+}
+
+define_scoped_read_mask! {
+    /// Scoped read mask for `execute_transaction(s)`.
+    ///
+    /// Its `default()` is [`EXECUTE_TRANSACTIONS_READ_MASK`], matching the
+    /// server-side fallback: the transaction digest, `effects`, `events` and
+    /// the input/output objects.
+    pub struct ExecuteTransactionReadMask from TransactionField default EXECUTE_TRANSACTIONS_READ_MASK;
 }
 
 // =============================================================================
@@ -926,5 +936,20 @@ mod tests {
         let fields = [ObjectField::REFERENCE, ObjectField::BCS];
         let mask: ObjectReadMask = (&fields).into();
         assert_eq!(mask, "bcs,reference");
+    }
+
+    #[test]
+    fn execute_default_mask_includes_effects() {
+        let mask = ExecuteTransactionReadMask::default();
+        assert_eq!(mask, EXECUTE_TRANSACTIONS_READ_MASK);
+        assert!(mask.as_str().split(',').any(|path| path == "effects"));
+        // The `get_transactions` default does not, so the two endpoints must
+        // not share a mask type.
+        assert!(
+            !TransactionReadMask::default()
+                .as_str()
+                .split(',')
+                .any(|path| path == "effects")
+        );
     }
 }
