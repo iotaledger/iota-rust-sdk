@@ -91,6 +91,14 @@ impl Secp256k1PrivateKey {
         }
     }
 
+    /// Generate a new private key using the operating system's random number
+    /// generator.
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[cfg(feature = "pem")]
@@ -515,5 +523,22 @@ mod tests {
         let decoded = Secp256k1PrivateKey::from_base64(&b64).unwrap();
         assert_eq!(decoded.to_bytes(), signer.to_bytes());
         assert_eq!(decoded.to_base64(), b64);
+    }
+
+    #[cfg(feature = "rand")]
+    #[test]
+    fn random_key_signing() {
+        let signer = Secp256k1PrivateKey::random();
+        assert_ne!(
+            signer.public_key(),
+            Secp256k1PrivateKey::random().public_key()
+        );
+
+        let message = PersonalMessage(b"hello".into());
+        let signature = signer.sign_personal_message(&message).unwrap();
+        signer
+            .verifying_key()
+            .verify_personal_message(&message, &signature)
+            .unwrap();
     }
 }

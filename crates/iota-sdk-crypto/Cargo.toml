@@ -31,6 +31,8 @@ secp256r1 = ["dep:base64ct", "dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
 passkey = ["secp256r1", "dep:sha2"]
 secp256k1 = ["dep:base64ct", "dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
 bech32 = ["dep:bech32", "signature/std"]
+# `random()` constructors backed by the operating system's RNG
+rand = ["dep:rand_core", "rand_core/getrandom"]
 # PKCS#8/PEM support. fastcrypto has no PKCS#8 codec, so ed25519, p256 and
 # k256 are pulled in purely as encoders/decoders here; the actual signing and
 # verification always go through fastcrypto.
