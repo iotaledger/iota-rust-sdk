@@ -676,9 +676,8 @@ impl crate::TreeDisplay for Object {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Object")?;
         w.leaf("Object ID", &self.id(), false)?;
-        w.leaf("Version", &self.version(), false)?;
+        w.child("Data", &self.data, false)?;
         w.leaf("Owner", &self.owner, false)?;
-        w.leaf("Type", &self.object_type(), false)?;
         w.leaf("Previous Tx", &self.previous_transaction, false)?;
         w.leaf("Storage Rebate", &self.storage_rebate, true)
     }
@@ -746,9 +745,8 @@ impl crate::TreeDisplay for GenesisObject {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Genesis Object")?;
         w.leaf("Object ID", &self.object_id(), false)?;
-        w.leaf("Version", &self.version(), false)?;
-        w.leaf("Owner", &self.owner, false)?;
-        w.leaf("Type", &self.object_type(), true)
+        w.child("Data", &self.data, false)?;
+        w.leaf("Owner", &self.owner, true)
     }
 }
 
