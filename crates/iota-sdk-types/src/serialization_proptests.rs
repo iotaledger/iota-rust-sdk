@@ -162,8 +162,7 @@ macro_rules! bcs_base64_test {
         paste::item! {
             #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
             #[cfg_attr(not(target_arch = "wasm32"), proptest)]
-            #[allow(non_snake_case)]
-            fn [< test_bcs_base64_roundtrip_ $type >] (instance: $type) {
+            fn [< test_bcs_base64_roundtrip_ $type:snake >] (instance: $type) {
                 assert_eq!(instance, $type::from_bcs(&instance.to_bcs()).unwrap());
                 assert_eq!(instance, $type::from_base64(&instance.to_base64()).unwrap());
             }
