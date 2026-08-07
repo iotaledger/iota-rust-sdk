@@ -279,6 +279,10 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthenticationError { error: Arc<ExecutionErrorWrapper> },
+    /// The transaction's attestation was invalid: the attestor vouched for a
+    /// transaction it should have rejected. The attestor is accountable, so the
+    /// issuer's owned objects and gas are left untouched.
+    InvalidAttestation,
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -438,6 +442,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
+            iota_sdk::types::ExecutionError::InvalidAttestation => Self::InvalidAttestation,
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -560,6 +565,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::MoveAuthenticationError { error } => Self::MoveAuthenticationError {
                 error: Box::new(error.0.clone()),
             },
+            ExecutionError::InvalidAttestation => Self::InvalidAttestation,
         }
     }
 }
