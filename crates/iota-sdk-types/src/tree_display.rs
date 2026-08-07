@@ -584,11 +584,11 @@ Multisig Aggregated Signature
 ├── Committee: Multisig Committee
 │   ├── Members
 │   │   └── 0: Multisig Member
-│   │       ├── Public Key: Ed25519(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=)
+│   │       ├── Public Key: Ed25519PublicKey(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=)
 │   │       └── Weight: 1
 │   └── Threshold: 1
 ├── Signatures
-│   └── 0: Ed25519(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
+│   └── 0: Ed25519Signature(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
 └── Bitmap: 1";
 
         assert_eq!(signature.to_string(), expected.strip_prefix('\n').unwrap());

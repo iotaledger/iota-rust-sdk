@@ -11,6 +11,7 @@
 //! fails instead of silently escaping the check.
 
 fn assert_display<T: std::fmt::Display>() {}
+
 #[test]
 fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Address>();

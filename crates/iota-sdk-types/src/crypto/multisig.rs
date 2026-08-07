@@ -501,13 +501,13 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
-    #[display("Ed25519({_0})")]
+    #[display("Ed25519Signature({_0})")]
     Ed25519(Ed25519Signature),
-    #[display("Secp256k1({_0})")]
+    #[display("Secp256k1Signature({_0})")]
     Secp256k1(Secp256k1Signature),
-    #[display("Secp256r1({_0})")]
+    #[display("Secp256r1Signature({_0})")]
     Secp256r1(Secp256r1Signature),
-    #[display("Passkey({_0})")]
+    #[display("PasskeyAuthenticator({_0})")]
     Passkey(PasskeyAuthenticator),
 }
 

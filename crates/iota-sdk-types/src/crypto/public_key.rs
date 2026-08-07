@@ -54,13 +54,13 @@ pub enum PublicKeyError {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum PublicKey {
-    #[display("Ed25519({_0})")]
+    #[display("Ed25519PublicKey({_0})")]
     Ed25519(Ed25519PublicKey),
-    #[display("Secp256k1({_0})")]
+    #[display("Secp256k1PublicKey({_0})")]
     Secp256k1(Secp256k1PublicKey),
-    #[display("Secp256r1({_0})")]
+    #[display("Secp256r1PublicKey({_0})")]
     Secp256r1(Secp256r1PublicKey),
-    #[display("Passkey({_0})")]
+    #[display("PasskeyPublicKey({_0})")]
     Passkey(PasskeyPublicKey),
 }
 

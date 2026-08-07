@@ -246,19 +246,28 @@ impl std::fmt::Display for SimpleSignature {
                 signature,
                 public_key,
             } => {
-                write!(f, "Ed25519(key: {public_key}, signature: {signature})")
+                write!(
+                    f,
+                    "SimpleSignature::Ed25519(key: {public_key}, signature: {signature})"
+                )
             }
             SimpleSignature::Secp256k1 {
                 signature,
                 public_key,
             } => {
-                write!(f, "Secp256k1(key: {public_key}, signature: {signature})")
+                write!(
+                    f,
+                    "SimpleSignature::Secp256k1(key: {public_key}, signature: {signature})"
+                )
             }
             SimpleSignature::Secp256r1 {
                 signature,
                 public_key,
             } => {
-                write!(f, "Secp256r1(key: {public_key}, signature: {signature})")
+                write!(
+                    f,
+                    "SimpleSignature::Secp256r1(key: {public_key}, signature: {signature})"
+                )
             }
         }
     }
