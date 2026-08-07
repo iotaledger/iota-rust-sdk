@@ -19,12 +19,6 @@ pub(crate) trait TreeDisplay {
     fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
 }
 
-impl<T: TreeDisplay + ?Sized> TreeDisplay for &T {
-    fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result {
-        (**self).fmt_tree(w)
-    }
-}
-
 /// Generates `Display` impls that delegate to [`TreeDisplay::fmt_tree`].
 macro_rules! impl_tree_display {
     ($($ty:ty),* $(,)?) => {
@@ -175,21 +169,20 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
-    /// Display a collection of [`TreeDisplay`] items as indexed sub-trees.
-    pub fn children<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
-    where
-        I: IntoIterator,
-        I::Item: TreeDisplay,
-        I::IntoIter: ExactSizeIterator,
-    {
-        let items = items.into_iter();
-        if items.len() == 0 {
+    /// Display a slice of [`TreeDisplay`] items as indexed sub-trees.
+    pub fn children(
+        &mut self,
+        label: &str,
+        items: &[impl TreeDisplay],
+        is_last: bool,
+    ) -> std::fmt::Result {
+        if items.is_empty() {
             self.leaf(label, &"[]", is_last)
         } else {
             self.branch(label, is_last, |w| {
                 let last_idx = items.len() - 1;
-                for (i, item) in items.enumerate() {
-                    w.child(&i.to_string(), &item, i == last_idx)?;
+                for (i, item) in items.iter().enumerate() {
+                    w.child(&i.to_string(), item, i == last_idx)?;
                 }
                 Ok(())
             })
