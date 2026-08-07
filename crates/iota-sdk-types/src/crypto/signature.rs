@@ -246,15 +246,15 @@ impl crate::TreeDisplay for SimpleSignature {
                 SimpleSignature::Ed25519 {
                     signature,
                     public_key,
-                } => ("Ed25519", public_key, signature),
+                } => ("Ed25519Signature", public_key, signature),
                 SimpleSignature::Secp256k1 {
                     signature,
                     public_key,
-                } => ("Secp256k1", public_key, signature),
+                } => ("Secp256k1Signature", public_key, signature),
                 SimpleSignature::Secp256r1 {
                     signature,
                     public_key,
-                } => ("Secp256r1", public_key, signature),
+                } => ("Secp256r1Signature", public_key, signature),
             };
         w.header(scheme)?;
         w.leaf("Public Key", public_key, false)?;
