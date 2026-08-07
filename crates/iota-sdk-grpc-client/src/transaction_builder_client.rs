@@ -9,7 +9,7 @@ use std::time::Duration;
 use iota_grpc_types::{
     read_mask_fields::{
         EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateReadMask, TransactionField, TransactionReadMask,
+        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -153,7 +153,7 @@ impl TransactionBuilderResolveClient for Client {
         let epoch = self
             .get_epoch(
                 epoch.into(),
-                Some(ReadMask::from(EpochField::REFERENCE_GAS_PRICE)),
+                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
             )
             .await?
             .into_inner();
@@ -163,7 +163,13 @@ impl TransactionBuilderResolveClient for Client {
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
-        let simulated = self.simulate_transaction(tx.clone(), true, None).await?;
+        let simulated = self
+            .simulate_transaction(
+                tx.clone(),
+                true,
+                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
+            )
+            .await?;
         let effects = simulated
             .into_inner()
             .executed_transaction()?
