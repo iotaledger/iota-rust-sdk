@@ -125,7 +125,7 @@ pub struct UnchangedSharedObject {
 /// unchanged-shared-kind = %d00 u64 object-digest   ; ReadOnlyRoot
 ///                       / %d01 u64                  ; MutateDeleted
 ///                       / %d02 u64                  ; ReadDeleted
-///                       / %d03 u64                  ; Cancelled
+///                       / %d03 u64                  ; Canceled
 ///                       / %d04                       ; PerEpochConfig
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -145,9 +145,9 @@ pub enum UnchangedSharedKind {
     MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Version },
-    /// Shared objects in cancelled transaction. The sequence number embed
+    /// Shared objects in canceled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled { version: Version },
+    Canceled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -158,7 +158,7 @@ impl UnchangedSharedKind {
         ReadOnlyRoot,
         MutateDeleted,
         ReadDeleted,
-        Cancelled,
+        Canceled,
         PerEpochConfig
     );
 }

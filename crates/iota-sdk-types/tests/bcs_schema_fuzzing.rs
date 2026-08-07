@@ -783,7 +783,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<Argument>("argument");
     test.check_rule::<Bls12381PublicKey>("bls12381-public-key");
     test.check_rule::<Bls12381Signature>("bls12381-signature");
-    test.check_rule::<CancelledTransaction>("cancelled-transaction");
+    test.check_rule::<CanceledTransaction>("canceled-transaction");
     test.check_rule::<ChangeEpoch>("change-epoch");
     test.check_rule::<ChangedObject>("changed-object");
     test.check_rule::<CheckpointCommitment>("checkpoint-commitment");

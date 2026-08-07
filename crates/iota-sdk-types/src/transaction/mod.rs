@@ -702,38 +702,42 @@ impl EndOfEpochTransactionKind {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
-    /// Cancelled transaction version assignment.
-    CancelledTransactions {
+    /// Canceled transaction version assignment.
+    // Serialized names keep the historical spelling for wire compatibility.
+    #[cfg_attr(feature = "serde", serde(rename = "CancelledTransactions"))]
+    CanceledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        cancelled_transactions: Vec<CancelledTransaction>,
+        // TODO rename?
+        #[cfg_attr(feature = "serde", serde(rename = "cancelled_transactions"))]
+        canceled_transactions: Vec<CanceledTransaction>,
     },
 }
 
 impl ConsensusDeterminedVersionAssignments {
-    crate::def_is!(CancelledTransactions);
+    crate::def_is!(CanceledTransactions);
 
-    pub fn as_cancelled_transactions(&self) -> &[CancelledTransaction] {
-        let Self::CancelledTransactions {
-            cancelled_transactions,
+    pub fn as_canceled_transactions(&self) -> &[CanceledTransaction] {
+        let Self::CanceledTransactions {
+            canceled_transactions,
         } = self;
-        cancelled_transactions
+        canceled_transactions
     }
 }
 
-/// A transaction that was cancelled
+/// A transaction that was canceled
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = transaction-digest (vector version-assignment)
+/// canceled-transaction = transaction-digest (vector version-assignment)
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-pub struct CancelledTransaction {
+pub struct CanceledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
