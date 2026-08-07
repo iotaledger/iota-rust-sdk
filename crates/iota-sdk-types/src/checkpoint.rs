@@ -91,13 +91,13 @@ pub struct EndOfEpochData {
 impl crate::TreeDisplay for EndOfEpochData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("End of Epoch Data")?;
-        w.vec_children("Next Epoch Committee", &self.next_epoch_committee, false)?;
+        w.children("Next Epoch Committee", &self.next_epoch_committee, false)?;
         w.leaf(
             "Next Epoch Protocol Version",
             &self.next_epoch_protocol_version,
             false,
         )?;
-        w.iter_inline("Epoch Commitments", &self.epoch_commitments, false)?;
+        w.leaves("Epoch Commitments", &self.epoch_commitments, false)?;
         w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
     }
 }
@@ -208,14 +208,14 @@ impl crate::TreeDisplay for CheckpointSummary {
             false,
         )?;
         w.leaf("Contents Digest", &self.contents_digest, false)?;
-        w.option("Previous Digest", &self.previous_digest, false)?;
+        w.option_leaf("Previous Digest", &self.previous_digest, false)?;
         w.child(
             "Epoch Rolling Gas Cost",
             &self.epoch_rolling_gas_cost_summary,
             false,
         )?;
         w.leaf("Timestamp (ms)", &self.timestamp_ms, false)?;
-        w.iter_inline(
+        w.leaves(
             "Checkpoint Commitments",
             &self.checkpoint_commitments,
             false,
@@ -458,7 +458,7 @@ impl crate::TreeDisplay for CheckpointContents {
 impl crate::TreeDisplay for CheckpointContentsV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Checkpoint Contents")?;
-        w.vec_children("Transactions", self.transactions(), true)
+        w.children("Transactions", self.transactions(), true)
     }
 }
 
@@ -478,7 +478,7 @@ impl crate::TreeDisplay for CheckpointTransactionInfo {
         w.header("Checkpoint Transaction Info")?;
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
-        w.iter_inline("Signatures", &self.signatures, true)
+        w.children("Signatures", &self.signatures, true)
     }
 }
 
@@ -498,7 +498,7 @@ impl crate::TreeDisplay for CheckpointData {
         w.header("Checkpoint Data")?;
         w.child("Checkpoint Summary", &self.checkpoint_summary, false)?;
         w.child("Contents", &self.checkpoint_contents, false)?;
-        w.vec_children("Transactions", &self.transactions, true)
+        w.children("Transactions", &self.transactions, true)
     }
 }
 
@@ -536,8 +536,8 @@ impl crate::TreeDisplay for CheckpointTransaction {
         w.child("Transaction", &self.transaction, false)?;
         w.child("Effects", &self.effects, false)?;
         w.option_child("Events", &self.events, false)?;
-        w.vec_children("Input Objects", &self.input_objects, false)?;
-        w.vec_children("Output Objects", &self.output_objects, true)
+        w.children("Input Objects", &self.input_objects, false)?;
+        w.children("Output Objects", &self.output_objects, true)
     }
 }
 

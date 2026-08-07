@@ -192,7 +192,7 @@ impl crate::TreeDisplay for SignedTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Signed Transaction")?;
         w.child("Transaction", &self.transaction, false)?;
-        w.iter_inline("Signatures", &self.signatures, true)
+        w.children("Signatures", &self.signatures, true)
     }
 }
 
@@ -273,7 +273,7 @@ pub struct GasPayment {
 impl crate::TreeDisplay for GasPayment {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Gas Payment")?;
-        w.vec_children("Objects", &self.objects, false)?;
+        w.children("Objects", &self.objects, false)?;
         w.leaf("Owner", &self.owner, false)?;
         w.leaf("Price", &self.price, false)?;
         w.leaf("Budget", &self.budget, true)
@@ -445,9 +445,9 @@ pub struct TransactionDenyRulesUpdate {
 impl crate::TreeDisplay for DenyRuleSet {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Deny Rule Set")?;
-        w.iter_inline("Denied Addresses", &self.denied_addresses, false)?;
-        w.iter_inline("Denied Objects", &self.denied_objects, false)?;
-        w.iter_inline("Denied Packages", &self.denied_packages, false)?;
+        w.leaves("Denied Addresses", &self.denied_addresses, false)?;
+        w.leaves("Denied Objects", &self.denied_objects, false)?;
+        w.leaves("Denied Packages", &self.denied_packages, false)?;
         w.leaf(
             "Package Publish Disabled",
             &self.package_publish_disabled,
@@ -486,12 +486,12 @@ impl crate::TreeDisplay for TransactionDenyRulesUpdate {
         w.header("Transaction Deny Rules Update")?;
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Round", &self.round, false)?;
-        w.iter_inline("Added Addresses", &self.added_addresses, false)?;
-        w.iter_inline("Removed Addresses", &self.removed_addresses, false)?;
-        w.iter_inline("Added Objects", &self.added_objects, false)?;
-        w.iter_inline("Removed Objects", &self.removed_objects, false)?;
-        w.iter_inline("Added Packages", &self.added_packages, false)?;
-        w.iter_inline("Removed Packages", &self.removed_packages, false)?;
+        w.leaves("Added Addresses", &self.added_addresses, false)?;
+        w.leaves("Removed Addresses", &self.removed_addresses, false)?;
+        w.leaves("Added Objects", &self.added_objects, false)?;
+        w.leaves("Removed Objects", &self.removed_objects, false)?;
+        w.leaves("Added Packages", &self.added_packages, false)?;
+        w.leaves("Removed Packages", &self.removed_packages, false)?;
         w.leaf(
             "Package Publish Disabled",
             &self.package_publish_disabled,
@@ -655,7 +655,7 @@ impl crate::TreeDisplay for TransactionKind {
             }
             Self::EndOfEpoch(items) => {
                 w.header("End of Epoch")?;
-                w.vec_children("Transactions", items, true)
+                w.children("Transactions", items, true)
             }
             Self::RandomnessStateUpdate(v) => v.fmt_tree(w),
             Self::TransactionDenyRulesUpdate(v) => v.fmt_tree(w),
@@ -875,7 +875,7 @@ impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
                 cancelled_transactions,
             } => {
                 w.header("Cancelled Transactions")?;
-                w.vec_children("Transactions", cancelled_transactions, true)
+                w.children("Transactions", cancelled_transactions, true)
             }
         }
     }
@@ -904,7 +904,7 @@ impl crate::TreeDisplay for CancelledTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Cancelled Transaction")?;
         w.leaf("Digest", &self.digest, false)?;
-        w.vec_children("Version Assignments", &self.version_assignments, true)
+        w.children("Version Assignments", &self.version_assignments, true)
     }
 }
 
@@ -985,7 +985,7 @@ impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
         w.header("Consensus Commit Prologue V1")?;
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Round", &self.round, false)?;
-        w.option("Sub DAG Index", &self.sub_dag_index, false)?;
+        w.option_leaf("Sub DAG Index", &self.sub_dag_index, false)?;
         w.leaf("Commit Timestamp Ms", &self.commit_timestamp_ms, false)?;
         w.leaf(
             "Consensus Commit Digest",
@@ -1072,7 +1072,7 @@ impl crate::TreeDisplay for ChangeEpoch {
             &self.epoch_start_timestamp_ms,
             false,
         )?;
-        w.vec_children("System Packages", &self.system_packages, true)
+        w.children("System Packages", &self.system_packages, true)
     }
 }
 
@@ -1157,7 +1157,7 @@ impl crate::TreeDisplay for ChangeEpochV2 {
             &self.epoch_start_timestamp_ms,
             false,
         )?;
-        w.vec_children("System Packages", &self.system_packages, true)
+        w.children("System Packages", &self.system_packages, true)
     }
 }
 
@@ -1228,8 +1228,8 @@ impl crate::TreeDisplay for ChangeEpochV3 {
             &self.epoch_start_timestamp_ms,
             false,
         )?;
-        w.vec_children("System Packages", &self.system_packages, false)?;
-        w.iter_inline(
+        w.children("System Packages", &self.system_packages, false)?;
+        w.leaves(
             "Eligible Active Validators",
             &self.eligible_active_validators,
             true,
@@ -1309,13 +1309,13 @@ impl crate::TreeDisplay for ChangeEpochV4 {
             &self.epoch_start_timestamp_ms,
             false,
         )?;
-        w.vec_children("System Packages", &self.system_packages, false)?;
-        w.iter_inline(
+        w.children("System Packages", &self.system_packages, false)?;
+        w.leaves(
             "Eligible Active Validators",
             &self.eligible_active_validators,
             false,
         )?;
-        w.iter_inline("Scores", &self.scores, false)?;
+        w.leaves("Scores", &self.scores, false)?;
         w.leaf(
             "Adjust Rewards By Score",
             &self.adjust_rewards_by_score,
@@ -1352,8 +1352,8 @@ impl crate::TreeDisplay for SystemPackage {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("System Package")?;
         w.leaf("Version", &self.version, false)?;
-        w.bytes_vec("Modules", &self.modules, false)?;
-        w.iter_inline("Dependencies", &self.dependencies, true)
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1380,8 +1380,8 @@ pub struct GenesisTransaction {
 impl crate::TreeDisplay for GenesisTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Genesis Transaction")?;
-        w.vec_children("Objects", &self.objects, false)?;
-        w.vec_children("Events", &self.events, true)
+        w.children("Objects", &self.objects, false)?;
+        w.children("Events", &self.events, true)
     }
 }
 
@@ -1414,8 +1414,8 @@ pub struct ProgrammableTransaction {
 impl crate::TreeDisplay for ProgrammableTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Programmable Transaction")?;
-        w.vec_children("Inputs", &self.inputs, false)?;
-        w.vec_children("Commands", &self.commands, true)
+        w.children("Inputs", &self.inputs, false)?;
+        w.children("Commands", &self.commands, true)
     }
 }
 /// An input to a user transaction
@@ -1769,7 +1769,7 @@ pub struct TransferObjects {
 impl crate::TreeDisplay for TransferObjects {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Transfer Objects")?;
-        w.iter_inline("Objects", &self.objects, false)?;
+        w.leaves("Objects", &self.objects, false)?;
         w.leaf("Address", &self.address, true)
     }
 }
@@ -1799,7 +1799,7 @@ impl crate::TreeDisplay for SplitCoins {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Split Coins")?;
         w.leaf("Coin", &self.coin, false)?;
-        w.iter_inline("Amounts", &self.amounts, true)
+        w.leaves("Amounts", &self.amounts, true)
     }
 }
 
@@ -1830,7 +1830,7 @@ impl crate::TreeDisplay for MergeCoins {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Merge Coins")?;
         w.leaf("Coin", &self.coin, false)?;
-        w.iter_inline("Coins To Merge", &self.coins_to_merge, true)
+        w.leaves("Coins To Merge", &self.coins_to_merge, true)
     }
 }
 
@@ -1871,8 +1871,8 @@ pub struct Publish {
 impl crate::TreeDisplay for Publish {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Publish")?;
-        w.bytes_vec("Modules", &self.modules, false)?;
-        w.iter_inline("Dependencies", &self.dependencies, true)
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1904,8 +1904,8 @@ pub struct MakeMoveVector {
 impl crate::TreeDisplay for MakeMoveVector {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Make Move Vector")?;
-        w.option("Type", &self.type_, false)?;
-        w.iter_inline("Elements", &self.elements, true)
+        w.option_leaf("Type", &self.type_, false)?;
+        w.leaves("Elements", &self.elements, true)
     }
 }
 
@@ -1952,8 +1952,8 @@ pub struct Upgrade {
 impl crate::TreeDisplay for Upgrade {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Upgrade")?;
-        w.bytes_vec("Modules", &self.modules, false)?;
-        w.iter_inline("Dependencies", &self.dependencies, false)?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
         w.leaf("Package", &self.package, false)?;
         w.leaf("Ticket", &self.ticket, true)
     }
@@ -2103,8 +2103,8 @@ impl crate::TreeDisplay for MoveCall {
         w.leaf("Package", &self.package, false)?;
         w.leaf("Module", &self.module, false)?;
         w.leaf("Function", &self.function, false)?;
-        w.iter_inline("Type Arguments", &self.type_arguments, false)?;
-        w.iter_inline("Arguments", &self.arguments, true)
+        w.leaves("Type Arguments", &self.type_arguments, false)?;
+        w.leaves("Arguments", &self.arguments, true)
     }
 }
 

@@ -262,7 +262,7 @@ impl MultisigCommittee {
 impl crate::TreeDisplay for MultisigCommittee {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Multisig Committee")?;
-        w.vec_children("Members", &self.members, false)?;
+        w.children("Members", &self.members, false)?;
         w.leaf("Threshold", &self.threshold, true)
     }
 }
@@ -454,7 +454,7 @@ impl crate::TreeDisplay for MultisigAggregatedSignature {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Multisig Aggregated Signature")?;
         w.child("Committee", &self.committee, false)?;
-        w.iter_inline("Signatures", &self.signatures, false)?;
+        w.children("Signatures", &self.signatures, false)?;
         w.leaf("Bitmap", &self.bitmap, true)
     }
 }
@@ -462,7 +462,8 @@ impl crate::TreeDisplay for MultisigAggregatedSignature {
 crate::impl_tree_display!(
     MultisigMember,
     MultisigCommittee,
-    MultisigAggregatedSignature
+    MultisigAggregatedSignature,
+    MultisigMemberSignature
 );
 
 /// Interpret a bitmap of 01s as a list of indices that is set to 1s.
@@ -497,18 +498,25 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
-    #[display("Ed25519Signature({_0})")]
     Ed25519(Ed25519Signature),
-    #[display("Secp256k1Signature({_0})")]
     Secp256k1(Secp256k1Signature),
-    #[display("Secp256r1Signature({_0})")]
     Secp256r1(Secp256r1Signature),
-    #[display("PasskeyAuthenticator({_0})")]
     Passkey(PasskeyAuthenticator),
+}
+
+impl crate::TreeDisplay for MultisigMemberSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::Ed25519(v) => w.header(&format!("Ed25519Signature({v})")),
+            Self::Secp256k1(v) => w.header(&format!("Secp256k1Signature({v})")),
+            Self::Secp256r1(v) => w.header(&format!("Secp256r1Signature({v})")),
+            Self::Passkey(v) => v.fmt_tree(w),
+        }
+    }
 }
 
 impl MultisigMemberSignature {

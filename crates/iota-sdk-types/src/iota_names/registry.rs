@@ -106,7 +106,7 @@ impl crate::TreeDisplay for NameRecord {
         w.header("Name Record")?;
         w.leaf("NFT ID", &self.nft_id, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
-        w.option("Target Address", &self.target_address, false)?;
+        w.option_leaf("Target Address", &self.target_address, false)?;
         w.branch("Data", true, |w| {
             if self.data.is_empty() {
                 w.leaf("Entries", &"[]", true)

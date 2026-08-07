@@ -19,6 +19,12 @@ pub(crate) trait TreeDisplay {
     fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
 }
 
+impl<T: TreeDisplay + ?Sized> TreeDisplay for &T {
+    fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result {
+        (**self).fmt_tree(w)
+    }
+}
+
 /// Generates `Display` impls that delegate to [`TreeDisplay::fmt_tree`].
 macro_rules! impl_tree_display {
     ($($ty:ty),* $(,)?) => {
@@ -149,7 +155,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     }
 
     /// Display a collection of `Display` items as indexed leaf nodes.
-    pub fn iter_inline<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
+    pub fn leaves<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
     where
         I: IntoIterator,
         I::Item: std::fmt::Display,
@@ -169,20 +175,21 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
-    /// Display a `Vec` of [`TreeDisplay`] items as indexed sub-trees.
-    pub fn vec_children(
-        &mut self,
-        label: &str,
-        items: &[impl TreeDisplay],
-        is_last: bool,
-    ) -> std::fmt::Result {
-        if items.is_empty() {
+    /// Display a collection of [`TreeDisplay`] items as indexed sub-trees.
+    pub fn children<I>(&mut self, label: &str, items: I, is_last: bool) -> std::fmt::Result
+    where
+        I: IntoIterator,
+        I::Item: TreeDisplay,
+        I::IntoIter: ExactSizeIterator,
+    {
+        let items = items.into_iter();
+        if items.len() == 0 {
             self.leaf(label, &"[]", is_last)
         } else {
             self.branch(label, is_last, |w| {
                 let last_idx = items.len() - 1;
-                for (i, item) in items.iter().enumerate() {
-                    w.child(&i.to_string(), item, i == last_idx)?;
+                for (i, item) in items.enumerate() {
+                    w.child(&i.to_string(), &item, i == last_idx)?;
                 }
                 Ok(())
             })
@@ -190,7 +197,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     }
 
     /// Display an `Option<impl Display>`, showing "None" for `None`.
-    pub fn option(
+    pub fn option_leaf(
         &mut self,
         label: &str,
         opt: &Option<impl std::fmt::Display>,
@@ -217,7 +224,12 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     }
 
     /// Display a `Vec<Vec<u8>>` as Base64-encoded indexed leaves.
-    pub fn bytes_vec(&mut self, label: &str, items: &[Vec<u8>], is_last: bool) -> std::fmt::Result {
+    pub fn base64_leaves(
+        &mut self,
+        label: &str,
+        items: &[Vec<u8>],
+        is_last: bool,
+    ) -> std::fmt::Result {
         if items.is_empty() {
             self.leaf(label, &"[]", is_last)
         } else {
@@ -403,27 +415,24 @@ Origin
     }
 
     #[test]
-    fn iter_inline_renders_indexed_leaves() {
+    fn leaves_writes_one_node_per_item() {
         let empty: &[u8] = &[];
-        assert_eq!(
-            render(|w| w.iter_inline("Items", empty, true)),
-            "└── Items: []"
-        );
+        assert_eq!(render(|w| w.leaves("Items", empty, true)), "└── Items: []");
         let expected = "
 └── Items
     ├── 0: 10
     └── 1: 20";
         assert_eq!(
-            render(|w| w.iter_inline("Items", [10, 20], true)),
+            render(|w| w.leaves("Items", [10, 20], true)),
             expected.strip_prefix('\n').unwrap()
         );
     }
 
     #[test]
-    fn iter_inline_renders_indexed_leaves_from_any_collection() {
+    fn leaves_accepts_any_collection() {
         let set = std::collections::BTreeSet::from([20, 10]);
         assert_eq!(
-            render(|w| w.iter_inline("Items", std::collections::BTreeSet::<u8>::new(), true)),
+            render(|w| w.leaves("Items", std::collections::BTreeSet::<u8>::new(), true)),
             "└── Items: []"
         );
         let expected = "
@@ -431,16 +440,16 @@ Origin
     ├── 0: 10
     └── 1: 20";
         assert_eq!(
-            render(|w| w.iter_inline("Items", &set, true)),
+            render(|w| w.leaves("Items", &set, true)),
             expected.strip_prefix('\n').unwrap()
         );
     }
 
     #[test]
-    fn vec_children_renders_indexed_sub_trees() {
+    fn children_renders_indexed_sub_trees() {
         let empty: &[Point] = &[];
         assert_eq!(
-            render(|w| w.vec_children("Points", empty, true)),
+            render(|w| w.children("Points", empty, true)),
             "└── Points: []"
         );
         let expected = "
@@ -449,16 +458,19 @@ Origin
         ├── X: 1
         └── Y: 2";
         assert_eq!(
-            render(|w| w.vec_children("Points", &[Point { x: 1, y: 2 }], true)),
+            render(|w| w.children("Points", &[Point { x: 1, y: 2 }], true)),
             expected.strip_prefix('\n').unwrap()
         );
     }
 
     #[test]
-    fn option_renders_value_or_none() {
-        assert_eq!(render(|w| w.option("Opt", &Some(5), true)), "└── Opt: 5");
+    fn option_leaf_renders_value_or_none() {
         assert_eq!(
-            render(|w| w.option("Opt", &None::<u8>, true)),
+            render(|w| w.option_leaf("Opt", &Some(5), true)),
+            "└── Opt: 5"
+        );
+        assert_eq!(
+            render(|w| w.option_leaf("Opt", &None::<u8>, true)),
             "└── Opt: None"
         );
     }
@@ -480,13 +492,16 @@ Origin
     }
 
     #[test]
-    fn bytes_vec_renders_base64_leaves() {
-        assert_eq!(render(|w| w.bytes_vec("Data", &[], true)), "└── Data: []");
+    fn base64_leaves_encodes_each_entry() {
+        assert_eq!(
+            render(|w| w.base64_leaves("Data", &[], true)),
+            "└── Data: []"
+        );
         let expected = "
 └── Data
     └── 0: AQID";
         assert_eq!(
-            render(|w| w.bytes_vec("Data", &[vec![1, 2, 3]], true)),
+            render(|w| w.base64_leaves("Data", &[vec![1, 2, 3]], true)),
             expected.strip_prefix('\n').unwrap()
         );
     }

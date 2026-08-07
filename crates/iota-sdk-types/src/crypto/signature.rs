@@ -239,37 +239,26 @@ impl SimpleSignature {
     }
 }
 
-impl std::fmt::Display for SimpleSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SimpleSignature::Ed25519 {
-                signature,
-                public_key,
-            } => {
-                write!(
-                    f,
-                    "SimpleSignature::Ed25519(key: {public_key}, signature: {signature})"
-                )
-            }
-            SimpleSignature::Secp256k1 {
-                signature,
-                public_key,
-            } => {
-                write!(
-                    f,
-                    "SimpleSignature::Secp256k1(key: {public_key}, signature: {signature})"
-                )
-            }
-            SimpleSignature::Secp256r1 {
-                signature,
-                public_key,
-            } => {
-                write!(
-                    f,
-                    "SimpleSignature::Secp256r1(key: {public_key}, signature: {signature})"
-                )
-            }
-        }
+impl crate::TreeDisplay for SimpleSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        let (scheme, public_key, signature): (_, &dyn std::fmt::Display, &dyn std::fmt::Display) =
+            match self {
+                SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => ("Ed25519", public_key, signature),
+                SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => ("Secp256k1", public_key, signature),
+                SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => ("Secp256r1", public_key, signature),
+            };
+        w.header(scheme)?;
+        w.leaf("Public Key", public_key, false)?;
+        w.leaf("Signature", signature, true)
     }
 }
 
@@ -386,7 +375,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -395,15 +384,24 @@ impl std::fmt::Display for InvalidSignatureScheme {
 )]
 #[non_exhaustive]
 pub enum UserSignature {
-    #[display("Simple({_0})")]
     Simple(SimpleSignature),
-    #[display("Multisig({_0})")]
     Multisig(MultisigAggregatedSignature),
-    #[display("Passkey({_0})")]
     PasskeyAuthenticator(PasskeyAuthenticator),
-    #[display("MoveAuthenticator({_0})")]
     MoveAuthenticator(MoveAuthenticator),
 }
+
+impl crate::TreeDisplay for UserSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::Simple(v) => v.fmt_tree(w),
+            Self::Multisig(v) => v.fmt_tree(w),
+            Self::PasskeyAuthenticator(v) => v.fmt_tree(w),
+            Self::MoveAuthenticator(v) => v.fmt_tree(w),
+        }
+    }
+}
+
+crate::impl_tree_display!(SimpleSignature, UserSignature);
 
 impl UserSignature {
     crate::def_is_as_into_opt!(

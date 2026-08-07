@@ -22,7 +22,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 impl crate::TreeDisplay for TransactionEvents {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Transaction Events")?;
-        w.vec_children("Events", &self.0, true)
+        w.children("Events", &self.0, true)
     }
 }
 

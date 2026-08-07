@@ -77,17 +77,17 @@ impl crate::TreeDisplay for TransactionEffectsV1 {
         w.leaf("Epoch", &self.epoch, false)?;
         w.child("Gas Cost Summary", &self.gas_cost_summary, false)?;
         w.leaf("Transaction Digest", &self.transaction_digest, false)?;
-        w.option("Gas Object Index", &self.gas_object_index, false)?;
-        w.option("Events Digest", &self.events_digest, false)?;
-        w.iter_inline("Dependencies", &self.dependencies, false)?;
+        w.option_leaf("Gas Object Index", &self.gas_object_index, false)?;
+        w.option_leaf("Events Digest", &self.events_digest, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
         w.leaf("Lamport Version", &self.lamport_version, false)?;
-        w.vec_children("Changed Objects", &self.changed_objects, false)?;
-        w.vec_children(
+        w.children("Changed Objects", &self.changed_objects, false)?;
+        w.children(
             "Unchanged Shared Objects",
             &self.unchanged_shared_objects,
             false,
         )?;
-        w.option("Auxiliary Data Digest", &self.auxiliary_data_digest, true)
+        w.option_leaf("Auxiliary Data Digest", &self.auxiliary_data_digest, true)
     }
 }
 

@@ -88,8 +88,8 @@ impl MovePackageData {
 impl crate::TreeDisplay for MovePackageData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Move Package Data")?;
-        w.bytes_vec("Modules", &self.modules, false)?;
-        w.iter_inline("Dependencies", &self.dependencies, false)?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
         w.leaf("Digest", &self.digest, true)
     }
 }
@@ -376,7 +376,15 @@ impl crate::TreeDisplay for MovePackage {
         w.header("Move Package")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Version", &self.version, false)?;
-        w.iter_inline("Modules", self.modules.keys(), true)
+        w.leaves("Modules", self.modules.keys(), false)?;
+        w.children("Type Origins", &self.type_origin_table, false)?;
+        w.branch("Linkage Table", true, |w| {
+            let last_idx = self.linkage_table.len().saturating_sub(1);
+            for (i, (id, info)) in self.linkage_table.iter().enumerate() {
+                w.child(&id.to_string(), info, i == last_idx)?;
+            }
+            Ok(())
+        })
     }
 }
 

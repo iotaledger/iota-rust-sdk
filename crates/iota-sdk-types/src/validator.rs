@@ -30,7 +30,7 @@ impl crate::TreeDisplay for ValidatorCommittee {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Validator Committee")?;
         w.leaf("Epoch", &self.epoch, false)?;
-        w.vec_children("Members", &self.members, true)
+        w.children("Members", &self.members, true)
     }
 }
 

@@ -156,9 +156,9 @@ impl crate::TreeDisplay for MoveAuthenticator {
 impl crate::TreeDisplay for MoveAuthenticatorV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Move Authenticator V1")?;
-        w.iter_inline("Call Args", &self.call_args, false)?;
-        w.iter_inline("Type Args", &self.type_args, false)?;
-        w.leaf("Object to Authenticate", &self.object_to_authenticate, true)
+        w.children("Call Args", &self.call_args, false)?;
+        w.leaves("Type Args", &self.type_args, false)?;
+        w.child("Object to Authenticate", &self.object_to_authenticate, true)
     }
 }
 
