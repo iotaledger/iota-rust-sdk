@@ -9,6 +9,7 @@ use iota_graphql_client::{
     Client, Direction,
     faucet::{CoinInfo, FaucetClient},
     pagination::PaginationFilter,
+    query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
     TransactionBuilder, WaitForTx, assigned, error::Error, unresolved::Argument,
@@ -493,4 +494,56 @@ async fn test_transactions_subscription() {
         matches!(item, Some(Ok(_))),
         "expected a transaction from the subscription, got {item:?}"
     );
+}
+
+/// Open a live events subscription and assert it delivers the
+/// `0x3::validator::StakingRequestEvent` emitted by a staking transaction that
+/// runs on a background task once the subscription has had a moment to connect.
+/// The filter is set at package level, so other `0x3` events (epoch changes)
+/// are skipped until the staking event arrives.
+#[tokio::test]
+async fn test_events_subscription() {
+    use futures::StreamExt;
+
+    let client = Client::new_localnet();
+    let filter = SubscriptionEventFilter {
+        emitting_module: Some("0x3".to_owned()),
+    };
+    let stream = client.events_stream(filter, None);
+    futures::pin_mut!(stream);
+
+    tokio::spawn(async move {
+        // Give the subscription time to connect before generating activity.
+        tokio::time::sleep(Duration::from_secs(2)).await;
+        let validator = Client::new_localnet()
+            .active_validators(None, PaginationFilter::default())
+            .await
+            .unwrap()
+            .data()
+            .first()
+            .expect("localnet runs at least one validator")
+            .address
+            .address;
+        let (mut tx, _, pk, _) = helper_setup().await;
+        tx.stake(1_000_000_000u64, validator);
+        let _ = tx.execute(&pk, WaitForTx::Finalized).await;
+    });
+
+    let event = tokio::time::timeout(Duration::from_secs(120), async {
+        while let Some(item) = stream.next().await {
+            let event = item.expect("the events subscription returned an error");
+            if event
+                .type_
+                .repr
+                .ends_with("::validator::StakingRequestEvent")
+            {
+                return event;
+            }
+        }
+        panic!("the events subscription ended without a staking event");
+    })
+    .await
+    .expect("timed out waiting for a staking event from the subscription");
+
+    assert!(!event.bcs.0.is_empty(), "staking event carries no bcs");
 }

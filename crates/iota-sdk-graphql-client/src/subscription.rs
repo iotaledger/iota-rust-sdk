@@ -58,8 +58,9 @@ impl Client {
     /// transaction immediately following the given transaction digest;
     /// thereafter the stream tracks its own resume point.
     ///
-    /// Note: subscriptions are served over a WebSocket and are currently
-    /// supported on devnet and localnet only.
+    /// Note: subscriptions are served over a WebSocket, which the node has to
+    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available.
     pub fn events_stream(
         &self,
         filter: impl Into<Option<SubscriptionEventFilter>>,
@@ -119,8 +120,9 @@ impl Client {
     /// from the transaction immediately following the given digest; thereafter
     /// the stream tracks its own resume point.
     ///
-    /// Note: subscriptions are served over a WebSocket and are currently
-    /// supported on devnet and localnet only.
+    /// Note: subscriptions are served over a WebSocket, which the node has to
+    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available.
     pub fn transactions_stream(
         &self,
         filter: impl Into<Option<SubscriptionTransactionFilter>>,
