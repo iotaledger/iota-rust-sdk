@@ -56,7 +56,7 @@ pub enum Shape {
     Address,
     Vector(Box<Shape>),
     /// Move `option::Option<T>` is a one-field struct wrapping `vector<T>`;
-    /// the comparator normalises this match.
+    /// the comparator normalizes this match.
     Option(Box<Shape>),
     /// Produced for the type the derive was applied to. Compared against a
     /// `normalized::Struct.fields` of matching arity / names / per-field

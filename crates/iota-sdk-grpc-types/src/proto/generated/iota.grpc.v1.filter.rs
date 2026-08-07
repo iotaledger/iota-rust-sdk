@@ -195,7 +195,7 @@ pub mod command_filter {
 }
 /// Filter by transaction execution status.
 /// Set `success` to `true` to match successful transactions,
-/// or `false` to match failed transactions (cancelled, execution error, etc.).
+/// or `false` to match failed transactions (canceled, execution error, etc.).
 #[non_exhaustive]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ExecutionStatusFilter {
