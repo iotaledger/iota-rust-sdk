@@ -83,20 +83,20 @@ impl ExecutionStatus {
     }
 }
 
-impl std::fmt::Display for ExecutionStatus {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for ExecutionStatus {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            ExecutionStatus::Success => write!(f, "Success"),
+            ExecutionStatus::Success => w.header("Success"),
             ExecutionStatus::Failure { error, command } => {
-                write!(f, "Failure: {error}")?;
-                if let Some(cmd) = command {
-                    write!(f, " (command {cmd})")?;
-                }
-                Ok(())
+                w.header("Failure")?;
+                w.leaf("Error", error, false)?;
+                w.option_leaf("Command", command, true)
             }
         }
     }
 }
+
+crate::impl_tree_display!(ExecutionStatus);
 
 fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
     struct W<'a>(&'a Option<MoveLocation>);

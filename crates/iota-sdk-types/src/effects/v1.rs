@@ -73,7 +73,7 @@ pub struct TransactionEffectsV1 {
 impl crate::TreeDisplay for TransactionEffectsV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Transaction Effects")?;
-        w.leaf("Status", &self.status, false)?;
+        w.child("Status", &self.status, false)?;
         w.leaf("Epoch", &self.epoch, false)?;
         w.child("Gas Cost Summary", &self.gas_cost_summary, false)?;
         w.leaf("Transaction Digest", &self.transaction_digest, false)?;
