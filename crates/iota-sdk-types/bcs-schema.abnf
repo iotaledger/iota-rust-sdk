@@ -210,6 +210,8 @@ execution-error = %d00                               ; InsufficientGas
                 / %d37 (size *object-id) u64         ; ExecutionCancelledDueToSharedObjectCongestionV2
                 / %d38                               ; InvalidLinkage
                 / %d39 execution-error               ; MoveAuthenticationError
+                / %d40 u64 u64                       ; MoveVectorElemTooBig
+                / %d41 u64 u64                       ; MoveRawValueTooBig
 
 execution-status = %d00                                     ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure
