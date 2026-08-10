@@ -65,7 +65,7 @@ txn-builder = ["dep:iota-transaction-builder"]
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde"]
-rand = ["types", "iota-types/rand"]
+rand = ["types", "iota-types/rand", "iota-crypto?/rand"]
 hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
 

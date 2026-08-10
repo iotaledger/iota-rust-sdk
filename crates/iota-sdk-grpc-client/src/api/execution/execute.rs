@@ -4,7 +4,7 @@
 //! High-level API for transaction execution.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, TransactionReadMask},
+    read_mask_fields::{ExecuteTransactionReadMask, IntoReadMask},
     v1::{
         signatures::{UserSignature as ProtoUserSignature, UserSignatures},
         transaction::ExecutedTransaction,
@@ -36,7 +36,7 @@ impl Client {
     /// - `result.object_changes()` - Get object changes (if requested)
     ///
     /// The `read_mask` controls which fields the server returns; use
-    /// `TransactionReadMask::default()` for the default mask. Pass a
+    /// `ExecuteTransactionReadMask::default()` for the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// or any slice/array/vec of fields — conversion is automatic.
     ///
@@ -51,14 +51,14 @@ impl Client {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::TransactionReadMask;
+    /// # use iota_sdk_grpc_client::read_mask_fields::ExecuteTransactionReadMask;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
     /// let result = client
-    ///     .execute_transaction(signed_tx, None, TransactionReadMask::default())
+    ///     .execute_transaction(signed_tx, None, ExecuteTransactionReadMask::default())
     ///     .await?;
     ///
     /// let effects = result.body().effects()?.effects()?;
@@ -75,7 +75,7 @@ impl Client {
         &self,
         signed_transaction: SignedTransaction,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-        read_mask: impl IntoReadMask<TransactionReadMask>,
+        read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
     ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
         self.execute_transactions(
             vec![signed_transaction],
@@ -96,8 +96,8 @@ impl Client {
     /// the per-item error returned by the server.
     ///
     /// The `read_mask` controls which fields the server returns for each
-    /// `ExecutedTransaction`; use `TransactionReadMask::default()` for the
-    /// default mask. Pass a
+    /// `ExecutedTransaction`; use `ExecuteTransactionReadMask::default()` for
+    /// the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
     /// or any slice/array/vec of fields — conversion is automatic.
     ///
@@ -117,7 +117,7 @@ impl Client {
         &self,
         transactions: Vec<SignedTransaction>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-        read_mask: impl IntoReadMask<TransactionReadMask>,
+        read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         let read_mask = read_mask.into_read_mask();
         let checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
