@@ -190,50 +190,81 @@ pub struct SimulateTransactionsResponse {
     #[prost(message, repeated, tag = "1")]
     pub transaction_results: ::prost::alloc::vec::Vec<SimulateTransactionResult>,
 }
-#[non_exhaustive]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ViewFunctionCallArgument {
-    #[prost(message, optional, tag = "1")]
-    pub bcs: ::core::option::Option<super::bcs::BcsData>,
-    #[prost(message, optional, tag = "2")]
-    pub json: ::core::option::Option<::prost_types::Value>,
-}
 /// A single view function to call.
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ViewFunctionCallItem {
+    /// Fully qualified function name, `<package>::<module>::<function>`.
     #[prost(string, tag = "1")]
     pub fq_function_name: ::prost::alloc::string::String,
+    /// Type arguments, in declaration order, for a generic function.
     #[prost(message, repeated, tag = "2")]
     pub type_args: ::prost::alloc::vec::Vec<super::types::TypeTag>,
+    /// Call arguments, in declaration order.
     #[prost(message, repeated, tag = "3")]
-    pub arguments: ::prost::alloc::vec::Vec<ViewFunctionCallArgument>,
+    pub inputs: ::prost::alloc::vec::Vec<super::command::InputArgument>,
 }
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ViewFunctionCallsRequest {
-    /// List of view functions to call. Function calls are simulated sequentially in order.
+    /// List of view functions to call. Each call runs in its own transaction, so
+    /// one call aborting leaves the others unaffected.
     /// For a single function call, provide a list with one item.
     #[prost(message, repeated, tag = "1")]
-    pub function_calls: ::prost::alloc::vec::Vec<ViewFunctionCallItem>,
-    /// Mask specifying which fields to read, applied to each ViewedFunctionCall in the response.
+    pub view_function_calls: ::prost::alloc::vec::Vec<ViewFunctionCallItem>,
+    /// Mask specifying which fields to read, applied to each ViewFunctionCallOutputs
+    /// in the response. If no mask is specified, defaults to `execution_result`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
+/// The outcome of running a single view function call.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallOutputs {
+    #[prost(oneof = "view_function_call_outputs::ExecutionResult", tags = "1, 2")]
+    pub execution_result: ::core::option::Option<
+        view_function_call_outputs::ExecutionResult,
+    >,
+}
+/// Nested message and enum types in `ViewFunctionCallOutputs`.
+pub mod view_function_call_outputs {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ExecutionResult {
+        /// The values the function returned.
+        #[prost(message, tag = "1")]
+        ReturnValues(super::super::command::CommandOutputs),
+        /// Why the call aborted.
+        #[prost(message, tag = "2")]
+        ExecutionError(super::ExecutionError),
+    }
+}
+/// The result of a single view function call: either the call ran (and returned
+/// or aborted), or the server rejected it.
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ViewFunctionCallResult {
-    #[prost(message, optional, tag = "1")]
-    pub view_function_call_result: ::core::option::Option<
-        super::command::CommandOutputs,
-    >,
+    #[prost(oneof = "view_function_call_result::Result", tags = "1, 2")]
+    pub result: ::core::option::Option<view_function_call_result::Result>,
 }
-/// Response message for `TransactionExecutionService.ViewFunctionCall`.
+/// Nested message and enum types in `ViewFunctionCallResult`.
+pub mod view_function_call_result {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "1")]
+        CallOutputs(super::ViewFunctionCallOutputs),
+        #[prost(message, tag = "2")]
+        Error(crate::google::rpc::Status),
+    }
+}
+/// Response message for `TransactionExecutionService.ViewFunctionCalls`.
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ViewFunctionCallsResponse {
+    /// Results for each call in the request, in the same order.
     #[prost(message, repeated, tag = "1")]
-    pub view_function_call_results: ::prost::alloc::vec::Vec<ViewFunctionCallResult>,
+    pub call_results: ::prost::alloc::vec::Vec<ViewFunctionCallResult>,
 }
 /// Generated client implementations.
 pub mod transaction_execution_service_client {

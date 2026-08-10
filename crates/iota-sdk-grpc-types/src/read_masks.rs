@@ -111,7 +111,7 @@ pub const SIMULATE_TRANSACTIONS_READ_MASK: &str = field_mask!(
 );
 
 /// Default read mask for `view_function_calls`.
-pub const VIEW_FUNCTION_CALLS_READ_MASK: &str = field_mask!("view_function_call_result");
+pub const VIEW_FUNCTION_CALLS_READ_MASK: &str = field_mask!("execution_result");
 
 // ---------------------------------------------------------------------------
 // CheckpointResponse — per-method field constants
@@ -386,6 +386,17 @@ pub const SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE: &str = "suggested_gas_price
 /// and
 /// [`SimulatedTransaction::execution_error()`](crate::v1::transaction_execution_service::SimulatedTransaction::execution_error).
 pub const SIMULATED_TRANSACTION_EXECUTION_RESULT: &str = "execution_result";
+
+// ---------------------------------------------------------------------------
+// ViewFunctionCallOutputs — per-method field constants
+// ---------------------------------------------------------------------------
+
+/// Read mask for
+/// [`ViewFunctionCallOutputs::execution_result()`](crate::v1::transaction_execution_service::ViewFunctionCallOutputs::execution_result),
+/// [`ViewFunctionCallOutputs::return_values()`](crate::v1::transaction_execution_service::ViewFunctionCallOutputs::return_values),
+/// and
+/// [`ViewFunctionCallOutputs::execution_error()`](crate::v1::transaction_execution_service::ViewFunctionCallOutputs::execution_error).
+pub const VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT: &str = "execution_result";
 
 // ---------------------------------------------------------------------------
 // ExecutionError — sub-field constants (relative to simulate_transactions)

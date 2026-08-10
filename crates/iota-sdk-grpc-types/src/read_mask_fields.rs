@@ -35,7 +35,7 @@ use crate::{
         EXECUTE_TRANSACTIONS_READ_MASK, GET_CHECKPOINT_READ_MASK, GET_EPOCH_READ_MASK,
         GET_OBJECTS_READ_MASK, GET_SERVICE_INFO_READ_MASK, GET_TRANSACTIONS_READ_MASK,
         LIST_DYNAMIC_FIELDS_READ_MASK, LIST_OWNED_OBJECTS_READ_MASK,
-        SIMULATE_TRANSACTIONS_READ_MASK,
+        SIMULATE_TRANSACTIONS_READ_MASK, VIEW_FUNCTION_CALLS_READ_MASK,
     },
 };
 
@@ -726,6 +726,44 @@ define_scoped_read_mask! {
 }
 
 // =============================================================================
+// view_function_call
+// =============================================================================
+
+define_field_paths! {
+    /// Field paths for `view_function_call(s)`.
+    pub struct ViewFunctionCallField {
+        /// Wildcard — request all fields.
+        ALL = "*",
+        /// Execution result (all sub-fields).
+        EXECUTION_RESULT = "execution_result",
+        /// Return values of the call (all sub-fields).
+        EXECUTION_RESULT_RETURN_VALUES = "execution_result.return_values",
+        /// The argument each return value came from.
+        EXECUTION_RESULT_RETURN_VALUES_ARGUMENT = "execution_result.return_values.argument",
+        /// The Move type of each return value.
+        EXECUTION_RESULT_RETURN_VALUES_TYPE_TAG = "execution_result.return_values.type_tag",
+        /// The BCS-encoded return values.
+        EXECUTION_RESULT_RETURN_VALUES_BCS = "execution_result.return_values.bcs",
+        /// The return values rendered as JSON.
+        EXECUTION_RESULT_RETURN_VALUES_JSON = "execution_result.return_values.json",
+        /// Execution error details (on failure, all sub-fields).
+        EXECUTION_RESULT_EXECUTION_ERROR = "execution_result.execution_error",
+        /// The BCS-encoded error kind.
+        EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND = "execution_result.execution_error.bcs_kind",
+        /// The error source description.
+        EXECUTION_RESULT_EXECUTION_ERROR_SOURCE = "execution_result.execution_error.source",
+        /// The index of the command that failed.
+        EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX =
+            "execution_result.execution_error.command_index",
+    }
+}
+
+define_scoped_read_mask! {
+    /// Scoped read mask for `view_function_call(s)`.
+    pub struct ViewFunctionCallReadMask from ViewFunctionCallField default VIEW_FUNCTION_CALLS_READ_MASK;
+}
+
+// =============================================================================
 // list_dynamic_fields
 // =============================================================================
 
@@ -936,6 +974,67 @@ mod tests {
         let fields = [ObjectField::REFERENCE, ObjectField::BCS];
         let mask: ObjectReadMask = (&fields).into();
         assert_eq!(mask, "bcs,reference");
+    }
+
+    /// Every path a caller can name must be one the server can resolve against
+    /// the message the mask is applied to, otherwise the field is silently
+    /// dropped instead of rejected.
+    #[test]
+    fn view_function_call_field_paths_resolve_against_the_outputs_message() {
+        use crate::{
+            field::{FieldMask, FieldMaskUtil},
+            v1::transaction_execution_service::ViewFunctionCallOutputs,
+        };
+
+        for path in [
+            ViewFunctionCallField::ALL,
+            ViewFunctionCallField::EXECUTION_RESULT,
+            ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES,
+            ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES_ARGUMENT,
+            ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES_TYPE_TAG,
+            ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES_BCS,
+            ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES_JSON,
+            ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR,
+            ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
+            ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
+            ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX,
+        ] {
+            let mask = FieldMask::from_str(path.as_str());
+            assert_eq!(
+                mask.validate::<ViewFunctionCallOutputs>(),
+                Ok(()),
+                "{path} does not resolve against ViewFunctionCallOutputs"
+            );
+        }
+
+        // The response-level field name is *not* a valid path: the mask applies
+        // per item, so naming it selects nothing.
+        assert!(
+            FieldMask::from_str("view_function_call_results")
+                .validate::<ViewFunctionCallOutputs>()
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn view_function_call_default_mask_resolves_and_covers_both_outcomes() {
+        use crate::{
+            field::{FieldMask, FieldMaskTree, FieldMaskUtil},
+            v1::transaction_execution_service::ViewFunctionCallOutputs,
+        };
+
+        let mask = ViewFunctionCallReadMask::default();
+        assert_eq!(mask, VIEW_FUNCTION_CALLS_READ_MASK);
+        assert_eq!(
+            FieldMask::from_str(mask.as_str()).validate::<ViewFunctionCallOutputs>(),
+            Ok(())
+        );
+
+        // The default names the oneof, so both arms come back — a caller that
+        // does not set a mask still sees a failing call's error.
+        let tree = FieldMaskTree::from_field_mask(&FieldMask::from_str(mask.as_str()));
+        assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES.as_str()));
+        assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR.as_str()));
     }
 
     #[test]

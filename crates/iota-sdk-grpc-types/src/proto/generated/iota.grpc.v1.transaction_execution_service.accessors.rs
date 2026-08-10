@@ -207,21 +207,6 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::ViewFunctionCallArgument {
-        /// Sets `bcs` with the provided value.
-        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.bcs = Some(field.into());
-            self
-        }
-        /// Sets `json` with the provided value.
-        pub fn with_json<T: Into<::prost_types::Value>>(mut self, field: T) -> Self {
-            self.json = Some(field.into());
-            self
-        }
-    }
     impl super::ViewFunctionCallItem {
         /// Sets `fq_function_name` with the provided value.
         pub fn with_fq_function_name<T: Into<String>>(mut self, field: T) -> Self {
@@ -236,22 +221,22 @@ mod _accessor_impls {
             self.type_args = field;
             self
         }
-        /// Sets `arguments` with the provided value.
-        pub fn with_arguments(
+        /// Sets `inputs` with the provided value.
+        pub fn with_inputs(
             mut self,
-            field: Vec<super::ViewFunctionCallArgument>,
+            field: Vec<super::super::command::InputArgument>,
         ) -> Self {
-            self.arguments = field;
+            self.inputs = field;
             self
         }
     }
     impl super::ViewFunctionCallsRequest {
-        /// Sets `function_calls` with the provided value.
-        pub fn with_function_calls(
+        /// Sets `view_function_calls` with the provided value.
+        pub fn with_view_function_calls(
             mut self,
             field: Vec<super::ViewFunctionCallItem>,
         ) -> Self {
-            self.function_calls = field;
+            self.view_function_calls = field;
             self
         }
         /// Sets `read_mask` with the provided value.
@@ -263,22 +248,64 @@ mod _accessor_impls {
             self
         }
     }
+    impl super::ViewFunctionCallOutputs {
+        /// Sets `return_values` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_return_values<T: Into<super::super::command::CommandOutputs>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.execution_result = Some(
+                super::view_function_call_outputs::ExecutionResult::ReturnValues(
+                    field.into(),
+                ),
+            );
+            self
+        }
+        /// Sets `execution_error` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_execution_error<T: Into<super::ExecutionError>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.execution_result = Some(
+                super::view_function_call_outputs::ExecutionResult::ExecutionError(
+                    field.into(),
+                ),
+            );
+            self
+        }
+    }
     impl super::ViewFunctionCallResult {
-        /// Sets `view_function_call_result` with the provided value.
-        pub fn with_view_function_call_result<
-            T: Into<super::super::command::CommandOutputs>,
+        /// Sets `call_outputs` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_call_outputs<T: Into<super::ViewFunctionCallOutputs>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.result = Some(
+                super::view_function_call_result::Result::CallOutputs(field.into()),
+            );
+            self
+        }
+        /// Sets `error` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_error<
+            T: Into<super::super::super::super::super::google::rpc::Status>,
         >(mut self, field: T) -> Self {
-            self.view_function_call_result = Some(field.into());
+            self.result = Some(
+                super::view_function_call_result::Result::Error(field.into()),
+            );
             self
         }
     }
     impl super::ViewFunctionCallsResponse {
-        /// Sets `view_function_call_results` with the provided value.
-        pub fn with_view_function_call_results(
+        /// Sets `call_results` with the provided value.
+        pub fn with_call_results(
             mut self,
             field: Vec<super::ViewFunctionCallResult>,
         ) -> Self {
-            self.view_function_call_results = field;
+            self.call_results = field;
             self
         }
     }

@@ -100,6 +100,8 @@ pub use api::{
     TRANSACTION_EFFECTS_DIGEST,
     TRANSACTION_EVENTS_BCS,
     TRANSACTION_EVENTS_DIGEST,
+    // ViewFunctionCall per-method masks
+    VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT,
 };
 // Re-export types for convenience
 pub use api::{
@@ -118,6 +120,7 @@ pub use api::{
     LIST_DYNAMIC_FIELDS_READ_MASK,
     LIST_OWNED_OBJECTS_READ_MASK,
     SIMULATE_TRANSACTIONS_READ_MASK,
+    VIEW_FUNCTION_CALLS_READ_MASK,
 };
 // Re-export query builders for convenience
 pub use api::{

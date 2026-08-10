@@ -169,7 +169,7 @@ pub fn proto_to_timestamp_ms(timestamp: prost_types::Timestamp) -> Result<u64, T
         .map_err(|e| TryFromProtoError::invalid("seconds + nanos", e))
 }
 
-// prost_types::Value to serde_json::Value conversion
+// prost_types::Value <-> serde_json::Value conversion
 //
 
 /// Converts a prost_types::Value to serde_json::Value.
@@ -194,5 +194,68 @@ pub fn prost_to_json(value: &prost_types::Value) -> serde_json::Value {
             let arr: Vec<serde_json::Value> = l.values.iter().map(prost_to_json).collect();
             serde_json::Value::Array(arr)
         }
+    }
+}
+
+/// Converts a serde_json::Value to prost_types::Value.
+///
+/// `google.protobuf.Value` has only a double for numbers, so integers beyond
+/// 2^53 do not survive the trip. Pass `u64`/`u128` Move arguments as JSON
+/// strings, which is what the node's JSON argument parser expects anyway.
+pub fn json_to_prost(value: &serde_json::Value) -> prost_types::Value {
+    use prost_types::{ListValue, Struct, value::Kind};
+
+    let kind = match value {
+        serde_json::Value::Null => Kind::NullValue(0),
+        serde_json::Value::Bool(b) => Kind::BoolValue(*b),
+        // `as_f64` is lossy only for integers past the mantissa, which the doc
+        // comment above tells callers to pass as strings.
+        serde_json::Value::Number(n) => Kind::NumberValue(n.as_f64().unwrap_or(f64::NAN)),
+        serde_json::Value::String(s) => Kind::StringValue(s.clone()),
+        serde_json::Value::Array(a) => Kind::ListValue(ListValue {
+            values: a.iter().map(json_to_prost).collect(),
+        }),
+        serde_json::Value::Object(o) => Kind::StructValue(Struct {
+            fields: o
+                .iter()
+                .map(|(k, v)| (k.clone(), json_to_prost(v)))
+                .collect(),
+        }),
+    };
+
+    prost_types::Value { kind: Some(kind) }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{json_to_prost, prost_to_json};
+
+    #[test]
+    fn nesting_survives_the_round_trip_through_prost() {
+        let value = serde_json::json!({
+            "list": [1.5, "0x2", true],
+            "nested": {"flag": false, "nothing": null},
+            "text": "0x2::hash::blake2b256",
+        });
+
+        assert_eq!(prost_to_json(&json_to_prost(&value)), value);
+    }
+
+    /// `google.protobuf.Value` holds every number as a double, so an integer
+    /// comes back as a float and one past the mantissa comes back rounded.
+    /// This is why Move `u64`/`u128`/`u256` arguments go as JSON strings.
+    #[test]
+    fn integers_come_back_as_doubles() {
+        assert_eq!(
+            prost_to_json(&json_to_prost(&serde_json::json!(2))),
+            serde_json::json!(2.0)
+        );
+
+        let big = serde_json::json!(u64::MAX);
+        assert_ne!(prost_to_json(&json_to_prost(&big)), big);
+
+        // Passed as a string, the exact value arrives intact.
+        let as_string = serde_json::json!(u64::MAX.to_string());
+        assert_eq!(prost_to_json(&json_to_prost(&as_string)), as_string);
     }
 }
