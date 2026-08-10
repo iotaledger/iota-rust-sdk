@@ -102,9 +102,17 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     /// reads `Enum Name: Variant`.
     ///
     /// The name is dropped where a field label already says what the node is,
-    /// and kept at a root or under an index, which name nothing.
+    /// and kept at a root or under an index, which name nothing. Nested enums
+    /// each add their name, so a variant holding another enum reads as the
+    /// whole chain down to the type that writes the header.
     pub fn enum_name(&mut self, name: &str) {
-        self.pending_enum = Some(name.to_owned());
+        match &mut self.pending_enum {
+            Some(pending) => {
+                pending.push_str(": ");
+                pending.push_str(name);
+            }
+            None => self.pending_enum = Some(name.to_owned()),
+        }
     }
 
     fn write_connector(&mut self, is_last: bool) -> std::fmt::Result {
