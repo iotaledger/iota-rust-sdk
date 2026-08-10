@@ -85,6 +85,7 @@ impl ExecutionStatus {
 
 impl crate::TreeDisplay for ExecutionStatus {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Execution Status");
         match self {
             ExecutionStatus::Success => w.header("Success"),
             ExecutionStatus::Failure { error, command } => {

@@ -213,6 +213,7 @@ impl UnchangedSharedKind {
 
 impl crate::TreeDisplay for UnchangedSharedKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Unchanged Shared Kind");
         match self {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
                 w.header("Read Only Root")?;
@@ -307,6 +308,7 @@ impl ObjectIn {
 
 impl crate::TreeDisplay for ObjectIn {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Object In");
         match self {
             ObjectIn::Missing => w.header("Missing"),
             ObjectIn::Data {
@@ -406,6 +408,7 @@ impl ObjectOut {
 
 impl crate::TreeDisplay for ObjectOut {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Object Out");
         match self {
             ObjectOut::Missing => w.header("Missing"),
             ObjectOut::ObjectWrite { digest, owner } => {

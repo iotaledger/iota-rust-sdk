@@ -57,6 +57,7 @@ impl From<TransactionV1> for Transaction {
 
 impl crate::TreeDisplay for Transaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction");
         match self {
             Self::V1(v1) => v1.fmt_tree(w),
         }
@@ -646,6 +647,7 @@ impl TransactionKind {
 
 impl crate::TreeDisplay for TransactionKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction Kind");
         match self {
             Self::Programmable(pt) => pt.fmt_tree(w),
             Self::Genesis(v) => v.fmt_tree(w),
@@ -834,6 +836,7 @@ impl EndOfEpochTransactionKind {
 
 impl crate::TreeDisplay for EndOfEpochTransactionKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("End of Epoch Transaction Kind");
         match self {
             Self::ChangeEpoch(v) => v.fmt_tree(w),
             Self::ChangeEpochV2(v) => v.fmt_tree(w),
@@ -870,6 +873,7 @@ impl ConsensusDeterminedVersionAssignments {
 
 impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Consensus Determined Version Assignments");
         match self {
             ConsensusDeterminedVersionAssignments::CancelledTransactions {
                 cancelled_transactions,
@@ -1532,6 +1536,7 @@ impl Input {
 
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Input");
         match self {
             Self::Pure(value) => {
                 w.header("Pure")?;
@@ -1733,6 +1738,7 @@ impl Command {
 
 impl crate::TreeDisplay for Command {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Command");
         match self {
             Self::MoveCall(v) => v.fmt_tree(w),
             Self::TransferObjects(v) => v.fmt_tree(w),

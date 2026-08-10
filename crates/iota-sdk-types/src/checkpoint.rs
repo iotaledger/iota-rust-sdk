@@ -449,6 +449,7 @@ impl CheckpointContentsV1 {
 
 impl crate::TreeDisplay for CheckpointContents {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Checkpoint Contents");
         match self {
             Self::V1(v1) => v1.fmt_tree(w),
         }

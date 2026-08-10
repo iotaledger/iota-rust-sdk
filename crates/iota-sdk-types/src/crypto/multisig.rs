@@ -510,6 +510,7 @@ pub enum MultisigMemberSignature {
 
 impl crate::TreeDisplay for MultisigMemberSignature {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Multisig Member Signature");
         match self {
             Self::Ed25519(v) => w.header(&format!("Ed25519Signature({v})")),
             Self::Secp256k1(v) => w.header(&format!("Secp256k1Signature({v})")),

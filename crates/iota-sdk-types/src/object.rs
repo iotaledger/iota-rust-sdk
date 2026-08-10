@@ -205,6 +205,7 @@ impl ObjectData {
 
 impl crate::TreeDisplay for ObjectData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Object Data");
         match self {
             ObjectData::Struct(s) => s.fmt_tree(w),
             ObjectData::Package(p) => p.fmt_tree(w),

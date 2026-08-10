@@ -241,6 +241,7 @@ impl SimpleSignature {
 
 impl crate::TreeDisplay for SimpleSignature {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Simple Signature");
         let (scheme, public_key, signature): (_, &dyn std::fmt::Display, &dyn std::fmt::Display) =
             match self {
                 SimpleSignature::Ed25519 {
@@ -392,6 +393,7 @@ pub enum UserSignature {
 
 impl crate::TreeDisplay for UserSignature {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("User Signature");
         match self {
             Self::Simple(v) => v.fmt_tree(w),
             Self::Multisig(v) => v.fmt_tree(w),

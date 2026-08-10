@@ -69,6 +69,7 @@ mod tests {
 
 impl crate::TreeDisplay for TransactionEffects {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction Effects");
         match self {
             Self::V1(v1) => v1.fmt_tree(w),
         }

@@ -34,13 +34,22 @@ macro_rules! impl_tree_display {
 }
 pub(crate) use impl_tree_display;
 
+/// A label a parent has written, waiting for its child's header.
+enum PendingLabel {
+    /// A field name, which already says what the node is.
+    Named(String),
+    /// An index, which names nothing.
+    Indexed,
+}
+
 /// A tree node writer that tracks depth and sibling position for rendering
 /// tree-structured output with box-drawing characters.
 pub(crate) struct TreeWriter<'f, 'a> {
     f: &'f mut std::fmt::Formatter<'a>,
     prefix: String,
     needs_newline: bool,
-    inline_label: Option<String>,
+    inline_label: Option<PendingLabel>,
+    pending_enum: Option<String>,
     skip_header: bool,
 }
 
@@ -51,6 +60,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             prefix: String::new(),
             needs_newline: false,
             inline_label: None,
+            pending_enum: None,
             skip_header: false,
         }
     }
@@ -60,21 +70,41 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     /// label, so the header is appended to it as `Label: Header` (or
     /// omitted when it repeats the label).
     pub fn header(&mut self, text: &str) -> std::fmt::Result {
+        let enum_name = self.pending_enum.take();
         if std::mem::take(&mut self.skip_header) {
             return Ok(());
         }
-        if let Some(label) = self.inline_label.take() {
-            if label != text {
-                write!(self.f, ": {text}")?;
+        if let Some(pending) = self.inline_label.take() {
+            match pending {
+                // The label already names the type; printing it twice adds nothing.
+                PendingLabel::Named(label) if label == text => {}
+                // A field label names the node, so the enum name is dropped.
+                PendingLabel::Named(_) => write!(self.f, ": {text}")?,
+                PendingLabel::Indexed => match &enum_name {
+                    Some(name) => write!(self.f, ": {name}: {text}")?,
+                    None => write!(self.f, ": {text}")?,
+                },
             }
             return Ok(());
         }
         if self.needs_newline {
             writeln!(self.f)?;
         }
-        write!(self.f, "{}{}", self.prefix, text)?;
+        match &enum_name {
+            Some(name) => write!(self.f, "{}{name}: {text}", self.prefix)?,
+            None => write!(self.f, "{}{}", self.prefix, text)?,
+        }
         self.needs_newline = true;
         Ok(())
+    }
+
+    /// Name the enum whose variant is about to write its header, so the node
+    /// reads `Enum Name: Variant`.
+    ///
+    /// The name is dropped where a field label already says what the node is,
+    /// and kept at a root or under an index, which name nothing.
+    pub fn enum_name(&mut self, name: &str) {
+        self.pending_enum = Some(name.to_owned());
     }
 
     fn write_connector(&mut self, is_last: bool) -> std::fmt::Result {
@@ -136,7 +166,21 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         is_last: bool,
     ) -> std::fmt::Result {
         self.branch(label, is_last, |w| {
-            w.inline_label = Some(label.to_string());
+            w.inline_label = Some(PendingLabel::Named(label.to_string()));
+            child.fmt_tree(w)
+        })
+    }
+
+    /// Write a [`TreeDisplay`] child under its index, which names nothing, so a
+    /// variant header keeps its enum name.
+    fn indexed_child(
+        &mut self,
+        index: usize,
+        child: &dyn TreeDisplay,
+        is_last: bool,
+    ) -> std::fmt::Result {
+        self.branch(&index.to_string(), is_last, |w| {
+            w.inline_label = Some(PendingLabel::Indexed);
             child.fmt_tree(w)
         })
     }
@@ -182,7 +226,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
             self.branch(label, is_last, |w| {
                 let last_idx = items.len() - 1;
                 for (i, item) in items.iter().enumerate() {
-                    w.child(&i.to_string(), item, i == last_idx)?;
+                    w.indexed_child(i, item, i == last_idx)?;
                 }
                 Ok(())
             })
@@ -540,13 +584,13 @@ Point
     #[test]
     fn transaction_renders_as_nested_tree() {
         let expected = "
-Transaction V1
+Transaction: Transaction V1
 ├── Kind: Programmable Transaction
 │   ├── Inputs
-│   │   └── 0: Pure
+│   │   └── 0: Input: Pure
 │   │       └── Value: 010203
 │   └── Commands
-│       └── 0: Split Coins
+│       └── 0: Command: Split Coins
 │           ├── Coin: Gas
 │           └── Amounts
 │               └── 0: Input(0)
@@ -596,7 +640,7 @@ Multisig Aggregated Signature
 │   │       └── Weight: 1
 │   └── Threshold: 1
 ├── Signatures
-│   └── 0: Ed25519Signature(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
+│   └── 0: Multisig Member Signature: Ed25519Signature(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
 └── Bitmap: 1";
 
         assert_eq!(signature.to_string(), expected.strip_prefix('\n').unwrap());
@@ -622,13 +666,13 @@ Intent Message
 │   ├── Version: V0
 │   └── App ID: Iota
 └── Value:
-    Transaction V1
+    Transaction: Transaction V1
     ├── Kind: Programmable Transaction
     │   ├── Inputs
-    │   │   └── 0: Pure
+    │   │   └── 0: Input: Pure
     │   │       └── Value: 010203
     │   └── Commands
-    │       └── 0: Split Coins
+    │       └── 0: Command: Split Coins
     │           ├── Coin: Gas
     │           └── Amounts
     │               └── 0: Input(0)
