@@ -431,7 +431,7 @@ pub enum ExecutionError {
     /// execution.
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
-    MoveAuthenticationError { error: Box<ExecutionError> },
+    MoveAuthentication { error: Box<ExecutionError> },
 }
 
 impl ExecutionError {
@@ -475,7 +475,7 @@ impl ExecutionError {
         ExecutionCancelledDueToRandomnessUnavailable,
         ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
-        MoveAuthenticationError,
+        MoveAuthentication,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
