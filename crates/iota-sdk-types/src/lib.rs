@@ -107,6 +107,9 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
+mod tree_display;
+pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
+
 #[cfg(feature = "hash")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
