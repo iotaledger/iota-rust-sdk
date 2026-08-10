@@ -457,7 +457,7 @@ impl crate::TreeDisplay for CheckpointContents {
 
 impl crate::TreeDisplay for CheckpointContentsV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Checkpoint Contents")?;
+        w.header("Checkpoint Contents V1")?;
         w.children("Transactions", self.transactions(), true)
     }
 }

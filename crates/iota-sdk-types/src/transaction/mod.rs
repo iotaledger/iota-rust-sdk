@@ -76,7 +76,7 @@ pub struct TransactionV1 {
 
 impl crate::TreeDisplay for TransactionV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Transaction")?;
+        w.header("Transaction V1")?;
         w.child("Kind", &self.kind, false)?;
         w.leaf("Sender", &self.sender, false)?;
         w.child("Gas Payment", &self.gas_payment, false)?;

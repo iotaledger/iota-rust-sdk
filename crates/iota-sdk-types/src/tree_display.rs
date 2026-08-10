@@ -540,7 +540,7 @@ Point
     #[test]
     fn transaction_renders_as_nested_tree() {
         let expected = "
-Transaction
+Transaction V1
 ├── Kind: Programmable Transaction
 │   ├── Inputs
 │   │   └── 0: Pure
@@ -622,7 +622,7 @@ Intent Message
 │   ├── Version: V0
 │   └── App ID: Iota
 └── Value:
-    Transaction
+    Transaction V1
     ├── Kind: Programmable Transaction
     │   ├── Inputs
     │   │   └── 0: Pure
