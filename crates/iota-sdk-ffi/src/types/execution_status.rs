@@ -278,7 +278,7 @@ pub enum ExecutionError {
     /// authenticator, before the programmable transaction was run. The
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
-    MoveAuthenticationError { error: Arc<ExecutionErrorWrapper> },
+    MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -433,8 +433,8 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
-            iota_sdk::types::ExecutionError::MoveAuthenticationError { error } => {
-                Self::MoveAuthenticationError {
+            iota_sdk::types::ExecutionError::MoveAuthentication { error } => {
+                Self::MoveAuthentication {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
@@ -557,7 +557,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
-            ExecutionError::MoveAuthenticationError { error } => Self::MoveAuthenticationError {
+            ExecutionError::MoveAuthentication { error } => Self::MoveAuthentication {
                 error: Box::new(error.0.clone()),
             },
         }
