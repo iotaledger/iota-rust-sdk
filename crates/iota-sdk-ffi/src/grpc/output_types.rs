@@ -23,6 +23,7 @@ use crate::{
     },
     types::{
         checkpoint::{CheckpointContents, CheckpointSummary},
+        coin::Coin,
         digest::Digest,
         events::{Event, TransactionEvents},
         execution_status::ExecutionError,
@@ -981,6 +982,15 @@ impl TryFrom<&proto::move_package_service::PackageVersion> for PackageVersion {
 pub struct OwnedObjectPage {
     /// The objects returned in the page.
     pub objects: Vec<Arc<Object>>,
+    /// Token to retrieve the next page. `None` when this is the last page.
+    pub next_page_token: Option<Vec<u8>>,
+}
+
+/// A page of coins returned by the gRPC server.
+#[derive(uniffi::Record)]
+pub struct GrpcCoinPage {
+    /// The coins returned in the page.
+    pub coins: Vec<Arc<Coin>>,
     /// Token to retrieve the next page. `None` when this is the last page.
     pub next_page_token: Option<Vec<u8>>,
 }
