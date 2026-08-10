@@ -287,8 +287,6 @@ pub struct MissingSignatureError {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
-    use base64ct::Encoding;
-
     use super::Hasher;
     use crate::{
         CheckpointContentsDigest, CheckpointDigest, Digest, ObjectDigest, SenderSignedDataDigest,
@@ -325,56 +323,12 @@ mod type_digest {
             const SALT: &str = "TransactionData::";
             type_digest(SALT, &self).into()
         }
-
-        /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Vec<u8> {
-            bcs::to_bytes(self).expect("bcs serialization failed")
-        }
-
-        /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> String {
-            base64ct::Base64::encode_string(&self.to_bcs())
-        }
-
-        /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes::<Self>(bytes)
-        }
-
-        /// Deserialize a transaction from a base64-encoded string.
-        pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
-            let decoded = base64ct::Base64::decode_vec(bytes)
-                .map_err(|e| bcs::Error::Custom(e.to_string()))?;
-            Self::from_bcs(&decoded)
-        }
     }
 
     impl crate::TransactionV1 {
         pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
             type_digest(SALT, &crate::Transaction::V1(self.clone())).into()
-        }
-
-        /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Vec<u8> {
-            bcs::to_bytes(self).expect("bcs serialization failed")
-        }
-
-        /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> String {
-            base64ct::Base64::encode_string(&self.to_bcs())
-        }
-
-        /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes::<Self>(bytes)
-        }
-
-        /// Deserialize a transaction from a base64-encoded string.
-        pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
-            let decoded = base64ct::Base64::decode_vec(bytes)
-                .map_err(|e| bcs::Error::Custom(e.to_string()))?;
-            Self::from_bcs(&decoded)
         }
     }
 
