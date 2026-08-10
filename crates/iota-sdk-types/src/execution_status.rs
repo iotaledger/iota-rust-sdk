@@ -383,11 +383,6 @@ pub enum ExecutionError {
     InputObjectDeleted,
     /// Certificate is canceled due to congestion on shared objects
     #[error("Certificate is canceled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
-    // Serialized names keep the historical spelling for wire compatibility.
-    #[cfg_attr(
-        feature = "serde",
-        serde(rename = "ExecutionCancelledDueToSharedObjectCongestion")
-    )]
     ExecutionCanceledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
     /// Address is denied for this coin type
     #[error("Address {address:?} is denied for coin {coin_type}")]
@@ -398,20 +393,12 @@ pub enum ExecutionError {
     /// Certificate is canceled because randomness could not be generated this
     /// epoch
     #[error("Certificate is canceled because randomness could not be generated this epoch")]
-    #[cfg_attr(
-        feature = "serde",
-        serde(rename = "ExecutionCancelledDueToRandomnessUnavailable")
-    )]
     ExecutionCanceledDueToRandomnessUnavailable,
     /// Certificate is canceled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
     #[error(
         "Certificate is canceled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
         display_congested_objects(.congested_objects)
-    )]
-    #[cfg_attr(
-        feature = "serde",
-        serde(rename = "ExecutionCancelledDueToSharedObjectCongestionV2")
     )]
     ExecutionCanceledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,

@@ -703,12 +703,8 @@ impl EndOfEpochTransactionKind {
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Canceled transaction version assignment.
-    // Serialized names keep the historical spelling for wire compatibility.
-    #[cfg_attr(feature = "serde", serde(rename = "CancelledTransactions"))]
     CanceledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        // TODO rename?
-        #[cfg_attr(feature = "serde", serde(rename = "cancelled_transactions"))]
         canceled_transactions: Vec<CanceledTransaction>,
     },
 }
