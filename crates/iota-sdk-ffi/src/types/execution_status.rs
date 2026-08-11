@@ -279,6 +279,10 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
+    /// Certificate is cancelled because the execution workers are congested;
+    /// suggested gas price can be used to give this certificate more priority.
+    /// No individual object is responsible, so none is reported.
+    ExecutionCancelledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -438,6 +442,11 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
+            iota_sdk::types::ExecutionError::ExecutionCancelledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCancelledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -559,6 +568,11 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             ExecutionError::MoveAuthentication { error } => Self::MoveAuthentication {
                 error: Box::new(error.0.clone()),
+            },
+            ExecutionError::ExecutionCancelledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCancelledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
             },
         }
     }

@@ -221,6 +221,7 @@ execution-error = %d00                               ; InsufficientGas
                 / %d37 (size *object-id) u64         ; ExecutionCanceledDueToSharedObjectCongestionV2
                 / %d38                               ; InvalidLinkage
                 / %d39 execution-error               ; MoveAuthentication
+                / %d40 u64                           ; ExecutionCancelledDueToExecutionWorkerCongestion
 
 execution-status = %d00                                     ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure
