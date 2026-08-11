@@ -233,6 +233,10 @@ pub enum CommitteeChainError {
     /// The summary's signatures did not verify under the current committee.
     #[error("signature verification failed: {0}")]
     Signature(#[from] SignatureError),
+    /// The committee elected by the summary's end-of-epoch data cannot be used
+    /// to verify the next epoch.
+    #[error("invalid next epoch committee: {0}")]
+    NextCommittee(#[source] SignatureError),
     /// The epoch counter would overflow past the last epoch.
     #[error("epoch number overflow")]
     EpochOverflow,
@@ -280,8 +284,8 @@ impl CommitteeChainVerifier {
     ///
     /// Errors leave the verifier unchanged, e.g. if the summary is for a
     /// different epoch, its signatures don't verify under the current
-    /// committee, or it is not a close-of-epoch checkpoint (no end-of-epoch
-    /// data).
+    /// committee, it is not a close-of-epoch checkpoint (no end-of-epoch data),
+    /// or the committee it elects is not well-formed.
     pub fn verify_epoch_close(
         &mut self,
         summary: &SignedCheckpointSummary,
@@ -319,7 +323,8 @@ impl CommitteeChainVerifier {
                 .ok_or(CommitteeChainError::EpochOverflow)?,
             members: end_of_epoch_data.next_epoch_committee.clone(),
         };
-        self.verifier = ValidatorCommitteeSignatureVerifier::new(next_committee)?;
+        self.verifier = ValidatorCommitteeSignatureVerifier::new(next_committee)
+            .map_err(CommitteeChainError::NextCommittee)?;
 
         Ok(())
     }
@@ -679,6 +684,26 @@ mod tests {
 
         assert_eq!(verifier.committee.total_weight, 10_000);
         assert_eq!(verifier.committee.quorum_threshold, 6_667);
+    }
+
+    #[proptest]
+    fn electing_a_committee_without_stake_is_rejected(
+        keys: [Bls12381PrivateKey; 4],
+        summary: CheckpointSummary,
+    ) {
+        let committee0 = committee(&keys, 0);
+        let mut verifier = CommitteeChainVerifier::new(committee0.clone()).unwrap();
+
+        let empty = ValidatorCommittee {
+            epoch: 1,
+            members: Vec::new(),
+        };
+        let signed = certify(&keys, committee0.clone(), close_epoch(summary, 0, &empty));
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
+        assert!(matches!(err, CommitteeChainError::NextCommittee(_)));
+        // The walk stays on the last committee it could verify.
+        assert_eq!(verifier.epoch(), 0);
+        assert_eq!(verifier.committee(), &committee0);
     }
 
     #[proptest]
