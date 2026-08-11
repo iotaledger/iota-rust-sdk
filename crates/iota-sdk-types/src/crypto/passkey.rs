@@ -98,6 +98,20 @@ impl PasskeyAuthenticator {
     }
 }
 
+impl crate::TreeDisplay for PasskeyAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Passkey Authenticator")?;
+        w.leaf(
+            "Authenticator Data",
+            &hex::encode(&self.authenticator_data),
+            false,
+        )?;
+        w.leaf("Client Data JSON", &self.client_data_json, false)?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Signature", &self.signature, true)
+    }
+}
+
 /// Public key of a `PasskeyAuthenticator`.
 ///
 /// This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
@@ -131,6 +145,12 @@ impl PasskeyPublicKey {
     /// The underlying `Secp256r1PublicKey` for this passkey.
     pub fn inner(&self) -> &Secp256r1PublicKey {
         &self.0
+    }
+}
+
+impl std::fmt::Display for PasskeyPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -445,6 +465,8 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
             .boxed()
     }
 }
+
+crate::impl_tree_display!(PasskeyAuthenticator);
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {

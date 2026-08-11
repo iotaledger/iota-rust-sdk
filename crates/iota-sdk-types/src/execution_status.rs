@@ -83,6 +83,22 @@ impl ExecutionStatus {
     }
 }
 
+impl crate::TreeDisplay for ExecutionStatus {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Execution Status");
+        match self {
+            ExecutionStatus::Success => w.header("Success"),
+            ExecutionStatus::Failure { error, command } => {
+                w.header("Failure")?;
+                w.leaf("Error", error, false)?;
+                w.option_leaf("Command", command, true)
+            }
+        }
+    }
+}
+
+crate::impl_tree_display!(ExecutionStatus);
+
 fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
     struct W<'a>(&'a Option<MoveLocation>);
     impl core::fmt::Display for W<'_> {
@@ -415,7 +431,7 @@ pub enum ExecutionError {
     /// execution.
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
-    MoveAuthenticationError { error: Box<ExecutionError> },
+    MoveAuthentication { error: Box<ExecutionError> },
 }
 
 impl ExecutionError {
@@ -459,7 +475,7 @@ impl ExecutionError {
         ExecutionCanceledDueToRandomnessUnavailable,
         ExecutionCanceledDueToSharedObjectCongestionV2,
         InvalidLinkage,
-        MoveAuthenticationError,
+        MoveAuthentication,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {

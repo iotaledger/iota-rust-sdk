@@ -9,7 +9,6 @@ use super::{
     Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
     RandomnessRound, TransactionDigest, TypeTag, UserSignature, Version,
 };
-use crate::utils::write_sep;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -56,6 +55,15 @@ impl From<TransactionV1> for Transaction {
     }
 }
 
+impl crate::TreeDisplay for Transaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction");
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -65,6 +73,16 @@ pub struct TransactionV1 {
     pub sender: Address,
     pub gas_payment: GasPayment,
     pub expiration: TransactionExpiration,
+}
+
+impl crate::TreeDisplay for TransactionV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction V1")?;
+        w.child("Kind", &self.kind, false)?;
+        w.leaf("Sender", &self.sender, false)?;
+        w.child("Gas Payment", &self.gas_payment, false)?;
+        w.leaf("Expiration", &self.expiration, true)
+    }
 }
 
 /// A [`SignedTransaction`] in its intent-message serialized form.
@@ -99,6 +117,12 @@ impl SenderSignedTransaction {
 impl From<SignedTransaction> for SenderSignedTransaction {
     fn from(transaction: SignedTransaction) -> Self {
         Self(transaction)
+    }
+}
+
+impl std::fmt::Display for SenderSignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -165,6 +189,14 @@ impl From<SenderSignedTransaction> for SignedTransaction {
     }
 }
 
+impl crate::TreeDisplay for SignedTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Signed Transaction")?;
+        w.child("Transaction", &self.transaction, false)?;
+        w.children("Signatures", &self.signatures, true)
+    }
+}
+
 /// A TTL for a transaction
 ///
 /// # BCS
@@ -199,6 +231,15 @@ impl TransactionExpiration {
     crate::def_is_as_into_opt!(Epoch(EpochId));
 }
 
+impl std::fmt::Display for TransactionExpiration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransactionExpiration::None => write!(f, "None"),
+            TransactionExpiration::Epoch(id) => write!(f, "Epoch({id})"),
+        }
+    }
+}
+
 /// Payment information for executing a transaction
 ///
 /// # BCS
@@ -230,6 +271,16 @@ pub struct GasPayment {
     pub budget: u64,
 }
 
+impl crate::TreeDisplay for GasPayment {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Gas Payment")?;
+        w.children("Objects", &self.objects, false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Price", &self.price, false)?;
+        w.leaf("Budget", &self.budget, true)
+    }
+}
+
 /// Randomness update
 ///
 /// # BCS
@@ -258,6 +309,20 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     pub randomness_obj_initial_shared_version: Version,
+}
+
+impl crate::TreeDisplay for RandomnessStateUpdate {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Randomness State Update")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Randomness Round", &self.randomness_round, false)?;
+        w.leaf("Random Bytes", &hex::encode(&self.random_bytes), false)?;
+        w.leaf(
+            "Randomness Obj Initial Shared Version",
+            &self.randomness_obj_initial_shared_version,
+            true,
+        )
+    }
 }
 
 /// A complete set of transaction deny rules.
@@ -378,6 +443,94 @@ pub struct TransactionDenyRulesUpdate {
     pub deny_rules_obj_initial_shared_version: Version,
 }
 
+impl crate::TreeDisplay for DenyRuleSet {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Deny Rule Set")?;
+        w.leaves("Denied Addresses", &self.denied_addresses, false)?;
+        w.leaves("Denied Objects", &self.denied_objects, false)?;
+        w.leaves("Denied Packages", &self.denied_packages, false)?;
+        w.leaf(
+            "Package Publish Disabled",
+            &self.package_publish_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Package Upgrade Disabled",
+            &self.package_upgrade_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Shared Object Disabled",
+            &self.shared_object_disabled,
+            false,
+        )?;
+        w.leaf(
+            "User Transaction Disabled",
+            &self.user_transaction_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Receiving Objects Disabled",
+            &self.receiving_objects_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Move Authenticator Disabled",
+            &self.move_authenticator_disabled,
+            true,
+        )
+    }
+}
+
+impl crate::TreeDisplay for TransactionDenyRulesUpdate {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Deny Rules Update")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Round", &self.round, false)?;
+        w.leaves("Added Addresses", &self.added_addresses, false)?;
+        w.leaves("Removed Addresses", &self.removed_addresses, false)?;
+        w.leaves("Added Objects", &self.added_objects, false)?;
+        w.leaves("Removed Objects", &self.removed_objects, false)?;
+        w.leaves("Added Packages", &self.added_packages, false)?;
+        w.leaves("Removed Packages", &self.removed_packages, false)?;
+        w.leaf(
+            "Package Publish Disabled",
+            &self.package_publish_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Package Upgrade Disabled",
+            &self.package_upgrade_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Shared Object Disabled",
+            &self.shared_object_disabled,
+            false,
+        )?;
+        w.leaf(
+            "User Transaction Disabled",
+            &self.user_transaction_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Receiving Objects Disabled",
+            &self.receiving_objects_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Move Authenticator Disabled",
+            &self.move_authenticator_disabled,
+            false,
+        )?;
+        w.leaf(
+            "Deny Rules Obj Initial Shared Version",
+            &self.deny_rules_obj_initial_shared_version,
+            true,
+        )
+    }
+}
+
 /// Transaction type
 ///
 /// # BCS
@@ -492,37 +645,22 @@ impl TransactionKind {
     }
 }
 
-impl core::fmt::Display for TransactionKind {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match &self {
-            Self::Programmable(p) => {
-                writeln!(f, "Transaction Kind : Programmable")?;
-                write!(f, "{p}")
-            }
-            Self::Genesis(_) => writeln!(f, "Transaction Kind : Genesis"),
-            Self::ConsensusCommitPrologueV1(p) => {
-                writeln!(f, "Transaction Kind : Consensus Commit Prologue V1")?;
-                writeln!(f, "Timestamp : {}", p.commit_timestamp_ms)?;
-                writeln!(f, "Consensus Digest: {}", p.consensus_commit_digest)?;
-                writeln!(
-                    f,
-                    "Consensus determined version assignment: {:?}",
-                    p.consensus_determined_version_assignments
-                )
-            }
+impl crate::TreeDisplay for TransactionKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction Kind");
+        match self {
+            Self::Programmable(pt) => pt.fmt_tree(w),
+            Self::Genesis(v) => v.fmt_tree(w),
+            Self::ConsensusCommitPrologueV1(v) => v.fmt_tree(w),
             Self::AuthenticatorStateUpdateV1Deprecated => {
-                writeln!(
-                    f,
-                    "Transaction Kind : Authenticator State Update (Deprecated)"
-                )
+                w.header("Authenticator State Update V1 (Deprecated)")
             }
-            Self::EndOfEpoch(_) => writeln!(f, "Transaction Kind : End of Epoch Transaction"),
-            Self::RandomnessStateUpdate(_) => {
-                writeln!(f, "Transaction Kind : Randomness State Update")
+            Self::EndOfEpoch(items) => {
+                w.header("End of Epoch")?;
+                w.children("Transactions", items, true)
             }
-            Self::TransactionDenyRulesUpdate(_) => {
-                writeln!(f, "Transaction Kind : Transaction Deny Rules Update")
-            }
+            Self::RandomnessStateUpdate(v) => v.fmt_tree(w),
+            Self::TransactionDenyRulesUpdate(v) => v.fmt_tree(w),
         }
     }
 }
@@ -696,6 +834,19 @@ impl EndOfEpochTransactionKind {
     }
 }
 
+impl crate::TreeDisplay for EndOfEpochTransactionKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("End of Epoch Transaction Kind");
+        match self {
+            Self::ChangeEpoch(v) => v.fmt_tree(w),
+            Self::ChangeEpochV2(v) => v.fmt_tree(w),
+            Self::ChangeEpochV3(v) => v.fmt_tree(w),
+            Self::ChangeEpochV4(v) => v.fmt_tree(w),
+            Self::TransactionDenyRulesCreate => w.header("Transaction Deny Rules Create"),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -720,6 +871,20 @@ impl ConsensusDeterminedVersionAssignments {
     }
 }
 
+impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Consensus Determined Version Assignments");
+        match self {
+            ConsensusDeterminedVersionAssignments::CanceledTransactions {
+                canceled_transactions,
+            } => {
+                w.header("Canceled Transactions")?;
+                w.children("Transactions", canceled_transactions, true)
+            }
+        }
+    }
+}
+
 /// A transaction that was canceled
 ///
 /// # BCS
@@ -737,6 +902,14 @@ pub struct CanceledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
+}
+
+impl crate::TreeDisplay for CanceledTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Canceled Transaction")?;
+        w.leaf("Digest", &self.digest, false)?;
+        w.children("Version Assignments", &self.version_assignments, true)
+    }
 }
 
 /// Object version assignment from consensus
@@ -762,6 +935,14 @@ impl VersionAssignment {
     /// Creates a [`VersionAssignment`].
     pub fn new(object_id: ObjectId, version: Version) -> Self {
         Self { object_id, version }
+    }
+}
+
+impl crate::TreeDisplay for VersionAssignment {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Version Assignment")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, true)
     }
 }
 
@@ -801,6 +982,26 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_commit_digest: ConsensusCommitDigest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+}
+
+impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Consensus Commit Prologue V1")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Round", &self.round, false)?;
+        w.option_leaf("Sub DAG Index", &self.sub_dag_index, false)?;
+        w.leaf("Commit Timestamp Ms", &self.commit_timestamp_ms, false)?;
+        w.leaf(
+            "Consensus Commit Digest",
+            &self.consensus_commit_digest,
+            false,
+        )?;
+        w.child(
+            "Consensus Determined Version Assignments",
+            &self.consensus_determined_version_assignments,
+            true,
+        )
+    }
 }
 
 /// System transaction used to change the epoch
@@ -855,6 +1056,28 @@ pub struct ChangeEpoch {
     /// their package ID), and a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
+}
+
+impl crate::TreeDisplay for ChangeEpoch {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Change Epoch")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        w.children("System Packages", &self.system_packages, true)
+    }
 }
 
 /// System transaction used to change the epoch
@@ -915,6 +1138,33 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
+impl crate::TreeDisplay for ChangeEpochV2 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Change Epoch V2")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        w.children("System Packages", &self.system_packages, true)
+    }
+}
+
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -957,6 +1207,38 @@ pub struct ChangeEpochV3 {
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.
     pub eligible_active_validators: Vec<u64>,
+}
+
+impl crate::TreeDisplay for ChangeEpochV3 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Change Epoch V3")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        w.children("System Packages", &self.system_packages, false)?;
+        w.leaves(
+            "Eligible Active Validators",
+            &self.eligible_active_validators,
+            true,
+        )
+    }
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -1008,6 +1290,44 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
+impl crate::TreeDisplay for ChangeEpochV4 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Change Epoch V4")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        w.children("System Packages", &self.system_packages, false)?;
+        w.leaves(
+            "Eligible Active Validators",
+            &self.eligible_active_validators,
+            false,
+        )?;
+        w.leaves("Scores", &self.scores, false)?;
+        w.leaf(
+            "Adjust Rewards By Score",
+            &self.adjust_rewards_by_score,
+            true,
+        )
+    }
+}
+
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1032,6 +1352,15 @@ pub struct SystemPackage {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl crate::TreeDisplay for SystemPackage {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("System Package")?;
+        w.leaf("Version", &self.version, false)?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, true)
+    }
+}
+
 /// The genesis transaction
 ///
 /// # BCS
@@ -1050,6 +1379,14 @@ pub struct GenesisTransaction {
     pub objects: Vec<GenesisObject>,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub events: Vec<Event>,
+}
+
+impl crate::TreeDisplay for GenesisTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Genesis Transaction")?;
+        w.children("Objects", &self.objects, false)?;
+        w.children("Events", &self.events, true)
+    }
 }
 
 /// A user transaction
@@ -1078,15 +1415,11 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
-impl core::fmt::Display for ProgrammableTransaction {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        let ProgrammableTransaction { inputs, commands } = self;
-        writeln!(f, "Inputs: {inputs:?}")?;
-        writeln!(f, "Commands: [")?;
-        for c in commands {
-            writeln!(f, "  {c},")?;
-        }
-        writeln!(f, "]")
+impl crate::TreeDisplay for ProgrammableTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Programmable Transaction")?;
+        w.children("Inputs", &self.inputs, false)?;
+        w.children("Commands", &self.commands, true)
     }
 }
 /// An input to a user transaction
@@ -1201,6 +1534,30 @@ impl Input {
     }
 }
 
+impl crate::TreeDisplay for Input {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Input");
+        match self {
+            Self::Pure(value) => {
+                w.header("Pure")?;
+                w.leaf("Value", &hex::encode(value), true)
+            }
+            Self::ImmutableOrOwned(obj_ref) => {
+                w.header("Immutable Or Owned")?;
+                w.inline_child(obj_ref)
+            }
+            Self::Shared(shared) => {
+                w.header("Shared")?;
+                w.inline_child(shared)
+            }
+            Self::Receiving(obj_ref) => {
+                w.header("Receiving")?;
+                w.inline_child(obj_ref)
+            }
+        }
+    }
+}
+
 /// A shared object input to a programmable transaction
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -1228,6 +1585,19 @@ impl SharedObjectReference {
             initial_shared_version,
             mutable,
         }
+    }
+}
+
+impl crate::TreeDisplay for SharedObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Shared Object Reference")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf(
+            "Initial Shared Version",
+            &self.initial_shared_version,
+            false,
+        )?;
+        w.leaf("Mutable", &self.mutable, true)
     }
 }
 
@@ -1366,111 +1736,17 @@ impl Command {
     }
 }
 
-impl core::fmt::Display for MoveCall {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self {
-            package,
-            module,
-            function,
-            type_arguments,
-            arguments,
-        } = self;
-        write!(f, "MoveCall(")?;
-        write!(f, "{package}::{module}::{function}")?;
-        if !type_arguments.is_empty() {
-            write_sep(f, type_arguments, Some(("<", ">")), ",")?;
-        }
-        write_sep(f, arguments, Some(("(", ")")), ",")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for TransferObjects {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self { objects, address } = self;
-
-        write!(f, "TransferObjects(")?;
-        write_sep(f, objects, Some(("[", "]")), ",")?;
-        write!(f, ",{address})")
-    }
-}
-
-impl core::fmt::Display for SplitCoins {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self { coin, amounts } = self;
-
-        write!(f, "SplitCoins({coin},")?;
-        write_sep(f, amounts, Some(("[", "]")), ",")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for MergeCoins {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self {
-            coin,
-            coins_to_merge,
-        } = self;
-
-        write!(f, "MergeCoins({coin},")?;
-        write_sep(f, coins_to_merge, Some(("[", "]")), ",")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for Publish {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self { dependencies, .. } = self;
-
-        write!(f, "Publish(_,")?;
-        write_sep(f, dependencies, Some(("[", "]")), ",")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for MakeMoveVector {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self { type_, elements } = self;
-
-        write!(f, "MakeMoveVector(")?;
-        if let Some(ty) = type_ {
-            write!(f, "Some({ty})")?;
-        } else {
-            write!(f, "None")?;
-        }
-        write!(f, ",")?;
-        write_sep(f, elements, Some(("[", "]")), ",")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for Upgrade {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let Self {
-            dependencies,
-            package,
-            ticket,
-            ..
-        } = self;
-
-        write!(f, "Upgrade(_,")?;
-        write_sep(f, dependencies, Some(("[", "]")), ",")?;
-        write!(f, ", {package}")?;
-        write!(f, ", {ticket}")?;
-        write!(f, ")")
-    }
-}
-
-impl core::fmt::Display for Command {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for Command {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Command");
         match self {
-            Command::MoveCall(cmd) => write!(f, "{cmd}"),
-            Command::TransferObjects(cmd) => write!(f, "{cmd}"),
-            Command::SplitCoins(cmd) => write!(f, "{cmd}"),
-            Command::MergeCoins(cmd) => write!(f, "{cmd}"),
-            Command::Publish(cmd) => write!(f, "{cmd}"),
-            Command::MakeMoveVector(cmd) => write!(f, "{cmd}"),
-            Command::Upgrade(cmd) => write!(f, "{cmd}"),
+            Self::MoveCall(v) => v.fmt_tree(w),
+            Self::TransferObjects(v) => v.fmt_tree(w),
+            Self::SplitCoins(v) => v.fmt_tree(w),
+            Self::MergeCoins(v) => v.fmt_tree(w),
+            Self::Publish(v) => v.fmt_tree(w),
+            Self::MakeMoveVector(v) => v.fmt_tree(w),
+            Self::Upgrade(v) => v.fmt_tree(w),
         }
     }
 }
@@ -1496,6 +1772,14 @@ pub struct TransferObjects {
     pub address: Argument,
 }
 
+impl crate::TreeDisplay for TransferObjects {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transfer Objects")?;
+        w.leaves("Objects", &self.objects, false)?;
+        w.leaf("Address", &self.address, true)
+    }
+}
+
 /// Command to split a single coin object into multiple coins
 ///
 /// # BCS
@@ -1515,6 +1799,14 @@ pub struct SplitCoins {
     /// The amounts to split off
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub amounts: Vec<Argument>,
+}
+
+impl crate::TreeDisplay for SplitCoins {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Split Coins")?;
+        w.leaf("Coin", &self.coin, false)?;
+        w.leaves("Amounts", &self.amounts, true)
+    }
 }
 
 /// Command to merge multiple coins of the same type into a single coin
@@ -1538,6 +1830,14 @@ pub struct MergeCoins {
     /// All listed coins must be of the same type and be the same type as `coin`
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub coins_to_merge: Vec<Argument>,
+}
+
+impl crate::TreeDisplay for MergeCoins {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Merge Coins")?;
+        w.leaf("Coin", &self.coin, false)?;
+        w.leaves("Coins To Merge", &self.coins_to_merge, true)
+    }
 }
 
 /// Command to publish a new move package
@@ -1574,6 +1874,14 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl crate::TreeDisplay for Publish {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Publish")?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, true)
+    }
+}
+
 /// Command to build a move vector out of a set of individual elements
 ///
 /// # BCS
@@ -1597,6 +1905,14 @@ pub struct MakeMoveVector {
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
+}
+
+impl crate::TreeDisplay for MakeMoveVector {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Make Move Vector")?;
+        w.option_leaf("Type", &self.type_, false)?;
+        w.leaves("Elements", &self.elements, true)
+    }
 }
 
 /// Command to upgrade an already published package
@@ -1637,6 +1953,16 @@ pub struct Upgrade {
     pub package: ObjectId,
     /// Ticket authorizing the upgrade
     pub ticket: Argument,
+}
+
+impl crate::TreeDisplay for Upgrade {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Upgrade")?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
+        w.leaf("Package", &self.package, false)?;
+        w.leaf("Ticket", &self.ticket, true)
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -1776,3 +2102,47 @@ pub struct MoveCall {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
 }
+
+impl crate::TreeDisplay for MoveCall {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Call")?;
+        w.leaf("Package", &self.package, false)?;
+        w.leaf("Module", &self.module, false)?;
+        w.leaf("Function", &self.function, false)?;
+        w.leaves("Type Arguments", &self.type_arguments, false)?;
+        w.leaves("Arguments", &self.arguments, true)
+    }
+}
+
+crate::impl_tree_display!(
+    Transaction,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
+    TransactionV1,
+    SignedTransaction,
+    GasPayment,
+    RandomnessStateUpdate,
+    TransactionKind,
+    EndOfEpochTransactionKind,
+    ConsensusDeterminedVersionAssignments,
+    CanceledTransaction,
+    VersionAssignment,
+    ConsensusCommitPrologueV1,
+    ChangeEpoch,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    SystemPackage,
+    GenesisTransaction,
+    ProgrammableTransaction,
+    SharedObjectReference,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    MoveCall,
+);
