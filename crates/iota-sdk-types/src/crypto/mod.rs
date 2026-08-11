@@ -9,7 +9,6 @@ mod move_authenticator;
 mod multisig;
 mod passkey;
 mod public_key;
-mod randomness_round;
 mod secp256k1;
 mod secp256r1;
 mod signature;
@@ -28,7 +27,6 @@ pub use multisig::{
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 pub use public_key::PublicKey;
-pub use randomness_round::RandomnessRound;
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
