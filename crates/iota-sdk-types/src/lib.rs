@@ -184,7 +184,8 @@ pub use transaction::{
     VersionAssignment,
 };
 pub use validator::{
-    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
+    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
+    ValidatorCommitteeMember, ValidatorSignature,
 };
 pub use version::Version;
 

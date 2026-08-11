@@ -30,17 +30,21 @@ struct MemberInfo<'a> {
 
 impl ExtendedValidatorCommittee {
     fn new(committee: ValidatorCommittee) -> Result<Self, SignatureError> {
+        let total_weight = committee
+            .validate()
+            .and_then(|()| committee.total_stake())
+            .map_err(|e| SignatureError::from_source(format!("invalid committee: {e}")))?;
+
         let mut public_key_to_index = HashMap::new();
         let mut verifying_keys = Vec::new();
 
-        let mut total_weight = 0;
         for (idx, member) in committee.members.iter().enumerate() {
             assert_eq!(idx, verifying_keys.len());
             verifying_keys.push(Bls12381VerifyingKey::new(&member.public_key)?);
             public_key_to_index.insert(member.public_key, idx);
-            total_weight += member.stake;
         }
 
+        // 2f+1 of the total stake, which `validate` has established is nonzero.
         let quorum_threshold = ((total_weight - 1) / 3) * 2 + 1;
 
         Ok(Self {
@@ -613,6 +617,68 @@ mod tests {
             CommitteeChainError::NotEndOfEpoch { epoch: 0, .. }
         ));
         assert_eq!(verifier.committee(), &committee0);
+    }
+
+    #[proptest]
+    fn committee_without_stake_is_rejected(key: Bls12381PrivateKey) {
+        ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
+            epoch: 0,
+            members: Vec::new(),
+        })
+        .unwrap_err();
+
+        ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
+            epoch: 0,
+            members: vec![ValidatorCommitteeMember {
+                public_key: key.public_key(),
+                stake: 0,
+            }],
+        })
+        .unwrap_err();
+    }
+
+    /// A committee whose stake sums past `u64::MAX` wraps to a low total, and
+    /// so to a quorum threshold a single member can meet.
+    #[proptest]
+    fn committee_with_overflowing_stake_is_rejected(
+        key1: Bls12381PrivateKey,
+        key2: Bls12381PrivateKey,
+    ) {
+        ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
+            epoch: 0,
+            members: vec![
+                ValidatorCommitteeMember {
+                    public_key: key1.public_key(),
+                    stake: u64::MAX,
+                },
+                ValidatorCommitteeMember {
+                    public_key: key2.public_key(),
+                    stake: 2,
+                },
+            ],
+        })
+        .unwrap_err();
+    }
+
+    #[proptest]
+    fn quorum_threshold_matches_the_protocol_constant(keys: [Bls12381PrivateKey; 2]) {
+        let verifier = ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
+            epoch: 0,
+            members: vec![
+                ValidatorCommitteeMember {
+                    public_key: keys[0].public_key(),
+                    stake: 6_000,
+                },
+                ValidatorCommitteeMember {
+                    public_key: keys[1].public_key(),
+                    stake: 4_000,
+                },
+            ],
+        })
+        .unwrap();
+
+        assert_eq!(verifier.committee.total_weight, 10_000);
+        assert_eq!(verifier.committee.quorum_threshold, 6_667);
     }
 
     #[proptest]

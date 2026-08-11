@@ -26,6 +26,75 @@ pub struct ValidatorCommittee {
     pub members: Vec<ValidatorCommitteeMember>,
 }
 
+/// An error returned when a [`ValidatorCommittee`] is not well-formed.
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum ValidatorCommitteeError {
+    #[error("Validator committee must have at least one member")]
+    EmptyCommittee,
+    #[error("Validator committee has zero total stake")]
+    ZeroTotalStake,
+    #[error("Validator committee total stake overflows a stake unit")]
+    StakeOverflow,
+    #[error("Duplicate public key")]
+    DuplicatePublicKey,
+}
+
+impl ValidatorCommittee {
+    /// Construct a [`ValidatorCommittee`] and verify it via [`Self::validate`].
+    pub fn new(
+        epoch: EpochId,
+        members: Vec<ValidatorCommitteeMember>,
+    ) -> Result<Self, ValidatorCommitteeError> {
+        let committee = Self { epoch, members };
+        committee.validate()?;
+        Ok(committee)
+    }
+
+    /// Checks if the committee is valid.
+    ///
+    /// A valid committee is one that:
+    ///  - Has at least one member
+    ///  - Has a nonzero total stake that fits in a [`StakeUnit`]
+    ///  - Contains no duplicate public keys
+    ///
+    /// Deserialization and the public fields both bypass this check, so a
+    /// committee that came off the wire or out of a checkpoint payload has to
+    /// be validated before its stake is used to derive a quorum threshold.
+    pub fn validate(&self) -> Result<(), ValidatorCommitteeError> {
+        if self.members.is_empty() {
+            return Err(ValidatorCommitteeError::EmptyCommittee);
+        }
+        if self.total_stake()? == 0 {
+            return Err(ValidatorCommitteeError::ZeroTotalStake);
+        }
+        for (idx, member) in self.members.iter().enumerate() {
+            if self
+                .members
+                .iter()
+                .skip(idx + 1)
+                .any(|other| other.public_key == member.public_key)
+            {
+                return Err(ValidatorCommitteeError::DuplicatePublicKey);
+            }
+        }
+
+        Ok(())
+    }
+
+    /// The combined stake of all members, or
+    /// [`ValidatorCommitteeError::StakeOverflow`] if it does not fit in a
+    /// [`StakeUnit`].
+    pub fn total_stake(&self) -> Result<StakeUnit, ValidatorCommitteeError> {
+        self.members
+            .iter()
+            .try_fold(0, |total: StakeUnit, member| {
+                total.checked_add(member.stake)
+            })
+            .ok_or(ValidatorCommitteeError::StakeOverflow)
+    }
+}
+
 /// A member of a Validator Committee
 ///
 /// # BCS
@@ -142,6 +211,60 @@ pub struct ValidatorSignature {
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     pub public_key: Bls12381PublicKey,
     pub signature: Bls12381Signature,
+}
+
+#[cfg(test)]
+mod committee_tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    fn member(key_byte: u8, stake: StakeUnit) -> ValidatorCommitteeMember {
+        ValidatorCommitteeMember {
+            public_key: Bls12381PublicKey::new([key_byte; Bls12381PublicKey::LENGTH]),
+            stake,
+        }
+    }
+
+    #[test]
+    fn new_accepts_a_well_formed_committee() {
+        let committee =
+            ValidatorCommittee::new(0, vec![member(1, 6_000), member(2, 4_000)]).unwrap();
+        assert_eq!(committee.total_stake().unwrap(), 10_000);
+    }
+
+    #[test]
+    fn new_rejects_an_empty_committee() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, Vec::new()),
+            Err(ValidatorCommitteeError::EmptyCommittee)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_zero_total_stake() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, 0), member(2, 0)]),
+            Err(ValidatorCommitteeError::ZeroTotalStake)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_stake_that_overflows() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, StakeUnit::MAX), member(2, 2)]),
+            Err(ValidatorCommitteeError::StakeOverflow)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_duplicate_public_keys() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, 5_000), member(1, 5_000)]),
+            Err(ValidatorCommitteeError::DuplicatePublicKey)
+        ));
+    }
 }
 
 #[cfg(all(test, feature = "serde"))]
