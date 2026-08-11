@@ -177,7 +177,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ execution-canceled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
-///                 =/ execution-cancelled-due-to-execution-worker-congestion
+///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -219,7 +219,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-canceled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
-/// execution-cancelled-due-to-execution-worker-congestion = %d40 u64
+/// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -434,13 +434,13 @@ pub enum ExecutionError {
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
     MoveAuthentication { error: Box<ExecutionError> },
-    /// Certificate is cancelled because the execution workers are congested;
+    /// Certificate is canceled because the execution workers are congested;
     /// suggested gas price can be used to give this certificate more priority.
     /// No individual object is responsible, so none is reported.
     #[error(
-        "Certificate is cancelled due to execution-worker congestion. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
+        "Certificate is canceled due to execution-worker congestion. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
     )]
-    ExecutionCancelledDueToExecutionWorkerCongestion {
+    ExecutionCanceledDueToExecutionWorkerCongestion {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         suggested_gas_price: u64,
     },
@@ -488,7 +488,7 @@ impl ExecutionError {
         ExecutionCanceledDueToSharedObjectCongestionV2,
         InvalidLinkage,
         MoveAuthentication,
-        ExecutionCancelledDueToExecutionWorkerCongestion,
+        ExecutionCanceledDueToExecutionWorkerCongestion,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
