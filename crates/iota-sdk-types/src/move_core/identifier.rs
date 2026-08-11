@@ -143,6 +143,7 @@ impl Identifier {
     pub const COIN_MANAGER_MODULE: Self = Self::from_static("coin_manager");
     pub const CONFIG_MODULE: Self = Self::from_static("config");
     pub const DENY_LIST_MODULE: Self = Self::from_static("deny_list");
+    pub const DERIVED_OBJECT_MODULE: Self = Self::from_static("derived_object");
     pub const DISPLAY_MODULE: Self = Self::from_static("display");
     pub const DYNAMIC_FIELD_MODULE: Self = Self::from_static("dynamic_field");
     pub const DYNAMIC_OBJECT_FIELD_MODULE: Self = Self::from_static("dynamic_object_field");
@@ -179,6 +180,7 @@ impl Identifier {
     pub const COIN_METADATA: Self = Self::from_static("CoinMetadata");
     pub const CONFIG: Self = Self::from_static("Config");
     pub const CONFIG_KEY: Self = Self::from_static("ConfigKey");
+    pub const DERIVED_OBJECT_KEY: Self = Self::from_static("DerivedObjectKey");
     pub const DISPLAY_CREATED: Self = Self::from_static("DisplayCreated");
     pub const FIELD: Self = Self::from_static("Field");
     pub const GLOBAL_PAUSE_KEY: Self = Self::from_static("GlobalPauseKey");
