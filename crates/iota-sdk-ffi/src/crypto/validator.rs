@@ -20,10 +20,10 @@ pub struct ValidatorCommitteeSignatureVerifier(
 #[uniffi::export]
 impl ValidatorCommitteeSignatureVerifier {
     #[uniffi::constructor]
-    pub fn new(committee: ValidatorCommittee) -> Result<Self> {
+    pub fn new(committee: &ValidatorCommittee) -> Result<Self> {
         Ok(Self(
             iota_sdk::crypto::validator::ValidatorCommitteeSignatureVerifier::new(
-                committee.into(),
+                committee.0.clone(),
             )?,
         ))
     }
@@ -67,12 +67,12 @@ pub struct ValidatorCommitteeSignatureAggregator(
 impl ValidatorCommitteeSignatureAggregator {
     #[uniffi::constructor]
     pub fn new_checkpoint_summary(
-        committee: ValidatorCommittee,
+        committee: &ValidatorCommittee,
         summary: &CheckpointSummary,
     ) -> Result<Self> {
         Ok(Self(
             iota_sdk::crypto::validator::ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
-                committee.into(),
+                committee.0.clone(),
                 &summary.0,
             )?
             .into(),
@@ -113,9 +113,9 @@ pub struct CommitteeChainVerifier(pub RwLock<iota_sdk::crypto::validator::Commit
 #[uniffi::export]
 impl CommitteeChainVerifier {
     #[uniffi::constructor]
-    pub fn new(trusted_committee: ValidatorCommittee) -> Result<Self> {
+    pub fn new(trusted_committee: &ValidatorCommittee) -> Result<Self> {
         Ok(Self(
-            iota_sdk::crypto::validator::CommitteeChainVerifier::new(trusted_committee.into())?
+            iota_sdk::crypto::validator::CommitteeChainVerifier::new(trusted_committee.0.clone())?
                 .into(),
         ))
     }
