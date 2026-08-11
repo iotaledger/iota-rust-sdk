@@ -7,8 +7,11 @@ use std::collections::BTreeSet;
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
     Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
-    RandomnessRound, TransactionDigest, TypeTag, UserSignature, Version,
+    TransactionDigest, TypeTag, UserSignature, Version,
 };
+
+mod randomness_round;
+pub use randomness_round::RandomnessRound;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
