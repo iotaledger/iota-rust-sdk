@@ -5,13 +5,10 @@ use std::collections::{HashMap, HashSet};
 
 use prost_types::{DescriptorProto, field_descriptor_proto::Type};
 
-// Dependency graph for tracking message dependencies
+/// Message dependencies of a package, keyed by fully qualified protobuf name.
 #[derive(Debug, Default)]
 pub(crate) struct DependencyGraph {
-    // Maps message name to set of messages it depends on
     dependencies: HashMap<String, HashSet<String>>,
-    // Maps message name to its full qualified name
-    full_names: HashMap<String, String>,
 }
 
 impl DependencyGraph {
@@ -19,16 +16,25 @@ impl DependencyGraph {
         Self::default()
     }
 
-    pub(crate) fn add_dependency(&mut self, from_message: &str, to_message: &str) {
-        self.dependencies
-            .entry(from_message.to_string())
-            .or_default()
-            .insert(to_message.to_string());
-    }
+    /// Adds `messages` and, recursively, their nested messages. `parent` is the
+    /// fully qualified name of the enclosing package or message, with a
+    /// leading dot.
+    pub(crate) fn add_messages(&mut self, messages: &[DescriptorProto], parent: &str) {
+        for message in messages {
+            let full_name = format!("{parent}.{}", message.name());
 
-    pub(crate) fn set_full_name(&mut self, message: &str, full_name: &str) {
-        self.full_names
-            .insert(message.to_string(), full_name.to_string());
+            let dependencies = message
+                .field
+                .iter()
+                .filter(|field| matches!(field.r#type(), Type::Message))
+                .map(|field| field.type_name().to_owned());
+            self.dependencies
+                .entry(full_name.clone())
+                .or_default()
+                .extend(dependencies);
+
+            self.add_messages(&message.nested_type, &full_name);
+        }
     }
 
     // Check if there's a circular dependency between two messages
@@ -59,42 +65,4 @@ impl DependencyGraph {
 
         false
     }
-}
-
-// Helper function to build dependency graph for all messages
-pub(crate) fn build_dependency_graph(
-    messages: &[DescriptorProto],
-    package: &str,
-    prefix: &str,
-) -> DependencyGraph {
-    let mut graph = DependencyGraph::new();
-
-    for message in messages {
-        let full_name = if prefix.is_empty() {
-            format!("{}.{}", package, message.name())
-        } else {
-            format!("{}.{}", prefix, message.name())
-        };
-
-        graph.set_full_name(message.name(), &full_name);
-
-        // Add dependencies for each message field
-        for field in &message.field {
-            if matches!(field.r#type(), Type::Message) {
-                let field_message_name = field.type_name().split('.').next_back().unwrap();
-                graph.add_dependency(message.name(), field_message_name);
-            }
-        }
-
-        // Recursively handle nested messages
-        let nested_graph = build_dependency_graph(&message.nested_type, package, &full_name);
-
-        // Merge nested graph dependencies
-        graph.dependencies.extend(nested_graph.dependencies);
-
-        //// Merge nested graph full names
-        graph.full_names.extend(nested_graph.full_names);
-    }
-
-    graph
 }

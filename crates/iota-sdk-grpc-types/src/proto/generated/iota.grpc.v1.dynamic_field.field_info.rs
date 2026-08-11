@@ -2,23 +2,12 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod _field_impls {
+#[doc(hidden)]
+pub mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::object::Object;
-    #[allow(unused_imports)]
-    use crate::v1::object::ObjectFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
     impl DynamicField {
         pub const KIND_FIELD: &'static MessageField = &MessageField {
             name: "kind",
@@ -34,7 +23,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const FIELD_ID_FIELD: &'static MessageField = &MessageField {
             name: "field_id",
@@ -42,7 +31,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const FIELD_OBJECT_FIELD: &'static MessageField = &MessageField {
             name: "field_object",
@@ -50,7 +39,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
         pub const NAME_FIELD: &'static MessageField = &MessageField {
             name: "name",
@@ -58,7 +47,7 @@ mod _field_impls {
             number: 5i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const VALUE_FIELD: &'static MessageField = &MessageField {
             name: "value",
@@ -66,7 +55,7 @@ mod _field_impls {
             number: 6i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const VALUE_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "value_type",
@@ -82,7 +71,7 @@ mod _field_impls {
             number: 8i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const CHILD_OBJECT_FIELD: &'static MessageField = &MessageField {
             name: "child_object",
@@ -90,7 +79,7 @@ mod _field_impls {
             number: 9i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
     }
     impl MessageFields for DynamicField {
@@ -130,37 +119,37 @@ mod _field_impls {
             self.path.push(DynamicField::KIND_FIELD.name);
             self.finish()
         }
-        pub fn parent(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn parent(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(DynamicField::PARENT_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn field_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn field_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(DynamicField::FIELD_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn field_object(mut self) -> ObjectFieldPathBuilder {
+        pub fn field_object(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(DynamicField::FIELD_OBJECT_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn name(mut self) -> BcsDataFieldPathBuilder {
+        pub fn name(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(DynamicField::NAME_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn value(mut self) -> BcsDataFieldPathBuilder {
+        pub fn value(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(DynamicField::VALUE_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
         pub fn value_type(mut self) -> String {
             self.path.push(DynamicField::VALUE_TYPE_FIELD.name);
             self.finish()
         }
-        pub fn child_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn child_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(DynamicField::CHILD_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn child_object(mut self) -> ObjectFieldPathBuilder {
+        pub fn child_object(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(DynamicField::CHILD_OBJECT_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
     }
 }

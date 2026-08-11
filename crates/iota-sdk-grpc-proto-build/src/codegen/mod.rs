@@ -6,3 +6,4 @@ pub mod accessor_config;
 pub mod accessors;
 pub mod generate_fields;
 pub mod generate_service_methods;
+pub mod type_registry;

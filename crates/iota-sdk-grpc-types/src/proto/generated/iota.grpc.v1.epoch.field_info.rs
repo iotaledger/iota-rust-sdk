@@ -2,27 +2,12 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod _field_impls {
+#[doc(hidden)]
+pub mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::checkpoint::Checkpoint;
-    #[allow(unused_imports)]
-    use crate::v1::checkpoint::CheckpointFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::TransactionEffects;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::TransactionEffectsFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::TransactionEvents;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::TransactionEventsFieldPathBuilder;
     impl ValidatorCommitteeMember {
         pub const PUBLIC_KEY_FIELD: &'static MessageField = &MessageField {
             name: "public_key",
@@ -332,7 +317,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const FIRST_CHECKPOINT_FIELD: &'static MessageField = &MessageField {
             name: "first_checkpoint",
@@ -433,9 +418,9 @@ mod _field_impls {
             self.path.push(Epoch::COMMITTEE_FIELD.name);
             ValidatorCommitteeFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs_system_state(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs_system_state(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Epoch::BCS_SYSTEM_STATE_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
         pub fn first_checkpoint(mut self) -> String {
             self.path.push(Epoch::FIRST_CHECKPOINT_FIELD.name);
@@ -473,7 +458,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Checkpoint::FIELDS),
+            message_fields: Some(crate::v1::checkpoint::Checkpoint::FIELDS),
         };
         pub const END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD: &'static MessageField = &MessageField {
             name: "end_of_epoch_transaction_effects",
@@ -481,7 +466,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TransactionEffects::FIELDS),
+            message_fields: Some(crate::v1::transaction::TransactionEffects::FIELDS),
         };
         pub const END_OF_EPOCH_TRANSACTION_EVENTS_FIELD: &'static MessageField = &MessageField {
             name: "end_of_epoch_transaction_events",
@@ -489,7 +474,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TransactionEvents::FIELDS),
+            message_fields: Some(crate::v1::transaction::TransactionEvents::FIELDS),
         };
         pub const BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS_FIELD: &'static MessageField = &MessageField {
             name: "bcs_next_epoch_system_state_objects",
@@ -497,7 +482,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for EpochCloseProof {
@@ -528,26 +513,34 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn checkpoint(mut self) -> CheckpointFieldPathBuilder {
+        pub fn checkpoint(
+            mut self,
+        ) -> crate::v1::checkpoint::CheckpointFieldPathBuilder {
             self.path.push(EpochCloseProof::CHECKPOINT_FIELD.name);
-            CheckpointFieldPathBuilder::new_with_base(self.path)
+            crate::v1::checkpoint::CheckpointFieldPathBuilder::new_with_base(self.path)
         }
         pub fn end_of_epoch_transaction_effects(
             mut self,
-        ) -> TransactionEffectsFieldPathBuilder {
+        ) -> crate::v1::transaction::TransactionEffectsFieldPathBuilder {
             self.path.push(EpochCloseProof::END_OF_EPOCH_TRANSACTION_EFFECTS_FIELD.name);
-            TransactionEffectsFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::TransactionEffectsFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn end_of_epoch_transaction_events(
             mut self,
-        ) -> TransactionEventsFieldPathBuilder {
+        ) -> crate::v1::transaction::TransactionEventsFieldPathBuilder {
             self.path.push(EpochCloseProof::END_OF_EPOCH_TRANSACTION_EVENTS_FIELD.name);
-            TransactionEventsFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::TransactionEventsFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
-        pub fn bcs_next_epoch_system_state_objects(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs_next_epoch_system_state_objects(
+            mut self,
+        ) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path
                 .push(EpochCloseProof::BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
 }

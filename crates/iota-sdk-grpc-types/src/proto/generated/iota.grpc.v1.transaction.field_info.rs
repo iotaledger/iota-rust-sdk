@@ -2,47 +2,12 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod _field_impls {
+#[doc(hidden)]
+pub mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::event::Event;
-    #[allow(unused_imports)]
-    use crate::v1::event::EventFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::object::Object;
-    #[allow(unused_imports)]
-    use crate::v1::object::ObjectFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::UserSignature;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::UserSignatureFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Address;
-    #[allow(unused_imports)]
-    use crate::v1::types::AddressFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Digest;
-    #[allow(unused_imports)]
-    use crate::v1::types::DigestFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Owner;
-    #[allow(unused_imports)]
-    use crate::v1::types::OwnerFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::TypeTag;
-    #[allow(unused_imports)]
-    use crate::v1::types::TypeTagFieldPathBuilder;
     impl Transaction {
         pub const DIGEST_FIELD: &'static MessageField = &MessageField {
             name: "digest",
@@ -50,7 +15,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -58,7 +23,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for Transaction {
@@ -87,13 +52,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(Transaction::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Transaction::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl TransactionEffects {
@@ -103,7 +68,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -111,7 +76,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for TransactionEffects {
@@ -140,13 +105,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(TransactionEffects::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(TransactionEffects::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl TransactionEvents {
@@ -156,7 +121,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const EVENTS_FIELD: &'static MessageField = &MessageField {
             name: "events",
@@ -164,7 +129,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Event::FIELDS),
+            message_fields: Some(crate::v1::event::Event::FIELDS),
         };
     }
     impl MessageFields for TransactionEvents {
@@ -193,13 +158,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(TransactionEvents::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn events(mut self) -> EventFieldPathBuilder {
+        pub fn events(mut self) -> crate::v1::event::EventFieldPathBuilder {
             self.path.push(TransactionEvents::EVENTS_FIELD.name);
-            EventFieldPathBuilder::new_with_base(self.path)
+            crate::v1::event::EventFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl ExecutedTransaction {
@@ -217,7 +182,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(UserSignature::FIELDS),
+            message_fields: Some(crate::v1::signatures::UserSignature::FIELDS),
         };
         pub const EFFECTS_FIELD: &'static MessageField = &MessageField {
             name: "effects",
@@ -257,7 +222,7 @@ mod _field_impls {
             number: 7i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
         pub const OUTPUT_OBJECTS_FIELD: &'static MessageField = &MessageField {
             name: "output_objects",
@@ -265,7 +230,7 @@ mod _field_impls {
             number: 8i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
         pub const BALANCE_CHANGES_FIELD: &'static MessageField = &MessageField {
             name: "balance_changes",
@@ -322,9 +287,13 @@ mod _field_impls {
             self.path.push(ExecutedTransaction::TRANSACTION_FIELD.name);
             TransactionFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn signatures(mut self) -> UserSignatureFieldPathBuilder {
+        pub fn signatures(
+            mut self,
+        ) -> crate::v1::signatures::UserSignatureFieldPathBuilder {
             self.path.push(ExecutedTransaction::SIGNATURES_FIELD.name);
-            UserSignatureFieldPathBuilder::new_with_base(self.path)
+            crate::v1::signatures::UserSignatureFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn effects(mut self) -> TransactionEffectsFieldPathBuilder {
             self.path.push(ExecutedTransaction::EFFECTS_FIELD.name);
@@ -342,13 +311,13 @@ mod _field_impls {
             self.path.push(ExecutedTransaction::TIMESTAMP_FIELD.name);
             self.finish()
         }
-        pub fn input_objects(mut self) -> ObjectFieldPathBuilder {
+        pub fn input_objects(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(ExecutedTransaction::INPUT_OBJECTS_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn output_objects(mut self) -> ObjectFieldPathBuilder {
+        pub fn output_objects(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(ExecutedTransaction::OUTPUT_OBJECTS_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
         pub fn balance_changes(mut self) -> BalanceChangeFieldPathBuilder {
             self.path.push(ExecutedTransaction::BALANCE_CHANGES_FIELD.name);
@@ -366,7 +335,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Owner::FIELDS),
+            message_fields: Some(crate::v1::types::Owner::FIELDS),
         };
         pub const COIN_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "coin_type",
@@ -374,7 +343,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const AMOUNT_FIELD: &'static MessageField = &MessageField {
             name: "amount",
@@ -412,13 +381,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn owner(mut self) -> OwnerFieldPathBuilder {
+        pub fn owner(mut self) -> crate::v1::types::OwnerFieldPathBuilder {
             self.path.push(BalanceChange::OWNER_FIELD.name);
-            OwnerFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn coin_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn coin_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(BalanceChange::COIN_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
         pub fn amount(mut self) -> String {
             self.path.push(BalanceChange::AMOUNT_FIELD.name);
@@ -470,7 +439,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -486,7 +455,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const MODULES_FIELD: &'static MessageField = &MessageField {
             name: "modules",
@@ -525,17 +494,17 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn package_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn package_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangePublished::PACKAGE_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangePublished::VERSION_FIELD.name);
             self.finish()
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(ObjectChangePublished::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
         pub fn modules(mut self) -> String {
             self.path.push(ObjectChangePublished::MODULES_FIELD.name);
@@ -549,7 +518,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const OWNER_FIELD: &'static MessageField = &MessageField {
             name: "owner",
@@ -557,7 +526,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Owner::FIELDS),
+            message_fields: Some(crate::v1::types::Owner::FIELDS),
         };
         pub const OBJECT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "object_type",
@@ -565,7 +534,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -573,7 +542,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -597,7 +566,7 @@ mod _field_impls {
             number: 7i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
     impl MessageFields for ObjectChangeMutated {
@@ -631,21 +600,21 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ObjectChangeMutated::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn owner(mut self) -> OwnerFieldPathBuilder {
+        pub fn owner(mut self) -> crate::v1::types::OwnerFieldPathBuilder {
             self.path.push(ObjectChangeMutated::OWNER_FIELD.name);
-            OwnerFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn object_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeMutated::OBJECT_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn object_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeMutated::OBJECT_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangeMutated::VERSION_FIELD.name);
@@ -655,9 +624,9 @@ mod _field_impls {
             self.path.push(ObjectChangeMutated::PREVIOUS_VERSION_FIELD.name);
             self.finish()
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(ObjectChangeMutated::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl ObjectChangeDeleted {
@@ -667,7 +636,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const OBJECT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "object_type",
@@ -675,7 +644,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -683,7 +652,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -722,17 +691,17 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ObjectChangeDeleted::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn object_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeDeleted::OBJECT_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn object_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeDeleted::OBJECT_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangeDeleted::VERSION_FIELD.name);
@@ -746,7 +715,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const OBJECT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "object_type",
@@ -754,7 +723,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -762,7 +731,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -801,17 +770,17 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ObjectChangeWrapped::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn object_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeWrapped::OBJECT_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn object_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeWrapped::OBJECT_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangeWrapped::VERSION_FIELD.name);
@@ -825,7 +794,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const OWNER_FIELD: &'static MessageField = &MessageField {
             name: "owner",
@@ -833,7 +802,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Owner::FIELDS),
+            message_fields: Some(crate::v1::types::Owner::FIELDS),
         };
         pub const OBJECT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "object_type",
@@ -841,7 +810,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -849,7 +818,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -865,7 +834,7 @@ mod _field_impls {
             number: 6i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
     impl MessageFields for ObjectChangeUnwrapped {
@@ -898,29 +867,29 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn owner(mut self) -> OwnerFieldPathBuilder {
+        pub fn owner(mut self) -> crate::v1::types::OwnerFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::OWNER_FIELD.name);
-            OwnerFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn object_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::OBJECT_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn object_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::OBJECT_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangeUnwrapped::VERSION_FIELD.name);
             self.finish()
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(ObjectChangeUnwrapped::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl ObjectChangeCreated {
@@ -930,7 +899,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const OWNER_FIELD: &'static MessageField = &MessageField {
             name: "owner",
@@ -938,7 +907,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Owner::FIELDS),
+            message_fields: Some(crate::v1::types::Owner::FIELDS),
         };
         pub const OBJECT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "object_type",
@@ -946,7 +915,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const OBJECT_ID_FIELD: &'static MessageField = &MessageField {
             name: "object_id",
@@ -954,7 +923,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -970,7 +939,7 @@ mod _field_impls {
             number: 6i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
     impl MessageFields for ObjectChangeCreated {
@@ -1003,29 +972,29 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ObjectChangeCreated::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn owner(mut self) -> OwnerFieldPathBuilder {
+        pub fn owner(mut self) -> crate::v1::types::OwnerFieldPathBuilder {
             self.path.push(ObjectChangeCreated::OWNER_FIELD.name);
-            OwnerFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::OwnerFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_type(mut self) -> TypeTagFieldPathBuilder {
+        pub fn object_type(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(ObjectChangeCreated::OBJECT_TYPE_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn object_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn object_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ObjectChangeCreated::OBJECT_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(ObjectChangeCreated::VERSION_FIELD.name);
             self.finish()
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(ObjectChangeCreated::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl ObjectChange {

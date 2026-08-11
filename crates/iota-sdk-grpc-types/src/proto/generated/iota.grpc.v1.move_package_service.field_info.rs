@@ -2,15 +2,12 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod _field_impls {
+#[doc(hidden)]
+pub mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
     impl ListPackageVersionsRequest {
         pub const PACKAGE_ID_FIELD: &'static MessageField = &MessageField {
             name: "package_id",
@@ -18,7 +15,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const PAGE_SIZE_FIELD: &'static MessageField = &MessageField {
             name: "page_size",
@@ -73,9 +70,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn package_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn package_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ListPackageVersionsRequest::PACKAGE_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn page_size(mut self) -> String {
             self.path.push(ListPackageVersionsRequest::PAGE_SIZE_FIELD.name);
@@ -151,7 +148,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const STORAGE_ID_FIELD: &'static MessageField = &MessageField {
             name: "storage_id",
@@ -159,7 +156,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const VERSION_FIELD: &'static MessageField = &MessageField {
             name: "version",
@@ -197,13 +194,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn original_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn original_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(PackageVersion::ORIGINAL_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn storage_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn storage_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(PackageVersion::STORAGE_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn version(mut self) -> String {
             self.path.push(PackageVersion::VERSION_FIELD.name);

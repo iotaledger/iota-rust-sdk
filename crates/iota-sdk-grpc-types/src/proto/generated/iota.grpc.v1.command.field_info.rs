@@ -2,34 +2,19 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod _field_impls {
+#[doc(hidden)]
+pub mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::TypeTag;
-    #[allow(unused_imports)]
-    use crate::v1::types::TypeTagFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::command::argument::Unknown;
-    #[allow(unused_imports)]
-    use crate::v1::command::argument::GasCoin;
-    #[allow(unused_imports)]
-    use crate::v1::command::argument::Input;
-    #[allow(unused_imports)]
-    use crate::v1::command::argument::Result;
     pub mod argument {
         use super::*;
-        impl Unknown {}
-        impl MessageFields for Unknown {
+        impl crate::v1::command::argument::Unknown {}
+        impl MessageFields for crate::v1::command::argument::Unknown {
             const FIELDS: &'static [&'static MessageField] = &[];
         }
-        impl Unknown {
+        impl crate::v1::command::argument::Unknown {
             pub fn path_builder() -> UnknownFieldPathBuilder {
                 UnknownFieldPathBuilder::new()
             }
@@ -50,11 +35,11 @@ mod _field_impls {
                 self.path.join(".")
             }
         }
-        impl GasCoin {}
-        impl MessageFields for GasCoin {
+        impl crate::v1::command::argument::GasCoin {}
+        impl MessageFields for crate::v1::command::argument::GasCoin {
             const FIELDS: &'static [&'static MessageField] = &[];
         }
-        impl GasCoin {
+        impl crate::v1::command::argument::GasCoin {
             pub fn path_builder() -> GasCoinFieldPathBuilder {
                 GasCoinFieldPathBuilder::new()
             }
@@ -75,7 +60,7 @@ mod _field_impls {
                 self.path.join(".")
             }
         }
-        impl Input {
+        impl crate::v1::command::argument::Input {
             pub const INDEX_FIELD: &'static MessageField = &MessageField {
                 name: "index",
                 json_name: "index",
@@ -85,10 +70,10 @@ mod _field_impls {
                 message_fields: None,
             };
         }
-        impl MessageFields for Input {
+        impl MessageFields for crate::v1::command::argument::Input {
             const FIELDS: &'static [&'static MessageField] = &[Self::INDEX_FIELD];
         }
-        impl Input {
+        impl crate::v1::command::argument::Input {
             pub fn path_builder() -> InputFieldPathBuilder {
                 InputFieldPathBuilder::new()
             }
@@ -109,11 +94,11 @@ mod _field_impls {
                 self.path.join(".")
             }
             pub fn index(mut self) -> String {
-                self.path.push(Input::INDEX_FIELD.name);
+                self.path.push(crate::v1::command::argument::Input::INDEX_FIELD.name);
                 self.finish()
             }
         }
-        impl Result {
+        impl crate::v1::command::argument::Result {
             pub const INDEX_FIELD: &'static MessageField = &MessageField {
                 name: "index",
                 json_name: "index",
@@ -131,13 +116,13 @@ mod _field_impls {
                 message_fields: None,
             };
         }
-        impl MessageFields for Result {
+        impl MessageFields for crate::v1::command::argument::Result {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::INDEX_FIELD,
                 Self::NESTED_RESULT_INDEX_FIELD,
             ];
         }
-        impl Result {
+        impl crate::v1::command::argument::Result {
             pub fn path_builder() -> ResultFieldPathBuilder {
                 ResultFieldPathBuilder::new()
             }
@@ -158,11 +143,15 @@ mod _field_impls {
                 self.path.join(".")
             }
             pub fn index(mut self) -> String {
-                self.path.push(Result::INDEX_FIELD.name);
+                self.path.push(crate::v1::command::argument::Result::INDEX_FIELD.name);
                 self.finish()
             }
             pub fn nested_result_index(mut self) -> String {
-                self.path.push(Result::NESTED_RESULT_INDEX_FIELD.name);
+                self.path
+                    .push(
+                        crate::v1::command::argument::Result::NESTED_RESULT_INDEX_FIELD
+                            .name,
+                    );
                 self.finish()
             }
         }
@@ -174,7 +163,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Unknown::FIELDS),
+            message_fields: Some(crate::v1::command::argument::Unknown::FIELDS),
         };
         pub const GAS_COIN_FIELD: &'static MessageField = &MessageField {
             name: "gas_coin",
@@ -182,7 +171,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(GasCoin::FIELDS),
+            message_fields: Some(crate::v1::command::argument::GasCoin::FIELDS),
         };
         pub const INPUT_FIELD: &'static MessageField = &MessageField {
             name: "input",
@@ -190,7 +179,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Input::FIELDS),
+            message_fields: Some(crate::v1::command::argument::Input::FIELDS),
         };
         pub const RESULT_FIELD: &'static MessageField = &MessageField {
             name: "result",
@@ -198,7 +187,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Result::FIELDS),
+            message_fields: Some(crate::v1::command::argument::Result::FIELDS),
         };
     }
     impl Argument {
@@ -265,7 +254,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TypeTag::FIELDS),
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -273,7 +262,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const JSON_FIELD: &'static MessageField = &MessageField {
             name: "json",
@@ -316,13 +305,13 @@ mod _field_impls {
             self.path.push(CommandOutput::ARGUMENT_FIELD.name);
             ArgumentFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn type_tag(mut self) -> TypeTagFieldPathBuilder {
+        pub fn type_tag(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
             self.path.push(CommandOutput::TYPE_TAG_FIELD.name);
-            TypeTagFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(CommandOutput::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
         pub fn json(mut self) -> String {
             self.path.push(CommandOutput::JSON_FIELD.name);
