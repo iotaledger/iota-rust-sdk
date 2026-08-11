@@ -218,6 +218,24 @@ impl From<ObjectId> for Vec<u8> {
     }
 }
 
+impl From<&ObjectId> for Vec<u8> {
+    fn from(value: &ObjectId) -> Self {
+        (&value.0).into()
+    }
+}
+
+impl From<ObjectId> for String {
+    fn from(value: ObjectId) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&ObjectId> for String {
+    fn from(value: &ObjectId) -> Self {
+        value.to_string()
+    }
+}
+
 impl std::str::FromStr for ObjectId {
     type Err = AddressParseError;
 

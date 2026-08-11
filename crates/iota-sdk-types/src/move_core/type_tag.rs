@@ -192,6 +192,18 @@ impl std::fmt::Display for TypeTag {
     }
 }
 
+impl From<TypeTag> for String {
+    fn from(value: TypeTag) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&TypeTag> for String {
+    fn from(value: &TypeTag) -> Self {
+        value.to_string()
+    }
+}
+
 impl std::str::FromStr for TypeTag {
     type Err = TypeParseError;
 

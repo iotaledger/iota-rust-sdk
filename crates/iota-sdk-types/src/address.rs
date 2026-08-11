@@ -326,6 +326,24 @@ impl From<Address> for Vec<u8> {
     }
 }
 
+impl From<&Address> for Vec<u8> {
+    fn from(value: &Address) -> Self {
+        value.0.to_vec()
+    }
+}
+
+impl From<Address> for String {
+    fn from(value: Address) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&Address> for String {
+    fn from(value: &Address) -> Self {
+        value.to_string()
+    }
+}
+
 impl From<super::ObjectId> for Address {
     fn from(value: super::ObjectId) -> Self {
         Self::from_object_id(value)
