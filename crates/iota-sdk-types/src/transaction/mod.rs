@@ -856,21 +856,21 @@ impl crate::TreeDisplay for EndOfEpochTransactionKind {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
-    /// Cancelled transaction version assignment.
-    CancelledTransactions {
+    /// Canceled transaction version assignment.
+    CanceledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        cancelled_transactions: Vec<CancelledTransaction>,
+        canceled_transactions: Vec<CanceledTransaction>,
     },
 }
 
 impl ConsensusDeterminedVersionAssignments {
-    crate::def_is!(CancelledTransactions);
+    crate::def_is!(CanceledTransactions);
 
-    pub fn as_cancelled_transactions(&self) -> &[CancelledTransaction] {
-        let Self::CancelledTransactions {
-            cancelled_transactions,
+    pub fn as_canceled_transactions(&self) -> &[CanceledTransaction] {
+        let Self::CanceledTransactions {
+            canceled_transactions,
         } = self;
-        cancelled_transactions
+        canceled_transactions
     }
 }
 
@@ -878,38 +878,38 @@ impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Consensus Determined Version Assignments");
         match self {
-            ConsensusDeterminedVersionAssignments::CancelledTransactions {
-                cancelled_transactions,
+            ConsensusDeterminedVersionAssignments::CanceledTransactions {
+                canceled_transactions,
             } => {
-                w.header("Cancelled Transactions")?;
-                w.children("Transactions", cancelled_transactions, true)
+                w.header("Canceled Transactions")?;
+                w.children("Transactions", canceled_transactions, true)
             }
         }
     }
 }
 
-/// A transaction that was cancelled
+/// A transaction that was canceled
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = transaction-digest (vector version-assignment)
+/// canceled-transaction = transaction-digest (vector version-assignment)
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-pub struct CancelledTransaction {
+pub struct CanceledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
 }
 
-impl crate::TreeDisplay for CancelledTransaction {
+impl crate::TreeDisplay for CanceledTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Cancelled Transaction")?;
+        w.header("Canceled Transaction")?;
         w.leaf("Digest", &self.digest, false)?;
         w.children("Version Assignments", &self.version_assignments, true)
     }
@@ -2128,7 +2128,7 @@ crate::impl_tree_display!(
     TransactionKind,
     EndOfEpochTransactionKind,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     ConsensusCommitPrologueV1,
     ChangeEpoch,

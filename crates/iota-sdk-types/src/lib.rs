@@ -178,7 +178,7 @@ pub use object_id::ObjectId;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
     EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,

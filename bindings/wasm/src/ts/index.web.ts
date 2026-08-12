@@ -8,7 +8,7 @@ import * as iota_sdk_ffi from "./iota_sdk_ffi";
 import * as bg from "./wasm-bindgen/index_bg.js";
 
 /**
- * Load and initialise the WASM module.
+ * Load and initialize the WASM module.
  *
  * @param input - One of:
  *   - `string` or `URL`: location of the `.wasm` binary to fetch (browser).

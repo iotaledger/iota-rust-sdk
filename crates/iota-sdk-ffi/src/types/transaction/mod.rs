@@ -805,12 +805,10 @@ pub struct ConsensusDeterminedVersionAssignments(
 #[uniffi::export]
 impl ConsensusDeterminedVersionAssignments {
     #[uniffi::constructor]
-    pub fn new_cancelled_transactions(
-        cancelled_transactions: Vec<Arc<CancelledTransaction>>,
-    ) -> Self {
+    pub fn new_canceled_transactions(canceled_transactions: Vec<Arc<CanceledTransaction>>) -> Self {
         Self(
-            iota_sdk::types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
-                cancelled_transactions: cancelled_transactions
+            iota_sdk::types::ConsensusDeterminedVersionAssignments::CanceledTransactions {
+                canceled_transactions: canceled_transactions
                     .into_iter()
                     .map(|v| v.0.clone())
                     .collect(),
@@ -818,13 +816,13 @@ impl ConsensusDeterminedVersionAssignments {
         )
     }
 
-    pub fn is_cancelled_transactions(&self) -> bool {
-        self.0.is_cancelled_transactions()
+    pub fn is_canceled_transactions(&self) -> bool {
+        self.0.is_canceled_transactions()
     }
 
-    pub fn as_cancelled_transactions(&self) -> Vec<Arc<CancelledTransaction>> {
+    pub fn as_canceled_transactions(&self) -> Vec<Arc<CanceledTransaction>> {
         self.0
-            .as_cancelled_transactions()
+            .as_canceled_transactions()
             .iter()
             .cloned()
             .map(Into::into)
@@ -833,27 +831,27 @@ impl ConsensusDeterminedVersionAssignments {
     }
 }
 
-/// A transaction that was cancelled
+/// A transaction that was canceled
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = digest (vector version-assignment)
+/// canceled-transaction = digest (vector version-assignment)
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
-pub struct CancelledTransaction(pub iota_sdk::types::CancelledTransaction);
+pub struct CanceledTransaction(pub iota_sdk::types::CanceledTransaction);
 
 #[uniffi::export]
-impl CancelledTransaction {
+impl CanceledTransaction {
     #[uniffi::constructor]
     pub fn new(
         digest: &TransactionDigest,
         version_assignments: Vec<Arc<VersionAssignment>>,
     ) -> Self {
-        Self(iota_sdk::types::CancelledTransaction {
+        Self(iota_sdk::types::CanceledTransaction {
             digest: digest.0,
             version_assignments: version_assignments
                 .into_iter()
@@ -2002,7 +2000,7 @@ crate::export_iota_types_objects_bcs_conversion!(
     Upgrade,
     ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     GenesisTransaction,
     ChangeEpoch,
@@ -2035,7 +2033,7 @@ crate::export_iota_types_objects_json_conversion!(
     Upgrade,
     ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     GenesisTransaction,
     ChangeEpoch,
