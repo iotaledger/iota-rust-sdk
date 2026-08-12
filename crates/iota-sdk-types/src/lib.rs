@@ -147,8 +147,8 @@ pub use crypto::{
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
     PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
-    RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
+    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
+    SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -181,9 +181,9 @@ pub use transaction::{
     Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
     EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,
+    SenderSignedTransaction, SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage,
+    Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{

@@ -144,10 +144,12 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
             ));
         }
 
+        let indices = signature
+            .indices()
+            .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
+
         let mut weight: ThresholdUnit = 0;
-        for (member_idx, member_signature) in
-            BitmapIndices::new(signature.bitmap()).zip(signature.signatures())
-        {
+        for (member_idx, member_signature) in indices.into_iter().zip(signature.signatures()) {
             let member = signature
                 .committee()
                 .members()
@@ -196,37 +198,6 @@ impl Verifier<UserSignature> for MultisigVerifier {
         };
 
         self.verify(message, signature)
-    }
-}
-
-/// Interpret a bitmap of 01s as a list of indices that is set to 1s.
-/// e.g. 22 = 0b10110, then the result is [1, 2, 4].
-struct BitmapIndices {
-    bitmap: u16,
-    range: std::ops::Range<u8>,
-}
-
-impl BitmapIndices {
-    pub fn new(bitmap: u16) -> Self {
-        Self {
-            bitmap,
-            range: 0..(u16::BITS as u8),
-        }
-    }
-}
-
-impl Iterator for BitmapIndices {
-    type Item = u8;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        #[allow(clippy::while_let_on_iterator)]
-        while let Some(i) = self.range.next() {
-            if self.bitmap & (1 << i) != 0 {
-                return Some(i);
-            }
-        }
-
-        None
     }
 }
 
