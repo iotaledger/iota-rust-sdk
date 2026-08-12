@@ -11,13 +11,6 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::Digest {
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<::prost::bytes::Bytes>>(mut self, field: T) -> Self {
-            self.digest = field.into();
-            self
-        }
-    }
     impl super::ObjectId {
         /// Sets `object_id` with the provided value.
         pub fn with_object_id<T: Into<::prost::bytes::Bytes>>(
@@ -25,6 +18,13 @@ mod _accessor_impls {
             field: T,
         ) -> Self {
             self.object_id = field.into();
+            self
+        }
+    }
+    impl super::Digest {
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<::prost::bytes::Bytes>>(mut self, field: T) -> Self {
+            self.digest = field.into();
             self
         }
     }

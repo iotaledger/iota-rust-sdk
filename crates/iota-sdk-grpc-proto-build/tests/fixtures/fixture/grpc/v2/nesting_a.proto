@@ -1,0 +1,13 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+// Fixture for `ProtoIndex` tests: same package tail and same message names as
+// `v1/nesting_a.proto`, one version module over.
+
+syntax = "proto3";
+
+package fixture.grpc.v2.a;
+
+message Input {
+  uint32 index = 1;
+}

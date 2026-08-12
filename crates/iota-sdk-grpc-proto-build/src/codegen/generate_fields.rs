@@ -2,20 +2,13 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    collections::{BTreeMap, HashMap, HashSet},
-    path::Path,
-};
+use std::{collections::HashMap, path::Path};
 
 use proc_macro2::TokenStream;
-use prost_types::{
-    DescriptorProto, FieldDescriptorProto, FileDescriptorSet, field_descriptor_proto::Type,
-};
+use prost_reflect::{FieldDescriptor, Kind, MessageDescriptor};
 use quote::quote;
 
-use crate::{
-    codegen::type_registry::TypeRegistry, dependency_graph::DependencyGraph, ident::to_snake,
-};
+use crate::{ident::to_snake, index::ProtoIndex};
 
 /// Information about a transparent wrapper message (one that should be skipped
 /// in read_mask paths / field path builders).
@@ -73,14 +66,12 @@ pub fn parse_transparent_messages_from_pool(
         // Detect whether the inner field is a map field (a repeated field whose
         // message type has map_entry = true).
         let is_map = match inner_field.kind() {
-            prost_reflect::Kind::Message(ref msg) => msg.is_map_entry(),
+            Kind::Message(ref msg) => msg.is_map_entry(),
             _ => false,
         };
 
         let inner_full_type_name = match inner_field.kind() {
-            prost_reflect::Kind::Message(ref msg) if !is_map => {
-                Some(format!(".{}", msg.full_name()))
-            }
+            Kind::Message(ref msg) if !is_map => Some(format!(".{}", msg.full_name())),
             _ => None,
         };
 
@@ -97,90 +88,60 @@ pub fn parse_transparent_messages_from_pool(
     map
 }
 
-#[derive(Default)]
-pub(crate) struct FileDescriptorWithPackageVersion {
-    pub fd_set: FileDescriptorSet,
-    pub version: String,
-}
-
 /// What the generator needs to turn a field's protobuf type into Rust, shared
 /// by every message of the package being generated.
 struct PackageContext<'a> {
     /// Package being generated, e.g. `iota.grpc.v1.command`.
     package: &'a str,
-    registry: &'a TypeRegistry,
+    index: &'a ProtoIndex,
     boxed_types: &'a [String],
-    dependency_graph: &'a DependencyGraph,
-    transparent_messages: &'a HashMap<String, TransparentInfo>,
 }
 
 impl PackageContext<'_> {
     fn message_path(&self, full_type_name: &str) -> TokenStream {
-        self.registry
-            .resolve(full_type_name)
-            .message_path(self.package)
+        self.index
+            .message_path(&self.index.resolve(full_type_name), self.package)
     }
 
     fn builder_path(&self, full_type_name: &str) -> TokenStream {
-        self.registry
-            .resolve(full_type_name)
-            .builder_path(self.package)
+        self.index
+            .builder_path(&self.index.resolve(full_type_name), self.package)
     }
 
     fn is_map_entry(&self, full_type_name: &str) -> bool {
-        self.registry.resolve(full_type_name).is_map_entry()
+        self.index.resolve(full_type_name).is_map_entry()
     }
 
     fn transparent(&self, full_type_name: &str) -> Option<&TransparentInfo> {
-        self.transparent_messages.get(full_type_name)
+        self.index.transparent(full_type_name)
     }
 
-    /// True when prost boxes the field, which the field path builders have to
-    /// mirror.
-    fn is_boxed_field(&self, message_full_name: &str, field_name: &str) -> bool {
-        let field_path = format!("{message_full_name}.{field_name}");
-        self.boxed_types.iter().any(|boxed_path| {
-            boxed_path.trim_start_matches('.') == field_path.trim_start_matches('.')
-        })
+    /// True when prost boxes the field, which the field constants have to
+    /// mirror by not recursing into it.
+    fn is_boxed_field(&self, message: &MessageDescriptor, field: &FieldDescriptor) -> bool {
+        let field_path = format!("{}.{}", message.full_name(), field.name());
+        self.boxed_types
+            .iter()
+            .any(|boxed_path| boxed_path.trim_start_matches('.') == field_path)
     }
 }
 
-pub(crate) fn generate_field_info(
-    packages: &BTreeMap<String, FileDescriptorWithPackageVersion>,
-    out_dir: &Path,
-    boxed_types: &[String],
-    transparent_messages: &HashMap<String, TransparentInfo>,
-) {
-    let registry = TypeRegistry::new(packages);
-
-    for (package, FileDescriptorWithPackageVersion { fd_set, .. }) in packages {
+pub(crate) fn generate_field_info(index: &ProtoIndex, out_dir: &Path, boxed_types: &[String]) {
+    for package in index.packages() {
         if package.contains("google") {
             continue;
         }
 
-        let package_full_name = format!(".{package}");
-
-        let mut dependency_graph = DependencyGraph::new();
-        for file in &fd_set.file {
-            dependency_graph.add_messages(&file.message_type, &package_full_name);
-        }
-
         let context = PackageContext {
-            package,
-            registry: &registry,
+            package: &package,
+            index,
             boxed_types,
-            dependency_graph: &dependency_graph,
-            transparent_messages,
         };
 
-        let mut stream = TokenStream::new();
-        for file in &fd_set.file {
-            stream.extend(generate_field_info_for_all_messages(
-                &context,
-                &package_full_name,
-                &file.message_type,
-            ));
-        }
+        let stream = generate_field_info_for_all_messages(
+            &context,
+            &index.messages_in_declaration_order(&package),
+        );
 
         // Only generate file if there's actual content in the stream
         if stream.is_empty() {
@@ -188,9 +149,10 @@ pub(crate) fn generate_field_info(
         }
 
         // Types of other packages are referenced through their full module
-        // path, so nothing but the traits has to be imported here. `_field_impls`
-        // is public because the field path builders of nested messages are
-        // shadowed at the package root by the prost module of the same name.
+        // path, so nothing but the traits has to be imported here.
+        // `_field_impls` is public because the field path builders of nested
+        // messages are shadowed at the package root by the prost module of the
+        // same name.
         let code = quote! {
             #[doc(hidden)]
             pub mod _field_impls {
@@ -227,8 +189,7 @@ pub(crate) fn generate_field_info(
 // nested ones
 fn generate_field_info_for_all_messages(
     context: &PackageContext<'_>,
-    parent_full_name: &str,
-    messages: &[DescriptorProto],
+    messages: &[MessageDescriptor],
 ) -> TokenStream {
     let mut stream = TokenStream::new();
 
@@ -236,18 +197,15 @@ fn generate_field_info_for_all_messages(
     // used
     for message in messages {
         // Skip map entry messages
-        if message.options.as_ref().is_some_and(|o| o.map_entry()) {
+        if message.is_map_entry() {
             continue;
         }
 
         // Generate nested modules for nested messages
-        if !message.nested_type.is_empty() {
+        let children: Vec<_> = message.child_messages().collect();
+        if !children.is_empty() {
             let module_name = quote::format_ident!("{}", to_snake(message.name()));
-            let nested_content = generate_field_info_for_all_messages(
-                context,
-                &format!("{parent_full_name}.{}", message.name()),
-                &message.nested_type,
-            );
+            let nested_content = generate_field_info_for_all_messages(context, &children);
 
             if !nested_content.is_empty() {
                 stream.extend(quote! {
@@ -264,15 +222,11 @@ fn generate_field_info_for_all_messages(
     // Second pass: Generate top-level messages after nested modules are defined
     for message in messages {
         // Skip map entry messages
-        if message.options.as_ref().is_some_and(|o| o.map_entry()) {
+        if message.is_map_entry() {
             continue;
         }
 
-        stream.extend(generate_field_info_for_message(
-            context,
-            &format!("{parent_full_name}.{}", message.name()),
-            message,
-        ));
+        stream.extend(generate_field_info_for_message(context, message));
     }
 
     stream
@@ -280,16 +234,14 @@ fn generate_field_info_for_all_messages(
 
 fn generate_field_info_for_message(
     context: &PackageContext<'_>,
-    message_full_name: &str,
-    message: &DescriptorProto,
+    message: &MessageDescriptor,
 ) -> TokenStream {
-    let message_path = context.message_path(message_full_name);
+    let message_path = context.message_path(message.full_name());
 
-    let constants = generate_field_constants(context, message_full_name, message, &message_path);
+    let constants = generate_field_constants(context, message, &message_path);
     let oneof_constants = generate_oneof_name_constants(message, &message_path);
     let message_fields_impl = generate_message_fields_impl(message, &message_path);
-    let field_path_builders =
-        generate_field_path_builders_impl(context, message_full_name, message, &message_path);
+    let field_path_builders = generate_field_path_builders_impl(context, message, &message_path);
 
     quote! {
         #constants
@@ -303,37 +255,12 @@ fn generate_field_info_for_message(
 /// each real `oneof` declaration in a message. Synthetic oneofs created by the
 /// proto3-optional feature are excluded.
 fn generate_oneof_name_constants(
-    message: &DescriptorProto,
+    message: &MessageDescriptor,
     message_path: &TokenStream,
 ) -> TokenStream {
-    if message.oneof_decl.is_empty() {
-        return TokenStream::new();
-    }
-
-    // Determine which oneof indices are "real" (not synthetic proto3-optional
-    // oneofs). A synthetic oneof only contains fields with proto3_optional = true.
-    let real_oneof_indices: HashSet<i32> = message
-        .field
-        .iter()
-        .filter_map(|field| {
-            if field.oneof_index.is_some() && !field.proto3_optional() {
-                field.oneof_index
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    if real_oneof_indices.is_empty() {
-        return TokenStream::new();
-    }
-
     let mut consts = TokenStream::new();
 
-    for (idx, oneof) in message.oneof_decl.iter().enumerate() {
-        if !real_oneof_indices.contains(&(idx as i32)) {
-            continue;
-        }
+    for oneof in message.oneofs().filter(|oneof| !oneof.is_synthetic()) {
         let name = oneof.name();
         let ident = quote::format_ident!("{}_ONEOF", name.to_ascii_uppercase());
         consts.extend(quote! {
@@ -354,14 +281,13 @@ fn generate_oneof_name_constants(
 
 fn generate_field_constants(
     context: &PackageContext<'_>,
-    message_full_name: &str,
-    message: &DescriptorProto,
+    message: &MessageDescriptor,
     message_path: &TokenStream,
 ) -> TokenStream {
     let mut field_consts = TokenStream::new();
 
-    for field in &message.field {
-        field_consts.extend(generate_field_constant(context, message_full_name, field));
+    for field in message.fields() {
+        field_consts.extend(generate_field_constant(context, message, &field));
     }
 
     quote! {
@@ -372,17 +298,21 @@ fn generate_field_constants(
 }
 
 fn generate_message_fields_impl(
-    message: &DescriptorProto,
+    message: &MessageDescriptor,
     message_path: &TokenStream,
 ) -> TokenStream {
     let mut field_refs = TokenStream::new();
 
-    for field in &message.field {
-        field_refs.extend(generate_field_reference(field));
+    for field in message.fields() {
+        field_refs.extend(generate_field_reference(&field));
     }
 
     // Collect real (non-synthetic) oneof names for the ONEOFS constant.
-    let real_oneof_names = get_real_oneof_names(message);
+    let real_oneof_names: Vec<String> = message
+        .oneofs()
+        .filter(|oneof| !oneof.is_synthetic())
+        .map(|oneof| oneof.name().to_owned())
+        .collect();
 
     let oneofs_impl = if real_oneof_names.is_empty() {
         TokenStream::new()
@@ -407,67 +337,38 @@ fn generate_message_fields_impl(
     }
 }
 
-/// Returns the names of real (non-synthetic proto3-optional) oneofs in a
-/// message.
-fn get_real_oneof_names(message: &DescriptorProto) -> Vec<String> {
-    if message.oneof_decl.is_empty() {
-        return Vec::new();
-    }
-
-    let real_oneof_indices: HashSet<i32> = message
-        .field
-        .iter()
-        .filter_map(|field| {
-            if field.oneof_index.is_some() && !field.proto3_optional() {
-                field.oneof_index
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    message
-        .oneof_decl
-        .iter()
-        .enumerate()
-        .filter_map(|(idx, oneof)| {
-            if real_oneof_indices.contains(&(idx as i32)) {
-                Some(oneof.name().to_string())
-            } else {
-                None
-            }
-        })
-        .collect()
-}
-
 fn generate_field_constant(
     context: &PackageContext<'_>,
-    message_full_name: &str,
-    field: &FieldDescriptorProto,
+    message: &MessageDescriptor,
+    field: &FieldDescriptor,
 ) -> TokenStream {
+    let descriptor = field.field_descriptor_proto();
     let ident = quote::format_ident!("{}_FIELD", field.name().to_ascii_uppercase());
     let name = field.name();
     let json_name = field.json_name();
-    let number = field.number();
+    let number = descriptor.number();
 
     // Check if the field is optional in the proto definition
-    let is_proto3_optional = field.proto3_optional.unwrap_or(false);
+    let is_proto3_optional = descriptor.proto3_optional.unwrap_or(false);
 
-    let (is_map, message_fields) =
-        if matches!(field.r#type(), Type::Message) && !field.type_name().contains("google") {
-            let full_type_name = field.type_name();
+    let (is_map, message_fields) = match field.kind() {
+        // we skip google types
+        Kind::Message(_) if !descriptor.type_name().contains("google") => {
+            let full_type_name = descriptor.type_name();
 
             // Check for circular references that need to be broken:
             // 1. Self-reference
             // 2. Map entry types
             // 3. Fields that are boxed AND create circular dependencies in the message
             //    graph
-            let is_circular_reference = context.is_boxed_field(message_full_name, field.name())
+            let is_circular_reference = context.is_boxed_field(message, field)
                 && context
-                    .dependency_graph
-                    .has_circular_dependency(message_full_name, full_type_name);
+                    .index
+                    .has_reference_cycle(message.full_name(), full_type_name);
 
-            if full_type_name == message_full_name || is_circular_reference {
+            if full_type_name.trim_start_matches('.') == message.full_name()
+                || is_circular_reference
+            {
                 (quote! { false }, quote! { None })
             } else if context.is_map_entry(full_type_name) {
                 (quote! { true }, quote! { None })
@@ -488,9 +389,9 @@ fn generate_field_constant(
                 let field_message = context.message_path(full_type_name);
                 (quote! { false }, quote! { Some(#field_message::FIELDS) })
             }
-        } else {
-            (quote! { false }, quote! { None })
-        };
+        }
+        _ => (quote! { false }, quote! { None }),
+    };
 
     quote! {
         pub const #ident: &'static MessageField = &MessageField {
@@ -504,7 +405,7 @@ fn generate_field_constant(
     }
 }
 
-fn generate_field_reference(field: &FieldDescriptorProto) -> TokenStream {
+fn generate_field_reference(field: &FieldDescriptor) -> TokenStream {
     let ident = quote::format_ident!("{}_FIELD", field.name().to_ascii_uppercase());
 
     quote! {
@@ -514,20 +415,19 @@ fn generate_field_reference(field: &FieldDescriptorProto) -> TokenStream {
 
 fn generate_field_path_builders_impl(
     context: &PackageContext<'_>,
-    message_full_name: &str,
-    message: &DescriptorProto,
+    message: &MessageDescriptor,
     message_path: &TokenStream,
 ) -> TokenStream {
     let builder_ident = quote::format_ident!("{}FieldPathBuilder", message.name());
 
     let mut field_chain_methods = TokenStream::new();
 
-    for field in &message.field {
+    for field in message.fields() {
         field_chain_methods.extend(generate_field_chain_methods(
             context,
-            message_full_name,
+            message,
             message_path,
-            field,
+            &field,
         ));
     }
 
@@ -566,10 +466,11 @@ fn generate_field_path_builders_impl(
 
 fn generate_field_chain_methods(
     context: &PackageContext<'_>,
-    message_full_name: &str,
+    message: &MessageDescriptor,
     message_path: &TokenStream,
-    field: &FieldDescriptorProto,
+    field: &FieldDescriptor,
 ) -> TokenStream {
+    let descriptor = field.field_descriptor_proto();
     let field_const = quote::format_ident!("{}_FIELD", field.name().to_ascii_uppercase());
     let name = if field.name() == "type" {
         quote::format_ident!("r#{}", field.name())
@@ -585,13 +486,15 @@ fn generate_field_chain_methods(
     };
 
     // we need to ignore google types, because we don't generate builders for them
-    if !matches!(field.r#type(), Type::Message) || field.type_name().contains("google") {
+    if !matches!(field.kind(), Kind::Message(_)) || descriptor.type_name().contains("google") {
         return leaf_method;
     }
 
-    let full_type_name = field.type_name();
+    let full_type_name = descriptor.type_name();
 
-    if full_type_name == message_full_name || context.is_map_entry(full_type_name) {
+    if full_type_name.trim_start_matches('.') == message.full_name()
+        || context.is_map_entry(full_type_name)
+    {
         return leaf_method;
     }
 

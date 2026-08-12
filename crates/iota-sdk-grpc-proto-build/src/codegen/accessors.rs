@@ -12,11 +12,13 @@ use quote::quote;
 use crate::{
     codegen::accessor_config::{AccessorMap, AccessorTypes},
     context::Context,
+    index::ProtoIndex,
     message_graph::{Field, Message, OneofField},
 };
 
 pub(crate) fn generate_accessors(
     context: &Context,
+    index: &ProtoIndex,
     out_dir: &Path,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
@@ -26,12 +28,20 @@ pub(crate) fn generate_accessors(
         let mut buf = String::new();
         let mut stream = TokenStream::new();
 
-        for message in context
-            .graph()
-            .messages
-            .values()
-            .filter(|m| &m.package == package && !context.is_extern(&m.type_name))
-        {
+        // Emit in the order the protos declare their messages, so a generated
+        // file reads like the `.proto` it comes from.
+        let messages = index
+            .all_messages_in_declaration_order(package.trim_start_matches('.'))
+            .into_iter()
+            .filter_map(|descriptor| {
+                context
+                    .graph()
+                    .messages
+                    .get(&format!(".{}", descriptor.full_name()))
+            })
+            .filter(|message| !context.is_extern(&message.type_name));
+
+        for message in messages {
             stream.extend(generate_accessors_for_message(
                 context,
                 message,

@@ -2,18 +2,81 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Proto build tool for generating gRPC types with field constants
+//! Proto build tool for generating gRPC types with field constants.
+//!
+//! Everything is written into `iota-sdk-grpc-types/src/proto/generated` and
+//! committed, so a run that changes the output fails the build. The pipeline
+//! is:
+//!
+//! 1. [`discover_proto_files`] — collect the `.proto` sources in a stable
+//!    order.
+//! 2. [`compile_proto_files`] — compile them with `protox` into a descriptor
+//!    pool (name resolution, options) and a file descriptor set.
+//! 3. [`generate_tonic`] — prost/tonic structs, clients and servers.
+//! 4. [`add_license_headers`] — license headers and `super::google` rewrites on
+//!    the files prost just wrote.
+//! 5. Accessor generation — `with_`/`set_`/getter methods driven by the
+//!    `iota.grpc.*_accessors` proto options.
+//! 6. Service method paths, then field constants and `MessageFields` impls,
+//!    which together back read masks and field path builders.
+//! 7. [`verify_generated_files_committed`] — fail if the output drifted from
+//!    what is committed.
+
 mod codegen;
 mod context;
-mod dependency_graph;
 mod ident;
+mod index;
 mod message_graph;
 
-use std::{collections::BTreeMap, path::PathBuf};
+use std::path::{Path, PathBuf};
 
-use crate::{
-    codegen::generate_fields::FileDescriptorWithPackageVersion, message_graph::DescriptorGraph,
-};
+use prost_reflect::DescriptorPool;
+use prost_types::FileDescriptorSet;
+
+use crate::{index::ProtoIndex, message_graph::DescriptorGraph};
+
+/// Fields that prost boxes in the generated structs, which accessor generation
+/// has to mirror in its signatures.
+///
+/// These are deliberately not passed to `Config::boxed`: prost boxes every
+/// non-repeated message field lying on a reference cycle by itself, before it
+/// consults its own config (`prost-build`, `Context::should_box_impl`), so
+/// configuring them changes nothing. The list exists only as input to our own
+/// accessor codegen.
+///
+/// Known gap, deliberately left alone:
+/// `.iota.grpc.v1.types.TypeTagVector.inner_type` is boxed by prost and missing
+/// here. No accessor is generated for it, so the omission is inert — adding it
+/// would change generated output.
+const PROST_BOXED_FIELDS: &[&str] = &[
+    ".iota.grpc.v1.filter.EventFilter.negation",
+    ".iota.grpc.v1.filter.TransactionFilter.negation",
+    ".iota.grpc.v1.filter.NotEventFilter.filter",
+    ".iota.grpc.v1.filter.NotTransactionFilter.filter",
+    ".iota.grpc.v1.types.TypeTag.vector_tag",
+];
+
+/// Fields whose `MessageFields::FIELDS` must stop recursing, because the field
+/// closes a reference cycle.
+const BOXED_TYPES_FIELD_INFO: &[&str] = &[
+    ".iota.grpc.v1.filter.AllEventFilter.filters",
+    ".iota.grpc.v1.filter.AnyEventFilter.filters",
+    ".iota.grpc.v1.filter.NotEventFilter.filter",
+    ".iota.grpc.v1.filter.AllTransactionFilter.filters",
+    ".iota.grpc.v1.filter.AnyTransactionFilter.filters",
+    ".iota.grpc.v1.filter.NotTransactionFilter.filter",
+    ".iota.grpc.v1.types.TypeTagVector.inner_type",
+];
+
+/// Fields whose accessors take and return boxed values: the ones prost boxes,
+/// plus those where a boxed signature is simply more ergonomic.
+const BOXED_TYPES_ACCESSOR: &[&str] = &[
+    ".iota.grpc.v1.filter.EventFilter.negation",
+    ".iota.grpc.v1.filter.TransactionFilter.negation",
+    ".iota.grpc.v1.filter.NotEventFilter.filter",
+    ".iota.grpc.v1.filter.NotTransactionFilter.filter",
+    ".iota.grpc.v1.types.TypeTag.vector_tag",
+];
 
 fn main() {
     let root_dir = PathBuf::from(std::env!("CARGO_MANIFEST_DIR"));
@@ -28,13 +91,57 @@ fn main() {
         .unwrap()
         .join("generated");
 
-    if out_dir.exists() {
-        std::fs::remove_dir_all(&out_dir).unwrap();
-    }
-    std::fs::create_dir_all(&out_dir).unwrap();
+    // The codegen entry points take owned paths, so widen the lists once here.
+    let prost_boxed_fields = owned_paths(PROST_BOXED_FIELDS);
+    let boxed_types_field_info = owned_paths(BOXED_TYPES_FIELD_INFO);
+    let boxed_types_accessor = owned_paths(BOXED_TYPES_ACCESSOR);
 
+    reset_out_dir(&out_dir);
+
+    let proto_files = discover_proto_files(&proto_dir);
+    let (descriptor_pool, fds) = compile_proto_files(&proto_dir, &proto_files);
+
+    generate_tonic(&proto_dir, &proto_files, &out_dir);
+    add_license_headers(&out_dir);
+
+    codegen::generate_service_methods::generate_service_method_paths(&descriptor_pool, &out_dir);
+
+    let index = ProtoIndex::build(descriptor_pool);
+
+    // Accessors are driven by the proto options the index carries.
+    let extern_paths = context::extern_paths::ExternPaths::new(&[], true).unwrap();
+    let graph = DescriptorGraph::new(fds.file.iter());
+    let context = context::Context::new(extern_paths, graph);
+    codegen::accessors::generate_accessors(
+        &context,
+        &index,
+        &out_dir,
+        &prost_boxed_fields,
+        &boxed_types_accessor,
+        index.accessor_map(),
+    );
+
+    codegen::generate_fields::generate_field_info(&index, &out_dir, &boxed_types_field_info);
+
+    verify_generated_files_committed(&out_dir);
+}
+
+fn owned_paths(paths: &[&str]) -> Vec<String> {
+    paths.iter().map(|path| (*path).to_owned()).collect()
+}
+
+/// Clears the output directory so that removed protos cannot leave stale
+/// generated files behind.
+fn reset_out_dir(out_dir: &Path) {
+    if out_dir.exists() {
+        std::fs::remove_dir_all(out_dir).unwrap();
+    }
+    std::fs::create_dir_all(out_dir).unwrap();
+}
+
+fn discover_proto_files(proto_dir: &Path) -> Vec<PathBuf> {
     let proto_ext = std::ffi::OsStr::new("proto");
-    let mut proto_files = walkdir::WalkDir::new(&proto_dir)
+    let mut proto_files = walkdir::WalkDir::new(proto_dir)
         .into_iter()
         .filter_map(|entry| {
             (|| {
@@ -60,11 +167,18 @@ fn main() {
     // package can swap positions in the generated module.
     proto_files.sort();
 
-    let mut compiler_init = protox::Compiler::new(std::slice::from_ref(&proto_dir)).unwrap();
+    proto_files
+}
+
+fn compile_proto_files(
+    proto_dir: &Path,
+    proto_files: &[PathBuf],
+) -> (DescriptorPool, FileDescriptorSet) {
+    let mut compiler_init = protox::Compiler::new([proto_dir]).unwrap();
     let compiler = compiler_init
         .include_source_info(true)
         .include_imports(true)
-        .open_files(&proto_files)
+        .open_files(proto_files)
         .unwrap();
 
     let descriptor_pool = compiler.descriptor_pool();
@@ -73,59 +187,29 @@ fn main() {
     // Sort files by name to have deterministic codegen output
     fds.file.sort_by(|a, b| a.name.cmp(&b.name));
 
-    // Define boxing configuration for prost-build
-    // These fields are boxed by prost in the generated structs
-    let boxed_types_prost = vec![
-        ".iota.grpc.v1.filter.EventFilter.negation".to_string(),
-        ".iota.grpc.v1.filter.TransactionFilter.negation".to_string(),
-        ".iota.grpc.v1.filter.NotEventFilter.filter".to_string(),
-        ".iota.grpc.v1.filter.NotTransactionFilter.filter".to_string(),
-        ".iota.grpc.v1.types.TypeTag.vector_tag".to_string(),
-    ];
+    (descriptor_pool, fds)
+}
 
-    // for field info and accessor generation
-    let boxed_types_field_info = vec![
-        ".iota.grpc.v1.filter.AllEventFilter.filters".to_string(),
-        ".iota.grpc.v1.filter.AnyEventFilter.filters".to_string(),
-        ".iota.grpc.v1.filter.NotEventFilter.filter".to_string(),
-        ".iota.grpc.v1.filter.AllTransactionFilter.filters".to_string(),
-        ".iota.grpc.v1.filter.AnyTransactionFilter.filters".to_string(),
-        ".iota.grpc.v1.filter.NotTransactionFilter.filter".to_string(),
-        ".iota.grpc.v1.types.TypeTagVector.inner_type".to_string(),
-    ];
-
-    // for accessor generation - includes both boxed proto fields and fields where
-    // we want the accessor to accept boxed types for ergonomics
-    let boxed_types_accessor = vec![
-        ".iota.grpc.v1.filter.EventFilter.negation".to_string(),
-        ".iota.grpc.v1.filter.TransactionFilter.negation".to_string(),
-        ".iota.grpc.v1.filter.NotEventFilter.filter".to_string(),
-        ".iota.grpc.v1.filter.NotTransactionFilter.filter".to_string(),
-        ".iota.grpc.v1.types.TypeTag.vector_tag".to_string(),
-    ];
-
-    let mut tonic_prost_builder = tonic_prost_build::configure()
+fn generate_tonic(proto_dir: &Path, proto_files: &[PathBuf], out_dir: &Path) {
+    tonic_prost_build::configure()
         .build_client(true)
         .build_server(true)
-        .bytes(".");
-
-    // apply all boxed types
-    for boxed_type in &boxed_types_prost {
-        tonic_prost_builder = tonic_prost_builder.boxed(boxed_type);
-    }
-
-    tonic_prost_builder
+        .bytes(".")
         .message_attribute(".iota.grpc", "#[non_exhaustive]")
         .enum_attribute(".iota.grpc", "#[non_exhaustive]")
         .btree_map(".")
-        .out_dir(&out_dir)
-        .compile_protos(&proto_files, std::slice::from_ref(&proto_dir))
+        .out_dir(out_dir)
+        .compile_protos(proto_files, &[proto_dir.to_path_buf()])
         .unwrap();
+}
 
+/// Adds IOTA license headers to the tonic-generated files and rewrites the
+/// `super::google` paths prost emits, which do not resolve from the module the
+/// generated files are included into.
+fn add_license_headers(out_dir: &Path) {
     let google_import_regex = regex::Regex::new(r"(?:super::)+google").unwrap();
 
-    // Add IOTA license headers to tonic-generated files and fix clippy warnings
-    for entry in std::fs::read_dir(&out_dir).unwrap() {
+    for entry in std::fs::read_dir(out_dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
 
@@ -159,64 +243,10 @@ fn main() {
             std::fs::write(&path, content).unwrap();
         }
     }
+}
 
-    // Setup for extended codegen
-    // Parse proto files to extract accessor annotations
-    let accessor_map = codegen::accessor_config::parse_proto_accessors_from_pool(&descriptor_pool);
-
-    let extern_paths = context::extern_paths::ExternPaths::new(&[], true).unwrap();
-    let files = fds.file.clone().into_iter().collect::<Vec<_>>();
-    let graph = DescriptorGraph::new(files.iter());
-    let context = context::Context::new(extern_paths, graph);
-    codegen::accessors::generate_accessors(
-        &context,
-        &out_dir,
-        &boxed_types_prost,
-        &boxed_types_accessor,
-        &accessor_map,
-    );
-
-    // Group files by package for field info generation
-    let mut packages: BTreeMap<String, FileDescriptorWithPackageVersion> = BTreeMap::new();
-    for mut file in fds.file {
-        // Clear source code info as it's not needed for field generation
-        file.source_code_info = None;
-
-        let package = packages.entry(file.package().to_owned()).or_default();
-
-        package.fd_set.file.push(file.clone());
-
-        // get the version from the file path
-        package.version = file
-            .name
-            .as_ref()
-            .and_then(|name| {
-                // Extract version from file path like "iota/grpc/v1/types.proto" -> "v1"
-                name.split('/').find(|part| {
-                    part.starts_with('v')
-                        && part.len() > 1
-                        && part[1..].chars().all(|c| c.is_ascii_digit())
-                })
-            })
-            .unwrap_or("v1")
-            .to_string();
-    }
-
-    // Generate gRPC method path constants from the descriptor pool
-    codegen::generate_service_methods::generate_service_method_paths(&descriptor_pool, &out_dir);
-
-    // Parse transparent message options from the descriptor pool
-    let transparent_messages =
-        codegen::generate_fields::parse_transparent_messages_from_pool(&descriptor_pool);
-
-    // Generate field constants and MessageFields impls
-    codegen::generate_fields::generate_field_info(
-        &packages,
-        &out_dir,
-        &boxed_types_field_info,
-        &transparent_messages,
-    );
-
+/// Fails the build when a run changed the generated files, which are committed.
+fn verify_generated_files_committed(out_dir: &Path) {
     let status = std::process::Command::new("git")
         .arg("diff")
         .arg("--exit-code")
