@@ -38,7 +38,9 @@ build-docs: ## Build docs
 	cargo doc --all-features --workspace --no-deps
 
 package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+	# `iota move build` prints git output to stdout when fetching dependencies
+	# into a cold ~/.move cache; keep only the JSON line.
+	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --allow-view-function true --dump-bytecode-as-base64 | grep '^{' > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet

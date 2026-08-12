@@ -22,8 +22,17 @@ runs:
         # gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
         # tar -zxvf "$artifact_name.tgz" ./iota ./iota-localnet
 
+        # Uncomment when using a branch build (dispatch release.yml on that branch first)
+        # IOTA_BRANCH="feat/update-graphql-rpc-checkpoint-bcs"
+        # # No --status filter: the linux artifact is available as soon as its
+        # # matrix job uploads it, even while other platforms are still building.
+        # database_id=$(gh run list --repo iotaledger/iota --workflow release.yml --branch "$IOTA_BRANCH" --limit 1 --json databaseId -q '.[0].databaseId')
+        # artifact_name="iota-$(echo $IOTA_BRANCH | tr "/" "-")-linux-x86_64"
+        # gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
+        # tar -zxvf "$artifact_name.tgz" ./iota ./iota-localnet
+
         # Uncomment when using a released build
-        IOTA_BINARY_VERSION="v1.24.0-rc"
+        IOTA_BINARY_VERSION="v1.29.0"
         ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
         download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
         echo "Downloading binary from $download_url"
