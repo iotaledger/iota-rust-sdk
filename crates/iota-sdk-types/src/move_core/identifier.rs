@@ -135,7 +135,6 @@ impl Identifier {
     // ========================================================================
 
     pub const ASCII_MODULE: Self = Self::from_static("ascii");
-    pub const AUTHENTICATOR_STATE_MODULE: Self = Self::from_static("authenticator_state");
     pub const BAG_MODULE: Self = Self::from_static("bag");
     pub const BALANCE_MODULE: Self = Self::from_static("balance");
     pub const CLOCK_MODULE: Self = Self::from_static("clock");
