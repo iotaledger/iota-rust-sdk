@@ -74,7 +74,14 @@ pub struct ServiceConfig {
     pub request_timeout_ms: i32,
 }
 
-#[derive(Clone, Copy, cynic::Enum, Debug)]
+impl ServiceConfig {
+    /// Whether `feature` is among the features this RPC service has enabled.
+    pub fn supports(&self, feature: Feature) -> bool {
+        self.enabled_features.contains(&feature)
+    }
+}
+
+#[derive(Clone, Copy, cynic::Enum, Debug, Eq, Hash, PartialEq)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Feature",
