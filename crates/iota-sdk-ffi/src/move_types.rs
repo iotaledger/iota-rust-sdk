@@ -1049,14 +1049,10 @@ impl KioskExtension {
         (*self.0.storage.id.object_id()).into()
     }
 
-    /// Whether the extension may place items into the kiosk.
-    pub fn can_place(&self) -> bool {
-        self.0.permissions & 1 != 0
-    }
-
-    /// Whether the extension may lock and place items in the kiosk.
-    pub fn can_lock(&self) -> bool {
-        self.0.permissions & 2 != 0
+    /// Bitmap of the permissions granted to the extension, as a decimal
+    /// string: bit 0 is `place`, bit 1 is `lock` (which also grants `place`).
+    pub fn permissions(&self) -> String {
+        self.0.permissions.to_string()
     }
 
     /// Whether the extension is currently allowed to call protected actions.
