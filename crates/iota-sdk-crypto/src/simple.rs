@@ -217,10 +217,10 @@ mod keypair {
             }
         }
 
-        #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
         /// format).
+        #[cfg(feature = "pem")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
             let private_key =
                 pkcs8::PrivateKeyInfo::try_from(bytes).map_err(SignatureError::from_source)?;
@@ -261,9 +261,9 @@ mod keypair {
             .map(|inner| Self { inner })
         }
 
+        /// Serialize this private key as DER-encoded PKCS#8
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Serialize this private key as DER-encoded PKCS#8
         pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -275,9 +275,9 @@ mod keypair {
             }
         }
 
+        /// Deserialize PKCS#8-encoded private key from PEM.
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Deserialize PKCS#8-encoded private key from PEM.
         pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
             use pkcs8::der::pem::PemLabel;
 
@@ -288,9 +288,9 @@ mod keypair {
             Self::from_der(doc.as_bytes())
         }
 
+        /// Serialize this private key as DER-encoded PKCS#8
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Serialize this private key as DER-encoded PKCS#8
         pub fn to_pem(&self) -> Result<String, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -401,9 +401,9 @@ mod keypair {
             }
         }
 
+        /// Deserialize public key from ASN.1 DER-encoded data (binary format).
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Deserialize public key from ASN.1 DER-encoded data (binary format).
         pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
             let public_key = pkcs8::SubjectPublicKeyInfoRef::try_from(bytes)
                 .map_err(SignatureError::from_source)?;
@@ -444,9 +444,9 @@ mod keypair {
             .map(|inner| Self { inner })
         }
 
+        /// Serialize this public key as DER-encoded data
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Serialize this public key as DER-encoded data
         pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -458,9 +458,9 @@ mod keypair {
             }
         }
 
+        /// Deserialize public key from PEM.
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Deserialize public key from PEM.
         pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
             use pkcs8::der::pem::PemLabel;
 
@@ -470,9 +470,9 @@ mod keypair {
             Self::from_der(doc.as_bytes())
         }
 
+        /// Serialize this public key as PEM
         #[cfg(feature = "pem")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-        /// Serialize this public key as PEM
         pub fn to_pem(&self) -> Result<String, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]

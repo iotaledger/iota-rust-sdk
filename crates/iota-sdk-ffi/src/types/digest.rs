@@ -201,10 +201,10 @@ ffi_digest_wrapper! {
             Self(iota_sdk::types::ObjectDigest::OBJECT_WRAPPED)
         }
 
-        /// A marker that signifies the object is cancelled.
+        /// A marker that signifies the object is canceled.
         #[uniffi::constructor]
-        pub fn object_cancelled() -> Self {
-            Self(iota_sdk::types::ObjectDigest::OBJECT_CANCELLED)
+        pub fn object_canceled() -> Self {
+            Self(iota_sdk::types::ObjectDigest::OBJECT_CANCELED)
         }
 
         /// Returns whether the digest represents an object that is neither

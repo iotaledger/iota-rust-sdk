@@ -26,6 +26,14 @@ pub struct ValidatorCommittee {
     pub members: Vec<ValidatorCommitteeMember>,
 }
 
+impl crate::TreeDisplay for ValidatorCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Validator Committee")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.children("Members", &self.members, true)
+    }
+}
+
 /// A member of a Validator Committee
 ///
 /// # BCS
@@ -46,6 +54,14 @@ pub struct ValidatorCommitteeMember {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub stake: StakeUnit,
+}
+
+impl crate::TreeDisplay for ValidatorCommitteeMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Validator Committee Member")?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Stake", &self.stake, true)
+    }
 }
 
 /// An aggregated signature from multiple Validators.
@@ -80,6 +96,15 @@ pub struct ValidatorAggregatedSignature {
     )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "bytes"))]
     pub bitmap: roaring::RoaringBitmap,
+}
+
+impl crate::TreeDisplay for ValidatorAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Validator Aggregated Signature")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Signature", &self.signature, false)?;
+        w.leaf("Bitmap", &format!("{:?}", self.bitmap), true)
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -143,6 +168,22 @@ pub struct ValidatorSignature {
     pub public_key: Bls12381PublicKey,
     pub signature: Bls12381Signature,
 }
+
+impl crate::TreeDisplay for ValidatorSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Validator Signature")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Signature", &self.signature, true)
+    }
+}
+
+crate::impl_tree_display!(
+    ValidatorCommittee,
+    ValidatorCommitteeMember,
+    ValidatorAggregatedSignature,
+    ValidatorSignature
+);
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {

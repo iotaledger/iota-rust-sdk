@@ -169,23 +169,26 @@ impl std::ops::SubAssign<Self> for GasCostSummary {
     }
 }
 
-impl std::fmt::Display for GasCostSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "computation_cost: {}, ", self.computation_cost)?;
-        write!(
-            f,
-            "computation_cost_burned: {}, ",
-            self.computation_cost_burned
+impl crate::TreeDisplay for GasCostSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Gas Cost Summary")?;
+        w.leaf("Computation Cost", &self.computation_cost, false)?;
+        w.leaf(
+            "Computation Cost Burned",
+            &self.computation_cost_burned,
+            false,
         )?;
-        write!(f, "storage_cost: {}, ", self.storage_cost)?;
-        write!(f, "storage_rebate: {}, ", self.storage_rebate)?;
-        write!(
-            f,
-            "non_refundable_storage_fee: {}",
-            self.non_refundable_storage_fee
+        w.leaf("Storage Cost", &self.storage_cost, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            true,
         )
     }
 }
+
+crate::impl_tree_display!(GasCostSummary);
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {
