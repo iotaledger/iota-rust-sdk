@@ -242,6 +242,12 @@ impl IotaSystemStateV2 {
     pub fn safe_mode_non_refundable_storage_fee(&self) -> u64 {
         self.0.safe_mode_non_refundable_storage_fee
     }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
+    }
 }
 
 /// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV1`
@@ -358,6 +364,12 @@ impl IotaSystemStateV1 {
     pub fn safe_mode_non_refundable_storage_fee(&self) -> u64 {
         self.0.safe_mode_non_refundable_storage_fee
     }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
+    }
 }
 
 /// A typed view of the `0x3::validator_set::ValidatorSetV2` embedded in the
@@ -411,9 +423,35 @@ impl ValidatorSetV2 {
             .collect()
     }
 
-    // `staking_pool_mappings`, `inactive_validators` and
-    // `validator_candidates` are table handles whose entries live in dynamic
-    // fields, not in this struct's contents.
+    /// Object ID of the `TableVec` holding the pending validator candidates,
+    /// keyed by their index.
+    pub fn pending_active_validators_id(&self) -> ObjectId {
+        (*self.0.pending_active_validators.contents.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` mapping each staking pool ID to its validator
+    /// address.
+    pub fn staking_pool_mappings_id(&self) -> ObjectId {
+        (*self.0.staking_pool_mappings.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` holding the inactive validators, keyed by
+    /// staking pool ID.
+    pub fn inactive_validators_id(&self) -> ObjectId {
+        (*self.0.inactive_validators.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` holding the validator candidates, keyed by
+    /// their address.
+    pub fn validator_candidates_id(&self) -> ObjectId {
+        (*self.0.validator_candidates.id.object_id()).into()
+    }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
+    }
 }
 
 /// A typed view of the `0x3::validator_set::ValidatorSetV1` embedded in
@@ -464,9 +502,35 @@ impl ValidatorSetV1 {
             .collect()
     }
 
-    // `staking_pool_mappings`, `inactive_validators` and
-    // `validator_candidates` are table handles whose entries live in dynamic
-    // fields, not in this struct's contents.
+    /// Object ID of the `TableVec` holding the pending validator candidates,
+    /// keyed by their index.
+    pub fn pending_active_validators_id(&self) -> ObjectId {
+        (*self.0.pending_active_validators.contents.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` mapping each staking pool ID to its validator
+    /// address.
+    pub fn staking_pool_mappings_id(&self) -> ObjectId {
+        (*self.0.staking_pool_mappings.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` holding the inactive validators, keyed by
+    /// staking pool ID.
+    pub fn inactive_validators_id(&self) -> ObjectId {
+        (*self.0.inactive_validators.id.object_id()).into()
+    }
+
+    /// Object ID of the `Table` holding the validator candidates, keyed by
+    /// their address.
+    pub fn validator_candidates_id(&self) -> ObjectId {
+        (*self.0.validator_candidates.id.object_id()).into()
+    }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
+    }
 }
 
 /// A typed view of a `0x3::validator::ValidatorV1` from the active validator
@@ -524,6 +588,12 @@ impl ValidatorV1 {
     /// points.
     pub fn next_epoch_commission_rate(&self) -> u64 {
         self.0.next_epoch_commission_rate
+    }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
@@ -696,6 +766,18 @@ impl StakingPoolV1 {
     /// epoch boundaries.
     pub fn pending_pool_token_withdraw(&self) -> u64 {
         self.0.pending_pool_token_withdraw
+    }
+
+    /// Object ID of the `Table` holding the exchange-rate history, keyed by
+    /// epoch.
+    pub fn exchange_rates_id(&self) -> ObjectId {
+        (*self.0.exchange_rates.id.object_id()).into()
+    }
+
+    /// Object ID of the `Bag` holding fields added to this struct after its
+    /// current on-chain layout was set.
+    pub fn extra_fields_id(&self) -> ObjectId {
+        (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
