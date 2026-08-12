@@ -554,6 +554,24 @@ impl crate::ObjectId {
 
         Self::new(digest.into_inner())
     }
+
+    /// Derive the ObjectId of a derived object (`0x2::derived_object`).
+    ///
+    /// hash(parent || len(key) || key || DerivedObjectKey(key_type_tag))
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn derive_object_id(&self, key_type_tag: &crate::TypeTag, key_bytes: &[u8]) -> Self {
+        // Wrap the key type into `DerivedObjectKey<K>` to preserve on-chain
+        // namespacing
+        let wrapper_type_tag = crate::TypeTag::Struct(Box::new(crate::StructTag::new(
+            crate::Address::FRAMEWORK,
+            crate::Identifier::DERIVED_OBJECT_MODULE,
+            crate::Identifier::DERIVED_OBJECT_KEY,
+            vec![key_type_tag.clone()],
+        )));
+
+        self.derive_dynamic_child_id(&wrapper_type_tag, key_bytes)
+    }
 }
 
 #[cfg(all(test, feature = "proptest"))]
@@ -591,9 +609,11 @@ mod tests {
 
 #[cfg(all(test, feature = "serde"))]
 mod serde_tests {
+    use std::str::FromStr;
+
     use base64ct::Encoding;
 
-    use crate::UserSignature;
+    use crate::{Address, Identifier, ObjectId, StructTag, TypeTag, UserSignature};
 
     // Guards the address derivation from serialized signatures: every
     // UserSignature kind, given as base64, must keep deriving the same address.
@@ -641,5 +661,82 @@ mod serde_tests {
         // at deserialization.
         let zklogin_b64 = base64ct::Base64::encode_string(&[0x05u8, 0, 0, 0]);
         assert!(UserSignature::from_base64(&zklogin_b64).is_err());
+    }
+
+    // Snapshot tests that match the on-chain `derive_address` logic.
+    // These snapshots can also be found in the `derived_object_tests.move` unit
+    // tests.
+    #[test]
+    fn test_derive_object_id_snapshot() {
+        let key_bytes = bcs::to_bytes("foo".as_bytes()).unwrap();
+        let key_type_tag = TypeTag::Vector(Box::new(TypeTag::U8));
+
+        let id = ObjectId::from_str("0x2")
+            .unwrap()
+            .derive_object_id(&key_type_tag, &key_bytes);
+
+        assert_eq!(
+            id,
+            ObjectId::from_str(
+                "0xa2b411aa9588c398d8e3bc97dddbdd430b5ded7f81545d05e33916c3ca0f30c3"
+            )
+            .unwrap()
+        );
+    }
+
+    #[test]
+    fn test_derive_object_id_with_struct_key_snapshot() {
+        #[derive(serde::Serialize)]
+        struct DemoStruct {
+            value: u64,
+        }
+
+        let key_bytes = bcs::to_bytes(&DemoStruct { value: 1 }).unwrap();
+        let key_type_tag = TypeTag::Struct(Box::new(StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::from_static("derived_object_tests"),
+            Identifier::from_static("DemoStruct"),
+            vec![],
+        )));
+
+        let id = ObjectId::from_str("0x2")
+            .unwrap()
+            .derive_object_id(&key_type_tag, &key_bytes);
+
+        assert_eq!(
+            id,
+            ObjectId::from_str(
+                "0x20c58d8790a5d2214c159c23f18a5fdc347211e511186353e785ad543abcea6b"
+            )
+            .unwrap()
+        );
+    }
+
+    #[test]
+    fn test_derive_object_id_with_generic_struct_key_snapshot() {
+        #[derive(serde::Serialize)]
+        struct GenericStruct<T> {
+            value: T,
+        }
+
+        let key_bytes = bcs::to_bytes(&GenericStruct::<u64> { value: 1 }).unwrap();
+        let key_type_tag = TypeTag::Struct(Box::new(StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::from_static("derived_object_tests"),
+            Identifier::from_static("GenericStruct"),
+            vec![TypeTag::U64],
+        )));
+
+        let id = ObjectId::from_str("0x2")
+            .unwrap()
+            .derive_object_id(&key_type_tag, &key_bytes);
+
+        assert_eq!(
+            id,
+            ObjectId::from_str(
+                "0xb497b8dcf1e297ae5fa69c040e4a08ef8240d5373bbc9d6b686ffbd7dfe04cbe"
+            )
+            .unwrap()
+        );
     }
 }
