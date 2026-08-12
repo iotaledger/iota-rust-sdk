@@ -75,8 +75,8 @@ pub struct ServiceConfig {
 }
 
 impl ServiceConfig {
-    /// Whether `feature` is among the features this RPC service has enabled.
-    pub fn supports(&self, feature: Feature) -> bool {
+    /// Whether `feature` is among those this RPC service has enabled.
+    pub fn supports_feature(&self, feature: Feature) -> bool {
         self.enabled_features.contains(&feature)
     }
 }
