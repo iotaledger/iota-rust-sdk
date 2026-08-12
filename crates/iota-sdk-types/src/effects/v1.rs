@@ -4,7 +4,7 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, Owner, TransactionDigest, TransactionEventsDigest, Version,
+    ObjectId, ObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -422,5 +422,172 @@ impl crate::TreeDisplay for ObjectOut {
                 w.leaf("Digest", digest, true)
             }
         }
+    }
+}
+
+impl TransactionEffectsV1 {
+    /// The id and pre-transaction version of every object that existed before
+    /// this transaction and was modified by it (mutated, wrapped or deleted).
+    pub fn modified_at_versions(&self) -> Vec<(ObjectId, Version)> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| {
+                changed
+                    .input_state
+                    .version_opt()
+                    .map(|version| (changed.object_id, version))
+            })
+            .collect()
+    }
+
+    /// The reference and owner, before this transaction, of every object it
+    /// modified.
+    pub fn old_object_metadata(&self) -> Vec<(ObjectReference, Owner)> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| match changed.input_state {
+                ObjectIn::Data {
+                    version,
+                    digest,
+                    owner,
+                } => Some((
+                    ObjectReference::new(changed.object_id, version, digest),
+                    owner,
+                )),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Objects (Move objects and packages) newly created by this transaction,
+    /// paired with their owner. Excludes objects created and then wrapped
+    /// within the same transaction.
+    pub fn created(&self) -> Vec<(ObjectReference, Owner)> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| {
+                changed.input_state.is_missing() && changed.id_operation == IdOperation::Created
+            })
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that existed before this transaction and whose contents it
+    /// updated (in-place mutations and system package upgrades), at their
+    /// post-transaction reference and owner.
+    pub fn mutated(&self) -> Vec<(ObjectReference, Owner)> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| changed.input_state.is_data())
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that were wrapped inside another object before this transaction
+    /// and that it promoted back to top-level objects in the store.
+    pub fn unwrapped(&self) -> Vec<(ObjectReference, Owner)> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| {
+                changed.input_state.is_missing() && changed.id_operation == IdOperation::None
+            })
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that existed before this transaction and that it deleted.
+    /// References carry the version this transaction assigned and the
+    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    pub fn deleted(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::Deleted,
+            ObjectDigest::OBJECT_DELETED,
+        )
+    }
+
+    /// Objects unwrapped and then deleted within this same transaction, so
+    /// that they existed as top-level objects neither before nor after it.
+    /// References carry the version this transaction assigned and the
+    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    pub fn unwrapped_then_deleted(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| {
+                changed.input_state.is_missing() && changed.id_operation == IdOperation::Deleted
+            },
+            ObjectDigest::OBJECT_DELETED,
+        )
+    }
+
+    /// Objects that existed as top-level objects before this transaction and
+    /// that it wrapped inside another object, so they are no longer visible in
+    /// the object store. References carry the version this transaction assigned
+    /// and the [`ObjectDigest::OBJECT_WRAPPED`] tombstone digest.
+    pub fn wrapped(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::None,
+            ObjectDigest::OBJECT_WRAPPED,
+        )
+    }
+
+    /// The post-transaction reference and owner of the gas object, or `None`
+    /// for a transaction that requires no gas (a system transaction).
+    pub fn gas_object(&self) -> Option<(ObjectReference, Owner)> {
+        let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
+        self.output_reference(changed)
+    }
+
+    /// The post-transaction reference and owner of a changed object, or `None`
+    /// if this transaction removed it from the store. A package carries its own
+    /// version; every other object takes the version this transaction assigned.
+    fn output_reference(&self, changed: &ChangedObject) -> Option<(ObjectReference, Owner)> {
+        match changed.output_state {
+            ObjectOut::ObjectWrite { digest, owner } => Some((
+                ObjectReference::new(changed.object_id, self.lamport_version, digest),
+                owner,
+            )),
+            ObjectOut::PackageWrite { version, digest } => Some((
+                ObjectReference::new(changed.object_id, version, digest),
+                Owner::Immutable,
+            )),
+            _ => None,
+        }
+    }
+
+    /// References, carrying `digest` as their tombstone, to the objects this
+    /// transaction removed from the store that `select` accepts.
+    fn removed_references(
+        &self,
+        select: impl Fn(&ChangedObject) -> bool,
+        digest: ObjectDigest,
+    ) -> Vec<ObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| changed.output_state.is_missing() && select(changed))
+            .map(|changed| ObjectReference::new(changed.object_id, self.lamport_version, digest))
+            .collect()
+    }
+}
+
+#[cfg(all(feature = "proptest", test))]
+mod tests {
+    use test_strategy::proptest;
+
+    use super::TransactionEffectsV1;
+
+    /// The six object sets are selected by mutually exclusive combinations of
+    /// input state, output state and id operation, so together they report each
+    /// changed object at most once — for any effects, not only well-formed
+    /// ones. The fixtures cover the other half, that real effects leave none
+    /// out.
+    #[proptest]
+    fn object_sets_report_each_changed_object_at_most_once(effects: TransactionEffectsV1) {
+        let reported = effects.created().len()
+            + effects.mutated().len()
+            + effects.unwrapped().len()
+            + effects.deleted().len()
+            + effects.unwrapped_then_deleted().len()
+            + effects.wrapped().len();
+
+        assert!(reported <= effects.changed_objects.len());
     }
 }
