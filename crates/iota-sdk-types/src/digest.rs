@@ -289,7 +289,7 @@ pub type SigningDigest = [u8; Digest::LENGTH];
 /// [`Digest`] (it is a transparent newtype), but is a distinct type so that,
 /// for example, a [`TransactionDigest`] can't be mixed up with an
 /// [`ObjectDigest`]. The shared, domain-agnostic surface (construction,
-/// encoding, ordering) is generated here; domain-specific behaviour is added in
+/// encoding, ordering) is generated here; domain-specific behavior is added in
 /// separate `impl` blocks.
 macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $name:ident) => {
@@ -524,7 +524,7 @@ impl_digest_wrapper! {
 
 const OBJECT_DIGEST_DELETED_BYTE_VAL: u8 = 99;
 const OBJECT_DIGEST_WRAPPED_BYTE_VAL: u8 = 88;
-const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
+const OBJECT_DIGEST_CANCELED_BYTE_VAL: u8 = 77;
 
 impl ObjectDigest {
     /// A marker that signifies the object is deleted.
@@ -533,8 +533,8 @@ impl ObjectDigest {
     /// A marker that signifies the object is wrapped into another object.
     pub const OBJECT_WRAPPED: Self = Self(Digest::new([OBJECT_DIGEST_WRAPPED_BYTE_VAL; 32]));
 
-    /// A marker that signifies the object is cancelled.
-    pub const OBJECT_CANCELLED: Self = Self(Digest::new([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]));
+    /// A marker that signifies the object is canceled.
+    pub const OBJECT_CANCELED: Self = Self(Digest::new([OBJECT_DIGEST_CANCELED_BYTE_VAL; 32]));
 
     /// Returns whether the digest represents an object that is neither deleted
     /// nor wrapped.
@@ -738,9 +738,9 @@ mod tests {
         assert!(ObjectDigest::OBJECT_WRAPPED.is_wrapped());
         assert!(!ObjectDigest::OBJECT_WRAPPED.is_alive());
         assert!(ObjectDigest::ZERO.is_alive());
-        // `is_alive` only accounts for deleted/wrapped objects, so a cancelled
+        // `is_alive` only accounts for deleted/wrapped objects, so a canceled
         // marker is still considered alive.
-        assert!(ObjectDigest::OBJECT_CANCELLED.is_alive());
+        assert!(ObjectDigest::OBJECT_CANCELED.is_alive());
     }
 
     #[test]

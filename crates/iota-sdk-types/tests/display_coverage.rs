@@ -19,7 +19,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Argument>();
     assert_display::<iota_sdk_types::Bls12381PublicKey>();
     assert_display::<iota_sdk_types::Bls12381Signature>();
-    assert_display::<iota_sdk_types::CancelledTransaction>();
+    assert_display::<iota_sdk_types::CanceledTransaction>();
     assert_display::<iota_sdk_types::ChangeEpoch>();
     assert_display::<iota_sdk_types::ChangeEpochV2>();
     assert_display::<iota_sdk_types::ChangeEpochV3>();
