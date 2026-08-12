@@ -473,8 +473,7 @@ async fn test_transactions_subscription() {
     use futures::StreamExt;
 
     let client = Client::new_localnet();
-    let stream = client.transactions_stream(None, None);
-    futures::pin_mut!(stream);
+    let mut stream = client.transactions_stream(None, None);
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.
@@ -509,8 +508,7 @@ async fn test_events_subscription() {
     let filter = SubscriptionEventFilter {
         emitting_module: Some("0x3".to_owned()),
     };
-    let stream = client.events_stream(filter, None);
-    futures::pin_mut!(stream);
+    let mut stream = client.events_stream(filter, None);
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.

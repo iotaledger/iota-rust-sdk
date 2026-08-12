@@ -65,7 +65,7 @@ impl Client {
         &self,
         filter: impl Into<Option<SubscriptionEventFilter>>,
         start_after: impl Into<Option<String>>,
-    ) -> impl Stream<Item = Result<Event>> + '_ {
+    ) -> impl Stream<Item = Result<Event>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
             move |cursor| {
@@ -127,7 +127,7 @@ impl Client {
         &self,
         filter: impl Into<Option<SubscriptionTransactionFilter>>,
         start_after: impl Into<Option<String>>,
-    ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
+    ) -> impl Stream<Item = Result<SignedTransaction>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
             move |cursor| {
@@ -227,14 +227,14 @@ fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> Result<T> {
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
-) -> impl Stream<Item = Result<T>> + 'a
+) -> impl Stream<Item = Result<T>> + Unpin + 'a
 where
     T: 'a,
     C: Fn(Option<String>) -> Fut + 'a,
     Fut: Future<Output = Result<S>> + 'a,
     S: Stream<Item = Result<Outcome<T>>> + Unpin + 'a,
 {
-    async_stream::stream! {
+    Box::pin(async_stream::stream! {
         let mut cursor = initial_cursor;
         let mut backoff = INITIAL_BACKOFF;
         loop {
@@ -263,5 +263,5 @@ where
             tokio::time::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }
-    }
+    })
 }
