@@ -111,6 +111,13 @@ impl ObjectId {
             .into()
     }
 
+    /// Derive the ObjectId of a derived object (`0x2::derived_object`).
+    ///
+    /// hash(parent || len(key) || key || DerivedObjectKey(key_type_tag))
+    pub fn derive_object_id(&self, key_type_tag: &TypeTag, key_bytes: &[u8]) -> Self {
+        self.0.derive_object_id(&key_type_tag.0, key_bytes).into()
+    }
+
     /// Returns the string representation of this object ID using the
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
