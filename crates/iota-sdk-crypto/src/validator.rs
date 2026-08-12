@@ -279,8 +279,7 @@ impl CommitteeChainVerifier {
     }
 
     /// Verify `summary` as the certified closing checkpoint of [`Self::epoch`]
-    /// and advance to the committee it elects for the next epoch, returning the
-    /// now committee-verified summary.
+    /// and advance to the committee it elects for the next epoch.
     ///
     /// Errors leave the verifier unchanged, e.g. if the summary is for a
     /// different epoch, its signatures don't verify under the current
