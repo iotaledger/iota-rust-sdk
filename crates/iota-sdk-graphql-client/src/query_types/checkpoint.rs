@@ -78,8 +78,7 @@ pub struct CheckpointId {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Checkpoint")]
 pub struct Checkpoint {
-    /// BCS serialization of the `CheckpointSummary`, Base64-encoded. `None` for
-    /// checkpoints indexed before the field was available.
+    /// BCS serialization of the `CheckpointSummary`, Base64-encoded.
     pub bcs: Option<Base64>,
 }
 
