@@ -8,7 +8,7 @@
 //! [`Lagged`] (emitted when the server's broker had to drop messages).
 
 use base64ct::Encoding;
-use iota_types::{SenderSignedTransaction, SignedTransaction, UserSignature};
+use iota_types::{SenderSignedTransaction, SignedTransaction};
 
 use crate::{
     error::{self, Error, Kind},
@@ -170,14 +170,13 @@ impl From<SubscriptionEvent> for Event {
 }
 
 /// A transaction block as delivered over a subscription. Selects the digest
-/// (used as the stream recovery cursor) alongside the fields needed to rebuild
-/// a [`SignedTransaction`].
+/// (used as the stream recovery cursor) alongside the `SenderSignedData` BCS
+/// that a [`SignedTransaction`] is rebuilt from.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
 pub struct SubscriptionTransactionBlock {
     pub digest: Option<String>,
     pub bcs: Option<Base64>,
-    pub signatures: Option<Vec<Base64>>,
 }
 
 impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
@@ -191,19 +190,8 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
             .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
             .transpose()?;
 
-        let signatures = if let Some(sigs) = value.signatures {
-            sigs.iter()
-                .map(|s| UserSignature::from_base64(&s.0))
-                .collect::<Result<Vec<_>, _>>()?
-        } else {
-            vec![]
-        };
-
         if let Some(transaction) = transaction {
-            Ok(SignedTransaction {
-                transaction: transaction.0.transaction,
-                signatures,
-            })
+            Ok(transaction.into())
         } else {
             Err(Error::from_error(
                 Kind::Other,
