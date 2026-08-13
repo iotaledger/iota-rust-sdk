@@ -32,9 +32,7 @@ async fn main() -> Result<()> {
     let enabled = client
         .service_config()
         .await?
-        .enabled_features
-        .iter()
-        .any(|feature| matches!(feature, Feature::Subscriptions));
+        .supports_feature(Feature::Subscriptions);
     if !enabled {
         println!("this node does not serve subscriptions");
         return Ok(());
