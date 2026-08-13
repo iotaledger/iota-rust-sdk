@@ -46,24 +46,26 @@ pub struct MovePackageQuery {
 // ===========================================================================
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
-#[cynic(
-    schema = "rpc",
-    graphql_type = "Query",
-    variables = "PackagesQueryArgs"
-)]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackagesArgs")]
 pub struct PackagesQuery {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub packages: MovePackageConnection,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
-pub struct PackagesQueryArgs<'a> {
+pub struct PackagesArgs<'a> {
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
     pub filter: Option<PackageCheckpointFilter>,
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
+
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `PackagesArgs` for naming consistency"
+)]
+pub type PackagesQueryArgs<'a> = PackagesArgs<'a>;
 
 #[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageCheckpointFilter")]

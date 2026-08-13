@@ -1,5 +1,5 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2025-2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
@@ -12,24 +12,30 @@ use crate::query_types::{
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "EventsQueryArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "EventsArgs")]
 pub struct EventsQuery {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub events: EventConnection,
 }
 
 // ===========================================================================
-// Events Query Args
+// Events Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EventsQueryArgs<'a> {
+pub struct EventsArgs<'a> {
     pub filter: Option<EventFilter>,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
+
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `EventsArgs` for naming consistency"
+)]
+pub type EventsQueryArgs<'a> = EventsArgs<'a>;
 
 // ===========================================================================
 // Events Types

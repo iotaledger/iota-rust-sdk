@@ -1,5 +1,5 @@
 // Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Modifications Copyright (c) 2025-2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
@@ -10,7 +10,7 @@ use crate::query_types::{
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct NormalizedMoveModuleQuery {
     #[arguments(address: $package, version: $version)]
@@ -18,7 +18,7 @@ pub struct NormalizedMoveModuleQuery {
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
-pub struct NormalizedMoveModuleQueryArgs<'a> {
+pub struct NormalizedMoveModuleArgs<'a> {
     pub package: Address,
     pub module: &'a str,
     pub version: Option<u64>,
@@ -40,11 +40,17 @@ pub struct NormalizedMoveModuleQueryArgs<'a> {
     pub last_friends: Option<i32>,
 }
 
+#[deprecated(
+    since = "0.0.2",
+    note = "renamed to `NormalizedMoveModuleArgs` for naming consistency"
+)]
+pub type NormalizedMoveModuleQueryArgs<'a> = NormalizedMoveModuleArgs<'a>;
+
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "MovePackage",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct MovePackage {
     #[arguments(name: $module)]
@@ -55,7 +61,7 @@ pub struct MovePackage {
 #[cynic(
     schema = "rpc",
     graphql_type = "MoveModule",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct MoveModule {
     pub file_format_version: i32,
