@@ -143,6 +143,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::UserSignature>();
     assert_display::<iota_sdk_types::ValidatorAggregatedSignature>();
     assert_display::<iota_sdk_types::ValidatorCommittee>();
+    assert_display::<iota_sdk_types::ValidatorCommitteeError>();
     assert_display::<iota_sdk_types::ValidatorCommitteeMember>();
     assert_display::<iota_sdk_types::ValidatorSignature>();
     assert_display::<iota_sdk_types::VersionAssignment>();
