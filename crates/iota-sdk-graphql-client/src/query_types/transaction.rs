@@ -128,7 +128,6 @@ pub struct TransactionBlocksQueryArgs {
 pub struct TransactionBlock {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
-    pub signatures: Option<Vec<Base64>>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
