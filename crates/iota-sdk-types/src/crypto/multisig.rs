@@ -72,7 +72,7 @@ pub enum MultisigError {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -102,6 +102,14 @@ impl MultisigMember {
     }
 }
 
+impl crate::TreeDisplay for MultisigMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Member")?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Weight", &self.weight, true)
+    }
+}
+
 /// A multisig committee
 ///
 /// A `MultisigCommittee` is a set of members who collectively control a single
@@ -124,7 +132,7 @@ impl MultisigMember {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigCommittee {
@@ -251,6 +259,14 @@ impl MultisigCommittee {
     }
 }
 
+impl crate::TreeDisplay for MultisigCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Committee")?;
+        w.children("Members", &self.members, false)?;
+        w.leaf("Threshold", &self.threshold, true)
+    }
+}
+
 /// Aggregated signature from members of a multisig committee.
 ///
 /// # BCS
@@ -276,7 +292,7 @@ impl MultisigCommittee {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
@@ -434,6 +450,22 @@ impl MultisigAggregatedSignature {
     }
 }
 
+impl crate::TreeDisplay for MultisigAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Aggregated Signature")?;
+        w.child("Committee", &self.committee, false)?;
+        w.children("Signatures", &self.signatures, false)?;
+        w.leaf("Bitmap", &self.bitmap, true)
+    }
+}
+
+crate::impl_tree_display!(
+    MultisigMember,
+    MultisigCommittee,
+    MultisigAggregatedSignature,
+    MultisigMemberSignature
+);
+
 /// Interpret a bitmap of 01s as a list of indices that is set to 1s.
 /// e.g. 22 = 0b10110, then the result is [1, 2, 4].
 fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
@@ -466,7 +498,7 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum MultisigMemberSignature {
@@ -474,6 +506,18 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     Passkey(PasskeyAuthenticator),
+}
+
+impl crate::TreeDisplay for MultisigMemberSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Multisig Member Signature");
+        match self {
+            Self::Ed25519(v) => w.header(&format!("Ed25519Signature({v})")),
+            Self::Secp256k1(v) => w.header(&format!("Secp256k1Signature({v})")),
+            Self::Secp256r1(v) => w.header(&format!("Secp256r1Signature({v})")),
+            Self::Passkey(v) => v.fmt_tree(w),
+        }
+    }
 }
 
 impl MultisigMemberSignature {
@@ -592,11 +636,7 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) mod serialization {
-    use std::{
-        borrow::Cow,
-        hash::{Hash, Hasher},
-        str::FromStr,
-    };
+    use std::{borrow::Cow, str::FromStr};
 
     use base64ct::{Base64, Encoding};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -846,12 +886,6 @@ pub(crate) mod serialization {
     impl From<&MultisigCommittee> for crate::Address {
         fn from(committee: &MultisigCommittee) -> Self {
             committee.derive_address()
-        }
-    }
-
-    impl Hash for MultisigAggregatedSignature {
-        fn hash<H: Hasher>(&self, state: &mut H) {
-            self.to_bytes().hash(state);
         }
     }
 

@@ -2,9 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "serde")]
-use std::hash::{Hash, Hasher};
-
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 use crate::SigningDigest;
 
@@ -37,7 +34,7 @@ use crate::SigningDigest;
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, derive_more::Debug, Eq, PartialEq)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
@@ -101,10 +98,17 @@ impl PasskeyAuthenticator {
     }
 }
 
-#[cfg(feature = "serde")]
-impl Hash for PasskeyAuthenticator {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.to_bytes().hash(state);
+impl crate::TreeDisplay for PasskeyAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Passkey Authenticator")?;
+        w.leaf(
+            "Authenticator Data",
+            &hex::encode(&self.authenticator_data),
+            false,
+        )?;
+        w.leaf("Client Data JSON", &self.client_data_json, false)?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Signature", &self.signature, true)
     }
 }
 
@@ -119,7 +123,7 @@ impl Hash for PasskeyAuthenticator {
 /// ```text
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Deserialize, serde::Serialize),
@@ -141,6 +145,12 @@ impl PasskeyPublicKey {
     /// The underlying `Secp256r1PublicKey` for this passkey.
     pub fn inner(&self) -> &Secp256r1PublicKey {
         &self.0
+    }
+}
+
+impl std::fmt::Display for PasskeyPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -455,6 +465,8 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
             .boxed()
     }
 }
+
+crate::impl_tree_display!(PasskeyAuthenticator);
 
 #[cfg(all(test, feature = "serde"))]
 mod tests {

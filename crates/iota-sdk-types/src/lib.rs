@@ -107,6 +107,9 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
+mod tree_display;
+pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
+
 #[cfg(feature = "hash")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
@@ -144,8 +147,8 @@ pub use crypto::{
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
     PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
-    RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
+    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
+    SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -175,13 +178,13 @@ pub use object_id::ObjectId;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments,
+    Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
     EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
-    VersionAssignment,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,
+    SenderSignedTransaction, SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage,
+    Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
+    TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
@@ -190,6 +193,53 @@ pub use version::Version;
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
+
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod bcs_base64 {
+    use base64ct::Encoding;
+
+    macro_rules! impl_bcs_base64 {
+        ($($type:ident),* $(,)?) => {
+            $(
+            impl crate::$type {
+                paste::paste! {
+                    #[doc = "Serialize this `" $type "` as a `Vec<u8>` of BCS bytes."]
+                    pub fn to_bcs(&self) -> Vec<u8> {
+                        bcs::to_bytes(self).expect("bcs serialization failed")
+                    }
+
+                    #[doc = "Serialize this `" $type "` as a base64-encoded string of its BCS bytes."]
+                    pub fn to_base64(&self) -> String {
+                        base64ct::Base64::encode_string(&self.to_bcs())
+                    }
+
+                    #[doc = "Deserialize a `" $type "` from BCS bytes."]
+                    pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+                        bcs::from_bytes::<Self>(bytes)
+                    }
+
+                    #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]
+                    pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
+                        let decoded = base64ct::Base64::decode_vec(bytes)
+                            .map_err(|e| bcs::Error::Custom(e.to_string()))?;
+                        Self::from_bcs(&decoded)
+                    }
+                }
+            }
+            )*
+        };
+    }
+
+    impl_bcs_base64!(
+        Object,
+        SenderSignedTransaction,
+        Transaction,
+        TransactionEffects,
+        TransactionKind,
+        TransactionV1,
+    );
+}
 
 /// Returns the next array in byte-increasing order.
 pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {

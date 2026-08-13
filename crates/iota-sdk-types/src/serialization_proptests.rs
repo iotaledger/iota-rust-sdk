@@ -127,9 +127,10 @@ serialization_test!(ChangeEpochV3);
 serialization_test!(ChangeEpochV4);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
-serialization_test!(CancelledTransaction);
+serialization_test!(CanceledTransaction);
 serialization_test!(ConsensusDeterminedVersionAssignments);
 serialization_test!(VersionAssignment);
+serialization_test!(DenyRuleSet);
 serialization_test!(EndOfEpochTransactionKind);
 serialization_test!(GasPayment);
 serialization_test!(GenesisTransaction);
@@ -146,6 +147,7 @@ serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);
 serialization_test!(Transaction);
 serialization_test!(TransactionV1);
+serialization_test!(TransactionDenyRulesUpdate);
 serialization_test!(TransactionExpiration);
 serialization_test!(TransactionKind);
 serialization_test!(TransferObjects);
@@ -154,3 +156,23 @@ serialization_test!(Identifier);
 serialization_test!(StructTag);
 serialization_test!(TypeTag);
 serialization_test!(Version);
+
+macro_rules! bcs_base64_test {
+    ($type:ident) => {
+        paste::item! {
+            #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
+            #[cfg_attr(not(target_arch = "wasm32"), proptest)]
+            fn [< test_bcs_base64_roundtrip_ $type:snake >] (instance: $type) {
+                assert_eq!(instance, $type::from_bcs(&instance.to_bcs()).unwrap());
+                assert_eq!(instance, $type::from_base64(&instance.to_base64()).unwrap());
+            }
+        }
+    };
+}
+
+bcs_base64_test!(Object);
+bcs_base64_test!(SenderSignedTransaction);
+bcs_base64_test!(Transaction);
+bcs_base64_test!(TransactionEffects);
+bcs_base64_test!(TransactionKind);
+bcs_base64_test!(TransactionV1);

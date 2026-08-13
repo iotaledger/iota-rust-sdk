@@ -33,6 +33,16 @@ impl NameRegistration {
     }
 }
 
+impl crate::TreeDisplay for NameRegistration {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Name Registration")?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Name", &self.name, false)?;
+        w.leaf("Name String", &self.name_str, false)?;
+        w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, true)
+    }
+}
+
 /// An object to manage a subname.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -50,6 +60,16 @@ impl SubnameRegistration {
         self.nft
     }
 }
+
+impl crate::TreeDisplay for SubnameRegistration {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Subname Registration")?;
+        w.leaf("ID", &self.id, false)?;
+        w.child("NFT", &self.nft, true)
+    }
+}
+
+crate::impl_tree_display!(NameRegistration, SubnameRegistration);
 
 /// Unifying trait for [`NameRegistration`] and [`SubnameRegistration`]
 pub trait IotaNamesNft {

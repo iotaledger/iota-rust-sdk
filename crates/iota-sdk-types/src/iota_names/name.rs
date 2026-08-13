@@ -168,7 +168,7 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, strum::Display)]
 pub enum NameFormat {
     At,
     Dot,
