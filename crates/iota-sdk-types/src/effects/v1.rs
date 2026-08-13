@@ -70,6 +70,27 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<EffectsAuxDataDigest>,
 }
 
+impl crate::TreeDisplay for TransactionEffectsV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Effects V1")?;
+        w.child("Status", &self.status, false)?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.child("Gas Cost Summary", &self.gas_cost_summary, false)?;
+        w.leaf("Transaction Digest", &self.transaction_digest, false)?;
+        w.option_leaf("Gas Object Index", &self.gas_object_index, false)?;
+        w.option_leaf("Events Digest", &self.events_digest, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
+        w.leaf("Lamport Version", &self.lamport_version, false)?;
+        w.children("Changed Objects", &self.changed_objects, false)?;
+        w.children(
+            "Unchanged Shared Objects",
+            &self.unchanged_shared_objects,
+            false,
+        )?;
+        w.option_leaf("Auxiliary Data Digest", &self.auxiliary_data_digest, true)
+    }
+}
+
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -96,6 +117,16 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
+impl crate::TreeDisplay for ChangedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Changed Object")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.child("Input State", &self.input_state, false)?;
+        w.child("Output State", &self.output_state, false)?;
+        w.leaf("ID Operation", &self.id_operation, true)
+    }
+}
+
 /// A shared object that wasn't changed during execution
 ///
 /// # BCS
@@ -115,6 +146,23 @@ pub struct UnchangedSharedObject {
     pub kind: UnchangedSharedKind,
 }
 
+impl crate::TreeDisplay for UnchangedSharedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Unchanged Shared Object")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.child("Kind", &self.kind, true)
+    }
+}
+
+crate::impl_tree_display!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut
+);
+
 /// Type of unchanged shared object
 ///
 /// # BCS
@@ -125,7 +173,7 @@ pub struct UnchangedSharedObject {
 /// unchanged-shared-kind = %d00 u64 object-digest   ; ReadOnlyRoot
 ///                       / %d01 u64                  ; MutateDeleted
 ///                       / %d02 u64                  ; ReadDeleted
-///                       / %d03 u64                  ; Cancelled
+///                       / %d03 u64                  ; Canceled
 ///                       / %d04                       ; PerEpochConfig
 /// ```
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -145,9 +193,9 @@ pub enum UnchangedSharedKind {
     MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Version },
-    /// Shared objects in cancelled transaction. The sequence number embed
+    /// Shared objects in canceled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled { version: Version },
+    Canceled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -158,9 +206,35 @@ impl UnchangedSharedKind {
         ReadOnlyRoot,
         MutateDeleted,
         ReadDeleted,
-        Cancelled,
+        Canceled,
         PerEpochConfig
     );
+}
+
+impl crate::TreeDisplay for UnchangedSharedKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Unchanged Shared Kind");
+        match self {
+            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                w.header("Read Only Root")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, true)
+            }
+            UnchangedSharedKind::MutateDeleted { version } => {
+                w.header("Mutate Deleted")?;
+                w.leaf("Version", version, true)
+            }
+            UnchangedSharedKind::ReadDeleted { version } => {
+                w.header("Read Deleted")?;
+                w.leaf("Version", version, true)
+            }
+            UnchangedSharedKind::Canceled { version } => {
+                w.header("Canceled")?;
+                w.leaf("Version", version, true)
+            }
+            UnchangedSharedKind::PerEpochConfig => w.header("Per Epoch Config"),
+        }
+    }
 }
 
 /// State of an object prior to execution
@@ -229,6 +303,25 @@ impl ObjectIn {
 
     pub fn owner(&self) -> Owner {
         self.owner_opt().expect("object does not exist")
+    }
+}
+
+impl crate::TreeDisplay for ObjectIn {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Object In");
+        match self {
+            ObjectIn::Missing => w.header("Missing"),
+            ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            } => {
+                w.header("Data")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, false)?;
+                w.leaf("Owner", owner, true)
+            }
+        }
     }
 }
 
@@ -310,5 +403,24 @@ impl ObjectOut {
 
     pub fn package_digest(&self) -> ObjectDigest {
         self.package_digest_opt().expect("package does not exist")
+    }
+}
+
+impl crate::TreeDisplay for ObjectOut {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Object Out");
+        match self {
+            ObjectOut::Missing => w.header("Missing"),
+            ObjectOut::ObjectWrite { digest, owner } => {
+                w.header("Object Write")?;
+                w.leaf("Digest", digest, false)?;
+                w.leaf("Owner", owner, true)
+            }
+            ObjectOut::PackageWrite { version, digest } => {
+                w.header("Package Write")?;
+                w.leaf("Version", version, false)?;
+                w.leaf("Digest", digest, true)
+            }
+        }
     }
 }

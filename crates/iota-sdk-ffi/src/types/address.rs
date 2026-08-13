@@ -179,7 +179,8 @@ named_address!(
     AUTHENTICATOR_STATE,
     RANDOMNESS_STATE,
     GENESIS_IOTA_BRIDGE,
-    DENY_LIST
+    DENY_LIST,
+    TRANSACTION_DENY_RULES
 );
 
 crate::export_iota_types_objects_bcs_conversion!(Address);

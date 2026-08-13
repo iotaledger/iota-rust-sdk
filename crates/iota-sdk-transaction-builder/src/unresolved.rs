@@ -96,6 +96,23 @@ impl Command {
             Command::Upgrade(upgrade) => iota_types::Command::Upgrade(upgrade.resolve(input_map)),
         }
     }
+
+    /// The arguments of this command that cannot be replaced by
+    /// [`Argument::Gas`].
+    ///
+    /// [`Argument::Gas`] stands for the whole gas payment — every gas coin
+    /// smashed into one — so substituting it for an argument that names a
+    /// single coin changes what the command operates on. The positions left
+    /// out take a coin without consuming it: a coin split from or merged into
+    /// is still there afterwards.
+    pub(crate) fn arguments_that_cannot_be_gas(&self) -> &[Argument] {
+        match self {
+            Command::MoveCall(MoveCall { arguments, .. }) => arguments,
+            Command::TransferObjects(TransferObjects { objects, .. }) => objects,
+            Command::MergeCoins(MergeCoins { coins_to_merge, .. }) => coins_to_merge,
+            _ => &[],
+        }
+    }
 }
 
 impl From<iota_types::Command> for Command {

@@ -7,8 +7,8 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ObjectReadMask, OwnedObjectReadMask, SimulateReadMask,
-        TransactionField, TransactionReadMask,
+        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
+        SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -80,7 +80,7 @@ impl TransactionBuilderClient for Client {
             return Ok(Vec::new());
         }
         // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK objects, which the server returns in request
+        // reconstruct the SDK objects, which `get_objects` returns in request
         // order.
         self.get_objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
             .await?
@@ -237,7 +237,11 @@ impl TransactionBuilderClient for Client {
         };
         // The default execute read mask includes `effects`.
         let result = self
-            .execute_transaction(signed_transaction, None, TransactionReadMask::default())
+            .execute_transaction(
+                signed_transaction,
+                None,
+                ExecuteTransactionReadMask::default(),
+            )
             .await?
             .into_inner();
         let effects = result.effects()?.effects()?;

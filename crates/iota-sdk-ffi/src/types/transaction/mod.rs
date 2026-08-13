@@ -211,6 +211,7 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 transaction-deny-rules-update          ; TransactionDenyRulesUpdate
 /// ```
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -251,6 +252,13 @@ impl TransactionKind {
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
+    }
+
+    /// Create a `TransactionKind` for a transaction-deny-rules-update
+    /// transaction.
+    #[uniffi::constructor]
+    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(tx.into()))
     }
 }
 
@@ -797,12 +805,10 @@ pub struct ConsensusDeterminedVersionAssignments(
 #[uniffi::export]
 impl ConsensusDeterminedVersionAssignments {
     #[uniffi::constructor]
-    pub fn new_cancelled_transactions(
-        cancelled_transactions: Vec<Arc<CancelledTransaction>>,
-    ) -> Self {
+    pub fn new_canceled_transactions(canceled_transactions: Vec<Arc<CanceledTransaction>>) -> Self {
         Self(
-            iota_sdk::types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
-                cancelled_transactions: cancelled_transactions
+            iota_sdk::types::ConsensusDeterminedVersionAssignments::CanceledTransactions {
+                canceled_transactions: canceled_transactions
                     .into_iter()
                     .map(|v| v.0.clone())
                     .collect(),
@@ -810,13 +816,13 @@ impl ConsensusDeterminedVersionAssignments {
         )
     }
 
-    pub fn is_cancelled_transactions(&self) -> bool {
-        self.0.is_cancelled_transactions()
+    pub fn is_canceled_transactions(&self) -> bool {
+        self.0.is_canceled_transactions()
     }
 
-    pub fn as_cancelled_transactions(&self) -> Vec<Arc<CancelledTransaction>> {
+    pub fn as_canceled_transactions(&self) -> Vec<Arc<CanceledTransaction>> {
         self.0
-            .as_cancelled_transactions()
+            .as_canceled_transactions()
             .iter()
             .cloned()
             .map(Into::into)
@@ -825,27 +831,27 @@ impl ConsensusDeterminedVersionAssignments {
     }
 }
 
-/// A transaction that was cancelled
+/// A transaction that was canceled
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// cancelled-transaction = digest (vector version-assignment)
+/// canceled-transaction = digest (vector version-assignment)
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
-pub struct CancelledTransaction(pub iota_sdk::types::CancelledTransaction);
+pub struct CanceledTransaction(pub iota_sdk::types::CanceledTransaction);
 
 #[uniffi::export]
-impl CancelledTransaction {
+impl CanceledTransaction {
     #[uniffi::constructor]
     pub fn new(
         digest: &TransactionDigest,
         version_assignments: Vec<Arc<VersionAssignment>>,
     ) -> Self {
-        Self(iota_sdk::types::CancelledTransaction {
+        Self(iota_sdk::types::CanceledTransaction {
             digest: digest.0,
             version_assignments: version_assignments
                 .into_iter()
@@ -1440,6 +1446,209 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
     }
 }
 
+/// A complete set of transaction deny rules.
+///
+/// The deny lists are exposed as sequences over the FFI; converting into the
+/// underlying set-typed Rust representation sorts and deduplicates them, so
+/// the BCS encoding is canonical regardless of the order supplied here.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// deny-rule-set = (vector address)   ; denied addresses
+///                 (vector object-id) ; denied objects
+///                 (vector object-id) ; denied packages
+///                 bool               ; package publish disabled
+///                 bool               ; package upgrade disabled
+///                 bool               ; shared object disabled
+///                 bool               ; user transaction disabled
+///                 bool               ; receiving objects disabled
+///                 bool               ; move authenticator disabled
+/// ```
+#[derive(uniffi::Record)]
+pub struct DenyRuleSet {
+    /// Addresses denied as transaction sender or gas sponsor. A denied
+    /// address can still receive objects.
+    pub denied_addresses: Vec<Arc<Address>>,
+    /// Objects denied as transaction inputs or receiving objects.
+    pub denied_objects: Vec<Arc<ObjectId>>,
+    /// Packages denied as a (transitive) dependency of any command; upgrading
+    /// a denied package is denied too.
+    pub denied_packages: Vec<Arc<ObjectId>>,
+    /// Denies all package publishing.
+    pub package_publish_disabled: bool,
+    /// Denies all package upgrades.
+    pub package_upgrade_disabled: bool,
+    /// Denies transactions that use shared objects as inputs.
+    pub shared_object_disabled: bool,
+    /// Denies all user transactions (kill switch).
+    pub user_transaction_disabled: bool,
+    /// Denies transactions that contain receiving objects.
+    pub receiving_objects_disabled: bool,
+    /// Denies transactions signed with a Move authenticator.
+    pub move_authenticator_disabled: bool,
+}
+
+impl From<DenyRuleSet> for iota_sdk::types::DenyRuleSet {
+    fn from(value: DenyRuleSet) -> Self {
+        Self {
+            denied_addresses: value.denied_addresses.iter().map(|a| a.0).collect(),
+            denied_objects: value.denied_objects.iter().map(|o| o.0).collect(),
+            denied_packages: value.denied_packages.iter().map(|o| o.0).collect(),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
+        }
+    }
+}
+
+impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
+    fn from(value: iota_sdk::types::DenyRuleSet) -> Self {
+        Self {
+            denied_addresses: value
+                .denied_addresses
+                .into_iter()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+            denied_objects: value
+                .denied_objects
+                .into_iter()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+            denied_packages: value
+                .denied_packages
+                .into_iter()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
+        }
+    }
+}
+
+/// Update of the on-chain transaction deny rules.
+///
+/// Carries an add/remove delta for each deny list plus the absolute switch
+/// states. The added and removed sets of a list are disjoint by producer
+/// contract; converting into the underlying set-typed Rust representation
+/// sorts and deduplicates the lists.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-deny-rules-update = u64               ; epoch
+///                                 u64               ; round
+///                                 (vector address)  ; added addresses
+///                                 (vector address)  ; removed addresses
+///                                 (vector object-id) ; added objects
+///                                 (vector object-id) ; removed objects
+///                                 (vector object-id) ; added packages
+///                                 (vector object-id) ; removed packages
+///                                 bool              ; package publish disabled
+///                                 bool              ; package upgrade disabled
+///                                 bool              ; shared object disabled
+///                                 bool              ; user transaction disabled
+///                                 bool              ; receiving objects disabled
+///                                 bool              ; move authenticator disabled
+///                                 version           ; initial shared version
+/// ```
+#[derive(uniffi::Record)]
+pub struct TransactionDenyRulesUpdate {
+    /// Epoch of the deny-rules update transaction
+    pub epoch: u64,
+    /// Consensus round of the update
+    pub round: u64,
+    /// Addresses added to the sender-or-sponsor deny list.
+    pub added_addresses: Vec<Arc<Address>>,
+    /// Addresses removed from the sender-or-sponsor deny list.
+    pub removed_addresses: Vec<Arc<Address>>,
+    /// Objects added to the input-or-receiving deny list.
+    pub added_objects: Vec<Arc<ObjectId>>,
+    /// Objects removed from the input-or-receiving deny list.
+    pub removed_objects: Vec<Arc<ObjectId>>,
+    /// Packages added to the dependency deny list.
+    pub added_packages: Vec<Arc<ObjectId>>,
+    /// Packages removed from the dependency deny list.
+    pub removed_packages: Vec<Arc<ObjectId>>,
+    /// Denies all package publishing.
+    pub package_publish_disabled: bool,
+    /// Denies all package upgrades.
+    pub package_upgrade_disabled: bool,
+    /// Denies transactions that use shared objects as inputs.
+    pub shared_object_disabled: bool,
+    /// Denies all user transactions (kill switch).
+    pub user_transaction_disabled: bool,
+    /// Denies transactions that contain receiving objects.
+    pub receiving_objects_disabled: bool,
+    /// Denies transactions signed with a Move authenticator.
+    pub move_authenticator_disabled: bool,
+    /// The initial version of the deny-rules object that it was shared at
+    pub deny_rules_obj_initial_shared_version: Arc<Version>,
+}
+
+impl From<TransactionDenyRulesUpdate> for iota_sdk::types::TransactionDenyRulesUpdate {
+    fn from(value: TransactionDenyRulesUpdate) -> Self {
+        Self {
+            epoch: value.epoch,
+            round: value.round,
+            added_addresses: value.added_addresses.iter().map(|a| a.0).collect(),
+            removed_addresses: value.removed_addresses.iter().map(|a| a.0).collect(),
+            added_objects: value.added_objects.iter().map(|o| o.0).collect(),
+            removed_objects: value.removed_objects.iter().map(|o| o.0).collect(),
+            added_packages: value.added_packages.iter().map(|o| o.0).collect(),
+            removed_packages: value.removed_packages.iter().map(|o| o.0).collect(),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
+            deny_rules_obj_initial_shared_version: **value.deny_rules_obj_initial_shared_version,
+        }
+    }
+}
+
+impl From<iota_sdk::types::TransactionDenyRulesUpdate> for TransactionDenyRulesUpdate {
+    fn from(value: iota_sdk::types::TransactionDenyRulesUpdate) -> Self {
+        fn arcs<T, U: From<T>>(items: impl IntoIterator<Item = T>) -> Vec<Arc<U>> {
+            items.into_iter().map(|x| Arc::new(x.into())).collect()
+        }
+        Self {
+            epoch: value.epoch,
+            round: value.round,
+            added_addresses: arcs(value.added_addresses),
+            removed_addresses: arcs(value.removed_addresses),
+            added_objects: arcs(value.added_objects),
+            removed_objects: arcs(value.removed_objects),
+            added_packages: arcs(value.added_packages),
+            removed_packages: arcs(value.removed_packages),
+            package_publish_disabled: value.package_publish_disabled,
+            package_upgrade_disabled: value.package_upgrade_disabled,
+            shared_object_disabled: value.shared_object_disabled,
+            user_transaction_disabled: value.user_transaction_disabled,
+            receiving_objects_disabled: value.receiving_objects_disabled,
+            move_authenticator_disabled: value.move_authenticator_disabled,
+            deny_rules_obj_initial_shared_version: Arc::new(
+                value.deny_rules_obj_initial_shared_version.into(),
+            ),
+        }
+    }
+}
+
 /// Operation run at the end of an epoch
 ///
 /// # BCS
@@ -1451,6 +1660,7 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 ///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
 ///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
+///                               =/ %d04                  ; TransactionDenyRulesCreate
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1484,6 +1694,11 @@ impl EndOfEpochTransactionKind {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
             tx.0.clone(),
         ))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_transaction_deny_rules_create() -> Self {
+        Self(iota_sdk::types::EndOfEpochTransactionKind::TransactionDenyRulesCreate)
     }
 }
 
@@ -1765,6 +1980,8 @@ impl From<SharedObjectReference> for iota_sdk::types::SharedObjectReference {
 crate::export_iota_types_bcs_conversion!(
     SignedTransaction,
     RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
     GasPayment,
     TransactionExpiration,
 );
@@ -1783,7 +2000,7 @@ crate::export_iota_types_objects_bcs_conversion!(
     Upgrade,
     ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     GenesisTransaction,
     ChangeEpoch,
@@ -1796,6 +2013,8 @@ crate::export_iota_types_objects_bcs_conversion!(
 crate::export_iota_types_json_conversion!(
     SignedTransaction,
     RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
     GasPayment,
     TransactionExpiration,
 );
@@ -1814,7 +2033,7 @@ crate::export_iota_types_objects_json_conversion!(
     Upgrade,
     ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     GenesisTransaction,
     ChangeEpoch,

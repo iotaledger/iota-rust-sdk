@@ -943,7 +943,7 @@ mod tests {
     }
 
     #[test]
-    fn not_found_is_recognised_at_the_call_and_item_level() {
+    fn not_found_is_recognized_at_the_call_and_item_level() {
         let item_level = Error::Server(Status {
             code: tonic::Code::NotFound.into(),
             message: String::new(),

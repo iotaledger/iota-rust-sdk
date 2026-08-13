@@ -203,7 +203,6 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 
 export_struct_tag_ctors!(
     AsciiString,
-    AuthenticatorState,
     Clock,
     DenyListAddressKey,
     DenyListConfigKey,

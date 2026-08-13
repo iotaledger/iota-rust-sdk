@@ -1343,8 +1343,6 @@ pub mod authenticator_state {
         pub version: u64,
     }
 
-    impl_try_from_object!(AuthenticatorState);
-
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]

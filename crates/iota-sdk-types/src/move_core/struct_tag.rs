@@ -409,7 +409,6 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 impl StructTag {
     add_struct_tag_ctor!(
         FRAMEWORK,
-        authenticator_state::AuthenticatorState,
         clock::Clock,
         iota::IotaTreasuryCap,
         kiosk::Kiosk,
