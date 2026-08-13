@@ -461,3 +461,69 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
         resolved.gas_payment.objects.len(),
     );
 }
+
+#[tokio::test]
+async fn test_move_view_call() {
+    let (mut tx, address, pk, _) = helper_setup().await;
+
+    let package = move_package_data("../package_test_example_v1.json");
+    tx.publish(package)
+        .upgrade_cap("cap")
+        .transfer_objects(address, [assigned("cap")]);
+
+    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let mut package_id: Option<ObjectId> = None;
+    if let Ok(ref effects) = effects {
+        match effects {
+            TransactionEffects::V1(e) => {
+                for obj in e.changed_objects.clone() {
+                    if obj.id_operation == IdOperation::Created
+                        && matches!(obj.output_state, iota_types::ObjectOut::PackageWrite { .. })
+                    {
+                        package_id = Some(obj.object_id);
+                    }
+                }
+            }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+    check_effects_status_success(effects);
+
+    let client = Client::new_localnet();
+    let function = format!("{}::test_example::double", package_id.unwrap());
+
+    let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
+        assert_eq!(
+            result.error, None,
+            "Move view call should not return an error"
+        );
+        let results = result
+            .results
+            .expect("Move view call should return results");
+        assert_eq!(
+            results.len(),
+            1,
+            "Move view call should return exactly one result"
+        );
+        // u64 return values are JSON-encoded as strings to avoid precision loss
+        let value = results[0]
+            .as_u64()
+            .or_else(|| results[0].as_str().and_then(|s| s.parse().ok()))
+            .expect("Result should be a u64");
+        assert_eq!(value, 42);
+    };
+
+    // Typed arguments
+    let result = client
+        .move_view_call(&function, None, (21u64,))
+        .await
+        .unwrap();
+    assert_doubled(result);
+
+    // Raw JSON arguments
+    let result = client
+        .move_view_call_json(&function, None, Some(vec![serde_json::json!("21")]))
+        .await
+        .unwrap();
+    assert_doubled(result);
+}
