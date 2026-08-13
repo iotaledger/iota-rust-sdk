@@ -47,7 +47,6 @@ macro_rules! export_identifier_consts {
 export_identifier_consts!(
     // Module name constants
     ASCII_MODULE,
-    AUTHENTICATOR_STATE_MODULE,
     BAG_MODULE,
     BALANCE_MODULE,
     CLOCK_MODULE,

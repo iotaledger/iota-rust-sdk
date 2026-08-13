@@ -46,6 +46,16 @@ impl CheckpointCommitment {
     }
 }
 
+impl std::fmt::Display for CheckpointCommitment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CheckpointCommitment::EcmhLiveObjectSet { digest } => {
+                write!(f, "EcmhLiveObjectSet({digest})")
+            }
+        }
+    }
+}
+
 /// Data, which when included in a [`CheckpointSummary`], signals the end of an
 /// `Epoch`.
 ///
@@ -76,6 +86,20 @@ pub struct EndOfEpochData {
     /// The number of tokens that were minted (if positive) or burnt (if
     /// negative) in this epoch.
     pub epoch_supply_change: i64,
+}
+
+impl crate::TreeDisplay for EndOfEpochData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("End of Epoch Data")?;
+        w.children("Next Epoch Committee", &self.next_epoch_committee, false)?;
+        w.leaf(
+            "Next Epoch Protocol Version",
+            &self.next_epoch_protocol_version,
+            false,
+        )?;
+        w.leaves("Epoch Commitments", &self.epoch_commitments, false)?;
+        w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
+    }
 }
 
 /// A header for a Checkpoint on the IOTA blockchain.
@@ -171,6 +195,33 @@ pub struct CheckpointSummary {
         <base64ct::Base64 as base64ct::Encoding>::encode_string(version_specific_data)
     )]
     pub version_specific_data: Vec<u8>,
+}
+
+impl crate::TreeDisplay for CheckpointSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Summary")?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Sequence Number", &self.sequence_number, false)?;
+        w.leaf(
+            "Network Total Transactions",
+            &self.network_total_transactions,
+            false,
+        )?;
+        w.leaf("Contents Digest", &self.contents_digest, false)?;
+        w.option_leaf("Previous Digest", &self.previous_digest, false)?;
+        w.child(
+            "Epoch Rolling Gas Cost",
+            &self.epoch_rolling_gas_cost_summary,
+            false,
+        )?;
+        w.leaf("Timestamp (ms)", &self.timestamp_ms, false)?;
+        w.leaves(
+            "Checkpoint Commitments",
+            &self.checkpoint_commitments,
+            false,
+        )?;
+        w.option_child("End of Epoch Data", &self.end_of_epoch_data, true)
+    }
 }
 
 impl CheckpointSummary {
@@ -276,6 +327,14 @@ impl CheckpointSummary {
 pub struct SignedCheckpointSummary {
     pub checkpoint: CheckpointSummary,
     pub signature: ValidatorAggregatedSignature,
+}
+
+impl crate::TreeDisplay for SignedCheckpointSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Signed Checkpoint Summary")?;
+        w.child("Checkpoint", &self.checkpoint, false)?;
+        w.child("Signature", &self.signature, true)
+    }
 }
 
 /// The committed to contents of a checkpoint.
@@ -388,6 +447,22 @@ impl CheckpointContentsV1 {
     }
 }
 
+impl crate::TreeDisplay for CheckpointContents {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Checkpoint Contents");
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
+    }
+}
+
+impl crate::TreeDisplay for CheckpointContentsV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Contents V1")?;
+        w.children("Transactions", self.transactions(), true)
+    }
+}
+
 /// Transaction information committed to in a checkpoint
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -399,6 +474,15 @@ pub struct CheckpointTransactionInfo {
     pub signatures: Vec<UserSignature>,
 }
 
+impl crate::TreeDisplay for CheckpointTransactionInfo {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Transaction Info")?;
+        w.leaf("Transaction", &self.transaction, false)?;
+        w.leaf("Effects", &self.effects, false)?;
+        w.children("Signatures", &self.signatures, true)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -408,6 +492,15 @@ pub struct CheckpointData {
     pub checkpoint_contents: CheckpointContents,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=1).lift()))]
     pub transactions: Vec<CheckpointTransaction>,
+}
+
+impl crate::TreeDisplay for CheckpointData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Data")?;
+        w.child("Checkpoint Summary", &self.checkpoint_summary, false)?;
+        w.child("Contents", &self.checkpoint_contents, false)?;
+        w.children("Transactions", &self.transactions, true)
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -437,6 +530,28 @@ pub struct CheckpointTransaction {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub output_objects: Vec<Object>,
 }
+
+impl crate::TreeDisplay for CheckpointTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Checkpoint Transaction")?;
+        w.child("Transaction", &self.transaction, false)?;
+        w.child("Effects", &self.effects, false)?;
+        w.option_child("Events", &self.events, false)?;
+        w.children("Input Objects", &self.input_objects, false)?;
+        w.children("Output Objects", &self.output_objects, true)
+    }
+}
+
+crate::impl_tree_display!(
+    EndOfEpochData,
+    CheckpointSummary,
+    SignedCheckpointSummary,
+    CheckpointContents,
+    CheckpointContentsV1,
+    CheckpointTransactionInfo,
+    CheckpointData,
+    CheckpointTransaction
+);
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

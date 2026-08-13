@@ -25,7 +25,7 @@ impl Version {
     /// `Version::MIN_CONGESTED + suggested_gas_price`,
     /// where `suggested_gas_price` is embedded into a congested version
     /// to facilitate a gas price feedback mechanism for transactions
-    /// cancelled due to shared object congestion.
+    /// canceled due to shared object congestion.
     #[uniffi::constructor]
     pub fn new_congested_with_suggested_gas_price(suggested_gas_price: u64) -> Result<Self> {
         Ok(Self(
@@ -41,7 +41,7 @@ impl Version {
 
     /// Returns the `suggested_gas_price` embedded in this congested shared
     /// object version. The `suggested_gas_price` here is used for a
-    /// gas price feedback mechanism for transactions cancelled due to
+    /// gas price feedback mechanism for transactions canceled due to
     /// shared object congestion.
     pub fn get_congested_version_suggested_gas_price(&self) -> Result<u64> {
         Ok(self.0.get_congested_version_suggested_gas_price()?)
@@ -56,14 +56,14 @@ impl Version {
         )?))
     }
 
-    /// Checks if this version is cancelled, i.e., the corresponding
-    /// object appears in a cancelled transaction.
-    pub fn is_cancelled(&self) -> bool {
-        self.0.is_cancelled()
+    /// Checks if this version is canceled, i.e., the corresponding
+    /// object appears in a canceled transaction.
+    pub fn is_canceled(&self) -> bool {
+        self.0.is_canceled()
     }
 
     /// Checks if this version is valid, i.e., the corresponding
-    /// object does not appear in a cancelled transaction.
+    /// object does not appear in a canceled transaction.
     pub fn is_valid(&self) -> bool {
         self.0.is_valid()
     }
@@ -71,7 +71,7 @@ impl Version {
     /// An inclusive lower limit on a valid version.
     ///
     /// A valid version means an object, which this version
-    /// is assigned to, does not appear in a cancelled transaction.
+    /// is assigned to, does not appear in a canceled transaction.
     #[uniffi::constructor]
     pub fn min_valid_incl() -> Self {
         Self(iota_sdk::types::Version::MIN_VALID_INCL)
@@ -81,19 +81,19 @@ impl Version {
     /// strictly smaller than this limit are valid versions.
     ///
     /// A valid version means an object, which this version
-    /// is assigned to, does not appear in a cancelled transaction.
+    /// is assigned to, does not appear in a canceled transaction.
     /// Versions larger than this value are "special" and
-    /// assigned to objects that appear in cancelled transactions.
+    /// assigned to objects that appear in canceled transactions.
     #[uniffi::constructor]
     pub fn max_valid_excl() -> Self {
         Self(iota_sdk::types::Version::MAX_VALID_EXCL)
     }
 
     /// Special version that is assigned to objects which are accessed
-    /// immutably in a cancelled transaction.
+    /// immutably in a canceled transaction.
     #[uniffi::constructor]
-    pub fn cancelled_read() -> Self {
-        Self(iota_sdk::types::Version::CANCELLED_READ)
+    pub fn canceled_read() -> Self {
+        Self(iota_sdk::types::Version::CANCELED_READ)
     }
 
     /// Special version that was assigned to congested objects which

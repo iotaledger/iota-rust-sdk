@@ -113,6 +113,10 @@
 //!   address.
 //! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a
 //!   recipient address.
+//! - [pay](TransactionBuilder::pay): Send coins of any type to several
+//!   recipients, each paired with the amount to send.
+//! - [pay_iota](TransactionBuilder::pay_iota): Send IOTA coins from the gas
+//!   coin to several recipients.
 //! - [merge_coins](TransactionBuilder::merge_coins): Merge a list of coins into
 //!   a single primary coin.
 //! - [split_coins](TransactionBuilder::split_coins): Split a coin into coins of

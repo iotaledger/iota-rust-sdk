@@ -239,6 +239,30 @@ impl SimpleSignature {
     }
 }
 
+impl crate::TreeDisplay for SimpleSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Simple Signature");
+        let (scheme, public_key, signature): (_, &dyn std::fmt::Display, &dyn std::fmt::Display) =
+            match self {
+                SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => ("Ed25519Signature", public_key, signature),
+                SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => ("Secp256k1Signature", public_key, signature),
+                SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => ("Secp256r1Signature", public_key, signature),
+            };
+        w.header(scheme)?;
+        w.leaf("Public Key", public_key, false)?;
+        w.leaf("Signature", signature, true)
+    }
+}
+
 /// Flag use to disambiguate the signature schemes supported by IOTA.
 ///
 /// # BCS
@@ -264,17 +288,24 @@ impl SimpleSignature {
 #[derive(
     Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display, strum::EnumString,
 )]
-#[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum SignatureScheme {
+    #[strum(to_string = "Ed25519", serialize = "ed25519")]
     Ed25519 = 0x00,
+    #[strum(to_string = "Secp256k1", serialize = "secp256k1")]
     Secp256k1 = 0x01,
+    #[strum(to_string = "Secp256r1", serialize = "secp256r1")]
     Secp256r1 = 0x02,
+    #[strum(to_string = "Multisig", serialize = "multisig")]
     Multisig = 0x03,
-    Bls12381 = 0x04, // This is currently not supported for user addresses
+    // This is currently not supported for user addresses
+    #[strum(to_string = "Bls12381", serialize = "bls12381")]
+    Bls12381 = 0x04,
+    #[strum(to_string = "PasskeyAuthenticator", serialize = "passkeyauthenticator")]
     PasskeyAuthenticator = 0x06,
+    #[strum(to_string = "MoveAuthenticator", serialize = "moveauthenticator")]
     MoveAuthenticator = 0x07,
 }
 
@@ -345,7 +376,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -359,6 +390,20 @@ pub enum UserSignature {
     PasskeyAuthenticator(PasskeyAuthenticator),
     MoveAuthenticator(MoveAuthenticator),
 }
+
+impl crate::TreeDisplay for UserSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("User Signature");
+        match self {
+            Self::Simple(v) => v.fmt_tree(w),
+            Self::Multisig(v) => v.fmt_tree(w),
+            Self::PasskeyAuthenticator(v) => v.fmt_tree(w),
+            Self::MoveAuthenticator(v) => v.fmt_tree(w),
+        }
+    }
+}
+
+crate::impl_tree_display!(SimpleSignature, UserSignature);
 
 impl UserSignature {
     crate::def_is_as_into_opt!(
@@ -400,13 +445,6 @@ impl UserSignature {
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
-    }
-}
-
-#[cfg(feature = "serde")]
-impl std::hash::Hash for UserSignature {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.to_bytes().hash(state);
     }
 }
 
@@ -1028,7 +1066,7 @@ mod serialization {
             }
 
             assert_eq!(SignatureScheme::from_str("ed25519").unwrap().to_u8(), 0x00);
-            assert!(SignatureScheme::from_str("Ed25519").is_err());
+            assert_eq!(SignatureScheme::from_str("Ed25519").unwrap().to_u8(), 0x00);
             assert!(SignatureScheme::from_str("zklogin").is_err());
         }
 

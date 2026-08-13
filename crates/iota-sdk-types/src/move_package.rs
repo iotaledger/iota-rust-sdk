@@ -13,7 +13,6 @@ use crate::{
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
-#[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 pub enum UpgradePolicy {
     /// The least restrictive policy. Permits changes to all function
@@ -86,6 +85,15 @@ impl MovePackageData {
     }
 }
 
+impl crate::TreeDisplay for MovePackageData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Package Data")?;
+        w.base64_leaves("Modules", &self.modules, false)?;
+        w.leaves("Dependencies", &self.dependencies, false)?;
+        w.leaf("Digest", &self.digest, true)
+    }
+}
+
 /// Upgraded package info for [MovePackage]'s linkage_table.
 ///
 /// # BCS
@@ -104,6 +112,14 @@ pub struct UpgradeInfo {
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     pub upgraded_version: Version,
+}
+
+impl crate::TreeDisplay for UpgradeInfo {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Upgrade Info")?;
+        w.leaf("Upgraded ID", &self.upgraded_id, false)?;
+        w.leaf("Upgraded Version", &self.upgraded_version, true)
+    }
 }
 
 /// Stores the origin of a data type where it first appeared in the version
@@ -129,6 +145,15 @@ pub struct TypeOrigin {
     pub datatype_name: Identifier,
     /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
+}
+
+impl crate::TreeDisplay for TypeOrigin {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Type Origin")?;
+        w.leaf("Module", &self.module_name, false)?;
+        w.leaf("Struct", &self.datatype_name, false)?;
+        w.leaf("Package", &self.package, true)
+    }
 }
 
 /// A move package
@@ -345,6 +370,17 @@ impl MovePackage {
         &self.linkage_table
     }
 }
+
+impl crate::TreeDisplay for MovePackage {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Package")?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaves("Modules", self.modules.keys(), true)
+    }
+}
+
+crate::impl_tree_display!(MovePackageData, UpgradeInfo, TypeOrigin, MovePackage);
 
 #[cfg(feature = "serde")]
 mod serialization {

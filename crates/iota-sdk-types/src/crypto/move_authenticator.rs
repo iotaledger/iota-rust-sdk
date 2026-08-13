@@ -1,16 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "serde")]
-use std::hash::{Hash, Hasher};
-
 use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectReference};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
-#[derive(Clone, Debug, derive_more::From, Eq, PartialEq)]
+#[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -41,15 +38,8 @@ impl MoveAuthenticator {
     }
 }
 
-#[cfg(feature = "serde")]
-impl Hash for MoveAuthenticator {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.to_bytes().hash(state);
-    }
-}
-
 /// Version 1 of the [`MoveAuthenticator`].
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -154,6 +144,26 @@ impl MoveAuthenticatorV1 {
         &self.object_to_authenticate
     }
 }
+
+impl crate::TreeDisplay for MoveAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Move Authenticator");
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
+    }
+}
+
+impl crate::TreeDisplay for MoveAuthenticatorV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Authenticator V1")?;
+        w.children("Call Args", &self.call_args, false)?;
+        w.leaves("Type Args", &self.type_args, false)?;
+        w.child("Object to Authenticate", &self.object_to_authenticate, true)
+    }
+}
+
+crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1);
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

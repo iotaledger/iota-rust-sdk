@@ -207,13 +207,13 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 /// unchanged-shared-object-kind =  read-only-root
 ///                              =/ mutate-deleted
 ///                              =/ read-deleted
-///                              =/ cancelled
+///                              =/ canceled
 ///                              =/ per-epoch-config
 ///
 /// read-only-root      = %d00 u64 digest
 /// mutate-deleted      = %d01 u64
 /// read-deleted        = %d02 u64
-/// cancelled           = %d03 u64
+/// canceled           = %d03 u64
 /// per-epoch-config    = %d04
 /// ```
 #[derive(uniffi::Enum)]
@@ -229,9 +229,9 @@ pub enum UnchangedSharedKind {
     MutateDeleted { version: Arc<Version> },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Arc<Version> },
-    /// Shared objects in cancelled transaction. The sequence number embed
+    /// Shared objects in canceled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled { version: Arc<Version> },
+    Canceled { version: Arc<Version> },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -254,7 +254,7 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
             iota_sdk::types::UnchangedSharedKind::ReadDeleted { version } => Self::ReadDeleted {
                 version: Arc::new(version.into()),
             },
-            iota_sdk::types::UnchangedSharedKind::Cancelled { version } => Self::Cancelled {
+            iota_sdk::types::UnchangedSharedKind::Canceled { version } => Self::Canceled {
                 version: Arc::new(version.into()),
             },
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
@@ -276,7 +276,7 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
             UnchangedSharedKind::ReadDeleted { version } => {
                 Self::ReadDeleted { version: **version }
             }
-            UnchangedSharedKind::Cancelled { version } => Self::Cancelled { version: **version },
+            UnchangedSharedKind::Canceled { version } => Self::Canceled { version: **version },
             UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
         }
     }
