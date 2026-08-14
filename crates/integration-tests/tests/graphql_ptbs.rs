@@ -287,7 +287,7 @@ async fn test_upgrade() {
     // now we can upgrade the package
     let receipt = tx
         .upgrade(package_id.unwrap(), updated_package, assigned("ticket"))
-        .arg();
+        .result();
 
     // commit the upgrade
     tx.move_call(Address::FRAMEWORK, "package", "commit_upgrade")

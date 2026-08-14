@@ -1037,7 +1037,7 @@ impl<C, L> TransactionBuilder<C, L> {
         stake_amount: S,
         validator_address: Address,
     ) -> &mut Self {
-        let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
+        let coin = self.split_coins(Argument::Gas, [stake_amount]).result();
         self.move_call(
             Address::SYSTEM,
             Identifier::IOTA_SYSTEM_MODULE.as_str(),
@@ -1819,7 +1819,7 @@ impl TransactionBuilder<(), Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder {
-        let cap = self.arg();
+        let cap = self.result();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .assign(name)
@@ -1831,7 +1831,7 @@ impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
-        let cap = self.arg();
+        let cap = self.result();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .assign(name)
@@ -1856,7 +1856,7 @@ impl<C, L: Into<Command>> TransactionBuilder<C, L> {
     }
 
     /// Get the argument representing the last command.
-    pub fn arg(&mut self) -> Argument {
+    pub fn result(&mut self) -> Argument {
         Argument::Result((self.data.commands.len() - 1) as _)
     }
 }
