@@ -23,17 +23,15 @@
 //!    what is committed.
 
 mod codegen;
-mod context;
+mod extern_paths;
 mod ident;
 mod index;
-mod message_graph;
 
 use std::path::{Path, PathBuf};
 
 use prost_reflect::DescriptorPool;
-use prost_types::FileDescriptorSet;
 
-use crate::{index::ProtoIndex, message_graph::DescriptorGraph};
+use crate::index::ProtoIndex;
 
 /// Fields that prost boxes in the generated structs, which accessor generation
 /// has to mirror in its signatures.
@@ -99,7 +97,7 @@ fn main() {
     reset_out_dir(&out_dir);
 
     let proto_files = discover_proto_files(&proto_dir);
-    let (descriptor_pool, fds) = compile_proto_files(&proto_dir, &proto_files);
+    let descriptor_pool = compile_proto_files(&proto_dir, &proto_files);
 
     generate_tonic(&proto_dir, &proto_files, &out_dir);
     add_license_headers(&out_dir);
@@ -108,12 +106,7 @@ fn main() {
 
     let index = ProtoIndex::build(descriptor_pool);
 
-    // Accessors are driven by the proto options the index carries.
-    let extern_paths = context::extern_paths::ExternPaths::new(&[], true).unwrap();
-    let graph = DescriptorGraph::new(fds.file.iter());
-    let context = context::Context::new(extern_paths, graph);
     codegen::accessors::generate_accessors(
-        &context,
         &index,
         &out_dir,
         &prost_boxed_fields,
@@ -170,10 +163,7 @@ fn discover_proto_files(proto_dir: &Path) -> Vec<PathBuf> {
     proto_files
 }
 
-fn compile_proto_files(
-    proto_dir: &Path,
-    proto_files: &[PathBuf],
-) -> (DescriptorPool, FileDescriptorSet) {
+fn compile_proto_files(proto_dir: &Path, proto_files: &[PathBuf]) -> DescriptorPool {
     let mut compiler_init = protox::Compiler::new([proto_dir]).unwrap();
     let compiler = compiler_init
         .include_source_info(true)
@@ -181,13 +171,7 @@ fn compile_proto_files(
         .open_files(proto_files)
         .unwrap();
 
-    let descriptor_pool = compiler.descriptor_pool();
-    let mut fds = compiler.file_descriptor_set();
-
-    // Sort files by name to have deterministic codegen output
-    fds.file.sort_by(|a, b| a.name.cmp(&b.name));
-
-    (descriptor_pool, fds)
+    compiler.descriptor_pool()
 }
 
 fn generate_tonic(proto_dir: &Path, proto_files: &[PathBuf], out_dir: &Path) {

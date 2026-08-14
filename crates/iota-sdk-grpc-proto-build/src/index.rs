@@ -16,6 +16,7 @@
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 
+use itertools::Itertools;
 use proc_macro2::TokenStream;
 use prost_reflect::{DescriptorPool, Kind, MessageDescriptor};
 use quote::{format_ident, quote};
@@ -25,11 +26,15 @@ use crate::{
         accessor_config::{AccessorMap, parse_proto_accessors_from_pool},
         generate_fields::{TransparentInfo, parse_transparent_messages_from_pool},
     },
-    ident::to_snake,
+    extern_paths::ExternPaths,
+    ident::{to_snake, to_upper_camel},
 };
 
 pub(crate) struct ProtoIndex {
     pool: DescriptorPool,
+    /// Types resolved to a path outside the generated code, such as the
+    /// `google.protobuf` well-known types.
+    extern_paths: ExternPaths,
     /// Version module per package, e.g. `iota.grpc.v1.types` -> `v1`.
     versions: BTreeMap<String, String>,
     /// Accessor annotations, keyed as [`parse_proto_accessors_from_pool`]
@@ -65,10 +70,59 @@ impl ProtoIndex {
 
         Self {
             pool,
+            extern_paths: ExternPaths::new(&[], true).expect("built-in extern paths are valid"),
             versions,
             accessors,
             transparent,
         }
+    }
+
+    /// True when the type resolves outside the generated code and so has
+    /// nothing generated for it.
+    pub(crate) fn is_extern(&self, full_type_name: &str) -> bool {
+        self.extern_paths
+            .resolve_ident(&format!(".{}", full_type_name.trim_start_matches('.')))
+            .is_some()
+    }
+
+    /// Resolves a protobuf type to a Rust path relative to `package`, the form
+    /// accessor generation emits (`super::super::types::Digest`).
+    ///
+    /// Kept separate from [`Self::message_path`], which produces absolute
+    /// `crate::` paths: accessors are written into a `_accessor_impls` module
+    /// and address their types relatively from there.
+    pub(crate) fn accessor_type_path(&self, package: &str, pb_ident: &str) -> String {
+        // protoc should always give fully qualified identifiers.
+        assert_eq!(".", &pb_ident[..1]);
+
+        if let Some(proto_ident) = self.extern_paths.resolve_ident(pb_ident) {
+            return proto_ident;
+        }
+
+        let mut local_path = package.split('.').peekable();
+
+        // If no package is specified the start of the package name will be '.'
+        // and split will return an empty string ("") which breaks resolution
+        // The fix to this is to ignore the first item if it is empty.
+        if local_path.peek().is_some_and(|s| s.is_empty()) {
+            local_path.next();
+        }
+
+        let mut ident_path = pb_ident[1..].split('.');
+        let ident_type = ident_path.next_back().unwrap();
+        let mut ident_path = ident_path.peekable();
+
+        // Skip path elements in common.
+        while local_path.peek().is_some() && local_path.peek() == ident_path.peek() {
+            local_path.next();
+            ident_path.next();
+        }
+
+        local_path
+            .map(|_| "super".to_string())
+            .chain(ident_path.map(to_snake))
+            .chain(std::iter::once(to_upper_camel(ident_type)))
+            .join("::")
     }
 
     /// Accessor annotations of every message, from the `iota.grpc` accessor
