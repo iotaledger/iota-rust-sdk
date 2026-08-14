@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{
-    ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature,
-};
+use iota_types::{ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects};
 
 use crate::{
     error::{self, Error, Kind},
@@ -130,7 +128,6 @@ pub struct TransactionBlocksQueryArgs {
 pub struct TransactionBlock {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
-    pub signatures: Option<Vec<Base64>>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -228,19 +225,8 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
             .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
             .transpose()?;
 
-        let signatures = if let Some(sigs) = value.signatures {
-            sigs.iter()
-                .map(|s| UserSignature::from_base64(&s.0))
-                .collect::<Result<Vec<_>, _>>()?
-        } else {
-            vec![]
-        };
-
         if let Some(transaction) = transaction {
-            Ok(SignedTransaction {
-                transaction: transaction.0.transaction,
-                signatures,
-            })
+            Ok(transaction.into())
         } else {
             Err(Error::from_error(
                 Kind::Other,
