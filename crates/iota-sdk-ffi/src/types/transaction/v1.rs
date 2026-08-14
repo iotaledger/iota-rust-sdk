@@ -8,7 +8,7 @@ use iota_sdk::types::{GasCostSummary, IdOperation};
 use crate::types::{
     digest::{EffectsAuxDataDigest, ObjectDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
-    object::{ObjectId, Owner},
+    object::{ObjectId, ObjectReference, Owner},
     version::Version,
 };
 
@@ -452,3 +452,37 @@ crate::export_iota_types_json_conversion!(
     ObjectOut,
     IdOperation
 );
+
+/// An object reference paired with the owner the object has at that version.
+#[derive(uniffi::Record)]
+pub struct OwnedObjectReference {
+    pub reference: ObjectReference,
+    pub owner: Arc<Owner>,
+}
+
+impl From<(iota_sdk::types::ObjectReference, iota_sdk::types::Owner)> for OwnedObjectReference {
+    fn from(
+        (reference, owner): (iota_sdk::types::ObjectReference, iota_sdk::types::Owner),
+    ) -> Self {
+        Self {
+            reference: reference.into(),
+            owner: Arc::new(owner.into()),
+        }
+    }
+}
+
+/// An object id paired with one of that object's versions.
+#[derive(uniffi::Record)]
+pub struct ObjectVersion {
+    pub object_id: Arc<ObjectId>,
+    pub version: Arc<Version>,
+}
+
+impl From<(iota_sdk::types::ObjectId, iota_sdk::types::Version)> for ObjectVersion {
+    fn from((object_id, version): (iota_sdk::types::ObjectId, iota_sdk::types::Version)) -> Self {
+        Self {
+            object_id: Arc::new(object_id.into()),
+            version: Arc::new(version.into()),
+        }
+    }
+}
