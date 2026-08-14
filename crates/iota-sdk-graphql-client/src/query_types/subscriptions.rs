@@ -64,7 +64,7 @@ pub struct TransactionsSubscriptionArgs {
 // Subscription filters
 // ===========================================================================
 
-/// Filter incoming events in a subscription. Exactly one field may be set
+/// Filter incoming events in a subscription. Exactly one field must be set
 /// (the GraphQL input is `@oneOf`).
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
@@ -74,7 +74,7 @@ pub struct SubscriptionEventFilter {
     pub emitting_module: Option<String>,
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field may be
+/// Filter incoming transactions in a subscription. Exactly one field must be
 /// set (the GraphQL input is `@oneOf`).
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
