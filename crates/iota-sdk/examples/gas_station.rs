@@ -13,7 +13,7 @@ async fn main() -> Result<()> {
     let client = Client::new_localnet();
     let gas_station_url = reqwest::Url::parse("http://0.0.0.0:9527")?;
     let gas_station_auth_token = "test";
-    let keypair = Ed25519PrivateKey::random_with(rand::thread_rng());
+    let keypair = Ed25519PrivateKey::random();
     let sender = keypair.public_key().derive_address();
 
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
