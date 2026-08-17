@@ -6,7 +6,6 @@ use iota_sdk::{
     crypto::{ToFromBech32, ed25519::Ed25519PrivateKey},
     types::PublicKeyExt,
 };
-use rand::rngs::OsRng;
 
 fn main() {
     let private_key = Ed25519PrivateKey::random();
