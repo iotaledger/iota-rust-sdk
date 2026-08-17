@@ -17,11 +17,9 @@ async fn main() -> Result<()> {
 
     let staked_iota = client
         .objects(
-            ObjectFilter {
-                type_: Some(StructTag::new_staked_iota().to_string()),
-                owner: Some(owner),
-                ..Default::default()
-            },
+            ObjectFilter::default()
+                .with_type(StructTag::new_staked_iota().to_string())
+                .with_owner(owner),
             Default::default(),
         )
         .await?

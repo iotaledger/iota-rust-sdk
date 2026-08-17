@@ -146,19 +146,18 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
 
 impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
     fn from(value: TransactionsFilter) -> Self {
-        Self {
-            function: value.function,
-            kind: value.kind,
-            after_checkpoint: value.after_checkpoint,
-            at_checkpoint: value.at_checkpoint,
-            before_checkpoint: value.before_checkpoint,
-            sent_address: value.sent_address.map(|v| **v),
-            recv_address: value.recv_address.map(|v| **v),
-            input_object: value.input_object.map(|v| **v),
-            changed_object: value.changed_object.map(|v| **v),
-            transaction_ids: value.transaction_ids,
-            wrapped_or_deleted_object: value.wrapped_or_deleted_object.map(|v| **v),
-        }
+        Self::default()
+            .with_function(value.function)
+            .with_kind(value.kind)
+            .with_after_checkpoint(value.after_checkpoint)
+            .with_at_checkpoint(value.at_checkpoint)
+            .with_before_checkpoint(value.before_checkpoint)
+            .with_sent_address(value.sent_address.map(|v| **v))
+            .with_recv_address(value.recv_address.map(|v| **v))
+            .with_input_object(value.input_object.map(|v| **v))
+            .with_changed_object(value.changed_object.map(|v| **v))
+            .with_transaction_ids(value.transaction_ids)
+            .with_wrapped_or_deleted_object(value.wrapped_or_deleted_object.map(|v| **v))
     }
 }
 
@@ -420,12 +419,11 @@ impl From<iota_sdk::graphql_client::query_types::EventFilter> for EventFilter {
 
 impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
     fn from(value: EventFilter) -> Self {
-        Self {
-            emitting_module: value.emitting_module,
-            event_type: value.event_type,
-            sender: value.sender.map(|a| **a),
-            transaction_digest: value.transaction_digest,
-        }
+        Self::default()
+            .with_emitting_module(value.emitting_module)
+            .with_event_type(value.event_type)
+            .with_sender(value.sender.map(|a| **a))
+            .with_transaction_digest(value.transaction_digest)
     }
 }
 
@@ -520,13 +518,14 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter 
 
 impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
     fn from(value: ObjectFilter) -> Self {
-        Self {
-            type_: value.type_tag,
-            owner: value.owner.map(|v| **v),
-            object_ids: value
-                .object_ids
-                .map(|v| v.into_iter().map(|v| **v).collect()),
-        }
+        Self::default()
+            .with_type(value.type_tag)
+            .with_owner(value.owner.map(|v| **v))
+            .with_object_ids(
+                value
+                    .object_ids
+                    .map(|v| v.into_iter().map(|v| **v).collect()),
+            )
     }
 }
 

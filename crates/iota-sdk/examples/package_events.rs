@@ -11,13 +11,10 @@ async fn main() -> Result<()> {
 
     let events = client
         .events(
-            EventFilter {
-                event_type: Some(
-                    "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
-                        .to_string(),
-                ),
-                ..Default::default()
-            },
+            EventFilter::default().with_event_type(
+                "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
+                    .to_string(),
+            ),
             PaginationFilter {
                 limit: Some(10),
                 ..Default::default()
