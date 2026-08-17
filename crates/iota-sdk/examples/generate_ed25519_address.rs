@@ -9,7 +9,7 @@ use iota_sdk::{
 use rand::rngs::OsRng;
 
 fn main() {
-    let private_key = Ed25519PrivateKey::random_with(OsRng);
+    let private_key = Ed25519PrivateKey::random();
     let private_key_bech32 = private_key.to_bech32().unwrap();
     let public_key = private_key.public_key();
     let flagged_public_key = Base64::encode_string(&public_key.to_flagged_bytes());
