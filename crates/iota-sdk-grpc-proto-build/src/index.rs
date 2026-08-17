@@ -242,14 +242,24 @@ impl ProtoIndex {
         }
 
         let root = self.package_path(message.package_name());
-        if outer.is_empty() {
-            quote! { #root::#builder }
-        } else {
-            // At the package root the nested module is shadowed by the prost
-            // module of the same name, so the builder is only reachable through
-            // `_field_impls`.
-            quote! { #root::_field_impls #(::#outer)* ::#builder }
+        if !outer.is_empty() {
+            // A nested message's builder has no path from outside its own
+            // package: `_field_impls` is private, and at the package root the
+            // module holding the builder is shadowed by the prost module of the
+            // same name, so the glob re-export never surfaces it.
+            //
+            // No proto references such a builder across packages today. Making
+            // `_field_impls` `pub` is the one-line fix if one ever does — hence
+            // failing loudly here rather than emitting a path that does not
+            // resolve.
+            panic!(
+                "cannot reference the field path builder of nested message {} from package {from_package}: \
+                 nested builders are only addressable inside their own package",
+                message.full_name()
+            );
         }
+
+        quote! { #root::#builder }
     }
 
     /// True when `to` reaches back to `from` through message-typed fields, i.e.
@@ -411,10 +421,16 @@ mod tests {
             builder_path(".fixture.grpc.v1.a.Input", "fixture.grpc.v1.b"),
             "crate::v1::a::InputFieldPathBuilder"
         );
-        assert_eq!(
-            builder_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.b"),
-            "crate::v1::a::_field_impls::argument::InputFieldPathBuilder"
-        );
+    }
+
+    /// A nested message's builder lives in the private `_field_impls` module,
+    /// and at the package root its module is shadowed by the prost module
+    /// of the same name, so no path reaches it from another package. Fail
+    /// at codegen rather than emit a path that will not resolve.
+    #[test]
+    #[should_panic(expected = "nested builders are only addressable inside their own package")]
+    fn builders_of_nested_messages_in_other_packages_are_rejected() {
+        builder_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.b");
     }
 
     #[test]

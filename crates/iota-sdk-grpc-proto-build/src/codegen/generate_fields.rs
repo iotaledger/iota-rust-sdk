@@ -148,14 +148,10 @@ pub(crate) fn generate_field_info(index: &ProtoIndex, out_dir: &Path, boxed_type
             continue;
         }
 
-        // Types of other packages are referenced through their full module
-        // path, so nothing but the traits has to be imported here.
-        // `_field_impls` is public because the field path builders of nested
-        // messages are shadowed at the package root by the prost module of the
-        // same name.
+        // Types of other packages are referenced through their full module path,
+        // so nothing but the traits has to be imported here.
         let code = quote! {
-            #[doc(hidden)]
-            pub mod _field_impls {
+            mod _field_impls {
                 #![allow(clippy::wrong_self_convention)]
 
                 use super::*;

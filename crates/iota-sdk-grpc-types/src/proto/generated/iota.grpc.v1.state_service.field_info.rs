@@ -2,8 +2,7 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[doc(hidden)]
-pub mod _field_impls {
+mod _field_impls {
     #![allow(clippy::wrong_self_convention)]
     use super::*;
     use crate::field::MessageFields;
