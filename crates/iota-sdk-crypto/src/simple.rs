@@ -741,7 +741,8 @@ mod tests {
     fn test_bech32_roundtrip_ed25519() {
         use rand::{SeedableRng, rngs::StdRng};
 
-        let keypair: SimpleKeypair = Ed25519PrivateKey::generate(StdRng::from_seed([1; 32])).into();
+        let keypair: SimpleKeypair =
+            Ed25519PrivateKey::random_with(StdRng::from_seed([1; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -757,7 +758,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256k1PrivateKey::generate(StdRng::from_seed([2; 32])).into();
+            Secp256k1PrivateKey::random_with(StdRng::from_seed([2; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -773,7 +774,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256r1PrivateKey::generate(StdRng::from_seed([3; 32])).into();
+            Secp256r1PrivateKey::random_with(StdRng::from_seed([3; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());

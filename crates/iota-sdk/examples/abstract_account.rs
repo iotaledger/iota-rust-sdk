@@ -54,7 +54,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
     let package_data = serde_json::from_str::<MovePackageData>(PRECOMPILED_PACKAGE)?;
 
     // Create a random private key to derive a sender address
-    let private_key = Ed25519PrivateKey::generate(OsRng);
+    let private_key = Ed25519PrivateKey::random_with(OsRng);
     let sender = private_key.public_key().derive_address();
 
     // Fund the sender address for gas payment

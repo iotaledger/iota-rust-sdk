@@ -45,7 +45,7 @@ fun main() = runBlocking {
         println("Digest: ${digest.toBase58()}")
 
         // Create a random private key to derive a sender address and for signing
-        val privateKey = Ed25519PrivateKey.generate()
+        val privateKey = Ed25519PrivateKey.random()
         val sender = privateKey.publicKey().deriveAddress()
         println("Sender: ${sender.toHex()}")
 

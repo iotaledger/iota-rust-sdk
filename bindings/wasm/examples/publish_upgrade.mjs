@@ -44,7 +44,7 @@ const digest = packageData.digest();
 console.log(`Digest: ${digest.toBase58()}`);
 
 // Create a random private key to derive a sender address and for signing
-const privateKey = Ed25519PrivateKey.generate();
+const privateKey = Ed25519PrivateKey.random();
 const sender = privateKey.publicKey().deriveAddress();
 console.log(`Sender: ${sender.toHex()}`);
 

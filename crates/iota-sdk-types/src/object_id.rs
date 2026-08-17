@@ -168,17 +168,17 @@ impl ObjectId {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(rng: R) -> Self
+    pub fn random_with<R>(rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
-        Self::from_address(Address::generate(rng))
+        Self::from_address(Address::random_with(rng))
     }
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 }
 
