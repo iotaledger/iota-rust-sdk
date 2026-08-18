@@ -120,7 +120,7 @@ fn check_public_key(
 
 #[cfg(test)]
 mod tests {
-    use iota_types::Transaction;
+    use iota_types::{PublicKey, Secp256r1PublicKey, Transaction};
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -151,12 +151,12 @@ mod tests {
         public_key
             .verify_transaction(&transaction, &signature)
             .unwrap();
-        iota_types::PublicKey::Passkey(public_key)
+        PublicKey::Passkey(public_key)
             .verify_transaction(&transaction, &signature)
             .unwrap();
 
         // a different public key must not verify the signature
-        let other_public_key = PasskeyPublicKey::new(iota_types::Secp256r1PublicKey::new([2; 33]));
+        let other_public_key = PasskeyPublicKey::new(Secp256r1PublicKey::new([2; 33]));
         other_public_key
             .verify_transaction(&transaction, &signature)
             .unwrap_err();
