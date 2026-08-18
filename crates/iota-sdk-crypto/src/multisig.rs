@@ -201,6 +201,8 @@ impl Verifier<UserSignature> for MultisigVerifier {
     }
 }
 
+crate::impl_iota_verifier!(MultisigVerifier);
+
 /// Verifier that will verify all UserSignature variants
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
@@ -251,6 +253,8 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
         }
     }
 }
+
+crate::impl_iota_verifier!(UserSignatureVerifier);
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct MultisigAggregator {
