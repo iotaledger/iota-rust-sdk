@@ -40,7 +40,7 @@ fn move_package_data(file: &str) -> MovePackageData {
 
 /// Generate a random private key and its corresponding address
 fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
-    let pk = Ed25519PrivateKey::generate(rand::thread_rng());
+    let pk = Ed25519PrivateKey::random_with(rand::thread_rng());
     let address = pk.public_key().derive_address();
     (address, pk)
 }
@@ -106,7 +106,7 @@ async fn test_transfer_obj_execution() {
     // get the object information from the client
     let client = Client::new_localnet();
     let coin = coins.first().unwrap().id;
-    let recipient = Address::generate(rand::thread_rng());
+    let recipient = Address::random_with(rand::thread_rng());
     tx.transfer_objects(recipient, [coin]);
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
@@ -142,7 +142,7 @@ async fn test_split_transfer() {
     // transfer 1 IOTA from Gas coin
     let gas = tx.get_gas()[0];
     tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
-    let recipient = Address::generate(rand::thread_rng());
+    let recipient = Address::random_with(rand::thread_rng());
     tx.transfer_objects(recipient, [assigned("coin")]);
 
     let effects = tx.execute(&pk, WaitForTx::Finalized).await;
@@ -217,7 +217,7 @@ async fn test_publish() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v1.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
@@ -230,7 +230,7 @@ async fn test_upgrade() {
     let (mut tx, address, pk, coins) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v2.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
@@ -323,7 +323,7 @@ async fn test_auto_gas_selection_with_many_coins() {
     check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
 
     let mut tx2 = TransactionBuilder::new(sender).with_client(client);
-    let recipient = Address::generate(rand::thread_rng());
+    let recipient = Address::random_with(rand::thread_rng());
     tx2.send_iota(recipient, 1_000u64);
     check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
 }
@@ -396,7 +396,7 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     );
 
     let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
-    let recipient = Address::generate(rand::thread_rng());
+    let recipient = Address::random_with(rand::thread_rng());
     tx2.gas(split_ids)
         .gas_budget(GAS_BUDGET)
         .send_iota(recipient, 1_000u64);
@@ -446,7 +446,7 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     // Build (but don't execute) a fresh tx without pinning gas. The
     // resolved transaction reveals what auto-gas picked.
     let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
-    let recipient = Address::generate(rand::thread_rng());
+    let recipient = Address::random_with(rand::thread_rng());
     tx2.gas_budget(GAS_BUDGET);
     tx2.send_iota(recipient, 1u64);
     let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
@@ -481,7 +481,7 @@ async fn test_transactions_subscription() {
         let (mut tx, _, pk, _) = helper_setup().await;
         let gas = tx.get_gas()[0];
         tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::random_with(rand::thread_rng());
         tx.transfer_objects(recipient, [assigned("coin")]);
         let _ = tx.execute(&pk, WaitForTx::Finalized).await;
     });
@@ -551,7 +551,7 @@ async fn test_move_view_call() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v1.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 

@@ -40,8 +40,8 @@ impl Bls12381PrivateKey {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        Self(iota_sdk::crypto::bls12381::Bls12381PrivateKey::generate(
+    pub fn random() -> Self {
+        Self(iota_sdk::crypto::bls12381::Bls12381PrivateKey::random_with(
             OsRng,
         ))
     }

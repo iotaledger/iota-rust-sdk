@@ -41,7 +41,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     package_data = MovePackageData.from_json(PRECOMPILED_PACKAGE)
 
     # Create a random private key to derive a sender address
-    private_key = Ed25519PrivateKey.generate()
+    private_key = Ed25519PrivateKey.random()
     sender = private_key.public_key().derive_address()
 
     # Fund the sender address for gas payment
@@ -53,7 +53,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     # Build the `publish` PTB
     builder = TransactionBuilder(sender).with_client(client)
     # Publish the package and receive the upgrade cap
-    builder.publish(package_data, "upgrade_cap")
+    builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
     builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
 

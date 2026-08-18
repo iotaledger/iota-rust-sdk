@@ -22,7 +22,7 @@ func main() {
 	client := iota_sdk.GraphQlClientNewLocalnet()
 	gasStationUrl := "http://0.0.0.0:9527"
 	gasStationAuthToken := "test"
-	keypair := iota_sdk.Ed25519PrivateKeyGenerate()
+	keypair := iota_sdk.Ed25519PrivateKeyRandom()
 	sender := keypair.PublicKey().DeriveAddress()
 	signer := iota_sdk.TransactionSignerFromEd25519(keypair)
 

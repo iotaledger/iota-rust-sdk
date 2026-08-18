@@ -63,7 +63,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	// Create a random private key to derive a sender address
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	sender := privateKey.PublicKey().DeriveAddress()
 
 	// Fund the sender address for gas payment
@@ -76,7 +76,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Build the `publish` PTB
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 	// Publish the package and receive the upgrade cap
-	builder.Publish(packageData, "upgrade_cap")
+	builder.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 
