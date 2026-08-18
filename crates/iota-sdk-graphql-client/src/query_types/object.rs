@@ -57,7 +57,7 @@ pub struct Object {
 #[non_exhaustive]
 pub struct ObjectFilter {
     #[cynic(rename = "type")]
-    pub type_: Option<String>,
+    pub tag: Option<String>,
     pub owner: Option<Address>,
     pub object_ids: Option<Vec<ObjectId>>,
 }
@@ -65,8 +65,8 @@ pub struct ObjectFilter {
 impl ObjectFilter {
     /// Filter by package, module, or fully qualified type, e.g. `"0x02"`,
     /// `"0x02::coin"`, or `"0x02::coin::Coin"`.
-    pub fn with_type(mut self, type_: impl Into<Option<String>>) -> Self {
-        self.type_ = type_.into();
+    pub fn with_type(mut self, tag: impl Into<Option<String>>) -> Self {
+        self.tag = tag.into();
         self
     }
 

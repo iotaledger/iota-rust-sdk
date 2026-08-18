@@ -45,7 +45,7 @@ impl TransactionBuilderClient for Client {
         let page = self
             .objects(
                 ObjectFilter {
-                    type_: struct_tag.map(|tag| tag.to_string()),
+                    tag: struct_tag.map(|tag| tag.to_string()),
                     owner: Some(owner),
                     object_ids: None,
                 },
