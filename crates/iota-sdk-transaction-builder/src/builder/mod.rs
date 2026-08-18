@@ -1042,7 +1042,12 @@ impl<C, L> TransactionBuilder<C, L> {
             .arguments((upgrade_capability, upgrade_policy, digest))
     }
 
-    /// Upgrade a move package.
+    /// Add the raw `Upgrade` command, consuming the `UpgradeTicket` returned
+    /// by [`authorize_upgrade`](Self::authorize_upgrade) and producing the
+    /// `UpgradeReceipt` expected by [`commit_upgrade`](Self::commit_upgrade).
+    ///
+    /// For the standard upgrade flow, use
+    /// [`upgrade_package`](Self::upgrade_package) instead.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
