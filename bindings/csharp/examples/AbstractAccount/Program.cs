@@ -46,7 +46,7 @@ class Program
             throw new Exception("Failed to request coins from faucet");
 
         var builder = new TransactionBuilder(sender).WithClient(client);
-        builder.Publish(packageData, "upgrade_cap");
+        builder.PublishPackage(packageData, "upgrade_cap");
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
 
         var txSigner = TransactionSigner.FromEd25519(privateKey);

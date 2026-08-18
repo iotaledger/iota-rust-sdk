@@ -981,7 +981,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Publish a move package.
-    pub fn publish(
+    pub fn publish_package(
         &mut self,
         package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Publish> {
@@ -991,7 +991,63 @@ impl<C, L> TransactionBuilder<C, L> {
         })
     }
 
-    /// Upgrade a move package.
+    /// Authorize a package upgrade by calling
+    /// `0x2::package::authorize_upgrade`.
+    ///
+    /// The command's result is the `UpgradeTicket` expected by
+    /// [`upgrade`](Self::upgrade). The policy is one of the
+    /// [`UpgradePolicy`](iota_types::UpgradePolicy) constants and the digest
+    /// is the digest of the package being upgraded to
+    /// ([`MovePackageData::digest`]).
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, MovePackageData, ObjectId, UpgradePolicy};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let package_id =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    /// let upgrade_cap =
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    /// # let modules = vec![vec![0u8]];
+    /// # let dependencies = vec![];
+    /// let package_data = MovePackageData::new(modules, dependencies);
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let upgrade_ticket = builder
+    ///     .authorize_upgrade(upgrade_cap, UpgradePolicy::COMPATIBLE, package_data.digest)
+    ///     .result();
+    /// let upgrade_receipt = builder
+    ///     .upgrade(package_id, package_data, upgrade_ticket)
+    ///     .result();
+    /// builder.commit_upgrade(upgrade_cap, upgrade_receipt);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn authorize_upgrade<Cap: PTBArgument, P: PTBArgument, D: PTBArgument>(
+        &mut self,
+        upgrade_capability: Cap,
+        upgrade_policy: P,
+        digest: D,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
+            .arguments((upgrade_capability, upgrade_policy, digest))
+    }
+
+    /// Add the raw `Upgrade` command, consuming the `UpgradeTicket` returned
+    /// by [`authorize_upgrade`](Self::authorize_upgrade) and producing the
+    /// `UpgradeReceipt` expected by [`commit_upgrade`](Self::commit_upgrade).
+    ///
+    /// For the standard upgrade flow, use
+    /// [`upgrade_package`](Self::upgrade_package) instead.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
@@ -1005,6 +1061,76 @@ impl<C, L> TransactionBuilder<C, L> {
             package: package_id,
             ticket,
         })
+    }
+
+    /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
+    /// consuming the `UpgradeReceipt` returned by [`upgrade`](Self::upgrade).
+    ///
+    /// See [`authorize_upgrade`](Self::authorize_upgrade) for an example of
+    /// the full upgrade flow.
+    pub fn commit_upgrade<Cap: PTBArgument, R: PTBArgument>(
+        &mut self,
+        upgrade_capability: Cap,
+        upgrade_receipt: R,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.move_call(Address::FRAMEWORK, "package", "commit_upgrade")
+            .arguments((upgrade_capability, upgrade_receipt))
+    }
+
+    /// Upgrade a move package.
+    ///
+    /// This is a high-level function which chains
+    /// [`authorize_upgrade`](Self::authorize_upgrade),
+    /// [`upgrade`](Self::upgrade) and [`commit_upgrade`](Self::commit_upgrade)
+    /// using the digest from the provided [`MovePackageData`]. Use the
+    /// individual functions for custom upgrade flows.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, MovePackageData, ObjectId, UpgradePolicy};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let package_id =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    /// let upgrade_cap =
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    /// # let modules = vec![vec![0u8]];
+    /// # let dependencies = vec![];
+    /// let package_data = MovePackageData::new(modules, dependencies);
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.upgrade_package(
+    ///     package_id,
+    ///     package_data,
+    ///     upgrade_cap,
+    ///     UpgradePolicy::COMPATIBLE,
+    /// );
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn upgrade_package<Cap: PTBArgument, P: PTBArgument>(
+        &mut self,
+        package_id: ObjectId,
+        package_data: MovePackageData,
+        upgrade_capability: Cap,
+        upgrade_policy: P,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        let upgrade_cap = self.apply_argument(upgrade_capability);
+        let upgrade_ticket = self
+            .authorize_upgrade(upgrade_cap, upgrade_policy, package_data.digest)
+            .result();
+        let upgrade_receipt = self
+            .upgrade(package_id, package_data, upgrade_ticket)
+            .result();
+        self.commit_upgrade(upgrade_cap, upgrade_receipt)
     }
 
     /// Add stake to a validator's staking pool.
