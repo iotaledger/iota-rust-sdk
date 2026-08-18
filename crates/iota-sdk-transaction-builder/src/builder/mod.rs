@@ -1072,6 +1072,62 @@ impl<C, L> TransactionBuilder<C, L> {
             .arguments((upgrade_capability, upgrade_receipt))
     }
 
+    /// Upgrade a move package.
+    ///
+    /// This is a high-level function which chains
+    /// [`authorize_upgrade`](Self::authorize_upgrade),
+    /// [`upgrade`](Self::upgrade) and [`commit_upgrade`](Self::commit_upgrade)
+    /// using the digest from the provided [`MovePackageData`]. Use the
+    /// individual functions for custom upgrade flows.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, MovePackageData, ObjectId, UpgradePolicy};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let package_id =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    /// let upgrade_cap =
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    /// # let modules = vec![vec![0u8]];
+    /// # let dependencies = vec![];
+    /// let package_data = MovePackageData::new(modules, dependencies);
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.upgrade_package(
+    ///     package_id,
+    ///     package_data,
+    ///     upgrade_cap,
+    ///     UpgradePolicy::COMPATIBLE,
+    /// );
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn upgrade_package<Cap: PTBArgument, P: PTBArgument>(
+        &mut self,
+        package_id: ObjectId,
+        package_data: MovePackageData,
+        upgrade_capability: Cap,
+        upgrade_policy: P,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        let upgrade_cap = self.apply_argument(upgrade_capability);
+        let upgrade_ticket = self
+            .authorize_upgrade(upgrade_cap, upgrade_policy, package_data.digest)
+            .result();
+        let upgrade_receipt = self
+            .upgrade(package_id, package_data, upgrade_ticket)
+            .result();
+        self.commit_upgrade(upgrade_cap, upgrade_receipt)
+    }
+
     /// Add stake to a validator's staking pool.
     ///
     /// This is a high-level function which will split the provided stake amount
