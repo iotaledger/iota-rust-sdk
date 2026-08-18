@@ -15,7 +15,7 @@ class Program
     {
         var client = GraphQlClient.NewTestnet();
 
-        Console.WriteLine("=== Example 1: move_view_call() with typed arguments (primitives) ===");
+        Console.WriteLine("=== Example 1: MoveViewCall() with typed arguments (primitives) ===");
         Console.WriteLine();
 
         var priceArgs = new[] { MoveViewArg.U64(100), MoveViewArg.U64(25) };
@@ -36,7 +36,7 @@ class Program
         }
 
         Console.WriteLine();
-        Console.WriteLine("=== Example 2: move_view_call_json() with JSON values (primitives) ===");
+        Console.WriteLine("=== Example 2: MoveViewCallJson() with JSON values (primitives) ===");
         Console.WriteLine();
 
         // `u64` is passed as a string so large values survive JSON.
@@ -57,7 +57,7 @@ class Program
         }
 
         Console.WriteLine();
-        Console.WriteLine("=== Example 3: move_view_call() with typed arguments (shared object) ===");
+        Console.WriteLine("=== Example 3: MoveViewCall() with typed arguments (shared object) ===");
         Console.WriteLine();
 
         var objectId = ObjectId.FromHex(Shop);
@@ -83,7 +83,7 @@ class Program
         }
 
         Console.WriteLine();
-        Console.WriteLine("=== Example 4: move_view_call_json() with JSON values (shared object) ===");
+        Console.WriteLine("=== Example 4: MoveViewCallJson() with JSON values (shared object) ===");
         Console.WriteLine();
 
         var shopJsonArgs = new[] { $"\"{Shop}\"", "\"1\"" };
