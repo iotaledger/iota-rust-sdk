@@ -433,7 +433,7 @@ crate::impl_iota_verifier!(Secp256k1Verifier);
 
 #[cfg(test)]
 mod tests {
-    use iota_types::PersonalMessage;
+    use iota_types::{PersonalMessage, PublicKey};
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
@@ -453,7 +453,7 @@ mod tests {
         public_key
             .verify_transaction(&transaction, &signature)
             .unwrap();
-        iota_types::PublicKey::Secp256k1(public_key)
+        PublicKey::Secp256k1(public_key)
             .verify_transaction(&transaction, &signature)
             .unwrap();
 
@@ -483,7 +483,7 @@ mod tests {
         public_key
             .verify_personal_message(&message, &signature)
             .unwrap();
-        iota_types::PublicKey::Secp256k1(public_key)
+        PublicKey::Secp256k1(public_key)
             .verify_personal_message(&message, &signature)
             .unwrap();
 
