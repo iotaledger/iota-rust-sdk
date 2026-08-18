@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout iota-rust-sdk
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.release.tag_name || github.ref }}
 
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           key: swift-source
 
@@ -29,7 +29,7 @@ jobs:
         run: make swift
 
       - name: Archive Swift SDK source
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: source
           path: |
@@ -54,14 +54,14 @@ jobs:
             folder: ios-sim-aarch64
     steps:
       - name: Checkout iota-rust-sdk
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Install rust target ${{ matrix.target }}
         run: rustup target add ${{ matrix.target }}
 
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           key: swift-${{ matrix.target }}
 
@@ -74,7 +74,7 @@ jobs:
           cp target/${{ matrix.target }}/release/libiota_sdk_ffi.dylib tmp/lib/${{ matrix.folder }}/libiota_sdk_ffi.dylib
 
       - name: Archive ${{ matrix.target }} library
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.target }}
           path: tmp
@@ -88,7 +88,7 @@ jobs:
       - prepare-libraries-archives
     steps:
       - name: Download source and libraries archives
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           merge-multiple: true
 
@@ -114,7 +114,7 @@ jobs:
             -output IotaSDK.xcframework
 
       - name: Upload XCFramework
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: xcframework
           path: IotaSDK.xcframework
@@ -126,19 +126,19 @@ jobs:
       - xcframework
     steps:
       - name: Checkout iota-sdk-swift
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: iotaledger/iota-sdk-swift
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_SWIFT_SDK }}
           fetch-depth: 0
 
       - name: Download source archive
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: source
 
       - name: Download XCFramework
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: xcframework
           path: IotaSDK.xcframework
