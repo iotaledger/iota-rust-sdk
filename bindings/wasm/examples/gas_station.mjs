@@ -17,7 +17,7 @@ await initAsync();
 const client = GraphQlClient.newLocalnet();
 const gasStationUrl = "http://0.0.0.0:9527";
 const gasStationAuthToken = "test";
-const keypair = Ed25519PrivateKey.generate();
+const keypair = Ed25519PrivateKey.random();
 const sender = keypair.publicKey().deriveAddress();
 const signer = TransactionSigner.fromEd25519(keypair);
 

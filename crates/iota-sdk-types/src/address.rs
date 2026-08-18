@@ -123,7 +123,7 @@ impl Address {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -135,7 +135,7 @@ impl Address {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Return the underlying byte array of a Address.

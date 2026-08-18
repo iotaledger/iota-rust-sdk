@@ -43,7 +43,7 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     val packageData = MovePackageData.fromJson(PRECOMPILED_AA_PACKAGE)
 
     // Create a random private key to derive a sender address
-    val privateKey = Ed25519PrivateKey.generate()
+    val privateKey = Ed25519PrivateKey.random()
     val sender = privateKey.publicKey().deriveAddress()
 
     // Fund the sender address for gas payment

@@ -52,7 +52,7 @@ struct AbstractAccountExample {
     let packageData = try MovePackageData.fromJson(json: abstractAccountPrecompiledPackage)
 
     // Create a random private key to derive a sender address
-    let privateKey = Ed25519PrivateKey.generate()
+    let privateKey = Ed25519PrivateKey.random()
     let sender = privateKey.publicKey().deriveAddress()
 
     // Fund the sender address for gas payment

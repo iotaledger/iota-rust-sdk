@@ -30,7 +30,6 @@ use iota_sdk::{
     transaction_builder::{TransactionBuilder, assigned},
     types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
-use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -48,7 +47,7 @@ async fn main() -> Result<()> {
     println!("Digest: {}", package_data.digest);
 
     // Create a random private key to derive a sender address and for signing
-    let private_key = Ed25519PrivateKey::generate(OsRng);
+    let private_key = Ed25519PrivateKey::random();
     let sender = private_key.public_key().derive_address();
     println!("Sender: {sender}");
     let client = Client::new_localnet();

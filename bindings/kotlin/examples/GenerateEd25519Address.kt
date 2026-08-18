@@ -6,7 +6,7 @@ import iota_sdk.base64Encode
 import kotlin.io.println
 
 fun main() {
-    val privateKey = Ed25519PrivateKey.generate()
+    val privateKey = Ed25519PrivateKey.random()
     val privateKeyBech32 = privateKey.toBech32()
     val publicKey = privateKey.publicKey()
     val flaggedPublicKey = publicKey.toFlaggedBytes()
