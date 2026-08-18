@@ -32,7 +32,7 @@ use crate::{
     types::{address::Address, transaction::SignedTransaction},
 };
 
-/// Filter incoming events in a subscription. Exactly one field may be set.
+/// Filter incoming events in a subscription. Exactly one field must be set.
 #[derive(Default, uniffi::Record)]
 pub struct SubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
@@ -52,7 +52,7 @@ impl From<SubscriptionEventFilter>
     }
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field may be
+/// Filter incoming transactions in a subscription. Exactly one field must be
 /// set.
 #[derive(Default, uniffi::Record)]
 pub struct SubscriptionTransactionFilter {
