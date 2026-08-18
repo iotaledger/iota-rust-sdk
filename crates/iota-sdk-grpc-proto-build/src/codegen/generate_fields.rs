@@ -8,7 +8,7 @@ use proc_macro2::TokenStream;
 use prost_reflect::{FieldDescriptor, Kind, MessageDescriptor};
 use quote::quote;
 
-use crate::{ident::to_snake, index::ProtoIndex};
+use crate::{ident::to_snake, context::Context};
 
 /// Information about a transparent wrapper message (one that should be skipped
 /// in read_mask paths / field path builders).
@@ -93,27 +93,27 @@ pub fn parse_transparent_messages_from_pool(
 struct PackageContext<'a> {
     /// Package being generated, e.g. `iota.grpc.v1.command`.
     package: &'a str,
-    index: &'a ProtoIndex,
+    context: &'a Context,
     boxed_types: &'a [String],
 }
 
 impl PackageContext<'_> {
     fn message_path(&self, full_type_name: &str) -> TokenStream {
-        self.index
-            .message_path(&self.index.resolve(full_type_name), self.package)
+        self.context
+            .message_path(&self.context.resolve(full_type_name), self.package)
     }
 
     fn builder_path(&self, full_type_name: &str) -> TokenStream {
-        self.index
-            .builder_path(&self.index.resolve(full_type_name), self.package)
+        self.context
+            .builder_path(&self.context.resolve(full_type_name), self.package)
     }
 
     fn is_map_entry(&self, full_type_name: &str) -> bool {
-        self.index.resolve(full_type_name).is_map_entry()
+        self.context.resolve(full_type_name).is_map_entry()
     }
 
     fn transparent(&self, full_type_name: &str) -> Option<&TransparentInfo> {
-        self.index.transparent(full_type_name)
+        self.context.transparent(full_type_name)
     }
 
     /// True when prost boxes the field, which the field constants have to
@@ -126,21 +126,21 @@ impl PackageContext<'_> {
     }
 }
 
-pub(crate) fn generate_field_info(index: &ProtoIndex, out_dir: &Path, boxed_types: &[String]) {
-    for package in index.packages() {
+pub(crate) fn generate_field_info(context: &Context, out_dir: &Path, boxed_types: &[String]) {
+    for package in context.packages() {
         if package.contains("google") {
             continue;
         }
 
-        let context = PackageContext {
+        let package_context = PackageContext {
             package: &package,
-            index,
+            context,
             boxed_types,
         };
 
         let stream = generate_field_info_for_all_messages(
-            &context,
-            &index.messages_in_declaration_order(&package),
+            &package_context,
+            &context.messages_in_declaration_order(&package),
         );
 
         // Only generate file if there's actual content in the stream
@@ -359,7 +359,7 @@ fn generate_field_constant(
             //    graph
             let is_circular_reference = context.is_boxed_field(message, field)
                 && context
-                    .index
+                    .context
                     .has_reference_cycle(message.full_name(), full_type_name);
 
             if full_type_name.trim_start_matches('.') == message.full_name()

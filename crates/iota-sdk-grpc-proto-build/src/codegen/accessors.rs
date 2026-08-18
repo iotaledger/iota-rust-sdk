@@ -16,7 +16,7 @@ use quote::quote;
 use crate::{
     codegen::accessor_config::{AccessorMap, AccessorTypes},
     ident::sanitize_identifier,
-    index::ProtoIndex,
+    context::Context,
 };
 
 /// The fields prost stores directly on the generated struct: everything that is
@@ -100,26 +100,26 @@ fn qualified(name: &str) -> String {
 }
 
 pub(crate) fn generate_accessors(
-    index: &ProtoIndex,
+    context: &Context,
     out_dir: &Path,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
     accessor_map: &AccessorMap,
 ) {
-    for package in index.packages() {
+    for package in context.packages() {
         let mut buf = String::new();
         let mut stream = TokenStream::new();
 
         // Emit in the order the protos declare their messages, so a generated
         // file reads like the `.proto` it comes from.
-        let messages = index
+        let messages = context
             .all_messages_in_declaration_order(&package)
             .into_iter()
-            .filter(|message| !index.is_extern(message.full_name()));
+            .filter(|message| !context.is_extern(message.full_name()));
 
         for message in messages {
             stream.extend(generate_accessors_for_message(
-                index,
+                context,
                 &message,
                 boxed_types_prost,
                 boxed_types_accessor,
@@ -154,7 +154,7 @@ pub(crate) fn generate_accessors(
 }
 
 fn generate_accessors_for_message(
-    index: &ProtoIndex,
+    context: &Context,
     message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
@@ -162,7 +162,7 @@ fn generate_accessors_for_message(
 ) -> TokenStream {
     let package = format!("{}.__accessors", qualified(message.package_name()));
     let message_rust_path =
-        TokenStream::from_str(&index.accessor_type_path(&package, &qualified(message.full_name())))
+        TokenStream::from_str(&context.accessor_type_path(&package, &qualified(message.full_name())))
             .unwrap();
 
     let mut functions = TokenStream::new();
@@ -181,7 +181,7 @@ fn generate_accessors_for_message(
     }
 
     functions.extend(generate_accessors_functions(
-        index,
+        context,
         message,
         boxed_types_prost,
         boxed_types_accessor,
@@ -261,7 +261,7 @@ fn message_needs_default_instance(message: &MessageDescriptor, accessor_map: &Ac
 }
 
 fn generate_accessors_functions(
-    index: &ProtoIndex,
+    context: &Context,
     message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
@@ -271,7 +271,7 @@ fn generate_accessors_functions(
 
     for field in struct_fields(message) {
         accessors.extend(generate_accessors_functions_for_field(
-            index,
+            context,
             message,
             &field,
             None,
@@ -284,7 +284,7 @@ fn generate_accessors_functions(
     for oneof in real_oneofs(message) {
         for field in oneof.fields() {
             accessors.extend(generate_accessors_functions_for_field(
-                index,
+                context,
                 message,
                 &field,
                 Some(&oneof),
@@ -312,7 +312,7 @@ fn is_field_boxed_from_config(
 }
 
 fn generate_accessors_functions_for_field(
-    index: &ProtoIndex,
+    context: &Context,
     message: &MessageDescriptor,
     field: &FieldDescriptor,
     oneof: Option<&OneofDescriptor>,
@@ -332,7 +332,7 @@ fn generate_accessors_functions_for_field(
 
     // Generate only the requested accessor types
     generate_selective_accessors_for_field(
-        index,
+        context,
         message,
         field,
         oneof,
@@ -343,7 +343,7 @@ fn generate_accessors_functions_for_field(
 }
 
 fn generate_selective_accessors_for_field(
-    index: &ProtoIndex,
+    context: &Context,
     message: &MessageDescriptor,
     field: &FieldDescriptor,
     oneof: Option<&OneofDescriptor>,
@@ -379,7 +379,7 @@ fn generate_selective_accessors_for_field(
 
     let is_boxed_in_accessor = is_field_boxed_from_config(message, field, boxed_types_accessor);
     let is_boxed_in_prost = is_field_boxed_from_config(message, field, boxed_types_prost);
-    let base_field_type_path = field_type_path(descriptor, index, &package);
+    let base_field_type_path = field_type_path(descriptor, context, &package);
     let field_type_path = if is_boxed_in_accessor {
         TokenStream::from_str(&format!(
             "::prost::alloc::boxed::Box<{base_field_type_path}>"
@@ -422,9 +422,9 @@ fn generate_selective_accessors_for_field(
     };
 
     let default_instance =
-        TokenStream::from_str(&type_default(descriptor, index, &package)).unwrap();
+        TokenStream::from_str(&type_default(descriptor, context, &package)).unwrap();
     let ref_return_type =
-        TokenStream::from_str(&ref_return_type(descriptor, index, &package)).unwrap();
+        TokenStream::from_str(&ref_return_type(descriptor, context, &package)).unwrap();
     let field_as = if is_ref_return(descriptor) {
         quote! {field as _}
     } else {
@@ -433,9 +433,9 @@ fn generate_selective_accessors_for_field(
 
     if let Some((key, value)) = &map_entry_fields(field) {
         // Map Types
-        let key_type = TokenStream::from_str(&map_entry_type_path(key, index, &package)).unwrap();
+        let key_type = TokenStream::from_str(&map_entry_type_path(key, context, &package)).unwrap();
         let value_type =
-            TokenStream::from_str(&map_entry_type_path(value, index, &package)).unwrap();
+            TokenStream::from_str(&map_entry_type_path(value, context, &package)).unwrap();
 
         let mut accessors = TokenStream::new();
 
@@ -532,7 +532,7 @@ fn generate_selective_accessors_for_field(
         }
 
         let oneof_field = quote::format_ident!("{}", sanitize_identifier(oneof.name()));
-        let oneof_type_path = TokenStream::from_str(&index.accessor_type_path(
+        let oneof_type_path = TokenStream::from_str(&context.accessor_type_path(
             &package,
             &format!(
                 "{}.{}",
@@ -882,7 +882,7 @@ fn generate_const_default_functions(
     }
 }
 
-fn type_default(field: &FieldDescriptorProto, index: &ProtoIndex, package: &str) -> String {
+fn type_default(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("0.0f32"),
         Type::Double => String::from("0.0f64"),
@@ -894,13 +894,13 @@ fn type_default(field: &FieldDescriptorProto, index: &ProtoIndex, package: &str)
         Type::String => String::from("\"\""),
         Type::Bytes => String::from("&[]"),
         Type::Group | Type::Message => {
-            let ty = index.accessor_type_path(package, field.type_name());
+            let ty = context.accessor_type_path(package, field.type_name());
             format!("{ty}::default_instance() as _")
         }
     }
 }
 
-fn ref_return_type(field: &FieldDescriptorProto, index: &ProtoIndex, package: &str) -> String {
+fn ref_return_type(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),
         Type::Double => String::from("f64"),
@@ -912,7 +912,7 @@ fn ref_return_type(field: &FieldDescriptorProto, index: &ProtoIndex, package: &s
         Type::String => String::from("&str"),
         Type::Bytes => String::from("&[u8]"),
         Type::Group | Type::Message => {
-            let ty = index.accessor_type_path(package, field.type_name());
+            let ty = context.accessor_type_path(package, field.type_name());
             format!("&{ty}")
         }
     }
@@ -955,7 +955,7 @@ fn use_into_for_setter(field: &FieldDescriptorProto) -> bool {
 /// Enums resolve to the generated enum type, not to the `i32` prost stores them
 /// in: the accessors convert with `.into()` at the assignment. Contrast
 /// [`map_entry_type_path`], which has to name the storage type.
-fn field_type_path(field: &FieldDescriptorProto, index: &ProtoIndex, package: &str) -> String {
+fn field_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),
         Type::Double => String::from("f64"),
@@ -967,14 +967,14 @@ fn field_type_path(field: &FieldDescriptorProto, index: &ProtoIndex, package: &s
         Type::String => String::from("String"),
         Type::Bytes => String::from("::prost::bytes::Bytes"),
         Type::Group | Type::Message | Type::Enum => {
-            index.accessor_type_path(package, field.type_name())
+            context.accessor_type_path(package, field.type_name())
         }
     }
 }
 
 /// The Rust type prost stores a map key or value in, as a path relative to
 /// `package`. Enum values are stored as `i32`.
-fn map_entry_type_path(field: &FieldDescriptorProto, index: &ProtoIndex, package: &str) -> String {
+fn map_entry_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),
         Type::Double => String::from("f64"),
@@ -985,6 +985,6 @@ fn map_entry_type_path(field: &FieldDescriptorProto, index: &ProtoIndex, package
         Type::Bool => String::from("bool"),
         Type::String => String::from("String"),
         Type::Bytes => String::from("::prost::bytes::Bytes"),
-        Type::Group | Type::Message => index.accessor_type_path(package, field.type_name()),
+        Type::Group | Type::Message => context.accessor_type_path(package, field.type_name()),
     }
 }

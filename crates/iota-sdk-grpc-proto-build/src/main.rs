@@ -25,13 +25,13 @@
 mod codegen;
 mod extern_paths;
 mod ident;
-mod index;
+mod context;
 
 use std::path::{Path, PathBuf};
 
 use prost_reflect::DescriptorPool;
 
-use crate::index::ProtoIndex;
+use crate::context::Context;
 
 /// Fields that prost boxes in the generated structs, which accessor generation
 /// has to mirror in its signatures.
@@ -104,17 +104,17 @@ fn main() {
 
     codegen::generate_service_methods::generate_service_method_paths(&descriptor_pool, &out_dir);
 
-    let index = ProtoIndex::build(descriptor_pool);
+    let context = Context::build(descriptor_pool);
 
     codegen::accessors::generate_accessors(
-        &index,
+        &context,
         &out_dir,
         &prost_boxed_fields,
         &boxed_types_accessor,
-        index.accessor_map(),
+        context.accessor_map(),
     );
 
-    codegen::generate_fields::generate_field_info(&index, &out_dir, &boxed_types_field_info);
+    codegen::generate_fields::generate_field_info(&context, &out_dir, &boxed_types_field_info);
 
     verify_generated_files_committed(&out_dir);
 }

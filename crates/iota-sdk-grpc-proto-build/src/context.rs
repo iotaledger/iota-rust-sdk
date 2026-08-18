@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The single index over the compiled protobuf descriptors.
+//! The single context over the compiled protobuf descriptors.
 //!
 //! `protox` produces a [`DescriptorPool`] that already resolves names, nesting,
 //! map entries and options across files, so this type adds only what the pool
@@ -30,7 +30,7 @@ use crate::{
     ident::{to_snake, to_upper_camel},
 };
 
-pub(crate) struct ProtoIndex {
+pub(crate) struct Context {
     pool: DescriptorPool,
     /// Types resolved to a path outside the generated code, such as the
     /// `google.protobuf` well-known types.
@@ -45,7 +45,7 @@ pub(crate) struct ProtoIndex {
     transparent: HashMap<String, TransparentInfo>,
 }
 
-impl ProtoIndex {
+impl Context {
     pub(crate) fn build(pool: DescriptorPool) -> Self {
         let mut versions = BTreeMap::new();
 
@@ -330,7 +330,7 @@ fn outer_modules(message: &MessageDescriptor) -> Vec<proc_macro2::Ident> {
 mod tests {
     use super::*;
 
-    fn index() -> ProtoIndex {
+    fn context() -> Context {
         let fixtures =
             std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
         let mut compiler = protox::Compiler::new([&fixtures]).unwrap();
@@ -341,22 +341,22 @@ mod tests {
                 "fixture/grpc/v2/nesting_a.proto",
             ])
             .unwrap();
-        ProtoIndex::build(compiler.descriptor_pool())
+        Context::build(compiler.descriptor_pool())
     }
 
     fn message_path(full_type_name: &str, from_package: &str) -> String {
-        let index = index();
-        let message = index.resolve(full_type_name);
-        index
+        let context = context();
+        let message = context.resolve(full_type_name);
+        context
             .message_path(&message, from_package)
             .to_string()
             .replace(' ', "")
     }
 
     fn builder_path(full_type_name: &str, from_package: &str) -> String {
-        let index = index();
-        let message = index.resolve(full_type_name);
-        index
+        let context = context();
+        let message = context.resolve(full_type_name);
+        context
             .builder_path(&message, from_package)
             .to_string()
             .replace(' ', "")
@@ -380,7 +380,7 @@ mod tests {
             message_path(".fixture.grpc.v2.a.Input", "fixture.grpc.v1.b"),
             "crate::v2::a::Input"
         );
-        assert_eq!(index().version("fixture.grpc.v2.a"), "v2");
+        assert_eq!(context().version("fixture.grpc.v2.a"), "v2");
     }
 
     #[test]
@@ -435,32 +435,32 @@ mod tests {
 
     #[test]
     fn resolve_accepts_both_leading_dot_and_bare_names() {
-        assert_eq!(index().resolve(".fixture.grpc.v1.a.Input").name(), "Input");
-        assert_eq!(index().resolve("fixture.grpc.v1.a.Input").name(), "Input");
+        assert_eq!(context().resolve(".fixture.grpc.v1.a.Input").name(), "Input");
+        assert_eq!(context().resolve("fixture.grpc.v1.a.Input").name(), "Input");
     }
 
     #[test]
     fn map_entries_are_recognised() {
         assert!(
-            index()
+            context()
                 .resolve(".fixture.grpc.v1.b.Input.EntriesEntry")
                 .is_map_entry()
         );
-        assert!(!index().resolve(".fixture.grpc.v1.b.Input").is_map_entry());
+        assert!(!context().resolve(".fixture.grpc.v1.b.Input").is_map_entry());
     }
 
     #[test]
     fn reference_cycles_are_detected_in_both_directions() {
-        let index = index();
-        assert!(index.has_reference_cycle(".fixture.grpc.v1.a.Loop", ".fixture.grpc.v1.a.Step"));
-        assert!(index.has_reference_cycle(".fixture.grpc.v1.a.Step", ".fixture.grpc.v1.a.Loop"));
-        assert!(!index.has_reference_cycle(".fixture.grpc.v1.a.Input", ".fixture.grpc.v1.a.Loop"));
+        let context = context();
+        assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Loop", ".fixture.grpc.v1.a.Step"));
+        assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Step", ".fixture.grpc.v1.a.Loop"));
+        assert!(!context.has_reference_cycle(".fixture.grpc.v1.a.Input", ".fixture.grpc.v1.a.Loop"));
     }
 
     /// The option extensions live in the real protos, so this one compiles
     /// those instead of the fixtures.
     #[test]
-    fn proto_options_are_indexed() {
+    fn proto_options_are_contexted() {
         let proto_dir = std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR"))
             .join("../iota-sdk-grpc-types/proto")
             .canonicalize()
@@ -469,31 +469,31 @@ mod tests {
         compiler
             .open_files(["iota/grpc/v1/transaction.proto"])
             .unwrap();
-        let index = ProtoIndex::build(compiler.descriptor_pool());
+        let context = Context::build(compiler.descriptor_pool());
 
         // `BalanceChanges` is `field_mask_transparent`, `ExecutedTransaction` is not.
         assert!(
-            index
+            context
                 .transparent(".iota.grpc.v1.transaction.BalanceChanges")
                 .is_some()
         );
         assert!(
-            index
+            context
                 .transparent("iota.grpc.v1.transaction.BalanceChanges")
                 .is_some()
         );
         assert!(
-            index
+            context
                 .transparent(".iota.grpc.v1.transaction.ExecutedTransaction")
                 .is_none()
         );
 
-        assert!(!index.accessor_map().is_empty());
+        assert!(!context.accessor_map().is_empty());
     }
 
     #[test]
     fn root_messages_are_yielded_in_declaration_order() {
-        let names: Vec<_> = index()
+        let names: Vec<_> = context()
             .messages_in_declaration_order("fixture.grpc.v1.a")
             .iter()
             .map(|message| message.name().to_owned())
@@ -503,7 +503,7 @@ mod tests {
 
     #[test]
     fn all_messages_follow_each_parent_with_its_children_and_skip_map_entries() {
-        let names: Vec<_> = index()
+        let names: Vec<_> = context()
             .all_messages_in_declaration_order("fixture.grpc.v1.a")
             .iter()
             .map(|message| message.full_name().to_owned())
@@ -520,7 +520,7 @@ mod tests {
         );
 
         // `Input.EntriesEntry` backs the map field and has no generated type.
-        let names: Vec<_> = index()
+        let names: Vec<_> = context()
             .all_messages_in_declaration_order("fixture.grpc.v1.b")
             .iter()
             .map(|message| message.full_name().to_owned())
