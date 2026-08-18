@@ -7,10 +7,10 @@ import iota_sdk.ObjectId
 import kotlinx.coroutines.runBlocking
 
 // The `view_demo` package published on testnet.
-const val PACKAGE = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4"
+const val VIEW_DEMO_PACKAGE = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4"
 
 // A shared `view_demo::shop::Shop` created when the package was published.
-const val SHOP = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
+const val VIEW_DEMO_SHOP = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 
 fun main() = runBlocking {
     try {
@@ -24,7 +24,8 @@ fun main() = runBlocking {
 
         val priceArgs = listOf(MoveViewArg.u64(100uL), MoveViewArg.u64(25uL))
 
-        val priceResult = client.moveViewCall("$PACKAGE::shop::discounted_price", null, priceArgs)
+        val priceResult =
+            client.moveViewCall("$VIEW_DEMO_PACKAGE::shop::discounted_price", null, priceArgs)
 
         if (priceResult.error != null) {
             println("Error: ${priceResult.error}")
@@ -44,7 +45,7 @@ fun main() = runBlocking {
         // `u64` is passed as a string so large values survive JSON.
         val priceJsonResult =
             client.moveViewCallJson(
-                "$PACKAGE::shop::discounted_price",
+                "$VIEW_DEMO_PACKAGE::shop::discounted_price",
                 null,
                 listOf("\"100\"", "\"25\""),
             )
@@ -64,11 +65,11 @@ fun main() = runBlocking {
         println("=== Example 3: moveViewCall() with typed arguments (shared object) ===")
         println()
 
-        val objectId = ObjectId.fromHex(SHOP)
+        val objectId = ObjectId.fromHex(VIEW_DEMO_SHOP)
 
         val shopArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.u64(1uL))
 
-        val shopResult = client.moveViewCall("$PACKAGE::shop::sale_at", null, shopArgs)
+        val shopResult = client.moveViewCall("$VIEW_DEMO_PACKAGE::shop::sale_at", null, shopArgs)
 
         if (shopResult.error != null) {
             println("Shop Error: ${shopResult.error}")
@@ -87,9 +88,9 @@ fun main() = runBlocking {
 
         val shopJsonResult =
             client.moveViewCallJson(
-                "$PACKAGE::shop::sale_at",
+                "$VIEW_DEMO_PACKAGE::shop::sale_at",
                 null,
-                listOf("\"$SHOP\"", "\"1\""),
+                listOf("\"$VIEW_DEMO_SHOP\"", "\"1\""),
             )
 
         if (shopJsonResult.error != null) {

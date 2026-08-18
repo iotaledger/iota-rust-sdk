@@ -23,8 +23,8 @@ async def main():
 
     price_args = [MoveViewArg.u64(100), MoveViewArg.u64(25)]
 
-    result = await client.move_view_call(
-        f"{PACKAGE}::shop::discounted_price", None, price_args)
+    result = await client.move_view_call(f"{PACKAGE}::shop::discounted_price",
+                                         None, price_args)
 
     if result.error is not None:
         print("Error:", result.error)
