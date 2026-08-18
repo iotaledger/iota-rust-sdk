@@ -479,8 +479,11 @@ mod tests {
             .verify_personal_message(&message, &signature)
             .unwrap();
 
-        signer
-            .public_key()
+        let public_key = signer.public_key();
+        public_key
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+        iota_types::PublicKey::Secp256k1(public_key)
             .verify_personal_message(&message, &signature)
             .unwrap();
 
