@@ -9,7 +9,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
         var gasStationUrl = "http://0.0.0.0:9527"
         var gasStationAuthToken = "test"
-        var keypair = Ed25519PrivateKey.generate()
+        var keypair = Ed25519PrivateKey.random()
         var sender = keypair.publicKey().deriveAddress()
         var signer = TransactionSigner.fromEd25519(keypair)
 

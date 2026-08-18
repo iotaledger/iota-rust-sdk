@@ -44,7 +44,7 @@ struct PublishUpgradeExample {
     print("Digest: \(digest.toBase58())")
 
     // Create a random private key to derive a sender address and for signing
-    let privateKey = Ed25519PrivateKey.generate()
+    let privateKey = Ed25519PrivateKey.random()
     let sender = privateKey.publicKey().deriveAddress()
     print("Sender: \(sender.toHex())")
 

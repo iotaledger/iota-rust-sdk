@@ -63,7 +63,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	// Create a random private key to derive a sender address
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	sender := privateKey.PublicKey().DeriveAddress()
 
 	// Fund the sender address for gas payment

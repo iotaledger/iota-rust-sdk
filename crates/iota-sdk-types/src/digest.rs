@@ -50,7 +50,7 @@ impl Digest {
     /// Generates a new digest from the provided random number generator.
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -62,7 +62,7 @@ impl Digest {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Returns a slice to the inner array representation of this digest.
@@ -321,11 +321,11 @@ macro_rules! impl_digest_wrapper {
             /// Generates a new digest from the provided random number generator.
             #[cfg(feature = "rand")]
             #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-            pub fn generate<R>(rng: R) -> Self
+            pub fn random_with<R>(rng: R) -> Self
             where
                 R: rand_core::RngCore + rand_core::CryptoRng,
             {
-                Self(Digest::generate(rng))
+                Self(Digest::random_with(rng))
             }
 
             /// Generates a new random digest.
