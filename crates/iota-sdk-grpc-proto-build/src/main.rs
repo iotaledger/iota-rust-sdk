@@ -23,9 +23,9 @@
 //!    what is committed.
 
 mod codegen;
+mod context;
 mod extern_paths;
 mod ident;
-mod context;
 
 use std::path::{Path, PathBuf};
 
@@ -111,7 +111,6 @@ fn main() {
         &out_dir,
         &prost_boxed_fields,
         &boxed_types_accessor,
-        context.accessor_map(),
     );
 
     codegen::generate_fields::generate_field_info(&context, &out_dir, &boxed_types_field_info);

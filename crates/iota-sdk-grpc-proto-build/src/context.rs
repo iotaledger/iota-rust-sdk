@@ -14,7 +14,7 @@
 //! the boxing config carry a leading dot. Everything here accepts either and
 //! normalizes on the way in.
 
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 use proc_macro2::TokenStream;
@@ -35,8 +35,6 @@ pub(crate) struct Context {
     /// Types resolved to a path outside the generated code, such as the
     /// `google.protobuf` well-known types.
     extern_paths: ExternPaths,
-    /// Version module per package, e.g. `iota.grpc.v1.types` -> `v1`.
-    versions: BTreeMap<String, String>,
     /// Accessor annotations, keyed as [`parse_proto_accessors_from_pool`]
     /// produces them.
     accessors: AccessorMap,
@@ -47,31 +45,12 @@ pub(crate) struct Context {
 
 impl Context {
     pub(crate) fn build(pool: DescriptorPool) -> Self {
-        let mut versions = BTreeMap::new();
-
-        for file in pool.files() {
-            // The version is the `vN` segment of the file path, e.g.
-            // `iota/grpc/v1/types.proto` -> `v1`.
-            let version = file
-                .name()
-                .split('/')
-                .find(|part| {
-                    part.starts_with('v')
-                        && part.len() > 1
-                        && part[1..].chars().all(|c| c.is_ascii_digit())
-                })
-                .unwrap_or("v1")
-                .to_owned();
-            versions.insert(file.package_name().to_owned(), version);
-        }
-
         let accessors = parse_proto_accessors_from_pool(&pool);
         let transparent = parse_transparent_messages_from_pool(&pool);
 
         Self {
             pool,
             extern_paths: ExternPaths::new(&[], true).expect("built-in extern paths are valid"),
-            versions,
             accessors,
             transparent,
         }
@@ -136,13 +115,6 @@ impl Context {
     pub(crate) fn transparent(&self, full_type_name: &str) -> Option<&TransparentInfo> {
         self.transparent
             .get(&format!(".{}", full_type_name.trim_start_matches('.')))
-    }
-
-    pub(crate) fn version(&self, package: &str) -> &str {
-        self.versions
-            .get(package)
-            .map(String::as_str)
-            .unwrap_or("v1")
     }
 
     /// Every package of every compiled file, sorted, without a leading dot.
@@ -222,7 +194,7 @@ impl Context {
             return quote! { #name };
         }
 
-        let root = self.package_path(message.package_name());
+        let root = package_path(message.package_name());
         quote! { #root #(::#outer)* ::#name }
     }
 
@@ -241,7 +213,7 @@ impl Context {
             return quote! { #(#outer::)* #builder };
         }
 
-        let root = self.package_path(message.package_name());
+        let root = package_path(message.package_name());
         if !outer.is_empty() {
             // A nested message's builder has no path from outside its own
             // package: `_field_impls` is private, and at the package root the
@@ -305,13 +277,24 @@ impl Context {
             _ => false,
         })
     }
+}
 
-    /// `crate::v1::types` for package `iota.grpc.v1.types`.
-    fn package_path(&self, package: &str) -> TokenStream {
-        let version = format_ident!("{}", self.version(package));
-        let module = format_ident!("{}", package.split('.').next_back().unwrap_or(package));
-        quote! { crate::#version::#module }
-    }
+/// Convert proto package to rust module path.
+/// Generated rust modules live in `crate::proto`.
+fn package_path(package: &str) -> TokenStream {
+    let path = package.split('.').collect::<Vec<_>>().join("::");
+    let module = if let Some(path) = path.strip_prefix("iota::grpc::v") {
+        // `crate::proto::iota::grpc::v1` is re-exported as `crate::v1`
+        format!("crate::v{path}")
+    } else if let Some(path) = path.strip_prefix("google") {
+        // `crate::proto::google` is re-exported as `crate::google`
+        format!("crate::google{path}")
+    } else {
+        // generic case
+        format!("crate::proto::{path}")
+    };
+    let path: syn::Path = syn::parse_str(module.as_str()).unwrap();
+    quote! { #path }
 }
 
 /// snake_case modules of the enclosing messages, outermost first.
@@ -375,15 +358,6 @@ mod tests {
     }
 
     #[test]
-    fn same_name_in_different_versions_keeps_its_own_version_module() {
-        assert_eq!(
-            message_path(".fixture.grpc.v2.a.Input", "fixture.grpc.v1.b"),
-            "crate::v2::a::Input"
-        );
-        assert_eq!(context().version("fixture.grpc.v2.a"), "v2");
-    }
-
-    #[test]
     fn nested_messages_are_qualified_by_their_outer_messages() {
         assert_eq!(
             message_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.b"),
@@ -435,7 +409,10 @@ mod tests {
 
     #[test]
     fn resolve_accepts_both_leading_dot_and_bare_names() {
-        assert_eq!(context().resolve(".fixture.grpc.v1.a.Input").name(), "Input");
+        assert_eq!(
+            context().resolve(".fixture.grpc.v1.a.Input").name(),
+            "Input"
+        );
         assert_eq!(context().resolve("fixture.grpc.v1.a.Input").name(), "Input");
     }
 
@@ -454,13 +431,15 @@ mod tests {
         let context = context();
         assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Loop", ".fixture.grpc.v1.a.Step"));
         assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Step", ".fixture.grpc.v1.a.Loop"));
-        assert!(!context.has_reference_cycle(".fixture.grpc.v1.a.Input", ".fixture.grpc.v1.a.Loop"));
+        assert!(
+            !context.has_reference_cycle(".fixture.grpc.v1.a.Input", ".fixture.grpc.v1.a.Loop")
+        );
     }
 
     /// The option extensions live in the real protos, so this one compiles
     /// those instead of the fixtures.
     #[test]
-    fn proto_options_are_contexted() {
+    fn proto_options_are_parsed() {
         let proto_dir = std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR"))
             .join("../iota-sdk-grpc-types/proto")
             .canonicalize()

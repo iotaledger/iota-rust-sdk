@@ -15,30 +15,24 @@ use quote::quote;
 
 use crate::{
     codegen::accessor_config::{AccessorMap, AccessorTypes},
-    ident::sanitize_identifier,
     context::Context,
+    ident::sanitize_identifier,
 };
 
 /// The fields prost stores directly on the generated struct: everything that is
 /// not a member of a real `oneof`. A synthetic proto3-optional oneof is not a
 /// oneof as far as prost is concerned, so its field belongs here.
-fn struct_fields(message: &MessageDescriptor) -> Vec<FieldDescriptor> {
-    message
-        .fields()
-        .filter(|field| {
-            field
-                .containing_oneof()
-                .is_none_or(|oneof| oneof.is_synthetic())
-        })
-        .collect()
+fn struct_fields(message: &MessageDescriptor) -> impl Iterator<Item = FieldDescriptor> {
+    message.fields().filter(|field| {
+        field
+            .containing_oneof()
+            .is_none_or(|oneof| oneof.is_synthetic())
+    })
 }
 
 /// The `oneof` declarations prost turns into an enum, in declaration order.
-fn real_oneofs(message: &MessageDescriptor) -> Vec<OneofDescriptor> {
-    message
-        .oneofs()
-        .filter(|oneof| !oneof.is_synthetic())
-        .collect()
+fn real_oneofs(message: &MessageDescriptor) -> impl Iterator<Item = OneofDescriptor> {
+    message.oneofs().filter(|oneof| !oneof.is_synthetic())
 }
 
 /// Key and value fields of the entry message backing a map field, or `None`
@@ -104,10 +98,8 @@ pub(crate) fn generate_accessors(
     out_dir: &Path,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) {
     for package in context.packages() {
-        let mut buf = String::new();
         let mut stream = TokenStream::new();
 
         // Emit in the order the protos declare their messages, so a generated
@@ -123,7 +115,6 @@ pub(crate) fn generate_accessors(
                 &message,
                 boxed_types_prost,
                 boxed_types_accessor,
-                accessor_map,
             ));
         }
 
@@ -141,6 +132,7 @@ pub(crate) fn generate_accessors(
             let code = prettyplease::unparse(&ast);
 
             // Add IOTA license header
+            let mut buf = String::new();
             buf.push_str("// Copyright (c) Mysten Labs, Inc.\n");
             buf.push_str("// Modifications Copyright (c) 2026 IOTA Stiftung\n");
             buf.push_str("// SPDX-License-Identifier: Apache-2.0\n");
@@ -158,12 +150,12 @@ fn generate_accessors_for_message(
     message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
     let package = format!("{}.__accessors", qualified(message.package_name()));
-    let message_rust_path =
-        TokenStream::from_str(&context.accessor_type_path(&package, &qualified(message.full_name())))
-            .unwrap();
+    let message_rust_path = TokenStream::from_str(
+        &context.accessor_type_path(&package, &qualified(message.full_name())),
+    )
+    .unwrap();
 
     let mut functions = TokenStream::new();
 
@@ -171,7 +163,7 @@ fn generate_accessors_for_message(
     // generate it if so. We do this at the message level (instead of per-field)
     // to avoid generating multiple default_instance functions for the same message
     // if multiple fields need it.
-    let needs_default_instance = message_needs_default_instance(message, accessor_map);
+    let needs_default_instance = message_needs_default_instance(message, context.accessor_map());
 
     if needs_default_instance {
         functions.extend(generate_const_default_functions(
@@ -185,7 +177,6 @@ fn generate_accessors_for_message(
         message,
         boxed_types_prost,
         boxed_types_accessor,
-        accessor_map,
     ));
 
     // Only generate the impl block if there are any functions
@@ -265,7 +256,6 @@ fn generate_accessors_functions(
     message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
     let mut accessors = TokenStream::new();
 
@@ -277,7 +267,6 @@ fn generate_accessors_functions(
             None,
             boxed_types_prost,
             boxed_types_accessor,
-            accessor_map,
         ));
     }
 
@@ -290,7 +279,6 @@ fn generate_accessors_functions(
                 Some(&oneof),
                 boxed_types_prost,
                 boxed_types_accessor,
-                accessor_map,
             ));
         }
     }
@@ -318,12 +306,11 @@ fn generate_accessors_functions_for_field(
     oneof: Option<&OneofDescriptor>,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
     // Check if this field has the accessors custom option
     let accessor_types = match AccessorTypes::from_field(
         field.field_descriptor_proto(),
-        accessor_map,
+        context.accessor_map(),
         message.full_name(),
     ) {
         Some(types) => types,

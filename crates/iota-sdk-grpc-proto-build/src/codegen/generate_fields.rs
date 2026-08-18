@@ -8,7 +8,7 @@ use proc_macro2::TokenStream;
 use prost_reflect::{FieldDescriptor, Kind, MessageDescriptor};
 use quote::quote;
 
-use crate::{ident::to_snake, context::Context};
+use crate::{context::Context, ident::to_snake};
 
 /// Information about a transparent wrapper message (one that should be skipped
 /// in read_mask paths / field path builders).
