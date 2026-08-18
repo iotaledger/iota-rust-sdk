@@ -66,87 +66,61 @@ impl Verifier<UserSignature> for SimpleVerifier {
 
 crate::impl_iota_verifier!(SimpleVerifier);
 
-impl IotaVerifier for PublicKey {
-    fn verify_transaction(
-        &self,
-        transaction: &Transaction,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        match self {
-            #[cfg(feature = "ed25519")]
-            PublicKey::Ed25519(public_key) => public_key.verify_transaction(transaction, signature),
-            #[cfg(not(feature = "ed25519"))]
-            PublicKey::Ed25519(_) => Err(SignatureError::from_source(
-                "support for ed25519 is not enabled",
-            )),
-            #[cfg(feature = "secp256k1")]
-            PublicKey::Secp256k1(public_key) => {
-                public_key.verify_transaction(transaction, signature)
+// Implements `IotaVerifier` for `PublicKey`: schemes whose feature is
+// enabled delegate to the inner public key, disabled ones report the missing
+// feature.
+macro_rules! impl_iota_verifier_for_public_key {
+    ($($variant:ident = $feature:literal),+ $(,)?) => {
+        impl IotaVerifier for PublicKey {
+            fn verify_transaction(
+                &self,
+                transaction: &Transaction,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_transaction(transaction, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
             }
-            #[cfg(not(feature = "secp256k1"))]
-            PublicKey::Secp256k1(_) => Err(SignatureError::from_source(
-                "support for secp256k1 is not enabled",
-            )),
-            #[cfg(feature = "secp256r1")]
-            PublicKey::Secp256r1(public_key) => {
-                public_key.verify_transaction(transaction, signature)
-            }
-            #[cfg(not(feature = "secp256r1"))]
-            PublicKey::Secp256r1(_) => Err(SignatureError::from_source(
-                "support for secp256r1 is not enabled",
-            )),
-            #[cfg(feature = "passkey")]
-            PublicKey::Passkey(public_key) => public_key.verify_transaction(transaction, signature),
-            #[cfg(not(feature = "passkey"))]
-            PublicKey::Passkey(_) => Err(SignatureError::from_source(
-                "support for passkey is not enabled",
-            )),
-            _ => Err(SignatureError::from_source("unknown signature scheme")),
-        }
-    }
 
-    fn verify_personal_message(
-        &self,
-        message: &PersonalMessage<'_>,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        match self {
-            #[cfg(feature = "ed25519")]
-            PublicKey::Ed25519(public_key) => {
-                public_key.verify_personal_message(message, signature)
+            fn verify_personal_message(
+                &self,
+                message: &PersonalMessage<'_>,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_personal_message(message, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
             }
-            #[cfg(not(feature = "ed25519"))]
-            PublicKey::Ed25519(_) => Err(SignatureError::from_source(
-                "support for ed25519 is not enabled",
-            )),
-            #[cfg(feature = "secp256k1")]
-            PublicKey::Secp256k1(public_key) => {
-                public_key.verify_personal_message(message, signature)
-            }
-            #[cfg(not(feature = "secp256k1"))]
-            PublicKey::Secp256k1(_) => Err(SignatureError::from_source(
-                "support for secp256k1 is not enabled",
-            )),
-            #[cfg(feature = "secp256r1")]
-            PublicKey::Secp256r1(public_key) => {
-                public_key.verify_personal_message(message, signature)
-            }
-            #[cfg(not(feature = "secp256r1"))]
-            PublicKey::Secp256r1(_) => Err(SignatureError::from_source(
-                "support for secp256r1 is not enabled",
-            )),
-            #[cfg(feature = "passkey")]
-            PublicKey::Passkey(public_key) => {
-                public_key.verify_personal_message(message, signature)
-            }
-            #[cfg(not(feature = "passkey"))]
-            PublicKey::Passkey(_) => Err(SignatureError::from_source(
-                "support for passkey is not enabled",
-            )),
-            _ => Err(SignatureError::from_source("unknown signature scheme")),
         }
-    }
+    };
 }
+
+impl_iota_verifier_for_public_key!(
+    Ed25519 = "ed25519",
+    Secp256k1 = "secp256k1",
+    Secp256r1 = "secp256r1",
+    Passkey = "passkey",
+);
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
