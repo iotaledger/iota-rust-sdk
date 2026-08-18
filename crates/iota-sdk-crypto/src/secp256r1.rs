@@ -456,6 +456,13 @@ mod tests {
         iota_types::PublicKey::Secp256r1(public_key)
             .verify_transaction(&transaction, &signature)
             .unwrap();
+
+        // a different public key must not verify the signature
+        Secp256r1PrivateKey::new([7; 32])
+            .unwrap()
+            .public_key()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
     }
 
     #[proptest]
@@ -476,6 +483,13 @@ mod tests {
             .public_key()
             .verify_personal_message(&message, &signature)
             .unwrap();
+
+        // a different public key must not verify the signature
+        Secp256r1PrivateKey::new([7; 32])
+            .unwrap()
+            .public_key()
+            .verify_personal_message(&message, &signature)
+            .unwrap_err();
     }
 
     #[test]

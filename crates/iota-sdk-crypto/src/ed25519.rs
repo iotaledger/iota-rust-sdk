@@ -463,6 +463,12 @@ mod tests {
         PublicKey::Ed25519(public_key)
             .verify_transaction(&transaction, &signature)
             .unwrap();
+
+        // a different public key must not verify the signature
+        Ed25519PrivateKey::new([7; 32])
+            .public_key()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
     }
 
     #[proptest]
