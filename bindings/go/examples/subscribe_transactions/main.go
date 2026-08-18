@@ -23,7 +23,8 @@ const deadline = 60 * time.Second
 
 func main() {
 	client := iota_sdk.GraphQlClientNewLocalnet()
-	subscription := client.TransactionsSubscription(nil, nil)
+	kind := iota_sdk.TransactionBlockKindInputProgrammableTx
+	subscription := client.TransactionsSubscription(&iota_sdk.SubscriptionTransactionFilter{Kind: &kind}, nil)
 	defer subscription.Cancel()
 
 	// Cancelling unblocks a pending Next, which is what keeps the example from

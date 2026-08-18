@@ -26,7 +26,9 @@ async def generate_activity():
 
 async def main():
     client = GraphQlClient.new_localnet()
-    subscription = await client.transactions_subscription()
+    subscription = await client.transactions_subscription(
+        filter=SubscriptionTransactionFilter(
+            kind=TransactionBlockKindInput.PROGRAMMABLE_TX))
 
     activity = asyncio.create_task(generate_activity())
     # Cancelling unblocks a pending `next`, which is what keeps the example from

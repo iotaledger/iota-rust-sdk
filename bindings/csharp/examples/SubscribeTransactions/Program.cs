@@ -17,7 +17,9 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewLocalnet();
-        var subscription = await client.TransactionsSubscription();
+        var subscription = await client.TransactionsSubscription(
+            new SubscriptionTransactionFilter(Kind: TransactionBlockKindInput.ProgrammableTx)
+        );
 
         var activity = Task.Run(async () =>
         {

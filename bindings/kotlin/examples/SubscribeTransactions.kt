@@ -11,6 +11,8 @@
 import iota_sdk.Address
 import iota_sdk.FaucetClient
 import iota_sdk.GraphQlClient
+import iota_sdk.SubscriptionTransactionFilter
+import iota_sdk.TransactionBlockKindInput
 import iota_sdk.TransactionUpdate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +23,10 @@ const val DEADLINE_MILLIS = 60_000L
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newLocalnet()
-        val subscription = client.transactionsSubscription()
+        val subscription =
+            client.transactionsSubscription(
+                SubscriptionTransactionFilter(kind = TransactionBlockKindInput.PROGRAMMABLE_TX)
+            )
 
         val activity = launch {
             // Give the subscription a moment to connect before generating
