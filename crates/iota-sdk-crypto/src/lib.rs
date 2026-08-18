@@ -140,7 +140,7 @@ pub trait IotaVerifier {
 
 // Implements `IotaVerifier` for types implementing `Verifier<UserSignature>`,
 // handling the proper construction of the signing message.
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1"))]
 macro_rules! impl_iota_verifier {
     ($($type:ty),+ $(,)?) => {
         $(
@@ -164,6 +164,7 @@ macro_rules! impl_iota_verifier {
         )+
     };
 }
+
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 pub(crate) use impl_iota_verifier;
 
