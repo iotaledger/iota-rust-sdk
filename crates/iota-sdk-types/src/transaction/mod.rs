@@ -117,7 +117,7 @@ impl SenderSignedTransaction {
     }
 
     /// The signed transaction carried by this intent message.
-    pub fn transaction(&self) -> &SignedTransaction {
+    pub fn signed_transaction(&self) -> &SignedTransaction {
         &self.0
     }
 }
