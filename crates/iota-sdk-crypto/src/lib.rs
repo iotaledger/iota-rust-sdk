@@ -119,10 +119,11 @@ impl<T: Signer<UserSignature>> IotaSigner for T {
 ///
 /// # Note
 ///
-/// There is a blanket implementation of `IotaVerifier` for all `T` where `T:
-/// `[`Verifier`]`<`[`UserSignature`]`>` so it is generally recommended for a
-/// signer to implement `Verifier<UserSignature>` and rely on the blanket
-/// implementation which handles the proper construction of the signing message.
+/// This trait is implemented by the verifier and verifying key types of this
+/// crate as well as directly by the public key types of `iota-sdk-types`. The
+/// public key implementations validate the key bytes on every call, so when
+/// verifying many signatures with the same key it is cheaper to construct the
+/// corresponding verifying key once and verify with that instead.
 pub trait IotaVerifier {
     fn verify_transaction(
         &self,
@@ -136,25 +137,34 @@ pub trait IotaVerifier {
     ) -> Result<(), SignatureError>;
 }
 
-impl<T: Verifier<UserSignature>> IotaVerifier for T {
-    fn verify_transaction(
-        &self,
-        transaction: &Transaction,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        let message = transaction.signing_digest();
-        self.verify(&message, signature)
-    }
+// Implements `IotaVerifier` for types implementing `Verifier<UserSignature>`,
+// handling the proper construction of the signing message.
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+macro_rules! impl_iota_verifier {
+    ($($type:ty),+ $(,)?) => {
+        $(
+            impl $crate::IotaVerifier for $type {
+                fn verify_transaction(
+                    &self,
+                    transaction: &iota_types::Transaction,
+                    signature: &iota_types::UserSignature,
+                ) -> Result<(), $crate::SignatureError> {
+                    $crate::Verifier::verify(self, &transaction.signing_digest(), signature)
+                }
 
-    fn verify_personal_message(
-        &self,
-        message: &PersonalMessage<'_>,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        let message = message.signing_digest();
-        self.verify(&message, signature)
-    }
+                fn verify_personal_message(
+                    &self,
+                    message: &iota_types::PersonalMessage<'_>,
+                    signature: &iota_types::UserSignature,
+                ) -> Result<(), $crate::SignatureError> {
+                    $crate::Verifier::verify(self, &message.signing_digest(), signature)
+                }
+            }
+        )+
+    };
 }
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+pub(crate) use impl_iota_verifier;
 
 /// Bech32 prefix for IOTA private keys
 #[cfg(feature = "bech32")]

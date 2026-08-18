@@ -2,10 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{SimpleSignature, UserSignature};
+use iota_types::{PersonalMessage, PublicKey, SimpleSignature, Transaction, UserSignature};
 use signature::Verifier;
 
-use crate::SignatureError;
+use crate::{IotaVerifier, SignatureError};
 
 pub struct SimpleVerifier;
 
@@ -61,6 +61,90 @@ impl Verifier<UserSignature> for SimpleVerifier {
         };
 
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
+    }
+}
+
+crate::impl_iota_verifier!(SimpleVerifier);
+
+impl IotaVerifier for PublicKey {
+    fn verify_transaction(
+        &self,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        match self {
+            #[cfg(feature = "ed25519")]
+            PublicKey::Ed25519(public_key) => public_key.verify_transaction(transaction, signature),
+            #[cfg(not(feature = "ed25519"))]
+            PublicKey::Ed25519(_) => Err(SignatureError::from_source(
+                "support for ed25519 is not enabled",
+            )),
+            #[cfg(feature = "secp256k1")]
+            PublicKey::Secp256k1(public_key) => {
+                public_key.verify_transaction(transaction, signature)
+            }
+            #[cfg(not(feature = "secp256k1"))]
+            PublicKey::Secp256k1(_) => Err(SignatureError::from_source(
+                "support for secp256k1 is not enabled",
+            )),
+            #[cfg(feature = "secp256r1")]
+            PublicKey::Secp256r1(public_key) => {
+                public_key.verify_transaction(transaction, signature)
+            }
+            #[cfg(not(feature = "secp256r1"))]
+            PublicKey::Secp256r1(_) => Err(SignatureError::from_source(
+                "support for secp256r1 is not enabled",
+            )),
+            #[cfg(feature = "passkey")]
+            PublicKey::Passkey(public_key) => public_key.verify_transaction(transaction, signature),
+            #[cfg(not(feature = "passkey"))]
+            PublicKey::Passkey(_) => Err(SignatureError::from_source(
+                "support for passkey is not enabled",
+            )),
+            _ => Err(SignatureError::from_source("unknown signature scheme")),
+        }
+    }
+
+    fn verify_personal_message(
+        &self,
+        message: &PersonalMessage<'_>,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        match self {
+            #[cfg(feature = "ed25519")]
+            PublicKey::Ed25519(public_key) => {
+                public_key.verify_personal_message(message, signature)
+            }
+            #[cfg(not(feature = "ed25519"))]
+            PublicKey::Ed25519(_) => Err(SignatureError::from_source(
+                "support for ed25519 is not enabled",
+            )),
+            #[cfg(feature = "secp256k1")]
+            PublicKey::Secp256k1(public_key) => {
+                public_key.verify_personal_message(message, signature)
+            }
+            #[cfg(not(feature = "secp256k1"))]
+            PublicKey::Secp256k1(_) => Err(SignatureError::from_source(
+                "support for secp256k1 is not enabled",
+            )),
+            #[cfg(feature = "secp256r1")]
+            PublicKey::Secp256r1(public_key) => {
+                public_key.verify_personal_message(message, signature)
+            }
+            #[cfg(not(feature = "secp256r1"))]
+            PublicKey::Secp256r1(_) => Err(SignatureError::from_source(
+                "support for secp256r1 is not enabled",
+            )),
+            #[cfg(feature = "passkey")]
+            PublicKey::Passkey(public_key) => {
+                public_key.verify_personal_message(message, signature)
+            }
+            #[cfg(not(feature = "passkey"))]
+            PublicKey::Passkey(_) => Err(SignatureError::from_source(
+                "support for passkey is not enabled",
+            )),
+            _ => Err(SignatureError::from_source("unknown signature scheme")),
+        }
     }
 }
 
@@ -517,6 +601,8 @@ mod keypair {
             <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
         }
     }
+
+    crate::impl_iota_verifier!(SimpleVerifyingKey);
 
     #[cfg(feature = "ed25519")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
