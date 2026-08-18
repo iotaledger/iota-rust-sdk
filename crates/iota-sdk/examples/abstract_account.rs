@@ -69,7 +69,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
     builder
         // Publish the package and receive the upgrade cap
-        .publish(package_data)
+        .publish_package(package_data)
         .assign("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [assigned("upgrade_cap")]);
