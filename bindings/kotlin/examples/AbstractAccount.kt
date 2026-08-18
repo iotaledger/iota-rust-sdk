@@ -54,7 +54,7 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     // Build the `publish` PTB
     var builder = TransactionBuilder(sender).withClient(client)
     // Publish the package and receive the upgrade cap
-    builder.publish(packageData, "upgrade_cap")
+    builder.publishPackage(packageData, "upgrade_cap")
     // Transfer the upgrade cap to the sender address
     builder.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
 

@@ -59,7 +59,7 @@ fun main() = runBlocking {
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder(sender).withClient(client)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(packageData, "upgrade_cap")
+        builderPublish.publishPackage(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
         val txPublish = builderPublish.finish()

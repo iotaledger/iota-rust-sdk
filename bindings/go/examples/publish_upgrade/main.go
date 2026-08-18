@@ -70,7 +70,7 @@ func main() {
 	// Build the `publish` PTB
 	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 	// Publish the package and receive the upgrade cap in return
-	builderPublish.Publish(packageData, "upgrade_cap")
+	builderPublish.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()

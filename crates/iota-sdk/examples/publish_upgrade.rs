@@ -67,7 +67,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
         // Publish the package and receive the upgrade cap
-        .publish(package_data.clone())
+        .publish_package(package_data.clone())
         .assign("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [assigned("upgrade_cap")]);

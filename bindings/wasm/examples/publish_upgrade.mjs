@@ -60,7 +60,7 @@ if (faucetReceipt === null) {
 // Build the `publish` PTB
 let builder = new TransactionBuilder(sender).withClient(client);
 // Publish the package and receive the upgrade cap
-builder.publish(packageData, "upgrade_cap");
+builder.publishPackage(packageData, "upgrade_cap");
 // Transfer the upgrade cap to the sender address
 builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 let tx = await builder.finish();

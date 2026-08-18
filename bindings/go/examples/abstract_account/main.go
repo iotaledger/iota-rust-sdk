@@ -76,7 +76,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Build the `publish` PTB
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 	// Publish the package and receive the upgrade cap
-	builder.Publish(packageData, "upgrade_cap")
+	builder.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 

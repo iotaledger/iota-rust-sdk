@@ -981,7 +981,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Publish a move package.
-    pub fn publish(
+    pub fn publish_package(
         &mut self,
         package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Publish> {
