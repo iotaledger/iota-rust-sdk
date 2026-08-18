@@ -130,6 +130,7 @@ pub trait IotaVerifier {
         transaction: &Transaction,
         signature: &UserSignature,
     ) -> Result<(), SignatureError>;
+
     fn verify_personal_message(
         &self,
         message: &PersonalMessage<'_>,
