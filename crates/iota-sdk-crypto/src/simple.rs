@@ -283,7 +283,7 @@ mod keypair {
 
             let (label, doc) =
                 pkcs8::SecretDocument::from_pem(s).map_err(SignatureError::from_source)?;
-            pkcs8::PrivateKeyInfo::validate_pem_label(label)
+            pkcs8::PrivateKeyInfoRef::validate_pem_label(label)
                 .map_err(SignatureError::from_source)?;
             Self::from_der(doc.as_bytes())
         }

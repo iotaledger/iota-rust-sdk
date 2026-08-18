@@ -159,8 +159,10 @@ private fun shortenPackageIds(signature: String): String {
 
             if (end > index + 2) {
                 val candidate = signature.substring(index, end)
-                val shortAddress =
-                    runCatching { Address.fromHex(candidate).toShortHex() }.getOrNull()
+                val shortAddress = runCatching {
+                    Address.fromHex(candidate).toShortHex()
+                }
+                    .getOrNull()
                 shortened.append(shortAddress ?: candidate)
                 index = end
                 continue
@@ -240,11 +242,10 @@ private fun formatPolicyName(policy: Int): String =
         else -> "Unknown ($policy)"
     }
 
-private fun extractPolicy(contents: Value): Int? =
-    runCatching {
-            jsonParser.parseToJsonElement(contents).jsonObject["policy"]?.jsonPrimitive?.intOrNull
-        }
-        .getOrNull()
+private fun extractPolicy(contents: Value): Int? = runCatching {
+    jsonParser.parseToJsonElement(contents).jsonObject["policy"]?.jsonPrimitive?.intOrNull
+}
+    .getOrNull()
 
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =
@@ -295,15 +296,14 @@ private fun publishesPackageAsImmutable(tx: Transaction): Boolean {
     val programmableTx = programmableTransactionJson(tx) ?: return false
     val commands = programmableTx["commands"] as? JsonArray ?: return false
 
-    val publishIndexes =
-        commands.mapIndexedNotNull { index, command ->
-            val commandObject = command as? JsonObject ?: return@mapIndexedNotNull null
-            if (commandObject["command"]?.jsonPrimitive?.contentOrNull == "publish") {
-                index
-            } else {
-                null
-            }
+    val publishIndexes = commands.mapIndexedNotNull { index, command ->
+        val commandObject = command as? JsonObject ?: return@mapIndexedNotNull null
+        if (commandObject["command"]?.jsonPrimitive?.contentOrNull == "publish") {
+            index
+        } else {
+            null
         }
+    }
     if (publishIndexes.size != 1) {
         return false
     }
@@ -330,15 +330,14 @@ private fun usesUpgradeCapForMakeImmutable(tx: Transaction, upgradeCapId: Object
     val inputs = programmableTx["inputs"] as? JsonArray ?: return false
     val commands = programmableTx["commands"] as? JsonArray ?: return false
 
-    val upgradeCapInputs =
-        inputs.mapIndexedNotNull { index, input ->
-            val inputObject = input as? JsonObject ?: return@mapIndexedNotNull null
-            if (inputMatchesObjectId(inputObject, upgradeCapId.toHex())) {
-                index
-            } else {
-                null
-            }
+    val upgradeCapInputs = inputs.mapIndexedNotNull { index, input ->
+        val inputObject = input as? JsonObject ?: return@mapIndexedNotNull null
+        if (inputMatchesObjectId(inputObject, upgradeCapId.toHex())) {
+            index
+        } else {
+            null
         }
+    }
     if (upgradeCapInputs.isEmpty()) {
         return false
     }

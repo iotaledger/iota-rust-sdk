@@ -35,7 +35,7 @@ serde = [
   "dep:serde_with",
   "roaring/std",
 ]
-rand = ["dep:rand_core", "rand_core/getrandom"]
+rand = ["dep:getrandom_4", "dep:rand_core"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
@@ -46,10 +46,12 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs = { workspace = true, optional = true }
 # Hash support
 blake2 = { version = "0.10.6", optional = true }
-bnum = "0.12.0"
+bnum = "0.14.4"
 bs58 = "0.5.1"
-bytestring = "1.5.0"
+bytestring = "1.5.1"
 derive_more = { workspace = true, features = ["full"] }
+# OS RNG behind the `random()` constructors
+getrandom_4 = { workspace = true, optional = true }
 hex.workspace = true
 paste.workspace = true
 # proptest support
@@ -60,17 +62,14 @@ roaring.workspace = true
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }
-serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
+serde_with = { version = "3.22", default-features = false, features = ["alloc"], optional = true }
 strum = { workspace = true, features = ["derive"] }
 test-strategy = { workspace = true, optional = true }
 thiserror.workspace = true
-winnow = "0.7"
+winnow = "1.0"
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
-
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-rand_core = { workspace = true, optional = true, features = ["getrandom"] }
 
 [build-dependencies]
 filetime = "0.2"
@@ -78,7 +77,7 @@ filetime = "0.2"
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
-num-bigint = "0.4.6"
+num-bigint = "0.5.1"
 paste.workspace = true
 rand.workspace = true
 serde_json.workspace = true

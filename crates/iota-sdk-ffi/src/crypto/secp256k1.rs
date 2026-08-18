@@ -5,7 +5,6 @@ use iota_sdk::{
     crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
     types::SignatureScheme,
 };
-use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -44,7 +43,7 @@ impl Secp256k1PrivateKey {
 
     #[uniffi::constructor]
     pub fn random() -> Self {
-        Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::random_with(OsRng))
+        Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::random())
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary

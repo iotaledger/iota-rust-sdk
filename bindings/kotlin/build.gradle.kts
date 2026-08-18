@@ -3,10 +3,10 @@ import java.util.Base64
 import org.gradle.api.tasks.bundling.Jar
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
-    id("com.ncorti.ktfmt.gradle") version "0.25.0"
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.serialization") version "2.4.10"
+    id("com.ncorti.ktfmt.gradle") version "0.27.0"
+    id("com.vanniktech.maven.publish") version "0.37.0"
     application
     signing
 }
@@ -18,9 +18,9 @@ version = "0.0.1-alpha.4"
 repositories { mavenCentral() }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("net.java.dev.jna:jna:5.13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("net.java.dev.jna:jna:5.19.1")
 }
 
 kotlin { jvmToolchain(21) }
@@ -70,6 +70,7 @@ sourceSets {
         kotlin {
             srcDirs("lib", "examples")
             exclude("android-demo/**")
+            exclude("release/**")
         }
         resources {
             srcDir("lib")
@@ -116,7 +117,7 @@ tasks.register("compileWithErrors") {
 }
 
 mavenPublishing {
-    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     signAllPublications()
 
     coordinates("org.iota", "iota-sdk", version.toString())

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::types::SignatureScheme;
-use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -41,9 +40,7 @@ impl Bls12381PrivateKey {
 
     #[uniffi::constructor]
     pub fn random() -> Self {
-        Self(iota_sdk::crypto::bls12381::Bls12381PrivateKey::random_with(
-            OsRng,
-        ))
+        Self(iota_sdk::crypto::bls12381::Bls12381PrivateKey::random())
     }
 
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {
