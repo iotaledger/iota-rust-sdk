@@ -45,7 +45,7 @@ async def main():
     print(f"Digest: {digest.to_base58()}")
 
     # Create a random private key to derive a sender address and for signing
-    private_key = Ed25519PrivateKey.generate()
+    private_key = Ed25519PrivateKey.random()
     sender = private_key.public_key().derive_address()
     print(f"Sender: {sender.to_hex()}")
 

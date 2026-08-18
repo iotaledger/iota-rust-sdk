@@ -41,7 +41,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     package_data = MovePackageData.from_json(PRECOMPILED_PACKAGE)
 
     # Create a random private key to derive a sender address
-    private_key = Ed25519PrivateKey.generate()
+    private_key = Ed25519PrivateKey.random()
     sender = private_key.public_key().derive_address()
 
     # Fund the sender address for gas payment

@@ -49,7 +49,7 @@ func main() {
 	fmt.Printf("Digest: %s\n", digest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	publicKey := privateKey.PublicKey()
 	sender := publicKey.DeriveAddress()
 	fmt.Printf("Sender: %s\n", sender.ToHex())

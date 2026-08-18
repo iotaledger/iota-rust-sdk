@@ -29,7 +29,7 @@ async function setupAccount(client) {
   const packageData = MovePackageData.fromJson(PRECOMPILED_PACKAGE);
 
   // Create a random private key to derive a sender address
-  const privateKey = Ed25519PrivateKey.generate();
+  const privateKey = Ed25519PrivateKey.random();
   const sender = privateKey.publicKey().deriveAddress();
 
   // Fund the sender address for gas payment

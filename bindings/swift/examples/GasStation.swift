@@ -11,7 +11,7 @@ struct GasStationExample {
       let client = GraphQlClient.newLocalnet()
       let gasStationUrl = "http://0.0.0.0:9527"
       let gasStationAuthToken = "test"
-      let keypair = Ed25519PrivateKey.generate()
+      let keypair = Ed25519PrivateKey.random()
       let sender = keypair.publicKey().deriveAddress()
       let signer = TransactionSigner.fromEd25519(key: keypair)
 

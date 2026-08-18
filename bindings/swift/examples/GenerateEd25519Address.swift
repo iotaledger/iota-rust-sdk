@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct GenerateEd25519AddressExample {
   static func main() throws {
-    let privateKey = Ed25519PrivateKey.generate()
+    let privateKey = Ed25519PrivateKey.random()
     let privateKeyBech32 = try privateKey.toBech32()
     let publicKey = privateKey.publicKey()
     let flaggedPublicKey = publicKey.toFlaggedBytes()

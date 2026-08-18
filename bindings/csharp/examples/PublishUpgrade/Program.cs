@@ -23,7 +23,7 @@ class Program
         Console.WriteLine($"Dependencies: {packageData.Dependencies().Length}");
         Console.WriteLine($"Digest: {packageData.Digest().ToBase58()}");
 
-        var privateKey = Ed25519PrivateKey.Generate();
+        var privateKey = Ed25519PrivateKey.Random();
         var sender = privateKey.PublicKey().DeriveAddress();
         Console.WriteLine($"Sender: {sender.ToHex()}");
 
