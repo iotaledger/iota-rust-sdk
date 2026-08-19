@@ -28,7 +28,7 @@ class Program
         }
         else if (result.Results != null)
         {
-            Console.WriteLine($"Results: {result.Results}");
+            Console.WriteLine($"Results: {string.Join(", ", result.Results)}");
         }
         else
         {
@@ -49,7 +49,7 @@ class Program
         }
         else if (jsonResult.Results != null)
         {
-            Console.WriteLine($"JSON Results: {jsonResult.Results}");
+            Console.WriteLine($"JSON Results: {string.Join(", ", jsonResult.Results)}");
         }
         else
         {
@@ -75,7 +75,7 @@ class Program
         }
         else if (shopResult.Results != null)
         {
-            Console.WriteLine($"Shop Results: {shopResult.Results}");
+            Console.WriteLine($"Shop Results: {string.Join(", ", shopResult.Results)}");
         }
         else
         {
@@ -95,7 +95,7 @@ class Program
         }
         else if (shopJsonResult.Results != null)
         {
-            Console.WriteLine($"Shop JSON Results: {shopJsonResult.Results}");
+            Console.WriteLine($"Shop JSON Results: {string.Join(", ", shopJsonResult.Results)}");
         }
         else
         {
