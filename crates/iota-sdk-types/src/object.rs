@@ -80,6 +80,33 @@ impl crate::TreeDisplay for ObjectReference {
     }
 }
 
+/// An [`ObjectReference`] paired with the owner the object has at that version.
+///
+/// Not a wire type: this is how transaction effects report an object they
+/// touched, since a reference alone does not say who owns it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OwnedObjectReference {
+    /// The object's reference.
+    pub reference: ObjectReference,
+    /// The owner the object has at that version.
+    pub owner: Owner,
+}
+
+impl OwnedObjectReference {
+    /// Pairs a reference with the owner the object has at that version.
+    pub const fn new(reference: ObjectReference, owner: Owner) -> Self {
+        Self { reference, owner }
+    }
+}
+
+impl crate::TreeDisplay for OwnedObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Owned Object Reference")?;
+        w.child("Reference", &self.reference, false)?;
+        w.leaf("Owner", &self.owner, true)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -753,6 +780,7 @@ impl crate::TreeDisplay for GenesisObject {
 
 crate::impl_tree_display!(
     ObjectReference,
+    OwnedObjectReference,
     ObjectData,
     MoveStruct,
     Object,

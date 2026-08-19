@@ -4,7 +4,8 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, ObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version,
+    ObjectId, ObjectReference, OwnedObjectReference, Owner, TransactionDigest,
+    TransactionEventsDigest, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -442,7 +443,7 @@ impl TransactionEffectsV1 {
 
     /// The reference and owner, before this transaction, of every object it
     /// modified.
-    pub fn old_object_metadata(&self) -> Vec<(ObjectReference, Owner)> {
+    pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
             .filter_map(|changed| match changed.input_state {
@@ -450,7 +451,7 @@ impl TransactionEffectsV1 {
                     version,
                     digest,
                     owner,
-                } => Some((
+                } => Some(OwnedObjectReference::new(
                     ObjectReference::new(changed.object_id, version, digest),
                     owner,
                 )),
@@ -462,7 +463,7 @@ impl TransactionEffectsV1 {
     /// Objects (Move objects and packages) newly created by this transaction,
     /// paired with their owner. Excludes objects created and then wrapped
     /// within the same transaction.
-    pub fn created(&self) -> Vec<(ObjectReference, Owner)> {
+    pub fn created(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
             .filter(|changed| {
@@ -475,7 +476,7 @@ impl TransactionEffectsV1 {
     /// Objects that existed before this transaction and whose contents it
     /// updated (in-place mutations and system package upgrades), at their
     /// post-transaction reference and owner.
-    pub fn mutated(&self) -> Vec<(ObjectReference, Owner)> {
+    pub fn mutated(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
             .filter(|changed| changed.input_state.is_data())
@@ -485,7 +486,7 @@ impl TransactionEffectsV1 {
 
     /// Objects that were wrapped inside another object before this transaction
     /// and that it promoted back to top-level objects in the store.
-    pub fn unwrapped(&self) -> Vec<(ObjectReference, Owner)> {
+    pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
             .filter(|changed| {
@@ -531,7 +532,7 @@ impl TransactionEffectsV1 {
 
     /// The post-transaction reference and owner of the gas object, or `None`
     /// for a transaction that requires no gas (a system transaction).
-    pub fn gas_object(&self) -> Option<(ObjectReference, Owner)> {
+    pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
         self.output_reference(changed)
     }
@@ -539,13 +540,13 @@ impl TransactionEffectsV1 {
     /// The post-transaction reference and owner of a changed object, or `None`
     /// if this transaction removed it from the store. A package carries its own
     /// version; every other object takes the version this transaction assigned.
-    fn output_reference(&self, changed: &ChangedObject) -> Option<(ObjectReference, Owner)> {
+    fn output_reference(&self, changed: &ChangedObject) -> Option<OwnedObjectReference> {
         match changed.output_state {
-            ObjectOut::ObjectWrite { digest, owner } => Some((
+            ObjectOut::ObjectWrite { digest, owner } => Some(OwnedObjectReference::new(
                 ObjectReference::new(changed.object_id, self.lamport_version, digest),
                 owner,
             )),
-            ObjectOut::PackageWrite { version, digest } => Some((
+            ObjectOut::PackageWrite { version, digest } => Some(OwnedObjectReference::new(
                 ObjectReference::new(changed.object_id, version, digest),
                 Owner::Immutable,
             )),

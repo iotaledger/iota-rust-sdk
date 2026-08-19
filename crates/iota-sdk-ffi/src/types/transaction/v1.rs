@@ -460,13 +460,11 @@ pub struct OwnedObjectReference {
     pub owner: Arc<Owner>,
 }
 
-impl From<(iota_sdk::types::ObjectReference, iota_sdk::types::Owner)> for OwnedObjectReference {
-    fn from(
-        (reference, owner): (iota_sdk::types::ObjectReference, iota_sdk::types::Owner),
-    ) -> Self {
+impl From<iota_sdk::types::OwnedObjectReference> for OwnedObjectReference {
+    fn from(value: iota_sdk::types::OwnedObjectReference) -> Self {
         Self {
-            reference: reference.into(),
-            owner: Arc::new(owner.into()),
+            reference: value.reference.into(),
+            owner: Arc::new(value.owner.into()),
         }
     }
 }

@@ -70,7 +70,7 @@ mod tests {
                 .into_iter()
                 .chain(fx.mutated())
                 .chain(fx.unwrapped())
-                .map(|(object_ref, _)| object_ref.object_id);
+                .map(|owned| owned.reference.object_id);
             let removed = fx
                 .deleted()
                 .into_iter()
@@ -118,7 +118,7 @@ mod tests {
             let old_metadata: Vec<_> = fx
                 .old_object_metadata()
                 .into_iter()
-                .map(|(object_ref, _)| object_ref.object_id)
+                .map(|owned| owned.reference.object_id)
                 .collect();
             assert_eq!(modified, old_metadata);
         }
@@ -131,13 +131,13 @@ mod tests {
         let effects: TransactionEffects =
             bcs::from_bytes(&Base64::decode_vec(SPONSOR_TX_EFFECTS.trim()).unwrap()).unwrap();
         let sponsored = effects.as_v1();
-        let (gas_ref, _) = sponsored.gas_object().expect("a sponsored tx pays gas");
-        assert_eq!(gas_ref.version, sponsored.lamport_version);
+        let gas = sponsored.gas_object().expect("a sponsored tx pays gas");
+        assert_eq!(gas.reference.version, sponsored.lamport_version);
         assert!(
             sponsored
                 .mutated()
                 .iter()
-                .any(|(object_ref, _)| *object_ref == gas_ref),
+                .any(|owned| owned.reference == gas.reference),
             "the gas object is reported as mutated"
         );
 
