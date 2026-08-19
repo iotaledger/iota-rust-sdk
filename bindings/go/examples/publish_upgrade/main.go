@@ -49,7 +49,7 @@ func main() {
 	fmt.Printf("Digest: %s\n", digest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	publicKey := privateKey.PublicKey()
 	sender := publicKey.DeriveAddress()
 	fmt.Printf("Sender: %s\n", sender.ToHex())
@@ -70,7 +70,7 @@ func main() {
 	// Build the `publish` PTB
 	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 	// Publish the package and receive the upgrade cap in return
-	builderPublish.Publish(packageData, "upgrade_cap")
+	builderPublish.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()

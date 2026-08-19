@@ -5,7 +5,7 @@ from lib.iota_sdk import Ed25519PrivateKey, base64_encode
 
 
 def main():
-    private_key = Ed25519PrivateKey.generate()
+    private_key = Ed25519PrivateKey.random()
     private_key_bech32 = private_key.to_bech32()
     public_key = private_key.public_key()
     flagged_public_key = public_key.to_flagged_bytes()

@@ -29,7 +29,7 @@ async function setupAccount(client) {
   const packageData = MovePackageData.fromJson(PRECOMPILED_PACKAGE);
 
   // Create a random private key to derive a sender address
-  const privateKey = Ed25519PrivateKey.generate();
+  const privateKey = Ed25519PrivateKey.random();
   const sender = privateKey.publicKey().deriveAddress();
 
   // Fund the sender address for gas payment
@@ -42,7 +42,7 @@ async function setupAccount(client) {
   // Build the `publish` PTB
   let builder = new TransactionBuilder(sender).withClient(client);
   // Publish the package and receive the upgrade cap
-  builder.publish(packageData, "upgrade_cap");
+  builder.publishPackage(packageData, "upgrade_cap");
   // Transfer the upgrade cap to the sender address
   builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 

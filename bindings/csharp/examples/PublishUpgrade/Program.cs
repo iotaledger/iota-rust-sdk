@@ -23,7 +23,7 @@ class Program
         Console.WriteLine($"Dependencies: {packageData.Dependencies().Length}");
         Console.WriteLine($"Digest: {packageData.Digest().ToBase58()}");
 
-        var privateKey = Ed25519PrivateKey.Generate();
+        var privateKey = Ed25519PrivateKey.Random();
         var sender = privateKey.PublicKey().DeriveAddress();
         Console.WriteLine($"Sender: {sender.ToHex()}");
 
@@ -35,7 +35,7 @@ class Program
             throw new Exception("Failed to request coins from faucet");
 
         var builder = new TransactionBuilder(sender).WithClient(client);
-        builder.Publish(packageData, "upgrade_cap");
+        builder.PublishPackage(packageData, "upgrade_cap");
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
         var tx = await builder.Finish();
 

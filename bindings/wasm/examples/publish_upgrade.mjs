@@ -44,7 +44,7 @@ const digest = packageData.digest();
 console.log(`Digest: ${digest.toBase58()}`);
 
 // Create a random private key to derive a sender address and for signing
-const privateKey = Ed25519PrivateKey.generate();
+const privateKey = Ed25519PrivateKey.random();
 const sender = privateKey.publicKey().deriveAddress();
 console.log(`Sender: ${sender.toHex()}`);
 
@@ -60,7 +60,7 @@ if (faucetReceipt === null) {
 // Build the `publish` PTB
 let builder = new TransactionBuilder(sender).withClient(client);
 // Publish the package and receive the upgrade cap
-builder.publish(packageData, "upgrade_cap");
+builder.publishPackage(packageData, "upgrade_cap");
 // Transfer the upgrade cap to the sender address
 builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 let tx = await builder.finish();

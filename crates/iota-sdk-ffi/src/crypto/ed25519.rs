@@ -43,8 +43,8 @@ impl Ed25519PrivateKey {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::generate(
+    pub fn random() -> Self {
+        Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::random_with(
             OsRng,
         ))
     }
