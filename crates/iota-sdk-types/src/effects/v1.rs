@@ -4,8 +4,8 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
-    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectVersion, OwnedObjectReference,
-    Owner, TransactionDigest, TransactionEventsDigest, Version,
+    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion,
+    OwnedObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
 };
 
 /// Version 1 of TransactionEffects
@@ -609,6 +609,36 @@ impl TransactionEffectsV1 {
             |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::None,
             ObjectDigest::OBJECT_WRAPPED,
         )
+    }
+
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there: the created, mutated and unwrapped objects together.
+    /// Excludes the objects the transaction removed.
+    pub fn all_changed_objects(&self) -> Vec<(OwnedObjectReference, WriteKind)> {
+        let tagged = |kind| move |object| (object, kind);
+        self.mutated()
+            .into_iter()
+            .map(tagged(WriteKind::Mutate))
+            .chain(self.created().into_iter().map(tagged(WriteKind::Create)))
+            .chain(self.unwrapped().into_iter().map(tagged(WriteKind::Unwrap)))
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why: the deleted and wrapped objects together.
+    /// Excludes an object the transaction unwrapped and then deleted, which was
+    /// not in the store to begin with.
+    pub fn all_removed_objects(&self) -> Vec<(ObjectReference, ObjectRemoveKind)> {
+        let tagged = |kind| move |reference| (reference, kind);
+        self.deleted()
+            .into_iter()
+            .map(tagged(ObjectRemoveKind::Delete))
+            .chain(
+                self.wrapped()
+                    .into_iter()
+                    .map(tagged(ObjectRemoveKind::Wrap)),
+            )
+            .collect()
     }
 
     /// The post-transaction reference and owner of the gas object, or `None`

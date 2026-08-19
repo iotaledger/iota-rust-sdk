@@ -634,3 +634,57 @@ impl From<iota_sdk::types::ObjectChange> for ObjectChange {
         }
     }
 }
+
+/// How an object came to be in the store after a transaction wrote it.
+#[derive(uniffi::Enum)]
+pub enum WriteKind {
+    /// The object existed already and the transaction changed its contents.
+    Mutate,
+    /// The transaction created the object.
+    Create,
+    /// The object was wrapped inside another object, and the transaction
+    /// restored it to the store.
+    Unwrap,
+}
+
+impl From<iota_sdk::types::WriteKind> for WriteKind {
+    fn from(value: iota_sdk::types::WriteKind) -> Self {
+        match value {
+            iota_sdk::types::WriteKind::Mutate => Self::Mutate,
+            iota_sdk::types::WriteKind::Create => Self::Create,
+            iota_sdk::types::WriteKind::Unwrap => Self::Unwrap,
+        }
+    }
+}
+
+/// Why an object is no longer in the store after a transaction.
+#[derive(uniffi::Enum)]
+pub enum ObjectRemoveKind {
+    /// The transaction deleted the object.
+    Delete,
+    /// The transaction wrapped the object inside another one.
+    Wrap,
+}
+
+impl From<iota_sdk::types::ObjectRemoveKind> for ObjectRemoveKind {
+    fn from(value: iota_sdk::types::ObjectRemoveKind) -> Self {
+        match value {
+            iota_sdk::types::ObjectRemoveKind::Delete => Self::Delete,
+            iota_sdk::types::ObjectRemoveKind::Wrap => Self::Wrap,
+        }
+    }
+}
+
+/// An object still in the store after a transaction, and how it got there.
+#[derive(uniffi::Record)]
+pub struct ChangedObjectWrite {
+    pub object: OwnedObjectReference,
+    pub kind: WriteKind,
+}
+
+/// An object no longer in the store after a transaction, and why.
+#[derive(uniffi::Record)]
+pub struct RemovedObject {
+    pub reference: ObjectReference,
+    pub kind: ObjectRemoveKind,
+}

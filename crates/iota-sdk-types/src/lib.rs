@@ -158,7 +158,8 @@ pub use digest::{
 };
 pub use effects::{
     ChangedObject, IdOperation, InputSharedObject, ObjectChange, ObjectIn, ObjectOut,
-    TransactionEffects, TransactionEffectsV1, UnchangedSharedKind, UnchangedSharedObject,
+    ObjectRemoveKind, TransactionEffects, TransactionEffectsV1, UnchangedSharedKind,
+    UnchangedSharedObject, WriteKind,
 };
 pub use events::{Event, TransactionEvents};
 pub use execution_status::{

@@ -296,6 +296,54 @@ mod tests {
         assert!(effects.gas_object().is_none());
     }
 
+    /// The tagged unions are exactly the sets they are drawn from, so nothing
+    /// is dropped or double-counted, and each object carries the right tag.
+    #[test]
+    fn tagged_unions_cover_the_object_sets() {
+        use crate::{ObjectRemoveKind, WriteKind};
+
+        for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
+            let effects: TransactionEffects =
+                bcs::from_bytes(&Base64::decode_vec(fixture.trim()).unwrap()).unwrap();
+            let fx = effects.as_v1();
+
+            let changed = fx.all_changed_objects();
+            assert_eq!(
+                changed.len(),
+                fx.mutated().len() + fx.created().len() + fx.unwrapped().len()
+            );
+            assert!(!changed.is_empty(), "the fixture must change objects");
+            let of_kind = |kind| {
+                changed
+                    .iter()
+                    .filter(|(_, k)| *k == kind)
+                    .map(|(object, _)| *object)
+                    .collect::<Vec<_>>()
+            };
+            assert_eq!(of_kind(WriteKind::Mutate), fx.mutated());
+            assert_eq!(of_kind(WriteKind::Create), fx.created());
+            assert_eq!(of_kind(WriteKind::Unwrap), fx.unwrapped());
+
+            let removed = fx.all_removed_objects();
+            assert_eq!(removed.len(), fx.deleted().len() + fx.wrapped().len());
+            let removed_of_kind = |kind| {
+                removed
+                    .iter()
+                    .filter(|(_, k)| *k == kind)
+                    .map(|(reference, _)| *reference)
+                    .collect::<Vec<_>>()
+            };
+            assert_eq!(removed_of_kind(ObjectRemoveKind::Delete), fx.deleted());
+            assert_eq!(removed_of_kind(ObjectRemoveKind::Wrap), fx.wrapped());
+
+            // An object unwrapped and then deleted was never in the store, so it
+            // is not a removal.
+            for reference in fx.unwrapped_then_deleted() {
+                assert!(!removed.iter().any(|(removed, _)| *removed == reference));
+            }
+        }
+    }
+
     /// Every changed object falls into exactly one of the reported sets, so the
     /// sets partition `changed_objects` and never report an object twice.
     #[test]
@@ -449,6 +497,56 @@ impl crate::TreeDisplay for InputSharedObject {
         };
         w.leaf("Kind", &kind, false)?;
         w.child("Reference", &self.object_reference(), true)
+    }
+}
+
+/// How an object came to be in the store after a transaction wrote it.
+///
+/// Not a wire type: this tags an object reported by
+/// [`TransactionEffectsV1::all_changed_objects`] with which of the object sets
+/// it came from.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum WriteKind {
+    /// The object existed already and the transaction changed its contents.
+    Mutate,
+    /// The transaction created the object.
+    Create,
+    /// The object was wrapped inside another object, and the transaction
+    /// restored it to the store.
+    Unwrap,
+}
+
+impl std::fmt::Display for WriteKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let text = match self {
+            Self::Mutate => "Mutate",
+            Self::Create => "Create",
+            Self::Unwrap => "Unwrap",
+        };
+        f.write_str(text)
+    }
+}
+
+/// Why an object is no longer in the store after a transaction.
+///
+/// Not a wire type: this tags an object reported by
+/// [`TransactionEffectsV1::all_removed_objects`] with which of the object sets
+/// it came from.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum ObjectRemoveKind {
+    /// The transaction deleted the object.
+    Delete,
+    /// The transaction wrapped the object inside another one.
+    Wrap,
+}
+
+impl std::fmt::Display for ObjectRemoveKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let text = match self {
+            Self::Delete => "Delete",
+            Self::Wrap => "Wrap",
+        };
+        f.write_str(text)
     }
 }
 
