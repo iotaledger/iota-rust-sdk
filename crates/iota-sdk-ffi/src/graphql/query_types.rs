@@ -507,7 +507,7 @@ pub struct ObjectFilter {
 impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectFilter) -> Self {
         Self {
-            type_tag: value.tag,
+            type_tag: value.type_tag,
             owner: value.owner.map(Into::into).map(Arc::new),
             object_ids: value
                 .object_ids

@@ -57,7 +57,7 @@ impl Client {
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
         let filter = ObjectFilter {
-            tag: Some(
+            type_tag: Some(
                 coin_type
                     .into()
                     .map(StructTag::new_coin)

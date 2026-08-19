@@ -63,7 +63,7 @@ impl Client {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the
+    /// Use this function together with
     /// [`ObjectFilter::with_owner`] to get the objects owned by an address.
     ///
     /// # Example
