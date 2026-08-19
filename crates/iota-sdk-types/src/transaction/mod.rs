@@ -125,6 +125,12 @@ impl SenderSignedTransaction {
     pub fn signed_transaction_mut(&mut self) -> &mut SignedTransaction {
         &mut self.0
     }
+
+    /// Consume this intent message and return the signed transaction it
+    /// carries.
+    pub fn into_signed_transaction(self) -> SignedTransaction {
+        self.0
+    }
 }
 
 impl From<SignedTransaction> for SenderSignedTransaction {
