@@ -179,6 +179,7 @@ pub enum TransactionBlockKindInput {
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
+#[non_exhaustive]
 pub struct TransactionsFilter {
     pub function: Option<String>,
     pub kind: Option<TransactionBlockKindInput>,
@@ -191,6 +192,78 @@ pub struct TransactionsFilter {
     pub changed_object: Option<ObjectId>,
     pub wrapped_or_deleted_object: Option<ObjectId>,
     pub transaction_ids: Option<Vec<String>>,
+}
+
+impl TransactionsFilter {
+    /// Filter by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
+        self.function = function.into();
+        self
+    }
+
+    /// Filter by transaction kind.
+    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
+        self.kind = kind.into();
+        self
+    }
+
+    /// Limit to transactions executed after the given checkpoint, exclusive.
+    pub fn with_after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
+        self.after_checkpoint = after_checkpoint.into();
+        self
+    }
+
+    /// Limit to transactions executed in the given checkpoint.
+    pub fn with_at_checkpoint(mut self, at_checkpoint: impl Into<Option<u64>>) -> Self {
+        self.at_checkpoint = at_checkpoint.into();
+        self
+    }
+
+    /// Limit to transactions executed before the given checkpoint, exclusive.
+    pub fn with_before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
+        self.before_checkpoint = before_checkpoint.into();
+        self
+    }
+
+    /// Filter by sender address.
+    pub fn with_sent_address(mut self, sent_address: impl Into<Option<Address>>) -> Self {
+        self.sent_address = sent_address.into();
+        self
+    }
+
+    /// Filter by the address receiving an object from the transaction.
+    pub fn with_recv_address(mut self, recv_address: impl Into<Option<Address>>) -> Self {
+        self.recv_address = recv_address.into();
+        self
+    }
+
+    /// Filter by an object used as input to the transaction.
+    pub fn with_input_object(mut self, input_object: impl Into<Option<ObjectId>>) -> Self {
+        self.input_object = input_object.into();
+        self
+    }
+
+    /// Filter by an object changed by the transaction.
+    pub fn with_changed_object(mut self, changed_object: impl Into<Option<ObjectId>>) -> Self {
+        self.changed_object = changed_object.into();
+        self
+    }
+
+    /// Filter by an object wrapped or deleted by the transaction.
+    pub fn with_wrapped_or_deleted_object(
+        mut self,
+        wrapped_or_deleted_object: impl Into<Option<ObjectId>>,
+    ) -> Self {
+        self.wrapped_or_deleted_object = wrapped_or_deleted_object.into();
+        self
+    }
+
+    /// Filter by transaction digests.
+    pub fn with_transaction_ids(mut self, transaction_ids: impl Into<Option<Vec<String>>>) -> Self {
+        self.transaction_ids = transaction_ids.into();
+        self
+    }
 }
 
 #[derive(cynic::QueryFragment, Debug)]

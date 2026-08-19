@@ -138,7 +138,7 @@ impl Client {
                 let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
                 Ok(Some(TransactionDataEffects {
-                    tx: transaction.0,
+                    tx: transaction.into(),
                     effects,
                 }))
             }
@@ -182,7 +182,7 @@ impl Client {
                     let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
                     Ok(TransactionDataEffects {
-                        tx: transaction.0,
+                        tx: transaction.into(),
                         effects,
                     })
                 })

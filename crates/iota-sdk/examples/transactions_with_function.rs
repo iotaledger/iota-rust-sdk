@@ -11,10 +11,8 @@ async fn main() -> Result<()> {
 
     let transactions = client
         .transactions(
-            TransactionsFilter {
-                function: Some("0x3::iota_system::request_add_stake".to_string()),
-                ..Default::default()
-            },
+            TransactionsFilter::default()
+                .with_function("0x3::iota_system::request_add_stake".to_string()),
             PaginationFilter::default(),
         )
         .await?;
