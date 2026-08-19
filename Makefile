@@ -28,11 +28,9 @@ clippy: ## Run Clippy linter
 # diff against: these have none yet. `iota-sdk` does have releases, but its
 # latest stable one is the unrelated legacy SDK that previously held the name,
 # so it stays excluded until 3.0.0 is published.
-SEMVER_CHECKS_EXCLUDE = iota-sdk iota-sdk-grpc-client iota-sdk-grpc-types iota-sdk-move-types
-
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace $(addprefix --exclude ,$(SEMVER_CHECKS_EXCLUDE))
+	cargo semver-checks --workspace --exclude iota-sdk --exclude iota-sdk-grpc-client --exclude iota-sdk-grpc-types --exclude iota-sdk-move-types
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
