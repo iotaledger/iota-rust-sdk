@@ -44,11 +44,42 @@ pub struct EventConnection {
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "EventFilter")]
+#[non_exhaustive]
 pub struct EventFilter {
     pub emitting_module: Option<String>,
     pub event_type: Option<String>,
     pub sender: Option<Address>,
     pub transaction_digest: Option<String>,
+}
+
+impl EventFilter {
+    /// Filter by the module emitting the event, e.g. `"0x02"` (package) or
+    /// `"0x02::coin"` (module).
+    pub fn with_emitting_module(mut self, emitting_module: impl Into<Option<String>>) -> Self {
+        self.emitting_module = emitting_module.into();
+        self
+    }
+
+    /// Filter by event type, e.g. `"0x02::coin::CoinMetadata"`.
+    pub fn with_event_type(mut self, event_type: impl Into<Option<String>>) -> Self {
+        self.event_type = event_type.into();
+        self
+    }
+
+    /// Filter by the address that sent the transaction emitting the event.
+    pub fn with_sender(mut self, sender: impl Into<Option<Address>>) -> Self {
+        self.sender = sender.into();
+        self
+    }
+
+    /// Filter by the digest of the transaction emitting the event.
+    pub fn with_transaction_digest(
+        mut self,
+        transaction_digest: impl Into<Option<String>>,
+    ) -> Self {
+        self.transaction_digest = transaction_digest.into();
+        self
+    }
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]

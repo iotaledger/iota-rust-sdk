@@ -39,10 +39,8 @@ async fn main() -> Result<()> {
     }
 
     let mut transactions = client.transactions_stream(
-        SubscriptionTransactionFilter {
-            kind: Some(TransactionBlockKindInput::ProgrammableTx),
-            ..Default::default()
-        },
+        SubscriptionTransactionFilter::default()
+            .with_kind(TransactionBlockKindInput::ProgrammableTx),
         None,
     );
 

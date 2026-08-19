@@ -9,10 +9,7 @@ async fn main() -> Result<()> {
 
     let coins = client
         .objects(
-            ObjectFilter {
-                type_: "0x2::coin::Coin<0x2::iota::IOTA>".to_owned().into(),
-                ..Default::default()
-            },
+            ObjectFilter::default().with_type("0x2::coin::Coin<0x2::iota::IOTA>".to_owned()),
             Default::default(),
         )
         .await?;

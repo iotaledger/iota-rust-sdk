@@ -63,19 +63,15 @@ impl Client {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the [`ObjectFilter::owner`] to get the
-    /// objects owned by an address.
+    /// Use this function together with
+    /// [`ObjectFilter::with_owner`] to get the objects owned by an address.
     ///
     /// # Example
     ///
     /// ```rust,ignore
-    /// let filter = ObjectFilter {
-    ///     type_: None,
-    ///     owner: Some(Address::from_str("test").unwrap().into()),
-    ///     object_ids: None,
-    /// };
+    /// let filter = ObjectFilter::default().with_owner(Address::from_str("test").unwrap());
     ///
-    /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
+    /// let owned_objects = client.objects(filter, PaginationFilter::default()).await;
     /// ```
     pub async fn objects(
         &self,

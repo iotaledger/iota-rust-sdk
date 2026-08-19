@@ -24,20 +24,14 @@ async fn main() -> Result<()> {
 
     let outgoing = client
         .transactions(
-            TransactionsFilter {
-                sent_address: Some(address),
-                ..Default::default()
-            },
+            TransactionsFilter::default().with_sent_address(address),
             PaginationFilter::default(),
         )
         .await?;
 
     let incoming = client
         .transactions(
-            TransactionsFilter {
-                recv_address: Some(address),
-                ..Default::default()
-            },
+            TransactionsFilter::default().with_recv_address(address),
             PaginationFilter::default(),
         )
         .await?;
