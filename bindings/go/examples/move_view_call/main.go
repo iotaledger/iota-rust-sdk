@@ -140,4 +140,29 @@ func main() {
 	} else {
 		fmt.Println("No shop JSON results")
 	}
+
+	// ===========================================================================
+	// Example 5: Using MoveViewCallBuilder() to assemble the call
+	// ===========================================================================
+	fmt.Println()
+	fmt.Println("=== Example 5: MoveViewCallBuilder() ===")
+	fmt.Println()
+
+	packageObjectId, err := iota_sdk.ObjectIdFromHex(packageId)
+	if err != nil {
+		log.Fatalf("Failed to parse the package id: %v", err)
+	}
+
+	builderResults, err := client.
+		MoveViewCallBuilder(packageObjectId, "shop", "sale_at").
+		Arguments([]*iota_sdk.MoveViewArg{
+			iota_sdk.MoveViewArgObjectId(objectId),
+			iota_sdk.MoveViewArgU64(1),
+		}).
+		Execute()
+	if err != nil {
+		log.Fatalf("Failed to execute the builder call: %v", err)
+	}
+
+	fmt.Println("Builder Results:", builderResults)
 }
