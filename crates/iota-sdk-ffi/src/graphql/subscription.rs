@@ -46,9 +46,7 @@ impl From<SubscriptionEventFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionEventFilter
 {
     fn from(value: SubscriptionEventFilter) -> Self {
-        Self {
-            emitting_module: value.emitting_module,
-        }
+        Self::default().with_emitting_module(value.emitting_module)
     }
 }
 
@@ -78,11 +76,10 @@ impl From<SubscriptionTransactionFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionTransactionFilter
 {
     fn from(value: SubscriptionTransactionFilter) -> Self {
-        Self {
-            kind: value.kind,
-            signing_address: value.signing_address.map(|address| address.0),
-            function: value.function,
-        }
+        Self::default()
+            .with_kind(value.kind)
+            .with_signing_address(value.signing_address.map(|a| a.0))
+            .with_function(value.function)
     }
 }
 
