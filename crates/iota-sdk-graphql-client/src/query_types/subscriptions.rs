@@ -68,16 +68,27 @@ pub struct TransactionsSubscriptionArgs {
 /// (the GraphQL input is `@oneOf`).
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
+#[non_exhaustive]
 pub struct SubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
     pub emitting_module: Option<String>,
 }
 
+impl SubscriptionEventFilter {
+    /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
+    /// `"0x02::coin"` (module).
+    pub fn with_emitting_module(mut self, emitting_module: impl Into<Option<String>>) -> Self {
+        self.emitting_module = emitting_module.into();
+        self
+    }
+}
+
 /// Filter incoming transactions in a subscription. Exactly one field must be
 /// set (the GraphQL input is `@oneOf`).
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
+#[non_exhaustive]
 pub struct SubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
     pub kind: Option<TransactionBlockKindInput>,
@@ -91,6 +102,32 @@ pub struct SubscriptionTransactionFilter {
     /// `"0x03"`, `"0x03::iota_system"`, or
     /// `"0x03::iota_system::request_add_stake"`.
     pub function: Option<String>,
+}
+
+impl SubscriptionTransactionFilter {
+    /// Filter incoming transactions by kind.
+    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
+        self.kind = kind.into();
+        self
+    }
+
+    /// Filter incoming transactions by sender address.
+    ///
+    /// Only the sender is compared, despite the name — a sponsored transaction
+    /// is not matched by its sponsor's (gas owner's) address, even though the
+    /// sponsor also signed it.
+    pub fn with_signing_address(mut self, signing_address: impl Into<Option<Address>>) -> Self {
+        self.signing_address = signing_address.into();
+        self
+    }
+
+    /// Filter incoming transactions by package, module, or function name, e.g.
+    /// `"0x03"`, `"0x03::iota_system"`, or
+    /// `"0x03::iota_system::request_add_stake"`.
+    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
+        self.function = function.into();
+        self
+    }
 }
 
 // ===========================================================================
