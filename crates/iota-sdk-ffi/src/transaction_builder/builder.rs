@@ -354,14 +354,14 @@ impl TransactionBuilder {
     ///  - `modules`: is the modules' bytecode to be published
     ///  - `dependencies`: is the list of IDs of the transitive dependencies of
     ///    the package
-    pub fn publish(
+    pub fn publish_package(
         self: Arc<Self>,
         package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(package_data.0.clone())
+                .publish_package(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self

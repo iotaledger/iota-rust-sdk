@@ -250,10 +250,7 @@ async fn print_object_samples(
 
     let objects = client
         .objects(
-            ObjectFilter {
-                type_: Some(type_tag.to_owned()),
-                ..Default::default()
-            },
+            ObjectFilter::default().with_type(type_tag.to_owned()),
             PaginationFilter {
                 limit: Some(3),
                 ..forward_page(None)
@@ -298,10 +295,7 @@ fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
 async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
     let effects_page = client
         .transactions_effects(
-            TransactionsFilter {
-                changed_object: Some(package_id),
-                ..Default::default()
-            },
+            TransactionsFilter::default().with_changed_object(package_id),
             PaginationFilter {
                 direction: Direction::Forward,
                 cursor: None,
@@ -439,10 +433,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter {
-                    changed_object: Some(package_id),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_changed_object(package_id),
                 forward_page(cursor.clone()),
             )
             .await?;
@@ -472,10 +463,7 @@ async fn was_upgrade_cap_used_for_make_immutable(
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter {
-                    input_object: Some(upgrade_cap_id),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_input_object(upgrade_cap_id),
                 forward_page(cursor.clone()),
             )
             .await?;

@@ -217,7 +217,7 @@ async fn test_publish() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v1.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
@@ -230,7 +230,7 @@ async fn test_upgrade() {
     let (mut tx, address, pk, coins) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v2.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
@@ -505,9 +505,7 @@ async fn test_events_subscription() {
     use futures::StreamExt;
 
     let client = Client::new_localnet();
-    let filter = SubscriptionEventFilter {
-        emitting_module: Some("0x3".to_owned()),
-    };
+    let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
     let mut stream = client.events_stream(filter, None);
 
     tokio::spawn(async move {
@@ -551,7 +549,7 @@ async fn test_move_view_call() {
     let (mut tx, address, pk, _) = helper_setup().await;
 
     let package = move_package_data("../package_test_example_v1.json");
-    tx.publish(package)
+    tx.publish_package(package)
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 

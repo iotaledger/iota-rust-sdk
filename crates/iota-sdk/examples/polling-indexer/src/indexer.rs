@@ -191,13 +191,11 @@ impl Indexer {
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
 
-        let tx_filter = TransactionsFilter {
-            function: self.config.filters.derived_tx_function(),
-            sent_address: self.config.filters.tx_sender,
-            after_checkpoint: range_start.checked_sub(1),
-            before_checkpoint: Some(range_end.saturating_add(1)),
-            ..Default::default()
-        };
+        let tx_filter = TransactionsFilter::default()
+            .with_function(self.config.filters.derived_tx_function())
+            .with_sent_address(self.config.filters.tx_sender)
+            .with_after_checkpoint(range_start.checked_sub(1))
+            .with_before_checkpoint(range_end.saturating_add(1));
 
         let mut tx_cursor: Option<String> = None;
         let mut tx_count = 0_u64;
@@ -321,13 +319,11 @@ impl Indexer {
         .execute(&self.pool)
         .await?;
 
-        let tx_filter = TransactionsFilter {
-            function: self.config.filters.tx_function.clone(),
-            sent_address: self.config.filters.tx_sender,
-            after_checkpoint: sequence.checked_sub(1),
-            before_checkpoint: Some(sequence.saturating_add(1)),
-            ..Default::default()
-        };
+        let tx_filter = TransactionsFilter::default()
+            .with_function(self.config.filters.tx_function.clone())
+            .with_sent_address(self.config.filters.tx_sender)
+            .with_after_checkpoint(sequence.checked_sub(1))
+            .with_before_checkpoint(sequence.saturating_add(1));
 
         let mut tx_cursor: Option<String> = None;
         loop {
@@ -412,11 +408,9 @@ impl Indexer {
             let event_page = self
                 .client
                 .events(
-                    EventFilter {
-                        transaction_digest: Some(transaction_digest.to_owned()),
-                        event_type: self.config.filters.event_type.clone(),
-                        ..Default::default()
-                    },
+                    EventFilter::default()
+                        .with_transaction_digest(transaction_digest.to_owned())
+                        .with_event_type(self.config.filters.event_type.clone()),
                     PaginationFilter {
                         limit: Some(self.config.page_size),
                         cursor: cursor.clone(),

@@ -16,10 +16,7 @@ async fn main() -> Result<()> {
         ObjectId::from_str("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")?;
     let transactions = client
         .transactions(
-            TransactionsFilter {
-                input_object: Some(shared_obj_id),
-                ..Default::default()
-            },
+            TransactionsFilter::default().with_input_object(shared_obj_id),
             Default::default(),
         )
         .await?;

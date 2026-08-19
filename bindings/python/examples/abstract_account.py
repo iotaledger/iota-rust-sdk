@@ -53,7 +53,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     # Build the `publish` PTB
     builder = TransactionBuilder(sender).with_client(client)
     # Publish the package and receive the upgrade cap
-    builder.publish(package_data, "upgrade_cap")
+    builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
     builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
 

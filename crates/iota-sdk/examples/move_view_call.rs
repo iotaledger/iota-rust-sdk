@@ -1,26 +1,33 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
-
-// use std::str::FromStr;
+use std::str::FromStr;
 
 use iota_sdk::{
     graphql_client::{Client, error::Result},
-    // types::ObjectId,
+    types::ObjectId,
 };
+
+/// The `view_demo` package published on testnet.
+const PACKAGE: &str = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
+/// A shared `view_demo::shop::Shop` created when the package was published.
+const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20";
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     // ===========================================================================
-    // Example 1: Using move_view_call() with typed arguments (blake2b256)
+    // Example 1: Using move_view_call() with typed arguments (primitives)
     // ===========================================================================
-    println!("=== Example 1: move_view_call() with typed arguments (blake2b256) ===\n");
+    println!("=== Example 1: move_view_call() with typed arguments (primitives) ===\n");
 
     let result = client
-        .move_view_call("0x2::hash::blake2b256", None, (vec![0u8, 1, 2],))
+        .move_view_call(
+            format!("{PACKAGE}::shop::discounted_price"),
+            None,
+            (100u64, 25u64),
+        )
         .await?;
 
     if let Some(error) = result.error {
@@ -32,15 +39,16 @@ async fn main() -> Result<()> {
     }
 
     // ===========================================================================
-    // Example 2: Using move_view_call_json() with JSON values (blake2b256)
+    // Example 2: Using move_view_call_json() with JSON values (primitives)
     // ===========================================================================
-    println!("\n=== Example 2: move_view_call_json() with JSON values (blake2b256) ===\n");
+    println!("\n=== Example 2: move_view_call_json() with JSON values (primitives) ===\n");
 
     let result = client
         .move_view_call_json(
-            "0x2::hash::blake2b256",
+            format!("{PACKAGE}::shop::discounted_price"),
             None,
-            Some(vec![serde_json::json!([0, 1, 2])]),
+            // `u64` is passed as a string so large values survive JSON.
+            Some(vec![serde_json::json!("100"), serde_json::json!("25")]),
         )
         .await?;
 
@@ -53,51 +61,46 @@ async fn main() -> Result<()> {
     }
 
     // ===========================================================================
-    // Example 3: Using move_view_call() with typed arguments (auction)
+    // Example 3: Using move_view_call() with typed arguments (shared object)
     // ===========================================================================
-    // println!("\n=== Example 3: move_view_call() with typed arguments (auction)
-    // ===\n");
+    println!("\n=== Example 3: move_view_call() with typed arguments (shared object) ===\n");
 
-    // let result = client
-    //     .move_view_call(
-    //         "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    //         None,
-    //         (ObjectId::from_str("
-    // 0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")?,
-    // "auc.iota"))     .await?;
+    let result = client
+        .move_view_call(
+            format!("{PACKAGE}::shop::sale_at"),
+            None,
+            (ObjectId::from_str(SHOP)?, 1u64),
+        )
+        .await?;
 
-    // if let Some(error) = result.error {
-    //     println!("Auction Error: {error}");
-    // } else if let Some(results) = result.results {
-    //     println!("Auction Results: {results:?}");
-    // } else {
-    //     println!("No auction results");
-    // }
+    if let Some(error) = result.error {
+        println!("Shop Error: {error}");
+    } else if let Some(results) = result.results {
+        println!("Shop Results: {results:?}");
+    } else {
+        println!("No shop results");
+    }
 
     // ===========================================================================
-    // Example 4: Using move_view_call_json() with JSON values (auction)
+    // Example 4: Using move_view_call_json() with JSON values (shared object)
     // ===========================================================================
-    // println!("\n=== Example 4: move_view_call_json() with JSON values (auction)
-    // ===\n");
+    println!("\n=== Example 4: move_view_call_json() with JSON values (shared object) ===\n");
 
-    // let result = client
-    //     .move_view_call_json(
-    //         "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    //         None,
-    //         Some(vec![serde_json::json!("
-    // 0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050"),
-    //             serde_json::json!("auc.iota"),
-    //         ]),
-    //     )
-    //     .await?;
+    let result = client
+        .move_view_call_json(
+            format!("{PACKAGE}::shop::sale_at"),
+            None,
+            Some(vec![serde_json::json!(SHOP), serde_json::json!("1")]),
+        )
+        .await?;
 
-    // if let Some(error) = result.error {
-    //     println!("Auction JSON Error: {error}");
-    // } else if let Some(results) = result.results {
-    //     println!("Auction JSON Results: {results:?}");
-    // } else {
-    //     println!("No auction JSON results");
-    // }
+    if let Some(error) = result.error {
+        println!("Shop JSON Error: {error}");
+    } else if let Some(results) = result.results {
+        println!("Shop JSON Results: {results:?}");
+    } else {
+        println!("No shop JSON results");
+    }
 
     Ok(())
 }

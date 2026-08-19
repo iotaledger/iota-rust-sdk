@@ -38,11 +38,9 @@ async fn main() -> Result<()> {
 
     let page = client
         .objects(
-            ObjectFilter {
-                type_: Some("0x3::staking_pool::StakedIota".to_owned()),
-                owner: Some(owner),
-                ..Default::default()
-            },
+            ObjectFilter::default()
+                .with_type("0x3::staking_pool::StakedIota".to_owned())
+                .with_owner(owner),
             Default::default(),
         )
         .await?;

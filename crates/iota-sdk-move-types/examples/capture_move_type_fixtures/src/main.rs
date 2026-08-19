@@ -602,11 +602,8 @@ async fn capture(
 ) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync + 'static>> {
     match source {
         Source::TypeFilter(type_str) => {
-            let filter = iota_sdk::graphql_client::query_types::ObjectFilter {
-                type_: Some((*type_str).to_string()),
-                owner: None,
-                object_ids: None,
-            };
+            let filter = iota_sdk::graphql_client::query_types::ObjectFilter::default()
+                .with_type((*type_str).to_string());
             let page = client
                 .objects(
                     filter,
@@ -641,11 +638,9 @@ async fn capture(
             tx_digest,
         } => {
             use base64ct::Encoding as _;
-            let filter = iota_sdk::graphql_client::query_types::EventFilter {
-                event_type: Some((*event_type).to_string()),
-                transaction_digest: Some((*tx_digest).to_string()),
-                ..Default::default()
-            };
+            let filter = iota_sdk::graphql_client::query_types::EventFilter::default()
+                .with_event_type((*event_type).to_string())
+                .with_transaction_digest((*tx_digest).to_string());
             let page = client
                 .events(
                     filter,
